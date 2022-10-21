@@ -8,6 +8,13 @@
     <artifactId>mcdull</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>mcdull</name>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>mcdull-bussiness</module>
+        <module>mcdull-framework</module>
+        <module>mcdull-support</module>
+    </modules>
 
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
