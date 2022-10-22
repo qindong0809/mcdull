@@ -1,0 +1,21 @@
+package com.dqcer.framework.base.entity;
+
+import java.io.Serializable;
+
+/**
+ * 实体
+ *
+ * @author dqcer
+ * @date  22:21 2021/4/28
+ */
+@SuppressWarnings("unused")
+public interface Entity extends Serializable {
+
+    /**
+     * 主键约束
+     *
+     * @return {@link Long}
+     */
+    Long getId();
+
+}
