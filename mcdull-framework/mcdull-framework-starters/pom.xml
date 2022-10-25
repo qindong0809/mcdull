@@ -12,6 +12,7 @@
 
     <modules>
         <module>mcdull-framework-starter-web</module>
+        <module>mcdull-framework-starter-nacos</module>
     </modules>
 
     <artifactId>mcdull-framework-starters</artifactId>

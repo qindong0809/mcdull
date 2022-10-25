@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.dqcer.mcdull.soagov.PrometheusConfiguration,\
+  com.dqcer.mcdull.soagov.LogLevelConfiguration
+
+
