@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: 172.16.11.115:8848
+      discovery:
+        heart-beat-timeout: 3000
+      config:
+        extension-configs:
+          - data-id: gateway-routes
+            group: routes
+            refresh: true

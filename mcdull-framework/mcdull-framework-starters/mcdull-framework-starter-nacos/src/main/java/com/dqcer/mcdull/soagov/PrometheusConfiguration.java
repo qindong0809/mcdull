@@ -22,7 +22,7 @@ public class PrometheusConfiguration implements CommandLineRunner {
 
 	private static final Logger log = LoggerFactory.getLogger(PrometheusConfiguration.class);
 
-	@Value("${spring.application.name}")
+	@Value("${spring.application.name:unknown}")
 	private String applicationName;
 
 	@Bean

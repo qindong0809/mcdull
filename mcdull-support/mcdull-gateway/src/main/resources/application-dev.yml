@@ -1,0 +1,19 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: mcdull-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          #微服务名称以小写形式呈现
+          lower-case-service-id: true
+          enabled: true
+    loadbalancer:
+      cache:
+        # 负载均衡缓存的失效时间
+        ttl: 30
+# 指定日志的文件名（nacos）
+logging:
+  dataId: log

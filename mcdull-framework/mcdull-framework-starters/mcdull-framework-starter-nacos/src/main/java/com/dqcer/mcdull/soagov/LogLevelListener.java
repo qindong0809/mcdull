@@ -29,18 +29,18 @@ import java.util.concurrent.TimeUnit;
  * 配置内容（如下所示）：
  * root=info
  * mybatis-plus=info
- * com.eclincloud=debug
+ * com.dqcer=debug
  * com.zaxxer.hikari=info
  * com.alibaba.nacos=error
- * com.eclincloud.common.core.filter=error
+ * com.dqcer.common.core.filter=error
  *
  * @author dongqin
  * @date 2022/10/24
  */
 @Component
-public class LogLevelConfiguration implements InitializingBean {
+public class LogLevelListener implements InitializingBean {
 
-    private static final Logger log = LoggerFactory.getLogger(LogLevelConfiguration.class);
+    private static final Logger log = LoggerFactory.getLogger(LogLevelListener.class);
 
     private static final ExecutorService executorService = new ThreadPoolExecutor(1, 2, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(500), r -> {
         Thread thread = new Thread(r);
@@ -91,7 +91,7 @@ public class LogLevelConfiguration implements InitializingBean {
         if (null == configInfo || configInfo.trim().length() == 0) {
             return;
         }
-        log.info("Update log level by nacos: {}", configInfo);
+        log.info("更新配置文件内容 \n{}", configInfo);
         Properties properties = new Properties();
         try {
             LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
