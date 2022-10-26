@@ -5,6 +5,7 @@ import com.alibaba.cloud.nacos.NacosConfigProperties;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.config.listener.Listener;
+import com.dqcer.framework.base.utils.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -133,6 +134,9 @@ public class DynamicRouteListener implements InitializingBean, ApplicationEventP
      * @param configInfo 配置信息
      */
     private void refresh(String configInfo) {
+        if (StrUtil.isBlank(configInfo)) {
+            return;
+        }
         // 删除之前的路由
         for (String routeId : ROUTE_IDS) {
             routeDefinitionWriter.delete(Mono.just(routeId)).subscribe();

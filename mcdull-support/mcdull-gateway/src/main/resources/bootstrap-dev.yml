@@ -6,6 +6,6 @@ spring:
         heart-beat-timeout: 3000
       config:
         extension-configs:
-          - data-id: gateway-routes
+          - data-id: gateway-routes.json
             group: routes
             refresh: true
