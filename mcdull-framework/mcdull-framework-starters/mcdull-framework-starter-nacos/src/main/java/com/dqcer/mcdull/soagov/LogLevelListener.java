@@ -5,6 +5,7 @@ import ch.qos.logback.classic.LoggerContext;
 import com.alibaba.cloud.nacos.NacosConfigManager;
 import com.alibaba.cloud.nacos.NacosConfigProperties;
 import com.alibaba.nacos.api.config.listener.Listener;
+import com.alibaba.nacos.api.exception.NacosException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -27,12 +28,12 @@ import java.util.concurrent.TimeUnit;
  * Data ID: log
  * 配置格式：properties
  * 配置内容（如下所示）：
- * root=info
- * mybatis-plus=info
- * com.dqcer=debug
- * com.zaxxer.hikari=info
- * com.alibaba.nacos=error
- * com.dqcer.common.core.filter=error
+ root=debug
+ mybatis-plus=warn
+ com.dqcer=debug
+ com.zaxxer.hikari=warn
+ com.alibaba.nacos=error
+
  *
  * @author dongqin
  * @date 2022/10/24
@@ -42,11 +43,6 @@ public class LogLevelListener implements InitializingBean {
 
     private static final Logger log = LoggerFactory.getLogger(LogLevelListener.class);
 
-    private static final ExecutorService executorService = new ThreadPoolExecutor(1, 2, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(500), r -> {
-        Thread thread = new Thread(r);
-        thread.setName("log-" + r.hashCode());
-        return thread;
-    });
 
     @Value("${logging.dataId:log}")
     private String logDataId;
@@ -63,10 +59,29 @@ public class LogLevelListener implements InitializingBean {
             return;
         }
 
+        new Thread(() -> {
+            // 初次加载
+            log.info("logDataId: {}", logDataId);
+            String configInfo = null;
+            try {
+                configInfo = nacosConfigManager.getConfigService().getConfig(logDataId, nacosConfigProperties.getGroup(), 3000);
+            } catch (NacosException e) {
+                log.error(e.getMessage(), e);
+            }
+            updateLogLevelConfig(configInfo);
+
+        }).start();
+
+
+        // 二次监听加载
         nacosConfigManager.getConfigService().addListener(logDataId, nacosConfigProperties.getGroup(), new Listener() {
             @Override
             public Executor getExecutor() {
-                return null;
+                return new ThreadPoolExecutor(1, 2, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(500), r -> {
+                    Thread thread = new Thread(r);
+                    thread.setName("log-" + r.hashCode());
+                    return thread;
+                });
             }
 
             @Override
@@ -75,16 +90,6 @@ public class LogLevelListener implements InitializingBean {
             }
         });
 
-
-        executorService.submit(() -> {
-            try {
-                log.info("logDataId: {}", logDataId);
-                String configInfo = nacosConfigManager.getConfigService().getConfig(logDataId, nacosConfigProperties.getGroup(), 10000);
-                updateLogLevelConfig(configInfo);
-            } catch (Exception e) {
-                log.error("拉取nacos配置设置日志级别失败", e);
-            }
-        });
     }
 
     private void updateLogLevelConfig(String configInfo) {

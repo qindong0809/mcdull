@@ -6,6 +6,7 @@
     <modules>
         <module>mcdull-gateway</module>
         <module>mcdull-dict</module>
+        <module>mcdull-auth</module>
     </modules>
     <parent>
         <artifactId>mcdull</artifactId>

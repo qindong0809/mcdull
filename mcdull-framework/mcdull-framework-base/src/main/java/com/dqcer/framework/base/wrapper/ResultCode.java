@@ -26,6 +26,10 @@ public enum ResultCode implements IResultCode , IDict<Integer> {
 	 */
 	UN_AUTHORIZATION(999401, "无权限"),
 
+	/**
+	 * 404
+	 */
+	NOT_FOUND(999404, "找不到资源"),
 
 	/**
 	 * 参数异常

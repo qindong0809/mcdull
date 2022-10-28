@@ -1,8 +1,10 @@
 package com.dqcer.mcdull.gateway.config;
 
 
+import com.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +28,7 @@ import java.util.List;
  * @date 2022/10/26
  */
 @Configuration
+@EnableConfigurationProperties(McdullGatewayProperties.class)
 public class GatewayConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(GatewayConfiguration.class);

@@ -2,10 +2,7 @@ spring:
   cloud:
     nacos:
       server-addr: 172.16.11.115:8848
-      discovery:
-        heart-beat-timeout: 3000
       config:
-        extension-configs:
-          - data-id: gateway-routes.json
-            group: routes
-            refresh: true
+        file-extension: yaml
+      discovery:
+        heart-beat-interval: 1

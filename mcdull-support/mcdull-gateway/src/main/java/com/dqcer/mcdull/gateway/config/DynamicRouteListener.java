@@ -5,6 +5,7 @@ import com.alibaba.cloud.nacos.NacosConfigProperties;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.config.listener.Listener;
+import com.alibaba.nacos.api.exception.NacosException;
 import com.dqcer.framework.base.utils.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +84,7 @@ public class DynamicRouteListener implements InitializingBean, ApplicationEventP
 
     private static final Logger log = LoggerFactory.getLogger(DynamicRouteListener.class);
 
-    @Value("${route.dataId:route}")
+    @Value("${route.dataId:gateway-routes}")
     private String routeDataId;
 
     @Resource
@@ -101,15 +102,24 @@ public class DynamicRouteListener implements InitializingBean, ApplicationEventP
 
     @Override
     public void afterPropertiesSet() throws Exception {
+
         ConfigService configService = nacosConfigManager.getConfigService();
         if (null == configService || null == nacosConfigProperties) {
             log.error("动态路由侦听失败");
             return;
         }
 
-        // 程序启动时，先读取指定的nacos的配置文件
-        String config = nacosConfigManager.getConfigService().getConfig(routeDataId, nacosConfigProperties.getGroup(), 3000);
-        refresh(config);
+        // 程序启动时，先读取指定的nacos的配置文件，采用子线程防止阻塞
+        new Thread(() -> {
+            String config = null;
+            try {
+                config = nacosConfigManager.getConfigService().getConfig(routeDataId, nacosConfigProperties.getGroup(), 3000);
+            } catch (NacosException e) {
+                e.printStackTrace();
+            }
+            refresh(config);
+        }).start();
+
 
         // 添加监听 指定的nacos的配置文件 事件
         configService.addListener(routeDataId, nacosConfigProperties.getGroup(), new Listener() {
@@ -134,6 +144,7 @@ public class DynamicRouteListener implements InitializingBean, ApplicationEventP
      * @param configInfo 配置信息
      */
     private void refresh(String configInfo) {
+        log.info("配置信息 \n {}", configInfo);
         if (StrUtil.isBlank(configInfo)) {
             return;
         }

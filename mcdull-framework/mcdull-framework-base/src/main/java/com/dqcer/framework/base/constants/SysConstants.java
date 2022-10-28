@@ -9,6 +9,8 @@ package com.dqcer.framework.base.constants;
 @SuppressWarnings("unused")
 public class SysConstants {
 
+    public static final String PROJECT = "mcdull";
+
     /**
      * feign 前缀
      */
