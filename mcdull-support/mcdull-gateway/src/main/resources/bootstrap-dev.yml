@@ -1,7 +1,7 @@
 spring:
   cloud:
     nacos:
-      server-addr: 172.16.11.115:8848
+      server-addr: 192.168.230.171:8848
       config:
         file-extension: yaml
       discovery:

@@ -12,4 +12,27 @@
     <artifactId>mcdull-auth-provider</artifactId>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>com.dqcer.cloud</groupId>
+            <artifactId>mcdull-framework-base</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dqcer.cloud</groupId>
+            <artifactId>mcdull-framework-starter-web</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dqcer.cloud</groupId>
+            <artifactId>mcdull-framework-starter-nacos</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dqcer.cloud</groupId>
+            <artifactId>mcdull-auth-client</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>
