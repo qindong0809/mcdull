@@ -49,4 +49,14 @@ public interface ValidGroup {
      */
     interface Paged { }
 
+    /**
+     * 单个
+     */
+    interface One {}
+
+    /**
+     * 多个
+     */
+    interface List {}
+
 }
