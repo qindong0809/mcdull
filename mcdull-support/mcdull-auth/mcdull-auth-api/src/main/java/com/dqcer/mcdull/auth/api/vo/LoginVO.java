@@ -2,7 +2,13 @@ package com.dqcer.mcdull.auth.api.vo;
 
 import com.dqcer.framework.base.VO;
 
-public class UserLoginVO extends VO {
+/**
+ * 登录VO
+ *
+ * @author dqcer
+ * @date 2022/11/01
+ */
+public class LoginVO extends VO {
 
     private String username;
 

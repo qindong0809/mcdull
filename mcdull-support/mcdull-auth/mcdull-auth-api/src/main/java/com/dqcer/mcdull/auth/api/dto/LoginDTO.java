@@ -4,18 +4,18 @@ import com.dqcer.framework.base.DTO;
 
 public class LoginDTO extends DTO {
 
-    private String username;
+    private String account;
 
     private String pd;
 
     private String code;
 
-    public String getUsername() {
-        return username;
+    public String getAccount() {
+        return account;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public String getPd() {
