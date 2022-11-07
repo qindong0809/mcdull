@@ -16,7 +16,7 @@ public class UnifySession implements Serializable {
     /**
      * 账号主键
      */
-    private Long accountId;
+    private Long userId;
 
     /**
      * 所属客户
@@ -29,19 +29,14 @@ public class UnifySession implements Serializable {
     private Long roleId;
 
     /**
-     * 数据源名称
-     */
-    private String dsKey;
-
-    /**
      * 语言
      */
     private String language;
 
     /**
-     * ip地址
+     * traceId
      */
-    private String ip;
+    private String traceId;
 
     /**
      * 扩展
@@ -50,40 +45,22 @@ public class UnifySession implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("UnifySession{");
-        sb.append("accountId=").append(accountId);
-        sb.append(", tenantId=").append(tenantId);
-        sb.append(", roleId=").append(roleId);
-        sb.append(", dsKey='").append(dsKey).append('\'');
-        sb.append(", language='").append(language).append('\'');
-        sb.append(", ip='").append(ip).append('\'');
-        sb.append(", extension=").append(extension);
-        sb.append('}');
-        return sb.toString();
+        return "UnifySession{" +
+                "userId=" + userId +
+                ", tenantId=" + tenantId +
+                ", roleId=" + roleId +
+                ", language='" + language + '\'' +
+                ", traceId='" + traceId + '\'' +
+                ", extension=" + extension +
+                '}';
     }
 
-    public String getLanguage() {
-        return language;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public Long getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getTenantId() {
@@ -94,20 +71,28 @@ public class UnifySession implements Serializable {
         this.tenantId = tenantId;
     }
 
-    public String getDsKey() {
-        return dsKey;
-    }
-
-    public void setDsKey(String dsKey) {
-        this.dsKey = dsKey;
-    }
-
     public Long getRoleId() {
         return roleId;
     }
 
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
     }
 
     public ConcurrentHashMap<String, Object> getExtension() {

@@ -3,6 +3,7 @@ package com.dqcer.mcdull.auth.provider.web.controller;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.auth.api.dto.LoginDTO;
 import com.dqcer.mcdull.auth.api.vo.LoginVO;
+import com.dqcer.mcdull.auth.client.api.AuthServiceApi;
 import com.dqcer.mcdull.auth.provider.web.service.LoginService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +14,7 @@ import javax.validation.Valid;
 
 @RequestMapping("")
 @RestController
-public class LoginController {
+public class LoginController implements AuthServiceApi {
 
     @Resource
     private LoginService loginService;
@@ -27,5 +28,16 @@ public class LoginController {
     @PostMapping("/login")
     public Result<String> login(@Valid LoginDTO loginDTO) {
         return loginService.login(loginDTO);
+    }
+
+    /**
+     * 验证token
+     *
+     * @param token token
+     * @return {@link Long}
+     */
+    @Override
+    public Result<Long> tokenValid(String token) {
+        return loginService.tokenValid(token);
     }
 }

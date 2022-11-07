@@ -37,7 +37,7 @@
         </dependency>
         <dependency>
             <groupId>com.dqcer.cloud</groupId>
-            <artifactId>mcdull-dict-client</artifactId>
+            <artifactId>mcdull-auth-client</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

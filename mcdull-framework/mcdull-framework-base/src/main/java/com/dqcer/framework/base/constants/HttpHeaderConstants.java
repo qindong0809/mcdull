@@ -33,11 +33,15 @@ public class HttpHeaderConstants {
      */
     public static final String T_ID = "tid";
 
+    /**
+     * 用户id
+     */
+    public static final String U_ID = "uid";
 
     /**
-     * feign调用标识
+     * traceId
      */
-    public static final String X_FEIGN = "x-feign";
+    public static final String TRACE_ID = "traceId";
 
 
 }

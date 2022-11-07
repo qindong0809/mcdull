@@ -1,13 +1,10 @@
 package com.dqcer.mcdull.framework.web.interceptor;
 
 import com.alibaba.fastjson.JSON;
-import com.dqcer.framework.base.auth.CacheUser;
 import com.dqcer.framework.base.auth.UnifySession;
 import com.dqcer.framework.base.auth.UserStorage;
-import com.dqcer.framework.base.constants.CacheConstant;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.constants.SysConstants;
-import com.dqcer.framework.base.utils.ObjUtil;
 import com.dqcer.framework.base.utils.StrUtil;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
@@ -23,8 +20,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.MessageFormat;
-import java.time.LocalDateTime;
 
 /**
  * 基础信息拦截器
@@ -46,6 +41,27 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
             log.debug("BaseInfoInterceptor#preHandle requestURI:[{}]", requestURI);
         }
 
+        // 无需认证
+        HandlerMethod method = (HandlerMethod) handler;
+        UnAuthorize unauthorize = method.getMethodAnnotation(UnAuthorize.class);
+        if (null != unauthorize) {
+            if (log.isDebugEnabled()) {
+                log.debug("UnAuthorize: {}", requestURI);
+            }
+            return true;
+        }
+
+        // 获取当前用户信息
+        UnifySession unifySession = new UnifySession();
+        unifySession.setLanguage(request.getHeader(HttpHeaders.ACCEPT_LANGUAGE));
+        unifySession.setUserId(Long.valueOf(request.getHeader(HttpHeaderConstants.U_ID)));
+        String tenantId = request.getHeader(HttpHeaderConstants.T_ID);
+        if (StrUtil.isNotBlank(tenantId)) {
+            unifySession.setTenantId(Long.valueOf(tenantId));
+        }
+        unifySession.setTraceId(request.getHeader(HttpHeaderConstants.TRACE_ID));
+        UserStorage.setSession(unifySession);
+
         if (requestURI.startsWith(SysConstants.FEIGN_URL)) {
             return true;
         }
@@ -53,21 +69,8 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
 
-        HandlerMethod method = (HandlerMethod) handler;
+        // TODO: 2022/11/7 资源模块效验
 
-        // 获取当前用户信息
-        UnifySession unifySession = new UnifySession();
-        unifySession.setLanguage(request.getHeader(HttpHeaders.ACCEPT_LANGUAGE));
-        unifySession.setIp("暂时空着");
-
-        UnAuthorize unauthorize = method.getMethodAnnotation(UnAuthorize.class);
-        if (null != unauthorize) {
-            if (log.isDebugEnabled()) {
-                log.debug("UnAuthorize: {}", requestURI);
-            }
-            UserStorage.setSession(unifySession);
-            return true;
-        }
 
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
@@ -84,43 +87,8 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
 
         String token = authorization.substring(HttpHeaderConstants.BEARER.length());
 
-        Object obj = redisClient.get(MessageFormat.format(CacheConstant.SSO_TOKEN, token));
-
-        if (ObjUtil.isNull(obj)) {
-            log.warn("BaseInfoInterceptor:  7天强制过期下线");
-            response.getWriter().write(JSON.toJSONString(Result.error(ResultCode.UN_AUTHORIZATION)));
-            return false;
-        }
-
-        CacheUser user = (CacheUser) obj;
-
-        if (log.isDebugEnabled()) {
-            log.debug("CacheUser:{}", user);
-        }
-
-        if (CacheUser.OFFLINE.equals(user.getOnlineStatus())) {
-            log.warn("BaseInfoInterceptor:  异地登录");
-            response.getWriter().write(JSON.toJSONString(Result.error(ResultCode.UN_AUTHORIZATION)));
-            //  异地登录
-            return false;
-        }
-
-        LocalDateTime lastActiveTime = user.getLastActiveTime();
 
 
-        LocalDateTime now = LocalDateTime.now();
-        if (lastActiveTime.plusMinutes(30).isBefore(now)) {
-            log.warn("BaseInfoInterceptor:  用户操作已过期");
-            response.getWriter().write(JSON.toJSONString(Result.error(ResultCode.UN_AUTHORIZATION)));
-            return false;
-        }
-
-
-        redisClient.set(MessageFormat.format(CacheConstant.SSO_TOKEN, token), user.setLastActiveTime(now));
-
-        unifySession.setAccountId(user.getAccountId());
-        unifySession.setTenantId(user.getTenantId());
-        UserStorage.setSession(unifySession);
 
         return true;
     }

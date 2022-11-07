@@ -33,7 +33,7 @@ public class CaffeineCache implements ICache {
         builder.softValues();
         //  回收策略 每写入一次重新计算一次缓存的有效时间
         // 到期时间默认10s
-        int expire = 10;
+        int expire = 3;
         builder.expireAfterWrite(expire, TimeUnit.SECONDS);
 
         //  回收策略 每访问一次重新计算一次缓存的有效时间

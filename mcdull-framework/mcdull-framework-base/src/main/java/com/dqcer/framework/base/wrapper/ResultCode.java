@@ -27,9 +27,24 @@ public enum ResultCode implements IResultCode , IDict<Integer> {
 	UN_AUTHORIZATION(999401, "无权限"),
 
 	/**
+	 * 异地登录
+	 */
+	OTHER_LOGIN(999402, "异地登录"),
+
+	/**
+	 * 登录超时
+	 */
+	TIMEOUT_LOGIN(999403, "token过期"),
+
+	/**
 	 * 404
 	 */
 	NOT_FOUND(999404, "找不到资源"),
+
+	/**
+	 * 没有traceId
+	 */
+	NOT_TRACE_ID(999405, "没有traceId"),
 
 	/**
 	 * 参数异常

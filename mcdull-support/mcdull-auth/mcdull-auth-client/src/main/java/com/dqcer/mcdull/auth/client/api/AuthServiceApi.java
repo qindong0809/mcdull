@@ -1,9 +1,7 @@
 package com.dqcer.mcdull.auth.client.api;
 
-import com.dqcer.mcdull.auth.api.dto.LoginDTO;
-import com.dqcer.mcdull.auth.api.vo.LoginVO;
+import com.dqcer.framework.base.wrapper.Result;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * 登录服务api
@@ -16,10 +14,10 @@ public interface AuthServiceApi {
     /**
      * 验证token
      *
-     * @param dto dto
-     * @return {@link LoginVO}
+     * @param token token
+     * @return {@link Long}
      */
-    @PostMapping("user/login")
-    LoginVO tokenValid(@RequestBody LoginDTO dto);
+    @PostMapping("token/valid")
+    Result<Long> tokenValid(String token);
 
 }

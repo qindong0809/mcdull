@@ -2,7 +2,10 @@ package com.dqcer.mcdull.gateway.filter;
 
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.constants.SysConstants;
+import com.dqcer.framework.base.utils.StrUtil;
+import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.mcdull.auth.client.service.AuthClientService;
 import com.dqcer.mcdull.gateway.properties.FilterProperties;
 import com.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
 import com.dqcer.mcdull.gateway.utils.IpUtils;
@@ -36,6 +39,9 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
     @Resource
     private McdullGatewayProperties mcdullGatewayProperties;
 
+    @Resource
+    private AuthClientService authClientService;
+
     private static final Logger log = LoggerFactory.getLogger(AuthGlobalFilter.class);
 
     @Override
@@ -50,6 +56,15 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
         log.info("请求地址: {} 来源Ip: {}", requestUrl, realIp);
 
         FilterProperties filterProperties = mcdullGatewayProperties.getFilter();
+
+        if (filterProperties.getEnableTrace()) {
+            String traceId = headers.getFirst(HttpHeaderConstants.TRACE_ID);
+            if (StrUtil.isBlank(traceId)) {
+                log.warn("没有traceId");
+                return errorResponse(response, ResultCode.NOT_TRACE_ID.getCode(), ResultCode.NOT_TRACE_ID.getMessage());
+            }
+        }
+
         // 无需效验的接口
         if (ignoreFilter(request.getPath().toString(), filterProperties.getNoAuth())) {
             if (log.isDebugEnabled()) {
@@ -65,7 +80,7 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
         }
 
         //  租户id效验
-        Boolean enableMultiTenant = filterProperties.getMultiTenant();
+        Boolean enableMultiTenant = filterProperties.getEnableMultiTenant();
         if (enableMultiTenant) {
             String tenantIdStr = headers.getFirst(HttpHeaderConstants.T_ID);
             if (log.isDebugEnabled()) {
@@ -81,7 +96,6 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
             }
             addHeader(mutate, HttpHeaderConstants.T_ID, tenantIdStr);
         }
-
 
         // token 效验
         String authorization = headers.getFirst(HttpHeaderConstants.AUTHORIZATION);
@@ -99,11 +113,13 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
             return errorResponse(response, ResultCode.UN_AUTHORIZATION.getCode(), ResultCode.UN_AUTHORIZATION.getMessage());
         }
 
-
-        // TODO: 2022/10/27 根据token验证身份
-
-
-
+        // 根据token验证身份
+        Result<Long> result = authClientService.tokenValid(token);
+        log.info("token valid result: {}", result);
+        if (!result.isOk()) {
+            return errorResponse(response, result.getCode(), result.getMessage());
+        }
+        addHeader(mutate, HttpHeaderConstants.U_ID, result.getData());
 
         return chain.filter(exchange.mutate().request(mutate.build()).build());
     }

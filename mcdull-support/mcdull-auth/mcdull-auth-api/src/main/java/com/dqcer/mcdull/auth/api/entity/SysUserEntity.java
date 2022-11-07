@@ -1,15 +1,23 @@
 package com.dqcer.mcdull.auth.api.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.dqcer.framework.base.entity.BaseEntity;
 
 import java.time.LocalTime;
 
+/**
+ * 系统用户实体
+ *
+ * @author dqcer
+ * @date 2022/11/07
+ */
+@TableName("sys_user")
 public class SysUserEntity extends BaseEntity {
 
     /**
      * 删除标识（1/正常 2/删除）
      */
-    private Integer defFlay;
+    private Integer delFlag;
 
     /**
      * 账户
@@ -41,12 +49,12 @@ public class SysUserEntity extends BaseEntity {
      */
     private LocalTime lastLoginTime;
 
-    public Integer getDefFlay() {
-        return defFlay;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setDefFlay(Integer defFlay) {
-        this.defFlay = defFlay;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
     public String getAccount() {

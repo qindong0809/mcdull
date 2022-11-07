@@ -17,16 +17,29 @@ public class FilterProperties {
     private List<String> noAuth = new ArrayList<>();
 
     /**
-     * 启用多租户模式
+     * 是否启用多租户模式
      */
-    private Boolean multiTenant = false;
+    private Boolean enableMultiTenant = false;
 
-    public Boolean getMultiTenant() {
-        return multiTenant;
+    /**
+     * 是否启用traceId
+     */
+    private Boolean enableTrace = false;
+
+    public Boolean getEnableTrace() {
+        return enableTrace;
     }
 
-    public void setMultiTenant(Boolean multiTenant) {
-        this.multiTenant = multiTenant;
+    public void setEnableTrace(Boolean enableTrace) {
+        this.enableTrace = enableTrace;
+    }
+
+    public Boolean getEnableMultiTenant() {
+        return enableMultiTenant;
+    }
+
+    public void setEnableMultiTenant(Boolean enableMultiTenant) {
+        this.enableMultiTenant = enableMultiTenant;
     }
 
     public List<String> getNoAuth() {

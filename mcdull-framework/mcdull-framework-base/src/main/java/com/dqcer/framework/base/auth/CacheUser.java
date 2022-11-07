@@ -24,9 +24,9 @@ public class CacheUser implements Serializable {
     private static final long serialVersionUID = 5099451915233476755L;
 
     /**
-     * 帐户id
+     *
      */
-    private Long accountId;
+    private Long userId;
 
     /**
      * 租户id
@@ -52,12 +52,12 @@ public class CacheUser implements Serializable {
         return this;
     }
 
-    public Long getAccountId() {
-        return accountId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public CacheUser setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public CacheUser setUserId(Long userId) {
+        this.userId = userId;
         return this;
     }
 
