@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: 192.168.230.171:8848
+      config:
+        file-extension: yaml
+      discovery:
+        heart-beat-interval: 1

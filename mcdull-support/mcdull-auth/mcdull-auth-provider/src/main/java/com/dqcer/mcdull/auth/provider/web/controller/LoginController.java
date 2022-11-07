@@ -25,7 +25,7 @@ public class LoginController {
      * @return {@link Result}<{@link LoginVO}>
      */
     @PostMapping("/login")
-    public Result<LoginVO> login(@Valid LoginDTO loginDTO) {
+    public Result<String> login(@Valid LoginDTO loginDTO) {
         return loginService.login(loginDTO);
     }
 }

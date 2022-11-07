@@ -3,6 +3,7 @@ package com.dqcer.mcdull.gateway.filter;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.constants.SysConstants;
 import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.mcdull.gateway.properties.FilterProperties;
 import com.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
 import com.dqcer.mcdull.gateway.utils.IpUtils;
 import org.slf4j.Logger;
@@ -48,8 +49,9 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
 
         log.info("请求地址: {} 来源Ip: {}", requestUrl, realIp);
 
+        FilterProperties filterProperties = mcdullGatewayProperties.getFilter();
         // 无需效验的接口
-        if (ignoreFilter(request.getPath().toString(), mcdullGatewayProperties.getFilter().getNoAuth())) {
+        if (ignoreFilter(request.getPath().toString(), filterProperties.getNoAuth())) {
             if (log.isDebugEnabled()) {
                 log.debug("Gateway Filer ignore url：{}", request.getPath());
             }
@@ -63,18 +65,23 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
         }
 
         //  租户id效验
-        String tenantIdStr = headers.getFirst(HttpHeaderConstants.T_ID);
-        if (log.isDebugEnabled()) {
-            log.debug("Gateway Filer TenantId: {}", tenantIdStr);
+        Boolean enableMultiTenant = filterProperties.getMultiTenant();
+        if (enableMultiTenant) {
+            String tenantIdStr = headers.getFirst(HttpHeaderConstants.T_ID);
+            if (log.isDebugEnabled()) {
+                log.debug("Gateway Filer TenantId: {}", tenantIdStr);
+            }
+            if (null == tenantIdStr || tenantIdStr.trim().length() == 0) {
+                log.error("头部tid参数缺失");
+                return errorResponse(response, ResultCode.ERROR_PARAMETERS.getCode(), ResultCode.ERROR_PARAMETERS.getMessage());
+            }
+            if (!isNumber(tenantIdStr)) {
+                log.error("头部tid参数异常");
+                return errorResponse(response, ResultCode.ERROR_PARAMETERS.getCode(), ResultCode.ERROR_PARAMETERS.getMessage());
+            }
+            addHeader(mutate, HttpHeaderConstants.T_ID, tenantIdStr);
         }
-        if (null == tenantIdStr || tenantIdStr.trim().length() == 0) {
-            log.error("头部tid参数缺失");
-            return errorResponse(response, ResultCode.ERROR_PARAMETERS.getCode(), ResultCode.ERROR_PARAMETERS.getMessage());
-        }
-        if (!isNumber(tenantIdStr)) {
-            log.error("头部tid参数异常");
-            return errorResponse(response, ResultCode.ERROR_PARAMETERS.getCode(), ResultCode.ERROR_PARAMETERS.getMessage());
-        }
+
 
         // token 效验
         String authorization = headers.getFirst(HttpHeaderConstants.AUTHORIZATION);
@@ -95,7 +102,7 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
 
         // TODO: 2022/10/27 根据token验证身份
 
-        addHeader(mutate, HttpHeaderConstants.T_ID, tenantIdStr);
+
 
 
         return chain.filter(exchange.mutate().request(mutate.build()).build());

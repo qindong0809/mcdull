@@ -32,7 +32,16 @@
             <groupId>com.dqcer.cloud</groupId>
             <artifactId>mcdull-auth-client</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dqcer.cloud</groupId>
+            <artifactId>mcdull-framework-starter-redis</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dqcer.cloud</groupId>
+            <artifactId>mcdull-framework-starter-mysql</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

@@ -1,5 +1,9 @@
 package com.dqcer.mcdull.auth.provider;
 
+import com.dqcer.mcdull.framework.mysql.EnableDynamicDataSource;
+import com.dqcer.mcdull.framework.redis.EnableCache;
+import com.dqcer.mcdull.framework.web.EnableWebCore;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -10,6 +14,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @author QinDong
  * @date 2022/10/31
  */
+@EnableWebCore
+@MapperScan("com.dqcer.mcdull.auth.provider.web.dao")
+@EnableDynamicDataSource
+@EnableCache
 @EnableDiscoveryClient
 @SpringBootApplication
 public class AuthApplication {

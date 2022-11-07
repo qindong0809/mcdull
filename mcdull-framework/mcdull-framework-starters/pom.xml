@@ -13,6 +13,8 @@
     <modules>
         <module>mcdull-framework-starter-web</module>
         <module>mcdull-framework-starter-nacos</module>
+        <module>mcdull-framework-starter-redis</module>
+        <module>mcdull-framework-starter-mysql</module>
     </modules>
 
     <artifactId>mcdull-framework-starters</artifactId>

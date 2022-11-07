@@ -10,6 +10,19 @@ spring:
           #微服务名称以小写形式呈现
           lower-case-service-id: true
           enabled: true
+      routes:
+        - id: mcdull-auth-provider
+          uri: lb://mcdull-auth-provider
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+
 # 指定日志的文件名（nacos）
 logging:
   dataId: log
+
+mcdull:
+  filter:
+    noAuth:
+      - /auth/login

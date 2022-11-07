@@ -16,6 +16,19 @@ public class FilterProperties {
      */
     private List<String> noAuth = new ArrayList<>();
 
+    /**
+     * 启用多租户模式
+     */
+    private Boolean multiTenant = false;
+
+    public Boolean getMultiTenant() {
+        return multiTenant;
+    }
+
+    public void setMultiTenant(Boolean multiTenant) {
+        this.multiTenant = multiTenant;
+    }
+
     public List<String> getNoAuth() {
         return noAuth;
     }

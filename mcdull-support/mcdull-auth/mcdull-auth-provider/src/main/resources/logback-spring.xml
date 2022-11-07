@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" debug="false">
+
+  <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+  <!-- 定义项目名称和日志路径 -->
+  <springProperty scope="context" name="application.name" source="spring.application.name" />
+  <property name="log.path" value="./logs" />
+
+  <!-- 所有级别日志，按日期滚动文件输出 -->
+  <appender name="allLevelFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- 正在记录的日志文档的路径及文档名 -->
+    <file>${log.path}/${application.name}/out.log</file>
+    <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <!-- 滚动分割保存日志文件名称定义 -->
+      <!-- 后缀以".zip"或".gz"结尾，则开启日志文件压缩 -->
+      <fileNamePattern>${log.path}/${application.name}/%d{yyyy-MM-dd}/out/out-%i.gz</fileNamePattern>
+      <!-- 文件大小分割，超过配置大小就建当天新的日志文件 -->
+      <maxFileSize>100MB</maxFileSize>
+      <!-- 日志文件保留天数，超过默认删除 -->
+      <MaxHistory>90</MaxHistory>
+      <totalSizeCap>80GB</totalSizeCap>
+    </rollingPolicy>
+    <!--日志文档输出格式-->
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss}  [ %thread ] - [ %-5level ] [%X{trace}]  [%p] [%t] %c - %m%n</pattern>
+      <!-- 此处设置字符集 -->
+      <charset>UTF-8</charset>
+    </encoder>
+  </appender>
+
+  <!-- INFO级别日志配置 -->
+  <appender name="info_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${log.path}/${application.name}/info.log</file>
+    <append>true</append>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>${log.path}/${application.name}/%d{yyyy-MM-dd}/info/info-%i.log
+      </fileNamePattern>
+      <maxFileSize>100MB</maxFileSize>
+      <maxHistory>90</maxHistory>
+      <totalSizeCap>80GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%X{trace}][%p] [%t] %c - %m%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>INFO</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+  </appender>
+
+  <!-- WARN 级别日志配置 -->
+  <appender name="warn_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${log.path}/${application.name}/warn.log</file>
+    <append>true</append>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>${log.path}/${application.name}/%d{yyyy-MM-dd}/warn/warn-%i.log
+      </fileNamePattern>
+      <maxFileSize>100MB</maxFileSize>
+      <maxHistory>90</maxHistory>
+      <totalSizeCap>80GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%X{trace}][%p] [%t] %c - %m%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>WARN</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+  </appender>
+
+  <!-- ERROR 级别日志配置 -->
+  <appender name="error_file" class="com.dqcer.mcdull.soagov.AlarmRollingFileAppender">
+    <file>${log.path}/${application.name}/error.log</file>
+    <append>true</append>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>${log.path}/${application.name}/%d{yyyy-MM-dd}/error/error-%i.log
+      </fileNamePattern>
+      <maxFileSize>100MB</maxFileSize>
+      <maxHistory>90</maxHistory>
+      <totalSizeCap>80GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%X{trace}][%p] [%t] %c - %m%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>ERROR</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+  </appender>
+
+  <logger name="com.alibaba.nacos.client.config" level="WARN"/>
+  <logger name="org.springframework.context" level="WARN"/>
+  <logger name="org.springframework.beans" level="WARN"/>
+  <logger name="springfox.bean.validators" level="ERROR"/>
+  <logger name="springfox.documentation" level="ERROR" />
+  <logger name="com.alibaba.nacos.client.naming" level="warn" />
+  <root level="info">
+    <appender-ref ref="CONSOLE" />
+    <appender-ref ref="allLevelFileAppender" />
+    <appender-ref ref="info_file" />
+    <appender-ref ref="warn_file" />
+    <appender-ref ref="error_file" />
+  </root>
+
+</configuration>
