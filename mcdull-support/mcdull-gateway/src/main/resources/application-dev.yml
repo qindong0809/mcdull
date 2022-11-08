@@ -17,7 +17,12 @@ spring:
             - Path=/auth/**
           filters:
             - StripPrefix=1
-
+        - id: mcdull-dict-provider
+          uri: lb://mcdull-dict-provider
+          predicates:
+            - Path=/dict/**
+          filters:
+            - StripPrefix=1
 # 指定日志的文件名（nacos）
 logging:
   dataId: log

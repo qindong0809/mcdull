@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DemoController {
 
-    @GetMapping()
+    @GetMapping("list")
     public Result<String> get() {
         return Result.ok("provider 8082");
     }

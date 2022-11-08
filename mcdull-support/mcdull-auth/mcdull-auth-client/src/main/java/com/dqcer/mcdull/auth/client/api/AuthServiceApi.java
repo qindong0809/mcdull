@@ -2,6 +2,7 @@ package com.dqcer.mcdull.auth.client.api;
 
 import com.dqcer.framework.base.wrapper.Result;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 登录服务api
@@ -18,6 +19,6 @@ public interface AuthServiceApi {
      * @return {@link Long}
      */
     @PostMapping("token/valid")
-    Result<Long> tokenValid(String token);
+    Result<Long> tokenValid(@RequestParam(value = "token")String token);
 
 }

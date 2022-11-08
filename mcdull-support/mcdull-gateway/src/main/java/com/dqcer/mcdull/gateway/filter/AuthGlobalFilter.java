@@ -9,6 +9,7 @@ import com.dqcer.mcdull.auth.client.service.AuthClientService;
 import com.dqcer.mcdull.gateway.properties.FilterProperties;
 import com.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
 import com.dqcer.mcdull.gateway.utils.IpUtils;
+import com.dqcer.mcdull.gateway.utils.SpringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -24,6 +25,10 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * 认证过滤器
@@ -36,11 +41,10 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
 
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
-    @Resource
-    private McdullGatewayProperties mcdullGatewayProperties;
+    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Resource
-    private AuthClientService authClientService;
+    private McdullGatewayProperties mcdullGatewayProperties;
 
     private static final Logger log = LoggerFactory.getLogger(AuthGlobalFilter.class);
 
@@ -108,13 +112,13 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
         }
 
         String token = authorization.substring(HttpHeaderConstants.BEARER.length());
-        if (null == token || token.trim().length() == 0) {
+        if (token.trim().length() == 0) {
             log.error("头部Authorization参数缺失Bearer ");
             return errorResponse(response, ResultCode.UN_AUTHORIZATION.getCode(), ResultCode.UN_AUTHORIZATION.getMessage());
         }
 
-        // 根据token验证身份
-        Result<Long> result = authClientService.tokenValid(token);
+        Result<Long> result = remoteValid(token);
+
         log.info("token valid result: {}", result);
         if (!result.isOk()) {
             return errorResponse(response, result.getCode(), result.getMessage());
@@ -122,6 +126,27 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
         addHeader(mutate, HttpHeaderConstants.U_ID, result.getData());
 
         return chain.filter(exchange.mutate().request(mutate.build()).build());
+    }
+
+    /**
+     * 远程调用验证
+     *
+     * @param token 令牌
+     * @return {@link Result}<{@link Long}>
+     */
+    private static Result<Long> remoteValid(String token) {
+        // 身份验证服务,因网关加载顺序需要进行懒加载
+        AuthClientService authClientService = SpringUtils.getBean(AuthClientService.class);
+
+        // WebFlux异步调用，同步会报错
+        Future<Result<Long>> future = executorService.submit(() -> authClientService.tokenValid(token));
+        Result<Long> result;
+        try {
+            result = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
     }
 
     /**
@@ -136,6 +161,6 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
 
     @Override
     public int getOrder() {
-        return 0;
+        return -1000;
     }
 }

@@ -49,6 +49,12 @@ public class LoginService {
     @Resource
     private CaffeineCache caffeineCache;
 
+    /**
+     * 登录
+     *
+     * @param loginDTO 登录dto
+     * @return {@link Result}<{@link String}>
+     */
     public Result<String> login(LoginDTO loginDTO) {
         String account = loginDTO.getAccount();
         LambdaQueryWrapper<SysUserEntity> wrapper = Wrappers.lambdaQuery();
@@ -76,7 +82,7 @@ public class LoginService {
 
         CacheUser cacheUser = new CacheUser().setUserId(entity.getId()).setLastActiveTime(LocalDateTime.now());
         //  强制7天过期
-        redisClient.set(MessageFormat.format(CacheConstant.SSO_TOKEN, token), cacheUser, CacheConstant.SSO_TOKEN_NAMESPACE_TIMEOUT, TimeUnit.MILLISECONDS);
+        redisClient.set(MessageFormat.format(CacheConstant.SSO_TOKEN, token), cacheUser, CacheConstant.SSO_TOKEN_NAMESPACE_TIMEOUT, TimeUnit.SECONDS);
 
         //  更新登录时间
         LambdaUpdateWrapper<SysUserEntity> update = Wrappers.lambdaUpdate();
@@ -89,6 +95,12 @@ public class LoginService {
         return Result.ok(token);
     }
 
+    /**
+     * token验证
+     *
+     * @param token 令牌
+     * @return {@link Result}<{@link Long}>
+     */
     public Result<Long> tokenValid(String token) {
         //  瞬态，本地缓存取
         String tokenKey = MessageFormat.format(CacheConstant.SSO_TOKEN, token);
