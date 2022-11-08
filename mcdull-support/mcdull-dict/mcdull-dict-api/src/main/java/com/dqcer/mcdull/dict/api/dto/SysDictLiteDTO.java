@@ -13,7 +13,7 @@ import javax.validation.constraints.NotEmpty;
  * @author dqcer
  * @date 2022/11/01 22:11:30
  */
-public class SysDictDTO extends DTO {
+public class SysDictLiteDTO extends DTO {
 
     /**
      * 编码
