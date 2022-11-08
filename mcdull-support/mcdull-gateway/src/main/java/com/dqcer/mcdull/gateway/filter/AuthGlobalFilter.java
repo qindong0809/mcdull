@@ -20,6 +20,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -138,6 +139,7 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
         // 身份验证服务,因网关加载顺序需要进行懒加载
         AuthClientService authClientService = SpringUtils.getBean(AuthClientService.class);
 
+        RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
         // WebFlux异步调用，同步会报错
         Future<Result<Long>> future = executorService.submit(() -> authClientService.tokenValid(token));
         Result<Long> result;

@@ -112,7 +112,7 @@ public class LoginService {
         Object obj = redisClient.get(tokenKey);
 
         if (ObjUtil.isNull(obj)) {
-            log.warn("BaseInfoInterceptor:  7天强制过期下线");
+            log.warn("token valid:  7天强制过期下线");
             return Result.error(ResultCode.UN_AUTHORIZATION);
         }
 
@@ -122,7 +122,7 @@ public class LoginService {
         }
 
         if (CacheUser.OFFLINE.equals(user.getOnlineStatus())) {
-            log.warn("BaseInfoInterceptor:  异地登录");
+            log.warn("token valid:  异地登录");
             return Result.error(ResultCode.OTHER_LOGIN);
         }
 
@@ -130,7 +130,7 @@ public class LoginService {
 
         LocalDateTime now = LocalDateTime.now();
         if (lastActiveTime.plusMinutes(30).isBefore(now)) {
-            log.warn("BaseInfoInterceptor:  用户操作已过期");
+            log.warn("token valid:  用户操作已过期");
             return Result.error(ResultCode.TIMEOUT_LOGIN);
         }
         redisClient.set(tokenKey, user.setLastActiveTime(now));
