@@ -14,6 +14,7 @@
         <module>mcdull-framework-base</module>
         <module>mcdull-framework-dependencies</module>
         <module>mcdull-framework-starters</module>
+        <module>mcdull-framework-agent</module>
     </modules>
 
     <artifactId>mcdull-framework</artifactId>

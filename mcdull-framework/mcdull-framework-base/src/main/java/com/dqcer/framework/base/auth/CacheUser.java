@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
  */
 public class CacheUser implements Serializable {
 
+    private static final long serialVersionUID = 5099451915233476755L;
+
+
     /**
      * 在线
      */
@@ -20,8 +23,6 @@ public class CacheUser implements Serializable {
      * 挤下线
      */
     public static final Integer OFFLINE = 2;
-
-    private static final long serialVersionUID = 5099451915233476755L;
 
     /**
      *

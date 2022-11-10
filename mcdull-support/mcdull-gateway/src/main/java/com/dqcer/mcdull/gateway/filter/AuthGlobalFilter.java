@@ -35,7 +35,7 @@ import java.util.concurrent.Future;
  * 认证过滤器
  *
  * @author dongqin
- * @date 2022/10/27
+ * @version  2022/10/27
  */
 @Component
 public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Ordered {
@@ -163,6 +163,6 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
 
     @Override
     public int getOrder() {
-        return -1000;
+        return -1000000;
     }
 }

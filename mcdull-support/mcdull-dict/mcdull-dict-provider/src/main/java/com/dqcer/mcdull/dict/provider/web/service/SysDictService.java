@@ -19,7 +19,7 @@ import java.util.List;
  * sys dict服务
  *
  * @author dqcer
- * @date 2022/11/08
+ * @version  2022/11/08
  */
 @Service
 public class SysDictService {
