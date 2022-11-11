@@ -2,7 +2,7 @@ package com.dqcer.mcdull.framework.web.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.dqcer.framework.base.auth.UnifySession;
-import com.dqcer.framework.base.auth.UserStorage;
+import com.dqcer.framework.base.auth.UserContextHolder;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.constants.SysConstants;
 import com.dqcer.framework.base.utils.StrUtil;
@@ -60,7 +60,7 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
             unifySession.setTenantId(Long.valueOf(tenantId));
         }
         unifySession.setTraceId(request.getHeader(HttpHeaderConstants.TRACE_ID));
-        UserStorage.setSession(unifySession);
+        UserContextHolder.setSession(unifySession);
 
         if (requestURI.startsWith(SysConstants.FEIGN_URL)) {
             return true;
@@ -96,7 +96,7 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        UserStorage.clearSession();
+        UserContextHolder.clearSession();
     }
 
     /**

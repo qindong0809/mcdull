@@ -1,12 +1,12 @@
 package com.dqcer.framework.base.auth;
 
 /**
- * 用户存储
+ * 用户上下文
  *
  * @author dqcer
- * @date 2021/08/19
+ * @version 2021/08/19
  */
-public class UserStorage {
+public class UserContextHolder {
 
     /**
      * 统一的会话
