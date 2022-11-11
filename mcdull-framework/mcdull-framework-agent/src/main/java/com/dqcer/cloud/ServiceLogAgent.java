@@ -1,5 +1,7 @@
 package com.dqcer.cloud;
 
+import cn.hutool.db.Db;
+import net.bytebuddy.agent.VirtualMachine;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.matcher.ElementMatchers;
@@ -12,6 +14,8 @@ import java.lang.instrument.Instrumentation;
 /**
  * 服务日志代理
  *
+ *  参考资料： https://github.com/fuzhengwei/CodeGuide/tree/master/docs/md/bytecode/byte-buddy
+ *
  * @author dqcer
  * @date 2022/11/10
  */
@@ -22,6 +26,8 @@ public class ServiceLogAgent {
     public static void premain(String agentArgs, Instrumentation inst) {
         log.info("Agent start...");
 
+        Db use = Db.use();
+
         //动态构建操作，根据transformer规则执行拦截操作
         // 匹配上的具体的类型描述
         AgentBuilder.Transformer transformer = (builder, typeDescription, classLoader, javaModule) -> {
@@ -30,7 +36,7 @@ public class ServiceLogAgent {
                     //method()指定哪些方法需要被拦截，ElementMatchers.any()表示拦截所有方法
                     .method(ElementMatchers.any())
                     //intercept()指定拦截上述方法的拦截器
-                    .intercept(MethodDelegation.to(new ServiceLogInterceptor()));
+                    .intercept(MethodDelegation.to(new ServiceLogInterceptor(use)));
         };
 
         //采用Byte Buddy的AgentBuilder结合Java Agent处理程序

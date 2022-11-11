@@ -7,8 +7,9 @@ import java.util.Date;
  * 服务日志
  *
  * @author dqcer
- * @date 2022/11/10
+ * @version  2022/11/10
  */
+@SuppressWarnings("unused")
 public class ServiceLog {
 
     /**
@@ -61,6 +62,39 @@ public class ServiceLog {
      */
     private Date endTime;
 
+
+    /**堆内存 ：初始化大小、已使用、提交的内存量，保证Java虚拟机可以使用这个内存量
+     * 、 最大值， */
+    private Long beforeHeadMemoryInit;
+    private Long beforeHeadMemoryUsed;
+    private Long beforeHeadMemoryCommitted;
+    private Long beforeHeadMemoryMax;
+    /**
+     *  beforeHeadMemoryCommitted * 100 / beforeHeadMemoryCommitted
+     */
+    private Long beforeHeadRate;
+
+    /**非堆内存*/
+    private Long beforeNonHeadMemoryInit;
+    private Long beforeNonHeadMemoryUsed;
+    private Long beforeNonHeadMemoryCommitted;
+    private Long beforeNonHeadMemoryMax;
+    private Long beforeNonHeadRate;
+
+    /**所花费的内存信息*/
+    private Long costHeadMemoryInit;
+    private Long costHeadMemoryUsed;
+    private Long costHeadMemoryCommitted;
+    private Long costHeadMemoryMax;
+    private Long costHeadRate;
+
+    private Long costNonHeadMemoryInit;
+    private Long costNonHeadMemoryUsed;
+    private Long costNonHeadMemoryCommitted;
+    private Long costNonHeadMemoryMax;
+    private Long costNonHeadRate;
+
+
     @Override
     public String toString() {
         return "ServiceLog{" +
@@ -74,6 +108,26 @@ public class ServiceLog {
                 ", status=" + status +
                 ", createdTime=" + createdTime +
                 ", endTime=" + endTime +
+                ", beforeHeadMemoryInit=" + beforeHeadMemoryInit +
+                ", beforeHeadMemoryUsed=" + beforeHeadMemoryUsed +
+                ", beforeHeadMemoryCommitted=" + beforeHeadMemoryCommitted +
+                ", beforeHeadMemoryMax=" + beforeHeadMemoryMax +
+                ", beforeHeadRate=" + beforeHeadRate +
+                ", beforeNonHeadMemoryInit=" + beforeNonHeadMemoryInit +
+                ", beforeNonHeadMemoryUsed=" + beforeNonHeadMemoryUsed +
+                ", beforeNonHeadMemoryCommitted=" + beforeNonHeadMemoryCommitted +
+                ", beforeNonHeadMemoryMax=" + beforeNonHeadMemoryMax +
+                ", beforeNonHeadRate=" + beforeNonHeadRate +
+                ", costHeadMemoryInit=" + costHeadMemoryInit +
+                ", costHeadMemoryUsed=" + costHeadMemoryUsed +
+                ", costHeadMemoryCommitted=" + costHeadMemoryCommitted +
+                ", costHeadMemoryMax=" + costHeadMemoryMax +
+                ", costHeadRate=" + costHeadRate +
+                ", costNonHeadMemoryInit=" + costNonHeadMemoryInit +
+                ", costNonHeadMemoryUsed=" + costNonHeadMemoryUsed +
+                ", costNonHeadMemoryCommitted=" + costNonHeadMemoryCommitted +
+                ", costNonHeadMemoryMax=" + costNonHeadMemoryMax +
+                ", costNonHeadRate=" + costNonHeadRate +
                 '}';
     }
 
@@ -155,5 +209,165 @@ public class ServiceLog {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public Long getBeforeHeadMemoryInit() {
+        return beforeHeadMemoryInit;
+    }
+
+    public void setBeforeHeadMemoryInit(Long beforeHeadMemoryInit) {
+        this.beforeHeadMemoryInit = beforeHeadMemoryInit;
+    }
+
+    public Long getBeforeHeadMemoryUsed() {
+        return beforeHeadMemoryUsed;
+    }
+
+    public void setBeforeHeadMemoryUsed(Long beforeHeadMemoryUsed) {
+        this.beforeHeadMemoryUsed = beforeHeadMemoryUsed;
+    }
+
+    public Long getBeforeHeadMemoryCommitted() {
+        return beforeHeadMemoryCommitted;
+    }
+
+    public void setBeforeHeadMemoryCommitted(Long beforeHeadMemoryCommitted) {
+        this.beforeHeadMemoryCommitted = beforeHeadMemoryCommitted;
+    }
+
+    public Long getBeforeHeadMemoryMax() {
+        return beforeHeadMemoryMax;
+    }
+
+    public void setBeforeHeadMemoryMax(Long beforeHeadMemoryMax) {
+        this.beforeHeadMemoryMax = beforeHeadMemoryMax;
+    }
+
+    public Long getBeforeHeadRate() {
+        return beforeHeadRate;
+    }
+
+    public void setBeforeHeadRate(Long beforeHeadRate) {
+        this.beforeHeadRate = beforeHeadRate;
+    }
+
+    public Long getBeforeNonHeadMemoryInit() {
+        return beforeNonHeadMemoryInit;
+    }
+
+    public void setBeforeNonHeadMemoryInit(Long beforeNonHeadMemoryInit) {
+        this.beforeNonHeadMemoryInit = beforeNonHeadMemoryInit;
+    }
+
+    public Long getBeforeNonHeadMemoryUsed() {
+        return beforeNonHeadMemoryUsed;
+    }
+
+    public void setBeforeNonHeadMemoryUsed(Long beforeNonHeadMemoryUsed) {
+        this.beforeNonHeadMemoryUsed = beforeNonHeadMemoryUsed;
+    }
+
+    public Long getBeforeNonHeadMemoryCommitted() {
+        return beforeNonHeadMemoryCommitted;
+    }
+
+    public void setBeforeNonHeadMemoryCommitted(Long beforeNonHeadMemoryCommitted) {
+        this.beforeNonHeadMemoryCommitted = beforeNonHeadMemoryCommitted;
+    }
+
+    public Long getBeforeNonHeadMemoryMax() {
+        return beforeNonHeadMemoryMax;
+    }
+
+    public void setBeforeNonHeadMemoryMax(Long beforeNonHeadMemoryMax) {
+        this.beforeNonHeadMemoryMax = beforeNonHeadMemoryMax;
+    }
+
+    public Long getBeforeNonHeadRate() {
+        return beforeNonHeadRate;
+    }
+
+    public void setBeforeNonHeadRate(Long beforeNonHeadRate) {
+        this.beforeNonHeadRate = beforeNonHeadRate;
+    }
+
+    public Long getCostHeadMemoryInit() {
+        return costHeadMemoryInit;
+    }
+
+    public void setCostHeadMemoryInit(Long costHeadMemoryInit) {
+        this.costHeadMemoryInit = costHeadMemoryInit;
+    }
+
+    public Long getCostHeadMemoryUsed() {
+        return costHeadMemoryUsed;
+    }
+
+    public void setCostHeadMemoryUsed(Long costHeadMemoryUsed) {
+        this.costHeadMemoryUsed = costHeadMemoryUsed;
+    }
+
+    public Long getCostHeadMemoryCommitted() {
+        return costHeadMemoryCommitted;
+    }
+
+    public void setCostHeadMemoryCommitted(Long costHeadMemoryCommitted) {
+        this.costHeadMemoryCommitted = costHeadMemoryCommitted;
+    }
+
+    public Long getCostHeadMemoryMax() {
+        return costHeadMemoryMax;
+    }
+
+    public void setCostHeadMemoryMax(Long costHeadMemoryMax) {
+        this.costHeadMemoryMax = costHeadMemoryMax;
+    }
+
+    public Long getCostHeadRate() {
+        return costHeadRate;
+    }
+
+    public void setCostHeadRate(Long costHeadRate) {
+        this.costHeadRate = costHeadRate;
+    }
+
+    public Long getCostNonHeadMemoryInit() {
+        return costNonHeadMemoryInit;
+    }
+
+    public void setCostNonHeadMemoryInit(Long costNonHeadMemoryInit) {
+        this.costNonHeadMemoryInit = costNonHeadMemoryInit;
+    }
+
+    public Long getCostNonHeadMemoryUsed() {
+        return costNonHeadMemoryUsed;
+    }
+
+    public void setCostNonHeadMemoryUsed(Long costNonHeadMemoryUsed) {
+        this.costNonHeadMemoryUsed = costNonHeadMemoryUsed;
+    }
+
+    public Long getCostNonHeadMemoryCommitted() {
+        return costNonHeadMemoryCommitted;
+    }
+
+    public void setCostNonHeadMemoryCommitted(Long costNonHeadMemoryCommitted) {
+        this.costNonHeadMemoryCommitted = costNonHeadMemoryCommitted;
+    }
+
+    public Long getCostNonHeadMemoryMax() {
+        return costNonHeadMemoryMax;
+    }
+
+    public void setCostNonHeadMemoryMax(Long costNonHeadMemoryMax) {
+        this.costNonHeadMemoryMax = costNonHeadMemoryMax;
+    }
+
+    public Long getCostNonHeadRate() {
+        return costNonHeadRate;
+    }
+
+    public void setCostNonHeadRate(Long costNonHeadRate) {
+        this.costNonHeadRate = costNonHeadRate;
     }
 }

@@ -11,7 +11,6 @@
     <packaging>jar</packaging>
 
     <name>mcdull-framework-agent</name>
-    <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -47,6 +46,15 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-db</artifactId>
+            <version>5.8.9</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -68,7 +76,7 @@
                             <!--指定premain方法所在的类-->
                             <Premain-Class>com.dqcer.cloud.ServiceLogAgent</Premain-Class>
                             <!--添加这个即可-->
-<!--                            <Agent-Class>com.dqcer.framework.ServiceLogAgen</Agent-Class>-->
+                            <Agent-Class>com.dqcer.cloud.ServiceLogAgent</Agent-Class>
                             <Can-Redefine-Classes>true</Can-Redefine-Classes>
                             <Can-Retransform-Classes>true</Can-Retransform-Classes>
                         </manifestEntries>

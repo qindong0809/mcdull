@@ -47,10 +47,18 @@ public class GatewayApplication {
         return Result.ok("good job");
     }
 
+    private String s  ="1";
 
+    /**
+     * 测试 agent gc
+     *
+     * @return {@link Result}<{@link String}>
+     */
     @GetMapping("log")
-    public Result<String> testLog() {
-        log.error("2223");
+    public Result<String> testAgentGC() {
+        for (int i = 0; i < 10000; i++) {
+            s += new String("dfd");
+        }
         return Result.ok("testLog");
     }
 }
