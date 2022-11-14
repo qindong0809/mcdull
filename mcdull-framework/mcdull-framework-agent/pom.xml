@@ -14,7 +14,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <dbutils.version>1.7</dbutils.version>
     </properties>
 
     <dependencies>
@@ -53,7 +52,6 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-db</artifactId>
-            <version>5.8.9</version>
         </dependency>
     </dependencies>
 

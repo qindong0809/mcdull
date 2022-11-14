@@ -20,6 +20,7 @@
         <hibernate-validator.version>6.1.0.Final</hibernate-validator.version>
         <fastjson.version>1.2.83</fastjson.version>
         <redisson.spring.boot.version>3.16.2</redisson.spring.boot.version>
+        <hutool.version>5.8.9</hutool.version>
     </properties>
 
     <dependencyManagement>
@@ -73,6 +74,12 @@
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson-spring-boot-starter</artifactId>
                 <version>${redisson.spring.boot.version}</version>
+            </dependency>
+            <!--hutool-->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-db</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
