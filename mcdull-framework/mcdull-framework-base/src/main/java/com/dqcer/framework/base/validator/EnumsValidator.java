@@ -10,9 +10,9 @@ import java.lang.reflect.Method;
  * 枚举字符串验证器
  *
  * @author dqcer
- * @date 2022/01/11
+ * @version 2022/01/11
  */
-public class EnumsValidator implements ConstraintValidator<EnumsValid, Integer> {
+public class EnumsValidator implements ConstraintValidator<EnumsValid, String> {
 
 
     private Class<? extends Enum> enumClass;
@@ -23,17 +23,17 @@ public class EnumsValidator implements ConstraintValidator<EnumsValid, Integer> 
     public void initialize(EnumsValid annotation) {
         enumClass = annotation.value();
         try {
-            enumClass.getDeclaredMethod(METHOD_NAME, int.class);
+            enumClass.getDeclaredMethod(METHOD_NAME, String.class);
         } catch (NoSuchMethodException e){
             throw new IllegalArgumentException("the enum class has not toEnum() method", e);
         }
     }
 
     @Override
-    public boolean isValid(Integer value, ConstraintValidatorContext context) {
+    public boolean isValid(String value, ConstraintValidatorContext context) {
         Method declareMethod;
         try {
-            declareMethod = enumClass.getDeclaredMethod(METHOD_NAME, int.class);
+            declareMethod = enumClass.getDeclaredMethod(METHOD_NAME, String.class);
         }catch (NoSuchMethodException e){
             return false;
         }
