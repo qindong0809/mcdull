@@ -20,22 +20,22 @@ function login() {
     var password = $.common.trim($("input[name='password']").val());
     var validateCode = $("input[name='validateCode']").val();
     var rememberMe = $("input[name='rememberme']").is(':checked');
+    var param = {
+            "account": username,
+            "pd": password
+        }
     $.ajax({
         type: "post",
         url: api + "/auth/login",
-        data: {
-            "username": username,
-            "password": password,
-            "validateCode": validateCode,
-            "rememberMe": rememberMe
-        },
+        contentType: "application/json",
+        data: JSON.stringify(param),
         success: function(r) {
             if (r.code == web_status.SUCCESS) {
                 location.href = ctx + 'index';
             } else {
             	$('.imgcode').click();
             	$(".code").val("");
-            	$.modal.msg(r.msg);
+            	$.modal.msg(r.message);
             }
             $.modal.closeLoading();
         }
