@@ -1,8 +1,8 @@
 server:
-  port: 8090
+  port: 8091
 spring:
   application:
-    name: mcdull-auth-provider
+    name: mcdull-mdc-provider
   datasource:
     url: jdbc:mysql://192.168.230.171:3306/mcdull-cloud?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&allowMultiQueries=true
     username: root
