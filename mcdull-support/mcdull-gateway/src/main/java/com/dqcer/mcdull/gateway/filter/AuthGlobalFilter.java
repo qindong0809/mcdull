@@ -5,7 +5,7 @@ import com.dqcer.framework.base.constants.SysConstants;
 import com.dqcer.framework.base.utils.StrUtil;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
-import com.dqcer.mcdull.auth.client.service.AuthClientService;
+import com.dqcer.mcdull.uac.client.service.AuthClientService;
 import com.dqcer.mcdull.gateway.properties.FilterProperties;
 import com.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
 import com.dqcer.mcdull.gateway.utils.IpUtils;
