@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
     <modules>
         <module>mcdull-gateway</module>
-        <module>mcdull-dict</module>
-        <module>mcdull-auth</module>
+        <module>mcdull-mdc</module>
+        <module>mcdull-uac</module>
     </modules>
     <parent>
         <artifactId>mcdull</artifactId>

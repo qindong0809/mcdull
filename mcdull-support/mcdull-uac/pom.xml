@@ -9,12 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mcdull-auth</artifactId>
+    <artifactId>mcdull-uac</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>mcdull-auth-api</module>
-        <module>mcdull-auth-client</module>
-        <module>mcdull-auth-provider</module>
+        <module>mcdull-uac-api</module>
+        <module>mcdull-uac-client</module>
+        <module>mcdull-uac-provider</module>
     </modules>
 
 

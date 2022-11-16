@@ -9,12 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mcdull-dict</artifactId>
+    <artifactId>mcdull-mdc</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>mcdull-dict-api</module>
-        <module>mcdull-dict-client</module>
-        <module>mcdull-dict-provider</module>
+        <module>mcdull-mdc-api</module>
+        <module>mcdull-mdc-client</module>
+        <module>mcdull-mdc-provider</module>
     </modules>
 
 
