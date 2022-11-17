@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -22,7 +23,7 @@ import java.util.*;
  * http日志
  *
  * @author dqcer
- * @date 2022/10/05
+ * @version  2022/10/05
  */
 public class HttpTraceLogFilter implements Filter {
 
@@ -87,8 +88,9 @@ public class HttpTraceLogFilter implements Filter {
                 traceLog.setParameterMap(getParamsMap(request));
                 traceLog.setStatus(status);
                 traceLog.setRequestBody(getRequestBody(request));
-                traceLog.setResponseBody(getResponseBody(response));
-                log.info("Http trace log: {}", buildTraceLog(traceLog));
+                // TODO: 2022/11/17 是否考虑去掉打印返回参数
+//                traceLog.setResponseBody(getResponseBody(response));
+                log.info("Http trace log: {}", traceLog);
                 if(isSetTraceId) {
                     MDC.remove(HttpHeaderConstants.LOG_TRACE_ID);
                 }
@@ -96,25 +98,7 @@ public class HttpTraceLogFilter implements Filter {
             updateResponse(response);
         }
     }
-
-
-    /**
-     * @param traceLog traceLog
-     * @return log str
-     */
-    private String buildTraceLog(HttpTraceLog traceLog) {
-        return String.format("%s %s %s %d cost %sms parameterMap=%s requestBody=%s, responseBody=%s, header=%s",
-                traceLog.getTime(),
-                traceLog.getMethod(),
-                traceLog.getPath(),
-                traceLog.getStatus(),
-                traceLog.getTimeTaken().toString(),
-                traceLog.getParameterMap(),
-                traceLog.getRequestBody(),
-                traceLog.getResponseBody(),
-                traceLog.getHeaders());
-    }
-
+    
     /**
      * @param request http request
      * @return boolean
@@ -184,31 +168,11 @@ public class HttpTraceLogFilter implements Filter {
         String requestBody = "";
         ContentCachingRequestWrapper wrapper = WebUtils.getNativeRequest(request, ContentCachingRequestWrapper.class);
         if (wrapper != null) {
-            try {
-                requestBody = new String(wrapper.getContentAsByteArray(), "UTF-8");
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
+            requestBody = new String(wrapper.getContentAsByteArray(), StandardCharsets.UTF_8);
         }
         return requestBody;
     }
 
-    /**
-     * @param response resp
-     * @return response body
-     */
-    private String getResponseBody(HttpServletResponse response) {
-        String responseBody = "";
-        ContentCachingResponseWrapper wrapper = WebUtils.getNativeResponse(response, ContentCachingResponseWrapper.class);
-        if (wrapper != null) {
-            try {
-                responseBody = new String(wrapper.getContentAsByteArray(), "UTF-8");
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
-        }
-        return responseBody;
-    }
 
     /**
      * @param response resp
@@ -234,6 +198,20 @@ public class HttpTraceLogFilter implements Filter {
         private String requestBody;
         private String headers;
         private String responseBody;
+
+        @Override
+        public String toString() {
+            return "HttpTraceLog{" +
+                    "time='" + time + '\'' +
+                    ", method='" + method + '\'' +
+                    ", path='" + path + '\'' +
+                    ", timeTaken=" + timeTaken +
+                    ", status=" + status +
+                    ", parameterMap='" + parameterMap + '\'' +
+                    ", requestBody='" + requestBody + '\'' +
+                    ", headers='" + headers + '\'' +
+                    '}';
+        }
 
         public String getPath() {
             return path;

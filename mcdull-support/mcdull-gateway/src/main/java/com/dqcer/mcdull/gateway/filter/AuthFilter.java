@@ -3,7 +3,6 @@ package com.dqcer.mcdull.gateway.filter;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.constants.SysConstants;
-import com.dqcer.framework.base.utils.StrUtil;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.uac.client.service.AuthClientService;
@@ -13,7 +12,6 @@ import com.dqcer.mcdull.gateway.utils.IpUtils;
 import com.dqcer.mcdull.gateway.utils.SpringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -34,6 +32,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import static com.dqcer.framework.base.feign.FeignConfiguration.URL_SESSION;
+
 /**
  * 认证过滤器
  *
@@ -41,7 +41,7 @@ import java.util.concurrent.Future;
  * @version  2022/10/27
  */
 @Component
-public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Ordered {
+public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered {
 
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
@@ -50,7 +50,7 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
     @Resource
     private McdullGatewayProperties mcdullGatewayProperties;
 
-    private static final Logger log = LoggerFactory.getLogger(AuthGlobalFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(AuthFilter.class);
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -58,34 +58,9 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
         ServerHttpResponse response = exchange.getResponse();
         ServerHttpRequest.Builder mutate = request.mutate();
         HttpHeaders headers = request.getHeaders();
-        String realIp = IpUtils.getRealIp(request);
         String requestUrl = exchange.getRequest().getURI().getPath();
 
         FilterProperties filterProperties = mcdullGatewayProperties.getFilter();
-
-        /**浏览器传traceId*/
-        // 暂不进行强制限制
-        String traceId = IdWorker.get32UUID();
-        addHeader(mutate, HttpHeaderConstants.TRACE_ID_HEADER, traceId);
-        // FIXME: 2022/11/17 MDC用后需要删除
-        MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
-//        if (filterProperties.getEnableTrace()) {
-//            String traceId = headers.getFirst(HttpHeaderConstants.TRACE_ID_HEADER);
-//            if (StrUtil.isBlank(traceId)) {
-//                log.warn("没有traceId");
-//                return errorResponse(response, ResultCode.NOT_TRACE_ID.getCode(), ResultCode.NOT_TRACE_ID.getMessage());
-//            }
-//        }
-
-        StringBuilder builder = new StringBuilder();
-        builder.append("\n");
-        for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-            builder.append(entry.getKey());
-            builder.append("=");
-            builder.append(entry.getValue());
-            builder.append("\n");
-        }
-        log.info("请求地址: {} 来源Ip: {} headers: {}", requestUrl, realIp, builder);
 
         // 无需效验的接口
         if (ignoreFilter(request.getPath().toString(), filterProperties.getNoAuth())) {
@@ -135,7 +110,14 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
             return errorResponse(response, ResultCode.UN_AUTHORIZATION.getCode(), ResultCode.UN_AUTHORIZATION.getMessage());
         }
 
-        Result<Long> result = remoteValid(token, traceId);
+        Result<Long> result;
+        try {
+            URL_SESSION.set("token/valid");
+            String traceId = headers.getFirst(HttpHeaderConstants.LOG_TRACE_ID);
+            result = remoteValid(token, traceId);
+        } finally {
+            URL_SESSION.remove();
+        }
 
         log.info("token valid result: {}", result);
         if (!result.isOk()) {
@@ -180,6 +162,6 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
 
     @Override
     public int getOrder() {
-        return Integer.MIN_VALUE;
+        return 0;
     }
 }

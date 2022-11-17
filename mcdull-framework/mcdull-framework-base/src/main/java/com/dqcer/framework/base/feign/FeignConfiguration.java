@@ -1,6 +1,7 @@
 package com.dqcer.framework.base.feign;
 
 
+import com.dqcer.framework.base.auth.UnifySession;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -23,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 @Configuration
 public class FeignConfiguration implements RequestInterceptor {
 
+    public final static ThreadLocal<String> URL_SESSION = new InheritableThreadLocal();
+
     private static final Logger log = LoggerFactory.getLogger(FeignConfiguration.class);
 
     public FeignConfiguration() {
@@ -30,6 +33,13 @@ public class FeignConfiguration implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
+        String s = URL_SESSION.get();
+        if (s != null) {
+            if (s.equals("token/valid")) {
+                return;
+            }
+        }
+
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {
             log.warn("RequestContextHolder.getRequestAttributes() is null");
