@@ -59,7 +59,7 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         if (StrUtil.isNotBlank(tenantId)) {
             unifySession.setTenantId(Long.valueOf(tenantId));
         }
-        unifySession.setTraceId(request.getHeader(HttpHeaderConstants.TRACE_ID));
+        unifySession.setTraceId(request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER));
         UserContextHolder.setSession(unifySession);
 
         if (requestURI.startsWith(SysConstants.FEIGN_URL)) {

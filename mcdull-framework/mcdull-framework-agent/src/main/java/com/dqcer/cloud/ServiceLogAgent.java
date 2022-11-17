@@ -34,7 +34,8 @@ public class ServiceLogAgent {
             //构建拦截规则
             return builder
                     //method()指定哪些方法需要被拦截，ElementMatchers.any()表示拦截所有方法
-                    .method(ElementMatchers.any())
+//                    .method(ElementMatchers.any())
+                    .method(ElementMatchers.not(ElementMatchers.isHashCode()).and(ElementMatchers.not(ElementMatchers.isToString())))
                     //intercept()指定拦截上述方法的拦截器
                     .intercept(MethodDelegation.to(new ServiceLogInterceptor(use)));
         };
@@ -43,8 +44,8 @@ public class ServiceLogAgent {
         new AgentBuilder
                 //采用ByteBuddy作为默认的Agent实例
                 .Default()
-                //拦截匹配方式：类以com.itheima.driver开始（其实就是com.itheima.driver包下的所有类）
-                .type(ElementMatchers.nameStartsWith("com.dqcer"))
+                //拦截匹配方式
+                .type(ElementMatchers.nameStartsWith("com.edetek.eclinical.ctms.web.api"))
                 .and(ElementMatchers.isAnnotatedWith(RestController.class))
                 //拦截到的类由transformer处理
                 .transform(transformer)

@@ -1,7 +1,9 @@
 package com.dqcer.mcdull.uac.client.api;
 
+import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.wrapper.Result;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -19,6 +21,6 @@ public interface AuthServiceApi {
      * @return {@link Long}
      */
     @PostMapping("token/valid")
-    Result<Long> tokenValid(@RequestParam(value = "token")String token);
+    Result<Long> tokenValid(@RequestParam(value = "token")String token, @RequestHeader(name = HttpHeaderConstants.TRACE_ID_HEADER) String traceId);
 
 }

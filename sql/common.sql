@@ -48,6 +48,12 @@ CREATE TABLE IF NOT EXISTS `sys_dict` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='公共码表';
 
+INSERT INTO `sys_dict` VALUES (1, '0', null, '未知的性别', null, 'sex_type', 1, 2, 1, '性别代码',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES (2, '1', null, '男', null, 'sex_type', 1, 2, 1, '性别代码',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES (3, '2', null, '女', null, 'sex_type', 1, 2, 1, '性别代码',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES (4, '9', null, '未说明的性别', null, 'sex_type', 1, 2, 1, '性别代码',  'zh-CN',  1);
+
+
 CREATE TABLE IF NOT EXISTS `sys_mail_config` (
 `id` bigint(20) NOT NULL COMMENT '主键',
 `created_by` bigint(20) NOT NULL COMMENT '创建人',
@@ -60,11 +66,11 @@ CREATE TABLE IF NOT EXISTS `sys_mail_config` (
 `username` varchar(128) NOT NULL COMMENT '账户',
 `password` varchar(128) NOT NULL COMMENT '密码',
 `from` varchar(128) NOT NULL COMMENT '设置发送方,如：张三<123456@qq.com>',
-`del_flag` int(1) NOT NULL DEFAULT COMMENT '删除标识（1/正常 2/删除）',
+`del_flag` int(1) NOT NULL COMMENT '删除标识（1/正常 2/删除）',
 PRIMARY KEY (`id`)
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='邮件发送方配置';
 
-INSERT INTO `sys_mail_config` VALUES (1, 1, '2022-01-01 00:00:00', NULL, NULL, 1, 'smtp.163.com', 465, '12345678910@163.com', 'UUSAPIDNYJITQTCE', '麦兜<18328353272@163.com>', 1);
+INSERT INTO `sys_mail_config` VALUES (1, 1, '2022-01-01 00:00:00', NULL, NULL, 1, 'smtp.163.com', 465, '12345678910@163.com', 'UUSAPIDNYJITQTCE', '麦兜<12345678910@163.com>', 1);
 
 CREATE TABLE `sys_mail_template` (
  `id` bigint unsigned NOT NULL COMMENT '主键',

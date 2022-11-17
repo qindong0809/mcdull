@@ -1,7 +1,6 @@
 package com.dqcer.mcdull.framework.web.filter;
 
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
-import com.dqcer.framework.base.constants.TraceConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -30,7 +29,7 @@ public class HttpTraceLogFilter implements Filter {
     private static final Logger log = LoggerFactory.getLogger(HttpTraceLogFilter.class);
 
     private static final String[] headerNames = {
-            TraceConstants.TRACE_ID_HEADER,
+            HttpHeaderConstants.TRACE_ID_HEADER,
             HttpHeaderConstants.AUTHORIZATION
     };
 
@@ -44,11 +43,11 @@ public class HttpTraceLogFilter implements Filter {
      * @return boolean
      */
     private boolean setTraceId(HttpServletRequest request) {
-        String traceId = request.getHeader(TraceConstants.TRACE_ID_HEADER);
+        String traceId = request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER);
         if(null == traceId || traceId.trim().length() == 0) {
             traceId = UUID.randomUUID().toString();
         }
-        MDC.put(TraceConstants.LOG_TRACE_ID, traceId);
+        MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
         return true;
     }
 
@@ -91,7 +90,7 @@ public class HttpTraceLogFilter implements Filter {
                 traceLog.setResponseBody(getResponseBody(response));
                 log.info("Http trace log: {}", buildTraceLog(traceLog));
                 if(isSetTraceId) {
-                    MDC.remove(TraceConstants.LOG_TRACE_ID);
+                    MDC.remove(HttpHeaderConstants.LOG_TRACE_ID);
                 }
             }
             updateResponse(response);

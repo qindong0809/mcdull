@@ -1,5 +1,6 @@
 package com.dqcer.mcdull.gateway.filter;
 
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.constants.SysConstants;
 import com.dqcer.framework.base.utils.StrUtil;
@@ -12,6 +13,7 @@ import com.dqcer.mcdull.gateway.utils.IpUtils;
 import com.dqcer.mcdull.gateway.utils.SpringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -26,6 +28,7 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -58,17 +61,31 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
         String realIp = IpUtils.getRealIp(request);
         String requestUrl = exchange.getRequest().getURI().getPath();
 
-        log.info("请求地址: {} 来源Ip: {}", requestUrl, realIp);
-
         FilterProperties filterProperties = mcdullGatewayProperties.getFilter();
 
-        if (filterProperties.getEnableTrace()) {
-            String traceId = headers.getFirst(HttpHeaderConstants.TRACE_ID);
-            if (StrUtil.isBlank(traceId)) {
-                log.warn("没有traceId");
-                return errorResponse(response, ResultCode.NOT_TRACE_ID.getCode(), ResultCode.NOT_TRACE_ID.getMessage());
-            }
+        /**浏览器传traceId*/
+        // 暂不进行强制限制
+        String traceId = IdWorker.get32UUID();
+        addHeader(mutate, HttpHeaderConstants.TRACE_ID_HEADER, traceId);
+        // FIXME: 2022/11/17 MDC用后需要删除
+        MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
+//        if (filterProperties.getEnableTrace()) {
+//            String traceId = headers.getFirst(HttpHeaderConstants.TRACE_ID_HEADER);
+//            if (StrUtil.isBlank(traceId)) {
+//                log.warn("没有traceId");
+//                return errorResponse(response, ResultCode.NOT_TRACE_ID.getCode(), ResultCode.NOT_TRACE_ID.getMessage());
+//            }
+//        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n");
+        for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+            builder.append(entry.getKey());
+            builder.append("=");
+            builder.append(entry.getValue());
+            builder.append("\n");
         }
+        log.info("请求地址: {} 来源Ip: {} headers: {}", requestUrl, realIp, builder);
 
         // 无需效验的接口
         if (ignoreFilter(request.getPath().toString(), filterProperties.getNoAuth())) {
@@ -118,7 +135,7 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
             return errorResponse(response, ResultCode.UN_AUTHORIZATION.getCode(), ResultCode.UN_AUTHORIZATION.getMessage());
         }
 
-        Result<Long> result = remoteValid(token);
+        Result<Long> result = remoteValid(token, traceId);
 
         log.info("token valid result: {}", result);
         if (!result.isOk()) {
@@ -135,13 +152,13 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
      * @param token 令牌
      * @return {@link Result}<{@link Long}>
      */
-    private static Result<Long> remoteValid(String token) {
+    private static Result<Long> remoteValid(String token, String traceId) {
         // 身份验证服务,因网关加载顺序需要进行懒加载
         AuthClientService authClientService = SpringUtils.getBean(AuthClientService.class);
 
         RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
         // WebFlux异步调用，同步会报错
-        Future<Result<Long>> future = executorService.submit(() -> authClientService.tokenValid(token));
+        Future<Result<Long>> future = executorService.submit(() -> authClientService.tokenValid(token, traceId));
         Result<Long> result;
         try {
             result = future.get();
@@ -163,6 +180,6 @@ public class AuthGlobalFilter extends AbstractFilter implements GlobalFilter, Or
 
     @Override
     public int getOrder() {
-        return -1000000;
+        return Integer.MIN_VALUE;
     }
 }

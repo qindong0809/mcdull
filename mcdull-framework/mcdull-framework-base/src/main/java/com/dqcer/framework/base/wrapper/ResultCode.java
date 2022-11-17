@@ -1,6 +1,7 @@
 package com.dqcer.framework.base.wrapper;
 
 import com.dqcer.framework.base.dict.IDict;
+import org.springframework.http.HttpStatus;
 
 /**
  * 返回码实现
@@ -44,7 +45,12 @@ public enum ResultCode implements IResultCode , IDict<Integer> {
 	/**
 	 * 没有traceId
 	 */
-	NOT_TRACE_ID(999405, "没有traceId"),
+	NOT_TRACE_ID(999415, "没有traceId"),
+
+	/**
+	 * 请求方法被禁止
+	 */
+	METHOD_NOT_ALLOWED(999405, "请求方法被禁止"),
 
 	/**
 	 * 参数异常

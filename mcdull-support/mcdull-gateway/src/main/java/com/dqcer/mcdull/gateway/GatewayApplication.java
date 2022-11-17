@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @author dongqin
  * @date 2022/10/24
  */
-@EnableFeignClients(basePackages = "com.dqcer.mcdull.auth.client.service")
+@EnableFeignClients(basePackages = "com.dqcer.mcdull.uac.client.service")
 @RestController
 @EnableDiscoveryClient
 @SpringBootApplication

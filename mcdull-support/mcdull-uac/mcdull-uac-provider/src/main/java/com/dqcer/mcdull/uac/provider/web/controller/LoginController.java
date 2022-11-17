@@ -38,7 +38,7 @@ public class LoginController implements AuthServiceApi {
      * @return {@link Long}
      */
     @Override
-    public Result<Long> tokenValid(String token) {
+    public Result<Long> tokenValid(String token, String traceId) {
         return loginService.tokenValid(token);
     }
 }

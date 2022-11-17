@@ -37,6 +37,7 @@ public class FeignConfiguration implements RequestInterceptor {
             HttpServletRequest request = attributes.getRequest();
             requestTemplate.header(HttpHeaderConstants.U_ID, request.getHeader(HttpHeaderConstants.U_ID));
             requestTemplate.header(HttpHeaderConstants.T_ID, request.getHeader(HttpHeaderConstants.T_ID));
+            requestTemplate.header(HttpHeaderConstants.TRACE_ID_HEADER, request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER));
         }
     }
 

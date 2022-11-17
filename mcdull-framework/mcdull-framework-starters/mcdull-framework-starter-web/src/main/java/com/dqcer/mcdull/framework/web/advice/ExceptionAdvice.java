@@ -2,31 +2,43 @@ package com.dqcer.mcdull.framework.web.advice;
 
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.mcdull.framework.web.util.IpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import java.util.List;
 import java.util.MissingResourceException;
+import java.util.stream.Collectors;
 
 /**
  * 全局异常处理程序
  *
  * @author dqcer
- * @date 2021/08/17
+ * @version  2021/08/17
  */
 @Order(-100)
 @RestControllerAdvice
 public class ExceptionAdvice {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+    @Value("${spring.application.name}")
+    private String applicationName;
 
 
     /**
@@ -78,28 +90,56 @@ public class ExceptionAdvice {
         return Result.error(ResultCode.ERROR_CONVERSION);
     }
 
+
     /**
-     * 方法参数无效异常处理
+     * 处理验证异常
      *
-     * @param exception 异常
+     * @param e e
      * @return {@link Result}
      */
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public Result<?> methodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        BindingResult bindingResult = exception.getBindingResult();
-        StringBuilder stringBuilder = new StringBuilder();
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            String defaultMessage = fieldError.getDefaultMessage();
-            String field = fieldError.getField();
-            Object rejectedValue = fieldError.getRejectedValue();
-            stringBuilder.append(field).append(":'");
-            stringBuilder.append(rejectedValue);
-            stringBuilder.append("' ");
-            stringBuilder.append("message:");
-            stringBuilder.append(defaultMessage).append("\t");
+    @ExceptionHandler(value = {BindException.class, ValidationException.class, MethodArgumentNotValidException.class, MissingServletRequestParameterException.class})
+    public Result<String> handleValidatedException(Exception e, HttpServletRequest request) {
+        if (e instanceof MethodArgumentNotValidException) {
+            MethodArgumentNotValidException ex = (MethodArgumentNotValidException) e;
+            List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
+            ObjectError objectError = allErrors.get(0);
+            Object[] arguments = objectError.getArguments();
+            if (arguments == null) {
+                String errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,，错误提示：%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), objectError.getDefaultMessage());
+                log.error("参数异常: {}", errorMessage);
+                return Result.error(ResultCode.ERROR_PARAMETERS);
+            }
+            DefaultMessageSourceResolvable a = (DefaultMessageSourceResolvable) arguments[0];
+            String errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,字段名称：%s，错误提示：%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), a.getDefaultMessage(), objectError.getDefaultMessage());
+            log.error("参数异常: {}", errorMessage);
+            return Result.error(ResultCode.ERROR_PARAMETERS);
         }
-        log.error("参数: {} 绑定异常 {}", exception.getParameter(), stringBuilder);
+        if (e instanceof ConstraintViolationException) {
+            ConstraintViolationException ex = (ConstraintViolationException) e;
+            log.error("参数异常: {}", ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining("; ")));
+            return Result.error(ResultCode.ERROR_PARAMETERS);
+        }
+
+        if (e instanceof BindException) {
+            BindException ex = (BindException) e;
+            List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
+            ObjectError objectError = allErrors.get(0);
+            Object[] arguments = objectError.getArguments();
+            DefaultMessageSourceResolvable a = (DefaultMessageSourceResolvable) arguments[0];
+            String fieldName = a.getDefaultMessage();
+            String errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,字段名称：%s，错误提示：%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), fieldName, objectError.getDefaultMessage());
+            log.error("参数异常: {}", errorMessage);
+            return Result.error(ResultCode.ERROR_PARAMETERS);
+        }
+
+        if (e instanceof MissingServletRequestParameterException) {
+            MissingServletRequestParameterException ex = (MissingServletRequestParameterException) e;
+            String parameterName = ex.getParameterName();
+
+            log.error("参数异常, parameterName: {}, {}", parameterName, String.format("appName=%s, clientIp=%s, requestURI=%s,message:%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), ex.getMessage()));
+            return Result.error(ResultCode.ERROR_PARAMETERS);
+        }
+        log.error("参数异常: {}", String.format("appName=%s, clientIp=%s, requestURI=%s,message:%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), e.getMessage()));
         return Result.error(ResultCode.ERROR_PARAMETERS);
     }
 }

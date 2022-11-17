@@ -8,7 +8,7 @@ import com.dqcer.framework.base.VO;
  * @author dqcer
  * @date 2022/11/01 22:11:78
  */
-public class SysDictVO extends VO {
+public class DictVO extends VO {
 
     /**
      * 编码

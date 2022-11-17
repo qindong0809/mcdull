@@ -102,6 +102,7 @@
   <logger name="com.alibaba.nacos.client.naming" level="warn" />
   <root level="info">
     <appender-ref ref="CONSOLE" />
+<!--    <appender-ref ref="console" />-->
     <appender-ref ref="allLevelFileAppender" />
     <appender-ref ref="info_file" />
     <appender-ref ref="warn_file" />

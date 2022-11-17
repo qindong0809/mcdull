@@ -8,10 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.dqcer.cloud.model.ServiceGcLog;
 import com.dqcer.cloud.model.ServiceLog;
-import net.bytebuddy.implementation.bind.annotation.AllArguments;
-import net.bytebuddy.implementation.bind.annotation.Origin;
-import net.bytebuddy.implementation.bind.annotation.RuntimeType;
-import net.bytebuddy.implementation.bind.annotation.SuperCall;
+import net.bytebuddy.implementation.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -32,6 +29,10 @@ import java.util.concurrent.Callable;
  */
 public class ServiceLogInterceptor {
 
+
+    public static final IdWorker logId = new IdWorker(1,1,1);
+    public static final IdWorker idWorker = new IdWorker(2,2,2);
+
     private static final Logger log = LoggerFactory.getLogger(McdullListener.class);
 
     private Db use;
@@ -50,8 +51,9 @@ public class ServiceLogInterceptor {
      */
     @SuppressWarnings("unused")
     @RuntimeType
-    public Object intercept(@AllArguments Object[] args, @Origin Method method, @SuperCall Callable<?> callable) throws Exception {
+    public Object intercept(@This Object obj,  @AllArguments Object[] args, @Origin Method method, @SuperCall Callable<?> callable) throws Exception {
         // todo 需要获取traceId 才能进行上下文关联
+        log.info("obj: {}", obj.getClass().getName());
 
         long start = System.currentTimeMillis();
         Integer status = 1;
@@ -77,7 +79,7 @@ public class ServiceLogInterceptor {
             gcInfos.addAll(JvmInfoUtil.getGCInfo(memoryInfo.getId(), 2));
 
             long endTime = System.currentTimeMillis();
-            saveLog(args, method, status, respResult, start, endTime, memoryInfo, gcInfos);
+            saveLog(obj, args, method, status, respResult, start, endTime, memoryInfo, gcInfos);
         }
         return result;
     }
@@ -94,8 +96,9 @@ public class ServiceLogInterceptor {
      * @param memoryInfo
      * @param gcInfos
      */
-    private void saveLog(Object[] args, Method method, Integer status, String respResult, long startTime, long endTime, ServiceLog memoryInfo, List<ServiceGcLog> gcInfos) {
+    private void saveLog(Object obj, Object[] args, Method method, Integer status, String respResult, long startTime, long endTime, ServiceLog memoryInfo, List<ServiceGcLog> gcInfos) {
         ServiceLog serviceLog = getBaseInfoArgs(memoryInfo, args,method);
+        serviceLog.setClassName(serviceLog.getClassName() + obj.getClass().getName());
         Date date = new Date();
         date.setTime(startTime);
         serviceLog.setCreatedTime(date);
@@ -130,7 +133,8 @@ public class ServiceLogInterceptor {
     }
 
     private void saveDB(ServiceLog log, List<ServiceGcLog> gcLogs) throws SQLException {
-        long id = IdUtil.getSnowflakeNextId();
+        // TODO: 2022/11/16 暂定
+        long id = logId.nextId();
         use.insert(Entity.create("service_log")
                 .set("id", id)
                 .set("trace_id", UUID.randomUUID().toString())
@@ -166,7 +170,7 @@ public class ServiceLogInterceptor {
 
         for (ServiceGcLog gcLog : gcLogs) {
             use.insert(Entity.create("service_gc_log")
-                    .set("id", IdUtil.getSnowflakeNextId())
+                    .set("id", idWorker.nextId())
                     .set("service_log_id", id)
                     .set("name", gcLog.getName())
                     .set("memory_pool_names", gcLog.getMemoryPoolNames())

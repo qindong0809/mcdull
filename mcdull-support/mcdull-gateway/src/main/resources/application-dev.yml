@@ -11,14 +11,14 @@ spring:
           lower-case-service-id: true
           enabled: true
       routes:
-        - id: mcdull-auth-provider
-          uri: lb://mcdull-auth-provider
+        - id: mcdull-uac-provider
+          uri: lb://mcdull-uac-provider
           predicates:
             - Path=/uac/**
           filters:
             - StripPrefix=1
-        - id: mcdull-dict-provider
-          uri: lb://mcdull-dict-provider
+        - id: mcdull-mdc-provider
+          uri: lb://mcdull-mdc-provider
           predicates:
             - Path=/mdc/**
           filters:
@@ -31,3 +31,5 @@ mcdull:
   filter:
     noAuth:
       - /uac/login
+  feign:
+    uac: mcdull-uac-provider

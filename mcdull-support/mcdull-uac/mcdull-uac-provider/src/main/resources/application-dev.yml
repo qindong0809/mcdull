@@ -13,3 +13,6 @@ spring:
 # 指定日志的文件名（nacos）
 logging:
   dataId: log
+mcdull:
+  feign:
+    uac: mcdull-uac-provider

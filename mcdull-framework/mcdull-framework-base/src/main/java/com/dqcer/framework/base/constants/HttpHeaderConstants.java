@@ -39,9 +39,15 @@ public class HttpHeaderConstants {
     public static final String U_ID = "uid";
 
     /**
-     * traceId
+     * 跟踪id头
+     * eg: http.addHeaders(TRACE_ID_HEADER, "uuid");
      */
-    public static final String TRACE_ID = "traceId";
+    public static final String TRACE_ID_HEADER = "x-trace-header";
 
+    /**
+     * 日志跟踪id
+     * eg: MDC.put(LOG_TRACE_ID, "uuid);
+     */
+    public static final String LOG_TRACE_ID = "traceId";
 
 }

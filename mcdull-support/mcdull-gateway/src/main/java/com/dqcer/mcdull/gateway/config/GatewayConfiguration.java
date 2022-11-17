@@ -1,6 +1,7 @@
 package com.dqcer.mcdull.gateway.config;
 
 
+import com.dqcer.mcdull.gateway.handler.ExceptionHandler;
 import com.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.server.WebExceptionHandler;
 import org.springframework.web.util.pattern.PathPatternParser;
 import reactor.core.publisher.Mono;
 
@@ -32,6 +34,11 @@ import java.util.List;
 public class GatewayConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(GatewayConfiguration.class);
+
+    @Bean
+    public WebExceptionHandler webExceptionHandler() {
+        return new ExceptionHandler();
+    }
 
     /**
      * 跨域处理

@@ -1,26 +1,26 @@
 package com.dqcer.mcdull.mdc.api.convert;
 
 import com.dqcer.mcdull.mdc.api.entity.SysDictEntity;
-import com.dqcer.mcdull.mdc.api.vo.SysDictVO;
+import com.dqcer.mcdull.mdc.api.vo.DictVO;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SysDictConvert {
+public class DictConvert {
 
 
     /**
      * 实体转换来视图对象
      *
      * @param item 项
-     * @return {@link SysDictVO}
+     * @return {@link DictVO}
      */
-    public static SysDictVO entityConvertToVo(SysDictEntity item) {
+    public static DictVO entityConvertToVo(SysDictEntity item) {
         if (item == null) {
             return null;
         }
-        SysDictVO result = new SysDictVO();
+        DictVO result = new DictVO();
         result.setCode(item.getCode());
         result.setParentCode(item.getParentCode());
         result.setName(item.getName());
@@ -39,13 +39,13 @@ public class SysDictConvert {
      * 实体转换为列表
      *
      * @param item 项
-     * @return {@link List}<{@link SysDictVO}>
+     * @return {@link List}<{@link DictVO}>
      */
-    public static List<SysDictVO> entitiesConvertToList(List<SysDictEntity> item) {
+    public static List<DictVO> entitiesConvertToList(List<SysDictEntity> item) {
         if (item == null) {
             return Collections.EMPTY_LIST;
         }
-        List<SysDictVO> result = new ArrayList<>();
+        List<DictVO> result = new ArrayList<>();
         for (SysDictEntity entity : item) {
             result.add(entityConvertToVo(entity));
         }

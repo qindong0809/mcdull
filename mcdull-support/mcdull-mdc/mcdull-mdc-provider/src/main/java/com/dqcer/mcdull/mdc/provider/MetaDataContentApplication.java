@@ -6,14 +6,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-@MapperScan("com.dqcer.mcdull.dict.provider.web.dao")
+@MapperScan("com.dqcer.mcdull.mdc.provider.web.dao")
 @EnableWebCore
 @EnableDiscoveryClient
 @SpringBootApplication
-public class DictApplication {
+public class MetaDataContentApplication {
 
 
     public static void main(String[] args) {
-        SpringApplication.run(DictApplication.class, args);
+        SpringApplication.run(MetaDataContentApplication.class, args);
     }
 }
