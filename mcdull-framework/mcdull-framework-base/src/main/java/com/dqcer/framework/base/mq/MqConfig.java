@@ -6,7 +6,7 @@ import java.io.Serializable;
  * MQ消息配置
  *
  * @author dqcer
- * @date 2022/10/05
+ * @version 2022/10/05
  */
 @SuppressWarnings("unused")
 public class MqConfig implements Serializable {

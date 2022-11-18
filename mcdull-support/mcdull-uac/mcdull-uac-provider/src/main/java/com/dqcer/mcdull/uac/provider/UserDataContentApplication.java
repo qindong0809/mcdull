@@ -12,7 +12,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * 身份验证应用程序
  *
  * @author dqcer
- * @date 2022/10/31
+ * @version 2022/10/31
  */
 @EnableWebCore
 @MapperScan("com.dqcer.mcdull.uac.provider.web.dao")

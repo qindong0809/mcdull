@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * 主题定义
  *
  * @author dqcer
- * @date 2022/10/05
+ * @version 2022/10/05
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

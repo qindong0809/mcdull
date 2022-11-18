@@ -7,7 +7,7 @@ import com.dqcer.framework.base.wrapper.IResultCode;
  * 返回码实现
  *
  * @author dqcer
- * @date 2022/01/11
+ * @version 2022/01/11
  */
 public enum AuthCode implements IResultCode, IDict<Integer> {
 

@@ -5,7 +5,7 @@ package com.dqcer.mcdull.framework.redis;
  * 缓存
  *
  * @author dqcer
- * @date  22:21 2021/4/28
+ * @version  22:21 2021/4/28
  */
 public interface ICache {
 

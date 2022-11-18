@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * 字典接口，实现类为枚举类
  *
  * @author dqcer
- * @date 2022/10/04
+ * @version 2022/10/04
  */
 @SuppressWarnings("unused")
 public interface IDict<T>  extends Serializable {

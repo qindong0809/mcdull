@@ -7,7 +7,7 @@ import java.lang.annotation.*;
  * 动态数据源 todo 继承自定义处理 @Inherited
  *
  * @author dqcer
- * @date 2021/10/09
+ * @version 2021/10/09
  */
 @Documented
 @Target({ElementType.METHOD, ElementType.TYPE})

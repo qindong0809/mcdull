@@ -7,7 +7,7 @@ import java.security.MessageDigest;
  * md5工具
  *
  * @author dqcer
- * @date 2022/10/04
+ * @version 2022/10/04
  */
 @SuppressWarnings("unused")
 public class Md5Util {

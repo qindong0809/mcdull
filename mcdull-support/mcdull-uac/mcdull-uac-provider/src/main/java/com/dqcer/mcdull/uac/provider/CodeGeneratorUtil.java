@@ -17,7 +17,7 @@ import java.util.*;
 /**
  * @author dongqin
  * @description 代码生成器
- * @date  22:21 2021/4/28
+ * @version  22:21 2021/4/28
  */
 @SuppressWarnings({"all"})
 public class CodeGeneratorUtil {

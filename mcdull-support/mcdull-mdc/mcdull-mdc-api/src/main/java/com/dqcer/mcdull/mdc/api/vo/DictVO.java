@@ -6,7 +6,7 @@ import com.dqcer.framework.base.VO;
  * sys dict
  *
  * @author dqcer
- * @date 2022/11/01 22:11:78
+ * @version 2022/11/01 22:11:78
  */
 public class DictVO extends VO {
 

@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
  * 日期转换配置，全局统一
  *
  * @author dqcer
- * @date 2022/10/04
+ * @version 2022/10/04
  */
 @Configuration
 public class DateTimeConfig {

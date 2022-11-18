@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * 网关应用程序
  *
  * @author dongqin
- * @date 2022/10/24
+ * @version 2022/10/24
  */
 @EnableFeignClients(basePackages = "com.dqcer.mcdull.uac.client.service")
 @RestController

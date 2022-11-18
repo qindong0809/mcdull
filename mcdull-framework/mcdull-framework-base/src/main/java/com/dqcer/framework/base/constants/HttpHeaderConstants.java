@@ -4,7 +4,7 @@ package com.dqcer.framework.base.constants;
  * http头部常量
  *
  * @author dqcer
- * @date 2022/07/26
+ * @version 2022/07/26
  */
 @SuppressWarnings("unused")
 public class HttpHeaderConstants {

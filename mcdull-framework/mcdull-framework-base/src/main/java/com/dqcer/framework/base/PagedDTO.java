@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  * 分页 DTO
  *
  * @author dqcer
- * @date 2022/07/26
+ * @version 2022/07/26
  */
 @SuppressWarnings("unused")
 public abstract class PagedDTO extends KeywordDTO implements IPaged {

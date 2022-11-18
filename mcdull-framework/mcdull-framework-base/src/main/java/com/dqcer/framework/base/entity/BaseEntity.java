@@ -10,7 +10,7 @@ import java.util.Date;
  * 基础的实体
  *
  * @author dqcer
- * @date 2022/01/12
+ * @version 2022/01/12
  */
 @SuppressWarnings("unused")
 public abstract class BaseEntity extends SuperId {

@@ -77,7 +77,7 @@ import java.util.concurrent.TimeUnit;
 
  *
  * @author dqcer
- * @date 2022/10/26
+ * @version 2022/10/26
  */
 @Component
 public class DynamicRouteListener implements InitializingBean, ApplicationEventPublisherAware {

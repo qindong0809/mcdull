@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  * enum类统一处理
  *
  * @author dqcer
- * @date 2022/10/05
+ * @version 2022/10/05
  */
 public class EnumTransformer implements Transformer<Object>{
 

@@ -25,7 +25,7 @@ import java.io.IOException;
  * 基础信息拦截器
  *
  * @author dqcer
- * @date 2021/08/19
+ * @version 2021/08/19
  */
 public class BaseInfoInterceptor implements HandlerInterceptor {
 

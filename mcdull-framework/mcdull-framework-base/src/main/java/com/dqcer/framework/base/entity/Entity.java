@@ -6,7 +6,7 @@ import java.io.Serializable;
  * 实体
  *
  * @author dqcer
- * @date  22:21 2021/4/28
+ * @version  22:21 2021/4/28
  */
 @SuppressWarnings("unused")
 public interface Entity extends Serializable {

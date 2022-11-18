@@ -7,7 +7,7 @@ import com.dqcer.framework.base.dict.IDict;
  * mq 延时时间等级
  *
  * @author dqcer
- * @date 2022/10/05
+ * @version 2022/10/05
  */
 @SuppressWarnings("unused")
 public enum MqDelayLevel implements IDict<Integer> {

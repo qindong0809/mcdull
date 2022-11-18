@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 
  *
  * @author dongqin
- * @date 2022/10/24
+ * @version 2022/10/24
  */
 @Component
 public class LogLevelListener implements InitializingBean {

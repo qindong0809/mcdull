@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
  * 返回码实现
  *
  * @author dqcer
- * @date 2022/01/11
+ * @version 2022/01/11
  */
 public enum ResultCode implements IResultCode , IDict<Integer> {
 

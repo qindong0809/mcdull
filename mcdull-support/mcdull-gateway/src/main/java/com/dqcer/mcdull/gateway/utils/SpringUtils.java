@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @Deprecated: {@link SpringContextUtil}
  *
  * @author QinDong
- * @date 2022/11/08
+ * @version 2022/11/08
  */
 @Component
 public class SpringUtils implements ApplicationContextAware {

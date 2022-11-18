@@ -7,7 +7,7 @@ import com.dqcer.framework.base.entity.SuperId;
  * sys dict实体
  *
  * @author dqcer
- * @date 2022/11/01 22:11:06
+ * @version 2022/11/01 22:11:06
  */
 @TableName("sys_dict")
 public class SysDictEntity extends SuperId {

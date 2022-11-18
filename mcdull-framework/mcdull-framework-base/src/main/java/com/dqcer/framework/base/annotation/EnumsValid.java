@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * 状态效验注解
  *
  * @author dqcer
- * @date 2021/12/20
+ * @version 2021/12/20
  */
 @Documented
 @Constraint(validatedBy = EnumsValidator.class)

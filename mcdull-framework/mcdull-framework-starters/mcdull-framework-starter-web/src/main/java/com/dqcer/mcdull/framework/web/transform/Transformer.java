@@ -4,7 +4,7 @@ package com.dqcer.mcdull.framework.web.transform;
  * 变压器
  *
  * @author dqcer
- * @date 2022/10/05
+ * @version 2022/10/05
  */
 @FunctionalInterface
 public interface Transformer<ID> {

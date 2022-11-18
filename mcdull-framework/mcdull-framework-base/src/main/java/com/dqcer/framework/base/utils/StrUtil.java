@@ -4,7 +4,7 @@ package com.dqcer.framework.base.utils;
  * 字符串验证工具
  *
  * @author dqcer
- * @date 2022/10/04
+ * @version 2022/10/04
  */
 @SuppressWarnings("unused")
 public enum StrUtil {

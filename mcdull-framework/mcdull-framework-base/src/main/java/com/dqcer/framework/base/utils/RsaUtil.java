@@ -20,7 +20,7 @@ import java.security.spec.X509EncodedKeySpec;
  * rsa util
  *
  * @author dqcer
- * @date 2022/10/04
+ * @version 2022/10/04
  */
 @SuppressWarnings("unused")
 public class RsaUtil {

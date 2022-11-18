@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * 自动配置
  *
  * @author dqcer
- * @date  22:21 2021/4/28
+ * @version  22:21 2021/4/28
  */
 @Configuration
 public class AutoConfiguration {

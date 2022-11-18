@@ -4,7 +4,7 @@ package com.dqcer.cloud;
  * id生成器
  *
  * @author dqcer
- * @date 2022/11/16
+ * @version 2022/11/16
  */
 public class IdWorker {
 

@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * 授权
  *
  * @author dqcer
- * @date 2022/07/26
+ * @version 2022/07/26
  */
 @SuppressWarnings("unused")
 @Documented

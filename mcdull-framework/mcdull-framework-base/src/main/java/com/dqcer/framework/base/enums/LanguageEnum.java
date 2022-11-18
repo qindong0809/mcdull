@@ -6,7 +6,7 @@ import com.dqcer.framework.base.dict.IDict;
  * 语言枚举
  *
  * @author dqcer
- * @date 2022/07/26
+ * @version 2022/07/26
  */
 @SuppressWarnings("unused")
 public enum LanguageEnum implements IDict<String> {

@@ -4,7 +4,7 @@ package com.dqcer.framework.base.constants;
  * 缓存常量
  *
  * @author dqcer
- * @date 2021/09/10
+ * @version 2021/09/10
  */
 public class CacheConstant {
 

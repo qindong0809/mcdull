@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
  * 启用缓存
  *
  * @author dqcer
- * @date 2021/09/10
+ * @version 2021/09/10
  */
 @EnableCaching
 @Target({ ElementType.TYPE })

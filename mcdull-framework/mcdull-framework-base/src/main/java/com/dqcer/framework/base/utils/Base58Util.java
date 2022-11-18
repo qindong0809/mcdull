@@ -6,7 +6,7 @@ import java.util.Arrays;
  * base58工具
  *
  * @author dongqin
- * @date 2022/10/21
+ * @version 2022/10/21
  */
 @SuppressWarnings("unused")
 public class Base58Util {

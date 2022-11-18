@@ -9,7 +9,7 @@ import java.util.Date;
  * mybatis 数据源处理 配置
  *
  * @author dqcer
- * @date 2021/08/21 20:08:55
+ * @version 2021/08/21 20:08:55
  */
 public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
 

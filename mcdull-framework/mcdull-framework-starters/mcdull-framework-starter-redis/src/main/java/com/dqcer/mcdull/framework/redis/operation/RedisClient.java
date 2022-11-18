@@ -28,7 +28,7 @@ import java.util.function.Consumer;
  * 包含常用操作及获取锁
  *
  * @author dqcer
- * @date 2022/11/07
+ * @version 2022/11/07
  */
 @SuppressWarnings("all")
 public final class RedisClient {

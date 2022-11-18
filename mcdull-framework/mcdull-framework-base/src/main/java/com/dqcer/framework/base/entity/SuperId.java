@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
  * 主键
  *
  * @author dqcer
- * @date 2022/01/12
+ * @version 2022/01/12
  */
 @SuppressWarnings("unused")
 public abstract class SuperId implements Entity {

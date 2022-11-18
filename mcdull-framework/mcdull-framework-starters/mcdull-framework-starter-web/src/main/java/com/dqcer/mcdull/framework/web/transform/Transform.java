@@ -6,7 +6,7 @@ import java.lang.annotation.*;
  * 翻译（由key翻译为value）
  *
  * @author dqcer
- * @date 2022/10/05
+ * @version 2022/10/05
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

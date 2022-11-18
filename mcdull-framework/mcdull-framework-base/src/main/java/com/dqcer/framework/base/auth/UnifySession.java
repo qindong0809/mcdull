@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 统一会话
  *
  * @author dqcer
- * @date 2021/11/13
+ * @version 2021/11/13
  */
 public class UnifySession implements Serializable {
 

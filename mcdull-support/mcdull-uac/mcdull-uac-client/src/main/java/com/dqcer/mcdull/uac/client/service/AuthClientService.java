@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  * 身份验证客户服务
  *
  * @author QinDong
- * @date 2022/11/08
+ * @version 2022/11/08
  */
 @FeignClient(value = "${mcdull.feign.uac}")
 public interface AuthClientService extends AuthServiceApi {

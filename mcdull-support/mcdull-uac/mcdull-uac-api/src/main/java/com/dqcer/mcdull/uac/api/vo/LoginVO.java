@@ -6,7 +6,7 @@ import com.dqcer.framework.base.VO;
  * 登录VO
  *
  * @author dqcer
- * @date 2022/11/01
+ * @version 2022/11/01
  */
 public class LoginVO extends VO {
 

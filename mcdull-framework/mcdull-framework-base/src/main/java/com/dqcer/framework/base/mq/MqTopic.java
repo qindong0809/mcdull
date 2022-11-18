@@ -6,7 +6,7 @@ package com.dqcer.framework.base.mq;
  * T 消息体类型
  *
  * @author dqcer
- * @date 2022/10/05
+ * @version 2022/10/05
  */
 @SuppressWarnings("unused")
 public interface MqTopic<T> {

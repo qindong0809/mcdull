@@ -7,7 +7,7 @@
 /*!
  * dragtable
  *
- * @Version 2.0.15
+ * @version 2.0.15
  *
  * Copyright (c) 2010-2013, Andres akottr@gmail.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)

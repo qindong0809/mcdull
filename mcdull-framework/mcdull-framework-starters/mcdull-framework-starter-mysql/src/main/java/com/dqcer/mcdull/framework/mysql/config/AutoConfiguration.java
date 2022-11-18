@@ -24,7 +24,7 @@ import java.util.Map;
  * 自动配置
  *
  * @author dqcer
- * @date 2021/10/09
+ * @version   2021/10/09
  */
 @Configuration
 @EnableConfigurationProperties(DataSourceProperties.class)
@@ -46,6 +46,7 @@ public class AutoConfiguration {
         mybatisSqlSessionFactoryBean.setDataSource(dynamicDataSource);
         GlobalConfig config = new GlobalConfig();
         config.setMetaObjectHandler(new MybatisMetaObjectHandlerConfig());
+        config.setBanner(false);
         mybatisSqlSessionFactoryBean.setGlobalConfig(config);
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));

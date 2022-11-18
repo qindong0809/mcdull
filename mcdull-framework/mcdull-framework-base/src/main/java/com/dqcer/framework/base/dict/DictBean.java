@@ -5,7 +5,7 @@ package com.dqcer.framework.base.dict;
  * 只有code和text，可以用于展示下拉框
  *
  * @author dqcer
- * @date 2022/10/04
+ * @version 2022/10/04
  */
 @SuppressWarnings("unused")
 public class DictBean<T> implements IDict<T>{

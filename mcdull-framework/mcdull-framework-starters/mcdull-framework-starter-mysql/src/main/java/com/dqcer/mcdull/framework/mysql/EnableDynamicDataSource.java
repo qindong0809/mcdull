@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * 启用动态数据源
  *
  * @author dqcer
- * @date 2021/08/21 19:08:69
+ * @version 2021/08/21 19:08:69
  */
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
