@@ -4,7 +4,7 @@ spring:
   application:
     name: mcdull-mdc-provider
   datasource:
-    url: jdbc:mysql://192.168.230.171:3306/mcdull-cloud?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&allowMultiQueries=true
+    url: jdbc:mysql://mcdull.io:3306/mcdull-cloud?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&allowMultiQueries=true
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver

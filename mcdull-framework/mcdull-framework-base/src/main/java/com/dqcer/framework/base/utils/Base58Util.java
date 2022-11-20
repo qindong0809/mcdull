@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * base58工具
  *
- * @author dongqin
+ * @author dqcer
  * @version 2022/10/21
  */
 @SuppressWarnings("unused")

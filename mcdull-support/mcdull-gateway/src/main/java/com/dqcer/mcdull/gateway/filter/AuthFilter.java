@@ -37,7 +37,7 @@ import static com.dqcer.framework.base.feign.FeignConfiguration.URL_SESSION;
 /**
  * 认证过滤器
  *
- * @author dongqin
+ * @author dqcer
  * @version  2022/10/27
  */
 @Component
@@ -113,7 +113,7 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
         Result<Long> result;
         try {
             URL_SESSION.set("token/valid");
-            String traceId = headers.getFirst(HttpHeaderConstants.LOG_TRACE_ID);
+            String traceId = headers.getFirst(HttpHeaderConstants.TRACE_ID_HEADER);
             result = remoteValid(token, traceId);
         } finally {
             URL_SESSION.remove();

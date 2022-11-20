@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
+import java.sql.SQLSyntaxErrorException;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.stream.Collectors;
@@ -51,6 +52,18 @@ public class ExceptionAdvice {
     public Result<?> exception(Exception exception) {
         log.error("系统异常: ", exception);
         return Result.error(ResultCode.ERROR_UNKNOWN);
+    }
+
+    /**
+     * 异常
+     *
+     * @param exception 异常
+     * @return {@link Result}
+     */
+    @ExceptionHandler(value = SQLSyntaxErrorException.class)
+    public Result<?> exception(SQLSyntaxErrorException exception) {
+        log.error("sql语法异常: ", exception);
+        return Result.error(ResultCode.SQL_SYNTAX_ERROR);
     }
 
 

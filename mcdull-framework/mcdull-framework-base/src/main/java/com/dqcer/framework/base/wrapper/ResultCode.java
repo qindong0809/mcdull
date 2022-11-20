@@ -23,6 +23,11 @@ public enum ResultCode implements IResultCode , IDict<Integer> {
 	ERROR_UNKNOWN(999500, "未知异常"),
 
 	/**
+	 * sql语法错误
+	 */
+	SQL_SYNTAX_ERROR(999510, "sql语法异常"),
+
+	/**
 	 * 无权限
 	 */
 	UN_AUTHORIZATION(999401, "无权限"),

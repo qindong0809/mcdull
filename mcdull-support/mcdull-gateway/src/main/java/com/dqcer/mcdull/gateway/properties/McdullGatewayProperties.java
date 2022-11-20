@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * 网关属性
  *
- * @author dongqin
+ * @author dqcer
  * @version 2022/10/27
  */
 @ConfigurationProperties(prefix = SysConstants.PROJECT)

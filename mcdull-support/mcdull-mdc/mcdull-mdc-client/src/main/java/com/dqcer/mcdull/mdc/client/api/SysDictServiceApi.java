@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 /**
  * 登录服务api
  *
- * @author dongqin
+ * @author dqcer
  * @version 2022/10/28
  */
 public interface SysDictServiceApi {

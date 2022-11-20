@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * 网关应用程序
  *
- * @author dongqin
+ * @author dqcer
  * @version 2022/10/24
  */
 @EnableFeignClients(basePackages = "com.dqcer.mcdull.uac.client.service")
