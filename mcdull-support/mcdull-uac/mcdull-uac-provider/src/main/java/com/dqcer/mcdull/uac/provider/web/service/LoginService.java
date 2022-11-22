@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dqcer.framework.base.auth.CacheUser;
+import com.dqcer.framework.base.auth.UserContextHolder;
 import com.dqcer.framework.base.constants.CacheConstant;
+import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.entity.SuperId;
 import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.enums.StatusEnum;
@@ -21,8 +23,11 @@ import com.dqcer.mcdull.framework.redis.operation.RedisClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -126,6 +131,11 @@ public class LoginService {
             return Result.error(ResultCode.OTHER_LOGIN);
         }
 
+        if (CacheUser.LOGOUT.equals(user.getOnlineStatus())) {
+            log.warn("token valid:  客户端主动退出");
+            return Result.error(ResultCode.LOGOUT);
+        }
+
         LocalDateTime lastActiveTime = user.getLastActiveTime();
 
         LocalDateTime now = LocalDateTime.now();
@@ -138,5 +148,31 @@ public class LoginService {
         // FIXME: 2022/11/7 这个过期时间没有用到默认3s过期
         caffeineCache.put(tokenKey, user, 0);
         return Result.ok(user.getUserId());
+    }
+
+    /**
+     * 注销
+     *
+     * @return {@link Result<String>}
+     */
+    public Result<String> logout() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        String token = request.getHeader(HttpHeaderConstants.TOKEN);
+        String tokenKey = MessageFormat.format(CacheConstant.SSO_TOKEN, token);
+        //  移除本地缓存
+        caffeineCache.evict(tokenKey);
+        Object obj = redisClient.get(tokenKey);
+        if (obj == null) {
+            log.error("redis 缓存 token过期，这里需要优化处理");
+            return Result.ok();
+        }
+        CacheUser user = (CacheUser) obj;
+
+        user.setOnlineStatus(CacheUser.LOGOUT);
+        redisClient.set(tokenKey, user);
+
+        log.info("用户:  {} 已主动退出", UserContextHolder.getSession().getUserId());
+        return Result.ok();
     }
 }

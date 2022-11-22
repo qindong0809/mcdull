@@ -38,6 +38,12 @@ public class HttpHeaderConstants {
      */
     public static final String U_ID = "uid";
 
+
+    /**
+     * 内部使用（退出）
+     */
+    public static final String TOKEN = "token";
+
     /**
      * 跟踪id头
      * eg: http.addHeaders(TRACE_ID_HEADER, "uuid");

@@ -48,6 +48,11 @@ public enum ResultCode implements IResultCode , IDict<Integer> {
 	NOT_FOUND(999404, "找不到资源"),
 
 	/**
+	 * 客户端已主动退出
+	 */
+	LOGOUT(999405, "客户端已主动退出"),
+
+	/**
 	 * 没有traceId
 	 */
 	NOT_TRACE_ID(999415, "没有traceId"),

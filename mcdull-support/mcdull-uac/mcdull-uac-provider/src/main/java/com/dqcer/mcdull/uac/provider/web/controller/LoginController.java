@@ -32,6 +32,16 @@ public class LoginController implements AuthServiceApi {
     }
 
     /**
+     * 注销
+     *
+     * @return {@link Result<String>}
+     */
+    @PostMapping("/logout")
+    public Result<String> logout() {
+        return loginService.logout();
+    }
+
+    /**
      * 验证token
      *
      * @param token token

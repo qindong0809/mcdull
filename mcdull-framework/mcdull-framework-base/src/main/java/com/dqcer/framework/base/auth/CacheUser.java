@@ -25,6 +25,11 @@ public class CacheUser implements Serializable {
     public static final Integer OFFLINE = 2;
 
     /**
+     * 主动注销
+     */
+    public static final Integer LOGOUT = 3;
+
+    /**
      *
      */
     private Long userId;
@@ -35,7 +40,7 @@ public class CacheUser implements Serializable {
     private Long tenantId;
 
     /**
-     * 1/在线 2/挤下线
+     * 1/在线 2/挤下线 3/主动退出
      */
     private Integer onlineStatus;
 
