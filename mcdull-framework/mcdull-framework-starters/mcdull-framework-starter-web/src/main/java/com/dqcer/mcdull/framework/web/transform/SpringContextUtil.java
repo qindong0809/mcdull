@@ -31,6 +31,10 @@ public class SpringContextUtil implements ApplicationContextAware, EnvironmentAw
         return context.getBean(clazz);
     }
 
+    public static Object getBean(String name) {
+        return context.getBean(name);
+    }
+
     public static <T> Map<String, T> getBeanMap(Class<T> clazz) {
         return context.getBeansOfType(clazz);
     }

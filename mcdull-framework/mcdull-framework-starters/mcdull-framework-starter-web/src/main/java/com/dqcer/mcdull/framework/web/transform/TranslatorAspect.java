@@ -3,6 +3,9 @@ package com.dqcer.mcdull.framework.web.transform;
 import com.dqcer.framework.base.dict.IDict;
 import com.dqcer.framework.base.dict.Transform;
 import com.dqcer.framework.base.dict.Transformer;
+import com.dqcer.framework.base.page.Paged;
+import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.web.remote.DictRemote;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -10,7 +13,9 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.domain.Page;
 
+import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.util.Collection;
 
@@ -26,6 +31,9 @@ public class TranslatorAspect {
 
     private static final Logger log = LoggerFactory.getLogger(TranslatorAspect.class);
 
+    @Resource
+    private DictTransformer dictTransformer;
+
 
     @Pointcut("@annotation(com.dqcer.framework.base.dict.Transform) ")
     public void translatorPointCut() {
@@ -35,7 +43,21 @@ public class TranslatorAspect {
     @AfterReturning(pointcut = "translatorPointCut()",  returning = "object")
     public void doAfter(JoinPoint joinPoint, Object object) {
         log.info("翻译切面处理 object: {}", object);
-        doTranslateObject(object);
+        if (object instanceof Result) {
+            Result result = (Result) object;
+
+            Object data = result.getData();
+            if (data instanceof Paged) {
+                Paged paged = (Paged) data;
+                for (Object o : paged.getList()) {
+                    doTranslateObject(o);
+                }
+                return;
+            }
+            doTranslateObject(data);
+            return;
+        }
+        log.warn("未命中@Transform,返回值必须为Result");
     }
 
     private void doTranslateObject(Object result) {
@@ -83,9 +105,18 @@ public class TranslatorAspect {
             }
             return;
         }
+        // TODO: 2022/11/26 需要改造，目前是直接调用mdc接口的需要改为feign
+////        Transformer<Object> transformer = SpringContextUtil.getBean(annotation.transformer());
+//        Object bean = SpringContextUtil.getBean("dictTransformer");
+//        if (bean instanceof Transformer) {
+//            Transformer transformer = (Transformer) bean;
+//            String translate = transformer.transform(filedValue, annotation.dataSource(), annotation.param());
+//            if (null != translate) {
+//                ReflectUtil.invokeSet(result, field, translate);
+//            }
+//        }
 
-        Transformer<Object> transformer = SpringContextUtil.getBean(annotation.transformer());
-        String translate = transformer.transform(filedValue, annotation.dataSource(), annotation.param());
+        String translate = dictTransformer.transform(filedValue, annotation.dataSource(), annotation.param());
         if (null != translate) {
             ReflectUtil.invokeSet(result, field, translate);
         }

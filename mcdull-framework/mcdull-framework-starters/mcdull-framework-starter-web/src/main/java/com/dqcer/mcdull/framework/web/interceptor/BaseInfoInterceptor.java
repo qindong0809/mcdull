@@ -5,6 +5,7 @@ import com.dqcer.framework.base.auth.UnifySession;
 import com.dqcer.framework.base.auth.UserContextHolder;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.constants.SysConstants;
+import com.dqcer.framework.base.enums.LanguageEnum;
 import com.dqcer.framework.base.utils.StrUtil;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
@@ -53,7 +54,11 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
 
         // 获取当前用户信息
         UnifySession unifySession = new UnifySession();
-        unifySession.setLanguage(request.getHeader(HttpHeaders.ACCEPT_LANGUAGE));
+        String language = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
+        if (language == null) {
+            language = LanguageEnum.ZH_CN.getCode();
+        }
+        unifySession.setLanguage(language);
         unifySession.setUserId(Long.valueOf(request.getHeader(HttpHeaderConstants.U_ID)));
         String tenantId = request.getHeader(HttpHeaderConstants.T_ID);
         if (StrUtil.isNotBlank(tenantId)) {

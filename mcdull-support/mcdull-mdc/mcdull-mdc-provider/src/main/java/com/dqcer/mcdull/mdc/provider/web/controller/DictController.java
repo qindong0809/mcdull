@@ -7,6 +7,7 @@ import com.dqcer.mcdull.mdc.api.vo.DictVO;
 import com.dqcer.mcdull.mdc.provider.web.service.DictService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -30,7 +31,7 @@ public class DictController {
      * @param dto dto
      * @return {@link Result}<{@link List}<{@link DictVO}>>
      */
-    @GetMapping("dict/list")
+    @PostMapping("dict/list")
     public Result<List<DictVO>> list(@Validated(ValidGroup.List.class) DictLiteDTO dto) {
         return sysDictService.list(dto);
     }
@@ -41,7 +42,7 @@ public class DictController {
      * @param dto dto
      * @return {@link Result}<{@link DictVO}>
      */
-    @GetMapping("dict/one")
+    @GetMapping("dict/detail")
     public Result<DictVO> one(@Validated(ValidGroup.One.class) DictLiteDTO dto) {
         return sysDictService.one(dto);
     }

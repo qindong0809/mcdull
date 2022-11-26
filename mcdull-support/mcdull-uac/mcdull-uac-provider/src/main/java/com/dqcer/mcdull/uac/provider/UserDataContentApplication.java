@@ -17,7 +17,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 @EnableWebCore
 @MapperScan("com.dqcer.mcdull.uac.provider.web.dao.mapper")
-@EnableFeignClients(basePackages = "com.dqcer.mcdull.*.client.service")
+@EnableFeignClients(basePackages = {"com.dqcer.mcdull.*.client.service", "com.dqcer.mcdull.framework.web.remote"})
 @EnableDynamicDataSource
 @EnableCache
 @EnableDiscoveryClient

@@ -21,7 +21,7 @@ public interface SysDictServiceApi {
      * @param dto dto
      * @return {@link Result< DictVO >}
      */
-    @GetMapping("sys/dice/detail")
+    @GetMapping("/dict/detail")
     Result<DictVO> one(@Validated(value = ValidGroup.One.class) DictLiteDTO dto);
 
 }

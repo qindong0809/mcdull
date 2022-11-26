@@ -5,6 +5,8 @@ import com.dqcer.mcdull.framework.web.advice.BaseExceptionAdvice;
 import com.dqcer.mcdull.framework.web.advice.ExceptionAdvice;
 import com.dqcer.mcdull.framework.web.config.AutoConfiguration;
 import com.dqcer.mcdull.framework.web.config.DateTimeConfig;
+import com.dqcer.mcdull.framework.web.remote.DictRemote;
+import com.dqcer.mcdull.framework.web.transform.DictTransformer;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
@@ -20,6 +22,6 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Import({ExceptionAdvice.class, BaseExceptionAdvice.class, AutoConfiguration.class, DateTimeConfig.class})
+@Import({ExceptionAdvice.class, BaseExceptionAdvice.class, AutoConfiguration.class, DateTimeConfig.class, DictTransformer.class})
 public @interface EnableWebCore {
 }
