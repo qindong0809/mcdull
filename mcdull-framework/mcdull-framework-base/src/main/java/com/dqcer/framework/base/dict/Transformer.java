@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.web.transform;
+package com.dqcer.framework.base.dict;
 
 /**
  * 变压器

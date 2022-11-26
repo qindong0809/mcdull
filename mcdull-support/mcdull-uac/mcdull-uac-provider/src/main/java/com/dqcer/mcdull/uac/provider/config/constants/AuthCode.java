@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.uac.provider.constants;
+package com.dqcer.mcdull.uac.provider.config.constants;
 
 import com.dqcer.framework.base.dict.IDict;
 import com.dqcer.framework.base.wrapper.IResultCode;

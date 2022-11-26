@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.web.transform;
+package com.dqcer.framework.base.dict;
 
 import java.lang.annotation.*;
 
@@ -24,6 +24,13 @@ public @interface Transform {
      * id或者code的值来源于哪个字段
      */
     String from() default "";
+
+    /**
+     * 数据源 dict类型
+     *
+     * @return boolean
+     */
+    boolean dataSourceDict() default true;
 
     /**
      * 额外参数

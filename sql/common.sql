@@ -12,24 +12,73 @@ CREATE TABLE IF NOT EXISTS `demo` (
 
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE IF NOT EXISTS `sys_user` (
-    `id` bigint(20) NOT NULL COMMENT '主键',
-    `created_by` bigint(20) NOT NULL COMMENT '创建人',
-    `created_time` datetime NOT NULL COMMENT '创建时间',
-    `updated_by` bigint(20) DEFAULT NULL COMMENT '更新人',
-    `updated_time` datetime DEFAULT NULL COMMENT '更新时间',
-    `status` int(4) NOT NULL COMMENT '状态（1/正常 2/停用）',
-    `del_flag` int(1) NOT NULL DEFAULT 1 COMMENT '删除标识（1/正常 2/删除）',
-    `account` varchar(128) NOT NULL COMMENT '账号',
-    `password` varchar(128) NOT NULL COMMENT '密码',
-    `salt` varchar(128) NOT NULL COMMENT '密码盐',
-    `email` varchar(128) DEFAULT NULL COMMENT '邮箱',
-    `phone` varchar(128) DEFAULT NULL COMMENT '手机号',
-    `last_login_time` datetime DEFAULT NULL COMMENT '最后一次登录时间',
-    PRIMARY KEY (`id`),
-    KEY `idx_pa_account` (`account`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
+`id` bigint(20) NOT NULL COMMENT '主键',
+`created_by` bigint(20) NOT NULL COMMENT '创建人',
+`created_time` datetime NOT NULL COMMENT '创建时间',
+`updated_by` bigint(20) DEFAULT NULL COMMENT '更新人',
+`updated_time` datetime DEFAULT NULL COMMENT '更新时间',
+`status` int(4) NOT NULL COMMENT '状态（1/正常 2/停用）',
+`del_flag` int(1) NOT NULL DEFAULT 1 COMMENT '删除标识（1/正常 2/删除）',
+`account` varchar(128) NOT NULL COMMENT '账号',
+`password` varchar(128) NOT NULL COMMENT '密码',
+`salt` varchar(128) NOT NULL COMMENT '密码盐',
+`email` varchar(128) DEFAULT NULL COMMENT '邮箱',
+`phone` varchar(128) DEFAULT NULL COMMENT '手机号',
+`last_login_time` datetime DEFAULT NULL COMMENT '最后一次登录时间',
+PRIMARY KEY (`id`),
+KEY `idx_pa_account` (`account`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 INSERT INTO sys_user(id, created_by, created_time, updated_by, updated_time, status, del_flag, account, password, salt, email, phone, last_login_time)
 VALUES(1589631293412503554, 1589631293412503554, '2022-10-31 07:20:54', null, null, 1, 1, 'admin', '7a69d7186df1a65ed7af2ba00747488e2415bf1a', 'c7e87439-aef3-48e0-be26-678d0ab99345', null, null, null);
+
+CREATE TABLE IF NOT EXISTS `sys_menu` (
+`id` bigint(20) NOT NULL COMMENT '主键',
+`created_by` bigint(20) NOT NULL COMMENT '创建人',
+`created_time` datetime NOT NULL COMMENT '创建时间',
+`updated_by` bigint(20) DEFAULT NULL COMMENT '更新人',
+`updated_time` datetime DEFAULT NULL COMMENT '更新时间',
+`status` int(1) NOT NULL COMMENT '状态（1/正常 2/停用）',
+`parent_id` bigint(20) NOT NULL COMMENT '父级',
+`name` varchar(128) NOT NULL COMMENT '名称',
+`icon` varchar(128) NOT NULL COMMENT '图标',
+`sort` varchar(128) NOT NULL COMMENT '排序',
+`res_code` varchar(128) NOT NULL COMMENT '模块code 如sys:user:list',
+`path` varchar(128) NOT NULL COMMENT '路由',
+`component` varchar(128) NOT NULL COMMENT '组件',
+`type` varchar(8) NOT NULL COMMENT '类型(menu/菜单、button/按钮)',
+`del_flag` int(1) NOT NULL COMMENT '删除标识（1/正常 2/已删除）',
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='菜单表';
+
+CREATE TABLE IF NOT EXISTS `sys_role` (
+`id` bigint(20) NOT NULL COMMENT '主键',
+`created_by` bigint(20) NOT NULL COMMENT '创建人',
+`created_time` datetime NOT NULL COMMENT '创建时间',
+`updated_by` bigint(20) DEFAULT NULL COMMENT '更新人',
+`updated_time` datetime DEFAULT NULL COMMENT '更新时间',
+`status` int(1) NOT NULL COMMENT '状态（1/正常 2/停用）',
+`name` varchar(512) NOT NULL COMMENT '名称',
+`code` varchar(128) DEFAULT NULL COMMENT '编码',
+`description` varchar(128) DEFAULT NULL COMMENT '描述',
+`del_flag` int(1) NOT NULL COMMENT '删除标识（1/正常 2/已删除）',
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色表';
+
+CREATE TABLE IF NOT EXISTS `sys_role_menu` (
+    `id` bigint(20) NOT NULL COMMENT '主键',
+    `created_time` datetime NOT NULL COMMENT '创建时间',
+    `role_id` bigint(20) NOT NULL COMMENT '角色主键',
+    `menu_id` bigint(20) NOT NULL COMMENT '菜单主键',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色菜单中间表';
+
+CREATE TABLE IF NOT EXISTS `sys_user_role` (
+    `id` bigint(20) NOT NULL COMMENT '主键',
+    `created_time` datetime NOT NULL COMMENT '创建时间',
+    `user_id` bigint(20) NOT NULL COMMENT '角色主键',
+    `menu_id` bigint(20) NOT NULL COMMENT '菜单主键',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户角色中间表';
 
 
 CREATE TABLE IF NOT EXISTS `sys_dict` (

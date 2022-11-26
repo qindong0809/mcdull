@@ -1,6 +1,7 @@
 package com.dqcer.mcdull.framework.web.transform;
 
 import com.dqcer.framework.base.dict.IDict;
+import com.dqcer.framework.base.dict.Transformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * @author dqcer
  * @version 2022/10/05
  */
-public class EnumTransformer implements Transformer<Object>{
+public class EnumTransformer implements Transformer<Object> {
 
     private static final Logger log = LoggerFactory.getLogger(EnumTransformer.class);
 

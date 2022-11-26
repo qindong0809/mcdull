@@ -1,6 +1,8 @@
 package com.dqcer.mcdull.framework.web.transform;
 
 import com.dqcer.framework.base.dict.IDict;
+import com.dqcer.framework.base.dict.Transform;
+import com.dqcer.framework.base.dict.Transformer;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -25,7 +27,7 @@ public class TranslatorAspect {
     private static final Logger log = LoggerFactory.getLogger(TranslatorAspect.class);
 
 
-    @Pointcut("@annotation(com.dqcer.mcdull.framework.web.transform.Transform) ")
+    @Pointcut("@annotation(com.dqcer.framework.base.dict.Transform) ")
     public void translatorPointCut() {
         // 切点
     }

@@ -7,6 +7,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * 身份验证应用程序
@@ -15,7 +16,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @version 2022/10/31
  */
 @EnableWebCore
-@MapperScan("com.dqcer.mcdull.uac.provider.web.dao")
+@MapperScan("com.dqcer.mcdull.uac.provider.web.dao.mapper")
+@EnableFeignClients(basePackages = "com.dqcer.mcdull.*.client.service")
 @EnableDynamicDataSource
 @EnableCache
 @EnableDiscoveryClient

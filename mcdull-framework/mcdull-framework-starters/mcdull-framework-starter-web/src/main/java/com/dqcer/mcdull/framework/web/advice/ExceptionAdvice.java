@@ -8,19 +8,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
+import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -32,15 +33,14 @@ import java.util.stream.Collectors;
  * @author dqcer
  * @version  2021/08/17
  */
-@Order(-100)
 @RestControllerAdvice
+@Order(1)
 public class ExceptionAdvice {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Value("${spring.application.name}")
     private String applicationName;
-
 
     /**
      * 异常
@@ -53,19 +53,6 @@ public class ExceptionAdvice {
         log.error("系统异常: ", exception);
         return Result.error(ResultCode.ERROR_UNKNOWN);
     }
-
-    /**
-     * 异常
-     *
-     * @param exception 异常
-     * @return {@link Result}
-     */
-    @ExceptionHandler(value = SQLSyntaxErrorException.class)
-    public Result<?> exception(SQLSyntaxErrorException exception) {
-        log.error("sql语法异常: ", exception);
-        return Result.error(ResultCode.SQL_SYNTAX_ERROR);
-    }
-
 
     /**
      * 缺少资源异常，无法找到对应properties文件中对应的key

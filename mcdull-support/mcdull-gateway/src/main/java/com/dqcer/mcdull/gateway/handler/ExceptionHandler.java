@@ -4,6 +4,7 @@ import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -74,9 +75,8 @@ public class ExceptionHandler implements WebExceptionHandler, Ordered {
                             error = Result.error(ResultCode.ERROR_UNKNOWN);
                             break;
                     }
-
                 } else {
-                    log.warn("网关异常处理", ex);
+                    log.warn("网关异常处理: {}", ex.getMessage());
                     error = Result.error(ResultCode.ERROR_UNKNOWN);
                 }
                 return bufferFactory.wrap(objectMapper.writeValueAsBytes(error));

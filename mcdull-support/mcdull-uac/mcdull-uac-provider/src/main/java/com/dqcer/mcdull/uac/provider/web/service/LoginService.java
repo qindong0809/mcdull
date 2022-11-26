@@ -14,12 +14,12 @@ import com.dqcer.framework.base.utils.ObjUtil;
 import com.dqcer.framework.base.utils.Sha1Util;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
-import com.dqcer.mcdull.uac.api.dto.LoginDTO;
-import com.dqcer.mcdull.uac.api.entity.SysUserEntity;
-import com.dqcer.mcdull.uac.provider.constants.AuthCode;
-import com.dqcer.mcdull.uac.provider.web.dao.UserDAO;
 import com.dqcer.mcdull.framework.redis.operation.CaffeineCache;
 import com.dqcer.mcdull.framework.redis.operation.RedisClient;
+import com.dqcer.mcdull.uac.api.dto.LoginDTO;
+import com.dqcer.mcdull.uac.api.entity.SysUserEntity;
+import com.dqcer.mcdull.uac.provider.config.constants.AuthCode;
+import com.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -46,7 +46,7 @@ public class LoginService {
     private static final Logger log = LoggerFactory.getLogger(LoginService.class);
 
     @Resource
-    private UserDAO userDAO;
+    private UserMapper userDAO;
 
     @Resource
     private RedisClient redisClient;

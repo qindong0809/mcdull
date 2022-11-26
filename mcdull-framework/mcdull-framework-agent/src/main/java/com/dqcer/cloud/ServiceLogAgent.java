@@ -45,7 +45,7 @@ public class ServiceLogAgent {
                 //采用ByteBuddy作为默认的Agent实例
                 .Default()
                 //拦截匹配方式
-                .type(ElementMatchers.nameStartsWith("com.edetek.eclinical.ctms.web.api"))
+                .type(ElementMatchers.nameStartsWith("com"))
                 .and(ElementMatchers.isAnnotatedWith(RestController.class))
                 //拦截到的类由transformer处理
                 .transform(transformer)

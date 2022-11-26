@@ -70,18 +70,20 @@ public class ServiceLogInterceptor {
 
             respResult = JSONObject.toJSONString(result, SerializerFeature.IgnoreErrorGetter);
 
+            return result;
         } catch (Exception e){
             log.error(e.getMessage(),e);
             status = 2;
             respResult = e.getMessage();
+            throw e;
         } finally{
             memoryInfo = JvmInfoUtil.afterMemoryInfo(memoryInfo);
             gcInfos.addAll(JvmInfoUtil.getGCInfo(memoryInfo.getId(), 2));
 
             long endTime = System.currentTimeMillis();
             saveLog(obj, args, method, status, respResult, start, endTime, memoryInfo, gcInfos);
+
         }
-        return result;
     }
 
     /**
