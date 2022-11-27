@@ -2,7 +2,7 @@ package com.dqcer.mcdull.uac.api.dto;
 
 import com.dqcer.framework.base.PagedDTO;
 import com.dqcer.framework.base.ValidGroup;
-import com.dqcer.framework.base.annotation.EnumsValid;
+import com.dqcer.framework.base.annotation.EnumsIntValid;
 import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.enums.StatusEnum;
 import org.hibernate.validator.constraints.Length;
@@ -23,63 +23,78 @@ public class UserLiteDTO extends PagedDTO {
      /**
       * 主键
       */
-     @NotNull(groups = {ValidGroup.Update.class, ValidGroup.One.class, ValidGroup.Status.class})
+     @NotNull(groups = {ValidGroup.Update.class, ValidGroup.One.class, ValidGroup.Status.class, ValidGroup.Delete.class})
      private Long id;
     /**
      * 状态（1/正常 2/停用）
      */
-     @NotNull(groups = {ValidGroup.Status.class})
-     @EnumsValid(groups = {ValidGroup.Status.class}, value = StatusEnum.class)
+     @EnumsIntValid(groups = {ValidGroup.Status.class}, value = StatusEnum.class)
      private Integer status;
+
     /**
      * 删除标识（1/正常 2/删除）
      */
-    @NotNull(groups = {ValidGroup.Add.class})
-    @EnumsValid(groups = {ValidGroup.Add.class}, value = DelFlayEnum.class)
+    @EnumsIntValid(groups = {ValidGroup.Delete.class}, value = DelFlayEnum.class)
     private Integer delFlag;
 
+
     /**
-     * 所属模块编码 如：user:register
+     * 昵称
      */
     @NotBlank(groups = {ValidGroup.Add.class})
     @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
-    private String modelCode;
+    private String nickname;
 
     /**
-     * 模板名称
+     * 账户
      */
     @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
-    private String templateName;
+    @Length(groups = {ValidGroup.Add.class}, min = 5, max = 64)
+    private String account;
 
     /**
-     * 模板类型
+     * 电子邮件
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
-    private String templateType;
+    @Length(groups = {ValidGroup.Add.class}, min = 5, max = 64)
+    private String email;
 
     /**
-     * 备注说明
+     * 电话
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
-    private String descr;
+    @Length(groups = {ValidGroup.Add.class}, min = 8, max = 11)
+    private String phone;
 
-    /**
-     * 标题（包含占位符）
-     */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
-    private String subject;
+    public String getNickname() {
+        return nickname;
+    }
 
-    /**
-     * 正文（包含占位符）
-     */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
-    private String content;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public Long getId() {
         return id;
@@ -102,61 +117,5 @@ public class UserLiteDTO extends PagedDTO {
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
     }
-    public String getModelCode() {
-        return modelCode;
-    }
 
-    public void setModelCode(String modelCode) {
-        this.modelCode = modelCode;
-    }
-    public String getTemplateName() {
-        return templateName;
-    }
-
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-    }
-    public String getTemplateType() {
-        return templateType;
-    }
-
-    public void setTemplateType(String templateType) {
-        this.templateType = templateType;
-    }
-    public String getDescr() {
-        return descr;
-    }
-
-    public void setDescr(String descr) {
-        this.descr = descr;
-    }
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    @Override
-    public String toString() {
-    return "SysMailTemplate{" +
-            "id=" + id +
-            ", status=" + status +
-            ", delFlag=" + delFlag +
-            ", modelCode=" + modelCode +
-            ", templateName=" + templateName +
-            ", templateType=" + templateType +
-            ", descr=" + descr +
-            ", subject=" + subject +
-            ", content=" + content +
-    "}";
-    }
 }

@@ -50,10 +50,10 @@ public class DictService {
      */
     public Result<DictVO> one(DictLiteDTO dto) {
         LambdaQueryWrapper<SysDictEntity> wrapper = Wrappers.lambdaQuery();
-        wrapper.ge(SysDictEntity::getCode, dto.getCode());
-        wrapper.ge(SysDictEntity::getLanguage, dto.getLanguage());
-        wrapper.ge(SysDictEntity::getSelectType, dto.getSelectType());
-        wrapper.ge(SysDictEntity::getDelFlag, DelFlayEnum.NORMAL.getCode());
+        wrapper.eq(SysDictEntity::getCode, dto.getCode());
+        wrapper.eq(SysDictEntity::getLanguage, dto.getLanguage());
+        wrapper.eq(SysDictEntity::getSelectType, dto.getSelectType());
+        wrapper.eq(SysDictEntity::getDelFlag, DelFlayEnum.NORMAL.getCode());
         wrapper.last(SysConstants.LAST_SQL_LIMIT_1);
         return Result.ok(DictConvert.entityConvertToVo(sysDictDAO.selectOne(wrapper)));
     }

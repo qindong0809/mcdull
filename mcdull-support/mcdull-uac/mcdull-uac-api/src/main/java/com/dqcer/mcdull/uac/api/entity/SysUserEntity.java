@@ -20,6 +20,11 @@ public class SysUserEntity extends BaseEntity {
     private Integer delFlag;
 
     /**
+     * 昵称
+     */
+    private String nickname;
+
+    /**
      * 账户
      */
     private String account;
@@ -48,6 +53,14 @@ public class SysUserEntity extends BaseEntity {
      * 最后登录时间
      */
     private LocalTime lastLoginTime;
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 
     public Integer getDelFlag() {
         return delFlag;

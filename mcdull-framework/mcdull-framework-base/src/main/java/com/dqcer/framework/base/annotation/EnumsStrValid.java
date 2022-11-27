@@ -1,7 +1,7 @@
 package com.dqcer.framework.base.annotation;
 
 
-import com.dqcer.framework.base.validator.EnumsValidator;
+import com.dqcer.framework.base.validator.EnumsStrValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -18,10 +18,10 @@ import java.lang.annotation.Target;
  * @version 2021/12/20
  */
 @Documented
-@Constraint(validatedBy = EnumsValidator.class)
+@Constraint(validatedBy = EnumsStrValidator.class)
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface EnumsValid {
+public @interface EnumsStrValid {
 
     String message() default "值不在枚举值中";
 

@@ -1,6 +1,7 @@
 package com.dqcer.mcdull.mdc.api.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.dqcer.framework.base.entity.Entity;
 import com.dqcer.framework.base.entity.SuperId;
 
 /**
@@ -10,7 +11,9 @@ import com.dqcer.framework.base.entity.SuperId;
  * @version 2022/11/01 22:11:06
  */
 @TableName("sys_dict")
-public class SysDictEntity extends SuperId {
+public class SysDictEntity implements Entity {
+
+    private static final long serialVersionUID = -3149487090464216421L;
 
     /**
      * 编码

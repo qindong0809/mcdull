@@ -31,7 +31,7 @@ public class DictController {
      * @param dto dto
      * @return {@link Result}<{@link List}<{@link DictVO}>>
      */
-    @PostMapping("dict/list")
+    @GetMapping("dict/list")
     public Result<List<DictVO>> list(@Validated(ValidGroup.List.class) DictLiteDTO dto) {
         return sysDictService.list(dto);
     }
@@ -42,7 +42,7 @@ public class DictController {
      * @param dto dto
      * @return {@link Result}<{@link DictVO}>
      */
-    @GetMapping("dict/detail")
+    @GetMapping({"dict/detail", "feign/dict/detail"})
     public Result<DictVO> one(@Validated(ValidGroup.One.class) DictLiteDTO dto) {
         return sysDictService.one(dto);
     }

@@ -26,7 +26,7 @@ public enum StatusEnum implements IDict<Integer> {
         init(code, text);
     }
 
-    public static StatusEnum toEnum(int value) {
+    public static StatusEnum toEnum(Integer value) {
         switch (value) {
             case 1:
                 return StatusEnum.ENABLE;

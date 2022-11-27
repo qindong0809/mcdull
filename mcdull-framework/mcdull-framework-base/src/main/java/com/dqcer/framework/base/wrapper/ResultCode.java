@@ -28,6 +28,11 @@ public enum ResultCode implements IResultCode , IDict<Integer> {
 	SQL_SYNTAX_ERROR(999510, "sql语法异常"),
 
 	/**
+	 * 数据库错误
+	 */
+	DB_ERROR(999511, "数据库操作异常"),
+
+	/**
 	 * 无权限
 	 */
 	UN_AUTHORIZATION(999401, "无权限"),
@@ -66,6 +71,16 @@ public enum ResultCode implements IResultCode , IDict<Integer> {
 	 * 参数异常
 	 */
 	ERROR_PARAMETERS(999450, "参数异常"),
+
+	/**
+	 * 数据存在
+	 */
+	DATA_EXIST(999460, "数据已存在"),
+
+	/**
+	 * 数据不存在
+	 */
+	DATA_NOT_EXIST(999461, "数据不存在"),
 
 	/**
 	 * 错误类型

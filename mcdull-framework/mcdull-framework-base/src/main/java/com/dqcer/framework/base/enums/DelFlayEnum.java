@@ -25,7 +25,7 @@ public enum DelFlayEnum implements IDict<Integer> {
         init(code, text);
     }
 
-    public static DelFlayEnum toEnum(int value) {
+    public static DelFlayEnum toEnum(Integer value) {
         switch (value) {
             case 1:
                 return DelFlayEnum.NORMAL;

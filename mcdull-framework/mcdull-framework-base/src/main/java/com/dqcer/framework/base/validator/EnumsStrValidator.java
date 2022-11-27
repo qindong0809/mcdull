@@ -1,6 +1,6 @@
 package com.dqcer.framework.base.validator;
 
-import com.dqcer.framework.base.annotation.EnumsValid;
+import com.dqcer.framework.base.annotation.EnumsStrValid;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
  * @author dqcer
  * @version 2022/01/11
  */
-public class EnumsValidator implements ConstraintValidator<EnumsValid, String> {
+public class EnumsStrValidator implements ConstraintValidator<EnumsStrValid, String> {
 
 
     private Class<? extends Enum> enumClass;
@@ -20,7 +20,7 @@ public class EnumsValidator implements ConstraintValidator<EnumsValid, String> {
     private static final String METHOD_NAME = "toEnum";
 
     @Override
-    public void initialize(EnumsValid annotation) {
+    public void initialize(EnumsStrValid annotation) {
         enumClass = annotation.value();
         try {
             enumClass.getDeclaredMethod(METHOD_NAME, String.class);

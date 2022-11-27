@@ -63,7 +63,7 @@ public class LoginService {
     public Result<String> login(LoginDTO loginDTO) {
         String account = loginDTO.getAccount();
         LambdaQueryWrapper<SysUserEntity> wrapper = Wrappers.lambdaQuery();
-        wrapper.ge(SysUserEntity::getAccount, account);
+        wrapper.eq(SysUserEntity::getAccount, account);
         SysUserEntity entity = userDAO.selectOne(wrapper);
         if (null == entity) {
             log.warn("账号不存在 account: {}", account);

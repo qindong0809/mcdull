@@ -22,3 +22,28 @@ mcdull
 │       
 
 ```
+### 闭坑指南
+
+##### feign 传参服务端无法接收
+- 解决方案
+```xml
+        <!--feign配置 针对解决：feign调用get请求时，body有参导致服务端自动转换为post请求-->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-httpclient</artifactId>
+        </dependency>
+```
+
+##### feign get传对象
+
+- 解决方案
+```java
+    /**
+     * 单个详情（使用 @SpringQueryMap）
+     *
+     * @param dto dto
+     * @return {@link Result < DictVO >}
+     */
+    @GetMapping("/dict/detail")
+    Result<DictVO> detail(@SpringQueryMap @Validated(value = ValidGroup.One.class) DictLiteDTO dto);
+```

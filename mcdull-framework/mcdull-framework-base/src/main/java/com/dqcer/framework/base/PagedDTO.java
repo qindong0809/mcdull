@@ -21,6 +21,7 @@ public abstract class PagedDTO extends KeywordDTO implements IPaged {
      */
     @NotNull(groups = ValidGroup.Paged.class)
     @Max(groups = ValidGroup.Paged.class, value = 1000)
+    @Min(groups = ValidGroup.Paged.class, value = 1)
     private Long pageSize;
 
     /**

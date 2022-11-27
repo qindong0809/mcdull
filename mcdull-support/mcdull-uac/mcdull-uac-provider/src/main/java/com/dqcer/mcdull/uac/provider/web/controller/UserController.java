@@ -8,9 +8,7 @@ import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
 import com.dqcer.mcdull.uac.provider.web.service.UserService;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -41,7 +39,41 @@ public class UserController {
      * @return {@link Result}<{@link UserVO}>
      */
     @GetMapping("base/detail")
+    @Transform
     public Result<UserVO> detail(@Validated(ValidGroup.One.class) UserLiteDTO dto) {
         return userService.detail(dto);
+    }
+
+    /**
+     * 新增数据
+     *
+     * @param dto dto
+     * @return {@link Result<Long> 返回新增主键}
+     */
+    @PostMapping("base/save")
+    public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Add.class})UserLiteDTO dto){
+        return userService.insert(dto);
+    }
+
+    /**
+     * 状态更新
+     *
+     * @param dto dto
+     * @return {@link Result<Long>}
+     */
+    @PostMapping("base/status")
+    public Result<Long> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) UserLiteDTO dto){
+        return userService.updateStatus(dto);
+    }
+
+    /**
+     * 单个删除
+     *
+     * @param dto dto
+     * @return {@link Result<Long>}
+     */
+    @PostMapping("base/delete")
+    public Result<Long> delete(@RequestBody @Validated(value = {ValidGroup.Delete.class}) UserLiteDTO dto){
+        return userService.delete(dto);
     }
 }

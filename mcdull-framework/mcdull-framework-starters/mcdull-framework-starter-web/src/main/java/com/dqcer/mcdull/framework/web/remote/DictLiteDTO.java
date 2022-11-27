@@ -2,7 +2,7 @@ package com.dqcer.mcdull.framework.web.remote;
 
 import com.dqcer.framework.base.DTO;
 import com.dqcer.framework.base.ValidGroup;
-import com.dqcer.framework.base.annotation.EnumsValid;
+import com.dqcer.framework.base.annotation.EnumsStrValid;
 import com.dqcer.framework.base.enums.LanguageEnum;
 
 import javax.validation.constraints.NotEmpty;
@@ -30,7 +30,7 @@ public class DictLiteDTO extends DTO {
     /**
      * language
      */
-    @EnumsValid(value = LanguageEnum.class, groups = { ValidGroup.One.class, ValidGroup.List.class })
+    @EnumsStrValid(value = LanguageEnum.class, groups = { ValidGroup.One.class, ValidGroup.List.class })
     private String language;
 
     public String getCode() {

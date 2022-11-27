@@ -4,7 +4,7 @@ import com.dqcer.framework.base.enums.StatusEnum;
 import com.dqcer.framework.base.PagedDTO;
 import com.dqcer.framework.base.ValidGroup;
 
-import com.dqcer.framework.base.annotation.EnumsValid;
+import com.dqcer.framework.base.annotation.EnumsStrValid;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
@@ -34,7 +34,7 @@ public class MailTemplateLiteDTO extends PagedDTO {
      * 删除标识（1/正常 2/删除）
      */
     @NotNull(groups = {ValidGroup.Add.class})
-    @EnumsValid(groups = {ValidGroup.Add.class}, value = StatusEnum.class)
+    @EnumsStrValid(groups = {ValidGroup.Add.class}, value = StatusEnum.class)
     private Integer delFlag;
 
     /**

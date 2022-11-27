@@ -21,7 +21,6 @@ public abstract class SuperId implements Entity {
     protected Long id;
 
 
-    @Override
     public Long getId() {
         return id;
     }

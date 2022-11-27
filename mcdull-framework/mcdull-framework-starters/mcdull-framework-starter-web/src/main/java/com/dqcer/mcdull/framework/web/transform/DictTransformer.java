@@ -38,7 +38,7 @@ public class DictTransformer implements Transformer {
         dto.setCode(String.valueOf(original));
         dto.setSelectType(param);
         dto.setLanguage(UserContextHolder.getSession().getLanguage());
-        DictVO vo = FeignResultParse.getInstance(dictRemote.one(dto));
+        DictVO vo = FeignResultParse.getInstance(dictRemote.detail(dto));
         return vo.getName();
     }
 }

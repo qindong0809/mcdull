@@ -14,4 +14,12 @@ public interface IUserRepository extends IService<SysUserEntity> {
      * @return {@link Page}<{@link SysUserEntity}>
      */
     Page<SysUserEntity> selectPage(UserLiteDTO dto);
+
+    /**
+     * 插入
+     *
+     * @param entity 实体
+     * @return {@link Long}
+     */
+    Long insert(SysUserEntity entity);
 }

@@ -11,11 +11,4 @@ import java.io.Serializable;
 @SuppressWarnings("unused")
 public interface Entity extends Serializable {
 
-    /**
-     * 主键约束
-     *
-     * @return {@link Long}
-     */
-    Long getId();
-
 }

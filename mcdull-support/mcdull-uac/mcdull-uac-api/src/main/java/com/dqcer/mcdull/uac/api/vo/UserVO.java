@@ -6,6 +6,12 @@ import com.dqcer.framework.base.dict.Transform;
 import java.time.LocalTime;
 import java.util.Date;
 
+/**
+ * 用户视图对象
+ *
+ * @author dqcer
+ * @version  2022/11/27
+ */
 public class UserVO extends VO {
 
     /**
@@ -23,6 +29,8 @@ public class UserVO extends VO {
      */
     private Long createdBy;
 
+    private String createdByStr;
+
     /**
      * 更新时间
      */
@@ -32,6 +40,8 @@ public class UserVO extends VO {
      * 更新人
      */
     private Long updatedBy;
+
+    private String updatedByStr;
 
     /**
      * 状态
@@ -50,15 +60,19 @@ public class UserVO extends VO {
 
     /**
      * 删除str
-     * 删除str
      */
-    @Transform(from = "delFlag", param = "del_flay_type")
+    @Transform(from = "delFlag", param = "del_flag_type")
     private String delFlagStr;
 
     /**
      * 账户
      */
     private String account;
+
+    /**
+     * 昵称
+     */
+    private String nickname;
 
     /**
      * 电子邮件
@@ -74,6 +88,38 @@ public class UserVO extends VO {
      * 最后登录时间
      */
     private LocalTime lastLoginTime;
+
+    public String getCreatedByStr() {
+        return createdByStr;
+    }
+
+    public void setCreatedByStr(String createdByStr) {
+        this.createdByStr = createdByStr;
+    }
+
+    public String getUpdatedByStr() {
+        return updatedByStr;
+    }
+
+    public void setUpdatedByStr(String updatedByStr) {
+        this.updatedByStr = updatedByStr;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getDelFlagStr() {
+        return delFlagStr;
+    }
+
+    public void setDelFlagStr(String delFlagStr) {
+        this.delFlagStr = delFlagStr;
+    }
 
     public Long getId() {
         return id;
