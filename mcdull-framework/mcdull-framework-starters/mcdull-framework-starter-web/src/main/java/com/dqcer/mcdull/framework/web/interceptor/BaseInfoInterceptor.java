@@ -57,6 +57,8 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         String language = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
         if (language == null) {
             language = LanguageEnum.ZH_CN.getCode();
+        } else {
+            language = language.substring(0, language.indexOf(","));
         }
         unifySession.setLanguage(language);
         unifySession.setUserId(Long.valueOf(request.getHeader(HttpHeaderConstants.U_ID)));

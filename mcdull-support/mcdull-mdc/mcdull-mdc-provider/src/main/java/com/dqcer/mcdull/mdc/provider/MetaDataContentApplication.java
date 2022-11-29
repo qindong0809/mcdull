@@ -8,9 +8,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @EnableFeignClients(basePackages = {"com.dqcer.mcdull.framework.web.remote"})
-@MapperScan("com.dqcer.mcdull.mdc.provider.web.dao")
+@MapperScan("com.dqcer.mcdull.mdc.provider.web.dao.mapper")
 @EnableWebCore
-@EnableDiscoveryClient()
+@EnableDiscoveryClient
 @SpringBootApplication
 public class MetaDataContentApplication {
 

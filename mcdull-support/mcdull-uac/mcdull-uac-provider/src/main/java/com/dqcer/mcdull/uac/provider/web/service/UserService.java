@@ -168,4 +168,30 @@ public class UserService {
 
         return Result.ok(id);
     }
+
+    /**
+     * 重置密码
+     *
+     * @param dto dto
+     * @return {@link Result}<{@link Long}>
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public Result<Long> resetPassword(UserLiteDTO dto) {
+        Long id = dto.getId();
+        SysUserEntity entity = userRepository.getById(id);
+        if (entity == null) {
+            log.warn("数据不存在 id:{}", id);
+            return Result.error(ResultCode.DATA_NOT_EXIST);
+        }
+        String password = Sha1Util.getSha1(Md5Util.getMd5(entity.getAccount() + entity.getSalt()));
+        SysUserEntity user = new SysUserEntity();
+        user.setId(id);
+        user.setPassword(password);
+        boolean success = userRepository.updateById(entity);
+        if (!success) {
+            log.error("重置密码失败，entity:{}", entity);
+            throw new BusinessException(ResultCode.DB_ERROR);
+        }
+        return Result.ok(id);
+    }
 }

@@ -97,15 +97,18 @@ CREATE TABLE IF NOT EXISTS `sys_dict` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='公共码表';
 
 INSERT INTO `sys_dict` VALUES ('0', null, '未知的性别', null, 'sex_type', 1, 2, 1, '性别代码',  'zh-CN',  1);
-INSERT INTO `sys_dict` VALUES ('1', null, '男', null, 'sex_type', 1, 2, 1, '性别代码',  'zh-CN',  1);
-INSERT INTO `sys_dict` VALUES ('2', null, '女', null, 'sex_type', 1, 2, 1, '性别代码',  'zh-CN',  1);
-INSERT INTO `sys_dict` VALUES ('9', null, '未说明的性别', null, 'sex_type', 1, 2, 1, '性别代码',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('1', null, '男', null, 'sex_type', 2, 2, 1, '性别代码',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('2', null, '女', null, 'sex_type', 3, 2, 1, '性别代码',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('9', null, '未说明的性别', null, 'sex_type', 4, 1, 1, '性别代码',  'zh-CN',  1);
 
-INSERT INTO `sys_dict` VALUES ('1', null, '启用', null, 'status_type', 1, 2, 1, '状态标识',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('1', null, '启用', null, 'status_type', 1, 1, 1, '状态标识',  'zh-CN',  1);
 INSERT INTO `sys_dict` VALUES ('2', null, '停用', null, 'status_type', 2, 2, 1, '状态标识',  'zh-CN',  1);
 
-INSERT INTO `sys_dict` VALUES ('1', null, '正常', null, 'del_flag_type', 1, 2, 1, '删除标识',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('1', null, '正常', null, 'del_flag_type', 1, 1, 1, '删除标识',  'zh-CN',  1);
 INSERT INTO `sys_dict` VALUES ('2', null, '删除', null, 'del_flag_type', 2, 2, 1, '删除标识',  'zh-CN',  1);
+
+INSERT INTO `sys_dict` VALUES ('zh-CN', null, '中文', null, 'language_type', 1, 1, 1, '语言类型',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('en-US', null, '英文', null, 'language_type', 2, 2, 1, '语言类型',  'zh-CN',  1);
 
 
 CREATE TABLE IF NOT EXISTS `sys_mail_config` (

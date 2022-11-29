@@ -9,7 +9,7 @@ import com.dqcer.mcdull.mdc.api.dto.MailTemplateLiteDTO;
 import com.dqcer.mcdull.mdc.api.entity.SysMailTemplateEntity;
 import com.dqcer.mcdull.mdc.api.vo.MailTemplateBaseVO;
 import com.dqcer.mcdull.mdc.api.vo.MailTemplateVO;
-import com.dqcer.mcdull.mdc.provider.web.dao.MailTemplateDAO;
+import com.dqcer.mcdull.mdc.provider.web.dao.mapper.MailTemplateDAO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

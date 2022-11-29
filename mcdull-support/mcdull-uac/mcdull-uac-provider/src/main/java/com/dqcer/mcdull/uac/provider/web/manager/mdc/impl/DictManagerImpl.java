@@ -4,7 +4,7 @@ import com.dqcer.framework.base.auth.UserContextHolder;
 import com.dqcer.framework.base.feign.FeignResultParse;
 import com.dqcer.framework.base.utils.StrUtil;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
-import com.dqcer.mcdull.mdc.api.dto.DictLiteDTO;
+import com.dqcer.mcdull.mdc.api.dto.DictFeignDTO;
 import com.dqcer.mcdull.mdc.api.vo.DictVO;
 import com.dqcer.mcdull.mdc.client.service.SysDictClientService;
 import com.dqcer.mcdull.uac.api.vo.RemoteDictVO;
@@ -48,7 +48,7 @@ public class DictManagerImpl implements IDictManager {
         if (remoteDictVO != null) {
             return remoteDictVO;
         }
-        DictLiteDTO dto = new DictLiteDTO();
+        DictFeignDTO dto = new DictFeignDTO();
         dto.setCode(code);
         dto.setSelectType(selectType);
         dto.setLanguage(language);

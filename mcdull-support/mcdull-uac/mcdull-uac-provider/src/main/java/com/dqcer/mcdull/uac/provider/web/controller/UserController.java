@@ -76,4 +76,15 @@ public class UserController {
     public Result<Long> delete(@RequestBody @Validated(value = {ValidGroup.Delete.class}) UserLiteDTO dto){
         return userService.delete(dto);
     }
+
+    /**
+     * 重置密码
+     *
+     * @param dto dto
+     * @return {@link Result}<{@link Long}>
+     */
+    @PostMapping("reset-password/update")
+    public Result<Long> resetPassword(@RequestBody @Validated(value = {ValidGroup.Update.class}) UserLiteDTO dto){
+        return userService.resetPassword(dto);
+    }
 }
