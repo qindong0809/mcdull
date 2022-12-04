@@ -5,7 +5,6 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.*;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringValueResolver;
 
 import java.util.Map;
@@ -16,8 +15,7 @@ import java.util.Map;
  * @author dqcer
  * @version 2022/10/05
  */
-@Component
-public class SpringContextUtil implements ApplicationContextAware, EnvironmentAware, EmbeddedValueResolverAware, DisposableBean {
+public class SpringContextHolder implements ApplicationContextAware, EnvironmentAware, EmbeddedValueResolverAware, DisposableBean {
 
     private static ApplicationContext context;
     private static Environment environment;
@@ -91,17 +89,17 @@ public class SpringContextUtil implements ApplicationContextAware, EnvironmentAw
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        SpringContextUtil.context = applicationContext;
+        SpringContextHolder.context = applicationContext;
     }
 
     @Override
     public void setEnvironment(Environment environment) {
-        SpringContextUtil.environment = environment;
+        SpringContextHolder.environment = environment;
     }
 
     @Override
     public void setEmbeddedValueResolver(StringValueResolver resolver) {
-        SpringContextUtil.stringValueResolver = resolver;
+        SpringContextHolder.stringValueResolver = resolver;
     }
 
     public static void clearHolder() {
@@ -118,6 +116,6 @@ public class SpringContextUtil implements ApplicationContextAware, EnvironmentAw
 
     @Override
     public void destroy() {
-        SpringContextUtil.clearHolder();
+        SpringContextHolder.clearHolder();
     }
 }

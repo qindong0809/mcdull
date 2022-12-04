@@ -18,6 +18,6 @@ public class ExcelService implements DropDownSetInterface {
      */
     @Override
     public String[] getSource(SelectTypeEnum typeEnum, Long userId, Long roleId, Long studyId) {
-        return new String[0];
+        return new String[]{"男","女"};
     }
 }

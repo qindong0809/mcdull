@@ -26,7 +26,7 @@ public class LogController {
      * @return {@link Result <Long> 返回新增主键}
      */
     @PostMapping("feign/log/batch/save")
-    public Result<Integer> batchSave(@RequestBody @Validated(value = {ValidGroup.Add.class}) List<SysLogDTO> dto){
+    public Result<Integer> batchSave(@RequestBody List<SysLogDTO> dto){
         return logService.batchSave(dto);
     }
 }

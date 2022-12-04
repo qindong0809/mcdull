@@ -55,7 +55,7 @@ public class DictController {
      * @return {@link Result}<{@link List}<{@link DictVO}>>
      */
     @GetMapping("/dict/base/list")
-    public Result<Paged<DictVO>> listByPage(@Validated(ValidGroup.List.class) DictLiteDTO dto) {
+    public Result<Paged<DictVO>> listByPage(@Validated(ValidGroup.Paged.class) DictLiteDTO dto) {
         return sysDictService.listByPage(dto);
     }
 }

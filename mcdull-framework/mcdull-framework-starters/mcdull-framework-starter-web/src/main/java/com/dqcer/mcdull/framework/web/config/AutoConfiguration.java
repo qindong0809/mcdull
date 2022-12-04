@@ -1,10 +1,15 @@
 package com.dqcer.mcdull.framework.web.config;
 
 import com.dqcer.mcdull.framework.web.filter.HttpTraceLogFilter;
+import com.dqcer.mcdull.framework.web.listener.LogListener;
+import com.dqcer.mcdull.framework.web.remote.RemoteLogService;
+import com.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import com.dqcer.mcdull.framework.web.transform.TranslatorAspect;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * 自动配置
@@ -12,9 +17,26 @@ import org.springframework.context.annotation.Configuration;
  * @author dqcer
  * @version  22:21 2021/4/28
  */
+@ConditionalOnWebApplication
+@EnableAsync
 @Configuration
 public class AutoConfiguration {
 
+    private final RemoteLogService remoteLogService;
+
+    public AutoConfiguration(RemoteLogService remoteLogService) {
+        this.remoteLogService = remoteLogService;
+    }
+
+    @Bean
+    public LogListener logListener() {
+        return new LogListener(remoteLogService);
+    }
+
+    @Bean
+    public SpringContextHolder springContextHolder() {
+        return new SpringContextHolder();
+    }
 
     /**
      * 跟踪日志过滤器bean注册

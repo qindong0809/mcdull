@@ -106,8 +106,8 @@ public class TranslatorAspect {
             return;
         }
         // TODO: 2022/11/26 需要改造，目前是直接调用mdc接口的需要改为feign
-////        Transformer<Object> transformer = SpringContextUtil.getBean(annotation.transformer());
-//        Object bean = SpringContextUtil.getBean("dictTransformer");
+////        Transformer<Object> transformer = SpringContextHolder.getBean(annotation.transformer());
+//        Object bean = SpringContextHolder.getBean("dictTransformer");
 //        if (bean instanceof Transformer) {
 //            Transformer transformer = (Transformer) bean;
 //            String translate = transformer.transform(filedValue, annotation.dataSource(), annotation.param());

@@ -1,10 +1,18 @@
 package com.dqcer.mcdull.framework.web.filter;
 
+import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
+import com.dqcer.mcdull.framework.web.event.LogEvent;
+import com.dqcer.mcdull.framework.web.remote.LogDTO;
+import com.dqcer.mcdull.framework.web.transform.SpringContextHolder;
+import com.dqcer.mcdull.framework.web.util.IpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 import org.springframework.web.util.WebUtils;
@@ -76,7 +84,7 @@ public class HttpTraceLogFilter implements Filter {
             status = response.getStatus();
         } finally {
             String path = request.getRequestURI();
-            if (!Objects.equals(IGNORE_CONTENT_TYPE, request.getContentType())) {
+            if (Objects.equals(IGNORE_CONTENT_TYPE, request.getContentType())) {
                 //1. 记录日志
                 HttpTraceLog traceLog = new HttpTraceLog();
                 traceLog.setPath(path);
@@ -90,6 +98,36 @@ public class HttpTraceLogFilter implements Filter {
                 traceLog.setRequestBody(getRequestBody(request));
                 // TODO: 2022/11/17 是否考虑去掉打印返回参数
 //                traceLog.setResponseBody(getResponseBody(response));
+
+                String userAgent = getUserAgent(request);
+
+                UserAgent parse = UserAgentUtil.parse(userAgent);
+
+                LogDTO entity = new LogDTO();
+                entity.setClientIp(IpUtil.getIpAddr(request));
+                entity.setBrowser(parse.getBrowser().getName());
+                entity.setEngine(parse.getEngine().getName());
+                entity.setPlatform(parse.getPlatform().getName());
+                entity.setMobile(parse.isMobile() ? 1 : 2);
+                entity.setOs(parse.getOs().getName());
+                entity.setVersion(parse.getVersion());
+                entity.setEngineVersion(parse.getEngineVersion());
+                entity.setHeaders(JSONObject.toJSONString(getHeaderMap(request)));
+                entity.setRequestBody(traceLog.getRequestBody());
+                entity.setResponseBody(traceLog.getResponseBody());
+                entity.setParameterMap(traceLog.getParameterMap());
+                entity.setPath(traceLog.getPath());
+                entity.setMethod(request.getMethod());
+//                entity.setTime(traceLog.getTime());
+//                entity.setStatus(traceLog.getStatus());
+                entity.setCreatedTime(new Date());
+                entity.setTimeTaken(traceLog.getTimeTaken());
+
+
+//                eventTrackService.save(entity);
+                RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
+                SpringContextHolder.publishEvent(new LogEvent(entity));
+
                 log.info("Http trace log: {}", traceLog);
                 if(isSetTraceId) {
                     MDC.remove(HttpHeaderConstants.LOG_TRACE_ID);
@@ -98,7 +136,31 @@ public class HttpTraceLogFilter implements Filter {
             updateResponse(response);
         }
     }
-    
+
+    private static String getUserAgent(HttpServletRequest request) {
+        String userAgent = null;
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String element = headerNames.nextElement();
+            if (element.equalsIgnoreCase("User-Agent")) {
+                userAgent = request.getHeader(element);
+            }
+        }
+        return userAgent;
+    }
+
+    public static Map<String, String> getHeaderMap(HttpServletRequest request) {
+        Map<String, String> headerMap = new HashMap();
+        Enumeration<String> names = request.getHeaderNames();
+
+        while(names.hasMoreElements()) {
+            String name = (String)names.nextElement();
+            headerMap.put(name, request.getHeader(name));
+        }
+
+        return headerMap;
+    }
+
     /**
      * @param request http request
      * @return boolean

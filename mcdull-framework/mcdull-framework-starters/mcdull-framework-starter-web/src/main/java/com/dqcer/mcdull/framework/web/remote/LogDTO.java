@@ -1,12 +1,8 @@
-package com.dqcer.mcdull.mdc.api.entity;
-
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.dqcer.framework.base.entity.SuperId;
+package com.dqcer.mcdull.framework.web.remote;
 
 import java.util.Date;
 
-@TableName("sys_log")
-public class SysLogEntity extends SuperId {
+public class LogDTO {
 
     /**
      * 是否为移动端

@@ -5,7 +5,6 @@ import com.dqcer.mcdull.framework.web.advice.BaseExceptionAdvice;
 import com.dqcer.mcdull.framework.web.advice.ExceptionAdvice;
 import com.dqcer.mcdull.framework.web.config.AutoConfiguration;
 import com.dqcer.mcdull.framework.web.config.DateTimeConfig;
-import com.dqcer.mcdull.framework.web.remote.DictRemote;
 import com.dqcer.mcdull.framework.web.transform.DictTransformer;
 import org.springframework.context.annotation.Import;
 
