@@ -29,7 +29,7 @@ public class Interceptor implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(getBaseInterceptor()).addPathPatterns("/**").excludePathPatterns("/token/valid", "/login");
+        registry.addInterceptor(getBaseInterceptor()).addPathPatterns("/**").excludePathPatterns("/feign/token/valid", "/login");
     }
 
     /**

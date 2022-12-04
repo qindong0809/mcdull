@@ -20,7 +20,7 @@ public interface AuthServiceApi {
      * @param token token
      * @return {@link Long}
      */
-    @PostMapping("token/valid")
+    @PostMapping("feign/token/valid")
     Result<Long> tokenValid(@RequestParam(value = "token")String token, @RequestHeader(name = HttpHeaderConstants.TRACE_ID_HEADER) String traceId);
 
 }

@@ -84,7 +84,7 @@ public class HttpTraceLogFilter implements Filter {
             status = response.getStatus();
         } finally {
             String path = request.getRequestURI();
-            if (Objects.equals(IGNORE_CONTENT_TYPE, request.getContentType())) {
+            if (!Objects.equals(IGNORE_CONTENT_TYPE, request.getContentType()) && !path.equals("/feign/token/valid")) {
                 //1. 记录日志
                 HttpTraceLog traceLog = new HttpTraceLog();
                 traceLog.setPath(path);
@@ -122,6 +122,7 @@ public class HttpTraceLogFilter implements Filter {
 //                entity.setStatus(traceLog.getStatus());
                 entity.setCreatedTime(new Date());
                 entity.setTimeTaken(traceLog.getTimeTaken());
+                entity.setAccountId(Long.valueOf(request.getHeader(HttpHeaderConstants.U_ID)));
 
 
 //                eventTrackService.save(entity);
