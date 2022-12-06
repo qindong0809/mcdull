@@ -1,4 +1,4 @@
-package com.dqcer.framework.base.annotation;
+package com.dqcer.framework.base.auth;
 
 
 import java.lang.annotation.Documented;

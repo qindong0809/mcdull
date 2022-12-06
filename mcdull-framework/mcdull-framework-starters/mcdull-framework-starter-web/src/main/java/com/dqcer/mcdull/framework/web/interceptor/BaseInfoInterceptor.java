@@ -10,7 +10,7 @@ import com.dqcer.framework.base.utils.StrUtil;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.framework.redis.operation.RedisClient;
-import com.dqcer.mcdull.framework.web.annotation.UnAuthorize;
+import com.dqcer.framework.base.auth.UnAuthorize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;

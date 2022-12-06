@@ -2,21 +2,21 @@ package com.dqcer.mcdull.uac.api.dto;
 
 import com.dqcer.framework.base.PagedDTO;
 import com.dqcer.framework.base.ValidGroup;
-import com.dqcer.framework.base.validator.EnumsIntValid;
 import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.enums.StatusEnum;
+import com.dqcer.framework.base.validator.EnumsIntValid;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
-* 用户 接收客户端参数
+* 角色 接收客户端参数
 *
 * @author dqcer
 * @version 2022-11-16
 */
-public class UserLiteDTO extends PagedDTO {
+public class RoleLiteDTO extends PagedDTO {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,63 +37,25 @@ public class UserLiteDTO extends PagedDTO {
     @EnumsIntValid(groups = {ValidGroup.Delete.class}, value = DelFlayEnum.class)
     private Integer delFlag;
 
-
     /**
      * 昵称
      */
     @NotBlank(groups = {ValidGroup.Add.class})
     @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
-    private String nickname;
+    private String name;
 
     /**
-     * 账户
+     * 描述
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 5, max = 64)
-    private String account;
+    @Length(groups = {ValidGroup.Add.class},  max = 2048)
+    private String description;
 
-    /**
-     * 电子邮件
-     */
-    @Length(groups = {ValidGroup.Add.class}, min = 5, max = 64)
-    private String email;
-
-    /**
-     * 电话
-     */
-    @Length(groups = {ValidGroup.Add.class}, min = 8, max = 11)
-    private String phone;
-
-    public String getNickname() {
-        return nickname;
+    public String getDescription() {
+        return description;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Long getId() {
@@ -103,6 +65,7 @@ public class UserLiteDTO extends PagedDTO {
     public void setId(Long id) {
         this.id = id;
     }
+
     public Integer getStatus() {
         return status;
     }
@@ -110,6 +73,7 @@ public class UserLiteDTO extends PagedDTO {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
     public Integer getDelFlag() {
         return delFlag;
     }
@@ -118,4 +82,11 @@ public class UserLiteDTO extends PagedDTO {
         this.delFlag = delFlag;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

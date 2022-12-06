@@ -2,18 +2,18 @@ package com.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
-import com.dqcer.mcdull.uac.api.entity.UserEntity;
+import com.dqcer.mcdull.uac.api.dto.RoleLiteDTO;
+import com.dqcer.mcdull.uac.api.entity.RoleEntity;
 
-public interface IUserRepository extends IService<UserEntity> {
+public interface IRoleRepository extends IService<RoleEntity> {
 
     /**
      * 分页查询
      *
      * @param dto dto
-     * @return {@link Page}<{@link UserEntity}>
+     * @return {@link Page}<{@link RoleEntity}>
      */
-    Page<UserEntity> selectPage(UserLiteDTO dto);
+    Page<RoleEntity> selectPage(RoleLiteDTO dto);
 
     /**
      * 插入
@@ -21,5 +21,5 @@ public interface IUserRepository extends IService<UserEntity> {
      * @param entity 实体
      * @return {@link Long}
      */
-    Long insert(UserEntity entity);
+    Long insert(RoleEntity entity);
 }

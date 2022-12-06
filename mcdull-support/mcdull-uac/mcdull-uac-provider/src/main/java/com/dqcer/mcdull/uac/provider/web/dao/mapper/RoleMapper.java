@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac.provider.web.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dqcer.mcdull.uac.api.entity.UserEntity;
+import com.dqcer.mcdull.uac.api.entity.RoleEntity;
 
-public interface UserMapper extends BaseMapper<UserEntity> {
+public interface RoleMapper extends BaseMapper<RoleEntity> {
 }

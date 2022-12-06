@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dqcer.framework.base.auth.CacheUser;
+import com.dqcer.framework.base.auth.SsoConstant;
 import com.dqcer.framework.base.auth.UserContextHolder;
-import com.dqcer.framework.base.constants.CacheConstant;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.entity.SuperId;
 import com.dqcer.framework.base.enums.DelFlayEnum;
@@ -17,7 +17,7 @@ import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.framework.redis.operation.CaffeineCache;
 import com.dqcer.mcdull.framework.redis.operation.RedisClient;
 import com.dqcer.mcdull.uac.api.dto.LoginDTO;
-import com.dqcer.mcdull.uac.api.entity.SysUserEntity;
+import com.dqcer.mcdull.uac.api.entity.UserEntity;
 import com.dqcer.mcdull.uac.provider.config.constants.AuthCode;
 import com.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
 import org.slf4j.Logger;
@@ -62,9 +62,9 @@ public class LoginService {
      */
     public Result<String> login(LoginDTO loginDTO) {
         String account = loginDTO.getAccount();
-        LambdaQueryWrapper<SysUserEntity> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(SysUserEntity::getAccount, account);
-        SysUserEntity entity = userDAO.selectOne(wrapper);
+        LambdaQueryWrapper<UserEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(UserEntity::getAccount, account);
+        UserEntity entity = userDAO.selectOne(wrapper);
         if (null == entity) {
             log.warn("账号不存在 account: {}", account);
             return Result.error(AuthCode.NOT_EXIST);
@@ -87,11 +87,11 @@ public class LoginService {
 
         CacheUser cacheUser = new CacheUser().setUserId(entity.getId()).setLastActiveTime(LocalDateTime.now());
         //  强制7天过期
-        redisClient.set(MessageFormat.format(CacheConstant.SSO_TOKEN, token), cacheUser, CacheConstant.SSO_TOKEN_NAMESPACE_TIMEOUT, TimeUnit.SECONDS);
+        redisClient.set(MessageFormat.format(SsoConstant.SSO_TOKEN, token), cacheUser, SsoConstant.SSO_TOKEN_NAMESPACE_TIMEOUT, TimeUnit.SECONDS);
 
         //  更新登录时间
-        LambdaUpdateWrapper<SysUserEntity> update = Wrappers.lambdaUpdate();
-        update.set(SysUserEntity::getLastLoginTime, new Date());
+        LambdaUpdateWrapper<UserEntity> update = Wrappers.lambdaUpdate();
+        update.set(UserEntity::getLastLoginTime, new Date());
         update.eq(SuperId::getId, entity.getId());
         userDAO.update(null, update);
 
@@ -108,7 +108,7 @@ public class LoginService {
      */
     public Result<Long> tokenValid(String token) {
         //  瞬态，本地缓存取
-        String tokenKey = MessageFormat.format(CacheConstant.SSO_TOKEN, token);
+        String tokenKey = MessageFormat.format(SsoConstant.SSO_TOKEN, token);
         CacheUser cacheUser = caffeineCache.get(tokenKey, CacheUser.class);
         if (null != cacheUser) {
             return Result.ok(cacheUser.getUserId());
@@ -159,7 +159,7 @@ public class LoginService {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         String token = request.getHeader(HttpHeaderConstants.TOKEN);
-        String tokenKey = MessageFormat.format(CacheConstant.SSO_TOKEN, token);
+        String tokenKey = MessageFormat.format(SsoConstant.SSO_TOKEN, token);
         //  移除本地缓存
         caffeineCache.evict(tokenKey);
         Object obj = redisClient.get(tokenKey);

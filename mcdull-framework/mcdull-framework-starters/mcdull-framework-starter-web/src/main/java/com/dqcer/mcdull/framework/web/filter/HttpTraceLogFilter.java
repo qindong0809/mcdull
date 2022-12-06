@@ -2,16 +2,14 @@ package com.dqcer.mcdull.framework.web.filter;
 
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.mcdull.framework.web.event.LogEvent;
 import com.dqcer.mcdull.framework.web.remote.LogDTO;
 import com.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import com.dqcer.mcdull.framework.web.util.IpUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -24,7 +22,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalTime;
 import java.util.*;
 
 /**
@@ -35,7 +32,7 @@ import java.util.*;
  */
 public class HttpTraceLogFilter implements Filter {
 
-    private static final Logger log = LoggerFactory.getLogger(HttpTraceLogFilter.class);
+    private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
     private static final String[] headerNames = {
             HttpHeaderConstants.TRACE_ID_HEADER,
@@ -43,6 +40,13 @@ public class HttpTraceLogFilter implements Filter {
     };
 
     private static final String IGNORE_CONTENT_TYPE = "multipart/form-data";
+
+    public static final List<String> pathList = new ArrayList<>();
+
+    static {
+        pathList.add("/feign/**");
+        pathList.add("/login");
+    }
 
 
     /**
@@ -58,6 +62,16 @@ public class HttpTraceLogFilter implements Filter {
         }
         MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
         return true;
+    }
+
+    /**
+     * 忽略Filter
+     *
+     * @param path 路径
+     * @return boolean
+     */
+    public boolean ignoreFilter(String path, List<String> list) {
+        return list.stream().anyMatch(url -> path.startsWith(url) || PATH_MATCHER.match(url, path));
     }
 
     @Override
@@ -84,21 +98,9 @@ public class HttpTraceLogFilter implements Filter {
             status = response.getStatus();
         } finally {
             String path = request.getRequestURI();
-            if (!Objects.equals(IGNORE_CONTENT_TYPE, request.getContentType()) && !path.equals("/feign/token/valid")) {
-                //1. 记录日志
-                HttpTraceLog traceLog = new HttpTraceLog();
-                traceLog.setPath(path);
-                traceLog.setMethod(request.getMethod());
+            if (!Objects.equals(IGNORE_CONTENT_TYPE, request.getContentType())
+                    && !ignoreFilter(path, pathList)) {
                 long latency = System.currentTimeMillis() - startTime;
-                traceLog.setTimeTaken(latency);
-                traceLog.setTime(LocalTime.now().toString());
-                traceLog.setHeaders(getHeaders(request));
-                traceLog.setParameterMap(getParamsMap(request));
-                traceLog.setStatus(status);
-                traceLog.setRequestBody(getRequestBody(request));
-                // TODO: 2022/11/17 是否考虑去掉打印返回参数
-//                traceLog.setResponseBody(getResponseBody(response));
-
                 String userAgent = getUserAgent(request);
 
                 UserAgent parse = UserAgentUtil.parse(userAgent);
@@ -112,24 +114,20 @@ public class HttpTraceLogFilter implements Filter {
                 entity.setOs(parse.getOs().getName());
                 entity.setVersion(parse.getVersion());
                 entity.setEngineVersion(parse.getEngineVersion());
-                entity.setHeaders(JSONObject.toJSONString(getHeaderMap(request)));
-                entity.setRequestBody(traceLog.getRequestBody());
-                entity.setResponseBody(traceLog.getResponseBody());
-                entity.setParameterMap(traceLog.getParameterMap());
-                entity.setPath(traceLog.getPath());
+                entity.setHeaders(getHeaders(request));
+                entity.setRequestBody(getRequestBody(request));
+//                entity.setResponseBody(getResponseBody(response));
+                entity.setParameterMap(getParamsMap(request));
+                entity.setPath(path);
                 entity.setMethod(request.getMethod());
-//                entity.setTime(traceLog.getTime());
-//                entity.setStatus(traceLog.getStatus());
                 entity.setCreatedTime(new Date());
-                entity.setTimeTaken(traceLog.getTimeTaken());
+                entity.setTimeTaken(latency);
+                entity.setStatus((long) status);
                 entity.setAccountId(Long.valueOf(request.getHeader(HttpHeaderConstants.U_ID)));
 
-
-//                eventTrackService.save(entity);
                 RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
                 SpringContextHolder.publishEvent(new LogEvent(entity));
 
-                log.info("Http trace log: {}", traceLog);
                 if(isSetTraceId) {
                     MDC.remove(HttpHeaderConstants.LOG_TRACE_ID);
                 }
@@ -150,17 +148,6 @@ public class HttpTraceLogFilter implements Filter {
         return userAgent;
     }
 
-    public static Map<String, String> getHeaderMap(HttpServletRequest request) {
-        Map<String, String> headerMap = new HashMap();
-        Enumeration<String> names = request.getHeaderNames();
-
-        while(names.hasMoreElements()) {
-            String name = (String)names.nextElement();
-            headerMap.put(name, request.getHeader(name));
-        }
-
-        return headerMap;
-    }
 
     /**
      * @param request http request
@@ -244,109 +231,6 @@ public class HttpTraceLogFilter implements Filter {
     private void updateResponse(HttpServletResponse response) throws IOException {
         ContentCachingResponseWrapper responseWrapper = WebUtils.getNativeResponse(response, ContentCachingResponseWrapper.class);
         Objects.requireNonNull(responseWrapper).copyBodyToResponse();
-    }
-
-
-    /**
-     * 日志记录
-     */
-    private static class HttpTraceLog {
-
-        private String time;
-        private String method;
-        private String path;
-        private Long timeTaken;
-        private Integer status;
-        private String parameterMap;
-        private String requestBody;
-        private String headers;
-        private String responseBody;
-
-        @Override
-        public String toString() {
-            return "HttpTraceLog{" +
-                    "time='" + time + '\'' +
-                    ", method='" + method + '\'' +
-                    ", path='" + path + '\'' +
-                    ", timeTaken=" + timeTaken +
-                    ", status=" + status +
-                    ", parameterMap='" + parameterMap + '\'' +
-                    ", requestBody='" + requestBody + '\'' +
-                    ", headers='" + headers + '\'' +
-                    '}';
-        }
-
-        public String getPath() {
-            return path;
-        }
-
-        public void setPath(String path) {
-            this.path = path;
-        }
-
-        public String getParameterMap() {
-            return parameterMap;
-        }
-
-        public void setParameterMap(String parameterMap) {
-            this.parameterMap = parameterMap;
-        }
-
-        public String getMethod() {
-            return method;
-        }
-
-        public void setMethod(String method) {
-            this.method = method;
-        }
-
-        public Long getTimeTaken() {
-            return timeTaken;
-        }
-
-        public void setTimeTaken(Long timeTaken) {
-            this.timeTaken = timeTaken;
-        }
-
-        public String getTime() {
-            return time;
-        }
-
-        public void setTime(String time) {
-            this.time = time;
-        }
-
-        public Integer getStatus() {
-            return status;
-        }
-
-        public void setStatus(Integer status) {
-            this.status = status;
-        }
-
-        public String getRequestBody() {
-            return requestBody;
-        }
-
-        public void setRequestBody(String requestBody) {
-            this.requestBody = requestBody;
-        }
-
-        public String getHeaders() {
-            return headers;
-        }
-
-        public void setHeaders(String headers) {
-            this.headers = headers;
-        }
-
-        public String getResponseBody() {
-            return responseBody;
-        }
-
-        public void setResponseBody(String responseBody) {
-            this.responseBody = responseBody;
-        }
     }
 
 }

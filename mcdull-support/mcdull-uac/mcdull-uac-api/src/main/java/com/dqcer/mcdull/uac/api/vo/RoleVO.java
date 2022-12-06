@@ -3,19 +3,18 @@ package com.dqcer.mcdull.uac.api.vo;
 import com.dqcer.framework.base.VO;
 import com.dqcer.framework.base.dict.Transform;
 
-import java.time.LocalTime;
 import java.util.Date;
 
 /**
- * 用户视图对象
+ * 角色视图对象
  *
  * @author dqcer
  * @version  2022/11/27
  */
-public class UserVO extends VO {
+public class RoleVO extends VO {
 
     /**
-     * 主键 只有当插入对象ID 为空，才自动填充
+     * 主键
      */
     private Long id;
 
@@ -45,6 +44,7 @@ public class UserVO extends VO {
 
     /**
      * 状态
+     *
      * @see com.dqcer.framework.base.enums.StatusEnum
      */
     private Integer status;
@@ -67,28 +67,12 @@ public class UserVO extends VO {
     /**
      * 账户
      */
-    private String account;
+    private String name;
 
     /**
-     * 昵称
+     * 描述
      */
-    private String nickname;
-
-    /**
-     * 电子邮件
-     */
-    private String email;
-
-    /**
-     * 电话
-     */
-    private String phone;
-
-    /**
-     * 最后登录时间
-     */
-    private LocalTime lastLoginTime;
-
+    private String description;
 
     /**
      *  类型（1/自定义 2/内置）
@@ -114,37 +98,6 @@ public class UserVO extends VO {
         this.type = type;
     }
 
-    public String getCreatedByStr() {
-        return createdByStr;
-    }
-
-    public void setCreatedByStr(String createdByStr) {
-        this.createdByStr = createdByStr;
-    }
-
-    public String getUpdatedByStr() {
-        return updatedByStr;
-    }
-
-    public void setUpdatedByStr(String updatedByStr) {
-        this.updatedByStr = updatedByStr;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getDelFlagStr() {
-        return delFlagStr;
-    }
-
-    public void setDelFlagStr(String delFlagStr) {
-        this.delFlagStr = delFlagStr;
-    }
 
     public Long getId() {
         return id;
@@ -170,6 +123,14 @@ public class UserVO extends VO {
         this.createdBy = createdBy;
     }
 
+    public String getCreatedByStr() {
+        return createdByStr;
+    }
+
+    public void setCreatedByStr(String createdByStr) {
+        this.createdByStr = createdByStr;
+    }
+
     public Date getUpdatedTime() {
         return updatedTime;
     }
@@ -184,6 +145,14 @@ public class UserVO extends VO {
 
     public void setUpdatedBy(Long updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    public String getUpdatedByStr() {
+        return updatedByStr;
+    }
+
+    public void setUpdatedByStr(String updatedByStr) {
+        this.updatedByStr = updatedByStr;
     }
 
     public Integer getStatus() {
@@ -210,35 +179,27 @@ public class UserVO extends VO {
         this.delFlag = delFlag;
     }
 
-    public String getAccount() {
-        return account;
+    public String getDelFlagStr() {
+        return delFlagStr;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setDelFlagStr(String delFlagStr) {
+        this.delFlagStr = delFlagStr;
     }
 
-    public String getEmail() {
-        return email;
+    public String getName() {
+        return name;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getDescription() {
+        return description;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public LocalTime getLastLoginTime() {
-        return lastLoginTime;
-    }
-
-    public void setLastLoginTime(LocalTime lastLoginTime) {
-        this.lastLoginTime = lastLoginTime;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

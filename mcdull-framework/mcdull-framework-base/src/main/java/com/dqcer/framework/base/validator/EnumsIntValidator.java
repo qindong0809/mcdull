@@ -1,8 +1,5 @@
 package com.dqcer.framework.base.validator;
 
-import com.dqcer.framework.base.annotation.EnumsIntValid;
-import com.dqcer.framework.base.annotation.EnumsStrValid;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.lang.reflect.Method;

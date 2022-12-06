@@ -11,29 +11,29 @@ import com.dqcer.framework.base.enums.StatusEnum;
 import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.utils.StrUtil;
 import com.dqcer.framework.base.wrapper.ResultCode;
-import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
-import com.dqcer.mcdull.uac.api.entity.UserEntity;
-import com.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
-import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
+import com.dqcer.mcdull.uac.api.dto.RoleLiteDTO;
+import com.dqcer.mcdull.uac.api.entity.RoleEntity;
+import com.dqcer.mcdull.uac.provider.web.dao.mapper.RoleMapper;
+import com.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
-public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> implements IUserRepository {
+public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleEntity> implements IRoleRepository {
 
     /**
      * 分页查询
      *
      * @param dto dto
-     * @return {@link Page}<{@link UserEntity}>
+     * @return {@link Page}<{@link RoleEntity}>
      */
     @Override
-    public Page<UserEntity> selectPage(UserLiteDTO dto) {
-        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+    public Page<RoleEntity> selectPage(RoleLiteDTO dto) {
+        LambdaQueryWrapper<RoleEntity> query = Wrappers.lambdaQuery();
         String keyword = dto.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
-            query.and(i-> i.like(UserEntity::getAccount, keyword).or().like(UserEntity::getPhone, keyword).or().like(UserEntity::getEmail, keyword));
+            query.and(i-> i.like(RoleEntity::getName, keyword));
         }
         query.orderByDesc(BaseEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getCurrPage(), dto.getPageSize()), query);
@@ -46,7 +46,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
      * @return {@link Long}
      */
     @Override
-    public Long insert(UserEntity entity) {
+    public Long insert(RoleEntity entity) {
         entity.setDelFlag(DelFlayEnum.NORMAL.getCode());
         entity.setStatus(StatusEnum.ENABLE.getCode());
         entity.setCreatedBy(UserContextHolder.getSession().getUserId());

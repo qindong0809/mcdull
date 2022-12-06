@@ -1,16 +1,17 @@
 package com.dqcer.mcdull.uac.provider.web.manager.uac.impl;
 
-import com.dqcer.mcdull.uac.api.convert.UserConvert;
-import com.dqcer.mcdull.uac.api.entity.UserEntity;
+import com.dqcer.mcdull.uac.api.convert.RoleConvert;
+import com.dqcer.mcdull.uac.api.entity.RoleEntity;
+import com.dqcer.mcdull.uac.api.vo.RoleVO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
-import com.dqcer.mcdull.uac.provider.web.manager.uac.IUserManager;
+import com.dqcer.mcdull.uac.provider.web.manager.uac.IRoleManager;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
 @Service
-public class UserManagerImpl implements IUserManager {
+public class RoleManagerImpl implements IRoleManager {
 
     @Resource
     private IUserRepository userRepository;
@@ -22,8 +23,8 @@ public class UserManagerImpl implements IUserManager {
      * @return {@link UserVO}
      */
     @Override
-    public UserVO entity2VO(UserEntity entity) {
-        UserVO vo = UserConvert.entity2VO(entity);
+    public RoleVO entity2VO(RoleEntity entity) {
+        RoleVO vo = RoleConvert.entity2VO(entity);
         if (vo == null) {
             return null;
         }

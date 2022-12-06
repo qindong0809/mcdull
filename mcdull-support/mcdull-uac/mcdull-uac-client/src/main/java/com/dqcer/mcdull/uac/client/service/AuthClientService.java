@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 /**
  * 身份验证客户服务
  *
- * @author QinDong
+ * @author dqcer
  * @version 2022/11/08
  */
 @FeignClient(value = "${mcdull.feign.uac}")

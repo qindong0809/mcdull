@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.web.annotation;
+package com.dqcer.framework.base.auth;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

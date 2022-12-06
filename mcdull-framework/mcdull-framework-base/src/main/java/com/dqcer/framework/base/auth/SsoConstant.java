@@ -1,4 +1,4 @@
-package com.dqcer.framework.base.constants;
+package com.dqcer.framework.base.auth;
 
 /**
  * 缓存常量
@@ -6,7 +6,7 @@ package com.dqcer.framework.base.constants;
  * @author dqcer
  * @version 2021/09/10
  */
-public class CacheConstant {
+public class SsoConstant {
 
     /**
      * sso令牌

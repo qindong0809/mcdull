@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac.api.convert;
 
 import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
-import com.dqcer.mcdull.uac.api.entity.SysUserEntity;
+import com.dqcer.mcdull.uac.api.entity.UserEntity;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
 
 /**
@@ -19,7 +19,7 @@ public class UserConvert {
      * @param entity 实体
      * @return {@link UserVO}
      */
-    public static UserVO entityToVO(SysUserEntity entity) {
+    public static UserVO entity2VO(UserEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -36,11 +36,12 @@ public class UserConvert {
         userVO.setEmail(entity.getEmail());
         userVO.setPhone(entity.getPhone());
         userVO.setLastLoginTime(entity.getLastLoginTime());
+        userVO.setType(entity.getType());
         return userVO;
     }
 
-    public static SysUserEntity dtoToEntity(UserLiteDTO dto) {
-        SysUserEntity entity = new SysUserEntity();
+    public static UserEntity dto2Entity(UserLiteDTO dto) {
+        UserEntity entity = new UserEntity();
         entity.setNickname(dto.getNickname());
         entity.setAccount(dto.getAccount());
         entity.setEmail(dto.getEmail());

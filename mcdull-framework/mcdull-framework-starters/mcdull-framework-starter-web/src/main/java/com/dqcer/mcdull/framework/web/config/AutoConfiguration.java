@@ -5,10 +5,14 @@ import com.dqcer.mcdull.framework.web.listener.LogListener;
 import com.dqcer.mcdull.framework.web.remote.RemoteLogService;
 import com.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import com.dqcer.mcdull.framework.web.transform.TranslatorAspect;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
@@ -56,5 +60,18 @@ public class AutoConfiguration {
     @Bean
     public TranslatorAspect translatorAspect() {
         return new TranslatorAspect();
+    }
+
+    /**
+     * 添加Long转json精度丢失的配置
+     */
+    @Bean
+    public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder builder) {
+        ObjectMapper objectMapper = builder.createXmlMapper(false).build();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(Long.class, ToStringSerializer.instance);
+        module.addSerializer(Long.TYPE, ToStringSerializer.instance);
+        objectMapper.registerModule(module);
+        return objectMapper;
     }
 }

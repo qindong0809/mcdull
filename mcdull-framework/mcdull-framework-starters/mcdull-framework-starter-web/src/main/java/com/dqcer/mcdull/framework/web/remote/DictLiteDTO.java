@@ -2,7 +2,7 @@ package com.dqcer.mcdull.framework.web.remote;
 
 import com.dqcer.framework.base.DTO;
 import com.dqcer.framework.base.ValidGroup;
-import com.dqcer.framework.base.annotation.EnumsStrValid;
+import com.dqcer.framework.base.validator.EnumsStrValid;
 import com.dqcer.framework.base.enums.LanguageEnum;
 
 import javax.validation.constraints.NotEmpty;

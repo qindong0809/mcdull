@@ -12,7 +12,7 @@ import java.time.LocalTime;
  * @version 2022/11/07
  */
 @TableName("sys_user")
-public class SysUserEntity extends BaseEntity {
+public class UserEntity extends BaseEntity {
 
     /**
      * 删除标识（1/正常 2/删除）
@@ -53,6 +53,19 @@ public class SysUserEntity extends BaseEntity {
      * 最后登录时间
      */
     private LocalTime lastLoginTime;
+
+    /**
+     *  类型（1/自定义 2/内置）
+     */
+    private Integer type;
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
     public String getNickname() {
         return nickname;

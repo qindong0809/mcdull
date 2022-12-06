@@ -1,12 +1,15 @@
-package com.dqcer.framework.base.annotation;
+package com.dqcer.framework.base.validator;
 
 
-import com.dqcer.framework.base.validator.EnumsIntValidator;
 import com.dqcer.framework.base.validator.EnumsStrValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * 状态效验注解
@@ -15,10 +18,10 @@ import java.lang.annotation.*;
  * @version 2021/12/20
  */
 @Documented
-@Constraint(validatedBy = EnumsIntValidator.class)
+@Constraint(validatedBy = EnumsStrValidator.class)
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface EnumsIntValid {
+public @interface EnumsStrValid {
 
     String message() default "值不在枚举值中";
 
