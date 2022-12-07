@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.mdc.api.convert;
 
-import com.dqcer.mcdull.mdc.api.entity.SysDictEntity;
+import com.dqcer.mcdull.mdc.api.entity.DictEntity;
 import com.dqcer.mcdull.mdc.api.vo.DictVO;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class DictConvert {
      * @param item 项
      * @return {@link DictVO}
      */
-    public static DictVO entityConvertToVo(SysDictEntity item) {
+    public static DictVO entityConvertToVo(DictEntity item) {
         if (item == null) {
             return null;
         }
@@ -41,12 +41,12 @@ public class DictConvert {
      * @param item 项
      * @return {@link List}<{@link DictVO}>
      */
-    public static List<DictVO> entitiesConvertToList(List<SysDictEntity> item) {
+    public static List<DictVO> entitiesConvertToList(List<DictEntity> item) {
         if (item == null) {
             return Collections.EMPTY_LIST;
         }
         List<DictVO> result = new ArrayList<>();
-        for (SysDictEntity entity : item) {
+        for (DictEntity entity : item) {
             result.add(entityConvertToVo(entity));
         }
         return result;

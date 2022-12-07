@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.uac.provider.config;
+package com.dqcer.mcdull.mdc.provider.config;
 
 
 import com.dqcer.mcdull.framework.mysql.interceptor.DynamicDatasourceInterceptor;

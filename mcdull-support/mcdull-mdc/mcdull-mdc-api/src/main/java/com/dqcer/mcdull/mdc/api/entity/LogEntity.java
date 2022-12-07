@@ -6,7 +6,7 @@ import com.dqcer.framework.base.entity.SuperId;
 import java.util.Date;
 
 @TableName("sys_log")
-public class SysLogEntity extends SuperId {
+public class LogEntity extends SuperId {
 
     /**
      * 是否为移动端

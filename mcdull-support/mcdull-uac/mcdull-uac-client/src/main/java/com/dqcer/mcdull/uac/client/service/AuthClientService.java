@@ -9,6 +9,6 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author dqcer
  * @version 2022/11/08
  */
-@FeignClient(value = "${mcdull.feign.uac}")
+@FeignClient(value = "${mcdull.feign.uac}", contextId = "authClientService")
 public interface AuthClientService extends AuthServiceApi {
 }

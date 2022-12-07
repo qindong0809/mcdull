@@ -24,7 +24,7 @@ public class BaseExceptionAdvice {
      */
     @ExceptionHandler(value = SQLException.class)
     public Result<?> exception(SQLException exception) {
-        log.error("sql语法异常: ", exception.getMessage());
+        log.error("sql语法异常: ", exception);
         return Result.error(ResultCode.SQL_SYNTAX_ERROR);
     }
 }

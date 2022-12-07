@@ -2,9 +2,8 @@ package com.dqcer.mcdull.framework.web.listener;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dqcer.mcdull.framework.web.event.LogEvent;
-import com.dqcer.mcdull.framework.web.remote.LogDTO;
 import com.dqcer.mcdull.framework.web.remote.RemoteLogService;
-import com.dqcer.mcdull.mdc.api.dto.SysLogDTO;
+import com.dqcer.mcdull.mdc.api.dto.SysLogFeignDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -34,12 +33,12 @@ public class LogListener {
     @Order
     @EventListener(LogEvent.class)
     public void listenLog(LogEvent event) {
-        LogDTO sysLog = (LogDTO) event.getSource();
+        com.dqcer.mcdull.framework.web.remote.LogDTO sysLog = (com.dqcer.mcdull.framework.web.remote.LogDTO) event.getSource();
         if (log.isDebugEnabled()) {
             log.debug("Log listener: {}", sysLog);
         }
-        List<SysLogDTO> dtos = new ArrayList<>();
-        SysLogDTO sysLogDTO = JSONObject.parseObject(JSONObject.toJSONString(sysLog), SysLogDTO.class);
+        List<SysLogFeignDTO> dtos = new ArrayList<>();
+        SysLogFeignDTO sysLogDTO = JSONObject.parseObject(JSONObject.toJSONString(sysLog), SysLogFeignDTO.class);
         dtos.add(sysLogDTO);
         logService.batchSave(dtos);
     }

@@ -6,6 +6,7 @@ import com.dqcer.framework.base.page.Paged;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
+import com.dqcer.mcdull.uac.client.api.UserServiceApi;
 import com.dqcer.mcdull.uac.provider.web.service.UserService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 
-@RequestMapping("user")
 @RestController
-public class UserController {
+public class UserController implements UserServiceApi {
 
     @Resource
     private UserService userService;
@@ -26,7 +26,7 @@ public class UserController {
      * @param dto dto
      * @return {@link Result}<{@link List}<{@link UserVO}>>
      */
-    @GetMapping("base/page")
+    @GetMapping("user/base/page")
     @Transform
     public Result<Paged<UserVO>> listByPage(@Validated(ValidGroup.Paged.class) UserLiteDTO dto) {
         return userService.listByPage(dto);
@@ -38,7 +38,7 @@ public class UserController {
      * @param dto dto
      * @return {@link Result}<{@link UserVO}>
      */
-    @GetMapping("base/detail")
+    @GetMapping("user/base/detail")
     @Transform
     public Result<UserVO> detail(@Validated(ValidGroup.One.class) UserLiteDTO dto) {
         return userService.detail(dto);
@@ -50,7 +50,7 @@ public class UserController {
      * @param dto dto
      * @return {@link Result<Long> 返回新增主键}
      */
-    @PostMapping("base/save")
+    @PostMapping("user/base/save")
     public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Add.class})UserLiteDTO dto){
         return userService.insert(dto);
     }
@@ -61,7 +61,7 @@ public class UserController {
      * @param dto dto
      * @return {@link Result<Long>}
      */
-    @PostMapping("base/status")
+    @PostMapping("user/base/status")
     public Result<Long> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) UserLiteDTO dto){
         return userService.updateStatus(dto);
     }
@@ -72,7 +72,7 @@ public class UserController {
      * @param dto dto
      * @return {@link Result<Long>}
      */
-    @PostMapping("base/delete")
+    @PostMapping("user/base/delete")
     public Result<Long> delete(@RequestBody @Validated(value = {ValidGroup.Delete.class}) UserLiteDTO dto){
         return userService.delete(dto);
     }
@@ -83,8 +83,21 @@ public class UserController {
      * @param dto dto
      * @return {@link Result}<{@link Long}>
      */
-    @PostMapping("reset-password/update")
+    @PostMapping("user/reset-password/update")
     public Result<Long> resetPassword(@RequestBody @Validated(value = {ValidGroup.Update.class}) UserLiteDTO dto){
         return userService.resetPassword(dto);
+    }
+
+    /**
+     * 用户详情
+     *
+     * @param userId
+     * @return {@link Long}
+     */
+    @Override
+    public Result<UserVO> getDetail(Long userId) {
+        UserLiteDTO dto = new UserLiteDTO();
+        dto.setId(userId);
+        return userService.detail(dto);
     }
 }

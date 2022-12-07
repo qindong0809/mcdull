@@ -3,15 +3,15 @@ package com.dqcer.mcdull.mdc.provider.web.dao.repository;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.dqcer.mcdull.mdc.api.dto.DictLiteDTO;
-import com.dqcer.mcdull.mdc.api.entity.SysDictEntity;
+import com.dqcer.mcdull.mdc.api.entity.DictEntity;
 
-public interface IDictRepository extends IService<SysDictEntity> {
+public interface IDictRepository extends IService<DictEntity> {
 
     /**
      * 分页查询
      *
      * @param dto dto
-     * @return {@link Page}<{@link SysDictEntity}>
+     * @return {@link Page}<{@link DictEntity}>
      */
-    Page<SysDictEntity> selectPage(DictLiteDTO dto);
+    Page<DictEntity> selectPage(DictLiteDTO dto);
 }
