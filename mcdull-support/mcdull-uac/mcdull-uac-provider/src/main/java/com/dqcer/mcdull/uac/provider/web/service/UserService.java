@@ -3,20 +3,24 @@ package com.dqcer.mcdull.uac.provider.web.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.exception.BusinessException;
-import com.dqcer.framework.base.util.PageUtil;
-import com.dqcer.framework.base.vo.PagedVO;
+import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.Md5Util;
+import com.dqcer.framework.base.util.PageUtil;
 import com.dqcer.framework.base.util.Sha1Util;
+import com.dqcer.framework.base.vo.BaseVO;
+import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.uac.api.convert.UserConvert;
 import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
+import com.dqcer.mcdull.uac.api.entity.RoleDO;
 import com.dqcer.mcdull.uac.api.entity.UserDO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
+import com.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
+import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
 import com.dqcer.mcdull.uac.provider.web.manager.uac.IUserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,12 +44,17 @@ public class UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-
     @Resource
     private IUserRepository userRepository;
 
     @Resource
     private IUserManager userManager;
+
+    @Resource
+    private IUserRoleRepository userRoleRepository;
+
+    @Resource
+    private IRoleRepository roleRepository;
     
     /**
      * 列表
@@ -57,7 +66,17 @@ public class UserService {
         Page<UserDO> entityPage = userRepository.selectPage(dto);
         List<UserVO> voList = new ArrayList<>();
         for (UserDO entity : entityPage.getRecords()) {
-            voList.add(userManager.entity2VO(entity));
+            UserVO vo = userManager.entity2VO(entity);
+            List<Long> list = userRoleRepository.listRoleByUserId(vo.getId());
+            List<BaseVO> baseRoles = new ArrayList<>();
+            for (RoleDO roleDO : roleRepository.listByIds(list)) {
+                BaseVO role = new BaseVO();
+                role.setId(roleDO.getId());
+                role.setName(roleDO.getName());
+                baseRoles.add(role);
+            }
+            vo.setRoles(baseRoles);
+            voList.add(vo);
         }
         return Result.ok(PageUtil.toPage(voList, entityPage));
     }

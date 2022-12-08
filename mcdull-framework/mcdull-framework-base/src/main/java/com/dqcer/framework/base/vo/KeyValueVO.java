@@ -13,26 +13,26 @@ public abstract class KeyValueVO<K, V> implements VO{
     /**
      * key
      */
-    protected K key;
+    protected K id;
 
     /**
      * value
      */
-    protected V value;
+    protected V name;
 
-    public K getKey() {
-        return key;
+    public K getId() {
+        return id;
     }
 
-    public void setKey(K key) {
-        this.key = key;
+    public void setId(K id) {
+        this.id = id;
     }
 
-    public V getValue() {
-        return value;
+    public V getName() {
+        return name;
     }
 
-    public void setValue(V value) {
-        this.value = value;
+    public void setName(V name) {
+        this.name = name;
     }
 }

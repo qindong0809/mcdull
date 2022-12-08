@@ -10,7 +10,7 @@
     {
       "name": "mcdull.gateway",
       "type": "com.dqcer.mcdull.framework.config.properties.GatewayProperties",
-      "description": "网关",
+      "description": "Gateway Config",
       "sourceType": "com.dqcer.mcdull.framework.config.properties.McdullProperties"
     },
     {

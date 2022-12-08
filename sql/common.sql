@@ -52,13 +52,7 @@ CREATE TABLE IF NOT EXISTS `sys_role_menu` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色菜单中间表';
 
-CREATE TABLE IF NOT EXISTS `sys_user_role` (
-    `id` bigint(20) NOT NULL COMMENT '主键',
-    `created_time` datetime NOT NULL COMMENT '创建时间',
-    `user_id` bigint(20) NOT NULL COMMENT '角色主键',
-    `menu_id` bigint(20) NOT NULL COMMENT '菜单主键',
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户角色中间表';
+
 
 
 

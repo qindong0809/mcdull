@@ -1,10 +1,12 @@
 package com.dqcer.mcdull.uac.api.vo;
 
-import com.dqcer.framework.base.vo.VO;
 import com.dqcer.framework.base.annotation.Transform;
+import com.dqcer.framework.base.vo.BaseVO;
+import com.dqcer.framework.base.vo.VO;
 
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户视图对象
@@ -97,6 +99,19 @@ public class UserVO implements VO {
 
     @Transform(from = "type", param = "data_type")
     private String typeStr;
+
+    /**
+     * 角色集
+     */
+    private List<BaseVO> roles;
+
+    public List<BaseVO> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<BaseVO> roles) {
+        this.roles = roles;
+    }
 
     public String getTypeStr() {
         return typeStr;

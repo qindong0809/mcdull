@@ -100,4 +100,19 @@ PRIMARY KEY (`id`)
 
 INSERT INTO sys_role
 (id, created_by, created_time, updated_by, updated_time, status, name, code, description, del_flag, `type`)
-VALUES(1, 1589631293412503554, '2022-10-31 07:20:54', 1589631293412503554, '2022-12-05 22:53:42', 1, '管理员', 'sys-admin', '这是系统管理员', 1, 2);
+VALUES(1, 1589631293412503554, '2022-10-31 07:20:54', 1589631293412503554, '2022-12-05 22:53:42', 1, '系统管理员', 'sys-admin', '这是系统管理员', 1, 2);
+INSERT INTO sys_role
+(id, created_by, created_time, updated_by, updated_time, status, name, code, description, del_flag, `type`)
+VALUES(2, 1589631293412503554, '2022-10-31 07:20:54', 1589631293412503554, '2022-12-05 22:53:42', 1, '日志管理员', 'log-admin', '这是日志管理员', 1, 2);
+
+DROP TABLE IF EXISTS `sys_user_role`;
+CREATE TABLE IF NOT EXISTS `sys_user_role` (
+    `id` bigint(20) NOT NULL COMMENT '主键',
+    `created_time` datetime NOT NULL COMMENT '创建时间',
+    `user_id` bigint(20) NOT NULL COMMENT '角色主键',
+    `role_id` bigint(20) NOT NULL COMMENT '菜单主键',
+    PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户角色中间表';
+
+INSERT INTO sys_user_role (id, created_time, user_id, role_id) VALUES(1, '2022-10-31 07:20:54', 1589631293412503554, 1);
+INSERT INTO sys_user_role (id, created_time, user_id, role_id) VALUES(2, '2022-10-31 07:20:54', 1589631293412503554, 2);
