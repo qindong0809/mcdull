@@ -1,9 +1,9 @@
 package ${package.ServiceImpl};
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.dqcer.framework.base.auth.UserContextHolder;
-import com.dqcer.framework.base.page.PageUtil;
-import com.dqcer.framework.base.page.Paged;
+import com.dqcer.framework.base.storage.UserContextHolder;
+import com.dqcer.framework.base.util.PageUtil;
+import com.dqcer.framework.base.vo.PagedVO;
 import ${cfg.apiDto}.${cfg.dtoName};
 import ${cfg.apiConvert}.${cfg.convertName};
 

@@ -1,7 +1,5 @@
 package com.dqcer.framework.base.enums;
 
-import com.dqcer.framework.base.dict.IDict;
-
 /**
  * 状态枚举
  *
@@ -9,7 +7,7 @@ import com.dqcer.framework.base.dict.IDict;
  * @version 2022/07/26
  */
 @SuppressWarnings("unused")
-public enum StatusEnum implements IDict<Integer> {
+public enum StatusEnum implements IEnum<Integer> {
 
     /**
      * 启用

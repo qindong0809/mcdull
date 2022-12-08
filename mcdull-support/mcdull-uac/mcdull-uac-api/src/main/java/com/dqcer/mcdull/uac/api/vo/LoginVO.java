@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.uac.api.vo;
 
-import com.dqcer.framework.base.VO;
+import com.dqcer.framework.base.vo.VO;
 
 /**
  * 登录VO
@@ -8,7 +8,7 @@ import com.dqcer.framework.base.VO;
  * @author dqcer
  * @version 2022/11/01
  */
-public class LoginVO extends VO {
+public class LoginVO implements VO {
 
     private String username;
 

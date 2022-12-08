@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.gateway.properties;
 
-import com.dqcer.framework.base.constants.SysConstants;
+import com.dqcer.framework.base.constants.GlobalConstant;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 
@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author dqcer
  * @version 2022/10/27
  */
-@ConfigurationProperties(prefix = SysConstants.PROJECT)
+@ConfigurationProperties(prefix = GlobalConstant.ROOT_PREFIX)
 public class McdullGatewayProperties {
 
     /**

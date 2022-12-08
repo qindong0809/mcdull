@@ -1,7 +1,5 @@
 package com.dqcer.framework.base.enums;
 
-import com.dqcer.framework.base.dict.IDict;
-
 /**
  * 性枚举
  *
@@ -9,7 +7,7 @@ import com.dqcer.framework.base.dict.IDict;
  * @version 2022/07/26
  */
 @SuppressWarnings("unused")
-public enum SexEnum implements IDict<Integer> {
+public enum SexEnum implements IEnum<Integer> {
 
     /**
      * 未知

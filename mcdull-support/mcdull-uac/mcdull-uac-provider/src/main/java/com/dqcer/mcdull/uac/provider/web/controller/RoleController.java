@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.uac.provider.web.controller;
 
-import com.dqcer.framework.base.ValidGroup;
-import com.dqcer.framework.base.dict.Transform;
-import com.dqcer.framework.base.page.Paged;
+import com.dqcer.framework.base.validator.ValidGroup;
+import com.dqcer.framework.base.annotation.Transform;
+import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.uac.api.dto.RoleLiteDTO;
 import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
@@ -30,7 +30,7 @@ public class RoleController {
      */
     @GetMapping("base/page")
     @Transform
-    public Result<Paged<RoleVO>> listByPage(@Validated(ValidGroup.Paged.class) RoleLiteDTO dto) {
+    public Result<PagedVO<RoleVO>> listByPage(@Validated(ValidGroup.Paged.class) RoleLiteDTO dto) {
         return roleService.listByPage(dto);
     }
 

@@ -1,6 +1,5 @@
 package com.dqcer.mcdull.gateway.filter;
 
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.mcdull.gateway.utils.IpUtils;
 import org.slf4j.Logger;
@@ -22,6 +21,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Component
@@ -38,7 +38,7 @@ public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {
 
         /**浏览器传traceId*/
         // 暂不进行强制限制
-        String traceId = IdWorker.get32UUID();
+        String traceId = UUID.randomUUID().toString();
         addHeader(mutate, HttpHeaderConstants.TRACE_ID_HEADER, traceId);
         MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
 

@@ -1,16 +1,16 @@
 package com.dqcer.mcdull.framework.web.interceptor;
 
 import com.alibaba.fastjson.JSON;
-import com.dqcer.framework.base.auth.UnifySession;
-import com.dqcer.framework.base.auth.UserContextHolder;
+import com.dqcer.framework.base.storage.UnifySession;
+import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
-import com.dqcer.framework.base.constants.SysConstants;
+import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.enums.LanguageEnum;
-import com.dqcer.framework.base.utils.StrUtil;
+import com.dqcer.framework.base.util.StrUtil;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.framework.redis.operation.RedisClient;
-import com.dqcer.framework.base.auth.UnAuthorize;
+import com.dqcer.framework.base.annotation.UnAuthorize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -69,7 +69,7 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         unifySession.setTraceId(request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER));
         UserContextHolder.setSession(unifySession);
 
-        if (requestURI.startsWith(SysConstants.FEIGN_URL)) {
+        if (requestURI.startsWith(GlobalConstant.FEIGN_PREFIX)) {
             return true;
         }
 

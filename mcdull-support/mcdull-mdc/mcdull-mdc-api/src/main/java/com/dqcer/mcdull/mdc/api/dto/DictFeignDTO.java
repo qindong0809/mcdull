@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.mdc.api.dto;
 
-import com.dqcer.framework.base.DTO;
-import com.dqcer.framework.base.ValidGroup;
-import com.dqcer.framework.base.validator.EnumsStrValid;
+import com.dqcer.framework.base.dto.DTO;
+import com.dqcer.framework.base.validator.ValidGroup;
+import com.dqcer.framework.base.annotation.EnumsStrValid;
 import com.dqcer.framework.base.enums.LanguageEnum;
 
 import javax.validation.constraints.NotEmpty;
@@ -13,7 +13,7 @@ import javax.validation.constraints.NotEmpty;
  * @author dqcer
  * @version 2022/11/01 22:11:30
  */
-public class DictFeignDTO extends DTO {
+public class DictFeignDTO implements DTO {
 
     /**
      * 编码

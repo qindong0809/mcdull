@@ -1,6 +1,6 @@
 package ${cfg.apiVo};
 
-import com.dqcer.framework.base.VO;
+import com.dqcer.framework.base.vo.VO;
 
 /**
 * ${table.comment!} 返回客户端值

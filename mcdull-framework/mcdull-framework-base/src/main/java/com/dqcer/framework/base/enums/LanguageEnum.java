@@ -1,7 +1,5 @@
 package com.dqcer.framework.base.enums;
 
-import com.dqcer.framework.base.dict.IDict;
-
 /**
  * 语言枚举
  *
@@ -9,7 +7,7 @@ import com.dqcer.framework.base.dict.IDict;
  * @version 2022/07/26
  */
 @SuppressWarnings("unused")
-public enum LanguageEnum implements IDict<String> {
+public enum LanguageEnum implements IEnum<String> {
     /**
      * 中文
      */

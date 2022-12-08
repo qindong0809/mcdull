@@ -1,6 +1,6 @@
 package ${package.Service};
 
-import com.dqcer.framework.base.page.Paged;
+import com.dqcer.framework.base.vo.PagedVO;
 import ${cfg.apiVo}.${cfg.voName};
 import ${cfg.apiDto}.${cfg.dtoName};
 import ${cfg.result};

@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.mdc.client.api;
 
-import com.dqcer.framework.base.ValidGroup;
+import com.dqcer.framework.base.validator.ValidGroup;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.mdc.api.dto.DictFeignDTO;
 import com.dqcer.mcdull.mdc.api.vo.DictVO;

@@ -40,8 +40,8 @@ public class ExcelController {
 //        Long roleId = UserContextHolder.getSession().getRoleId();
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setCharacterEncoding("utf-8");
-//        List<DictVO> dictVOList = dictManager.dictList(DictSelectTypeEnum.SUBJECT_IMPORT_TEXT.name());
-//        Map<String, String> codeNameMap = CollUtil.defaultIfEmpty(dictVOList, new ArrayList<>()).stream().collect(Collectors.toMap(DictVO::getCode, DictVO::getName));
+//        List<EnumVO> dictVOList = dictManager.dictList(DictSelectTypeEnum.SUBJECT_IMPORT_TEXT.name());
+//        Map<String, String> codeNameMap = CollUtil.defaultIfEmpty(dictVOList, new ArrayList<>()).stream().collect(Collectors.toMap(EnumVO::getCode, EnumVO::getName));
         String fileName = URLEncoder.encode( "import_model", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
 

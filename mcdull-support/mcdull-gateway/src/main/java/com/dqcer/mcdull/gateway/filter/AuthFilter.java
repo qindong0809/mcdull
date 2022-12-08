@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.gateway.filter;
 
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
-import com.dqcer.framework.base.constants.SysConstants;
+import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.gateway.properties.FilterProperties;
@@ -29,7 +29,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static com.dqcer.framework.base.feign.FeignConfiguration.URL_SESSION;
+import static com.dqcer.mcdull.framework.feign.FeignConfiguration.URL_SESSION;
+
 
 /**
  * 认证过滤器
@@ -68,7 +69,7 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
         }
 
         // feign拦截
-        if(requestUrl.toLowerCase().contains(SysConstants.FEIGN_URL)) {
+        if(requestUrl.toLowerCase().contains(GlobalConstant.FEIGN_PREFIX)) {
             log.warn("内部feign接口，外部非法调用");
             return errorResponse(response, ResultCode.NOT_FOUND.getCode(), ResultCode.NOT_FOUND.getMessage());
         }

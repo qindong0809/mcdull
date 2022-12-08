@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.mdc.api.vo;
 
-import com.dqcer.framework.base.VO;
+import com.dqcer.framework.base.vo.VO;
 
 /**
  * sys dict
@@ -8,7 +8,7 @@ import com.dqcer.framework.base.VO;
  * @author dqcer
  * @version 2022/11/01 22:11:78
  */
-public class DictVO extends VO {
+public class DictVO implements VO {
 
     /**
      * 编码

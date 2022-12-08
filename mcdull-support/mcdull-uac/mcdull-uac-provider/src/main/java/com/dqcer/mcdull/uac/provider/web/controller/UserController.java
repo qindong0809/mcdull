@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.uac.provider.web.controller;
 
-import com.dqcer.framework.base.ValidGroup;
-import com.dqcer.framework.base.dict.Transform;
-import com.dqcer.framework.base.page.Paged;
+import com.dqcer.framework.base.validator.ValidGroup;
+import com.dqcer.framework.base.annotation.Transform;
+import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
@@ -28,7 +28,7 @@ public class UserController implements UserServiceApi {
      */
     @GetMapping("user/base/page")
     @Transform
-    public Result<Paged<UserVO>> listByPage(@Validated(ValidGroup.Paged.class) UserLiteDTO dto) {
+    public Result<PagedVO<UserVO>> listByPage(@Validated(ValidGroup.Paged.class) UserLiteDTO dto) {
         return userService.listByPage(dto);
     }
 

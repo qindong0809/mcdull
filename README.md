@@ -47,3 +47,5 @@ mcdull
     @GetMapping("/dict/detail")
     Result<DictVO> detail(@SpringQueryMap @Validated(value = ValidGroup.One.class) DictLiteDTO dto);
 ```
+
+国际化 测试

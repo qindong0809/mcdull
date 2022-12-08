@@ -1,7 +1,6 @@
 package com.dqcer.framework.base.wrapper;
 
-import com.dqcer.framework.base.dict.IDict;
-import org.springframework.http.HttpStatus;
+import com.dqcer.framework.base.enums.IEnum;
 
 /**
  * 返回码实现
@@ -9,7 +8,7 @@ import org.springframework.http.HttpStatus;
  * @author dqcer
  * @version 2022/01/11
  */
-public enum ResultCode implements IResultCode , IDict<Integer> {
+public enum ResultCode implements IResultCode , IEnum<Integer> {
 
 
 	/**

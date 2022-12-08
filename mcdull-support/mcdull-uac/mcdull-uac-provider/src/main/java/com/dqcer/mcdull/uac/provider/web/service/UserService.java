@@ -3,18 +3,18 @@ package com.dqcer.mcdull.uac.provider.web.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.dqcer.framework.base.auth.UserContextHolder;
-import com.dqcer.framework.base.constants.SysConstants;
+import com.dqcer.framework.base.storage.UserContextHolder;
+import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.exception.BusinessException;
-import com.dqcer.framework.base.page.PageUtil;
-import com.dqcer.framework.base.page.Paged;
-import com.dqcer.framework.base.utils.Md5Util;
-import com.dqcer.framework.base.utils.Sha1Util;
+import com.dqcer.framework.base.util.PageUtil;
+import com.dqcer.framework.base.vo.PagedVO;
+import com.dqcer.framework.base.util.Md5Util;
+import com.dqcer.framework.base.util.Sha1Util;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.uac.api.convert.UserConvert;
 import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
-import com.dqcer.mcdull.uac.api.entity.UserEntity;
+import com.dqcer.mcdull.uac.api.entity.UserDO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import com.dqcer.mcdull.uac.provider.web.manager.uac.IUserManager;
@@ -53,10 +53,10 @@ public class UserService {
      * @param dto dto
      * @return {@link Result}<{@link List}<{@link UserVO}>>
      */
-    public Result<Paged<UserVO>> listByPage(UserLiteDTO dto) {
-        Page<UserEntity> entityPage = userRepository.selectPage(dto);
+    public Result<PagedVO<UserVO>> listByPage(UserLiteDTO dto) {
+        Page<UserDO> entityPage = userRepository.selectPage(dto);
         List<UserVO> voList = new ArrayList<>();
-        for (UserEntity entity : entityPage.getRecords()) {
+        for (UserDO entity : entityPage.getRecords()) {
             voList.add(userManager.entity2VO(entity));
         }
         return Result.ok(PageUtil.toPage(voList, entityPage));
@@ -80,15 +80,15 @@ public class UserService {
      */
     @Transactional(rollbackFor = Exception.class)
     public Result<Long> insert(UserLiteDTO dto) {
-        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
-        query.eq(UserEntity::getAccount, dto.getAccount());
-        query.last(SysConstants.LAST_SQL_LIMIT_1);
-        List<UserEntity> list = userRepository.list(query);
+        LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
+        query.eq(UserDO::getAccount, dto.getAccount());
+        query.last(GlobalConstant.SQL_LIMIT_1);
+        List<UserDO> list = userRepository.list(query);
         if (!list.isEmpty()) {
             return Result.error(ResultCode.DATA_EXIST);
         }
 
-        UserEntity entity = UserConvert.dto2Entity(dto);
+        UserDO entity = UserConvert.dto2Entity(dto);
 
         String salt = UUID.randomUUID().toString();
         String password = Sha1Util.getSha1(Md5Util.getMd5(dto.getAccount() + salt));
@@ -108,7 +108,7 @@ public class UserService {
         Long id = dto.getId();
 
 
-        UserEntity dbData = userRepository.getById(id);
+        UserDO dbData = userRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(ResultCode.DATA_NOT_EXIST);
@@ -119,7 +119,7 @@ public class UserService {
             return Result.error(ResultCode.DATA_EXIST);
         }
 
-        UserEntity entity = new UserEntity();
+        UserDO entity = new UserDO();
         entity.setId(id);
         entity.setStatus(status);
         entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
@@ -144,7 +144,7 @@ public class UserService {
         Long id = dto.getId();
 
 
-        UserEntity dbData = userRepository.getById(id);
+        UserDO dbData = userRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(ResultCode.DATA_NOT_EXIST);
@@ -155,7 +155,7 @@ public class UserService {
             return Result.error(ResultCode.DATA_EXIST);
         }
 
-        UserEntity entity = new UserEntity();
+        UserDO entity = new UserDO();
         entity.setId(id);
         entity.setDelFlag(delFlag);
         entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
@@ -178,13 +178,13 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class)
     public Result<Long> resetPassword(UserLiteDTO dto) {
         Long id = dto.getId();
-        UserEntity entity = userRepository.getById(id);
+        UserDO entity = userRepository.getById(id);
         if (entity == null) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(ResultCode.DATA_NOT_EXIST);
         }
         String password = Sha1Util.getSha1(Md5Util.getMd5(entity.getAccount() + entity.getSalt()));
-        UserEntity user = new UserEntity();
+        UserDO user = new UserDO();
         user.setId(id);
         user.setPassword(password);
         boolean success = userRepository.updateById(entity);

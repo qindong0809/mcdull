@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.framework.web.remote;
 
-import com.dqcer.framework.base.ValidGroup;
+import com.dqcer.framework.base.validator.ValidGroup;
 import com.dqcer.framework.base.wrapper.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
@@ -14,7 +14,7 @@ public interface DictRemote {
      * 单个
      *
      * @param dto dto
-     * @return {@link Result < DictVO >}
+     * @return {@link Result < EnumVO >}
      */
     @GetMapping("feign/dict/detail")
     Result<DictVO> detail(@SpringQueryMap @Validated(value = ValidGroup.One.class) DictLiteDTO dto);

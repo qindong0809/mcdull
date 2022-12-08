@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac.provider.web.manager.uac.impl;
 
 import com.dqcer.mcdull.uac.api.convert.RoleConvert;
-import com.dqcer.mcdull.uac.api.entity.RoleEntity;
+import com.dqcer.mcdull.uac.api.entity.RoleDO;
 import com.dqcer.mcdull.uac.api.vo.RoleVO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
@@ -23,7 +23,7 @@ public class RoleManagerImpl implements IRoleManager {
      * @return {@link UserVO}
      */
     @Override
-    public RoleVO entity2VO(RoleEntity entity) {
+    public RoleVO entity2VO(RoleDO entity) {
         RoleVO vo = RoleConvert.entity2VO(entity);
         if (vo == null) {
             return null;

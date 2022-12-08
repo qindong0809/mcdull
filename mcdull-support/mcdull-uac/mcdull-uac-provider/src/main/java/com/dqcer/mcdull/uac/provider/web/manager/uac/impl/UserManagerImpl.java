@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac.provider.web.manager.uac.impl;
 
 import com.dqcer.mcdull.uac.api.convert.UserConvert;
-import com.dqcer.mcdull.uac.api.entity.UserEntity;
+import com.dqcer.mcdull.uac.api.entity.UserDO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import com.dqcer.mcdull.uac.provider.web.manager.uac.IUserManager;
@@ -22,7 +22,7 @@ public class UserManagerImpl implements IUserManager {
      * @return {@link UserVO}
      */
     @Override
-    public UserVO entity2VO(UserEntity entity) {
+    public UserVO entity2VO(UserDO entity) {
         UserVO vo = UserConvert.entity2VO(entity);
         if (vo == null) {
             return null;

@@ -4,15 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dqcer.framework.base.auth.UserContextHolder;
-import com.dqcer.framework.base.entity.BaseEntity;
+import com.dqcer.framework.base.storage.UserContextHolder;
+import com.dqcer.framework.base.entity.BaseDO;
 import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.enums.StatusEnum;
 import com.dqcer.framework.base.exception.BusinessException;
-import com.dqcer.framework.base.utils.StrUtil;
+import com.dqcer.framework.base.util.StrUtil;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
-import com.dqcer.mcdull.uac.api.entity.UserEntity;
+import com.dqcer.mcdull.uac.api.entity.UserDO;
 import com.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import org.springframework.stereotype.Service;
@@ -20,23 +20,23 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> implements IUserRepository {
+public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implements IUserRepository {
 
     /**
      * 分页查询
      *
      * @param dto dto
-     * @return {@link Page}<{@link UserEntity}>
+     * @return {@link Page}<{@link UserDO}>
      */
     @Override
-    public Page<UserEntity> selectPage(UserLiteDTO dto) {
-        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+    public Page<UserDO> selectPage(UserLiteDTO dto) {
+        LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
         String keyword = dto.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
-            query.and(i-> i.like(UserEntity::getAccount, keyword).or().like(UserEntity::getPhone, keyword).or().like(UserEntity::getEmail, keyword));
+            query.and(i-> i.like(UserDO::getAccount, keyword).or().like(UserDO::getPhone, keyword).or().like(UserDO::getEmail, keyword));
         }
-        query.orderByDesc(BaseEntity::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getCurrPage(), dto.getPageSize()), query);
+        query.orderByDesc(BaseDO::getCreatedTime);
+        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
     }
 
     /**
@@ -46,7 +46,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
      * @return {@link Long}
      */
     @Override
-    public Long insert(UserEntity entity) {
+    public Long insert(UserDO entity) {
         entity.setDelFlag(DelFlayEnum.NORMAL.getCode());
         entity.setStatus(StatusEnum.ENABLE.getCode());
         entity.setCreatedBy(UserContextHolder.getSession().getUserId());

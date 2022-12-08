@@ -1,13 +1,13 @@
 package com.dqcer.mcdull.mdc.api.convert;
 
-import com.dqcer.mcdull.mdc.api.entity.SysMailTemplateEntity;
+import com.dqcer.mcdull.mdc.api.entity.SysMailTemplateDO;
 import com.dqcer.mcdull.mdc.api.vo.MailTemplateBaseVO;
 import com.dqcer.mcdull.mdc.api.vo.MailTemplateVO;
 
 public class MailTemplateConvert {
 
 
-    public static MailTemplateVO convertToMailTemplateVO(SysMailTemplateEntity item){
+    public static MailTemplateVO convertToMailTemplateVO(SysMailTemplateDO item){
         if (item == null){
             return null;
         }
@@ -23,7 +23,7 @@ public class MailTemplateConvert {
         return vo;
     }
 
-    public static MailTemplateBaseVO convertToMailTemplateBaseVO(SysMailTemplateEntity item){
+    public static MailTemplateBaseVO convertToMailTemplateBaseVO(SysMailTemplateDO item){
         if (item == null){
             return null;
         }

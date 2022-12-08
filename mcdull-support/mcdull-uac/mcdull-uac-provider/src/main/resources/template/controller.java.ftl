@@ -2,8 +2,8 @@ package ${package.Controller};
 
 import com.eclincloud.common.base.annotation.Authentication;
 import com.eclincloud.common.base.annotation.StudyStatusPermission;
-import com.dqcer.framework.base.page.Paged;
-import com.dqcer.framework.base.ValidGroup;
+import com.dqcer.framework.base.vo.PagedVO;
+import com.dqcer.framework.base.validator.ValidGroup;
 import ${package.Service}.${cfg.serviceName};
 import ${cfg.apiVo}.${cfg.voName};
 import ${cfg.apiDto}.${cfg.dtoName};

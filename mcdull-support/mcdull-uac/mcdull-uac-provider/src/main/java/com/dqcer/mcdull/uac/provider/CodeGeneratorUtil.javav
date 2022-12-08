@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
-import com.dqcer.framework.base.utils.StrUtil;
+import com.dqcer.framework.base.util.StrUtil;
 
 import java.util.*;
 
@@ -137,7 +137,7 @@ public class CodeGeneratorUtil {
                 map.put("modelName", modelName);
                 map.put("baseController", "com.dqcer.common.core.supert.BaseController");
                 map.put("result", "com.dqcer.framework.base.wrapper.Result");
-                map.put("baseEntity", "com.dqcer.framework.base.entity.BaseEntity");
+                map.put("baseEntity", "com.dqcer.framework.base.entity.BaseDO");
                 map.put("repository",repository);
                 map.put("repositoryImpl", repository + ".impl");
                 map.put("controller", className + "Controller");

@@ -14,7 +14,11 @@
         <dependency>
             <groupId>com.dqcer.cloud</groupId>
             <artifactId>mcdull-framework-base</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-core</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -1,7 +1,5 @@
 package com.dqcer.framework.base.enums;
 
-import com.dqcer.framework.base.dict.IDict;
-
 /**
  * 删除枚举
  *
@@ -9,7 +7,7 @@ import com.dqcer.framework.base.dict.IDict;
  * @version 2022/07/26
  */
 @SuppressWarnings("unused")
-public enum DelFlayEnum implements IDict<Integer> {
+public enum DelFlayEnum implements IEnum<Integer> {
     /**
      * 1 = 正常
      */

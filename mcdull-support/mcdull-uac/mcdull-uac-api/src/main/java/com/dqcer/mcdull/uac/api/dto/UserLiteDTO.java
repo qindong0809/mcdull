@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.uac.api.dto;
 
-import com.dqcer.framework.base.PagedDTO;
-import com.dqcer.framework.base.ValidGroup;
-import com.dqcer.framework.base.validator.EnumsIntValid;
+import com.dqcer.framework.base.dto.PagedDTO;
+import com.dqcer.framework.base.validator.ValidGroup;
+import com.dqcer.framework.base.annotation.EnumsIntValid;
 import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.enums.StatusEnum;
 import org.hibernate.validator.constraints.Length;

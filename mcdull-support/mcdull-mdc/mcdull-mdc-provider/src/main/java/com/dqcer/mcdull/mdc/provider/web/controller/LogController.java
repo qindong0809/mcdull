@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.mdc.provider.web.controller;
 
 
-import com.dqcer.framework.base.ValidGroup;
-import com.dqcer.framework.base.page.Paged;
+import com.dqcer.framework.base.validator.ValidGroup;
+import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.mdc.api.dto.LogLiteDTO;
 import com.dqcer.mcdull.mdc.api.dto.SysLogFeignDTO;
@@ -42,7 +42,7 @@ public class LogController {
      * @return {@link Result}<{@link List}<{@link DictVO}>>
      */
     @GetMapping("/log/base/list")
-    public Result<Paged<LogVO>> listByPage(@Validated(ValidGroup.Paged.class) LogLiteDTO dto) {
+    public Result<PagedVO<LogVO>> listByPage(@Validated(ValidGroup.Paged.class) LogLiteDTO dto) {
         return logService.listByPage(dto);
     }
 }

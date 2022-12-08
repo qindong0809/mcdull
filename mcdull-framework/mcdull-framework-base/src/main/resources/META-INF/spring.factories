@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.dqcer.framework.base.feign.FeignConfiguration
-
-

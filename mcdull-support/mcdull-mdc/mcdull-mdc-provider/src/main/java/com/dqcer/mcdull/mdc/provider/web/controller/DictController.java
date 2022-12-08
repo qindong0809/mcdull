@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.mdc.provider.web.controller;
 
-import com.dqcer.framework.base.ValidGroup;
-import com.dqcer.framework.base.page.Paged;
+import com.dqcer.framework.base.validator.ValidGroup;
+import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.mdc.api.dto.DictFeignDTO;
 import com.dqcer.mcdull.mdc.api.dto.DictLiteDTO;
@@ -55,7 +55,7 @@ public class DictController {
      * @return {@link Result}<{@link List}<{@link DictVO}>>
      */
     @GetMapping("/dict/base/list")
-    public Result<Paged<DictVO>> listByPage(@Validated(ValidGroup.Paged.class) DictLiteDTO dto) {
+    public Result<PagedVO<DictVO>> listByPage(@Validated(ValidGroup.Paged.class) DictLiteDTO dto) {
         return sysDictService.listByPage(dto);
     }
 }

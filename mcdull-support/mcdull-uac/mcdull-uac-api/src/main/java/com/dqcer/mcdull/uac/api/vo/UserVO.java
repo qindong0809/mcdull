@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac.api.vo;
 
-import com.dqcer.framework.base.VO;
-import com.dqcer.framework.base.dict.Transform;
+import com.dqcer.framework.base.vo.VO;
+import com.dqcer.framework.base.annotation.Transform;
 
 import java.time.LocalTime;
 import java.util.Date;
@@ -12,7 +12,7 @@ import java.util.Date;
  * @author dqcer
  * @version  2022/11/27
  */
-public class UserVO extends VO {
+public class UserVO implements VO {
 
     /**
      * 主键 只有当插入对象ID 为空，才自动填充

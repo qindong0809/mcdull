@@ -1,8 +1,7 @@
 package com.dqcer.mcdull.mdc.provider.web.controller;
 
-import com.dqcer.framework.base.ValidGroup;
+import com.dqcer.framework.base.validator.ValidGroup;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.mcdull.mdc.api.dto.DictLiteDTO;
 import com.dqcer.mcdull.mdc.api.dto.MailTemplateLiteDTO;
 import com.dqcer.mcdull.mdc.api.vo.DictVO;
 import com.dqcer.mcdull.mdc.api.vo.MailTemplateBaseVO;

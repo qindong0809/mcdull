@@ -15,7 +15,7 @@ public interface RemoteLogService {
      * 单个
      *
      * @param dto dto
-     * @return {@link Result < DictVO >}
+     * @return {@link Result < EnumVO >}
      */
     @PostMapping("feign/log/batch/save")
     Result<Integer> batchSave(@RequestBody List<SysLogFeignDTO> dto);

@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.mdc.api.vo;
 
-import com.dqcer.framework.base.VO;
+import com.dqcer.framework.base.vo.VO;
 
 
 /**
@@ -9,7 +9,7 @@ import com.dqcer.framework.base.VO;
  * @author dqcer
  * @version  2022/11/16
  */
-public class MailTemplateVO extends VO {
+public class MailTemplateVO implements VO {
 
     private Long id;
 

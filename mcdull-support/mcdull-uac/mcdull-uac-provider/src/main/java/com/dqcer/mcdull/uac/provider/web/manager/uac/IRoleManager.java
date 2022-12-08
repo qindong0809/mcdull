@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.uac.provider.web.manager.uac;
 
-import com.dqcer.mcdull.uac.api.entity.RoleEntity;
+import com.dqcer.mcdull.uac.api.entity.RoleDO;
 import com.dqcer.mcdull.uac.api.vo.RoleVO;
 
 public interface IRoleManager {
@@ -11,5 +11,5 @@ public interface IRoleManager {
      * @param entity 实体
      * @return {@link RoleVO}
      */
-    RoleVO entity2VO(RoleEntity entity);
+    RoleVO entity2VO(RoleDO entity);
 }

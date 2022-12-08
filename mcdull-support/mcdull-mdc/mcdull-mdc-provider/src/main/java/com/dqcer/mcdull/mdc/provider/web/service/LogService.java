@@ -1,14 +1,14 @@
 package com.dqcer.mcdull.mdc.provider.web.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.dqcer.framework.base.feign.FeignResultParse;
-import com.dqcer.framework.base.page.PageUtil;
-import com.dqcer.framework.base.page.Paged;
+import com.dqcer.framework.base.wrapper.FeignResultParse;
+import com.dqcer.framework.base.util.PageUtil;
+import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.mdc.api.convert.LogConvert;
 import com.dqcer.mcdull.mdc.api.dto.LogLiteDTO;
 import com.dqcer.mcdull.mdc.api.dto.SysLogFeignDTO;
-import com.dqcer.mcdull.mdc.api.entity.LogEntity;
+import com.dqcer.mcdull.mdc.api.entity.LogDO;
 import com.dqcer.mcdull.mdc.api.vo.LogVO;
 import com.dqcer.mcdull.mdc.provider.web.dao.repository.ILogRepository;
 import com.dqcer.mcdull.uac.client.service.UserClientService;
@@ -29,7 +29,7 @@ public class LogService {
     private UserClientService userClientService;
 
     public Result<Integer> batchSave(List<SysLogFeignDTO> dto) {
-        List<LogEntity> entities = Lists.newArrayList();
+        List<LogDO> entities = Lists.newArrayList();
         for (SysLogFeignDTO sysLogFeignDTO : dto) {
             entities.add(sysLogFeignDTO);
         }
@@ -37,10 +37,10 @@ public class LogService {
         return Result.ok(entities.size());
     }
 
-    public Result<Paged<LogVO>> listByPage(LogLiteDTO dto) {
-        Page<LogEntity> entityPage = logRepository.selectPage(dto);
+    public Result<PagedVO<LogVO>> listByPage(LogLiteDTO dto) {
+        Page<LogDO> entityPage = logRepository.selectPage(dto);
         List<LogVO> voList = new ArrayList<>();
-        for (LogEntity entity : entityPage.getRecords()) {
+        for (LogDO entity : entityPage.getRecords()) {
             LogVO logVO = LogConvert.entity2Vo(entity);
             String nickname = FeignResultParse.getInstance(userClientService.getDetail(logVO.getAccountId())).getNickname();
             logVO.setAccountIdStr(nickname);

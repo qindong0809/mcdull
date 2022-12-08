@@ -3,21 +3,21 @@ package com.dqcer.mcdull.uac.provider.web.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.dqcer.framework.base.auth.CacheUser;
-import com.dqcer.framework.base.auth.SsoConstant;
-import com.dqcer.framework.base.auth.UserContextHolder;
+import com.dqcer.framework.base.storage.CacheUser;
+import com.dqcer.framework.base.storage.SsoConstant;
+import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
-import com.dqcer.framework.base.entity.SuperId;
+import com.dqcer.framework.base.entity.IdDO;
 import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.enums.StatusEnum;
-import com.dqcer.framework.base.utils.ObjUtil;
-import com.dqcer.framework.base.utils.Sha1Util;
+import com.dqcer.framework.base.util.ObjUtil;
+import com.dqcer.framework.base.util.Sha1Util;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.framework.redis.operation.CaffeineCache;
 import com.dqcer.mcdull.framework.redis.operation.RedisClient;
 import com.dqcer.mcdull.uac.api.dto.LoginDTO;
-import com.dqcer.mcdull.uac.api.entity.UserEntity;
+import com.dqcer.mcdull.uac.api.entity.UserDO;
 import com.dqcer.mcdull.uac.provider.config.constants.AuthCode;
 import com.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
 import org.slf4j.Logger;
@@ -62,9 +62,9 @@ public class LoginService {
      */
     public Result<String> login(LoginDTO loginDTO) {
         String account = loginDTO.getAccount();
-        LambdaQueryWrapper<UserEntity> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(UserEntity::getAccount, account);
-        UserEntity entity = userDAO.selectOne(wrapper);
+        LambdaQueryWrapper<UserDO> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(UserDO::getAccount, account);
+        UserDO entity = userDAO.selectOne(wrapper);
         if (null == entity) {
             log.warn("账号不存在 account: {}", account);
             return Result.error(AuthCode.NOT_EXIST);
@@ -90,9 +90,9 @@ public class LoginService {
         redisClient.set(MessageFormat.format(SsoConstant.SSO_TOKEN, token), cacheUser, SsoConstant.SSO_TOKEN_NAMESPACE_TIMEOUT, TimeUnit.SECONDS);
 
         //  更新登录时间
-        LambdaUpdateWrapper<UserEntity> update = Wrappers.lambdaUpdate();
-        update.set(UserEntity::getLastLoginTime, new Date());
-        update.eq(SuperId::getId, entity.getId());
+        LambdaUpdateWrapper<UserDO> update = Wrappers.lambdaUpdate();
+        update.set(UserDO::getLastLoginTime, new Date());
+        update.eq(IdDO::getId, entity.getId());
         userDAO.update(null, update);
 
         log.info("账号: {} 用户名: {} 已登录", entity.getAccount(), entity.getEmail());

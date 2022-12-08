@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.mdc.api.vo;
 
-import com.dqcer.mcdull.mdc.api.entity.LogEntity;
+import com.dqcer.mcdull.mdc.api.entity.LogDO;
 
-public class LogVO extends LogEntity {
+public class LogVO extends LogDO {
 
     private String accountIdStr;
 

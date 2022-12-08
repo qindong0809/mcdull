@@ -4,15 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dqcer.framework.base.auth.UserContextHolder;
-import com.dqcer.framework.base.entity.BaseEntity;
+import com.dqcer.framework.base.storage.UserContextHolder;
+import com.dqcer.framework.base.entity.BaseDO;
 import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.enums.StatusEnum;
 import com.dqcer.framework.base.exception.BusinessException;
-import com.dqcer.framework.base.utils.StrUtil;
+import com.dqcer.framework.base.util.StrUtil;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.uac.api.dto.RoleLiteDTO;
-import com.dqcer.mcdull.uac.api.entity.RoleEntity;
+import com.dqcer.mcdull.uac.api.entity.RoleDO;
 import com.dqcer.mcdull.uac.provider.web.dao.mapper.RoleMapper;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
 import org.springframework.stereotype.Service;
@@ -20,23 +20,23 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleEntity> implements IRoleRepository {
+public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implements IRoleRepository {
 
     /**
      * 分页查询
      *
      * @param dto dto
-     * @return {@link Page}<{@link RoleEntity}>
+     * @return {@link Page}<{@link RoleDO}>
      */
     @Override
-    public Page<RoleEntity> selectPage(RoleLiteDTO dto) {
-        LambdaQueryWrapper<RoleEntity> query = Wrappers.lambdaQuery();
+    public Page<RoleDO> selectPage(RoleLiteDTO dto) {
+        LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
         String keyword = dto.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
-            query.and(i-> i.like(RoleEntity::getName, keyword));
+            query.and(i-> i.like(RoleDO::getName, keyword));
         }
-        query.orderByDesc(BaseEntity::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getCurrPage(), dto.getPageSize()), query);
+        query.orderByDesc(BaseDO::getCreatedTime);
+        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
     }
 
     /**
@@ -46,7 +46,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleEntity> impl
      * @return {@link Long}
      */
     @Override
-    public Long insert(RoleEntity entity) {
+    public Long insert(RoleDO entity) {
         entity.setDelFlag(DelFlayEnum.NORMAL.getCode());
         entity.setStatus(StatusEnum.ENABLE.getCode());
         entity.setCreatedBy(UserContextHolder.getSession().getUserId());

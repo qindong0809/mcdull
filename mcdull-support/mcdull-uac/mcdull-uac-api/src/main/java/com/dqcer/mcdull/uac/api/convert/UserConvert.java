@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac.api.convert;
 
 import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
-import com.dqcer.mcdull.uac.api.entity.UserEntity;
+import com.dqcer.mcdull.uac.api.entity.UserDO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
 
 /**
@@ -19,7 +19,7 @@ public class UserConvert {
      * @param entity 实体
      * @return {@link UserVO}
      */
-    public static UserVO entity2VO(UserEntity entity) {
+    public static UserVO entity2VO(UserDO entity) {
         if (entity == null) {
             return null;
         }
@@ -40,8 +40,8 @@ public class UserConvert {
         return userVO;
     }
 
-    public static UserEntity dto2Entity(UserLiteDTO dto) {
-        UserEntity entity = new UserEntity();
+    public static UserDO dto2Entity(UserLiteDTO dto) {
+        UserDO entity = new UserDO();
         entity.setNickname(dto.getNickname());
         entity.setAccount(dto.getAccount());
         entity.setEmail(dto.getEmail());

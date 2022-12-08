@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.uac.api.dto;
 
-import com.dqcer.framework.base.DTO;
+import com.dqcer.framework.base.dto.DTO;
 
-public class LoginDTO extends DTO {
+public class LoginDTO implements DTO {
 
     private String account;
 

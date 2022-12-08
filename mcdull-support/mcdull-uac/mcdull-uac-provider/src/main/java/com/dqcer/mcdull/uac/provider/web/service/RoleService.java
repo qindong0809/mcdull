@@ -3,17 +3,17 @@ package com.dqcer.mcdull.uac.provider.web.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.dqcer.framework.base.auth.UserContextHolder;
-import com.dqcer.framework.base.constants.SysConstants;
+import com.dqcer.framework.base.storage.UserContextHolder;
+import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.exception.BusinessException;
-import com.dqcer.framework.base.page.PageUtil;
-import com.dqcer.framework.base.page.Paged;
+import com.dqcer.framework.base.util.PageUtil;
+import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.uac.api.convert.RoleConvert;
 import com.dqcer.mcdull.uac.api.dto.RoleLiteDTO;
 import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
-import com.dqcer.mcdull.uac.api.entity.RoleEntity;
+import com.dqcer.mcdull.uac.api.entity.RoleDO;
 import com.dqcer.mcdull.uac.api.vo.RoleVO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
@@ -52,10 +52,10 @@ public class RoleService {
      * @param dto dto
      * @return {@link Result}<{@link List}<{@link UserVO}>>
      */
-    public Result<Paged<RoleVO>> listByPage(RoleLiteDTO dto) {
-        Page<RoleEntity> entityPage = roleRepository.selectPage(dto);
+    public Result<PagedVO<RoleVO>> listByPage(RoleLiteDTO dto) {
+        Page<RoleDO> entityPage = roleRepository.selectPage(dto);
         List<RoleVO> voList = new ArrayList<>();
-        for (RoleEntity entity : entityPage.getRecords()) {
+        for (RoleDO entity : entityPage.getRecords()) {
             voList.add(roleManager.entity2VO(entity));
         }
         return Result.ok(PageUtil.toPage(voList, entityPage));
@@ -79,15 +79,15 @@ public class RoleService {
      */
     @Transactional(rollbackFor = Exception.class)
     public Result<Long> insert(RoleLiteDTO dto) {
-        LambdaQueryWrapper<RoleEntity> query = Wrappers.lambdaQuery();
-        query.eq(RoleEntity::getName, dto.getName());
-        query.last(SysConstants.LAST_SQL_LIMIT_1);
-        List<RoleEntity> list = roleRepository.list(query);
+        LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
+        query.eq(RoleDO::getName, dto.getName());
+        query.last(GlobalConstant.SQL_LIMIT_1);
+        List<RoleDO> list = roleRepository.list(query);
         if (!list.isEmpty()) {
             return Result.error(ResultCode.DATA_EXIST);
         }
 
-        RoleEntity entity = RoleConvert.dto2Entity(dto);
+        RoleDO entity = RoleConvert.dto2Entity(dto);
 
         return Result.ok(roleRepository.insert(entity));
     }
@@ -103,7 +103,7 @@ public class RoleService {
         Long id = dto.getId();
 
 
-        RoleEntity dbData = roleRepository.getById(id);
+        RoleDO dbData = roleRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(ResultCode.DATA_NOT_EXIST);
@@ -114,7 +114,7 @@ public class RoleService {
             return Result.error(ResultCode.DATA_EXIST);
         }
 
-        RoleEntity entity = new RoleEntity();
+        RoleDO entity = new RoleDO();
         entity.setId(id);
         entity.setStatus(status);
         entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
@@ -139,7 +139,7 @@ public class RoleService {
         Long id = dto.getId();
 
 
-        RoleEntity dbData = roleRepository.getById(id);
+        RoleDO dbData = roleRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(ResultCode.DATA_NOT_EXIST);
@@ -150,7 +150,7 @@ public class RoleService {
             return Result.error(ResultCode.DATA_EXIST);
         }
 
-        RoleEntity entity = new RoleEntity();
+        RoleDO entity = new RoleDO();
         entity.setId(id);
         entity.setDelFlag(delFlag);
         entity.setUpdatedBy(UserContextHolder.getSession().getUserId());

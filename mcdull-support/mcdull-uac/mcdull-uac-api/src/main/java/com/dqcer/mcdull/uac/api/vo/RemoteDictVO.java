@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.uac.api.vo;
 
-import com.dqcer.framework.base.VO;
+import com.dqcer.framework.base.vo.VO;
 
-public class RemoteDictVO extends VO {
+public class RemoteDictVO implements VO {
     /**
      * 编码
      */

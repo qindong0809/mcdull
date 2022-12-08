@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.uac.provider.web.manager.uac;
 
-import com.dqcer.mcdull.uac.api.entity.UserEntity;
+import com.dqcer.mcdull.uac.api.entity.UserDO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
 
 public interface IUserManager {
@@ -11,5 +11,5 @@ public interface IUserManager {
      * @param entity 实体
      * @return {@link UserVO}
      */
-    UserVO entity2VO(UserEntity entity);
+    UserVO entity2VO(UserDO entity);
 }

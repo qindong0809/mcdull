@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.mdc.api.convert;
 
-import com.dqcer.mcdull.mdc.api.entity.LogEntity;
+import com.dqcer.mcdull.mdc.api.entity.LogDO;
 import com.dqcer.mcdull.mdc.api.vo.DictVO;
 import com.dqcer.mcdull.mdc.api.vo.LogVO;
 
@@ -13,7 +13,7 @@ public class LogConvert {
      * @param item 项
      * @return {@link DictVO}
      */
-    public static LogVO entity2Vo(LogEntity item) {
+    public static LogVO entity2Vo(LogDO item) {
         LogVO logVO = new LogVO();
         logVO.setMobile(item.getMobile());
         logVO.setAccountId(item.getAccountId());

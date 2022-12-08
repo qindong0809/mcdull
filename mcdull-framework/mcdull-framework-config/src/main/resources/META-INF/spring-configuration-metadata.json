@@ -1,0 +1,25 @@
+{
+  "groups": [
+    {
+      "name": "mcdull",
+      "type": "com.dqcer.mcdull.framework.config.properties.McdullProperties",
+      "sourceType": "com.dqcer.mcdull.framework.config.properties.McdullProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "mcdull.gateway",
+      "type": "com.dqcer.mcdull.framework.config.properties.GatewayProperties",
+      "description": "网关",
+      "sourceType": "com.dqcer.mcdull.framework.config.properties.McdullProperties"
+    },
+    {
+      "name": "mcdull.gateway.noAuth",
+      "type": "java.util.List",
+      "description": "Ignore Token Url",
+      "sourceType": "com.dqcer.mcdull.framework.config.properties.GatewayPropertie",
+      "defaultValue": ["valid/token"]
+    }
+  ],
+  "hints": []
+}

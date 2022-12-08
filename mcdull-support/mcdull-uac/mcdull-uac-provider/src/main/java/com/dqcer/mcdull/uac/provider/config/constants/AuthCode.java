@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.uac.provider.config.constants;
 
-import com.dqcer.framework.base.dict.IDict;
+import com.dqcer.framework.base.enums.IEnum;
 import com.dqcer.framework.base.wrapper.IResultCode;
 
 /**
@@ -9,7 +9,7 @@ import com.dqcer.framework.base.wrapper.IResultCode;
  * @author dqcer
  * @version 2022/01/11
  */
-public enum AuthCode implements IResultCode, IDict<Integer> {
+public enum AuthCode implements IResultCode, IEnum<Integer> {
 
 
 	/**
