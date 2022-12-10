@@ -50,6 +50,11 @@ public interface ValidGroup {
     interface Paged { }
 
     /**
+     * 关键字
+     */
+    interface Keyword { }
+
+    /**
      * 单个
      */
     interface One {}

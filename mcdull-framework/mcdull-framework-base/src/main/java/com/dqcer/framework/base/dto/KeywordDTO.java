@@ -14,9 +14,9 @@ public abstract class KeywordDTO implements DTO {
 
     private static final long serialVersionUID = -8417050850699510442L;
     /**
-     * 关键字 最大长度64
+     * 关键字 最大长度512
      */
-    @Length(groups = {ValidGroup.Paged.class}, max = 512)
+    @Length(groups = {ValidGroup.Paged.class, ValidGroup.Keyword.class}, max = 512)
     private String keyword;
 
     public String getKeyword() {
