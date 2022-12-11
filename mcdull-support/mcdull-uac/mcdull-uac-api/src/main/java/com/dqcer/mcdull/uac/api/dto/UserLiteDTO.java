@@ -1,14 +1,15 @@
 package com.dqcer.mcdull.uac.api.dto;
 
-import com.dqcer.framework.base.dto.PagedDTO;
-import com.dqcer.framework.base.validator.ValidGroup;
 import com.dqcer.framework.base.annotation.EnumsIntValid;
+import com.dqcer.framework.base.dto.PagedDTO;
 import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.enums.StatusEnum;
+import com.dqcer.framework.base.validator.ValidGroup;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
 * 用户 接收客户端参数
@@ -41,28 +42,42 @@ public class UserLiteDTO extends PagedDTO {
     /**
      * 昵称
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Add.class, ValidGroup.Update.class})
+    @Length(groups = {ValidGroup.Add.class, ValidGroup.Update.class}, min = 1, max = 512)
     private String nickname;
 
     /**
      * 账户
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 5, max = 64)
+    @NotBlank(groups = {ValidGroup.Add.class, ValidGroup.Update.class})
+    @Length(groups = {ValidGroup.Add.class, ValidGroup.Update.class}, min = 5, max = 64)
     private String account;
 
     /**
      * 电子邮件
      */
-    @Length(groups = {ValidGroup.Add.class}, min = 5, max = 64)
+    @Length(groups = {ValidGroup.Add.class, ValidGroup.Update.class}, min = 5, max = 64)
     private String email;
 
     /**
      * 电话
      */
-    @Length(groups = {ValidGroup.Add.class}, min = 8, max = 11)
+    @Length(groups = {ValidGroup.Add.class, ValidGroup.Update.class}, min = 8, max = 11)
     private String phone;
+
+    /**
+     * 角色id集
+     */
+    private List<Long> roleIds;
+
+
+    public List<Long> getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(List<Long> roleIds) {
+        this.roleIds = roleIds;
+    }
 
     public String getNickname() {
         return nickname;

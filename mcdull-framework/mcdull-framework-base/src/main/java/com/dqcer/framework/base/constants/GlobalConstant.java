@@ -17,8 +17,17 @@ public class GlobalConstant {
     public static final String FEIGN_PREFIX = "/feign";
 
 
-    /**
-     * 针对查询、更新、删除 sql单条sql 限制1
-     */
-    public static final String SQL_LIMIT_1 = "LIMIT 1";
+    public static class Database {
+
+        /**
+         * 数字0： 如数据库操作所影响行数
+         */
+        public static final int ROW_0 = 0;
+
+        /**
+         * 针对查询、更新、删除 sql单条sql 限制1
+         */
+        public static final String SQL_LIMIT_1 = "LIMIT 1";
+    }
 }
+

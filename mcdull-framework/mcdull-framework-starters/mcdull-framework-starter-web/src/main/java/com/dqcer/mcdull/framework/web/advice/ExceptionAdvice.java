@@ -1,5 +1,6 @@
 package com.dqcer.mcdull.framework.web.advice;
 
+import com.dqcer.framework.base.exception.DatabaseException;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.framework.web.util.IpUtil;
@@ -8,21 +9,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
-import java.sql.SQLException;
-import java.sql.SQLSyntaxErrorException;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.stream.Collectors;
@@ -52,6 +51,18 @@ public class ExceptionAdvice {
     public Result<?> exception(Exception exception) {
         log.error("系统异常: ", exception);
         return Result.error(ResultCode.ERROR_UNKNOWN);
+    }
+
+    /**
+     * 数据库异常
+     *
+     * @param exception 异常
+     * @return {@link Result}<{@link ?}>
+     */
+    @ExceptionHandler(value = DatabaseException.class)
+    public Result<?> databaseException(DatabaseException exception) {
+        log.error("数据库操作异常: ", exception);
+        return Result.error(exception.getCode());
     }
 
     /**

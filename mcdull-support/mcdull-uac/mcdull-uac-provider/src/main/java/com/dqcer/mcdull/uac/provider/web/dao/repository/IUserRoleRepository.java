@@ -14,4 +14,6 @@ public interface IUserRoleRepository extends IService<UserRoleDO> {
      * @return {@link List}<{@link UserRoleDO}>
      */
     List<Long> listRoleByUserId(Long userId);
+
+    void updateByUserId(Long id, List<Long> roleIds);
 }

@@ -16,6 +16,9 @@ public class RoleConvert {
     }
 
     public static RoleVO entity2VO(RoleDO entity) {
+        if (entity == null) {
+            return null;
+        }
         RoleVO roleVO = new RoleVO();
         roleVO.setId(entity.getId());
         roleVO.setCreatedTime(entity.getCreatedTime());

@@ -1,19 +1,31 @@
 package com.dqcer.mcdull.uac.provider.web.manager.uac.impl;
 
+import com.dqcer.framework.base.vo.BaseVO;
 import com.dqcer.mcdull.uac.api.convert.UserConvert;
+import com.dqcer.mcdull.uac.api.entity.RoleDO;
 import com.dqcer.mcdull.uac.api.entity.UserDO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
+import com.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
+import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
 import com.dqcer.mcdull.uac.provider.web.manager.uac.IUserManager;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserManagerImpl implements IUserManager {
 
     @Resource
     private IUserRepository userRepository;
+
+    @Resource
+    private IUserRoleRepository userRoleRepository;
+
+    @Resource
+    private IRoleRepository roleRepository;
 
     /**
      * entity 转 VO
@@ -32,6 +44,18 @@ public class UserManagerImpl implements IUserManager {
         if (updatedBy != null) {
             vo.setUpdatedByStr(userRepository.getById(updatedBy).getNickname());
         }
+
+        List<BaseVO> baseRoles = new ArrayList<>();
+        List<Long> list = userRoleRepository.listRoleByUserId(vo.getId());
+        if (!list.isEmpty()) {
+            for (RoleDO roleDO : roleRepository.listByIds(list)) {
+                BaseVO role = new BaseVO();
+                role.setId(roleDO.getId());
+                role.setName(roleDO.getName());
+                baseRoles.add(role);
+            }
+        }
+        vo.setRoles(baseRoles);
         return vo;
     }
 }

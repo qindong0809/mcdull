@@ -42,8 +42,11 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
             log.debug("BaseInfoInterceptor#preHandle requestURI:[{}]", requestURI);
         }
 
-        // 无需认证
+        if (! (handler instanceof HandlerMethod)) {
+            return true;
+        }
         HandlerMethod method = (HandlerMethod) handler;
+        // 无需认证
         UnAuthorize unauthorize = method.getMethodAnnotation(UnAuthorize.class);
         if (null != unauthorize) {
             if (log.isDebugEnabled()) {

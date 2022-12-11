@@ -56,6 +56,17 @@ public class UserController implements UserServiceApi {
     }
 
     /**
+     * 更新数据
+     *
+     * @param dto dto
+     * @return {@link Result<Long> 返回主键}
+     */
+    @PostMapping("user/base/update")
+    public Result<Long> update(@RequestBody @Validated(value = {ValidGroup.Update.class})UserLiteDTO dto){
+        return userService.update(dto);
+    }
+
+    /**
      * 状态更新
      *
      * @param dto dto

@@ -9,16 +9,13 @@ import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.Md5Util;
 import com.dqcer.framework.base.util.PageUtil;
 import com.dqcer.framework.base.util.Sha1Util;
-import com.dqcer.framework.base.vo.BaseVO;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.uac.api.convert.UserConvert;
 import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
-import com.dqcer.mcdull.uac.api.entity.RoleDO;
 import com.dqcer.mcdull.uac.api.entity.UserDO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
-import com.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
 import com.dqcer.mcdull.uac.provider.web.manager.uac.IUserManager;
@@ -52,9 +49,6 @@ public class UserService {
 
     @Resource
     private IUserRoleRepository userRoleRepository;
-
-    @Resource
-    private IRoleRepository roleRepository;
     
     /**
      * 列表
@@ -66,17 +60,7 @@ public class UserService {
         Page<UserDO> entityPage = userRepository.selectPage(dto);
         List<UserVO> voList = new ArrayList<>();
         for (UserDO entity : entityPage.getRecords()) {
-            UserVO vo = userManager.entity2VO(entity);
-            List<Long> list = userRoleRepository.listRoleByUserId(vo.getId());
-            List<BaseVO> baseRoles = new ArrayList<>();
-            for (RoleDO roleDO : roleRepository.listByIds(list)) {
-                BaseVO role = new BaseVO();
-                role.setId(roleDO.getId());
-                role.setName(roleDO.getName());
-                baseRoles.add(role);
-            }
-            vo.setRoles(baseRoles);
-            voList.add(vo);
+            voList.add(userManager.entity2VO(entity));
         }
         return Result.ok(PageUtil.toPage(voList, entityPage));
     }
@@ -101,7 +85,7 @@ public class UserService {
     public Result<Long> insert(UserLiteDTO dto) {
         LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
         query.eq(UserDO::getAccount, dto.getAccount());
-        query.last(GlobalConstant.SQL_LIMIT_1);
+        query.last(GlobalConstant.Database.SQL_LIMIT_1);
         List<UserDO> list = userRepository.list(query);
         if (!list.isEmpty()) {
             return Result.error(ResultCode.DATA_EXIST);
@@ -113,7 +97,12 @@ public class UserService {
         String password = Sha1Util.getSha1(Md5Util.getMd5(dto.getAccount() + salt));
         entity.setSalt(salt);
         entity.setPassword(password);
-        return Result.ok(userRepository.insert(entity));
+        entity.setType(1);
+        Long userId = userRepository.insert(entity);
+
+        userRoleRepository.updateByUserId(userId, dto.getRoleIds());
+
+        return Result.ok(userId);
     }
 
     /**
@@ -125,8 +114,6 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class)
     public Result<Long> updateStatus(UserLiteDTO dto) {
         Long id = dto.getId();
-
-
         UserDO dbData = userRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
@@ -212,5 +199,31 @@ public class UserService {
             throw new BusinessException(ResultCode.DB_ERROR);
         }
         return Result.ok(id);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Result<Long> update(UserLiteDTO dto) {
+        Long id = dto.getId();
+        UserDO entity = userRepository.getById(id);
+        if (entity == null) {
+            log.warn("数据不存在 id:{}", id);
+            return Result.error(ResultCode.DATA_NOT_EXIST);
+        }
+
+        UserDO userDO = userRepository.oneByAccount(dto.getAccount());
+        if (userDO != null) {
+            if (!userDO.getId().equals(id)) {
+                log.warn("账号名称已存在 account: {}", dto.getAccount());
+                return Result.error(ResultCode.DATA_EXIST);
+            }
+        }
+
+        UserDO updateDO = UserConvert.dto2Entity(dto);
+        updateDO.setId(id);
+        userRepository.updateById(updateDO);
+
+        userRoleRepository.updateByUserId(id, dto.getRoleIds());
+
+        return Result.ok(updateDO.getId());
     }
 }

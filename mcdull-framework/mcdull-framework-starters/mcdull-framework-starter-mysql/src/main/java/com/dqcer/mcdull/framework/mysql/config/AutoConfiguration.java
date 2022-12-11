@@ -10,9 +10,11 @@ import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.dqcer.mcdull.framework.mysql.aspect.DataSourceAspect;
 import com.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
@@ -37,7 +39,9 @@ public class AutoConfiguration {
      * @param dynamicDataSource 动态数据来源
      * @return {@link MybatisSqlSessionFactoryBean}
      */
-    @Bean
+    @Bean(name = "sqlSessionFactory")
+    @Primary
+    @ConditionalOnMissingBean
     public SqlSessionFactory sqlSessionFactoryBean(RoutingDataSource dynamicDataSource) throws Exception {
         MybatisSqlSessionFactoryBean mybatisSqlSessionFactoryBean = new MybatisSqlSessionFactoryBean();
         PathMatchingResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();

@@ -1,7 +1,6 @@
 package com.dqcer.framework.base.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 
 import java.util.Date;
@@ -18,7 +17,7 @@ public abstract class BaseDO extends IdDO {
     /**
      * 创建时间
      */
-    @TableField(fill = FieldFill.INSERT,updateStrategy = FieldStrategy.NEVER )
+    @TableField(fill = FieldFill.INSERT)
     protected Date createdTime;
 
     /**

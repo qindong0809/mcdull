@@ -81,7 +81,7 @@ public class RoleService {
     public Result<Long> insert(RoleLiteDTO dto) {
         LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
         query.eq(RoleDO::getName, dto.getName());
-        query.last(GlobalConstant.SQL_LIMIT_1);
+        query.last(GlobalConstant.Database.SQL_LIMIT_1);
         List<RoleDO> list = roleRepository.list(query);
         if (!list.isEmpty()) {
             return Result.error(ResultCode.DATA_EXIST);

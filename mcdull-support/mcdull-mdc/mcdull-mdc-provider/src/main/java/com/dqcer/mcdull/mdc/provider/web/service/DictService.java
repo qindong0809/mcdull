@@ -59,7 +59,7 @@ public class DictService {
         wrapper.eq(DictDO::getLanguage, dto.getLanguage());
         wrapper.eq(DictDO::getSelectType, dto.getSelectType());
         wrapper.eq(DictDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
-        wrapper.last(GlobalConstant.SQL_LIMIT_1);
+        wrapper.last(GlobalConstant.Database.SQL_LIMIT_1);
         return Result.ok(DictConvert.entityConvertToVo(dictRepository.getOne(wrapper)));
     }
 

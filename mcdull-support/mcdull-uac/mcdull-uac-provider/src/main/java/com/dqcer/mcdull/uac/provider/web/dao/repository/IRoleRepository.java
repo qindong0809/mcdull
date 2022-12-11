@@ -22,4 +22,5 @@ public interface IRoleRepository extends IService<RoleDO> {
      * @return {@link Long}
      */
     Long insert(RoleDO entity);
+
 }

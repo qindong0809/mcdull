@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.entity.BaseDO;
 import com.dqcer.framework.base.enums.DelFlayEnum;
@@ -51,8 +52,8 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
         entity.setStatus(StatusEnum.ENABLE.getCode());
         entity.setCreatedBy(UserContextHolder.getSession().getUserId());
         entity.setCreatedTime(new Date());
-        int insert = baseMapper.insert(entity);
-        if (insert != 1) {
+        int row = baseMapper.insert(entity);
+        if (row == GlobalConstant.Database.ROW_0) {
             throw new BusinessException(ResultCode.DB_ERROR);
         }
         return entity.getId();

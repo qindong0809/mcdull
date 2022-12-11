@@ -22,4 +22,12 @@ public interface IUserRepository extends IService<UserDO> {
      * @return {@link Long}
      */
     Long insert(UserDO entity);
+
+    /**
+     * 单个根据账户名称
+     *
+     * @param account 账户
+     * @return {@link UserDO}
+     */
+    UserDO oneByAccount(String account);
 }
