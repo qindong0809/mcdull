@@ -5,7 +5,6 @@ import com.dqcer.framework.base.storage.UserContextHolder;
 import org.apache.ibatis.reflection.MetaObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
@@ -15,7 +14,6 @@ import java.util.Date;
  * @author dqcer
  * @version 2021/08/21 20:08:55
  */
-@Component
 public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
 
     private static final Logger log = LoggerFactory.getLogger(MybatisMetaObjectHandlerConfig.class);

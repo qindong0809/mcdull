@@ -39,7 +39,7 @@ public class AutoConfiguration {
      * @param dynamicDataSource 动态数据来源
      * @return {@link MybatisSqlSessionFactoryBean}
      */
-    @Bean(name = "sqlSessionFactory")
+    @Bean
     @Primary
     @ConditionalOnMissingBean
     public SqlSessionFactory sqlSessionFactoryBean(RoutingDataSource dynamicDataSource) throws Exception {
@@ -49,7 +49,7 @@ public class AutoConfiguration {
                 .getResources("classpath*:mapper/**/*.xml"));
         mybatisSqlSessionFactoryBean.setDataSource(dynamicDataSource);
         GlobalConfig config = new GlobalConfig();
-        config.setMetaObjectHandler(new MybatisMetaObjectHandlerConfig());
+        config.setMetaObjectHandler(metaObjectHandlerConfig());
         config.setBanner(false);
         mybatisSqlSessionFactoryBean.setGlobalConfig(config);
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
@@ -59,6 +59,11 @@ public class AutoConfiguration {
         mybatisSqlSessionFactoryBean.setConfiguration(configuration);
 
         return mybatisSqlSessionFactoryBean.getObject();
+    }
+
+    @Bean
+    public MybatisMetaObjectHandlerConfig metaObjectHandlerConfig() {
+        return new MybatisMetaObjectHandlerConfig();
     }
 
     /**
