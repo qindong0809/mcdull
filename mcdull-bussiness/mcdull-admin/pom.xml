@@ -4,10 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>mcdull-bussiness</artifactId>
-        <groupId>com.dqcer.cloud</groupId>
+        <groupId>com.dqcer.mcdull</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <groupId>com.dqcer.cloud</groupId>
+    <groupId>com.dqcer.mcdull</groupId>
     <artifactId>mcdull-admin</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>mcdull-admin</name>

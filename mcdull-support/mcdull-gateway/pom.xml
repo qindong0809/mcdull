@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>mcdull-support</artifactId>
-        <groupId>com.dqcer.cloud</groupId>
+        <groupId>com.dqcer.mcdull</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -21,17 +21,17 @@
             <artifactId>fastjson</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.dqcer.cloud</groupId>
+            <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-starter-nacos</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.dqcer.cloud</groupId>
+            <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-base</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.dqcer.cloud</groupId>
+            <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-uac-client</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -40,12 +40,12 @@
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.dqcer.cloud</groupId>
+            <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-starter-feign</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.dqcer.cloud</groupId>
+            <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-config</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>

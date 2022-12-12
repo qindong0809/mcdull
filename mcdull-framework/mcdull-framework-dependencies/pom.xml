@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.dqcer.cloud</groupId>
+    <groupId>com.dqcer.mcdull</groupId>
     <artifactId>mcdull-framework-dependencies</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>mcdull-framework-dependencies</name>
@@ -88,7 +88,7 @@
                 <version>${hutool.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.dqcer.cloud</groupId>
+                <groupId>com.dqcer.mcdull</groupId>
                 <artifactId>mcdull-framework-base</artifactId>
                 <version>${mcdull.version}</version>
             </dependency>

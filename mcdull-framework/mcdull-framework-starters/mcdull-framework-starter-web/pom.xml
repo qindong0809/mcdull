@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>mcdull-framework-starters</artifactId>
-        <groupId>com.dqcer.cloud</groupId>
+        <groupId>com.dqcer.mcdull</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.dqcer.cloud</groupId>
+    <groupId>com.dqcer.mcdull</groupId>
     <artifactId>mcdull-framework-starter-web</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -59,7 +59,7 @@
         <!-- end -->
 
         <dependency>
-            <groupId>com.dqcer.cloud</groupId>
+            <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-base</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
@@ -71,7 +71,7 @@
             <artifactId>spring-boot</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.dqcer.cloud</groupId>
+            <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-starter-redis</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
@@ -93,13 +93,13 @@
             <artifactId>hutool-http</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.dqcer.cloud</groupId>
+            <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-mdc-api</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.dqcer.cloud</groupId>
+            <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-starter-feign</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
