@@ -11,8 +11,9 @@ import java.util.Date;
  * @author dqcer
  * @version 2022/01/12
  */
-@SuppressWarnings("unused")
 public abstract class BaseDO extends IdDO {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 创建时间
@@ -23,6 +24,7 @@ public abstract class BaseDO extends IdDO {
     /**
      * 创建人
      */
+    @TableField(fill = FieldFill.INSERT)
     protected Long createdBy;
 
     /**
@@ -34,12 +36,14 @@ public abstract class BaseDO extends IdDO {
     /**
      * 更新人
      */
+    @TableField(fill = FieldFill.UPDATE)
     protected Long updatedBy;
 
     /**
-     * 状态
+     * 状态 默认启用
      * @see com.dqcer.framework.base.enums.StatusEnum
      */
+    @TableField(fill = FieldFill.INSERT)
     protected Integer status;
 
 
