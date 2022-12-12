@@ -4,9 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dqcer.framework.base.constants.GlobalConstant;
-import com.dqcer.framework.base.exception.DatabaseException;
+import com.dqcer.framework.base.exception.DatabaseRowException;
 import com.dqcer.framework.base.util.ObjUtil;
-import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.uac.api.entity.UserRoleDO;
 import com.dqcer.mcdull.uac.provider.web.dao.mapper.UserRoleMapper;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
@@ -49,7 +48,7 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
         query.eq(UserRoleDO::getUserId, userId);
         int row = baseMapper.delete(query);
         if (row == GlobalConstant.Database.ROW_0) {
-            throw new DatabaseException(ResultCode.DB_ERROR);
+            throw new DatabaseRowException();
         }
 
 
@@ -66,7 +65,7 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
         }
         boolean saveBatch = saveBatch(entities);
         if (!saveBatch) {
-            throw new DatabaseException(ResultCode.DB_ERROR);
+            throw new DatabaseRowException();
         }
     }
 }

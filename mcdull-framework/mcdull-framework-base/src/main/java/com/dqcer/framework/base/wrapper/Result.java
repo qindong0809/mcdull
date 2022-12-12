@@ -4,6 +4,8 @@ package com.dqcer.framework.base.wrapper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
+import java.util.List;
 import java.util.StringJoiner;
 
 /**
@@ -77,6 +79,20 @@ public class Result<T> implements Serializable {
         return Result.<T>builder()
                 .withCode(resultCode.getCode())
                 .withMessage(resultCode.getMessage())
+                .build();
+    }
+
+    /**
+     * 返回错误消息
+     *
+     * @param resultCode 结果代码
+     * @param param      参数
+     * @return {@link Result}<{@link T}>
+     */
+    public static <T> Result<T> error(IResultCode resultCode, List<Object> param) {
+        return Result.<T>builder()
+                .withCode(resultCode.getCode())
+                .withMessage(MessageFormat.format(resultCode.getMessage(), param.toArray()))
                 .build();
     }
 

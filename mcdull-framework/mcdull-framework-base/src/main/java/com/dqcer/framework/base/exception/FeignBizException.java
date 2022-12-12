@@ -9,15 +9,17 @@ import com.dqcer.framework.base.wrapper.Result;
  * @author dqcer
  * @version  2022/04/22
  */
+@SuppressWarnings("unused")
 public class FeignBizException extends RuntimeException{
 
-    private Result result;
+    private static final long serialVersionUID = 6295445256074041773L;
+    private Result<?> result;
 
     public FeignBizException() {
         super();
     }
 
-    public FeignBizException(Result result) {
+    public FeignBizException(Result<?> result) {
         this.result = result;
     }
 
@@ -37,11 +39,11 @@ public class FeignBizException extends RuntimeException{
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
-    public Result getResult() {
+    public Result<?> getResult() {
         return result;
     }
 
-    public void setResult(Result result) {
+    public void setResult(Result<?> result) {
         this.result = result;
     }
 }

@@ -19,17 +19,17 @@ public enum ResultCode implements IResultCode , IEnum<Integer> {
 	/**
 	 * 服务异常
 	 */
-	ERROR_UNKNOWN(999500, "未知异常"),
+	ERROR_UNKNOWN(999500, "未知异常: {0}"),
 
 	/**
 	 * sql语法错误
 	 */
-	SQL_SYNTAX_ERROR(999510, "sql语法异常"),
+	SQL_SYNTAX_ERROR(999510, "sql异常: {0}"),
 
 	/**
 	 * 数据库错误
 	 */
-	DB_ERROR(999511, "数据库操作异常"),
+	DB_ERROR(999511, "数据库实际影响行数与预期不同"),
 
 	/**
 	 * 无权限
@@ -69,7 +69,7 @@ public enum ResultCode implements IResultCode , IEnum<Integer> {
 	/**
 	 * 参数异常
 	 */
-	ERROR_PARAMETERS(999450, "参数异常"),
+	ERROR_PARAMETERS(999450, "参数异常: {0}"),
 
 	/**
 	 * 数据存在

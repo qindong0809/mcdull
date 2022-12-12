@@ -11,6 +11,8 @@ import com.dqcer.framework.base.wrapper.IResultCode;
  */
 public class BusinessException extends RuntimeException {
 
+	private static final long serialVersionUID = -8454250231269196534L;
+
 	protected IResultCode code;
 
 	public void setCode(IResultCode code) {

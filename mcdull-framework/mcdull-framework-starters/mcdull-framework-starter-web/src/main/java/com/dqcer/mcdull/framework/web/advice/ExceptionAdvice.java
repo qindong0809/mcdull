@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.framework.web.advice;
 
-import com.dqcer.framework.base.exception.DatabaseException;
+import com.dqcer.framework.base.exception.DatabaseRowException;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.framework.web.util.IpUtil;
@@ -22,6 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Collections;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.stream.Collectors;
@@ -50,7 +53,13 @@ public class ExceptionAdvice {
     @ExceptionHandler(value = Exception.class)
     public Result<?> exception(Exception exception) {
         log.error("系统异常: ", exception);
-        return Result.error(ResultCode.ERROR_UNKNOWN);
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter pw = new PrintWriter(stringWriter);
+        exception.printStackTrace(pw);
+
+        String errorStack = stringWriter.toString();
+        errorStack = errorStack.substring(0, 1000);
+        return Result.error(ResultCode.ERROR_UNKNOWN, Collections.singletonList(errorStack));
     }
 
     /**
@@ -59,10 +68,10 @@ public class ExceptionAdvice {
      * @param exception 异常
      * @return {@link Result}<{@link ?}>
      */
-    @ExceptionHandler(value = DatabaseException.class)
-    public Result<?> databaseException(DatabaseException exception) {
-        log.error("数据库操作异常: ", exception);
-        return Result.error(exception.getCode());
+    @ExceptionHandler(value = DatabaseRowException.class)
+    public Result<?> databaseRowException(DatabaseRowException exception) {
+        log.error("数据库实际影响行数与预期不同: ", exception);
+        return Result.error(ResultCode.DB_ERROR);
     }
 
     /**
@@ -136,11 +145,15 @@ public class ExceptionAdvice {
             List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
             ObjectError objectError = allErrors.get(0);
             Object[] arguments = objectError.getArguments();
-            DefaultMessageSourceResolvable a = (DefaultMessageSourceResolvable) arguments[0];
-            String fieldName = a.getDefaultMessage();
-            String errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,字段名称：%s，错误提示：%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), fieldName, objectError.getDefaultMessage());
+            String errorMessage = "";
+            if (arguments != null) {
+                DefaultMessageSourceResolvable a = (DefaultMessageSourceResolvable) arguments[0];
+                String fieldName = a.getDefaultMessage();
+                errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,字段名称：%s，错误提示：%s",
+                        applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), fieldName, objectError.getDefaultMessage());
+            }
             log.error("参数异常: {}", errorMessage);
-            return Result.error(ResultCode.ERROR_PARAMETERS);
+            return Result.error(ResultCode.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
 
         if (e instanceof MissingServletRequestParameterException) {

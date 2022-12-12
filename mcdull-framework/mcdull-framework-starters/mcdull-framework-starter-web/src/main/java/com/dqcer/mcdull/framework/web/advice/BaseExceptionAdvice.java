@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLException;
+import java.util.Collections;
 
 @RestControllerAdvice
 @Order(0)
@@ -24,7 +25,7 @@ public class BaseExceptionAdvice {
      */
     @ExceptionHandler(value = SQLException.class)
     public Result<?> exception(SQLException exception) {
-        log.error("sql语法异常: ", exception);
-        return Result.error(ResultCode.SQL_SYNTAX_ERROR);
+        log.error("sql异常: ", exception);
+        return Result.error(ResultCode.SQL_SYNTAX_ERROR, Collections.singletonList(exception.getMessage()));
     }
 }
