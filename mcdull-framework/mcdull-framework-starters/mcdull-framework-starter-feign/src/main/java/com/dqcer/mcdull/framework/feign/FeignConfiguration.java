@@ -23,8 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 @Configuration
 public class FeignConfiguration implements RequestInterceptor {
 
-    public final static ThreadLocal<String> URL_SESSION = new InheritableThreadLocal();
-
     private static final Logger log = LoggerFactory.getLogger(FeignConfiguration.class);
 
     public FeignConfiguration() {
@@ -32,11 +30,9 @@ public class FeignConfiguration implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
-        String s = URL_SESSION.get();
-        if (s != null) {
-            if (s.equals("token/valid")) {
-                return;
-            }
+        String path = requestTemplate.path();
+        if (path.equals("/feign/token/valid")) {
+            return;
         }
 
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -52,6 +48,6 @@ public class FeignConfiguration implements RequestInterceptor {
 
     @Bean
     public feign.Logger.Level loggerLevel() {
-        return feign.Logger.Level.FULL;
+        return feign.Logger.Level.BASIC;
     }
 }

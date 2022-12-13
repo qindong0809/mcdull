@@ -29,8 +29,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static com.dqcer.mcdull.framework.feign.FeignConfiguration.URL_SESSION;
-
 
 /**
  * 认证过滤器
@@ -109,13 +107,9 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
         }
 
         Result<Long> result;
-        try {
-            URL_SESSION.set("token/valid");
-            String traceId = headers.getFirst(HttpHeaderConstants.TRACE_ID_HEADER);
-            result = remoteValid(token, traceId);
-        } finally {
-            URL_SESSION.remove();
-        }
+        String traceId = headers.getFirst(HttpHeaderConstants.TRACE_ID_HEADER);
+        result = remoteValid(token, traceId);
+
 
         log.info("token valid result: {}", result);
         if (!result.isOk()) {

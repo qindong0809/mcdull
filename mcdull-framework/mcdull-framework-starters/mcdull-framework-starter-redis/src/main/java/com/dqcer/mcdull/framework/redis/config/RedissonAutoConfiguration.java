@@ -1,6 +1,8 @@
 package com.dqcer.mcdull.framework.redis.config;
 
 import com.dqcer.mcdull.framework.redis.annotation.ExpireRedisCacheWriter;
+import com.dqcer.mcdull.framework.redis.aspect.CacheExpireAspect;
+import com.dqcer.mcdull.framework.redis.aspect.RedisLockAspect;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.Module;
@@ -50,6 +52,16 @@ public class RedissonAutoConfiguration extends CachingConfigurerSupport {
     @ConditionalOnMissingBean(CacheChannel.class)
     public CacheChannel getRedissonObject() {
         return new CacheChannel();
+    }
+
+    @Bean
+    public RedisLockAspect getRedisLockAspect() {
+        return new RedisLockAspect();
+    }
+
+    @Bean
+    public CacheExpireAspect getCacheExpireAspect() {
+        return new CacheExpireAspect();
     }
 
 

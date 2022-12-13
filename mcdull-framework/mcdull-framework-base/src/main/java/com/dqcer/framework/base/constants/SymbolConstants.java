@@ -71,4 +71,9 @@ public class SymbolConstants {
      * 冒号 :
      */
     public static final String MH = ":";
+
+    /**
+     * #号
+     */
+    public static final String JH = "#";
 }

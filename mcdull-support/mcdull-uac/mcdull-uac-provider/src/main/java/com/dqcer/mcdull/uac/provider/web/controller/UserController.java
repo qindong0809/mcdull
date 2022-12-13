@@ -4,6 +4,7 @@ import com.dqcer.framework.base.validator.ValidGroup;
 import com.dqcer.framework.base.annotation.Transform;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.redis.annotation.RedisLock;
 import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
 import com.dqcer.mcdull.uac.client.api.UserServiceApi;
@@ -50,6 +51,7 @@ public class UserController implements UserServiceApi {
      * @param dto dto
      * @return {@link Result<Long> 返回新增主键}
      */
+    @RedisLock(key = "'lock:uac:user:' + #dto.nickname + '-' + #dto.account", timeout = 3)
     @PostMapping("user/base/save")
     public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Add.class})UserLiteDTO dto){
         return userService.insert(dto);

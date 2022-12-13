@@ -100,6 +100,7 @@
   <logger name="springfox.bean.validators" level="ERROR"/>
   <logger name="springfox.documentation" level="ERROR" />
   <logger name="com.alibaba.nacos.client.naming" level="warn" />
+  <logger name="com.dqcer" level="debug" />
   <root level="info">
     <appender-ref ref="CONSOLE" />
 <!--    <appender-ref ref="console" />-->

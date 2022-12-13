@@ -1,5 +1,6 @@
 package com.dqcer.mcdull.framework.web.advice;
 
+import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.exception.DatabaseRowException;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
@@ -63,6 +64,18 @@ public class ExceptionAdvice {
     }
 
     /**
+     * 业务异常
+     *
+     * @param exception 异常
+     * @return {@link Result}<{@link ?}>
+     */
+    @ExceptionHandler(value = BusinessException.class)
+    public Result<?> businessException(BusinessException exception) {
+        log.error("业务系统异常: ", exception);
+        return Result.error(exception.getCode());
+    }
+
+    /**
      * 数据库异常
      *
      * @param exception 异常
@@ -93,7 +106,7 @@ public class ExceptionAdvice {
      * @return {@link Result}
      */
     @ExceptionHandler(value = MissingResourceException.class)
-    public Result<?> missingResourceException(Exception exception) {
+    public Result<?> missingResourceException(MissingResourceException exception) {
         log.error("无法找到对应properties文件中对应的key: ", exception);
         return Result.error(ResultCode.NOT_FIND_PROPERTIES_KEY);
     }

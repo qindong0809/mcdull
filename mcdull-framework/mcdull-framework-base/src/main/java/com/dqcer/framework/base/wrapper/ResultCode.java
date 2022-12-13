@@ -32,6 +32,11 @@ public enum ResultCode implements IResultCode , IEnum<Integer> {
 	DB_ERROR(999511, "数据库实际影响行数与预期不同"),
 
 	/**
+	 * 锁定超时
+	 */
+	LOCK_TIMEOUT(999512, "锁定超时"),
+
+	/**
 	 * 无权限
 	 */
 	UN_AUTHORIZATION(999401, "无权限"),
