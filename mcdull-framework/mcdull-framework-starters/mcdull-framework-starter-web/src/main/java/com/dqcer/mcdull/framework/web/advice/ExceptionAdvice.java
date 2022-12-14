@@ -132,25 +132,27 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(value = {BindException.class, ValidationException.class, MethodArgumentNotValidException.class, MissingServletRequestParameterException.class})
     public Result<String> handleValidatedException(Exception e, HttpServletRequest request) {
+        String errorMessage = "";
         if (e instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException ex = (MethodArgumentNotValidException) e;
             List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
             ObjectError objectError = allErrors.get(0);
             Object[] arguments = objectError.getArguments();
             if (arguments == null) {
-                String errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,，错误提示：%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), objectError.getDefaultMessage());
+                errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,，错误提示：%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), objectError.getDefaultMessage());
                 log.error("参数异常: {}", errorMessage);
-                return Result.error(ResultCode.ERROR_PARAMETERS);
+                return Result.error(ResultCode.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
             }
             DefaultMessageSourceResolvable a = (DefaultMessageSourceResolvable) arguments[0];
-            String errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,字段名称：%s，错误提示：%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), a.getDefaultMessage(), objectError.getDefaultMessage());
+            errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,字段名称：%s，错误提示：%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), a.getDefaultMessage(), objectError.getDefaultMessage());
             log.error("参数异常: {}", errorMessage);
-            return Result.error(ResultCode.ERROR_PARAMETERS);
+            return Result.error(ResultCode.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
         if (e instanceof ConstraintViolationException) {
             ConstraintViolationException ex = (ConstraintViolationException) e;
-            log.error("参数异常: {}", ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining("; ")));
-            return Result.error(ResultCode.ERROR_PARAMETERS);
+            errorMessage = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining("; "));
+            log.error("参数异常: {}", errorMessage);
+            return Result.error(ResultCode.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
 
         if (e instanceof BindException) {
@@ -158,7 +160,6 @@ public class ExceptionAdvice {
             List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
             ObjectError objectError = allErrors.get(0);
             Object[] arguments = objectError.getArguments();
-            String errorMessage = "";
             if (arguments != null) {
                 DefaultMessageSourceResolvable a = (DefaultMessageSourceResolvable) arguments[0];
                 String fieldName = a.getDefaultMessage();
@@ -174,9 +175,10 @@ public class ExceptionAdvice {
             String parameterName = ex.getParameterName();
 
             log.error("参数异常, parameterName: {}, {}", parameterName, String.format("appName=%s, clientIp=%s, requestURI=%s,message:%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), ex.getMessage()));
-            return Result.error(ResultCode.ERROR_PARAMETERS);
+            return Result.error(ResultCode.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
-        log.error("参数异常: {}", String.format("appName=%s, clientIp=%s, requestURI=%s,message:%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), e.getMessage()));
-        return Result.error(ResultCode.ERROR_PARAMETERS);
+        errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,message:%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), e.getMessage());
+        log.error("参数异常: {}", errorMessage);
+        return Result.error(ResultCode.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
     }
 }

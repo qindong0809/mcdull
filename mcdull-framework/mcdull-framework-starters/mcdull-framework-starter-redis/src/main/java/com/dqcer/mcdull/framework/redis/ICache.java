@@ -35,7 +35,7 @@ public interface ICache {
      *
      * @param keys 关键
      */
-    <T> void evict(String... keys);
+    void evict(String... keys);
 
 
 }

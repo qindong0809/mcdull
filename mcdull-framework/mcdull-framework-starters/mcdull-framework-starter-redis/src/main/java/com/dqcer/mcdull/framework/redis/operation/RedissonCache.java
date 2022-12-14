@@ -25,6 +25,7 @@ public class RedissonCache implements ICache {
     private RedissonClient redissonClient;
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> type) {
         Object o = redissonClient.getBucket(key).get();
         if (null != o) {
@@ -49,13 +50,13 @@ public class RedissonCache implements ICache {
     }
 
     @Override
-    public <T> void evict(String... keys) {
+    public void evict(String... keys) {
         for (String key : keys) {
             if (log.isDebugEnabled()) {
                 log.debug("redis缓存 key={} 缓存已删除", key);
             }
 
-            RBucket<T> bucket = redissonClient.getBucket(key);
+            RBucket<Object> bucket = redissonClient.getBucket(key);
             bucket.delete();
         }
     }

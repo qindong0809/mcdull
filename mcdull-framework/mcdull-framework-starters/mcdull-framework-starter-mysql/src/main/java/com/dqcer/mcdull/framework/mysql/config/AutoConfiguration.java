@@ -52,13 +52,18 @@ public class AutoConfiguration {
         config.setMetaObjectHandler(metaObjectHandlerConfig());
         config.setBanner(false);
         mybatisSqlSessionFactoryBean.setGlobalConfig(config);
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         MybatisConfiguration configuration = new MybatisConfiguration();
-        configuration.addInterceptor(interceptor);
+        configuration.addInterceptor(mybatisPlusInterceptor());
         mybatisSqlSessionFactoryBean.setConfiguration(configuration);
 
         return mybatisSqlSessionFactoryBean.getObject();
+    }
+
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        return interceptor;
     }
 
     @Bean

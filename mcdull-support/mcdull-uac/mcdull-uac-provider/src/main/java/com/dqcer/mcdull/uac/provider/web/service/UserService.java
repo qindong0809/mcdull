@@ -99,10 +99,10 @@ public class UserService {
         entity.setPassword(password);
         entity.setType(1);
         Long userId = userRepository.insert(entity);
-
-        userRoleRepository.updateByUserId(userId, dto.getRoleIds());
-
-        return Result.ok(userId);
+        throw new RuntimeException();
+//        userRoleRepository.updateByUserId(userId, dto.getRoleIds());
+//
+//        return Result.ok(userId);
     }
 
     /**

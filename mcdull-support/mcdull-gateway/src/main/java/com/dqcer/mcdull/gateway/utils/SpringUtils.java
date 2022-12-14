@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 /**
  * @Deprecated: {@link SpringContextUtil}
  *
- * @author QinDong
+ * @author dqcer
  * @version 2022/11/08
  */
 @Component

@@ -1,22 +1,24 @@
 package com.dqcer.mcdull.uac.provider.web.controller;
 
-import com.dqcer.framework.base.validator.ValidGroup;
 import com.dqcer.framework.base.annotation.Transform;
+import com.dqcer.framework.base.validator.ValidGroup;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.framework.redis.annotation.RedisLock;
 import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
 import com.dqcer.mcdull.uac.api.vo.UserVO;
-import com.dqcer.mcdull.uac.client.api.UserServiceApi;
 import com.dqcer.mcdull.uac.provider.web.service.UserService;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-public class UserController implements UserServiceApi {
+public class UserController {
 
     @Resource
     private UserService userService;
@@ -99,18 +101,5 @@ public class UserController implements UserServiceApi {
     @PostMapping("user/reset-password/update")
     public Result<Long> resetPassword(@RequestBody @Validated(value = {ValidGroup.Update.class}) UserLiteDTO dto){
         return userService.resetPassword(dto);
-    }
-
-    /**
-     * 用户详情
-     *
-     * @param userId
-     * @return {@link Long}
-     */
-    @Override
-    public Result<UserVO> getDetail(Long userId) {
-        UserLiteDTO dto = new UserLiteDTO();
-        dto.setId(userId);
-        return userService.detail(dto);
     }
 }

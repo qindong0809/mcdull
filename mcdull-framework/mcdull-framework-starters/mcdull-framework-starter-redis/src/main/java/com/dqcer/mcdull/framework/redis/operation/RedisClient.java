@@ -397,13 +397,13 @@ public final class RedisClient {
     /**
      * 添加zset元素 有则覆盖
      *
-     * @param key
-     * @param v
-     * @param score
-     * @return
+     * @param key   key
+     * @param value     value
+     * @param score 分数
+     * @return {@link Boolean}
      */
-    public <T> Boolean zAdd(String key, T v, long score) {
-        return redisTemplate.opsForZSet().add(key, v, score);
+    public <T> Boolean zAdd(String key, T value, long score) {
+        return redisTemplate.opsForZSet().add(key, value, score);
     }
 
     /**
@@ -419,10 +419,11 @@ public final class RedisClient {
     }
 
     /**
-     * 添加zset元素 有则覆盖
+     * z删除
      *
-     * @param key
-     * @return
+     * @param key key
+     * @param vs  vs
+     * @return {@link Long}
      */
     public Long zRemove(String key, Object... vs) {
         return redisTemplate.opsForZSet().remove(key, vs);
@@ -438,17 +439,17 @@ public final class RedisClient {
         return redisTemplate.opsForZSet().size(key);
     }
 
-//    /**
-//     * 如果不存在则添加zset元素
-//     *
-//     * @param key
-//     * @param v
-//     * @param score
-//     * @return
-//     */
-//    public <T> Boolean zAddIfNotExist(String key, T v, long score) {
-//        return redisTemplate.opsForZSet().addIfAbsent(key, v, score);
-//    }
+    /**
+     * 如果不存在则添加zset元素
+     *
+     * @param key   关键
+     * @param v     v
+     * @param score 分数
+     * @return {@link Boolean}
+     */
+    public <T> Boolean zAddIfNotExist(String key, T v, long score) {
+        return redisTemplate.opsForZSet().addIfAbsent(key, v, score);
+    }
 
     /**
      * zset中是否存在对应元素

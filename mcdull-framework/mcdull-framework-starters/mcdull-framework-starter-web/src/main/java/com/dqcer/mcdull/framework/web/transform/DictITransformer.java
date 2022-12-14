@@ -32,7 +32,7 @@ public class DictITransformer implements ITransformer {
     @Override
     public String transform(Object original, Class datasource, String param) {
         if (log.isDebugEnabled()) {
-            log.debug("Dict transformer original: {} datasource: {} param: {}");
+            log.debug("码表翻译处理 original: {} datasource: {} param: {}", original, datasource.getName(), param);
         }
         DictLiteDTO dto = new DictLiteDTO();
         dto.setCode(String.valueOf(original));

@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac.client.api;
 
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.mcdull.uac.api.vo.UserVO;
+import com.dqcer.mcdull.uac.client.vo.RemoteUserVO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -19,6 +19,6 @@ public interface UserServiceApi {
      * @return {@link Long}
      */
     @PostMapping("feign/user/base/detail")
-    Result<UserVO> getDetail(@RequestParam(value = "userId")Long userId);
+    Result<RemoteUserVO> getDetail(@RequestParam(value = "userId")Long userId);
 
 }

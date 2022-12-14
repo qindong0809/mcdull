@@ -2,11 +2,12 @@ package com.dqcer.mcdull.uac.provider;
 
 import com.dqcer.mcdull.framework.redis.EnableCache;
 import com.dqcer.mcdull.framework.web.EnableWebCore;
-import org.mybatis.spring.annotation.MapperScan;
+import com.dqcer.mcdull.uac.provider.config.EnableMapperScan;
+import com.dqcer.mcdull.uac.provider.config.EnableUacFeignClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * 身份验证应用程序
@@ -14,9 +15,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @author dqcer
  * @version 2022/10/31
  */
+@EnableTransactionManagement
 @EnableWebCore
-@MapperScan("com.dqcer.mcdull.uac.provider.web.dao.mapper")
-@EnableFeignClients(basePackages = {"com.dqcer.mcdull.*.client.service", "com.dqcer.mcdull.framework.web.remote"})
+@EnableMapperScan
+@EnableUacFeignClients
 @EnableCache
 @EnableDiscoveryClient
 @SpringBootApplication

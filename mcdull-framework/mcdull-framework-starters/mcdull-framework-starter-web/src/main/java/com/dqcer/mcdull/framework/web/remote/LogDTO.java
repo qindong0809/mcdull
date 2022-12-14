@@ -262,5 +262,4 @@ public class LogDTO {
 
     public void setResponseBody(String responseBody) {
         this.responseBody = responseBody;
-    }
-}
+    }}

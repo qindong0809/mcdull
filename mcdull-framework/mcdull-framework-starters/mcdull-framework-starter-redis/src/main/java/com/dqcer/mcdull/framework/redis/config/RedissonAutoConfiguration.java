@@ -123,7 +123,7 @@ public class RedissonAutoConfiguration extends CachingConfigurerSupport {
 
     /**
      * key生成器，利用","拼接
-     *
+     * <p>
      * 使用@Cachable生成的key的默认规则
      * 如果手动指定了key则不生效
      * <p>

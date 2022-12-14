@@ -49,7 +49,7 @@ public class CaffeineCache implements ICache {
      * @return {@link T}
      */
     @Override
-
+    @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> type) {
         Object o = cache.getIfPresent(key);
         if (null != o) {
