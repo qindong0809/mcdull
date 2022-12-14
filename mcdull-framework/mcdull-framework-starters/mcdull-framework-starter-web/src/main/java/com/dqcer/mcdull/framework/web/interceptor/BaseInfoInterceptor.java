@@ -1,14 +1,11 @@
 package com.dqcer.mcdull.framework.web.interceptor;
 
-import com.alibaba.fastjson.JSON;
 import com.dqcer.framework.base.storage.UnifySession;
 import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.enums.LanguageEnum;
 import com.dqcer.framework.base.util.StrUtil;
-import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.framework.redis.operation.RedisClient;
 import com.dqcer.framework.base.annotation.UnAuthorize;
 import org.slf4j.Logger;
@@ -90,7 +87,8 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
 
         if (StrUtil.isBlank(authorization) || !authorization.startsWith(HttpHeaderConstants.BEARER)) {
 
-            response.getWriter().write(JSON.toJSONString(Result.error(ResultCode.UN_AUTHORIZATION)));
+            // ResultCode.UN_AUTHORIZATION
+            response.getWriter().write("{\"code\":999401, \"data\":null, \"msg\":\"无权限\"}");
             //  认证失败
             return false;
         }

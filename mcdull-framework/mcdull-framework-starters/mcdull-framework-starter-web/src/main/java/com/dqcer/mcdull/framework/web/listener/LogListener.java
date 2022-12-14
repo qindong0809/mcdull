@@ -1,6 +1,5 @@
 package com.dqcer.mcdull.framework.web.listener;
 
-import com.alibaba.fastjson.JSONObject;
 import com.dqcer.mcdull.framework.web.event.LogEvent;
 import com.dqcer.mcdull.framework.web.remote.LogDTO;
 import com.dqcer.mcdull.framework.web.remote.RemoteLogService;
@@ -38,8 +37,7 @@ public class LogListener {
             log.debug("Log listener: {}", sysLog);
         }
         List<LogDTO> dtos = new ArrayList<>();
-        LogDTO sysLogDTO = JSONObject.parseObject(JSONObject.toJSONString(sysLog), LogDTO.class);
-        dtos.add(sysLogDTO);
+        dtos.add(sysLog);
         logService.batchSave(dtos);
     }
 
