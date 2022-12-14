@@ -99,10 +99,10 @@ public class UserService {
         entity.setPassword(password);
         entity.setType(1);
         Long userId = userRepository.insert(entity);
-        throw new RuntimeException();
-//        userRoleRepository.updateByUserId(userId, dto.getRoleIds());
-//
-//        return Result.ok(userId);
+
+        userRoleRepository.updateByUserId(userId, dto.getRoleIds());
+
+        return Result.ok(userId);
     }
 
     /**
@@ -193,9 +193,9 @@ public class UserService {
         UserDO user = new UserDO();
         user.setId(id);
         user.setPassword(password);
-        boolean success = userRepository.updateById(entity);
+        boolean success = userRepository.updateById(user);
         if (!success) {
-            log.error("重置密码失败，entity:{}", entity);
+            log.error("重置密码失败，entity:{}", user);
             throw new BusinessException(ResultCode.DB_ERROR);
         }
         return Result.ok(id);

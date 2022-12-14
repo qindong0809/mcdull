@@ -67,6 +67,7 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
             stmt = conn.createStatement();
 
 
+            // TODO: 2022/12/14  
             /*
                 select * from information_schema.TABLES
                 where TABLE_NAME = '需要查询的数据表名';

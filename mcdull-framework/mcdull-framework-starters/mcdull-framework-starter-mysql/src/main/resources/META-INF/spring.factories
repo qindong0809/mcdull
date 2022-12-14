@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.dqcer.mcdull.framework.mysql.config.AutoConfiguration
-
-
