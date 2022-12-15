@@ -30,9 +30,7 @@ public class LogService {
 
     public Result<Integer> batchSave(List<SysLogFeignDTO> dto) {
         List<LogDO> entities = Lists.newArrayList();
-        for (SysLogFeignDTO sysLogFeignDTO : dto) {
-            entities.add(sysLogFeignDTO);
-        }
+        entities.addAll(dto);
         logRepository.saveBatch(entities, entities.size());
         return Result.ok(entities.size());
     }

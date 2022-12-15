@@ -1,7 +1,5 @@
 package com.dqcer.mcdull.framework.web.filter;
 
-import cn.hutool.http.useragent.UserAgent;
-import cn.hutool.http.useragent.UserAgentUtil;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.mcdull.framework.web.event.LogEvent;
 import com.dqcer.mcdull.framework.web.remote.LogDTO;
@@ -101,19 +99,9 @@ public class HttpTraceLogFilter implements Filter {
             if (!Objects.equals(IGNORE_CONTENT_TYPE, request.getContentType())
                     && !ignoreFilter(path, pathList)) {
                 long latency = System.currentTimeMillis() - startTime;
-                String userAgent = getUserAgent(request);
-
-                UserAgent parse = UserAgentUtil.parse(userAgent);
-
                 LogDTO entity = new LogDTO();
                 entity.setClientIp(IpUtil.getIpAddr(request));
-                entity.setBrowser(parse.getBrowser().getName());
-                entity.setEngine(parse.getEngine().getName());
-                entity.setPlatform(parse.getPlatform().getName());
-                entity.setMobile(parse.isMobile() ? 1 : 2);
-                entity.setOs(parse.getOs().getName());
-                entity.setVersion(parse.getVersion());
-                entity.setEngineVersion(parse.getEngineVersion());
+                entity.setUserAgent(getUserAgent(request));
                 entity.setHeaders(getHeaders(request));
                 entity.setRequestBody(getRequestBody(request));
 //                entity.setResponseBody(getResponseBody(response));

@@ -4,10 +4,8 @@ import java.util.Date;
 
 public class LogDTO {
 
-    /**
-     * 是否为移动端
-     */
-    private int mobile;
+    private String userAgent;
+
 
     /**
      * 操作人的账号主键
@@ -29,35 +27,6 @@ public class LogDTO {
      */
     private String clientIp;
 
-    /**
-     * 客户端
-     */
-    private String browser;
-
-    /**
-     * 平台
-     */
-    private String platform;
-
-    /**
-     * 操作系统
-     */
-    private String os;
-
-    /**
-     * 引擎
-     */
-    private String engine;
-
-    /**
-     * 版本
-     */
-    private String version;
-
-    /**
-     * 引擎版本
-     */
-    private String engineVersion;
 
     /**
      * 操作时间
@@ -104,12 +73,13 @@ public class LogDTO {
      */
     private String responseBody;
 
-    public int getMobile() {
-        return mobile;
+
+    public String getUserAgent() {
+        return userAgent;
     }
 
-    public void setMobile(int mobile) {
-        this.mobile = mobile;
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
     }
 
     public Long getAccountId() {
@@ -144,53 +114,6 @@ public class LogDTO {
         this.clientIp = clientIp;
     }
 
-    public String getBrowser() {
-        return browser;
-    }
-
-    public void setBrowser(String browser) {
-        this.browser = browser;
-    }
-
-    public String getPlatform() {
-        return platform;
-    }
-
-    public void setPlatform(String platform) {
-        this.platform = platform;
-    }
-
-    public String getOs() {
-        return os;
-    }
-
-    public void setOs(String os) {
-        this.os = os;
-    }
-
-    public String getEngine() {
-        return engine;
-    }
-
-    public void setEngine(String engine) {
-        this.engine = engine;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getEngineVersion() {
-        return engineVersion;
-    }
-
-    public void setEngineVersion(String engineVersion) {
-        this.engineVersion = engineVersion;
-    }
 
     public Date getTime() {
         return time;
