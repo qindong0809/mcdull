@@ -3,7 +3,6 @@ package com.dqcer.mcdull.mdc.provider.web.controller;
 import com.dqcer.framework.base.validator.ValidGroup;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.mcdull.mdc.api.dto.DictFeignDTO;
 import com.dqcer.mcdull.mdc.api.dto.DictLiteDTO;
 import com.dqcer.mcdull.mdc.api.vo.DictVO;
 import com.dqcer.mcdull.mdc.provider.web.service.DictService;
@@ -25,28 +24,6 @@ public class DictController {
 
     @Resource
     private DictService sysDictService;
-
-    /**
-     * 列表
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link List}<{@link DictVO}>>
-     */
-    @GetMapping("feign/dict/list")
-    public Result<List<DictVO>> list(@Validated(ValidGroup.List.class) DictFeignDTO dto) {
-        return sysDictService.list(dto);
-    }
-
-    /**
-     * 单个
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link DictVO}>
-     */
-    @GetMapping({ "feign/dict/detail"})
-    public Result<DictVO> one(@Validated(ValidGroup.One.class) DictFeignDTO dto) {
-        return sysDictService.one(dto);
-    }
 
     /**
      * 列表分页

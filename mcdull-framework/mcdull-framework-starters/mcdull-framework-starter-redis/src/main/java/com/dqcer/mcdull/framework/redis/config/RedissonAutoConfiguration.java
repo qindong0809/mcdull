@@ -135,6 +135,7 @@ public class RedissonAutoConfiguration extends CachingConfigurerSupport {
      *
      * @return {@link KeyGenerator}
      */
+    @Bean
     @Override
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> Stream.of(params).map(String::valueOf).collect(Collectors.joining(","));

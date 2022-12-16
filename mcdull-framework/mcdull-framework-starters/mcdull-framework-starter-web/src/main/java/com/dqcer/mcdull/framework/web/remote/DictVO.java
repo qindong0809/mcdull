@@ -10,6 +10,8 @@ import com.dqcer.framework.base.vo.VO;
  */
 public class DictVO implements VO {
 
+    private static final long serialVersionUID = -7624687197091455426L;
+
     /**
      * 编码
      */

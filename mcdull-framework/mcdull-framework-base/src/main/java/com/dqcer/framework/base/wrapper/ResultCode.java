@@ -37,6 +37,11 @@ public enum ResultCode implements IResultCode , IEnum<Integer> {
 	LOCK_TIMEOUT(999512, "锁定超时"),
 
 	/**
+	 * feign 调用异常
+	 */
+	FEIGN_BIZ(999520, "上游服务调用异常{0}"),
+
+	/**
 	 * 无权限
 	 */
 	UN_AUTHORIZATION(999401, "无权限"),

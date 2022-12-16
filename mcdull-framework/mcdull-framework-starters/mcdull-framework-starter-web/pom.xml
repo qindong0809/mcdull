@@ -45,10 +45,6 @@
             <artifactId>mcdull-framework-starter-redis</artifactId>
             <scope>provided</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba</groupId>-->
-<!--            <artifactId>fastjson</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-starter-feign</artifactId>

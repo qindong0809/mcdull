@@ -34,7 +34,12 @@ public class CacheChannel implements ICache {
         if (null != t) {
             return t;
         }
-        return redisCache.get(key, type);
+        t = redisCache.get(key, type);
+        if (t == null) {
+            return null;
+        }
+        caffeineCache.put(key, t, 0);
+        return t;
     }
 
     /**

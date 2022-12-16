@@ -58,7 +58,6 @@ INSERT INTO `sys_dict` VALUES ('2', null, '内置', null, 'data_type', 2, 2, 1, 
 DROP TABLE IF EXISTS `sys_log`;
 CREATE TABLE `sys_log`  (
 `id` bigint(20) NOT NULL COMMENT '主键',
-`mobile` tinyint(4) NOT NULL COMMENT '是否为移动端',
 `account_id` bigint(20)  NOT NULL COMMENT '操作人的账号主键',
 `tenant_id` bigint(20)  DEFAULT NULL COMMENT '租户主键',
 `created_time` datetime  NOT NULL COMMENT '创建时间',
