@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.framework.web.listener;
 
 import com.dqcer.mcdull.framework.web.event.LogEvent;
-import com.dqcer.mcdull.framework.web.remote.LogDTO;
-import com.dqcer.mcdull.framework.web.remote.RemoteLogService;
+import com.dqcer.mcdull.framework.web.feign.model.LogDTO;
+import com.dqcer.mcdull.framework.web.feign.service.LogFeignClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -21,10 +21,10 @@ public class LogListener {
 
     private static final Logger log = LoggerFactory.getLogger(LogListener.class);
 
-    private final RemoteLogService logService;
+    private final LogFeignClient logService;
 
 
-    public LogListener(RemoteLogService logService) {
+    public LogListener(LogFeignClient logService) {
         this.logService = logService;
     }
 

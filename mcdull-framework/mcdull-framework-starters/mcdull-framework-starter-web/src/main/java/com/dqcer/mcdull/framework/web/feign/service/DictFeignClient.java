@@ -1,8 +1,10 @@
-package com.dqcer.mcdull.framework.web.remote;
+package com.dqcer.mcdull.framework.web.feign.service;
 
 import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.validator.ValidGroup;
 import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.web.feign.model.DictLiteDTO;
+import com.dqcer.mcdull.framework.web.feign.model.DictVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @FeignClient(value = "mcdull-mdc-provider",  contextId = "commonDict")
-public interface DictRemote {
+public interface DictFeignClient {
 
     /**
      * 单个

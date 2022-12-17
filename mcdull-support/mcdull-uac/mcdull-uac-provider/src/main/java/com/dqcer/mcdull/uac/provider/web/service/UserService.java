@@ -12,6 +12,7 @@ import com.dqcer.framework.base.util.Sha1Util;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import com.dqcer.mcdull.uac.api.convert.UserConvert;
 import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
 import com.dqcer.mcdull.uac.api.entity.UserDO;
@@ -225,5 +226,15 @@ public class UserService {
         userRoleRepository.updateByUserId(id, dto.getRoleIds());
 
         return Result.ok(updateDO.getId());
+    }
+
+    /**
+     * 查询资源模块
+     *
+     * @param userId 用户id
+     * @return {@link Result}<{@link List}<{@link UserPowerVO}>>
+     */
+    public Result<List<UserPowerVO>> queryResourceModules(Long userId) {
+        return Result.ok(userRepository.queryResourceModules(userId));
     }
 }

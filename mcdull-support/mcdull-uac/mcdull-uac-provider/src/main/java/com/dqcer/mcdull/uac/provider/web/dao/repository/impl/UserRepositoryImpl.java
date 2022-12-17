@@ -7,14 +7,17 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.entity.BaseDO;
 import com.dqcer.framework.base.exception.BusinessException;
+import com.dqcer.framework.base.util.ObjUtil;
 import com.dqcer.framework.base.util.StrUtil;
 import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
 import com.dqcer.mcdull.uac.api.entity.UserDO;
 import com.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -72,5 +75,27 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
             return null;
         }
         return list.get(0);
+    }
+
+    /**
+     * 查询资源模块
+     *
+     * @param userId 用户id
+     * @return {@link List}<{@link UserPowerVO}>
+     */
+    @Override
+    public List<UserPowerVO> queryResourceModules(Long userId) {
+        List<UserPowerVO> vos = baseMapper.queryRoles(userId);
+        if (ObjUtil.isNull(vos)) {
+            return Collections.emptyList();
+        }
+        for (UserPowerVO vo : vos) {
+            List<String> modules = baseMapper.queryModulesByRoleId(vo.getRoleId());
+            if (ObjUtil.isNull(modules)) {
+                vo.setModules(Collections.emptyList());
+            }
+            vo.setModules(modules);
+        }
+        return vos;
     }
 }

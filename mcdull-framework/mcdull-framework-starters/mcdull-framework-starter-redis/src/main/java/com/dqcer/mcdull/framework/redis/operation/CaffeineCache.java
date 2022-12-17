@@ -25,19 +25,17 @@ public class CaffeineCache implements ICache {
 
     public CaffeineCache() {
         Caffeine<Object, Object> caffeine = Caffeine.newBuilder();
-        Caffeine<Object, Object> builder = caffeine.maximumSize(1000);
+        Caffeine<Object, Object> builder = caffeine.maximumSize(10000);
         builder.initialCapacity(3000);
         //  基于引用回收
         //  软引用：如果一个对象只具有软引用，则内存空间足够，垃圾回收器就不会回收它；如果内存空间不足了，就会回收这些对象的内存。
         //  弱引用：弱引用的对象拥有更短暂的生命周期。在垃圾回收器线程扫描它所管辖的内存区域的过程中，一旦发现了只具有弱引用的对象，不管当前内存空间足够与否，都会回收它的内存
         builder.softValues();
-        //  回收策略 每写入一次重新计算一次缓存的有效时间
         // 到期时间默认10s
         int expire = 3;
+        //  回收策略 每写入一次重新计算一次缓存的有效时间
         builder.expireAfterWrite(expire, TimeUnit.SECONDS);
 
-        //  回收策略 每访问一次重新计算一次缓存的有效时间
-        /* builder.expireAfterAccess(expire, TimeUnit.SECONDS);*/
         cache = caffeine.build();
     }
 

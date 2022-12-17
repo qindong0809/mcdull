@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.web.remote;
+package com.dqcer.mcdull.framework.web.feign.model;
 
 import java.util.Date;
 

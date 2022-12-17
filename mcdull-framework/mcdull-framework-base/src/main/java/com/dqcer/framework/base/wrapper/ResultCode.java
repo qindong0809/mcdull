@@ -22,6 +22,11 @@ public enum ResultCode implements IResultCode , IEnum<Integer> {
 	ERROR_UNKNOWN(999500, "未知异常: {0}"),
 
 	/**
+	 * 服务不可用
+	 */
+	SERVICE_UNAVAILABLE(999503, "服务不可用: {0}"),
+
+	/**
 	 * sql语法错误
 	 */
 	SQL_SYNTAX_ERROR(999510, "sql异常: {0}"),
@@ -39,7 +44,7 @@ public enum ResultCode implements IResultCode , IEnum<Integer> {
 	/**
 	 * feign 调用异常
 	 */
-	FEIGN_BIZ(999520, "上游服务调用异常{0}"),
+	FEIGN_BIZ(999520, "上游服务调用异常： {0}"),
 
 	/**
 	 * 无权限
@@ -67,14 +72,20 @@ public enum ResultCode implements IResultCode , IEnum<Integer> {
 	LOGOUT(999405, "客户端已主动退出"),
 
 	/**
+	 * 没有对应模块
+	 */
+	POWER_CHECK_MODULE(999410, "没有对应的模块权限"),
+
+	/**
 	 * 没有traceId
 	 */
 	NOT_TRACE_ID(999415, "没有traceId"),
 
+
 	/**
 	 * 请求方法被禁止
 	 */
-	METHOD_NOT_ALLOWED(999405, "请求方法被禁止"),
+	METHOD_NOT_ALLOWED(999430, "请求方法被禁止"),
 
 	/**
 	 * 参数异常

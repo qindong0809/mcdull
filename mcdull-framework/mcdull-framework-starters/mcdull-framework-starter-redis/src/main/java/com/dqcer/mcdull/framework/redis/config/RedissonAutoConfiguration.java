@@ -12,8 +12,12 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -22,7 +26,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -65,25 +68,18 @@ public class RedissonAutoConfiguration extends CachingConfigurerSupport {
     }
 
 
-    /**
-     * 注入RedisTemplate
-     * tips：泛型可以适用于各种类型的注入
-     *
-     * @param factory         工厂
-     * @param redisSerializer redis 序列化器
-     * @return {@link RedisTemplate}<{@link String}, {@link T}>
-     */
     @Bean
-    public <T> RedisTemplate<String, T> redisTemplate(RedisConnectionFactory factory, RedisSerializer<?> redisSerializer) {
-        // 指定序列化方式
-        RedisTemplate<String, T> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setKeySerializer(RedisSerializer.string());
-        redisTemplate.setHashKeySerializer(RedisSerializer.string());
-        redisTemplate.setValueSerializer(redisSerializer);
-        redisTemplate.setHashValueSerializer(redisSerializer);
-        redisTemplate.setConnectionFactory(factory);
-        return redisTemplate;
-    }
+    public RedissonClient redissonClient(RedisProperties properties) {
+        Config config = new Config();
+        // 默认编码为org.redisson.codec.JsonJacksonCodec（性能最优）
+//        config.setCodec(new org.redisson.client.codec.StringCodec());
+        config.useSingleServer()
+                .setAddress("redis://" + properties.getHost() + ":" + properties.getPort())
+                .setPassword(properties.getPassword())
+                .setConnectionPoolSize(50)
+                .setDatabase(properties.getDatabase());
+        return Redisson.create(config);
+}
 
     /**
      * 初始化Redis序列器，使用jackson

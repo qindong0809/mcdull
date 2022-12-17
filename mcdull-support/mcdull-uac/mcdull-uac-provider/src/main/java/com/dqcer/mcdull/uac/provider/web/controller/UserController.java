@@ -1,5 +1,6 @@
 package com.dqcer.mcdull.uac.provider.web.controller;
 
+import com.dqcer.framework.base.annotation.Authorized;
 import com.dqcer.framework.base.annotation.Transform;
 import com.dqcer.framework.base.validator.ValidGroup;
 import com.dqcer.framework.base.vo.PagedVO;
@@ -29,6 +30,7 @@ public class UserController {
      * @param dto dto
      * @return {@link Result}<{@link List}<{@link UserVO}>>
      */
+    @Authorized("sys:user:view")
     @GetMapping("user/base/page")
     @Transform
     public Result<PagedVO<UserVO>> listByPage(@Validated(ValidGroup.Paged.class) UserLiteDTO dto) {

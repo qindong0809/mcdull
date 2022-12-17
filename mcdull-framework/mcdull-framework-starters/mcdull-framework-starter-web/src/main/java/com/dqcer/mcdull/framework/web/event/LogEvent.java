@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.framework.web.event;
 
-import com.dqcer.mcdull.framework.web.remote.LogDTO;
+import com.dqcer.mcdull.framework.web.feign.model.LogDTO;
 import org.springframework.context.ApplicationEvent;
 
 /**

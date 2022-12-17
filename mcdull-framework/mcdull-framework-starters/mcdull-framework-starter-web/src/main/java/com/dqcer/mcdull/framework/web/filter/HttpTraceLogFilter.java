@@ -2,7 +2,7 @@ package com.dqcer.mcdull.framework.web.filter;
 
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.mcdull.framework.web.event.LogEvent;
-import com.dqcer.mcdull.framework.web.remote.LogDTO;
+import com.dqcer.mcdull.framework.web.feign.model.LogDTO;
 import com.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import com.dqcer.mcdull.framework.web.util.IpUtil;
 import org.slf4j.MDC;

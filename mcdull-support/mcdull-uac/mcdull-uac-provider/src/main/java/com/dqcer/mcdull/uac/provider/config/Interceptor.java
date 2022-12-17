@@ -2,7 +2,6 @@ package com.dqcer.mcdull.uac.provider.config;
 
 
 import com.dqcer.mcdull.framework.mysql.interceptor.DynamicDatasourceInterceptor;
-import com.dqcer.mcdull.framework.web.interceptor.BaseInfoInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -45,7 +44,7 @@ public class Interceptor implements WebMvcConfigurer {
      */
     @Bean
     public HandlerInterceptor getBaseInterceptor() {
-        return new BaseInfoInterceptor();
+        return new BaseInterceptor();
     }
 
 }

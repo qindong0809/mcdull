@@ -2,7 +2,7 @@ package com.dqcer.mcdull.framework.web.config;
 
 import com.dqcer.mcdull.framework.web.filter.HttpTraceLogFilter;
 import com.dqcer.mcdull.framework.web.listener.LogListener;
-import com.dqcer.mcdull.framework.web.remote.RemoteLogService;
+import com.dqcer.mcdull.framework.web.feign.service.LogFeignClient;
 import com.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import com.dqcer.mcdull.framework.web.transform.TranslatorAspect;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,15 +26,15 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @Configuration
 public class AutoConfiguration {
 
-    private final RemoteLogService remoteLogService;
+    private final LogFeignClient logFeignClient;
 
-    public AutoConfiguration(RemoteLogService remoteLogService) {
-        this.remoteLogService = remoteLogService;
+    public AutoConfiguration(LogFeignClient logFeignClient) {
+        this.logFeignClient = logFeignClient;
     }
 
     @Bean
     public LogListener logListener() {
-        return new LogListener(remoteLogService);
+        return new LogListener(logFeignClient);
     }
 
     @Bean

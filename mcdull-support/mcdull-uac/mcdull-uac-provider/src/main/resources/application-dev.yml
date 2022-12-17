@@ -16,6 +16,3 @@ logging:
 mcdull:
   feign:
     uac: mcdull-uac-provider
-mybatis-plus:
-  global-config:
-    banner: false

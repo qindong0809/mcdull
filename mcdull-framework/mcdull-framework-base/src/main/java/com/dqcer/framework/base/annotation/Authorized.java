@@ -1,11 +1,9 @@
 package com.dqcer.framework.base.annotation;
 
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.dqcer.framework.base.enums.DataPermissionsEnum;
+
+import java.lang.annotation.*;
 
 /**
  * 授权
@@ -20,10 +18,18 @@ import java.lang.annotation.Target;
 public @interface Authorized {
 
     /**
-     * 模块权限效验
+     * 模块权限效验: sys:user:list
      *
      * @return {@link String}
      */
-    String code() default "";
+    String value() default "";
+
+
+    /**
+     * 数据权限效验: 角色
+     *
+     * @return {@link DataPermissionsEnum[]}
+     */
+    DataPermissionsEnum[] data() default {DataPermissionsEnum.ROLE};
 
 }

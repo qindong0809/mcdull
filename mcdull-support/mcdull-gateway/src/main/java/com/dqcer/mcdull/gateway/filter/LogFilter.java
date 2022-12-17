@@ -38,7 +38,7 @@ public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {
 
         /**浏览器传traceId*/
         // 暂不进行强制限制
-        String traceId = UUID.randomUUID().toString();
+        String traceId = UUID.randomUUID().toString().replaceAll("-", "");
         addHeader(mutate, HttpHeaderConstants.TRACE_ID_HEADER, traceId);
         MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
 

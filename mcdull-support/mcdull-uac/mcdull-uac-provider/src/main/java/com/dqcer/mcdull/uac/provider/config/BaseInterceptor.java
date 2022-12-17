@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.web.interceptor;
+package com.dqcer.mcdull.uac.provider.config;
 
 import com.dqcer.framework.base.annotation.Authorized;
 import com.dqcer.framework.base.annotation.UnAuthorize;
@@ -12,9 +12,8 @@ import com.dqcer.framework.base.util.StrUtil;
 import com.dqcer.framework.base.wrapper.FeignResultParse;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
-import com.dqcer.mcdull.framework.redis.operation.RedisClient;
 import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import com.dqcer.mcdull.framework.web.feign.service.PowerCheckFeignClient;
+import com.dqcer.mcdull.uac.provider.web.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -34,18 +33,15 @@ import java.util.List;
  * @author dqcer
  * @version 2021/08/19
  */
-public class BaseInfoInterceptor implements HandlerInterceptor {
+public class BaseInterceptor implements HandlerInterceptor {
 
-    private static final Logger log = LoggerFactory.getLogger(BaseInfoInterceptor.class);
-
-    @Resource
-    private RedisClient redisClient;
+    private static final Logger log = LoggerFactory.getLogger(BaseInterceptor.class);
 
     @Resource
     private CacheChannel cacheChannel;
 
     @Resource
-    private PowerCheckFeignClient powerCheckFeignClient;
+    private UserService userService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
@@ -96,15 +92,15 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         if (null != authorized) {
             String code = authorized.value();
             if (StrUtil.isNotBlank(code)) {
-                String userPowerCacheKey = MessageFormat.format("framework:web:interceptor:power:{0}", unifySession.getUserId());
+                String userPowerCacheKey = MessageFormat.format("web:interceptor:power:{0}", unifySession.getUserId());
                 List<UserPowerVO> userPower = cacheChannel.get(userPowerCacheKey, List.class);
                 if (ObjUtil.isNull(userPower)) {
-                    userPower = FeignResultParse.getInstance(powerCheckFeignClient.queryResourceModules());
+                    userPower = FeignResultParse.getInstance(userService.queryResourceModules(unifySession.getUserId()));
                     cacheChannel.put(userPowerCacheKey, userPower, 3000);
                 }
                 boolean anyMatch = userPower.stream().anyMatch(i -> i.getModules().contains(code));
                 if (!anyMatch) {
-                    log.warn("没有对应的模块权限: {}, userPower: {}", ResultCode.POWER_CHECK_MODULE, userPower);
+                    log.warn("{}模块权限检查未通过, code: {} userPower: {}", ResultCode.POWER_CHECK_MODULE, code, userPower);
                     response.getWriter().write("{\"code\":999410, \"data\":null, \"msg\":\"无权限\"}");
                     return false;
                 }

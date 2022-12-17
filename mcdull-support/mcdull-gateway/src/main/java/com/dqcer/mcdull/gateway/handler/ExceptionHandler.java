@@ -69,10 +69,14 @@ public class ExceptionHandler implements WebExceptionHandler, Ordered {
                             log.warn("网关异常处理", ex);
                             error = Result.error(ResultCode.ERROR_PARAMETERS);
                             break;
+                        case SERVICE_UNAVAILABLE:
+                            // 服务不可用
+                            error = Result.error(ResultCode.SERVICE_UNAVAILABLE, Collections.singletonList(ex.getMessage()));
+                            break;
                         default:
                             // 其他异常默认为500
                             log.warn("网关异常处理", ex);
-                            error = Result.error(ResultCode.ERROR_UNKNOWN);
+                            error = Result.error(ResultCode.ERROR_UNKNOWN, Collections.singletonList(ex.getMessage()));
                             break;
                     }
                 } else {

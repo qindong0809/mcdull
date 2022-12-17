@@ -5,6 +5,7 @@ import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -24,9 +25,17 @@ public class RedissonCache implements ICache {
     @Resource
     private RedissonClient redissonClient;
 
+    @Value("${spring.application.name:unknown}")
+    private String appName;
+
+    private String prefix() {
+        return appName + ":";
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> type) {
+        key = prefix() + key;
         Object o = redissonClient.getBucket(key).get();
         if (null != o) {
             if (!type.isInstance(o)) {
@@ -42,6 +51,7 @@ public class RedissonCache implements ICache {
 
     @Override
     public <T> void put(String key, T value, long expire) {
+        key = prefix() + key;
         if (log.isDebugEnabled()) {
             log.debug("redis缓存 key={} 缓存已存入", key);
         }
@@ -49,9 +59,19 @@ public class RedissonCache implements ICache {
         bucket.set(value, expire, TimeUnit.SECONDS);
     }
 
+    public <T> void putIfExists(String key, T value) {
+        key = prefix() + key;
+        if (log.isDebugEnabled()) {
+            log.debug("redis缓存 key={} 缓存已存入", key);
+        }
+        RBucket<T> bucket = redissonClient.getBucket(key);
+        bucket.setIfExists(value);
+    }
+
     @Override
     public void evict(String... keys) {
         for (String key : keys) {
+            key = prefix() + key;
             if (log.isDebugEnabled()) {
                 log.debug("redis缓存 key={} 缓存已删除", key);
             }

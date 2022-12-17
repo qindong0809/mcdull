@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 public @interface EnableUacFeignClients {
 
     @SuppressWarnings("unused")
-    String[] basePackages() default {"com.dqcer.mcdull.*.client.service", "com.dqcer.mcdull.framework.web.remote"};
+    String[] basePackages() default {"com.dqcer.mcdull.*.client.service", "com.dqcer.mcdull.framework.web.feign"};
 
 
 }

@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.web.remote;
+package com.dqcer.mcdull.framework.web.feign.model;
 
 import com.dqcer.framework.base.dto.DTO;
 import com.dqcer.framework.base.validator.ValidGroup;

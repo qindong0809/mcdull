@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper">
+
+    <select id="queryRoles" resultType="com.dqcer.mcdull.framework.web.feign.model.UserPowerVO">
+        select
+            sr.id as roleId,
+            sr.name as roleName
+        FROM
+            sys_user_role ur
+        left join sys_role sr on
+                sr.id = ur .role_id
+        where
+            ur.user_id = #{userId} and sr.del_flag = 1 and sr.status = 1
+    </select>
+    <select id="queryModulesByRoleId" resultType="java.lang.String">
+        select
+            m.res_code
+        from
+            sys_role_menu t
+                left join sys_menu m on
+                m.id = t.menu_id
+        where
+            t.role_id = #{roleId}
+          and m.status = 1
+          and m.del_flag = 1
+    </select>
+</mapper>

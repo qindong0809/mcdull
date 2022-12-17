@@ -49,6 +49,16 @@ public class CacheUser implements Serializable {
      */
     private LocalDateTime lastActiveTime;
 
+    @Override
+    public String toString() {
+        return "CacheUser{" +
+                "userId=" + userId +
+                ", tenantId=" + tenantId +
+                ", onlineStatus=" + onlineStatus +
+                ", lastActiveTime=" + lastActiveTime +
+                '}';
+    }
+
     public Long getTenantId() {
         return tenantId;
     }
