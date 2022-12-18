@@ -22,7 +22,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * @version  22:21 2021/4/28
  */
 @ConditionalOnWebApplication
-@EnableAsync
 @Configuration
 public class AutoConfiguration {
 

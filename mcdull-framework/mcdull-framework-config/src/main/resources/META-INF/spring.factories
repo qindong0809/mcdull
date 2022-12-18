@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.dqcer.mcdull.framework.config.McdullConfig
+
+

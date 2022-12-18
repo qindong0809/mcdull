@@ -28,7 +28,7 @@ public class LogListener {
         this.logService = logService;
     }
 
-    @Async
+    @Async("threadPool")
     @Order
     @EventListener(LogEvent.class)
     public void listenLog(LogEvent event) {

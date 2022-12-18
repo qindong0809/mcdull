@@ -16,9 +16,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration;
 
 /**
- * The class Aliyun core config.
+ * mcdull 配置
  *
- * @author paascloud.net @gmail.com
+ * @author dqcer
+ * @date 2022/12/18
  */
 @Configuration
 @EnableConfigurationProperties(McdullProperties.class)

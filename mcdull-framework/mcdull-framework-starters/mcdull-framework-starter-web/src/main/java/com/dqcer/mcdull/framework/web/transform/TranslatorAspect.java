@@ -1,10 +1,9 @@
 package com.dqcer.mcdull.framework.web.transform;
 
-import com.dqcer.framework.base.enums.IEnum;
 import com.dqcer.framework.base.annotation.Transform;
+import com.dqcer.framework.base.enums.IEnum;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -38,14 +37,16 @@ public class TranslatorAspect {
     }
 
     @AfterReturning(pointcut = "translatorPointCut()",  returning = "object")
-    public void doAfter(JoinPoint joinPoint, Object object) {
-        log.info("翻译切面处理 object: {}", object);
+    public void doAfter(Object object) {
+        if (log.isDebugEnabled()) {
+            log.debug("翻译切面处理 object: {}", object);
+        }
         if (object instanceof Result) {
-            Result result = (Result) object;
+            Result<?> result = (Result<?>) object;
 
             Object data = result.getData();
             if (data instanceof PagedVO) {
-                PagedVO pagedVO = (PagedVO) data;
+                PagedVO<?> pagedVO = (PagedVO<?>) data;
                 for (Object o : pagedVO.getList()) {
                     doTranslateObject(o);
                 }

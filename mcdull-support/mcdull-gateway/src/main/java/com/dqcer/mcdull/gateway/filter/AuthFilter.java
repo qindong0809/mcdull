@@ -106,9 +106,8 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
             return errorResponse(response, ResultCode.UN_AUTHORIZATION.getCode(), ResultCode.UN_AUTHORIZATION.getMessage());
         }
 
-        Result<Long> result;
         String traceId = headers.getFirst(HttpHeaderConstants.TRACE_ID_HEADER);
-        result = remoteValid(token, traceId);
+        Result<Long> result = remoteValid(token, traceId);
 
 
         log.info("token valid result: {}", result);

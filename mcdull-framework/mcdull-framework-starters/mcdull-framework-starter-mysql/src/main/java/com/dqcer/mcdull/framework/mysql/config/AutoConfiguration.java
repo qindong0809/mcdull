@@ -4,6 +4,7 @@ package com.dqcer.mcdull.framework.mysql.config;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
+import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
@@ -51,12 +52,18 @@ public class AutoConfiguration {
         GlobalConfig config = new GlobalConfig();
         config.setMetaObjectHandler(metaObjectHandlerConfig());
         config.setBanner(false);
+        config.setIdentifierGenerator(idGenerator());
         mybatisSqlSessionFactoryBean.setGlobalConfig(config);
         MybatisConfiguration configuration = new MybatisConfiguration();
         configuration.addInterceptor(mybatisPlusInterceptor());
         mybatisSqlSessionFactoryBean.setConfiguration(configuration);
 
         return mybatisSqlSessionFactoryBean.getObject();
+    }
+
+    @Bean
+    public IdentifierGenerator idGenerator() {
+        return new CustomIdGenerator();
     }
 
     @Bean

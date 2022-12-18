@@ -11,6 +11,20 @@ public class McdullProperties {
      */
     private GatewayProperties gateway = new GatewayProperties();
 
+    /**
+     * 线程池
+     */
+    private ThreadPoolProperties threadPool = new ThreadPoolProperties();
+
+    public ThreadPoolProperties getThreadPool() {
+        return threadPool;
+    }
+
+    public McdullProperties setThreadPool(ThreadPoolProperties threadPool) {
+        this.threadPool = threadPool;
+        return this;
+    }
+
     public GatewayProperties getGateway() {
         return gateway;
     }

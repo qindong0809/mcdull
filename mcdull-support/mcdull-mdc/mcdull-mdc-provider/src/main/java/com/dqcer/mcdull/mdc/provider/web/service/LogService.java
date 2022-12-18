@@ -1,9 +1,9 @@
 package com.dqcer.mcdull.mdc.provider.web.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.dqcer.framework.base.wrapper.FeignResultParse;
 import com.dqcer.framework.base.util.PageUtil;
 import com.dqcer.framework.base.vo.PagedVO;
+import com.dqcer.framework.base.wrapper.FeignResultParse;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.mdc.provider.model.convert.LogConvert;
 import com.dqcer.mcdull.mdc.provider.model.dto.LogLiteDTO;
@@ -13,6 +13,7 @@ import com.dqcer.mcdull.mdc.provider.model.vo.LogVO;
 import com.dqcer.mcdull.mdc.provider.web.dao.repository.ILogRepository;
 import com.dqcer.mcdull.uac.client.service.UserClientService;
 import com.google.common.collect.Lists;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,11 +29,16 @@ public class LogService {
     @Resource
     private UserClientService userClientService;
 
+    @Resource
+    private ThreadPoolTaskExecutor threadPool;
+
     public Result<Integer> batchSave(List<SysLogFeignDTO> dto) {
-        List<LogDO> entities = Lists.newArrayList();
-        entities.addAll(dto);
-        logRepository.saveBatch(entities, entities.size());
-        return Result.ok(entities.size());
+        threadPool.submit(() -> {
+            List<LogDO> entities = Lists.newArrayList();
+            entities.addAll(dto);
+            logRepository.saveBatch(entities, entities.size());
+        });
+        return Result.ok(dto.size());
     }
 
     public Result<PagedVO<LogVO>> listByPage(LogLiteDTO dto) {

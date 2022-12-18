@@ -50,5 +50,9 @@
             <artifactId>mcdull-framework-starter-feign</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.dqcer.mcdull</groupId>
+            <artifactId>mcdull-framework-config</artifactId>
+        </dependency>
     </dependencies>
 </project>
