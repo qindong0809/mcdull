@@ -1,5 +1,6 @@
 package com.dqcer.mcdull.uac.provider.web.controller;
 
+import com.dqcer.framework.base.annotation.UnAuthorize;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.uac.api.dto.LoginDTO;
 import com.dqcer.mcdull.uac.api.vo.LoginVO;
@@ -7,13 +8,11 @@ import com.dqcer.mcdull.uac.client.api.AuthServiceApi;
 import com.dqcer.mcdull.uac.provider.web.service.LoginService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
-@RequestMapping("")
 @RestController
 public class LoginController implements AuthServiceApi {
 
@@ -47,6 +46,7 @@ public class LoginController implements AuthServiceApi {
      * @param token token
      * @return {@link Long}
      */
+    @UnAuthorize
     @Override
     public Result<Long> tokenValid(String token, String traceId) {
         return loginService.tokenValid(token);

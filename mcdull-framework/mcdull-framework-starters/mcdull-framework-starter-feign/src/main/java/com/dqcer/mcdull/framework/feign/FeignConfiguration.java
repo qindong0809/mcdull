@@ -31,19 +31,22 @@ public class FeignConfiguration implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate requestTemplate) {
         String path = requestTemplate.path();
+        if (log.isDebugEnabled()) {
+            log.debug("Feign RequestInterceptor Path: {}", path);
+        }
         if (path.equals("/feign/token/valid")) {
             return;
         }
 
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attributes == null) {
-            log.warn("RequestContextHolder.getRequestAttributes() is null");
-        } else {
+        if (attributes != null) {
             HttpServletRequest request = attributes.getRequest();
             requestTemplate.header(HttpHeaderConstants.U_ID, request.getHeader(HttpHeaderConstants.U_ID));
             requestTemplate.header(HttpHeaderConstants.T_ID, request.getHeader(HttpHeaderConstants.T_ID));
             requestTemplate.header(HttpHeaderConstants.TRACE_ID_HEADER, request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER));
+            return;
         }
+        log.warn("RequestContextHolder.getRequestAttributes() is null");
     }
 
     @Bean
