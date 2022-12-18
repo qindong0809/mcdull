@@ -2,8 +2,8 @@ package com.dqcer.mcdull.uac.provider.web.controller;
 
 import com.dqcer.framework.base.annotation.UnAuthorize;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.mcdull.uac.api.dto.LoginDTO;
-import com.dqcer.mcdull.uac.api.vo.LoginVO;
+import com.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
+import com.dqcer.mcdull.uac.provider.model.vo.LoginVO;
 import com.dqcer.mcdull.uac.client.api.AuthServiceApi;
 import com.dqcer.mcdull.uac.provider.web.service.LoginService;
 import org.springframework.web.bind.annotation.PostMapping;

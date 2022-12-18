@@ -12,7 +12,6 @@
     <artifactId>mcdull-mdc</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>mcdull-mdc-api</module>
         <module>mcdull-mdc-client</module>
         <module>mcdull-mdc-provider</module>
     </modules>

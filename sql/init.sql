@@ -21,6 +21,15 @@ CREATE TABLE IF NOT EXISTS `sys_user` (
 INSERT INTO sys_user(id, created_by, created_time, updated_by, updated_time, status, del_flag, nickname, account, password, salt, email, phone, last_login_time, type)
 VALUES(1589631293412503554, 1589631293412503554, '2022-10-31 07:20:54', null, null, 1, 1, '麦兜', 'admin', '7a69d7186df1a65ed7af2ba00747488e2415bf1a', 'c7e87439-aef3-48e0-be26-678d0ab99345', 'admin@mcdull.com', '18238352145', null, 2);
 
+DROP TABLE IF EXISTS `sys_user_login`;
+CREATE TABLE IF NOT EXISTS `sys_user_login` (
+    `id` bigint(20) NOT NULL COMMENT '主键',
+    `created_time` datetime NOT NULL COMMENT '创建时间',
+    `user_id` bigint(20) NOT NULL COMMENT '用户主键',
+    `token` varchar(64) NOT NULL COMMENT '所用token',
+    `type` int(4) NOT NULL COMMENT '类型（1/登录 2/注销）',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户登录记录表';
 
 DROP TABLE IF EXISTS `sys_dict`;
 CREATE TABLE IF NOT EXISTS `sys_dict` (
@@ -113,22 +122,22 @@ INSERT INTO sys_user_role VALUES(2, '2022-10-31 07:20:54', 1589631293412503554, 
 
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE IF NOT EXISTS `sys_menu` (
-    `id` bigint(20) NOT NULL COMMENT '主键',
-    `created_by` bigint(20) NOT NULL COMMENT '创建人',
-    `created_time` datetime NOT NULL COMMENT '创建时间',
-    `updated_by` bigint(20) DEFAULT NULL COMMENT '更新人',
-    `updated_time` datetime DEFAULT NULL COMMENT '更新时间',
-    `status` int(1) NOT NULL COMMENT '状态（1/正常 2/停用）',
-    `parent_id` bigint(20) NOT NULL COMMENT '父级',
-    `name` varchar(128) NOT NULL COMMENT '名称',
-    `icon` varchar(128) DEFAULT NULL COMMENT '图标',
-    `sort` int(16) NOT NULL COMMENT '排序',
-    `res_code` varchar(128) NOT NULL COMMENT '模块code 如sys:user:list',
-    `path` varchar(128) DEFAULT NULL COMMENT '路由',
-    `component` varchar(128) DEFAULT NULL COMMENT '组件',
-    `type` varchar(8) NOT NULL COMMENT '类型(sys/子系统 menu/菜单、button/按钮)',
-    `del_flag` int(1) NOT NULL COMMENT '删除标识（1/正常 2/已删除）',
-    PRIMARY KEY (`id`)
+`id` bigint(20) NOT NULL COMMENT '主键',
+`created_by` bigint(20) NOT NULL COMMENT '创建人',
+`created_time` datetime NOT NULL COMMENT '创建时间',
+`updated_by` bigint(20) DEFAULT NULL COMMENT '更新人',
+`updated_time` datetime DEFAULT NULL COMMENT '更新时间',
+`status` int(1) NOT NULL COMMENT '状态（1/正常 2/停用）',
+`parent_id` bigint(20) NOT NULL COMMENT '父级',
+`name` varchar(128) NOT NULL COMMENT '名称',
+`icon` varchar(128) DEFAULT NULL COMMENT '图标',
+`sort` int(16) NOT NULL COMMENT '排序',
+`res_code` varchar(128) NOT NULL COMMENT '模块code 如sys:user:list',
+`path` varchar(128) DEFAULT NULL COMMENT '路由',
+`component` varchar(128) DEFAULT NULL COMMENT '组件',
+`type` varchar(8) NOT NULL COMMENT '类型(sys/子系统 menu/菜单、button/按钮)',
+`del_flag` int(1) NOT NULL COMMENT '删除标识（1/正常 2/已删除）',
+PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='菜单表';
 BEGIN;
 -- 系统级

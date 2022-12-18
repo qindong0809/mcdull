@@ -1,9 +1,9 @@
 package com.dqcer.mcdull.uac.provider.web.manager.uac.impl;
 
-import com.dqcer.mcdull.uac.api.convert.RoleConvert;
-import com.dqcer.mcdull.uac.api.entity.RoleDO;
-import com.dqcer.mcdull.uac.api.vo.RoleVO;
-import com.dqcer.mcdull.uac.api.vo.UserVO;
+import com.dqcer.mcdull.uac.provider.model.convert.RoleConvert;
+import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
+import com.dqcer.mcdull.uac.provider.model.vo.RoleVO;
+import com.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import com.dqcer.mcdull.uac.provider.web.manager.uac.IRoleManager;
 import org.springframework.stereotype.Service;

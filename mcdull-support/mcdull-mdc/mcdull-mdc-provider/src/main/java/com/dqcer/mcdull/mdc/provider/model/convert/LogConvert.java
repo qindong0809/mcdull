@@ -1,0 +1,35 @@
+package com.dqcer.mcdull.mdc.provider.model.convert;
+
+import com.dqcer.mcdull.mdc.provider.model.entity.LogDO;
+import com.dqcer.mcdull.mdc.client.vo.DictClientVO;
+import com.dqcer.mcdull.mdc.provider.model.vo.LogVO;
+
+public class LogConvert {
+
+
+    /**
+     * 实体转换来视图对象
+     *
+     * @param item 项
+     * @return {@link DictClientVO}
+     */
+    public static LogVO entity2Vo(LogDO item) {
+        LogVO logVO = new LogVO();
+        logVO.setAccountId(item.getAccountId());
+        logVO.setTenantId(item.getTenantId());
+        logVO.setCreatedTime(item.getCreatedTime());
+        logVO.setClientIp(item.getClientIp());
+        logVO.setUserAgent(item.getUserAgent());
+        logVO.setTime(item.getTime());
+        logVO.setMethod(item.getMethod());
+        logVO.setPath(item.getPath());
+        logVO.setTimeTaken(item.getTimeTaken());
+        logVO.setStatus(item.getStatus());
+        logVO.setParameterMap(item.getParameterMap());
+        logVO.setRequestBody(item.getRequestBody());
+        logVO.setHeaders(item.getHeaders());
+        logVO.setResponseBody(item.getResponseBody());
+        logVO.setId(item.getId());
+        return logVO;
+    }
+}

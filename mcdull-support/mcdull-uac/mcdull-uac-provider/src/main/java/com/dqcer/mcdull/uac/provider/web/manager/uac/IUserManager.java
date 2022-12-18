@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac.provider.web.manager.uac;
 
-import com.dqcer.mcdull.uac.api.entity.UserDO;
-import com.dqcer.mcdull.uac.api.vo.UserVO;
+import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
+import com.dqcer.mcdull.uac.provider.model.vo.UserVO;
 
 public interface IUserManager {
 

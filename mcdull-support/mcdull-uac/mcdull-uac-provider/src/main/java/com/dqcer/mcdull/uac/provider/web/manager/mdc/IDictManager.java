@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.uac.provider.web.manager.mdc;
 
-import com.dqcer.mcdull.uac.api.vo.RemoteDictVO;
+import com.dqcer.mcdull.uac.provider.model.vo.RemoteDictVO;
 
 public interface IDictManager {
 

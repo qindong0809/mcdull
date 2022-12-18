@@ -1,14 +1,14 @@
 package com.dqcer.mcdull.uac.provider.web.manager.mdc.impl;
 
 import com.dqcer.framework.base.storage.UserContextHolder;
-import com.dqcer.framework.base.wrapper.FeignResultParse;
 import com.dqcer.framework.base.util.StrUtil;
+import com.dqcer.framework.base.wrapper.FeignResultParse;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
-import com.dqcer.mcdull.mdc.api.dto.DictFeignDTO;
-import com.dqcer.mcdull.mdc.api.vo.DictVO;
+import com.dqcer.mcdull.mdc.client.dto.DictClientDTO;
 import com.dqcer.mcdull.mdc.client.service.SysDictClientService;
-import com.dqcer.mcdull.uac.api.vo.RemoteDictVO;
+import com.dqcer.mcdull.mdc.client.vo.DictClientVO;
 import com.dqcer.mcdull.uac.provider.config.constants.CacheConstants;
+import com.dqcer.mcdull.uac.provider.model.vo.RemoteDictVO;
 import com.dqcer.mcdull.uac.provider.web.manager.mdc.IDictManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,14 +48,14 @@ public class DictManagerImpl implements IDictManager {
         if (remoteDictVO != null) {
             return remoteDictVO;
         }
-        DictFeignDTO dto = new DictFeignDTO();
+        DictClientDTO dto = new DictClientDTO();
         dto.setCode(code);
         dto.setSelectType(selectType);
         dto.setLanguage(language);
         if (log.isDebugEnabled()) {
             log.debug("查询字典数据请求参数: {}", dto);
         }
-        DictVO dictVO = FeignResultParse.getInstance(sysDictClientService.one(dto));
+        DictClientVO dictVO = FeignResultParse.getInstance(sysDictClientService.one(dto));
         RemoteDictVO vo = new RemoteDictVO();
         vo.setCode(dictVO.getCode());
         vo.setName(dictVO.getName());

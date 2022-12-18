@@ -3,8 +3,8 @@ package com.dqcer.mcdull.uac.provider.web.dao.repository;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
-import com.dqcer.mcdull.uac.api.entity.UserDO;
+import com.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
+import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
 
 import java.util.List;
 
@@ -42,4 +42,18 @@ public interface IUserRepository extends IService<UserDO> {
      */
     List<UserPowerVO> queryResourceModules(Long userId);
 
+    /**
+     * 更新登录时间通过id
+     *
+     * @param userId 用户id
+     */
+    void updateLoginTimeById(Long userId);
+
+    /**
+     * 查询用户帐户
+     *
+     * @param account 账户
+     * @return {@link UserDO}
+     */
+    UserDO queryUserByAccount(String account);
 }

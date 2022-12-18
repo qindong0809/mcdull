@@ -4,11 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.mcdull.mdc.api.convert.MailTemplateConvert;
-import com.dqcer.mcdull.mdc.api.dto.MailTemplateLiteDTO;
-import com.dqcer.mcdull.mdc.api.entity.SysMailTemplateDO;
-import com.dqcer.mcdull.mdc.api.vo.MailTemplateBaseVO;
-import com.dqcer.mcdull.mdc.api.vo.MailTemplateVO;
+import com.dqcer.mcdull.mdc.provider.model.convert.MailTemplateConvert;
+import com.dqcer.mcdull.mdc.provider.model.dto.MailTemplateLiteDTO;
+import com.dqcer.mcdull.mdc.provider.model.entity.SysMailTemplateDO;
+import com.dqcer.mcdull.mdc.provider.model.vo.MailTemplateBaseVO;
+import com.dqcer.mcdull.mdc.provider.model.vo.MailTemplateVO;
 import com.dqcer.mcdull.mdc.provider.web.dao.mapper.MailTemplateDAO;
 import org.springframework.stereotype.Service;
 

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.exception.DatabaseRowException;
 import com.dqcer.framework.base.util.ObjUtil;
-import com.dqcer.mcdull.uac.api.entity.UserRoleDO;
+import com.dqcer.mcdull.uac.provider.model.entity.UserRoleDO;
 import com.dqcer.mcdull.uac.provider.web.dao.mapper.UserRoleMapper;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
 import org.springframework.stereotype.Service;

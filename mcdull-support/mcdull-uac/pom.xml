@@ -12,7 +12,6 @@
     <artifactId>mcdull-uac</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>mcdull-uac-api</module>
         <module>mcdull-uac-client</module>
         <module>mcdull-uac-provider</module>
     </modules>

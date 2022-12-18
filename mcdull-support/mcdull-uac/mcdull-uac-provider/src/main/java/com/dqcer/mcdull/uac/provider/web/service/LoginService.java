@@ -1,28 +1,26 @@
 package com.dqcer.mcdull.uac.provider.web.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
-import com.dqcer.framework.base.entity.IdDO;
 import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.enums.StatusEnum;
+import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.storage.CacheUser;
 import com.dqcer.framework.base.storage.SsoConstant;
-import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.ObjUtil;
 import com.dqcer.framework.base.util.Sha1Util;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import com.dqcer.mcdull.framework.redis.operation.RedissonCache;
-import com.dqcer.mcdull.uac.api.dto.LoginDTO;
-import com.dqcer.mcdull.uac.api.entity.UserDO;
+import com.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
+import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import com.dqcer.mcdull.uac.provider.config.constants.AuthCode;
-import com.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
+import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserLoginRepository;
+import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -30,7 +28,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -45,7 +42,10 @@ public class LoginService {
     private static final Logger log = LoggerFactory.getLogger(LoginService.class);
 
     @Resource
-    private UserMapper userDAO;
+    private IUserRepository userRepository;
+
+    @Resource
+    private IUserLoginRepository userLoginRepository;
 
     @Resource
     private RedissonCache redisClient;
@@ -59,43 +59,42 @@ public class LoginService {
      * @param loginDTO 登录dto
      * @return {@link Result}<{@link String}>
      */
+    @Transactional(rollbackFor = Exception.class)
     public Result<String> login(LoginDTO loginDTO) {
         String account = loginDTO.getAccount();
-        LambdaQueryWrapper<UserDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(UserDO::getAccount, account);
-        UserDO entity = userDAO.selectOne(wrapper);
-        if (null == entity) {
+        UserDO userEntity = userRepository.queryUserByAccount(account);
+        if (null == userEntity) {
             log.warn("账号不存在 account: {}", account);
             return Result.error(AuthCode.NOT_EXIST);
         }
-        String password = entity.getPassword();
+        String password = userEntity.getPassword();
 
-        if (!password.equals(Sha1Util.getSha1(loginDTO.getPd() + entity.getSalt()))) {
+        if (!password.equals(Sha1Util.getSha1(loginDTO.getPd() + userEntity.getSalt()))) {
             log.warn("用户密码错误");
             return Result.error(AuthCode.NOT_EXIST);
         }
-        if (!entity.getStatus().equals(StatusEnum.ENABLE.getCode())) {
+        if (!userEntity.getStatus().equals(StatusEnum.ENABLE.getCode())) {
             log.warn("账号已停用 account: {}", account);
             return Result.error(AuthCode.DISABLE);
         }
-        if (!entity.getDelFlag().equals(DelFlayEnum.NORMAL.getCode())) {
+        if (!userEntity.getDelFlag().equals(DelFlayEnum.NORMAL.getCode())) {
             log.warn("账号已被删除 account: {}", account);
             return Result.error(AuthCode.NOT_EXIST);
         }
 
-        String token = UUID.randomUUID().toString().replaceAll("-", "");
+        Long userId = userEntity.getId();
 
-        CacheUser cacheUser = new CacheUser().setUserId(entity.getId()).setLastActiveTime(LocalDateTime.now());
         //  强制7天过期
+        String token = UUID.randomUUID().toString().replaceAll("-", "");
+        CacheUser cacheUser = new CacheUser().setUserId(userId).setLastActiveTime(LocalDateTime.now());
         cacheChannel.put(MessageFormat.format(SsoConstant.SSO_TOKEN, token), cacheUser, SsoConstant.SSO_TOKEN_NAMESPACE_TIMEOUT);
 
         //  更新登录时间
-        LambdaUpdateWrapper<UserDO> update = Wrappers.lambdaUpdate();
-        update.set(UserDO::getLastLoginTime, new Date());
-        update.eq(IdDO::getId, entity.getId());
-        userDAO.update(null, update);
+        userRepository.updateLoginTimeById(userId);
 
-        log.info("账号: {} 用户名: {} 已登录", entity.getAccount(), entity.getEmail());
+        //  记录登录信息
+        userLoginRepository.saveLoginInfoByUserIdAndToken(userId, token);
+//        Integer.valueOf("dfd");
 
         return Result.ok(token);
     }
@@ -146,8 +145,12 @@ public class LoginService {
      *
      * @return {@link Result<String>}
      */
+    @Transactional(rollbackFor = Exception.class)
     public Result<String> logout() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            throw new BusinessException();
+        }
         HttpServletRequest request = attributes.getRequest();
         String token = request.getHeader(HttpHeaderConstants.TOKEN);
         String tokenKey = MessageFormat.format(SsoConstant.SSO_TOKEN, token);
@@ -156,11 +159,11 @@ public class LoginService {
             log.error("redis 缓存 token过期，这里需要优化处理");
             return Result.ok();
         }
-
         user.setOnlineStatus(CacheUser.LOGOUT);
         redisClient.putIfExists(tokenKey, user);
 
-        log.info("用户:  {} 已主动退出", UserContextHolder.getSession().getUserId());
+        //  记录注销信息
+        userLoginRepository.saveLogoutInfoByUserIdAndToken(user.getUserId(), token);
         return Result.ok();
     }
 }

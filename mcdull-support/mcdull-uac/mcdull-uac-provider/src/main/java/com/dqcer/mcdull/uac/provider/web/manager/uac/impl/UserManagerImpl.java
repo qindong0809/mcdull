@@ -1,10 +1,10 @@
 package com.dqcer.mcdull.uac.provider.web.manager.uac.impl;
 
 import com.dqcer.framework.base.vo.BaseVO;
-import com.dqcer.mcdull.uac.api.convert.UserConvert;
-import com.dqcer.mcdull.uac.api.entity.RoleDO;
-import com.dqcer.mcdull.uac.api.entity.UserDO;
-import com.dqcer.mcdull.uac.api.vo.UserVO;
+import com.dqcer.mcdull.uac.provider.model.convert.UserConvert;
+import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
+import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
+import com.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;

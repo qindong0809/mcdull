@@ -8,11 +8,11 @@ import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.util.PageUtil;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.mcdull.mdc.api.convert.DictConvert;
-import com.dqcer.mcdull.mdc.api.dto.DictFeignDTO;
-import com.dqcer.mcdull.mdc.api.dto.DictLiteDTO;
-import com.dqcer.mcdull.mdc.api.entity.DictDO;
-import com.dqcer.mcdull.mdc.api.vo.DictVO;
+import com.dqcer.mcdull.mdc.provider.model.convert.DictConvert;
+import com.dqcer.mcdull.mdc.client.dto.DictClientDTO;
+import com.dqcer.mcdull.mdc.provider.model.dto.DictLiteDTO;
+import com.dqcer.mcdull.mdc.provider.model.entity.DictDO;
+import com.dqcer.mcdull.mdc.client.vo.DictClientVO;
 import com.dqcer.mcdull.mdc.provider.web.dao.repository.IDictRepository;
 import org.springframework.stereotype.Service;
 
@@ -36,9 +36,9 @@ public class DictService {
      * 列表
      *
      * @param dto dto
-     * @return {@link Result}<{@link List}<{@link DictVO}>>
+     * @return {@link Result}<{@link List}<{@link DictClientVO}>>
      */
-    public Result<List<DictVO>> list(DictFeignDTO dto) {
+    public Result<List<DictClientVO>> list(DictClientDTO dto) {
         LambdaQueryWrapper<DictDO> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(DictDO::getSelectType, dto.getSelectType());
         wrapper.eq(DictDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
@@ -51,9 +51,9 @@ public class DictService {
      * 一个
      *
      * @param dto dto
-     * @return {@link Result}<{@link DictVO}>
+     * @return {@link Result}<{@link DictClientVO}>
      */
-    public Result<DictVO> one(DictFeignDTO dto) {
+    public Result<DictClientVO> one(DictClientDTO dto) {
         LambdaQueryWrapper<DictDO> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(DictDO::getCode, dto.getCode());
         wrapper.eq(DictDO::getLanguage, dto.getLanguage());
@@ -67,12 +67,12 @@ public class DictService {
      * 列表分页
      *
      * @param dto dto
-     * @return {@link Result}<{@link List}<{@link DictVO}>>
+     * @return {@link Result}<{@link List}<{@link DictClientVO}>>
      */
-    public Result<PagedVO<DictVO>> listByPage(DictLiteDTO dto) {
+    public Result<PagedVO<DictClientVO>> listByPage(DictLiteDTO dto) {
         Page<DictDO> entityPage = dictRepository.selectPage(dto);
 
-        List<DictVO> voList = new ArrayList<>();
+        List<DictClientVO> voList = new ArrayList<>();
         for (DictDO entity : entityPage.getRecords()) {
             voList.add(DictConvert.entityConvertToVo(entity));
         }

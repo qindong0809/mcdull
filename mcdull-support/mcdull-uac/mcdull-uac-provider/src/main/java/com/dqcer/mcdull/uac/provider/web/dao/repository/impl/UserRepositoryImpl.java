@@ -1,23 +1,27 @@
 package com.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.entity.BaseDO;
+import com.dqcer.framework.base.entity.IdDO;
 import com.dqcer.framework.base.exception.BusinessException;
+import com.dqcer.framework.base.exception.DatabaseRowException;
 import com.dqcer.framework.base.util.ObjUtil;
 import com.dqcer.framework.base.util.StrUtil;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import com.dqcer.mcdull.uac.api.dto.UserLiteDTO;
-import com.dqcer.mcdull.uac.api.entity.UserDO;
+import com.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
+import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import com.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -97,5 +101,38 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
             vo.setModules(modules);
         }
         return vos;
+    }
+
+    /**
+     * 更新登录时间通过id
+     *
+     * @param userId 用户id
+     */
+    @Override
+    public void updateLoginTimeById(Long userId) {
+        LambdaUpdateWrapper<UserDO> update = Wrappers.lambdaUpdate();
+        update.set(UserDO::getLastLoginTime, new Date());
+        update.eq(IdDO::getId, userId);
+        int rowSize = baseMapper.update(null, update);
+        if (rowSize == GlobalConstant.Database.ROW_0) {
+            throw new DatabaseRowException();
+        }
+    }
+
+    /**
+     * 查询用户帐户
+     *
+     * @param account 账户
+     * @return {@link UserDO}
+     */
+    @Override
+    public UserDO queryUserByAccount(String account) {
+        LambdaQueryWrapper<UserDO> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(UserDO::getAccount, account);
+        List<UserDO> list = baseMapper.selectList(wrapper);
+        if (ObjUtil.isNull(list)) {
+            return null;
+        }
+        return list.get(0);
     }
 }

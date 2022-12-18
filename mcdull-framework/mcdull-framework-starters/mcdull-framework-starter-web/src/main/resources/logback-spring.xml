@@ -4,6 +4,8 @@
   <include resource="org/springframework/boot/logging/logback/defaults.xml" />
   <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
+  <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} | %p | %t | %X{traceId} | %c | %m%n"/>
+
   <!-- 定义项目名称和日志路径 -->
   <springProperty scope="context" name="application.name" source="spring.application.name" />
   <property name="log.path" value="./logs" />
@@ -25,7 +27,7 @@
     </rollingPolicy>
     <!--日志文档输出格式-->
     <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss}  [ %thread ] - [ %-5level ] [%X{trace}]  [%p] [%t] %c - %m%n</pattern>
+      <pattern>${LOG_PATTERN}</pattern>
       <!-- 此处设置字符集 -->
       <charset>UTF-8</charset>
     </encoder>
@@ -43,7 +45,7 @@
       <totalSizeCap>80GB</totalSizeCap>
     </rollingPolicy>
     <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%X{trace}][%p] [%t] %c - %m%n</pattern>
+      <pattern>${LOG_PATTERN}</pattern>
     </encoder>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>INFO</level>
@@ -64,7 +66,7 @@
       <totalSizeCap>80GB</totalSizeCap>
     </rollingPolicy>
     <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%X{trace}][%p] [%t] %c - %m%n</pattern>
+      <pattern>${LOG_PATTERN}</pattern>
     </encoder>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>WARN</level>
@@ -85,7 +87,7 @@
       <totalSizeCap>80GB</totalSizeCap>
     </rollingPolicy>
     <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%X{trace}][%p] [%t] %c - %m%n</pattern>
+      <pattern>${LOG_PATTERN}</pattern>
     </encoder>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>ERROR</level>

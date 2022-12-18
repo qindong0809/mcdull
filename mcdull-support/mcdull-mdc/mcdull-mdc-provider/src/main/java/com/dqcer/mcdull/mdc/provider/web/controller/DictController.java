@@ -3,8 +3,8 @@ package com.dqcer.mcdull.mdc.provider.web.controller;
 import com.dqcer.framework.base.validator.ValidGroup;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.mcdull.mdc.api.dto.DictLiteDTO;
-import com.dqcer.mcdull.mdc.api.vo.DictVO;
+import com.dqcer.mcdull.mdc.provider.model.dto.DictLiteDTO;
+import com.dqcer.mcdull.mdc.client.vo.DictClientVO;
 import com.dqcer.mcdull.mdc.provider.web.service.DictService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +29,10 @@ public class DictController {
      * 列表分页
      *
      * @param dto dto
-     * @return {@link Result}<{@link List}<{@link DictVO}>>
+     * @return {@link Result}<{@link List}<{@link DictClientVO}>>
      */
     @GetMapping("/dict/base/list")
-    public Result<PagedVO<DictVO>> listByPage(@Validated(ValidGroup.Paged.class) DictLiteDTO dto) {
+    public Result<PagedVO<DictClientVO>> listByPage(@Validated(ValidGroup.Paged.class) DictLiteDTO dto) {
         return sysDictService.listByPage(dto);
     }
 }

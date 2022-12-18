@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac.provider.web.manager.uac;
 
-import com.dqcer.mcdull.uac.api.entity.RoleDO;
-import com.dqcer.mcdull.uac.api.vo.RoleVO;
+import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
+import com.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 
 public interface IRoleManager {
 

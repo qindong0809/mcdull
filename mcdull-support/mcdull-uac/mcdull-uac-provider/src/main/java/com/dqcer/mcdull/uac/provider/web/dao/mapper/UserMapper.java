@@ -2,7 +2,7 @@ package com.dqcer.mcdull.uac.provider.web.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import com.dqcer.mcdull.uac.api.entity.UserDO;
+import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

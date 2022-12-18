@@ -2,8 +2,8 @@ package com.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.dqcer.mcdull.uac.api.dto.RoleLiteDTO;
-import com.dqcer.mcdull.uac.api.entity.RoleDO;
+import com.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
+import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 
 public interface IRoleRepository extends IService<RoleDO> {
 
