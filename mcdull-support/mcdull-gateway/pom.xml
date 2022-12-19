@@ -23,12 +23,10 @@
         <dependency>
             <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-starter-nacos</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-base</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.dqcer.mcdull</groupId>
@@ -42,17 +40,10 @@
         <dependency>
             <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-starter-feign</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-config</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>apm-toolkit-logback-1.x</artifactId>
-            <version>8.0.1</version>
         </dependency>
     </dependencies>
     <build>
