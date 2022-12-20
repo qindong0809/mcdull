@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 /**
- * 登录服务api
+ * 码表服务api
  *
  * @author dqcer
  * @version 2022/10/28

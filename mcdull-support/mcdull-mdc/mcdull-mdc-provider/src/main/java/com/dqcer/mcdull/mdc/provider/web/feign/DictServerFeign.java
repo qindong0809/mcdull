@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-public class DictFeign implements DictServiceApi {
+public class DictServerFeign implements DictServiceApi {
 
     @Resource
     private DictService sysDictService;

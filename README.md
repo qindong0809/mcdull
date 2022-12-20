@@ -19,6 +19,8 @@ mcdull
 │ 
 ├─mcdull-support                                支撑模块（包含技术中台和业务中台）
 │    └─mcdull-geteway                           统一网关
+│    ├─mcdull-mdc                               元数据中心  
+│    └─mcdull-uac                               用户中心  
 │       
 
 ```

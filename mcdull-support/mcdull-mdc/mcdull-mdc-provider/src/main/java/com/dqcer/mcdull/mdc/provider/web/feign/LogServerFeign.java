@@ -1,6 +1,5 @@
 package com.dqcer.mcdull.mdc.provider.web.feign;
 
-import com.dqcer.framework.base.annotation.UnAuthorize;
 import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.mdc.provider.model.dto.SysLogFeignDTO;
@@ -13,7 +12,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-public class LogFeign {
+public class LogServerFeign {
 
     @Resource
     private LogService logService;
@@ -24,7 +23,6 @@ public class LogFeign {
      * @param dto dto
      * @return {@link Result <Long> 返回新增主键}
      */
-    @UnAuthorize
     @PostMapping(GlobalConstant.FEIGN_PREFIX + "/log/batch/save")
     public Result<Integer> batchSave(@RequestBody List<SysLogFeignDTO> dto){
         return logService.batchSave(dto);
