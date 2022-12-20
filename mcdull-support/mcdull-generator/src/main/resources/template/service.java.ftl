@@ -74,7 +74,7 @@ public interface ${cfg.serviceName} {
      * 分页列表
      *
      * @param dto 参数
-     * @return {@link Result<Paged>}
+     * @return {@link Result<PagedVO>}
      */
-    Result<Paged<${cfg.voName}>> listByPage(${cfg.dtoName} dto);
+    Result<PagedVO<${cfg.voName}>> listByPage(${cfg.dtoName} dto);
 }

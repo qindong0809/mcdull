@@ -1,35 +1,40 @@
-package ${cfg.apiVo};
+package ${cfg.apiEntity};
 
-import com.dqcer.framework.base.vo.VO;
+import com.baomidou.mybatisplus.annotation.TableName;
+import ${cfg.baseEntity};
+
+
 
 /**
-* ${table.comment!} 返回客户端值
-*
-* @author ${author}
-* @version ${date}
-*/
-public class ${cfg.voName} extends VO {
+ * ${table.comment!} 实体类
+ *
+ * @author ${author}
+ * @version ${date}
+ */
+@TableName("${table.name}")
+public class ${cfg.entityName} extends BaseDO {
 
-<#if entitySerialVersionUID>
     private static final long serialVersionUID = 1L;
-</#if>
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
+<#if "id" != field.name && "status" != field.name>
     <#if field.keyFlag>
         <#assign keyPropertyName="${field.propertyName}"/>
     </#if>
+
     <#if field.comment!?length gt 0>
-    /**
-     * ${field.comment}
-     */
+   /**
+    * ${field.comment}
+    */
     </#if>
     private ${field.propertyType} ${field.propertyName};
-
+</#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
 
 <#if !entityLombokModel>
     <#list table.fields as field>
+        <#if "id" != field.name && "status" != field.name>
         <#if field.propertyType == "boolean">
             <#assign getprefix="is"/>
         <#else>
@@ -39,22 +44,23 @@ public class ${cfg.voName} extends VO {
         return ${field.propertyName};
     }
 
-<#if entityBuilderModel>
+    <#if entityBuilderModel>
     public ${entity} set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
-<#else>
+    <#else>
     public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
-</#if>
+    </#if>
         this.${field.propertyName} = ${field.propertyName};
-<#if entityBuilderModel>
+        <#if entityBuilderModel>
         return this;
-</#if>
+        </#if>
     }
+    </#if>
     </#list>
 </#if>
 
 <#if entityColumnConstant>
     <#list table.fields as field>
-        public static final String ${field.name?upper_case} = "${field.name}";
+    public static final String ${field.name?upper_case} = "${field.name}";
 
     </#list>
 </#if>
@@ -72,15 +78,17 @@ public class ${cfg.voName} extends VO {
 <#if !entityLombokModel>
     @Override
     public String toString() {
-    return "${entity}{" +
+        return "${entity}{" +
     <#list table.fields as field>
+        <#if "id" != field.name && "status" != field.name>
         <#if field_index==0>
             "${field.propertyName}=" + ${field.propertyName} +
         <#else>
             ", ${field.propertyName}=" + ${field.propertyName} +
         </#if>
+        </#if>
     </#list>
-    "}";
+        "}";
     }
 </#if>
 }

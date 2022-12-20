@@ -47,16 +47,6 @@
             <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-starter-feign</artifactId>
         </dependency>
-        <!--代码生成器-->
-<!--        <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>mybatis-plus-generator</artifactId>-->
-<!--            <version>3.4.0</version>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

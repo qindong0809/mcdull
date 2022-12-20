@@ -1,7 +1,6 @@
 package ${package.Controller};
 
-import com.eclincloud.common.base.annotation.Authentication;
-import com.eclincloud.common.base.annotation.StudyStatusPermission;
+import com.dqcer.framework.base.annotation.Authorized;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.validator.ValidGroup;
 import ${package.Service}.${cfg.serviceName};
@@ -37,9 +36,9 @@ public class ${cfg.controller} {
     * @param dto dto
     * @return {@link Result<Long> 返回新增主键}
     */
-    @Authentication(code = "${cfg.modelName}:base:save")
+    @Authorized("${cfg.modelName}:base:save")
     @PostMapping("base/save")
-    public Result<Long> save(@RequestBody @Validated(value = {ValidGroup.Create.class}) ${cfg.dtoName} dto){
+    public Result<Long> save(@RequestBody @Validated(value = {ValidGroup.Add.class}) ${cfg.dtoName} dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.save(dto);
     }
 
@@ -50,7 +49,7 @@ public class ${cfg.controller} {
     * @return {@link Result<${cfg.voName}>}
     */
     @GetMapping("base/detail")
-    public Result<${cfg.voName}> detail(@Validated(value = {ValidGroup.Detail.class}) ${cfg.dtoName} dto){
+    public Result<${cfg.voName}> detail(@Validated(value = {ValidGroup.One.class}) ${cfg.dtoName} dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.detail(dto);
     }
 
@@ -60,7 +59,7 @@ public class ${cfg.controller} {
     * @param dto dto
     * @return {@link Result<Long>}
     */
-    @Authentication(code = "${cfg.modelName}:base:update")
+    @Authorized("${cfg.modelName}:base:update")
     @PutMapping("base/update")
     public Result<Long> update(@RequestBody @Validated(value = {ValidGroup.Update.class}) ${cfg.dtoName} dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.update(dto);
@@ -72,7 +71,7 @@ public class ${cfg.controller} {
     * @param dto dto
     * @return {@link Result<Long>}
     */
-    @Authentication(code = "${cfg.modelName}:base:status")
+    @Authorized("${cfg.modelName}:base:status")
     @PutMapping("base/status")
     public Result<Long> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) ${cfg.dtoName} dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.updateStatus(dto);
@@ -84,7 +83,7 @@ public class ${cfg.controller} {
     * @param dto dto
     * @return {@link Result<Long>}
     */
-    @Authentication(code = "${cfg.modelName}:base:delete")
+    @Authorized("${cfg.modelName}:base:delete")
     @PostMapping("base/delete")
     public Result<Long> delete(@RequestBody @Validated(value = {ValidGroup.Delete.class}) ${cfg.dtoName} dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.delete(dto);
@@ -94,10 +93,10 @@ public class ${cfg.controller} {
     * 查询分页数据
     *
     * @param dto dto
-    * @return {@link Result<Paged>}
+    * @return {@link Result<PagedVO>}
     */
     @GetMapping("base/list")
-    public Result<Paged<${cfg.voName}>> listByPage(@Validated(value = {ValidGroup.Page.class}) ${cfg.dtoName} dto){
+    public Result<PagedVO<${cfg.voName}>> listByPage(@Validated(value = {ValidGroup.Paged.class}) ${cfg.dtoName} dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.listByPage(dto);
     }
 

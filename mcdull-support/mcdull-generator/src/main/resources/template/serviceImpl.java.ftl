@@ -2,6 +2,9 @@ package ${package.ServiceImpl};
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dqcer.framework.base.storage.UserContextHolder;
+import com.dqcer.framework.base.exception.DatabaseRowException;
+import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.util.PageUtil;
 import com.dqcer.framework.base.vo.PagedVO;
 import ${cfg.apiDto}.${cfg.dtoName};
@@ -16,8 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ${cfg.repository}.${cfg.repositoryName};
 import ${cfg.result};
-import com.dqcer.framework.base.wrapper.ResultCode;
-import com.dqcer.framework.base.exception.BusinessException;
+
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -53,7 +55,7 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
         boolean exist = ${(cfg.repositoryName?substring(1))?uncap_first}.exist(existEntity);
         if (exist) {
             log.warn("数据已存在 query:{}", existEntity);
-            return Result.error(ResultCode.CODE_999430);
+            return Result.error(ResultCode.DATA_EXIST);
         }
 
         ${cfg.entityName} entity = ${cfg.convertName}.convertTo${cfg.entityName}(dto);
@@ -73,7 +75,7 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
         ${cfg.entityName} entity = ${(cfg.repositoryName?substring(1))?uncap_first}.getById(dto.getId());
         if (null == entity) {
             log.warn("数据不存在 id:{}", dto.getId());
-            return Result.ok();
+            return Result.error(ResultCode.DATA_NOT_EXIST);
         }
         return Result.ok(${cfg.convertName}.convertTo${cfg.voName}(entity));
     }
@@ -92,14 +94,14 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
         ${cfg.entityName} dbData = ${(cfg.repositoryName?substring(1))?uncap_first}.getById(id);
         if(null == dbData) {
             log.warn("数据不存在 id:{}", id);
-            return Result.error(ResultCode.CODE_999432);
+            return Result.error(ResultCode.DATA_NOT_EXIST);
         }
         ${cfg.entityName} entity = ${cfg.convertName}.convertTo${cfg.entityName}(dto);
         entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
         boolean success = ${(cfg.repositoryName?substring(1))?uncap_first}.updateById(entity);
         if (!success) {
             log.error("数据更新失败, entity:{}", entity);
-            throw new BusinessException(ResultCode.CODE_999431);
+            throw new DatabaseRowException();
         }
 
         return Result.ok(id);
@@ -119,7 +121,7 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
         ${cfg.entityName} dbData = ${(cfg.repositoryName?substring(1))?uncap_first}.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
-            return Result.error(ResultCode.CODE_999432);
+            return Result.error(ResultCode.DATA_NOT_EXIST);
         }
 
         ${cfg.entityName} entity = new ${cfg.entityName}();
@@ -130,7 +132,7 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
 
         if (!success) {
             log.error("数据更新失败，entity:{}", entity);
-            throw new BusinessException(ResultCode.CODE_999431);
+            throw new DatabaseRowException();
         }
 
         return Result.ok(id);
@@ -149,7 +151,7 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
         int size = ${(cfg.repositoryName?substring(1))?uncap_first}.deleteById(dto.getId());
         if (size != 0) {
             log.error("数据删除失败 影响行数: {}, id:{}", size, id);
-            throw new BusinessException(ResultCode.CODE_999431);
+            throw new DatabaseRowException();
         }
 
         return Result.ok(id);
@@ -167,7 +169,7 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
         int size = ${(cfg.repositoryName?substring(1))?uncap_first}.deleteBatchIds(ids);
         if (size != ids.size()) {
             log.error("数据批量删除失败 影响行数: {}, ids:{}", size, ids);
-            throw new BusinessException(ResultCode.CODE_999431);
+            throw new DatabaseRowException();
         }
 
         return Result.ok(ids);
@@ -193,10 +195,10 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
      * 分页列表
      *
      * @param dto 参数
-     * @return {@link Result<Paged>}
+     * @return {@link Result<PagedVO>}
      */
     @Override
-    public Result<Paged<${cfg.voName}>> listByPage(${cfg.dtoName} dto) {
+    public Result<PagedVO<${cfg.voName}>> listByPage(${cfg.dtoName} dto) {
         Page<${cfg.entityName}> entityPage = ${(cfg.repositoryName?substring(1))?uncap_first}.selectPage(dto);
         List<${cfg.voName}> voList = new ArrayList<>();
         for (${cfg.entityName} entity : entityPage.getRecords()) {

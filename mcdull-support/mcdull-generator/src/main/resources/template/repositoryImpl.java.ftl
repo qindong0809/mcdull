@@ -1,5 +1,8 @@
 package ${cfg.repositoryImpl};
 
+import com.dqcer.framework.base.constants.GlobalConstant;
+import com.dqcer.framework.base.enums.StatusEnum;
+import com.dqcer.framework.base.exception.DatabaseRowException;
 import com.dqcer.framework.base.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -56,7 +59,7 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
         if (StrUtil.isNotBlank(keyword)) {
             //TODO 组装查询条件
         }
-        return baseMapper.selectPage(new Page<>(param.getCurrPage(), param.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(param.getCurrentPage(), param.getPageSize()), lambda);
     }
 
     /**
@@ -78,10 +81,10 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
      */
     @Override
     public Long insert(${cfg.entityName} entity) {
-        int insert = baseMapper.insert(entity);
-        if (insert != 1) {
-        log.error("数据插入失败 影响行数: {}, entity:{}", insert, entity);
-        throw new BusinessException(ResultCode.CODE_999431);
+        int rowSize = baseMapper.insert(entity);
+        if (rowSize == GlobalConstant.Database.ROW_0) {
+            log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
+            throw new DatabaseRowException();
         }
         return entity.getId();
     }

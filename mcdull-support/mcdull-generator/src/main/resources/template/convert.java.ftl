@@ -5,7 +5,7 @@ import ${cfg.apiDto}.${cfg.dtoName};
 import ${cfg.apiEntity}.${cfg.entityName};
 
 /**
-* ${entity} 对象转换类
+* ${table.comment!} 对象转换类
 *
 * @author ${author}
 * @version ${date}
