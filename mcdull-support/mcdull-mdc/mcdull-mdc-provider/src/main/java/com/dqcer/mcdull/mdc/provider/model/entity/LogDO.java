@@ -34,9 +34,9 @@ public class LogDO extends IdDO {
     private String userAgent;
 
     /**
-     * 操作时间
+     * 跟踪id
      */
-    private Date time;
+    private String traceId;
 
     /**
      * 请求方法
@@ -53,10 +53,6 @@ public class LogDO extends IdDO {
      */
     private Long timeTaken;
 
-    /**
-     * http状态
-     */
-    private Long status;
 
     /**
      * 参数map
@@ -64,19 +60,10 @@ public class LogDO extends IdDO {
     private String parameterMap;
 
     /**
-     * 请求体
-     */
-    private String requestBody;
-
-    /**
      * 请求头
      */
     private String headers;
 
-    /**
-     * 响应头
-     */
-    private String responseBody;
 
     public Long getAccountId() {
         return accountId;
@@ -118,13 +105,6 @@ public class LogDO extends IdDO {
         this.userAgent = userAgent;
     }
 
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
 
     public String getMethod() {
         return method;
@@ -150,28 +130,12 @@ public class LogDO extends IdDO {
         this.timeTaken = timeTaken;
     }
 
-    public Long getStatus() {
-        return status;
-    }
-
-    public void setStatus(Long status) {
-        this.status = status;
-    }
-
     public String getParameterMap() {
         return parameterMap;
     }
 
     public void setParameterMap(String parameterMap) {
         this.parameterMap = parameterMap;
-    }
-
-    public String getRequestBody() {
-        return requestBody;
-    }
-
-    public void setRequestBody(String requestBody) {
-        this.requestBody = requestBody;
     }
 
     public String getHeaders() {
@@ -182,11 +146,12 @@ public class LogDO extends IdDO {
         this.headers = headers;
     }
 
-    public String getResponseBody() {
-        return responseBody;
+    public String getTraceId() {
+        return traceId;
     }
 
-    public void setResponseBody(String responseBody) {
-        this.responseBody = responseBody;
+    public LogDO setTraceId(String traceId) {
+        this.traceId = traceId;
+        return this;
     }
 }

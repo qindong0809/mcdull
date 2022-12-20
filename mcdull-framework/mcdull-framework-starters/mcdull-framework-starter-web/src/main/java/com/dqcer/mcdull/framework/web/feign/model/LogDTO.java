@@ -27,12 +27,6 @@ public class LogDTO {
      */
     private String clientIp;
 
-
-    /**
-     * 操作时间
-     */
-    private Date time;
-
     /**
      * 请求方法
      */
@@ -49,19 +43,9 @@ public class LogDTO {
     private Long timeTaken;
 
     /**
-     * http状态
-     */
-    private Long status;
-
-    /**
      * 参数map
      */
     private String parameterMap;
-
-    /**
-     * 请求体
-     */
-    private String requestBody;
 
     /**
      * 请求头
@@ -69,9 +53,9 @@ public class LogDTO {
     private String headers;
 
     /**
-     * 响应头
+     * 跟踪id
      */
-    private String responseBody;
+    private String traceId;
 
 
     public String getUserAgent() {
@@ -114,15 +98,6 @@ public class LogDTO {
         this.clientIp = clientIp;
     }
 
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
-
     public String getMethod() {
         return method;
     }
@@ -147,28 +122,12 @@ public class LogDTO {
         this.timeTaken = timeTaken;
     }
 
-    public Long getStatus() {
-        return status;
-    }
-
-    public void setStatus(Long status) {
-        this.status = status;
-    }
-
     public String getParameterMap() {
         return parameterMap;
     }
 
     public void setParameterMap(String parameterMap) {
         this.parameterMap = parameterMap;
-    }
-
-    public String getRequestBody() {
-        return requestBody;
-    }
-
-    public void setRequestBody(String requestBody) {
-        this.requestBody = requestBody;
     }
 
     public String getHeaders() {
@@ -179,10 +138,12 @@ public class LogDTO {
         this.headers = headers;
     }
 
-    public String getResponseBody() {
-        return responseBody;
+    public String getTraceId() {
+        return traceId;
     }
 
-    public void setResponseBody(String responseBody) {
-        this.responseBody = responseBody;
-    }}
+    public LogDTO setTraceId(String traceId) {
+        this.traceId = traceId;
+        return this;
+    }
+}

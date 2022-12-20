@@ -25,6 +25,7 @@ public class LoginController implements AuthServiceApi {
      * @param loginDTO 登录dto
      * @return {@link Result}<{@link LoginVO}>
      */
+    @UnAuthorize
     @PostMapping("/login")
     public Result<String> login(@RequestBody @Valid LoginDTO loginDTO) {
         return loginService.login(loginDTO);

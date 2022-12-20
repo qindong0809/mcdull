@@ -20,15 +20,12 @@ public class LogConvert {
         logVO.setCreatedTime(item.getCreatedTime());
         logVO.setClientIp(item.getClientIp());
         logVO.setUserAgent(item.getUserAgent());
-        logVO.setTime(item.getTime());
         logVO.setMethod(item.getMethod());
         logVO.setPath(item.getPath());
         logVO.setTimeTaken(item.getTimeTaken());
-        logVO.setStatus(item.getStatus());
         logVO.setParameterMap(item.getParameterMap());
-        logVO.setRequestBody(item.getRequestBody());
         logVO.setHeaders(item.getHeaders());
-        logVO.setResponseBody(item.getResponseBody());
+        logVO.setTraceId(item.getTraceId());
         logVO.setId(item.getId());
         return logVO;
     }

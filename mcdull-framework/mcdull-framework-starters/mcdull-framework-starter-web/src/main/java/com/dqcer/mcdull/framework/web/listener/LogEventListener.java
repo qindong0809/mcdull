@@ -1,10 +1,7 @@
 package com.dqcer.mcdull.framework.web.listener;
 
-import com.dqcer.mcdull.framework.web.event.LogEvent;
 import com.dqcer.mcdull.framework.web.feign.model.LogDTO;
 import com.dqcer.mcdull.framework.web.feign.service.LogFeignClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.Async;
@@ -13,29 +10,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 日志事件监听器
+ *
  * @author dqcer
- * @description 异步监听日志事件
  * @date 2021/08/19
  */
-public class LogListener {
-
-    private static final Logger log = LoggerFactory.getLogger(LogListener.class);
+public class LogEventListener {
 
     private final LogFeignClient logService;
 
-
-    public LogListener(LogFeignClient logService) {
+    public LogEventListener(LogFeignClient logService) {
         this.logService = logService;
     }
 
-    @Async("threadPool")
+    @Async("threadPoolTaskExecutor")
     @Order
-    @EventListener(LogEvent.class)
-    public void listenLog(LogEvent event) {
-        LogDTO sysLog = (LogDTO) event.getSource();
-        if (log.isDebugEnabled()) {
-            log.debug("Log listener: {}", sysLog);
-        }
+    @EventListener(LogDTO.class)
+    public void listenLog(LogDTO sysLog) {
         List<LogDTO> dtos = new ArrayList<>();
         dtos.add(sysLog);
         logService.batchSave(dtos);

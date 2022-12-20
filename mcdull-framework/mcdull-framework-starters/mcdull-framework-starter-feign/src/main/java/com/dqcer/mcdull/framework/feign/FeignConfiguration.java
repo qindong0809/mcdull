@@ -34,9 +34,9 @@ public class FeignConfiguration implements RequestInterceptor {
         if (log.isDebugEnabled()) {
             log.debug("Feign RequestInterceptor Path: {}", path);
         }
-        if (path.equals("/feign/token/valid")) {
-            return;
-        }
+//        if (path.equals("/feign/token/valid")) {
+//            return;
+//        }
 
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes != null) {

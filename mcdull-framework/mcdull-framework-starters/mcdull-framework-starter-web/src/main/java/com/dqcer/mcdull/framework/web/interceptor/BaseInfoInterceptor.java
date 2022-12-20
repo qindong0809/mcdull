@@ -12,7 +12,6 @@ import com.dqcer.framework.base.util.StrUtil;
 import com.dqcer.framework.base.wrapper.FeignResultParse;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
-import com.dqcer.mcdull.framework.redis.operation.RedisClient;
 import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import com.dqcer.mcdull.framework.web.feign.service.PowerCheckFeignClient;
 import org.slf4j.Logger;
@@ -39,9 +38,6 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
     private static final Logger log = LoggerFactory.getLogger(BaseInfoInterceptor.class);
 
     @Resource
-    private RedisClient redisClient;
-
-    @Resource
     private CacheChannel cacheChannel;
 
     @Resource
@@ -51,7 +47,7 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         String requestURI = request.getRequestURI();
         if (log.isDebugEnabled()) {
-            log.debug("BaseInfoInterceptor#preHandle requestURI:[{}]", requestURI);
+            log.debug("Interceptor#preHandle requestURI:[{}]", requestURI);
         }
 
         if (! (handler instanceof HandlerMethod)) {
@@ -117,18 +113,5 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         UserContextHolder.clearSession();
-    }
-
-    /**
-     * 是否执行
-     *
-     * @param object 对象
-     * @return boolean
-     */
-    public boolean isExecute(Object object) {
-        if (object instanceof HttpServletRequest) {
-            return false;
-        }
-        return !(object instanceof HttpServletResponse);
     }
 }

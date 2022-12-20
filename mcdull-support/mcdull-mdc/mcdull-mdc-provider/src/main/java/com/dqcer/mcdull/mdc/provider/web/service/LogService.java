@@ -30,10 +30,10 @@ public class LogService {
     private UserClientService userClientService;
 
     @Resource
-    private ThreadPoolTaskExecutor threadPool;
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     public Result<Integer> batchSave(List<SysLogFeignDTO> dto) {
-        threadPool.submit(() -> {
+        threadPoolTaskExecutor.submit(() -> {
             List<LogDO> entities = Lists.newArrayList();
             entities.addAll(dto);
             logRepository.saveBatch(entities, entities.size());

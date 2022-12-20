@@ -5,7 +5,7 @@ import com.dqcer.framework.base.util.StrUtil;
 import com.dqcer.framework.base.wrapper.FeignResultParse;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import com.dqcer.mcdull.mdc.client.dto.DictClientDTO;
-import com.dqcer.mcdull.mdc.client.service.SysDictClientService;
+import com.dqcer.mcdull.mdc.client.service.DictClientService;
 import com.dqcer.mcdull.mdc.client.vo.DictClientVO;
 import com.dqcer.mcdull.uac.provider.config.constants.CacheConstants;
 import com.dqcer.mcdull.uac.provider.model.vo.RemoteDictVO;
@@ -23,7 +23,7 @@ public class DictManagerImpl implements IDictManager {
     private static final Logger log = LoggerFactory.getLogger(DictManagerImpl.class);
 
     @Resource
-    private SysDictClientService sysDictClientService;
+    private DictClientService sysDictClientService;
 
     @Resource
     private CacheChannel cacheChannel;

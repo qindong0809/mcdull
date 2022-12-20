@@ -70,20 +70,17 @@ CREATE TABLE `sys_log`  (
 `account_id` bigint(20)  NOT NULL COMMENT '操作人的账号主键',
 `tenant_id` bigint(20)  DEFAULT NULL COMMENT '租户主键',
 `created_time` datetime  NOT NULL COMMENT '创建时间',
-`client_ip` varchar(128)  DEFAULT NULL COMMENT '客户端ip',
-`user_agent` text  DEFAULT NULL COMMENT '用户代理',
-`time` datetime  DEFAULT NULL COMMENT '操作时间',
-`method` varchar(128)  DEFAULT NULL COMMENT '请求方法',
-`path` varchar(128)   DEFAULT NULL COMMENT '路径',
-`time_taken` bigint(20) DEFAULT NULL COMMENT '耗时',
-`status` bigint(20) DEFAULT NULL COMMENT 'http状态',
+`client_ip` varchar(128)  NOT NULL COMMENT '客户端ip',
+`user_agent` text  NOT NULL COMMENT '用户代理',
+`method` varchar(128)  NOT NULL COMMENT '请求方法',
+`path` varchar(128)   NOT NULL COMMENT '路径',
+`trace_id` varchar(128)   NOT NULL COMMENT '日志跟踪id',
+`time_taken` bigint(20) NOT NULL COMMENT '耗时',
 `parameter_map` varchar(1024)  DEFAULT NULL COMMENT '参数map',
-`request_body` longtext  DEFAULT NULL COMMENT '请求体',
-`headers` text  DEFAULT NULL COMMENT '请求头',
-`response_body` longtext  DEFAULT NULL COMMENT '响应头',
+`headers` text  NOT NULL COMMENT '请求头',
 PRIMARY KEY (`id`) USING BTREE
 
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '日志记录 ' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '日志记录';
 
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE IF NOT EXISTS `sys_role` (

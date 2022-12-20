@@ -29,7 +29,7 @@ public class ThreadPoolConfig {
     private McdullProperties mcdullProperties;
 
     @Bean
-    public ThreadPoolTaskExecutor threadPool(){
+    public ThreadPoolTaskExecutor threadPoolTaskExecutor(){
         ThreadPoolProperties threadPool = mcdullProperties.getThreadPool();
         if (log.isDebugEnabled()) {
             log.debug("Init Thread Pool Config: {}", threadPool);
