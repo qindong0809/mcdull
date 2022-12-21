@@ -12,6 +12,7 @@ import org.springframework.mail.MailException;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 
 @ActiveProfiles("dev")
 @SpringBootTest(classes = {MetaDataContentApplication.class})
@@ -31,9 +32,18 @@ public class MailTest {
     }
 
     @Test
+    void testHtml() throws MessagingException {
+        String s = "hello word:     content";
+        s = s.replaceAll("\\u0020", "&nbsp;");
+        s = s.replaceAll("\\u3000", "&nbsp;");
+        s = s.replaceAll("\\u00A0", "&nbsp;");
+        mailTemplate.sendHtmlMail("dqcer@sina.com", "subject", s);
+    }
+
+    @Test
     void testSendMailService() {
         MailClientDTO dto = new MailClientDTO()
-                .setTo("dqcer@sina.com").setSubject("subject").setContent("content");
+                .setTo("dqcer@sina.com").setSubject("subject").setContent("hello word:     content");
         Result<Boolean> result = mailService.send(dto);
         Assertions.assertTrue(result.getData());
     }

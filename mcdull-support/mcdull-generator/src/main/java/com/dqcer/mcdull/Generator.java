@@ -17,8 +17,6 @@ public class Generator {
 
     public static final String COM = "com.dqcer.";
 
-    public static final String COM_ = "/com/dqcer/";
-
     public static final String SRC = "/src/main/java";
 
     public static final String USER_DIR = System.getProperty("user.dir");
@@ -61,6 +59,7 @@ public class Generator {
         String username = "root";
         String password = "123456";
         String projectName_ = "mcdull.auth";
+        boolean isGeneratorWeb = true;
 
         String outPath = USER_DIR + outputBase + SRC + "/";
 
@@ -135,13 +134,10 @@ public class Generator {
 
         String entityPackage = String.format(API_PROJECT, projectName, "entity");
         String entityPath = entityPackage.replaceAll("\\.", "/");
-
         String dtoPackage = String.format(API_PROJECT + S_, projectName, "dto", modelName);
         String dtoPath = dtoPackage.replaceAll("\\.", "/");
-
         String voPackage = String.format(API_PROJECT + S_, projectName, "vo", modelName);
         String voPath = voPackage.replaceAll("\\.", "/");
-
         String convertPackage = String.format(API_PROJECT + S_, projectName, "convert", modelName);
         String convertPath = convertPackage.replaceAll("\\.", "/");
 
@@ -216,47 +212,47 @@ public class Generator {
                 return outPath + voPath +"/" + className + voSuffix + StringPool.DOT_JAVA;
             }
         });
-        focList.add(new FileOutConfig("/template/controller.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return outPath + controllerPath +"/" + className + controllerSuffix + StringPool.DOT_JAVA;
-            }
-        });
-        focList.add(new FileOutConfig("/template/service.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return outPath  + servicePath + "/I" + className + serviceSuffix + StringPool.DOT_JAVA;
-            }
-        });
-        focList.add(new FileOutConfig("/template/serviceImpl.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return outPath  + serviceImplPath +"/" + className + serviceImplSuffix + StringPool.DOT_JAVA;
-            }
-        });
-        focList.add(new FileOutConfig("/template/repository.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return outPath + repositoryPath + "/I" + className + repositorySuffix + StringPool.DOT_JAVA;
-            }
-        });
-        focList.add(new FileOutConfig("/template/repositoryImpl.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return outPath + repositoryImplPath +"/" + className + repositoryImplSuffix + StringPool.DOT_JAVA;
-            }
-        });
         focList.add(new FileOutConfig("/template/mapper.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 return outPath  + daoPath +"/" + className + mapperSuffix + StringPool.DOT_JAVA;
             }
         });
+        if (isGeneratorWeb) {
+            focList.add(new FileOutConfig("/template/controller.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    return outPath + controllerPath +"/" + className + controllerSuffix + StringPool.DOT_JAVA;
+                }
+            });
+            focList.add(new FileOutConfig("/template/service.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    return outPath  + servicePath + "/I" + className + serviceSuffix + StringPool.DOT_JAVA;
+                }
+            });
+            focList.add(new FileOutConfig("/template/serviceImpl.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    return outPath  + serviceImplPath +"/" + className + serviceImplSuffix + StringPool.DOT_JAVA;
+                }
+            });
+            focList.add(new FileOutConfig("/template/repository.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    return outPath + repositoryPath + "/I" + className + repositorySuffix + StringPool.DOT_JAVA;
+                }
+            });
+            focList.add(new FileOutConfig("/template/repositoryImpl.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    return outPath + repositoryImplPath +"/" + className + repositoryImplSuffix + StringPool.DOT_JAVA;
+                }
+            });
+        }
 
         cfg.setFileOutConfigList(focList);
         mpg.setCfg(cfg);
-
-
         // 配置模板
         TemplateConfig templateConfig = new TemplateConfig();
         templateConfig.setXml(null);
@@ -267,14 +263,12 @@ public class Generator {
         templateConfig.setServiceImpl(null);
         templateConfig.setXml(null);
         mpg.setTemplate(templateConfig);
-
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         strategy.setEntityLombokModel(false);
         strategy.setEntitySerialVersionUID(true);
-
         strategy.setRestControllerStyle(true);
         strategy.setEntityTableFieldAnnotationEnable(true);
         // 写于父类中的公共字段

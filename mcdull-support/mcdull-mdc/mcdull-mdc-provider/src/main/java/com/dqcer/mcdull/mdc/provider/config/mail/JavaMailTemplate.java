@@ -48,7 +48,7 @@ public class JavaMailTemplate implements MailTemplate {
 	public void sendHtmlMail(String to, String subject, String content, String... cc) throws MessagingException {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = buildHelper(to, subject, content, message, cc);
-		mailSender.send(message);
+		mailSender.send(helper.getMimeMessage());
 	}
 
 	@Override
