@@ -16,6 +16,14 @@ public class GlobalConstant {
      */
     public static final String FEIGN_PREFIX = "/feign";
 
+    public static class Environment {
+
+        /**
+         * 生产环境
+         */
+        public static final String PROD = "prod";
+    }
+
 
     public static class Database {
 

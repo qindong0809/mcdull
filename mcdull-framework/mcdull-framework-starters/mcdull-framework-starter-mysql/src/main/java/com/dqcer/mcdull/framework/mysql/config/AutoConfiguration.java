@@ -14,12 +14,14 @@ import com.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +36,12 @@ import java.util.Map;
 @EnableConfigurationProperties(DataSourceProperties.class)
 public class AutoConfiguration {
 
+    @Resource
+    private ApplicationContext context;
+
+    public String getActiveProfile() {
+        return context.getEnvironment().getActiveProfiles()[0];
+    }
 
     /**
      * 调整 SqlSessionFactory 为 MyBatis-Plus 的 SqlSessionFactory
@@ -75,7 +83,7 @@ public class AutoConfiguration {
         // 防止全部更新删除
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
         // SQL规范检查
-        interceptor.addInnerInterceptor(new SQLReviewInnerInterceptor());
+        interceptor.addInnerInterceptor(new SQLReviewInnerInterceptor(context));
         return interceptor;
     }
 

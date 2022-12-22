@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.parser.JsqlParserSupport;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
+import com.dqcer.framework.base.constants.GlobalConstant;
 import net.sf.jsqlparser.expression.BinaryExpression;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.Function;
@@ -26,6 +27,7 @@ import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
+import org.springframework.context.ApplicationContext;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -63,6 +65,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SQLReviewInnerInterceptor extends JsqlParserSupport implements InnerInterceptor {
 
+    private final ApplicationContext context;
+
     /**
      * 缓存验证结果，提高性能
      */
@@ -72,13 +76,24 @@ public class SQLReviewInnerInterceptor extends JsqlParserSupport implements Inne
      */
     private static final Map<String, List<SQLReviewInnerInterceptor.IndexInfo>> indexInfoMap = new ConcurrentHashMap<>();
 
+    public SQLReviewInnerInterceptor(ApplicationContext context) {
+        this.context = context;
+    }
+
+    public String getActiveProfile() {
+        return context.getEnvironment().getActiveProfiles()[0];
+    }
+
 
     @Override
     public void beforePrepare(StatementHandler sh, Connection connection, Integer transactionTimeout) {
         PluginUtils.MPStatementHandler mpStatementHandler = PluginUtils.mpStatementHandler(sh);
         MappedStatement ms = mpStatementHandler.mappedStatement();
         SqlCommandType sct = ms.getSqlCommandType();
-        if (sct == SqlCommandType.INSERT || InterceptorIgnoreHelper.willIgnoreIllegalSql(ms.getId())) return;
+        if (sct == SqlCommandType.INSERT
+                || InterceptorIgnoreHelper.willIgnoreIllegalSql(ms.getId()) || !getActiveProfile().equals(GlobalConstant.Environment.PROD) ) {
+            return;
+        }
         BoundSql boundSql = mpStatementHandler.boundSql();
         String originalSql = boundSql.getSql();
         logger.debug("检查SQL是否合规，SQL:" + originalSql);
