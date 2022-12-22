@@ -111,7 +111,9 @@ CREATE TABLE IF NOT EXISTS `sys_user_role` (
     `created_time` datetime NOT NULL COMMENT '创建时间',
     `user_id` bigint(20) NOT NULL COMMENT '角色主键',
     `role_id` bigint(20) NOT NULL COMMENT '菜单主键',
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    KEY `idx_user_id` (`user_id`) USING BTREE,
+    KEY `idx_role_id` (`role_id`) USING BTREE
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户角色中间表';
 
 INSERT INTO sys_user_role VALUES(1, '2022-10-31 07:20:54', 1589631293412503554, 1);
@@ -160,6 +162,8 @@ CREATE TABLE IF NOT EXISTS `sys_role_menu` (
 `created_time` datetime NOT NULL COMMENT '创建时间',
 `role_id` bigint(20) NOT NULL COMMENT '角色主键',
 `menu_id` bigint(20) NOT NULL COMMENT '菜单主键',
+KEY `idx_role_id` (`role_id`) USING BTREE,
+KEY `idx_menu_id` (`menu_id`) USING BTREE,
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色菜单资源中间表';
 BEGIN;

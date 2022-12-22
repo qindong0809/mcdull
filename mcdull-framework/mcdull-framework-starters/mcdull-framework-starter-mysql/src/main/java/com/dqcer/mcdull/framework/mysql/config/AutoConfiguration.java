@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.IllegalSQLInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.dqcer.mcdull.framework.mysql.aspect.DataSourceAspect;
@@ -76,7 +75,7 @@ public class AutoConfiguration {
         // 防止全部更新删除
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
         // SQL规范检查
-        interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
+        interceptor.addInnerInterceptor(new SQLReviewInnerInterceptor());
         return interceptor;
     }
 

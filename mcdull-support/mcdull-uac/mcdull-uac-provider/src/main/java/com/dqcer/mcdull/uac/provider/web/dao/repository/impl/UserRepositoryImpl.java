@@ -8,16 +8,20 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.entity.BaseDO;
 import com.dqcer.framework.base.entity.IdDO;
+import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.exception.DatabaseRowException;
 import com.dqcer.framework.base.util.ObjUtil;
 import com.dqcer.framework.base.util.StrUtil;
 import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.mcdull.framework.web.config.ThreadPoolConfig;
 import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import com.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
 import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import com.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -27,12 +31,15 @@ import java.util.List;
 @Service
 public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implements IUserRepository {
 
+    private static final Logger log = LoggerFactory.getLogger(ThreadPoolConfig.class);
+
     /**
      * 分页查询
      *
      * @param dto dto
      * @return {@link Page}<{@link UserDO}>
      */
+
     @Override
     public Page<UserDO> selectPage(UserLiteDTO dto) {
         LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
@@ -41,6 +48,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
             query.and(i-> i.like(UserDO::getAccount, keyword).or().like(UserDO::getPhone, keyword).or().like(UserDO::getEmail, keyword));
         }
         query.orderByDesc(BaseDO::getCreatedTime);
+        query.eq(UserDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
     }
 
@@ -91,11 +99,13 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
     public List<UserPowerVO> queryResourceModules(Long userId) {
         List<UserPowerVO> vos = baseMapper.queryRoles(userId);
         if (ObjUtil.isNull(vos)) {
+            log.warn("userId: {} 查无角色权限", userId);
             return Collections.emptyList();
         }
         for (UserPowerVO vo : vos) {
             List<String> modules = baseMapper.queryModulesByRoleId(vo.getRoleId());
             if (ObjUtil.isNull(modules)) {
+                log.warn("userId: {} roleId: {} 查无模块权限", userId, vo.getRoleId());
                 vo.setModules(Collections.emptyList());
             }
             vo.setModules(modules);

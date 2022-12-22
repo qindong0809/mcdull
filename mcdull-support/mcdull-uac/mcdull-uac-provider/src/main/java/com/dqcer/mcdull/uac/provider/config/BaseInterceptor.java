@@ -96,6 +96,9 @@ public class BaseInterceptor implements HandlerInterceptor {
                 List<UserPowerVO> userPower = cacheChannel.get(userPowerCacheKey, List.class);
                 if (ObjUtil.isNull(userPower)) {
                     userPower = FeignResultParse.getInstance(userService.queryResourceModules(unifySession.getUserId()));
+                    if (log.isDebugEnabled()) {
+                        log.debug("userPower: {}", userPower);
+                    }
                     cacheChannel.put(userPowerCacheKey, userPower, 3000);
                 }
                 boolean anyMatch = userPower.stream().anyMatch(i -> i.getModules().contains(code));
