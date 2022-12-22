@@ -1,10 +1,10 @@
 package com.dqcer.mcdull.framework.web.aspect;
 
+import com.dqcer.framework.base.annotation.ITransformer;
 import com.dqcer.framework.base.annotation.Transform;
 import com.dqcer.framework.base.enums.IEnum;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.mcdull.framework.web.transform.DictITransformer;
 import com.dqcer.mcdull.framework.web.transform.EnumITransformer;
 import com.dqcer.mcdull.framework.web.transform.ReflectUtil;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -31,8 +31,7 @@ public class TranslatorAspect {
     private static final Logger log = LoggerFactory.getLogger(TranslatorAspect.class);
 
     @Resource
-    private DictITransformer dictTransformer;
-
+    private ITransformer transform;
 
     @Pointcut("@annotation(com.dqcer.framework.base.annotation.Transform) ")
     public void translatorPointCut() {
@@ -117,7 +116,7 @@ public class TranslatorAspect {
 //            }
 //        }
 
-        String translate = dictTransformer.transform(filedValue, annotation.dataSource(), annotation.param());
+        String translate = transform.transform(filedValue, annotation.dataSource(), annotation.param());
         if (null != translate) {
             ReflectUtil.invokeSet(result, field, translate);
         }

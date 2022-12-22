@@ -60,7 +60,7 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
 
         ${cfg.entityName} entity = ${cfg.convertName}.convertTo${cfg.entityName}(dto);
         entity.setCreatedBy(UserContextHolder.getSession().getUserId());
-        Long id = ${(cfg.repositoryName?substring(1))?uncap_first}.insert(entity);
+        ${(cfg.repositoryName?substring(1))?uncap_first}.insert(entity);
         return Result.ok(entity.getId());
     }
 

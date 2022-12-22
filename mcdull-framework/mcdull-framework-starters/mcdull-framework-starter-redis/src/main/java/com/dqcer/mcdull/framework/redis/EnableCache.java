@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
  * @author dqcer
  * @version 2021/09/10
  */
-@EnableCaching
+@EnableCaching(proxyTargetClass = true)
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Import({RedissonAutoConfiguration.class, RedissonCache.class, CaffeineCache.class, RedisClient.class})

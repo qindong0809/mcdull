@@ -7,6 +7,7 @@ import com.dqcer.mcdull.uac.provider.config.EnableUacFeignClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * 身份验证应用程序
@@ -20,6 +21,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableCache
 @EnableDiscoveryClient
 @SpringBootApplication
+@EnableFeignClients(basePackages = {"com.dqcer.mcdull.framework.web.feign.service", "com.dqcer.mcdull.uac.client", "com.dqcer.mcdull.mdc.client"})
 public class UserDataContentApplication {
 
     public static void main(String[] args) {

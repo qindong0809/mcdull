@@ -6,12 +6,9 @@
         select
             sr.id as roleId,
             sr.name as roleName
-        FROM
-            sys_user_role ur
-        left join sys_role sr on
-                sr.id = ur .role_id
-        where
-            ur.user_id = #{userId} and sr.del_flag = 1 and sr.status = 1
+        FROM sys_user_role t
+        left join sys_role sr on sr.id = t.role_id
+        where t.user_id = #{userId} and sr.del_flag = 1 and sr.status = 1
     </select>
     <select id="queryModulesByRoleId" resultType="java.lang.String">
         select

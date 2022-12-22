@@ -4,11 +4,12 @@ import com.dqcer.framework.base.enums.StatusEnum;
 import com.dqcer.framework.base.dto.PagedDTO;
 import com.dqcer.framework.base.validator.ValidGroup;
 
-import com.dqcer.framework.base.annotation.EnumsStrValid;
+import com.dqcer.framework.base.annotation.EnumsIntValid;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
 * ${table.comment!} 接收客户端参数
@@ -56,7 +57,7 @@ public class ${cfg.dtoName} extends PagedDTO {
     </#if>
     <#if "Integer" == field.propertyType>
     @NotNull(groups = {ValidGroup.Add.class})
-    @EnumsValid(groups = {ValidGroup.Add.class}, value = StatusEnum.class)
+    @EnumsIntValid(groups = {ValidGroup.Add.class}, value = StatusEnum.class)
     private ${field.propertyType} ${field.propertyName};
     </#if>
     <#if "String" == field.propertyType>

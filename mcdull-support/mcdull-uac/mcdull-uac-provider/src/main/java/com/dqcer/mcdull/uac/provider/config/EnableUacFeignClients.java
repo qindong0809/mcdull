@@ -1,12 +1,6 @@
 package com.dqcer.mcdull.uac.provider.config;
 
-import org.springframework.cloud.openfeign.EnableFeignClients;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * feign 配置
@@ -17,11 +11,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@EnableFeignClients
 public @interface EnableUacFeignClients {
 
     @SuppressWarnings("unused")
-    String[] basePackages() default {"com.dqcer.mcdull.*.client.service", "com.dqcer.mcdull.framework.web.feign"};
+    String[] basePackages() default {"com.dqcer.mcdull.framework.web.feign.service", "com.dqcer.mcdull.uac.client", "com.dqcer.mcdull.mdc.client"};
 
 
 }

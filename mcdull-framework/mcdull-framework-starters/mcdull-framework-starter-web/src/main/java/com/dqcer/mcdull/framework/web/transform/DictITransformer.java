@@ -5,25 +5,24 @@ import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.wrapper.FeignResultParse;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import com.dqcer.mcdull.framework.web.feign.model.DictLiteDTO;
-import com.dqcer.mcdull.framework.web.feign.service.DictFeignClient;
 import com.dqcer.mcdull.framework.web.feign.model.DictVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.dqcer.mcdull.framework.web.feign.service.DictFeignClient;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
 
 @Component
-public class DictITransformer implements ITransformer {
+public class DictITransformer implements ITransformer<Object> {
 
-    private static final Logger log = LoggerFactory.getLogger(DictITransformer.class);
-
-    @Resource
-    private DictFeignClient dictFeignClient;
+    private final DictFeignClient dictFeignClient;
 
     @Resource
     private CacheChannel cacheChannel;
+
+    public DictITransformer(DictFeignClient dictFeignClient) {
+        this.dictFeignClient = dictFeignClient;
+    }
 
 
     /**

@@ -23,7 +23,7 @@ public class DictManagerImpl implements IDictManager {
     private static final Logger log = LoggerFactory.getLogger(DictManagerImpl.class);
 
     @Resource
-    private DictClientService sysDictClientService;
+    private DictClientService dictClientService;
 
     @Resource
     private CacheChannel cacheChannel;
@@ -55,7 +55,7 @@ public class DictManagerImpl implements IDictManager {
         if (log.isDebugEnabled()) {
             log.debug("查询字典数据请求参数: {}", dto);
         }
-        DictClientVO dictVO = FeignResultParse.getInstance(sysDictClientService.one(dto));
+        DictClientVO dictVO = FeignResultParse.getInstance(dictClientService.one(dto));
         RemoteDictVO vo = new RemoteDictVO();
         vo.setCode(dictVO.getCode());
         vo.setName(dictVO.getName());
