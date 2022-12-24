@@ -19,6 +19,13 @@ public abstract class KeywordDTO implements DTO {
     @Length(groups = {ValidGroup.Paged.class, ValidGroup.Keyword.class}, max = 512)
     private String keyword;
 
+    @Override
+    public String toString() {
+        return "KeywordDTO{" +
+                "keyword='" + keyword + '\'' +
+                '}';
+    }
+
     public String getKeyword() {
         return keyword;
     }

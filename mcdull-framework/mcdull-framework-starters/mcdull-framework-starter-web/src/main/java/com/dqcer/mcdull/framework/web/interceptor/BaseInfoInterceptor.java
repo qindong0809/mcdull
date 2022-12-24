@@ -45,9 +45,9 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        String requestURI = request.getRequestURI();
+        String requestUrl = request.getRequestURI();
         if (log.isDebugEnabled()) {
-            log.debug("Interceptor#preHandle requestURI:[{}]", requestURI);
+            log.debug("Interceptor#preHandle requestURI:[{}]", requestUrl);
         }
 
         if (! (handler instanceof HandlerMethod)) {
@@ -58,7 +58,7 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         UnAuthorize unauthorize = method.getMethodAnnotation(UnAuthorize.class);
         if (null != unauthorize) {
             if (log.isDebugEnabled()) {
-                log.debug("UnAuthorize: {}", requestURI);
+                log.debug("UnAuthorize: {}", requestUrl);
             }
             return true;
         }
@@ -80,7 +80,7 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         unifySession.setTraceId(request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER));
         UserContextHolder.setSession(unifySession);
 
-        if (requestURI.startsWith(GlobalConstant.FEIGN_PREFIX)) {
+        if (requestUrl.startsWith(GlobalConstant.FEIGN_PREFIX)) {
             return true;
         }
 

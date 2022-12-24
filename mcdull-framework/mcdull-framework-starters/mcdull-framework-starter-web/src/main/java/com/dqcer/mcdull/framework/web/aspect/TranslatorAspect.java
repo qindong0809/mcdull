@@ -5,7 +5,7 @@ import com.dqcer.framework.base.annotation.Transform;
 import com.dqcer.framework.base.enums.IEnum;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.mcdull.framework.web.transform.EnumITransformer;
+import com.dqcer.mcdull.framework.web.transform.EnumTransformer;
 import com.dqcer.mcdull.framework.web.transform.ReflectUtil;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -99,7 +99,7 @@ public class TranslatorAspect {
             return;
         }
         if (IEnum.class.isAssignableFrom(aClass)) {
-            String translate = new EnumITransformer().transform(filedValue, aClass, null);
+            String translate = new EnumTransformer().transform(filedValue, aClass, null);
             if (null != translate) {
                 ReflectUtil.invokeSet(result, field, translate);
             }

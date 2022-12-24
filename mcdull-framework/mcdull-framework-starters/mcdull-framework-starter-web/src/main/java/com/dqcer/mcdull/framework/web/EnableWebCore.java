@@ -6,7 +6,7 @@ import com.dqcer.mcdull.framework.web.advice.ExceptionAdvice;
 import com.dqcer.mcdull.framework.web.config.AutoConfiguration;
 import com.dqcer.mcdull.framework.web.config.DateTimeConfig;
 import com.dqcer.mcdull.framework.web.config.ThreadPoolConfig;
-import com.dqcer.mcdull.framework.web.transform.DictITransformer;
+import com.dqcer.mcdull.framework.web.transform.DictTransformer;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
@@ -22,6 +22,6 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Import({ExceptionAdvice.class, BaseExceptionAdvice.class, AutoConfiguration.class, DateTimeConfig.class, DictITransformer.class, ThreadPoolConfig.class})
+@Import({ExceptionAdvice.class, BaseExceptionAdvice.class, AutoConfiguration.class, DateTimeConfig.class, DictTransformer.class, ThreadPoolConfig.class})
 public @interface EnableWebCore {
 }

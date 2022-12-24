@@ -24,10 +24,7 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 
 /**
@@ -41,7 +38,8 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
 
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
-    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private static final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3000, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1000));
+
 
     @Resource
     private McdullGatewayProperties mcdullGatewayProperties;

@@ -83,7 +83,7 @@ public class AutoConfiguration {
         // 防止全部更新删除
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
         // SQL规范检查
-        interceptor.addInnerInterceptor(new SQLReviewInnerInterceptor(context));
+        interceptor.addInnerInterceptor(new SqlReviewInnerInterceptor(context));
         return interceptor;
     }
 

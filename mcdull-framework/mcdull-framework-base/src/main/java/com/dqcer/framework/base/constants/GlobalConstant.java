@@ -37,5 +37,20 @@ public class GlobalConstant {
          */
         public static final String SQL_LIMIT_1 = "LIMIT 1";
     }
+
+    public static class Number {
+
+        public static final Integer NUMBER_0 = 0;
+        public static final Integer NUMBER_1 = 1;
+        public static final Integer NUMBER_2 = 2;
+        public static final Integer NUMBER_3 = 3;
+        public static final Integer NUMBER_4 = 4;
+        public static final Integer NUMBER_5 = 5;
+        public static final Integer NUMBER_6 = 6;
+        public static final Integer NUMBER_7 = 7;
+        public static final Integer NUMBER_8 = 8;
+        public static final Integer NUMBER_9 = 9;
+    }
+
 }
 

@@ -1,5 +1,7 @@
 package com.dqcer.framework.base.util;
 
+import com.dqcer.framework.base.constants.GlobalConstant;
+
 import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Random;
@@ -13,10 +15,10 @@ import java.util.UUID;
  */
 public class RandomUtil {
 
-    private static final SecureRandom numberGenerator = new SecureRandom();
+    private static final SecureRandom NUMBER_GENERATOR = new SecureRandom();
 
     public static int random(int min, int max) {
-        return min + numberGenerator.nextInt(max - min);
+        return min + NUMBER_GENERATOR.nextInt(max - min);
     }
 
     /**
@@ -26,8 +28,9 @@ public class RandomUtil {
      * @return int
      */
     public static int gen09(int len) {
-        if (len < 1 || len > 9)
+        if (len < GlobalConstant.Number.NUMBER_1 || len > GlobalConstant.Number.NUMBER_9) {
             throw new IllegalArgumentException("len must be 1~9");
+        }
         int d = (int) Math.pow(10, len - 1);
         return d + new Random().nextInt(d * 9);
     }
@@ -39,8 +42,10 @@ public class RandomUtil {
      * @return
      */
     public static String genAz09(int len) {
-        if (len < 1 || len > 32)
+        int max = 32;
+        if (len < 1 || len > max) {
             throw new IllegalArgumentException("len must be 1~32");
+        }
         String s = UUID.randomUUID().toString().replaceAll("-", "");
         return s.substring(32 - len);
     }
@@ -62,20 +67,26 @@ public class RandomUtil {
     public static String randomUUID() {
         /* random */
         byte[] randomBytes = new byte[16];
-        numberGenerator.nextBytes(randomBytes);
-        randomBytes[6] &= 0x0f; /* clear version */
-        randomBytes[6] |= 0x40; /* set to version 4 */
-        randomBytes[8] &= 0x3f; /* clear variant */
-        randomBytes[8] |= 0x80; /* set to IETF variant */
+        NUMBER_GENERATOR.nextBytes(randomBytes);
+        // clear version
+        randomBytes[6] &= 0x0f;
+        // set to version 4
+        randomBytes[6] |= 0x40;
+        // clear variant
+        randomBytes[8] &= 0x3f;
+        // set to IETF variant
+        randomBytes[8] |= 0x80;
 
         /* uuid */
         long msb = 0;
         long lsb = 0;
         assert randomBytes.length == 16 : "data must be 16 bytes in length";
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++) {
             msb = (msb << 8) | (randomBytes[i] & 0xff);
-        for (int i = 8; i < 16; i++)
+        }
+        for (int i = 8; i < 16; i++) {
             lsb = (lsb << 8) | (randomBytes[i] & 0xff);
+        }
 
         return toString(msb, lsb);
     }

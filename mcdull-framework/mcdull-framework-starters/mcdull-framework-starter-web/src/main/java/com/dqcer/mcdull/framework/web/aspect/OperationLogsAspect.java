@@ -60,13 +60,13 @@ public class OperationLogsAspect {
         }
 
         HttpServletRequest request = requestAttributes.getRequest();
-        String requestURI = request.getRequestURI();
+        String requestUrl = request.getRequestURI();
 
         if (log.isDebugEnabled()) {
-            log.debug("Operation Logs Url:{}", requestURI);
+            log.debug("Operation Logs Url:{}", requestUrl);
         }
 
-        if (ignoreFilter(requestURI, pathList)) {
+        if (ignoreFilter(requestUrl, PATH_LIST)) {
             return joinPoint.proceed();
         }
 
@@ -128,7 +128,7 @@ public class OperationLogsAspect {
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String element = headerNames.nextElement();
-            if (element.equalsIgnoreCase("User-Agent")) {
+            if ("User-Agent".equalsIgnoreCase(element)) {
                 userAgent = request.getHeader(element);
             }
         }
@@ -138,10 +138,10 @@ public class OperationLogsAspect {
 
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
-    public static final List<String> pathList = new ArrayList<>();
+    public static final List<String> PATH_LIST = new ArrayList<>();
 
     static {
-        pathList.add("/feign/**");
+        PATH_LIST.add("/feign/**");
     }
 
 

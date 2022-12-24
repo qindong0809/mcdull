@@ -1,5 +1,7 @@
 package com.dqcer.mcdull.framework.mysql.aspect;
 
+import com.dqcer.framework.base.constants.GlobalConstant;
+import com.dqcer.framework.base.constants.SymbolConstants;
 import com.dqcer.mcdull.framework.mysql.annotation.DynamicDataSource;
 import com.dqcer.mcdull.framework.mysql.config.DynamicContextHolder;
 import org.aspectj.lang.JoinPoint;
@@ -15,6 +17,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.jdbc.support.incrementer.SybaseAnywhereMaxValueIncrementer;
 
 import java.lang.reflect.Method;
 import java.util.Deque;
@@ -67,7 +70,7 @@ public class DataSourceAspect {
      * @return
      */
     private String calculateValue(String annoValue, Method method, Object[] arguments) {
-        if(!annoValue.startsWith("#")) {
+        if(!annoValue.startsWith(SymbolConstants.JH)) {
             return annoValue;
         }
         EvaluationContext context = new MethodBasedEvaluationContext(null, method, arguments, NAME_DISCOVERER);

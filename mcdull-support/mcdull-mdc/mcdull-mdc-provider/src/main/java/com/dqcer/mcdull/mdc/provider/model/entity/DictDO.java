@@ -69,6 +69,23 @@ public class DictDO implements DO {
      */
     private Integer delFlag;
 
+    @Override
+    public String toString() {
+        return "DictDO{" +
+                "code='" + code + '\'' +
+                ", parentCode='" + parentCode + '\'' +
+                ", name='" + name + '\'' +
+                ", nameShort='" + nameShort + '\'' +
+                ", selectType='" + selectType + '\'' +
+                ", sort=" + sort +
+                ", defaulted=" + defaulted +
+                ", status=" + status +
+                ", remark='" + remark + '\'' +
+                ", language='" + language + '\'' +
+                ", delFlag=" + delFlag +
+                '}';
+    }
+
     public String getCode() {
         return code;
     }

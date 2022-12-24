@@ -59,8 +59,10 @@ public class CustomIdGenerator implements IdentifierGenerator {
             Enumeration addresses = network.getInetAddresses();
             while (addresses.hasMoreElements()) {
                 InetAddress address = (InetAddress) addresses.nextElement();
-                if (address != null && (address instanceof Inet4Address || address instanceof Inet6Address)) {
-                    list.add(address.getHostAddress());
+                if (address != null) {
+                    if ((address instanceof Inet4Address || address instanceof Inet6Address)) {
+                        list.add(address.getHostAddress());
+                    }
                 }
             }
         }

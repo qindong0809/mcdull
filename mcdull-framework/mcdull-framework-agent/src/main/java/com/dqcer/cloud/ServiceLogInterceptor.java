@@ -1,6 +1,5 @@
 package com.dqcer.cloud;
 
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import com.alibaba.fastjson.JSONArray;
@@ -30,8 +29,8 @@ import java.util.concurrent.Callable;
 public class ServiceLogInterceptor {
 
 
-    public static final IdWorker logId = new IdWorker(1,1,1);
-    public static final IdWorker idWorker = new IdWorker(2,2,2);
+    public static final IdWorker LOG_ID = new IdWorker(1,1,1);
+    public static final IdWorker ID_WORKER = new IdWorker(2,2,2);
 
     private static final Logger log = LoggerFactory.getLogger(McdullListener.class);
 
@@ -136,7 +135,7 @@ public class ServiceLogInterceptor {
 
     private void saveDB(ServiceLog log, List<ServiceGcLog> gcLogs) throws SQLException {
         // TODO: 2022/11/16 暂定
-        long id = logId.nextId();
+        long id = LOG_ID.nextId();
         use.insert(Entity.create("service_log")
                 .set("id", id)
                 .set("trace_id", UUID.randomUUID().toString())
@@ -172,7 +171,7 @@ public class ServiceLogInterceptor {
 
         for (ServiceGcLog gcLog : gcLogs) {
             use.insert(Entity.create("service_gc_log")
-                    .set("id", idWorker.nextId())
+                    .set("id", ID_WORKER.nextId())
                     .set("service_log_id", id)
                     .set("name", gcLog.getName())
                     .set("memory_pool_names", gcLog.getMemoryPoolNames())

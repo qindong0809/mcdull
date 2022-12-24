@@ -12,15 +12,21 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.text.MessageFormat;
 
+/**
+ * 码表翻译
+ *
+ * @author dqcer
+ * @version 2022/12/23
+ */
 @Component
-public class DictITransformer implements ITransformer<Object> {
+public class DictTransformer implements ITransformer<Object> {
 
     private final DictFeignClient dictFeignClient;
 
     @Resource
     private CacheChannel cacheChannel;
 
-    public DictITransformer(DictFeignClient dictFeignClient) {
+    public DictTransformer(DictFeignClient dictFeignClient) {
         this.dictFeignClient = dictFeignClient;
     }
 

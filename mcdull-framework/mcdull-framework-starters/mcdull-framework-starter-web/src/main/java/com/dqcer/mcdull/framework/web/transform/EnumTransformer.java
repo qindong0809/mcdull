@@ -6,14 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * enum类统一处理
+ * enum类翻译统一处理
  *
  * @author dqcer
  * @version 2022/10/05
  */
-public class EnumITransformer implements ITransformer<Object> {
+public class EnumTransformer implements ITransformer<Object> {
 
-    private static final Logger log = LoggerFactory.getLogger(EnumITransformer.class);
+    private static final Logger log = LoggerFactory.getLogger(EnumTransformer.class);
 
 
     /**

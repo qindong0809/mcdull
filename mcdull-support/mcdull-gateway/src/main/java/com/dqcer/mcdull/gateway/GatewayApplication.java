@@ -55,7 +55,7 @@ public class GatewayApplication {
      * @return {@link Result}<{@link String}>
      */
     @GetMapping("log")
-    public Result<String> testAgentGC() {
+    public Result<String> testAgentGc() {
         for (int i = 0; i < 10000; i++) {
             s += new String("dfd");
         }

@@ -55,8 +55,8 @@ public class SpringContextHolder implements ApplicationContextAware, Environment
      * @param spEL spring表达式，须用"${spEL}"括起来
      * @return 表达式的值
      */
-    public static String getSpringValue(String spEL) {
-        return stringValueResolver.resolveStringValue(spEL);
+    public static String getSpringValue(String spel) {
+        return stringValueResolver.resolveStringValue(spel);
     }
 
     /**

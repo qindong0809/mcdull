@@ -8,32 +8,55 @@ package com.dqcer.cloud;
  */
 public class IdWorker {
 
-    //因为二进制里第一个 bit 为如果是 1，那么都是负数，但是我们生成的 id 都是正数，所以第一个 bit 统一都是 0。
+    /**因为二进制里第一个 bit 为如果是 1，那么都是负数，但是我们生成的 id 都是正数，所以第一个 bit 统一都是 0。*/
 
-    //机器ID  2进制5位  32位减掉1位 31个
+    /**
+     * 机器ID  2进制5位  32位减掉1位 31个
+     */
     private long workerId;
-    //机房ID 2进制5位  32位减掉1位 31个
+    /**
+     * 机房ID 2进制5位  32位减掉1位 31个
+     */
     private long datacenterId;
-    //代表一毫秒内生成的多个id的最新序号  12位 4096 -1 = 4095 个
+    /**
+     * 代表一毫秒内生成的多个id的最新序号  12位 4096 -1 = 4095 个
+     */
     private long sequence;
-    //设置一个时间初始值    2^41 - 1   差不多可以用69年
+
+    /**
+     * 设置一个时间初始值    2^41 - 1   差不多可以用69年
+     */
     private long twepoch = 1585644268888L;
-    //5位的机器id
+
+    /**
+     * 5位的机器id
+     */
     private long workerIdBits = 5L;
-    //5位的机房id
+    /**
+     * 5位的机房id
+     */
     private long datacenterIdBits = 5L;
-    //每毫秒内产生的id数 2 的 12次方
+
+    /**
+     * 每毫秒内产生的id数 2 的 12次方
+     */
     private long sequenceBits = 12L;
-    // 这个是二进制运算，就是5 bit最多只能有31个数字，也就是说机器id最多只能是32以内
+    /**
+     * 这个是二进制运算，就是5 bit最多只能有31个数字，也就是说机器id最多只能是32以内
+     */
     private long maxWorkerId = -1L ^ (-1L << workerIdBits);
-    // 这个是一个意思，就是5 bit最多只能有31个数字，机房id最多只能是32以内
+    /**
+     * 这个是一个意思，就是5 bit最多只能有31个数字，机房id最多只能是32以内
+     */
     private long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
 
     private long workerIdShift = sequenceBits;
     private long datacenterIdShift = sequenceBits + workerIdBits;
     private long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
     private long sequenceMask = -1L ^ (-1L << sequenceBits);
-    //记录产生时间毫秒数，判断是否是同1毫秒
+    /**
+     * 记录产生时间毫秒数，判断是否是同1毫秒
+     */
     private long lastTimestamp = -1L;
     public long getWorkerId(){
         return workerId;
@@ -65,7 +88,10 @@ public class IdWorker {
         this.sequence = sequence;
     }
 
-    // 这个是核心方法，通过调用nextId()方法，让当前这台机器上的snowflake算法程序生成一个全局唯一的id
+    /**
+     * 这个是核心方法，通过调用nextId()方法，让当前这台机器上的snowflake算法程序生成一个全局唯一的id
+     * @return
+     */
     public synchronized long nextId() {
         // 这儿就是获取当前时间戳，单位是毫秒
         long timestamp = timeGen();
@@ -117,7 +143,12 @@ public class IdWorker {
         }
         return timestamp;
     }
-    //获取当前时间戳
+
+    /**
+     * 获取当前时间戳
+     *
+     * @return long
+     */
     private long timeGen(){
         return System.currentTimeMillis();
     }
@@ -134,7 +165,7 @@ public class IdWorker {
         System.out.println(6&4596);
         System.out.println(6&4596);
 		IdWorker worker = new IdWorker(1,1,1);
-		for (int i = 0; i < 22; i++) {
+		for (int i = 0; i < 9; i++) {
 			System.out.println(worker.nextId());
 		}
     }

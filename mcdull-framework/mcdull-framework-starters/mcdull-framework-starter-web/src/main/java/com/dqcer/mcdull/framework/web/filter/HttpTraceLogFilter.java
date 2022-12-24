@@ -28,10 +28,10 @@ public class HttpTraceLogFilter implements Filter {
             throws ServletException, IOException {
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        String requestURI = request.getRequestURI();
+        String requestUrl = request.getRequestURI();
 
         if (log.isDebugEnabled()) {
-            log.debug("doFilter url: {}", requestURI);
+            log.debug("doFilter url: {}", requestUrl);
         }
         if (!isRequestValid(request)) {
             log.warn("非法请求....");
@@ -42,7 +42,7 @@ public class HttpTraceLogFilter implements Filter {
         try {
             String traceId = request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER);
             if(null == traceId || traceId.trim().length() == 0) {
-                log.warn("url: {} traceId is null", requestURI);
+                log.warn("url: {} traceId is null", requestUrl);
                 traceId = RandomUtil.randomUUID();
             }
             MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);

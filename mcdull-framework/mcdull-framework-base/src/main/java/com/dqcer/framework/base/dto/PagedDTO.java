@@ -32,6 +32,14 @@ public abstract class PagedDTO extends KeywordDTO implements IPaged {
     private Long currentPage;
 
     @Override
+    public String toString() {
+        return "PagedDTO{" +
+                "pageSize=" + pageSize +
+                ", currentPage=" + currentPage +
+                "} " + super.toString();
+    }
+
+    @Override
     public Long getPageSize() {
         return pageSize;
     }

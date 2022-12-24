@@ -63,20 +63,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author dqcer
  * @date 2022/12/23
  */
-public class SQLReviewInnerInterceptor extends JsqlParserSupport implements InnerInterceptor {
+public class SqlReviewInnerInterceptor extends JsqlParserSupport implements InnerInterceptor {
 
     private final ApplicationContext context;
 
     /**
      * 缓存验证结果，提高性能
      */
-    private static final Set<String> cacheValidResult = new HashSet<>();
+    private static final Set<String> CACHE_VALID_RESULT = new HashSet<>();
     /**
      * 缓存表的索引信息
      */
-    private static final Map<String, List<SQLReviewInnerInterceptor.IndexInfo>> indexInfoMap = new ConcurrentHashMap<>();
+    private static final Map<String, List<SqlReviewInnerInterceptor.IndexInfo>> INDEX_INFO_MAP = new ConcurrentHashMap<>();
 
-    public SQLReviewInnerInterceptor(ApplicationContext context) {
+    public SqlReviewInnerInterceptor(ApplicationContext context) {
         this.context = context;
     }
 
@@ -98,13 +98,13 @@ public class SQLReviewInnerInterceptor extends JsqlParserSupport implements Inne
         String originalSql = boundSql.getSql();
         logger.debug("检查SQL是否合规，SQL:" + originalSql);
         String md5Base64 = EncryptUtils.md5Base64(originalSql);
-        if (cacheValidResult.contains(md5Base64)) {
+        if (CACHE_VALID_RESULT.contains(md5Base64)) {
             logger.debug("该SQL已验证，无需再次验证，，SQL:" + originalSql);
             return;
         }
         parserSingle(originalSql, connection);
         //缓存验证结果
-        cacheValidResult.add(md5Base64);
+        CACHE_VALID_RESULT.add(md5Base64);
     }
 
     @Override
@@ -217,8 +217,8 @@ public class SQLReviewInnerInterceptor extends JsqlParserSupport implements Inne
             dbName = tableArray[0];
             tableName = tableArray[1];
         }
-        List<SQLReviewInnerInterceptor.IndexInfo> indexInfos = getIndexInfos(dbName, tableName, connection);
-        for (SQLReviewInnerInterceptor.IndexInfo indexInfo : indexInfos) {
+        List<SqlReviewInnerInterceptor.IndexInfo> indexInfos = getIndexInfos(dbName, tableName, connection);
+        for (SqlReviewInnerInterceptor.IndexInfo indexInfo : indexInfos) {
             if (null != columnName && columnName.equalsIgnoreCase(indexInfo.getColumnName())) {
                 useIndexFlag = true;
                 break;
@@ -290,7 +290,7 @@ public class SQLReviewInnerInterceptor extends JsqlParserSupport implements Inne
      * @param conn      ignore
      * @return ignore
      */
-    public List<SQLReviewInnerInterceptor.IndexInfo> getIndexInfos(String dbName, String tableName, Connection conn) {
+    public List<SqlReviewInnerInterceptor.IndexInfo> getIndexInfos(String dbName, String tableName, Connection conn) {
         return getIndexInfos(null, dbName, tableName, conn);
     }
 
@@ -303,10 +303,10 @@ public class SQLReviewInnerInterceptor extends JsqlParserSupport implements Inne
      * @param conn      ignore
      * @return ignore
      */
-    public List<SQLReviewInnerInterceptor.IndexInfo> getIndexInfos(String key, String dbName, String tableName, Connection conn) {
-        List<SQLReviewInnerInterceptor.IndexInfo> indexInfos = null;
+    public List<SqlReviewInnerInterceptor.IndexInfo> getIndexInfos(String key, String dbName, String tableName, Connection conn) {
+        List<SqlReviewInnerInterceptor.IndexInfo> indexInfos = null;
         if (StringUtils.isNotBlank(key)) {
-            indexInfos = indexInfoMap.get(key);
+            indexInfos = INDEX_INFO_MAP.get(key);
         }
         if (indexInfos == null || indexInfos.isEmpty()) {
             ResultSet rs;
@@ -319,7 +319,7 @@ public class SQLReviewInnerInterceptor extends JsqlParserSupport implements Inne
                 while (rs.next()) {
                     //索引中的列序列号等于1，才有效
                     if (Objects.equals(rs.getString(8), "1")) {
-                        SQLReviewInnerInterceptor.IndexInfo indexInfo = new SQLReviewInnerInterceptor.IndexInfo();
+                        SqlReviewInnerInterceptor.IndexInfo indexInfo = new SqlReviewInnerInterceptor.IndexInfo();
                         indexInfo.setDbName(rs.getString(1));
                         indexInfo.setTableName(rs.getString(3));
                         indexInfo.setColumnName(rs.getString(9));
@@ -327,7 +327,7 @@ public class SQLReviewInnerInterceptor extends JsqlParserSupport implements Inne
                     }
                 }
                 if (StringUtils.isNotBlank(key)) {
-                    indexInfoMap.put(key, indexInfos);
+                    INDEX_INFO_MAP.put(key, indexInfos);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

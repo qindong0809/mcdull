@@ -33,6 +33,15 @@ public class DictClientDTO implements DTO {
     @EnumsStrValid(value = LanguageEnum.class, groups = { ValidGroup.One.class, ValidGroup.List.class })
     private String language;
 
+    @Override
+    public String toString() {
+        return "DictClientDTO{" +
+                "code='" + code + '\'' +
+                ", selectType='" + selectType + '\'' +
+                ", language='" + language + '\'' +
+                '}';
+    }
+
     public String getCode() {
         return code;
     }

@@ -10,5 +10,8 @@ import com.dqcer.framework.base.dto.PagedDTO;
  */
 public class DictLiteDTO extends PagedDTO {
 
-
+    @Override
+    public String toString() {
+        return "DictLiteDTO{} " + super.toString();
+    }
 }
