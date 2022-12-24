@@ -58,6 +58,28 @@ public class MenuDO extends BaseDO {
      */
     private String type;
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("MenuDO{");
+        sb.append("delFlag=").append(delFlag);
+        sb.append(", parentId=").append(parentId);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", icon='").append(icon).append('\'');
+        sb.append(", sort=").append(sort);
+        sb.append(", resCode='").append(resCode).append('\'');
+        sb.append(", path='").append(path).append('\'');
+        sb.append(", component='").append(component).append('\'');
+        sb.append(", type='").append(type).append('\'');
+        sb.append(", createdTime=").append(createdTime);
+        sb.append(", createdBy=").append(createdBy);
+        sb.append(", updatedTime=").append(updatedTime);
+        sb.append(", updatedBy=").append(updatedBy);
+        sb.append(", status=").append(status);
+        sb.append(", id=").append(id);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Integer getDelFlag() {
         return delFlag;
     }

@@ -82,6 +82,28 @@ public class RoleVO implements VO {
     @Transform(from = "type", param = "data_type")
     private String typeStr;
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("RoleVO{");
+        sb.append("id=").append(id);
+        sb.append(", createdTime=").append(createdTime);
+        sb.append(", createdBy=").append(createdBy);
+        sb.append(", createdByStr='").append(createdByStr).append('\'');
+        sb.append(", updatedTime=").append(updatedTime);
+        sb.append(", updatedBy=").append(updatedBy);
+        sb.append(", updatedByStr='").append(updatedByStr).append('\'');
+        sb.append(", status=").append(status);
+        sb.append(", statusStr='").append(statusStr).append('\'');
+        sb.append(", delFlag=").append(delFlag);
+        sb.append(", delFlagStr='").append(delFlagStr).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", type=").append(type);
+        sb.append(", typeStr='").append(typeStr).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
+
     public String getTypeStr() {
         return typeStr;
     }

@@ -16,6 +16,8 @@ public class GlobalConstant {
      */
     public static final String FEIGN_PREFIX = "/feign";
 
+
+
     public static class Environment {
 
         /**

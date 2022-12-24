@@ -54,6 +54,25 @@ public class MenuVO extends TreeVO<MenuVO, Long> {
     @Transform(from = "type", dataSource = MenuTypeEnum.class)
     private String typeStr;
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("MenuVO{");
+        sb.append("status=").append(status);
+        sb.append(", statusStr='").append(statusStr).append('\'');
+        sb.append(", delFlag=").append(delFlag);
+        sb.append(", delFlagStr='").append(delFlagStr).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", resCode='").append(resCode).append('\'');
+        sb.append(", type=").append(type);
+        sb.append(", typeStr='").append(typeStr).append('\'');
+        sb.append(", id=").append(id);
+        sb.append(", pid=").append(pid);
+        sb.append(", hasChild=").append(hasChild);
+        sb.append(", children=").append(children);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Integer getStatus() {
         return status;
     }

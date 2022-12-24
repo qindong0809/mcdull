@@ -58,6 +58,24 @@ public class RemoteDictVO implements VO {
      */
     private Integer delFlag;
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("RemoteDictVO{");
+        sb.append("code='").append(code).append('\'');
+        sb.append(", parentCode='").append(parentCode).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", nameShort='").append(nameShort).append('\'');
+        sb.append(", selectType='").append(selectType).append('\'');
+        sb.append(", sort=").append(sort);
+        sb.append(", defaulted=").append(defaulted);
+        sb.append(", status=").append(status);
+        sb.append(", remark='").append(remark).append('\'');
+        sb.append(", language='").append(language).append('\'');
+        sb.append(", delFlag=").append(delFlag);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public String getCode() {
         return code;
     }

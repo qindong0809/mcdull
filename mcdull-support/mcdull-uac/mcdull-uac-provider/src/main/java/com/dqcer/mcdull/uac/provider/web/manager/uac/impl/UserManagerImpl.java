@@ -15,6 +15,12 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 用户通用逻辑实现层
+ *
+ * @author dqcer
+ * @version 2022/12/25
+ */
 @Service
 public class UserManagerImpl implements IUserManager {
 

@@ -3,6 +3,12 @@ package com.dqcer.mcdull.framework.config.properties;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 网关属性
+ *
+ * @author dqcer
+ * @version 2022/12/25
+ */
 public class GatewayProperties {
 
     /**

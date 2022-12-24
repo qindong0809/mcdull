@@ -13,6 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * 用户 feign 实现层
+ *
+ * @author dqcer
+ * @version 2022/12/25
+ */
 @RestController
 public class UserApi implements UserServiceApi {
 
@@ -32,8 +38,8 @@ public class UserApi implements UserServiceApi {
     /**
      * 用户详情
      *
-     * @param userId
-     * @return {@link Long}
+     * @param userId 用户id
+     * @return {@link Result}<{@link RemoteUserVO}>
      */
     @Override
     public Result<RemoteUserVO> getDetail(Long userId) {

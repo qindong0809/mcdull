@@ -56,4 +56,9 @@ public class HttpHeaderConstants {
      */
     public static final String LOG_TRACE_ID = "traceId";
 
+    /**
+     * 未知
+     */
+    public static final String UNKNOWN = "unknown";
+
 }

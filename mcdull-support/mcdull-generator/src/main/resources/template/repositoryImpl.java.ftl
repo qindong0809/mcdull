@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
-* ${table.comment!} Repository 实现
+* ${table.comment!} 数据库操作封装实现层
 *
 * @author ${author}
 * @version ${date}

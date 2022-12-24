@@ -70,6 +70,19 @@ public class UserLiteDTO extends PagedDTO {
      */
     private List<Long> roleIds;
 
+    @Override
+    public String toString() {
+        return "UserLiteDTO{" +
+                "id=" + id +
+                ", status=" + status +
+                ", delFlag=" + delFlag +
+                ", nickname='" + nickname + '\'' +
+                ", account='" + account + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", roleIds=" + roleIds +
+                "} " + super.toString();
+    }
 
     public List<Long> getRoleIds() {
         return roleIds;

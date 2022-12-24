@@ -105,6 +105,32 @@ public class RemoteUserVO implements VO {
      */
     private List<BaseVO> roles;
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("RemoteUserVO{");
+        sb.append("id=").append(id);
+        sb.append(", createdTime=").append(createdTime);
+        sb.append(", createdBy=").append(createdBy);
+        sb.append(", createdByStr='").append(createdByStr).append('\'');
+        sb.append(", updatedTime=").append(updatedTime);
+        sb.append(", updatedBy=").append(updatedBy);
+        sb.append(", updatedByStr='").append(updatedByStr).append('\'');
+        sb.append(", status=").append(status);
+        sb.append(", statusStr='").append(statusStr).append('\'');
+        sb.append(", delFlag=").append(delFlag);
+        sb.append(", delFlagStr='").append(delFlagStr).append('\'');
+        sb.append(", account='").append(account).append('\'');
+        sb.append(", nickname='").append(nickname).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", phone='").append(phone).append('\'');
+        sb.append(", lastLoginTime=").append(lastLoginTime);
+        sb.append(", type=").append(type);
+        sb.append(", typeStr='").append(typeStr).append('\'');
+        sb.append(", roles=").append(roles);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public List<BaseVO> getRoles() {
         return roles;
     }

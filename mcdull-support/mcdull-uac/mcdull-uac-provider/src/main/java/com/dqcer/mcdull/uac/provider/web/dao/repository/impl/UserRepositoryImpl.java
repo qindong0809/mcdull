@@ -28,6 +28,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 用户存储库impl
+ *
+ * @author dqcer
+ * @date 2022/12/25
+ */
 @Service
 public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implements IUserRepository {
 

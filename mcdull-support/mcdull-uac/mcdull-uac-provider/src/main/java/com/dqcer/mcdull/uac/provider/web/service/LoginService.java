@@ -130,7 +130,9 @@ public class LoginService {
         LocalDateTime lastActiveTime = user.getLastActiveTime();
 
         LocalDateTime now = LocalDateTime.now();
-        if (lastActiveTime.plusMinutes(30).isBefore(now)) {
+        // TODO: 2022/12/25 过期时间， 需要写入配置文件
+        int expirationTime = 30;
+        if (lastActiveTime.plusMinutes(expirationTime).isBefore(now)) {
             log.warn("token valid:  用户操作已过期");
             return Result.error(ResultCode.TIMEOUT_LOGIN);
         }

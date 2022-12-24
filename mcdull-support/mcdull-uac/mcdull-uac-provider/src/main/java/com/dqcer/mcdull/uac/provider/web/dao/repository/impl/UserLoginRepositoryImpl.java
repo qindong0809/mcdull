@@ -8,6 +8,12 @@ import com.dqcer.mcdull.uac.provider.web.dao.mapper.UserLoginMapper;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserLoginRepository;
 import org.springframework.stereotype.Service;
 
+/**
+ * 用户登录信息 数据库操作实现层
+ *
+ * @author dqcer
+ * @version 2022/12/25
+ */
 @Service
 public class UserLoginRepositoryImpl extends ServiceImpl<UserLoginMapper, UserLoginDO> implements IUserLoginRepository {
 

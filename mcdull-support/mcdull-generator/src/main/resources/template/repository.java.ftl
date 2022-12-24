@@ -7,7 +7,7 @@ import ${cfg.apiEntity}.${cfg.entityName};
 import ${cfg.apiDto}.${cfg.dtoName};
 
 /**
-* ${table.comment!} 数据查询封装接口
+* ${table.comment!} 数据库操作封装接口层
 *
 * @author ${author}
 * @version ${date}

@@ -59,6 +59,28 @@ public class UserDO extends BaseDO {
      */
     private Integer type;
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("UserDO{");
+        sb.append("delFlag=").append(delFlag);
+        sb.append(", nickname='").append(nickname).append('\'');
+        sb.append(", account='").append(account).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", salt='").append(salt).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", phone='").append(phone).append('\'');
+        sb.append(", lastLoginTime=").append(lastLoginTime);
+        sb.append(", type=").append(type);
+        sb.append(", createdTime=").append(createdTime);
+        sb.append(", createdBy=").append(createdBy);
+        sb.append(", updatedTime=").append(updatedTime);
+        sb.append(", updatedBy=").append(updatedBy);
+        sb.append(", status=").append(status);
+        sb.append(", id=").append(id);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Integer getType() {
         return type;
     }

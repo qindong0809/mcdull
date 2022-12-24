@@ -50,6 +50,18 @@ public class RoleLiteDTO extends PagedDTO {
     @Length(groups = {ValidGroup.Add.class},  max = 2048)
     private String description;
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("RoleLiteDTO{");
+        sb.append("id=").append(id);
+        sb.append(", status=").append(status);
+        sb.append(", delFlag=").append(delFlag);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
+
     public String getDescription() {
         return description;
     }

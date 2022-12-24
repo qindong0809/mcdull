@@ -34,6 +34,17 @@ public class RoleMenuDO extends IdDO {
      */
     private Long roleId;
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("RoleMenuDO{");
+        sb.append("createdTime=").append(createdTime);
+        sb.append(", menuId=").append(menuId);
+        sb.append(", roleId=").append(roleId);
+        sb.append(", id=").append(id);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Date getCreatedTime() {
         return createdTime;
     }

@@ -105,6 +105,31 @@ public class UserVO implements VO {
      */
     private List<BaseVO> roles;
 
+    @Override
+    public String toString() {
+        return "UserVO{" +
+                "id=" + id +
+                ", createdTime=" + createdTime +
+                ", createdBy=" + createdBy +
+                ", createdByStr='" + createdByStr + '\'' +
+                ", updatedTime=" + updatedTime +
+                ", updatedBy=" + updatedBy +
+                ", updatedByStr='" + updatedByStr + '\'' +
+                ", status=" + status +
+                ", statusStr='" + statusStr + '\'' +
+                ", delFlag=" + delFlag +
+                ", delFlagStr='" + delFlagStr + '\'' +
+                ", account='" + account + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", lastLoginTime=" + lastLoginTime +
+                ", type=" + type +
+                ", typeStr='" + typeStr + '\'' +
+                ", roles=" + roles +
+                '}';
+    }
+
     public List<BaseVO> getRoles() {
         return roles;
     }

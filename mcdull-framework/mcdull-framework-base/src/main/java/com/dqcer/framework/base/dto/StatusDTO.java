@@ -29,6 +29,15 @@ public class StatusDTO implements DTO {
     @EnumsIntValid(value = StatusEnum.class, groups = ValidGroup.Status.class)
     private Integer status;
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("StatusDTO{");
+        sb.append("id=").append(id);
+        sb.append(", status=").append(status);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Long getId() {
         return id;
     }

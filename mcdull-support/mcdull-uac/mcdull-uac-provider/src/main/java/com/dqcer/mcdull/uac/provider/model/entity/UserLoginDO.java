@@ -40,6 +40,17 @@ public class UserLoginDO extends IdDO {
      */
     private Integer type;
 
+    @Override
+    public String toString() {
+        return "UserLoginDO{" +
+                "createdTime=" + createdTime +
+                ", userId=" + userId +
+                ", token='" + token + '\'' +
+                ", type=" + type +
+                ", id=" + id +
+                "} " + super.toString();
+    }
+
     public Date getCreatedTime() {
         return createdTime;
     }

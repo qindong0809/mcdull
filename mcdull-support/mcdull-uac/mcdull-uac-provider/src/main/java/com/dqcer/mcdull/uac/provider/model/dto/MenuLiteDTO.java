@@ -78,6 +78,25 @@ public class MenuLiteDTO extends PagedDTO {
      */
     private String type;
 
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("MenuLiteDTO{");
+        sb.append("id=").append(id);
+        sb.append(", status=").append(status);
+        sb.append(", delFlag=").append(delFlag);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", parentId=").append(parentId);
+        sb.append(", icon='").append(icon).append('\'');
+        sb.append(", sort=").append(sort);
+        sb.append(", resCode='").append(resCode).append('\'');
+        sb.append(", path='").append(path).append('\'');
+        sb.append(", component='").append(component).append('\'');
+        sb.append(", type='").append(type).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Long getParentId() {
         return parentId;
     }

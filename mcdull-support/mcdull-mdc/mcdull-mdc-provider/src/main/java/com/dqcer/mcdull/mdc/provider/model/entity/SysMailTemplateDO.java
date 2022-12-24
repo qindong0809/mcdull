@@ -74,6 +74,26 @@ public class SysMailTemplateDO extends IdDO {
      */
     private String content;
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("SysMailTemplateDO{");
+        sb.append("createdBy=").append(createdBy);
+        sb.append(", createdTime=").append(createdTime);
+        sb.append(", updatedBy=").append(updatedBy);
+        sb.append(", updatedTime=").append(updatedTime);
+        sb.append(", status=").append(status);
+        sb.append(", delFlag=").append(delFlag);
+        sb.append(", modelCode='").append(modelCode).append('\'');
+        sb.append(", templateName='").append(templateName).append('\'');
+        sb.append(", templateType='").append(templateType).append('\'');
+        sb.append(", descr='").append(descr).append('\'');
+        sb.append(", subject='").append(subject).append('\'');
+        sb.append(", content='").append(content).append('\'');
+        sb.append(", id=").append(id);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Long getCreatedBy() {
         return createdBy;
     }

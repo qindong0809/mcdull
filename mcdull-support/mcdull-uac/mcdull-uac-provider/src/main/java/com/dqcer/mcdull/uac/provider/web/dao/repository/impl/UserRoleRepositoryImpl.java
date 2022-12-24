@@ -16,6 +16,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 用户角色数据库操作封装实现层
+ *
+ * @author dqcer
+ * @version 2022/12/25
+ */
 @Service
 public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRoleDO> implements IUserRoleRepository {
 

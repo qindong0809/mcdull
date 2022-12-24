@@ -11,6 +11,12 @@ import com.dqcer.mcdull.mdc.provider.web.dao.mapper.DictMapper;
 import com.dqcer.mcdull.mdc.provider.web.dao.repository.IDictRepository;
 import org.springframework.stereotype.Service;
 
+/**
+ * 码表 数据库操作封装实现层
+ *
+ * @author dqcer
+ * @version  2022/12/25
+ */
 @Service
 public class DictRepositoryImpl extends ServiceImpl<DictMapper, DictDO> implements IDictRepository {
 

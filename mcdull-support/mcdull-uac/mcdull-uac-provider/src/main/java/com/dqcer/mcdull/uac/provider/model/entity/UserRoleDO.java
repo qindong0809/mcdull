@@ -34,6 +34,16 @@ public class UserRoleDO extends IdDO {
      */
     private Long roleId;
 
+    @Override
+    public String toString() {
+        return "UserRoleDO{" +
+                "createdTime=" + createdTime +
+                ", userId=" + userId +
+                ", roleId=" + roleId +
+                ", id=" + id +
+                "} " + super.toString();
+    }
+
     public Date getCreatedTime() {
         return createdTime;
     }
