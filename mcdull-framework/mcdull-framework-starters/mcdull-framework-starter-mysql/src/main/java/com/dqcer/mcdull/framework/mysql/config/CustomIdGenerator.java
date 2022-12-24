@@ -10,6 +10,12 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * 自定义id生成器
+ *
+ * @author dqcer
+ * @version 2022/12/24
+ */
 public class CustomIdGenerator implements IdentifierGenerator {
 
     private Snowflake snowflake;

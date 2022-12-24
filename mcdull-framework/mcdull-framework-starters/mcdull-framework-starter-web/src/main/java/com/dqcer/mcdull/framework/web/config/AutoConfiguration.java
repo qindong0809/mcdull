@@ -5,6 +5,7 @@ import com.dqcer.mcdull.framework.web.aspect.TranslatorAspect;
 import com.dqcer.mcdull.framework.web.feign.service.LogFeignClient;
 import com.dqcer.mcdull.framework.web.filter.HttpTraceLogFilter;
 import com.dqcer.mcdull.framework.web.listener.LogEventListener;
+import com.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -35,10 +36,10 @@ public class AutoConfiguration {
         return new LogEventListener(logFeignClient);
     }
 
-//    @Bean
-//    public SpringContextHolder springContextHolder() {
-//        return new SpringContextHolder();
-//    }
+    @Bean
+    public SpringContextHolder springContextHolder() {
+        return new SpringContextHolder();
+    }
 
     /**
      * 跟踪日志过滤器bean注册

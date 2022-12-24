@@ -1,13 +1,14 @@
 package com.dqcer.mcdull.gateway.filter;
 
-import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.constants.GlobalConstant;
+import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.gateway.properties.FilterProperties;
 import com.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
 import com.dqcer.mcdull.gateway.utils.SpringUtils;
 import com.dqcer.mcdull.uac.client.service.AuthClientService;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -38,7 +39,8 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
 
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
-    private static final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3000, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1000));
+    private static final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3000, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1000), new ThreadFactoryBuilder()
+            .setNameFormat("auth-pool-%d").build());
 
 
     @Resource

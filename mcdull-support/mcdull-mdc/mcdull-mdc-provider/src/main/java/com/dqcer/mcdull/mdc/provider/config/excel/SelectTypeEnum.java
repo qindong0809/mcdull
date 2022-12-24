@@ -10,7 +10,9 @@ package com.dqcer.mcdull.mdc.provider.config.excel;
 public enum SelectTypeEnum {
 
 
-
+    /**
+     * 状态
+     */
     STATUS("1", "状态"),
 
     ;

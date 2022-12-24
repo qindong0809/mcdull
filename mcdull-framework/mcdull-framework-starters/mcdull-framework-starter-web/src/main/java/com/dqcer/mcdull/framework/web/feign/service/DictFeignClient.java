@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
+/**
+ * 码表对外调用客户端
+ *
+ * @author dqcer
+ * @version 2022/12/24
+ */
 @FeignClient(value = "mcdull-mdc-provider",  contextId = "commonDict")
 public interface DictFeignClient {
 

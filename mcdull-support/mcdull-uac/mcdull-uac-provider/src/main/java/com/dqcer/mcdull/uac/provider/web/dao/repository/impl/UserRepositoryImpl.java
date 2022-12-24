@@ -60,10 +60,6 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
      */
     @Override
     public Long insert(UserDO entity) {
-//        entity.setDelFlag(DelFlayEnum.NORMAL.getCode());
-//        entity.setStatus(StatusEnum.ENABLE.getCode());
-//        entity.setCreatedBy(UserContextHolder.getSession().getUserId());
-//        entity.setCreatedTime(new Date());
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {
             throw new BusinessException(ResultCode.DB_ERROR);

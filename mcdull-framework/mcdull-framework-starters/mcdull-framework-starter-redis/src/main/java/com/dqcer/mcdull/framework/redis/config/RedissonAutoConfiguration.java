@@ -71,8 +71,7 @@ public class RedissonAutoConfiguration extends CachingConfigurerSupport {
     @Bean
     public RedissonClient redissonClient(RedisProperties properties) {
         Config config = new Config();
-        // 默认编码为org.redisson.codec.JsonJacksonCodec（性能最优）
-//        config.setCodec(new org.redisson.client.codec.StringCodec());
+        // 默认编码为org.redisson.codec.JsonJacksonCodec（性能最优） config.setCodec(new org.redisson.client.codec.StringCodec());
         config.useSingleServer()
                 .setAddress("redis://" + properties.getHost() + ":" + properties.getPort())
                 .setPassword(properties.getPassword())

@@ -18,6 +18,16 @@ public class LoginVO implements VO {
 
     private String tenantName;
 
+    @Override
+    public String toString() {
+        return "LoginVO{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", tid='" + tid + '\'' +
+                ", tenantName='" + tenantName + '\'' +
+                '}';
+    }
+
     public String getTenantName() {
         return tenantName;
     }

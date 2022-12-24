@@ -10,6 +10,15 @@ public class LoginDTO implements DTO {
 
     private String code;
 
+    @Override
+    public String toString() {
+        return "LoginDTO{" +
+                "account='" + account + '\'' +
+                ", pd='" + pd + '\'' +
+                ", code='" + code + '\'' +
+                '}';
+    }
+
     public String getAccount() {
         return account;
     }

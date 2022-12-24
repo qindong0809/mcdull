@@ -62,7 +62,7 @@ public class ServiceLogInterceptor {
         List<ServiceGcLog> gcInfos = new ArrayList<>();
         try {
             memoryInfo = JvmInfoUtil.beforeMemoryInfo();
-            gcInfos = JvmInfoUtil.getGCInfo(memoryInfo.getId(), 1);
+            gcInfos = JvmInfoUtil.getGcInfo(memoryInfo.getId(), 1);
 
             // 原有函数执行
             result = callable.call();
@@ -77,7 +77,7 @@ public class ServiceLogInterceptor {
             throw e;
         } finally{
             memoryInfo = JvmInfoUtil.afterMemoryInfo(memoryInfo);
-            gcInfos.addAll(JvmInfoUtil.getGCInfo(memoryInfo.getId(), 2));
+            gcInfos.addAll(JvmInfoUtil.getGcInfo(memoryInfo.getId(), 2));
 
             long endTime = System.currentTimeMillis();
             saveLog(obj, args, method, status, respResult, start, endTime, memoryInfo, gcInfos);
@@ -113,7 +113,7 @@ public class ServiceLogInterceptor {
 
         log.info("Agent: {}, GC: {}", JSONObject.toJSONString(serviceLog, SerializerFeature.IgnoreErrorGetter), JSONArray.toJSONString(gcInfos));
         try {
-            saveDB(serviceLog, gcInfos);
+            savedb(serviceLog, gcInfos);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -133,7 +133,7 @@ public class ServiceLogInterceptor {
         return serviceLog;
     }
 
-    private void saveDB(ServiceLog log, List<ServiceGcLog> gcLogs) throws SQLException {
+    private void savedb(ServiceLog log, List<ServiceGcLog> gcLogs) throws SQLException {
         // TODO: 2022/11/16 暂定
         long id = LOG_ID.nextId();
         use.insert(Entity.create("service_log")

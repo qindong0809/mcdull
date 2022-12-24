@@ -37,9 +37,6 @@ public class UserApi implements UserServiceApi {
      */
     @Override
     public Result<RemoteUserVO> getDetail(Long userId) {
-//        UserLiteDTO dto = new UserLiteDTO();
-//        dto.setId(userId);
-//        return userService.detail(dto);
         return Result.ok();
     }
 }

@@ -1,6 +1,9 @@
 package com.dqcer.framework.base.util;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -25,6 +28,7 @@ import java.security.spec.X509EncodedKeySpec;
 @SuppressWarnings("unused")
 public class RsaUtil {
 
+    private static final Logger log = LoggerFactory.getLogger(RsaUtil.class);
 
     /**
      * 禁止实例化
@@ -70,7 +74,7 @@ public class RsaUtil {
                 | NoSuchPaddingException | InvalidKeyException
                 | BadPaddingException | IllegalBlockSizeException
                 | IOException e) {
-            //log.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         return null;
     }
@@ -93,7 +97,7 @@ public class RsaUtil {
             cipher.init(Cipher.DECRYPT_MODE, privateK);
             return getBytes(text, cipher, MAX_DECRYPT_BLOCK);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeySpecException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
-            //log.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         return null;
     }

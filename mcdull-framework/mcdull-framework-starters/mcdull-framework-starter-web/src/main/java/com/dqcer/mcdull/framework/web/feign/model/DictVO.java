@@ -154,4 +154,21 @@ public class DictVO implements VO {
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
     }
+
+    @Override
+    public String toString() {
+        return "DictVO{" +
+                "code='" + code + '\'' +
+                ", parentCode='" + parentCode + '\'' +
+                ", name='" + name + '\'' +
+                ", nameShort='" + nameShort + '\'' +
+                ", selectType='" + selectType + '\'' +
+                ", sort=" + sort +
+                ", defaulted=" + defaulted +
+                ", status=" + status +
+                ", remark='" + remark + '\'' +
+                ", language='" + language + '\'' +
+                ", delFlag=" + delFlag +
+                '}';
+    }
 }

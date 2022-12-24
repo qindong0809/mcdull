@@ -79,7 +79,7 @@ public class JvmInfoUtil {
      *
      * @return {@link List}<{@link ServiceGcLog}>
      */
-    public static List<ServiceGcLog> getGCInfo(Long serviceLogId, Integer type) {
+    public static List<ServiceGcLog> getGcInfo(Long serviceLogId, Integer type) {
         List<ServiceGcLog> details = new ArrayList<>();
         List<GarbageCollectorMXBean> garbages = ManagementFactory.getGarbageCollectorMXBeans();
         ServiceGcLog detail;

@@ -37,11 +37,8 @@ public class ExcelController {
      */
     @GetMapping("/download")
     public void download(Long studyId, HttpServletResponse response) throws IOException {
-//        Long roleId = UserContextHolder.getSession().getRoleId();
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setCharacterEncoding("utf-8");
-//        List<EnumVO> dictVOList = dictManager.dictList(DictSelectTypeEnum.SUBJECT_IMPORT_TEXT.name());
-//        Map<String, String> codeNameMap = CollUtil.defaultIfEmpty(dictVOList, new ArrayList<>()).stream().collect(Collectors.toMap(EnumVO::getCode, EnumVO::getName));
         String fileName = URLEncoder.encode( "import_model", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
 
@@ -54,7 +51,6 @@ public class ExcelController {
         Map<Integer, Integer[]> mapLength = new HashMap<>(16);
 
         Field field = null;
-//        Long userId = UserContextHolder.getSession().getUserId();
         for (int i = 0; i < fields.length; i++) {
             field = fields[i];
             DropDownSetField dropDownSetField = field.getAnnotation(DropDownSetField.class);
@@ -73,10 +69,6 @@ public class ExcelController {
                 mapLength.put(i, new Integer[]{excelLength.min(), excelLength.max()});
             }
         }
-
-//        EasyExcel.write(response.getOutputStream(), TplExport.class).autoCloseStream(Boolean.FALSE).registerWriteHandler(new CustomSheetWriteHandler(map, listIndex, mapLength))
-//                .registerWriteHandler(new CustomCellWriteHandler(codeNameMap)).sheet("hello").doWrite((Collection<?>) null);
-
 
         EasyExcel.write(response.getOutputStream(), TplExport.class).autoCloseStream(Boolean.FALSE).registerWriteHandler(new CustomSheetWriteHandler(map, listIndex, mapLength))
                .sheet("hello").doWrite((Collection<?>) null);

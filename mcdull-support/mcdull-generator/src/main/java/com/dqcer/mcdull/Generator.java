@@ -58,14 +58,14 @@ public class Generator {
         String driverName = "com.mysql.cj.jdbc.Driver";
         String username = "root";
         String password = "123456";
-        String projectName_ = "mcdull.auth";
+        String projectNames = "mcdull.auth";
         boolean isGeneratorWeb = true;
 
         String outPath = USER_DIR + outputBase + SRC + "/";
 
         /**********************************end**********************************/
 
-        String projectName = projectName_.replace("-", "");
+        String projectName = projectNames.replace("-", "");
 
         String modelName = scanner("包名称如：auth、pub");
 
@@ -178,78 +178,7 @@ public class Generator {
         List<FileOutConfig> focList = new ArrayList<>();
 
 
-
-        focList.add(new FileOutConfig(templatePath) {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return USER_DIR + outputBase + "/src/main/resources/mapper/" + mapperXmlPath
-                        + "/" + className + mapperSuffix + StringPool.DOT_XML;
-            }
-        });
-
-        focList.add(new FileOutConfig("/template/entitydto.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return outPath + dtoPath + "/" + className + dtoSuffix + StringPool.DOT_JAVA;
-            }
-        });
-        focList.add(new FileOutConfig("/template/convert.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return outPath + convertPath + "/" + className + convertSuffix + StringPool.DOT_JAVA;
-            }
-        });
-        focList.add(new FileOutConfig("/template/entity.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return outPath + entityPath + "/" + className + entitySuffix + StringPool.DOT_JAVA;
-            }
-        });
-        focList.add(new FileOutConfig("/template/entityvo.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return outPath + voPath +"/" + className + voSuffix + StringPool.DOT_JAVA;
-            }
-        });
-        focList.add(new FileOutConfig("/template/mapper.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return outPath  + daoPath +"/" + className + mapperSuffix + StringPool.DOT_JAVA;
-            }
-        });
-        if (isGeneratorWeb) {
-            focList.add(new FileOutConfig("/template/controller.java.ftl") {
-                @Override
-                public String outputFile(TableInfo tableInfo) {
-                    return outPath + controllerPath +"/" + className + controllerSuffix + StringPool.DOT_JAVA;
-                }
-            });
-            focList.add(new FileOutConfig("/template/service.java.ftl") {
-                @Override
-                public String outputFile(TableInfo tableInfo) {
-                    return outPath  + servicePath + "/I" + className + serviceSuffix + StringPool.DOT_JAVA;
-                }
-            });
-            focList.add(new FileOutConfig("/template/serviceImpl.java.ftl") {
-                @Override
-                public String outputFile(TableInfo tableInfo) {
-                    return outPath  + serviceImplPath +"/" + className + serviceImplSuffix + StringPool.DOT_JAVA;
-                }
-            });
-            focList.add(new FileOutConfig("/template/repository.java.ftl") {
-                @Override
-                public String outputFile(TableInfo tableInfo) {
-                    return outPath + repositoryPath + "/I" + className + repositorySuffix + StringPool.DOT_JAVA;
-                }
-            });
-            focList.add(new FileOutConfig("/template/repositoryImpl.java.ftl") {
-                @Override
-                public String outputFile(TableInfo tableInfo) {
-                    return outPath + repositoryImplPath +"/" + className + repositoryImplSuffix + StringPool.DOT_JAVA;
-                }
-            });
-        }
+        extracted(outputBase, isGeneratorWeb, outPath, className, controllerPath, servicePath, serviceImplPath, repositoryPath, repositoryImplPath, daoPath, mapperXmlPath, controllerSuffix, serviceSuffix, serviceImplSuffix, repositorySuffix, repositoryImplSuffix, mapperSuffix, entitySuffix, voSuffix, dtoSuffix, convertSuffix, entityPath, dtoPath, voPath, convertPath, templatePath, focList);
 
         cfg.setFileOutConfigList(focList);
         mpg.setCfg(cfg);
@@ -286,6 +215,80 @@ public class Generator {
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();
+    }
+
+    private static void extracted(String outputBase, boolean isGeneratorWeb, String outPath, String className, String controllerPath, String servicePath, String serviceImplPath, String repositoryPath, String repositoryImplPath, String daoPath, String mapperXmlPath, String controllerSuffix, String serviceSuffix, String serviceImplSuffix, String repositorySuffix, String repositoryImplSuffix, String mapperSuffix, String entitySuffix, String voSuffix, String dtoSuffix, String convertSuffix, String entityPath, String dtoPath, String voPath, String convertPath, String templatePath, List<FileOutConfig> focList) {
+        focList.add(new FileOutConfig(templatePath) {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
+                return USER_DIR + outputBase + "/src/main/resources/mapper/" + mapperXmlPath
+                        + "/" + className + mapperSuffix + StringPool.DOT_XML;
+            }
+        });
+
+        focList.add(new FileOutConfig("/template/entitydto.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return outPath + dtoPath + "/" + className + dtoSuffix + StringPool.DOT_JAVA;
+            }
+        });
+        focList.add(new FileOutConfig("/template/convert.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return outPath + convertPath + "/" + className + convertSuffix + StringPool.DOT_JAVA;
+            }
+        });
+        focList.add(new FileOutConfig("/template/entity.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return outPath + entityPath + "/" + className + entitySuffix + StringPool.DOT_JAVA;
+            }
+        });
+        focList.add(new FileOutConfig("/template/entityvo.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return outPath + voPath +"/" + className + voSuffix + StringPool.DOT_JAVA;
+            }
+        });
+        focList.add(new FileOutConfig("/template/mapper.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return outPath + daoPath +"/" + className + mapperSuffix + StringPool.DOT_JAVA;
+            }
+        });
+        if (isGeneratorWeb) {
+            focList.add(new FileOutConfig("/template/controller.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    return outPath + controllerPath +"/" + className + controllerSuffix + StringPool.DOT_JAVA;
+                }
+            });
+            focList.add(new FileOutConfig("/template/service.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    return outPath + servicePath + "/I" + className + serviceSuffix + StringPool.DOT_JAVA;
+                }
+            });
+            focList.add(new FileOutConfig("/template/serviceImpl.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    return outPath + serviceImplPath +"/" + className + serviceImplSuffix + StringPool.DOT_JAVA;
+                }
+            });
+            focList.add(new FileOutConfig("/template/repository.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    return outPath + repositoryPath + "/I" + className + repositorySuffix + StringPool.DOT_JAVA;
+                }
+            });
+            focList.add(new FileOutConfig("/template/repositoryImpl.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    return outPath + repositoryImplPath +"/" + className + repositoryImplSuffix + StringPool.DOT_JAVA;
+                }
+            });
+        }
     }
 
     private static String toPath(String packageName) {

@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.sql.SQLException;
 import java.util.Collections;
 
+/**
+ * sql异常拦截
+ *
+ * @author dqcer
+ * @version 2022/12/24
+ */
 @RestControllerAdvice
 @Order(0)
 public class BaseExceptionAdvice {

@@ -24,19 +24,29 @@ public class Snowflake implements Serializable {
     private final long twepoch;
     private final long workerIdBits = 5L;
     private final long dataCenterIdBits = 5L;
-    //// 最大支持机器节点数0~31，一共32个
-    // 最大支持数据中心节点数0~31，一共32个
+    /**
+     * 最大支持机器节点数0~31，一共32个
+     * 最大支持数据中心节点数0~31，一共32个
+     */
     @SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
     private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
     @SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
     private final long maxDataCenterId = -1L ^ (-1L << dataCenterIdBits);
-    // 序列号12位
+    /**
+     * 序列号12位
+     */
     private final long sequenceBits = 12L;
-    // 机器节点左移12位
+    /**
+     * 机器节点左移12位
+     */
     private final long workerIdShift = sequenceBits;
-    // 数据中心节点左移17位
+    /**
+     * 数据中心节点左移17位
+     */
     private final long dataCenterIdShift = sequenceBits + workerIdBits;
-    // 时间毫秒数左移22位
+    /**
+     * 时间毫秒数左移22位
+     */
     private final long timestampLeftShift = sequenceBits + workerIdBits + dataCenterIdBits;
     @SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
     private final long sequenceMask = -1L ^ (-1L << sequenceBits);// 4095

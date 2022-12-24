@@ -1,8 +1,10 @@
 package com.dqcer.mcdull.framework.web.feign.model;
 
+import com.dqcer.framework.base.dto.DTO;
+
 import java.util.Date;
 
-public class LogDTO {
+public class LogDTO implements DTO {
 
     private String userAgent;
 
@@ -57,6 +59,22 @@ public class LogDTO {
      */
     private String traceId;
 
+    @Override
+    public String toString() {
+        return "LogDTO{" +
+                "userAgent='" + userAgent + '\'' +
+                ", accountId=" + accountId +
+                ", tenantId=" + tenantId +
+                ", createdTime=" + createdTime +
+                ", clientIp='" + clientIp + '\'' +
+                ", method='" + method + '\'' +
+                ", path='" + path + '\'' +
+                ", timeTaken=" + timeTaken +
+                ", parameterMap='" + parameterMap + '\'' +
+                ", headers='" + headers + '\'' +
+                ", traceId='" + traceId + '\'' +
+                '}';
+    }
 
     public String getUserAgent() {
         return userAgent;

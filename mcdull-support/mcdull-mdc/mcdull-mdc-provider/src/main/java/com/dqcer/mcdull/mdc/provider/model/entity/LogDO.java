@@ -64,6 +64,23 @@ public class LogDO extends IdDO {
      */
     private String headers;
 
+    @Override
+    public String toString() {
+        return "LogDO{" +
+                "accountId=" + accountId +
+                ", tenantId=" + tenantId +
+                ", createdTime=" + createdTime +
+                ", clientIp='" + clientIp + '\'' +
+                ", userAgent='" + userAgent + '\'' +
+                ", traceId='" + traceId + '\'' +
+                ", method='" + method + '\'' +
+                ", path='" + path + '\'' +
+                ", timeTaken=" + timeTaken +
+                ", parameterMap='" + parameterMap + '\'' +
+                ", headers='" + headers + '\'' +
+                ", id=" + id +
+                "} " + super.toString();
+    }
 
     public Long getAccountId() {
         return accountId;

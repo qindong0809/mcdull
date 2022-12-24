@@ -16,9 +16,11 @@ public interface AuthServiceApi {
 
     /**
      * 验证token
+     * todo traceId 待优化
      *
-     * @param token token
-     * @return {@link Long}
+     * @param token   token
+     * @param traceId 跟踪id
+     * @return {@link Result}<{@link Long}>
      */
     @PostMapping("feign/token/valid")
     Result<Long> tokenValid(@RequestParam(value = "token")String token, @RequestHeader(name = HttpHeaderConstants.TRACE_ID_HEADER) String traceId);

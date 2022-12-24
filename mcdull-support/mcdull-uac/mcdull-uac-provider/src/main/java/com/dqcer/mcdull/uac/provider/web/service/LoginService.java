@@ -94,7 +94,6 @@ public class LoginService {
 
         //  记录登录信息
         userLoginRepository.saveLoginInfoByUserIdAndToken(userId, token);
-//        Integer.valueOf("dfd");
 
         return Result.ok(token);
     }

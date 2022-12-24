@@ -2,7 +2,7 @@ package com.dqcer.mcdull.mdc.provider.web.controller.excl;
 
 import com.alibaba.excel.metadata.Head;
 import com.alibaba.excel.metadata.data.WriteCellData;
-import com.alibaba.excel.write.handler.AbstractCellWriteHandler;
+import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteTableHolder;
 import org.apache.poi.ss.usermodel.Cell;
@@ -17,7 +17,7 @@ import java.util.Map;
  * @author dongqin
  * @date 2022/11/20 22:11:22
  */
-public class CustomCellWriteHandler extends AbstractCellWriteHandler {
+public class CustomCellWriteHandler implements CellWriteHandler {
 
     Map<String, String> codeNameMap;
 
