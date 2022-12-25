@@ -39,8 +39,10 @@ public class CacheExpireAspect {
         CacheExpire cacheExpire = method.getAnnotation(CacheExpire.class);
         // 过期时间（毫秒）
         long cacheExpiredMilliseconds = 1000L * cacheExpire.value();
-        // 上下浮动范围（毫秒）long floatRangeMilliseconds = (long) (1000 * RandomUtils.nextDouble(0, cacheExpire.floatRange()));
-        // (数据类型)(最小值+Math.random()*(最大值-最小值+1))
+        /* 上下浮动范围（毫秒）
+         * long floatRangeMilliseconds = (long) (1000 * RandomUtils.nextDouble(0, cacheExpire.floatRange()));
+         * (数据类型)(最小值+Math.random()*(最大值-最小值+1))
+         */
         long floatRangeMilliseconds = (long) (1 + Math.random() * (cacheExpire.floatRange() * 1000 - 1 + 1));
         //  设置失效时间，加上随机浮动值防止缓存穿透
         CacheExpireHolder.set(cacheExpiredMilliseconds + floatRangeMilliseconds);

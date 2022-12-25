@@ -31,20 +31,20 @@ public class ValidateUtil {
     /**
      * regexp电话
      */
-    public static final String REGEXP_PHONE = "^(13[0-9]|14[0-9]|15[0-9]|170|177|18[0-9])\\d{8}$";//
+    public static final String REGEXP_PHONE = "^(13[0-9]|14[0-9]|15[0-9]|170|177|18[0-9])\\d{8}$";
 
     /**
      * regexp url
      */
-    public static final String REGEXP_URL = "^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"; //
+    public static final String REGEXP_URL = "^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$";
     /**
      * regexp ipv4
      */
-    public static final String REGEXP_IPV4 = "((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)"; //
+    public static final String REGEXP_IPV4 = "((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)";
     /**
      * regexp ipv6
      */
-    public static final String REGEXP_IPV6 = "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"; //
+    public static final String REGEXP_IPV6 = "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
     /**
      * regexp html
      */

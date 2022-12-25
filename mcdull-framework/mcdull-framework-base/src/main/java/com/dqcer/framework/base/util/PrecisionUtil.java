@@ -98,8 +98,10 @@ public class PrecisionUtil {
             throw new IllegalArgumentException(
                     "The scale must be a positive integer or zero");
         }
-        BigDecimal b1 = new BigDecimal(Double.toString(v1));
-        BigDecimal b2 = new BigDecimal(Double.toString(v2));
+        String s1 = Double.toString(v1);
+        String s2 = Double.toString(v2);
+        BigDecimal b1 = new BigDecimal(s1);
+        BigDecimal b2 = new BigDecimal(s2);
         return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
@@ -117,7 +119,8 @@ public class PrecisionUtil {
             throw new IllegalArgumentException(
                     "The scale must be a positive integer or zero");
         }
-        BigDecimal b = new BigDecimal(Double.toString(v));
+        String s = Double.toString(v);
+        BigDecimal b = new BigDecimal(s);
         BigDecimal one = new BigDecimal("1");
         return b.divide(one, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }

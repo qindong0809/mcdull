@@ -48,8 +48,12 @@ public class Snowflake implements Serializable {
      * 时间毫秒数左移22位
      */
     private final long timestampLeftShift = sequenceBits + workerIdBits + dataCenterIdBits;
+
+    /**
+     *  4095
+     */
     @SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
-    private final long sequenceMask = -1L ^ (-1L << sequenceBits);// 4095
+    private final long sequenceMask = -1L ^ (-1L << sequenceBits);
 
     private final long workerId;
     private final long dataCenterId;
