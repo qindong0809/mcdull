@@ -30,58 +30,7 @@ public class CustomCellWriteHandler implements CellWriteHandler {
     public void afterCellDispose(WriteSheetHolder writeSheetHolder, WriteTableHolder writeTableHolder,
                                  List<WriteCellData<?>> cellDataList, Cell cell, Head head, Integer relativeRowIndex, Boolean isHead) {
         // 这里可以对cell进行任何操作
-        if (isHead && cell.getColumnIndex() == 0 &&  cell.getRowIndex() == 0) {
-            setCellValue(cell, "300130");
-        }
-        if (isHead &&  cell.getRowIndex() == 1 && cell.getColumnIndex() == 0 ) {
-            setCellValue(cell, "300131");
-        }
-        if (isHead &&  cell.getRowIndex() == 1 && cell.getColumnIndex() == 1 ) {
-            setCellValue(cell, "300132");
-        }
-        if (isHead &&  cell.getRowIndex() == 1 && cell.getColumnIndex() == 2 ) {
-            setCellValue(cell, "300133");
-        }
-        if (isHead &&  cell.getRowIndex() == 1 && cell.getColumnIndex() == 3 ) {
-            setCellValue(cell, "300134");
-        }
-        if (isHead &&  cell.getRowIndex() == 1 && cell.getColumnIndex() == 4 ) {
-            setCellValue(cell, "300135");
-        }
-        if (isHead &&  cell.getRowIndex() == 1 && cell.getColumnIndex() == 5 ) {
-            setCellValue(cell, "300136");
-        }
-        if (isHead &&  cell.getRowIndex() == 1 && cell.getColumnIndex() == 6 ) {
-            setCellValue(cell, "300137");
-        }
-        if (isHead &&  cell.getRowIndex() == 1 && cell.getColumnIndex() == 7 ) {
-            setCellValue(cell, "300138");
-        }
-        if (isHead &&  cell.getRowIndex() == 1 && cell.getColumnIndex() == 8 ) {
-            setCellValue(cell, "300139");
-        }
-        if (isHead &&  cell.getRowIndex() == 1 && cell.getColumnIndex() == 9 ) {
-            setCellValue(cell, "300140");
-        }
-        if (isHead &&  cell.getRowIndex() == 1 && cell.getColumnIndex() == 10 ) {
-            setCellValue(cell, "300141");
-        }
-        if (isHead &&  cell.getRowIndex() == 1 && cell.getColumnIndex() == 11 ) {
-            setCellValue(cell, "300142");
-        }
-        if (isHead &&  cell.getRowIndex() == 1 && cell.getColumnIndex() == 12 ) {
-            setCellValue(cell, "300143");
-        }
-        if (isHead &&  cell.getRowIndex() == 1 && cell.getColumnIndex() == 13 ) {
-            setCellValue(cell, "300144");
-        }
-    }
 
-    private void setCellValue(Cell cell, String code) {
-        String s = codeNameMap.get(code);
-        if (s != null) {
-            cell.setCellValue(s);
-        }
     }
 
 }

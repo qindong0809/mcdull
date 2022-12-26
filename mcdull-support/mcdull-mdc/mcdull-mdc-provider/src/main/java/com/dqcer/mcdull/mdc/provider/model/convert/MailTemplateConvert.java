@@ -4,6 +4,12 @@ import com.dqcer.mcdull.mdc.provider.model.entity.SysMailTemplateDO;
 import com.dqcer.mcdull.mdc.provider.model.vo.MailTemplateBaseVO;
 import com.dqcer.mcdull.mdc.provider.model.vo.MailTemplateVO;
 
+/**
+ * 邮件模板转换
+ *
+ * @author dqcer
+ * @version 2022/12/26 21:12:88
+ */
 public class MailTemplateConvert {
 
 

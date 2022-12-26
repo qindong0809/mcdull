@@ -1,9 +1,9 @@
 package com.dqcer.framework.base.wrapper;
 
 
+import com.dqcer.framework.base.vo.VO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.StringJoiner;
@@ -15,9 +15,9 @@ import java.util.StringJoiner;
  * @version 2022/07/26
  */
 @SuppressWarnings("unused")
-public class Result<T> implements Serializable {
+public class Result<T> implements VO {
 
-    private static final long serialVersionUID = -4671443827915132861L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 状态码

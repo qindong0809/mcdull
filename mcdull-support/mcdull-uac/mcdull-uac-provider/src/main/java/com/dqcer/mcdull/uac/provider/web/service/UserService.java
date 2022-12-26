@@ -8,6 +8,7 @@ import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.Md5Util;
 import com.dqcer.framework.base.util.PageUtil;
+import com.dqcer.framework.base.util.RandomUtil;
 import com.dqcer.framework.base.util.Sha1Util;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
@@ -29,7 +30,6 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * 用户服务
@@ -94,7 +94,7 @@ public class UserService {
 
         UserDO entity = UserConvert.dto2Entity(dto);
 
-        String salt = UUID.randomUUID().toString();
+        String salt = RandomUtil.uuid();
         String password = Sha1Util.getSha1(Md5Util.getMd5(dto.getAccount() + salt));
         entity.setSalt(salt);
         entity.setPassword(password);

@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac.provider.model.vo;
 
-import com.dqcer.framework.base.vo.VO;
 import com.dqcer.framework.base.annotation.Transform;
+import com.dqcer.framework.base.vo.VO;
 
 import java.util.Date;
 

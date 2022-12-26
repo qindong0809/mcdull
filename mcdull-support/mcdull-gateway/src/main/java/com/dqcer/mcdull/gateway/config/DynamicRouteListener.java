@@ -100,6 +100,7 @@ public class DynamicRouteListener implements InitializingBean, ApplicationEventP
 
     private ApplicationEventPublisher applicationEventPublisher;
 
+    @SuppressWarnings("all")
     @Override
     public void afterPropertiesSet() throws Exception {
 
@@ -115,7 +116,7 @@ public class DynamicRouteListener implements InitializingBean, ApplicationEventP
             try {
                 config = nacosConfigManager.getConfigService().getConfig(routeDataId, nacosConfigProperties.getGroup(), 3000);
             } catch (NacosException e) {
-                e.printStackTrace();
+                log.error("nacos exception", e);
             }
             refresh(config);
         }).start();

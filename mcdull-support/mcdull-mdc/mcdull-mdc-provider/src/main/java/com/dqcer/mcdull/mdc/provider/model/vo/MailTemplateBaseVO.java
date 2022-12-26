@@ -38,6 +38,18 @@ public class MailTemplateBaseVO implements VO {
      */
     private String descr;
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("MailTemplateBaseVO{");
+        sb.append("id=").append(id);
+        sb.append(", status=").append(status);
+        sb.append(", modelCode='").append(modelCode).append('\'');
+        sb.append(", templateName='").append(templateName).append('\'');
+        sb.append(", templateType='").append(templateType).append('\'');
+        sb.append(", descr='").append(descr).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 
     public Long getId() {
         return id;

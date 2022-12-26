@@ -7,14 +7,15 @@ import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.storage.CacheUser;
 import com.dqcer.framework.base.storage.SsoConstant;
 import com.dqcer.framework.base.util.ObjUtil;
+import com.dqcer.framework.base.util.RandomUtil;
 import com.dqcer.framework.base.util.Sha1Util;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.ResultCode;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import com.dqcer.mcdull.framework.redis.operation.RedissonCache;
+import com.dqcer.mcdull.uac.provider.config.constants.AuthCode;
 import com.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
 import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
-import com.dqcer.mcdull.uac.provider.config.constants.AuthCode;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserLoginRepository;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import org.slf4j.Logger;
@@ -28,7 +29,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 /**
  * 登录服务
@@ -85,7 +85,7 @@ public class LoginService {
         Long userId = userEntity.getId();
 
         //  强制7天过期
-        String token = UUID.randomUUID().toString().replaceAll("-", "");
+        String token = RandomUtil.uuid();
         CacheUser cacheUser = new CacheUser().setUserId(userId).setLastActiveTime(LocalDateTime.now());
         cacheChannel.put(MessageFormat.format(SsoConstant.SSO_TOKEN, token), cacheUser, SsoConstant.SSO_TOKEN_NAMESPACE_TIMEOUT);
 

@@ -145,7 +145,8 @@ public class Snowflake implements Serializable {
     public synchronized long nextId() {
         long timestamp = genTime();
         if (timestamp < lastTimestamp) {
-            if(lastTimestamp - timestamp < 2000){
+            long maxTimestamp = 2 * 1000L;
+            if(lastTimestamp - timestamp < maxTimestamp){
                 // 容忍2秒内的回拨，避免NTP校时造成的异常
                 timestamp = lastTimestamp;
             } else{

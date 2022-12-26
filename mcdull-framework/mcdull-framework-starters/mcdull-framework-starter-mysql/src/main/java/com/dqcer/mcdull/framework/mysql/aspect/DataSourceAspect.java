@@ -1,11 +1,14 @@
 package com.dqcer.mcdull.framework.mysql.aspect;
 
-import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.constants.SymbolConstants;
 import com.dqcer.mcdull.framework.mysql.annotation.DynamicDataSource;
 import com.dqcer.mcdull.framework.mysql.config.DynamicContextHolder;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +20,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.jdbc.support.incrementer.SybaseAnywhereMaxValueIncrementer;
 
 import java.lang.reflect.Method;
 import java.util.Deque;
@@ -64,10 +66,11 @@ public class DataSourceAspect {
 
     /**
      * spel表达式通过方法入参计算数据源名称
-     * @param annoValue
-     * @param method
-     * @param arguments
-     * @return
+     *
+     * @param annoValue annoValue
+     * @param method    方法
+     * @param arguments 参数
+     * @return {@link String}
      */
     private String calculateValue(String annoValue, Method method, Object[] arguments) {
         if(!annoValue.startsWith(SymbolConstants.JH)) {

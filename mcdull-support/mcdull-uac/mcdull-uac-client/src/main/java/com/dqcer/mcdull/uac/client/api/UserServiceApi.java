@@ -16,7 +16,8 @@ public interface UserServiceApi {
     /**
      * 用户详情
      *
-     * @return {@link Long}
+     * @param userId 用户id
+     * @return {@link Result<RemoteUserVO>}
      */
     @PostMapping("feign/user/base/detail")
     Result<RemoteUserVO> getDetail(@RequestParam(value = "userId")Long userId);

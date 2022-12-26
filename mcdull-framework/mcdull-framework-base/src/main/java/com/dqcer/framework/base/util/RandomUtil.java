@@ -5,7 +5,6 @@ import com.dqcer.framework.base.constants.GlobalConstant;
 import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * 随机数工具类
@@ -46,25 +45,18 @@ public class RandomUtil {
         if (len < 1 || len > max) {
             throw new IllegalArgumentException("len must be 1~32");
         }
-        String s = UUID.randomUUID().toString().replaceAll("-", "");
+        String s = uuid();
         return s.substring(32 - len);
     }
 
-    /**
-     * UUID.randomUUID().toString().replaceAll("-", "");
-     *
-     * @return
-     */
-    public static String genUUID() {
-        return UUID.randomUUID().toString().replaceAll("-", "");
-    }
 
     /**
      * 从UUID复制出来的方法，不生成-，所以比genUUID更快
      *
      * @return
      */
-    public static String randomUUID() {
+    @SuppressWarnings("all")
+    public static String uuid() {
         /* random */
         byte[] randomBytes = new byte[16];
         NUMBER_GENERATOR.nextBytes(randomBytes);

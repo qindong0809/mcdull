@@ -6,7 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -43,7 +47,7 @@ public class HttpTraceLogFilter implements Filter {
             String traceId = request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER);
             if(null == traceId || traceId.trim().length() == 0) {
                 log.warn("url: {} traceId is null", requestUrl);
-                traceId = RandomUtil.randomUUID();
+                traceId = RandomUtil.uuid();
             }
             MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
 

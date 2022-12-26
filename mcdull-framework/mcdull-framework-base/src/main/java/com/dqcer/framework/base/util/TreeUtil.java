@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * 树跑龙套
+ * tree 工具类
  *
  * @author dqcer
  * @date 2022/12/09
@@ -27,7 +27,7 @@ public class TreeUtil {
      * @return {@link List}<{@link T}>
      */
     public static <T extends TreeVO<T, ID>, ID extends Serializable> List<T> getChildTreeObjects(List<T> list, ID parentId) {
-        List<T> returnList = Collections.emptyList();
+        List<T> returnList = new java.util.ArrayList<>(Collections.emptyList());
         for (T res : list) {
             if (res.getPid() == null) {
                 continue;
@@ -53,6 +53,7 @@ public class TreeUtil {
             t.setHasChild(true);
         }
         for (T nextChild : children) {
+            boolean hasChild = false;
             // 下一个对象，与所有的资源集进行判断
             if (hasChild(list, nextChild)) {
                 // 有下一个子节点,递归
@@ -60,8 +61,9 @@ public class TreeUtil {
                     // 所有的对象--跟当前这个childList 的对象子节点
                     recursionFn(list, node);
                 }
-                nextChild.setHasChild(true);
+                hasChild = true;
             }
+            nextChild.setHasChild(hasChild);
         }
     }
 
@@ -74,7 +76,7 @@ public class TreeUtil {
      * @return the child list
      */
     public static <T extends TreeVO<T, ID>, ID extends Serializable> List<T> getChildList(List<T> list, T t) {
-        List<T> childList = Collections.emptyList();
+        List<T> childList = new java.util.ArrayList<>(Collections.emptyList());
         for (T child : list) {
             if (Objects.isNull(child.getPid())) {
                 continue;

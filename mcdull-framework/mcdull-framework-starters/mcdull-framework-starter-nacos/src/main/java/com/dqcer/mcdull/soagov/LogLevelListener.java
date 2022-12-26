@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -53,6 +52,7 @@ public class LogLevelListener implements InitializingBean {
     @Resource
     private NacosConfigProperties nacosConfigProperties;
 
+    @SuppressWarnings("all")
     @Override
     public void afterPropertiesSet() throws Exception {
         if (nacosConfigManager == null || nacosConfigProperties == null) {
@@ -66,7 +66,7 @@ public class LogLevelListener implements InitializingBean {
             try {
                 configInfo = nacosConfigManager.getConfigService().getConfig(logDataId, nacosConfigProperties.getGroup(), 3000);
             } catch (NacosException e) {
-                log.error(e.getMessage(), e);
+                log.error("nacos exception", e);
             }
             updateLogLevelConfig(configInfo);
 

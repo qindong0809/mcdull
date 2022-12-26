@@ -6,9 +6,9 @@ package com.dqcer.framework.base.vo;
  * @author dqcer
  * @date 2022/12/07
  */
-public abstract class KeyValueVO<K, V> implements VO{
+public class KeyValueVO<K, V> implements VO{
 
-    private static final long serialVersionUID = 8433439505613070766L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * key
@@ -19,6 +19,15 @@ public abstract class KeyValueVO<K, V> implements VO{
      * value
      */
     protected V name;
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("KeyValueVO{");
+        sb.append("id=").append(id);
+        sb.append(", name=").append(name);
+        sb.append('}');
+        return sb.toString();
+    }
 
     public K getId() {
         return id;

@@ -11,7 +11,7 @@ import java.util.Date;
  * @author dqcer
  * @version 2022/01/12
  */
-public abstract class BaseDO extends IdDO {
+public class BaseDO extends IdDO {
 
     private static final long serialVersionUID = 1L;
 
@@ -46,6 +46,18 @@ public abstract class BaseDO extends IdDO {
     @TableField(fill = FieldFill.INSERT)
     protected Integer status;
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("BaseDO{");
+        sb.append("createdTime=").append(createdTime);
+        sb.append(", createdBy=").append(createdBy);
+        sb.append(", updatedTime=").append(updatedTime);
+        sb.append(", updatedBy=").append(updatedBy);
+        sb.append(", status=").append(status);
+        sb.append(", id=").append(id);
+        sb.append('}');
+        return sb.toString();
+    }
 
     public Date getCreatedTime() {
         return createdTime;

@@ -12,13 +12,22 @@ import java.util.Date;
  * @version 2022/01/12
  */
 @SuppressWarnings("unused")
-public abstract class MiddleDO extends IdDO {
+public class MiddleDO extends IdDO {
 
     /**
      * 创建时间，方便增量同步
      */
     @TableField(fill = FieldFill.INSERT)
     protected Date createdTime;
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("MiddleDO{");
+        sb.append("createdTime=").append(createdTime);
+        sb.append(", id=").append(id);
+        sb.append('}');
+        return sb.toString();
+    }
 
     public Date getCreatedTime() {
         return createdTime;

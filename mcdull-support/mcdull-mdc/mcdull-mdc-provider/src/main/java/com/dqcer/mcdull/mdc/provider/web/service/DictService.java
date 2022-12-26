@@ -8,11 +8,11 @@ import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.util.PageUtil;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.mcdull.mdc.provider.model.convert.DictConvert;
 import com.dqcer.mcdull.mdc.client.dto.DictClientDTO;
+import com.dqcer.mcdull.mdc.client.vo.DictClientVO;
+import com.dqcer.mcdull.mdc.provider.model.convert.DictConvert;
 import com.dqcer.mcdull.mdc.provider.model.dto.DictLiteDTO;
 import com.dqcer.mcdull.mdc.provider.model.entity.DictDO;
-import com.dqcer.mcdull.mdc.client.vo.DictClientVO;
 import com.dqcer.mcdull.mdc.provider.web.dao.repository.IDictRepository;
 import org.springframework.stereotype.Service;
 

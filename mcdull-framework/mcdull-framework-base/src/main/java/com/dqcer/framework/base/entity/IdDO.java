@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
  * @version 2022/01/12
  */
 @SuppressWarnings("unused")
-public abstract class IdDO implements DO {
+public class IdDO implements DO {
 
     private static final long serialVersionUID = 1L;
 
@@ -20,6 +20,13 @@ public abstract class IdDO implements DO {
     @TableId(type= IdType.ASSIGN_ID)
     protected Long id;
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("IdDO{");
+        sb.append("id=").append(id);
+        sb.append('}');
+        return sb.toString();
+    }
 
     public Long getId() {
         return id;

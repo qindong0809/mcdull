@@ -1,6 +1,7 @@
 package com.dqcer.mcdull.gateway.filter;
 
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
+import com.dqcer.framework.base.util.RandomUtil;
 import com.dqcer.mcdull.gateway.utils.IpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,6 @@ import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -44,7 +44,7 @@ public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {
 
         /**浏览器传traceId*/
         // 暂不进行强制限制
-        String traceId = UUID.randomUUID().toString().replaceAll("-", "");
+        String traceId = RandomUtil.uuid();
         addHeader(mutate, HttpHeaderConstants.TRACE_ID_HEADER, traceId);
         MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
 

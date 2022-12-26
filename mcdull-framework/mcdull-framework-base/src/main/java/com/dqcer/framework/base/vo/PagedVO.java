@@ -13,23 +13,23 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class PagedVO<T> implements IPaged, VO {
 
-    private static final long serialVersionUID = 6479835551003499787L;
+    private static final long serialVersionUID = 1L;
     /**
      * 总记录数
      */
-    private long totalCount;
+    private Long totalCount;
     /**
      * 每页记录数
      */
-    private long pageSize;
+    private Long pageSize;
     /**
      * 总页数
      */
-    private long totalPage;
+    private Long totalPage;
     /**
      * 当前页数
      */
-    private long currentPage;
+    private Long currentPage;
     /**
      * 列表数据
      */
@@ -43,19 +43,19 @@ public class PagedVO<T> implements IPaged, VO {
      * @param pageSize   每页记录数
      * @param currentPage   当前页数
      */
-    public PagedVO(List<T> list, long totalCount, long pageSize, long currentPage) {
+    public PagedVO(List<T> list, Long totalCount, Long pageSize, Long currentPage) {
         this.list = list;
         this.totalCount = totalCount;
         this.pageSize = pageSize;
         this.currentPage = currentPage;
-        this.totalPage = (int) Math.ceil((double) totalCount / pageSize);
+        this.totalPage = (long) (int) Math.ceil((double) totalCount / pageSize);
     }
 
     public long getTotalCount() {
         return totalCount;
     }
 
-    public void setTotalCount(int totalCount) {
+    public void setTotalCount(Long totalCount) {
         this.totalCount = totalCount;
     }
 
@@ -64,7 +64,7 @@ public class PagedVO<T> implements IPaged, VO {
         return pageSize;
     }
 
-    public void setPageSize(int pageSize) {
+    public void setPageSize(Long pageSize) {
         this.pageSize = pageSize;
     }
 
@@ -72,7 +72,7 @@ public class PagedVO<T> implements IPaged, VO {
         return totalPage;
     }
 
-    public void setTotalPage(int totalPage) {
+    public void setTotalPage(Long totalPage) {
         this.totalPage = totalPage;
     }
 
@@ -87,7 +87,7 @@ public class PagedVO<T> implements IPaged, VO {
         return currentPage;
     }
 
-    public void setCurrentPage(long currentPage) {
+    public void setCurrentPage(Long currentPage) {
         this.currentPage = currentPage;
     }
 

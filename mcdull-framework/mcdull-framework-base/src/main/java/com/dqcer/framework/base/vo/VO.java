@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author dqcer
  * @version 2022/07/26
  */
+@SuppressWarnings("all")
 public interface VO extends Serializable {
-
 
 }

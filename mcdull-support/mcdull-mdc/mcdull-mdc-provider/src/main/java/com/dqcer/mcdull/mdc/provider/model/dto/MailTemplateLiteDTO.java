@@ -1,10 +1,9 @@
 package com.dqcer.mcdull.mdc.provider.model.dto;
 
-import com.dqcer.framework.base.enums.StatusEnum;
-import com.dqcer.framework.base.dto.PagedDTO;
-import com.dqcer.framework.base.validator.ValidGroup;
-
 import com.dqcer.framework.base.annotation.EnumsStrValid;
+import com.dqcer.framework.base.dto.PagedDTO;
+import com.dqcer.framework.base.enums.StatusEnum;
+import com.dqcer.framework.base.validator.ValidGroup;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;

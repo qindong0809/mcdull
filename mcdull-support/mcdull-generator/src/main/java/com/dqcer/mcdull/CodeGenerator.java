@@ -4,16 +4,32 @@ import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
-import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
+import com.baomidou.mybatisplus.generator.config.FileOutConfig;
+import com.baomidou.mybatisplus.generator.config.GlobalConfig;
+import com.baomidou.mybatisplus.generator.config.PackageConfig;
+import com.baomidou.mybatisplus.generator.config.StrategyConfig;
+import com.baomidou.mybatisplus.generator.config.TemplateConfig;
 import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
-public class Generator {
+/**
+ * 代码生成器
+ *
+ * @author dqcer
+ * @version 2022/12/26 21:12:71
+ */
+public class CodeGenerator {
 
     public static final String COM = "com.dqcer.";
 
@@ -47,6 +63,7 @@ public class Generator {
     }
 
 
+    @SuppressWarnings("all")
     public static void main(String[] args) {
 
         /**************************要修改的信息*********************************/
@@ -66,17 +83,12 @@ public class Generator {
         /**********************************end**********************************/
 
         String projectName = projectNames.replace("-", "");
-
         String modelName = scanner("包名称如：auth、pub");
-
         String split = scanner("表名");
-
         // 首字符小写
         String valName = toCamelCase(split);
-
         //  大写
         String className = captureName(valName);
-
 
         //  各层所对应的最终包路径
         String controllerPackage = String.format(WBB_PROJECT, projectName, "controller", modelName);
@@ -97,13 +109,7 @@ public class Generator {
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
         // 全局配置
-        GlobalConfig gc = new GlobalConfig();
-        gc.setDateType(DateType.ONLY_DATE);
-        gc.setOutputDir(outPath);
-        gc.setAuthor(author);
-        gc.setOpen(false);
-        gc.setSwagger2(false);
-
+        GlobalConfig gc = getGlobalConfig(author, outPath);
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setUrl(dataUrl);
@@ -142,7 +148,78 @@ public class Generator {
         String convertPath = convertPackage.replaceAll("\\.", "/");
 
         // 自定义配置
-        InjectionConfig cfg = new InjectionConfig() {
+        InjectionConfig cfg = getInjectionConfig(projectName, modelName, className, repositoryPackage, repositoryImplPackage, controllerSuffix, serviceSuffix, serviceImplSuffix, repositorySuffix, repositoryImplSuffix, mapperSuffix, entitySuffix, voSuffix, dtoSuffix, convertSuffix, entityPackage, dtoPackage, voPackage, convertPackage);
+
+        // 如果模板引擎是 freemarker
+        String templatePath = "/template/mapper.xml.ftl";
+        // 自定义输出配置
+        List<FileOutConfig> focList = new ArrayList<>();
+        // 自定义模板
+        extracted(outputBase, isGeneratorWeb, outPath, className, controllerPath, servicePath, serviceImplPath, repositoryPath, repositoryImplPath, daoPath, mapperXmlPath, controllerSuffix, serviceSuffix, serviceImplSuffix, repositorySuffix, repositoryImplSuffix, mapperSuffix, entitySuffix, voSuffix, dtoSuffix, convertSuffix, entityPath, dtoPath, voPath, convertPath, templatePath, focList);
+
+        cfg.setFileOutConfigList(focList);
+        mpg.setCfg(cfg);
+        // 配置模板
+        TemplateConfig templateConfig = getTemplateConfig(mpg);
+        // 策略配置
+        StrategyConfig strategy = getStrategyConfig(split, pc);
+
+        ConfigBuilder configBuilder = new ConfigBuilder(pc, dsc, strategy, templateConfig, gc);
+        mpg.setConfig(configBuilder);
+        mpg.setStrategy(strategy);
+        mpg.setTemplateEngine(new FreemarkerTemplateEngine());
+        mpg.execute();
+    }
+
+    @NotNull
+    private static GlobalConfig getGlobalConfig(String author, String outPath) {
+        GlobalConfig gc = new GlobalConfig();
+        gc.setDateType(DateType.ONLY_DATE);
+        gc.setOutputDir(outPath);
+        gc.setAuthor(author);
+        gc.setOpen(false);
+        gc.setSwagger2(false);
+        gc.setMapperName("%sMapper");
+        return gc;
+    }
+
+    @NotNull
+    private static TemplateConfig getTemplateConfig(AutoGenerator mpg) {
+        TemplateConfig templateConfig = new TemplateConfig();
+        templateConfig.setXml(null);
+        templateConfig.setController(null);
+        templateConfig.setService(null);
+        templateConfig.setEntity(null);
+        templateConfig.setMapper(null);
+        templateConfig.setServiceImpl(null);
+        templateConfig.setXml(null);
+        mpg.setTemplate(templateConfig);
+        return templateConfig;
+    }
+
+    @NotNull
+    private static StrategyConfig getStrategyConfig(String split, PackageConfig pc) {
+        StrategyConfig strategy = new StrategyConfig();
+        strategy.setNaming(NamingStrategy.underline_to_camel);
+        strategy.setColumnNaming(NamingStrategy.underline_to_camel);
+        strategy.setEntityLombokModel(false);
+        strategy.setEntitySerialVersionUID(true);
+        strategy.setRestControllerStyle(true);
+        strategy.setEntityTableFieldAnnotationEnable(true);
+        // 写于父类中的公共字段
+        String[] strings = { "created_by", "created_time", "updated_by", "updated_time"};
+        strategy.setSuperEntityColumns(strings);
+
+        strategy.setInclude(split);
+        strategy.setControllerMappingHyphenStyle(true);
+        strategy.setTablePrefix(pc.getModuleName() + "_");
+        return strategy;
+    }
+
+    @NotNull
+    private static InjectionConfig getInjectionConfig(String projectName, String modelName, String className, String repositoryPackage, String repositoryImplPackage, String controllerSuffix, String serviceSuffix, String serviceImplSuffix, String repositorySuffix, String repositoryImplSuffix, String mapperSuffix, String entitySuffix, String voSuffix, String dtoSuffix, String convertSuffix, String entityPackage, String dtoPackage, String voPackage, String convertPackage) {
+        // 自定义配置
+        return new InjectionConfig() {
             @Override
             public void initMap() {
                 Map<String, Object> map = new HashMap<>(16);
@@ -171,50 +248,6 @@ public class Generator {
                 this.setMap(map);
             }
         };
-
-        // 如果模板引擎是 freemarker
-        String templatePath = "/template/mapper.xml.ftl";
-        // 自定义输出配置
-        List<FileOutConfig> focList = new ArrayList<>();
-
-
-        extracted(outputBase, isGeneratorWeb, outPath, className, controllerPath, servicePath, serviceImplPath, repositoryPath, repositoryImplPath, daoPath, mapperXmlPath, controllerSuffix, serviceSuffix, serviceImplSuffix, repositorySuffix, repositoryImplSuffix, mapperSuffix, entitySuffix, voSuffix, dtoSuffix, convertSuffix, entityPath, dtoPath, voPath, convertPath, templatePath, focList);
-
-        cfg.setFileOutConfigList(focList);
-        mpg.setCfg(cfg);
-        // 配置模板
-        TemplateConfig templateConfig = new TemplateConfig();
-        templateConfig.setXml(null);
-        templateConfig.setController(null);
-        templateConfig.setService(null);
-        templateConfig.setEntity(null);
-        templateConfig.setMapper(null);
-        templateConfig.setServiceImpl(null);
-        templateConfig.setXml(null);
-        mpg.setTemplate(templateConfig);
-        // 策略配置
-        StrategyConfig strategy = new StrategyConfig();
-        strategy.setNaming(NamingStrategy.underline_to_camel);
-        strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        strategy.setEntityLombokModel(false);
-        strategy.setEntitySerialVersionUID(true);
-        strategy.setRestControllerStyle(true);
-        strategy.setEntityTableFieldAnnotationEnable(true);
-        // 写于父类中的公共字段
-        String[] strings = { "created_by", "created_time", "updated_by", "updated_time"};
-        strategy.setSuperEntityColumns(strings);
-
-        strategy.setInclude(split);
-        strategy.setControllerMappingHyphenStyle(true);
-        strategy.setTablePrefix(pc.getModuleName() + "_");
-
-        gc.setMapperName("%sMapper");
-
-        ConfigBuilder configBuilder = new ConfigBuilder(pc, dsc, strategy, templateConfig, gc);
-        mpg.setConfig(configBuilder);
-        mpg.setStrategy(strategy);
-        mpg.setTemplateEngine(new FreemarkerTemplateEngine());
-        mpg.execute();
     }
 
     private static void extracted(String outputBase, boolean isGeneratorWeb, String outPath, String className, String controllerPath, String servicePath, String serviceImplPath, String repositoryPath, String repositoryImplPath, String daoPath, String mapperXmlPath, String controllerSuffix, String serviceSuffix, String serviceImplSuffix, String repositorySuffix, String repositoryImplSuffix, String mapperSuffix, String entitySuffix, String voSuffix, String dtoSuffix, String convertSuffix, String entityPath, String dtoPath, String voPath, String convertPath, String templatePath, List<FileOutConfig> focList) {

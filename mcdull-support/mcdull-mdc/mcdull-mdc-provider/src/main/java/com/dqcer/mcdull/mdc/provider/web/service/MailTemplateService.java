@@ -16,6 +16,12 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 邮件模板服务
+ *
+ * @author dqcer
+ * @version 2022/12/26 21:12:84
+ */
 @Service
 public class MailTemplateService {
 

@@ -21,5 +21,11 @@ public interface IUserRoleRepository extends IService<UserRoleDO> {
      */
     List<Long> listRoleByUserId(Long userId);
 
+    /**
+     * 更新根据用户id
+     *
+     * @param id      id
+     * @param roleIds 角色id
+     */
     void updateByUserId(Long id, List<Long> roleIds);
 }

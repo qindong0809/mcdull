@@ -1,9 +1,9 @@
 package com.dqcer.mcdull.framework.web.feign.model;
 
-import com.dqcer.framework.base.dto.DTO;
-import com.dqcer.framework.base.validator.ValidGroup;
 import com.dqcer.framework.base.annotation.EnumsStrValid;
+import com.dqcer.framework.base.dto.DTO;
 import com.dqcer.framework.base.enums.LanguageEnum;
+import com.dqcer.framework.base.validator.ValidGroup;
 
 import javax.validation.constraints.NotEmpty;
 

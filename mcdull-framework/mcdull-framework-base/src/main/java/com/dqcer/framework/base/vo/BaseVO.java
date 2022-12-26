@@ -8,7 +8,7 @@ package com.dqcer.framework.base.vo;
  */
 public class BaseVO extends KeyValueVO<Long, String> {
 
-    private static final long serialVersionUID = 3763668005096764085L;
+    private static final long serialVersionUID = 1L;
 
     @Override
     public String toString() {

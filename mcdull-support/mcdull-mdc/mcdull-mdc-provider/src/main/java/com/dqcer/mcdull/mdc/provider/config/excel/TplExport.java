@@ -3,26 +3,15 @@ package com.dqcer.mcdull.mdc.provider.config.excel;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
-import com.alibaba.excel.annotation.write.style.ContentFontStyle;
-import com.alibaba.excel.annotation.write.style.ContentRowHeight;
-import com.alibaba.excel.annotation.write.style.ContentStyle;
-import com.alibaba.excel.annotation.write.style.HeadFontStyle;
-import com.alibaba.excel.annotation.write.style.HeadRowHeight;
 
 import java.util.Date;
 
 /**
  * excel 导入模板
  *
- * @author dongqin
+ * @author dqcer
  * @date 2022/11/20 22:11:23
  */
-@ContentStyle // 自动换行
-@ContentRowHeight(10) // 内容高
-@HeadRowHeight(25) // 行高
-@ColumnWidth(15) // 列宽
-@HeadFontStyle(fontHeightInPoints = 12) // 字体
-@ContentFontStyle(fontHeightInPoints = 16) // 字体
 public class TplExport {
 
 	@DropDownSetField(SelectTypeEnum.STATUS)

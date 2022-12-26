@@ -2,7 +2,10 @@ package com.dqcer.mcdull.framework.web.transform;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.context.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.EmbeddedValueResolverAware;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
 import org.springframework.util.StringValueResolver;
@@ -52,7 +55,7 @@ public class SpringContextHolder implements ApplicationContextAware, Environment
      * 获取spring value，和@Value的效果相同
      * 注意：如果是获取配置，找不到配置会报异常
      *
-     * @param spEL spring表达式，须用"${spEL}"括起来
+     * @param spel spring表达式，须用"${spEL}"括起来
      * @return 表达式的值
      */
     public static String getSpringValue(String spel) {

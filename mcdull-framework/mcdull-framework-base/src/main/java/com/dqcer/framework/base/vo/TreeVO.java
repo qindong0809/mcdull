@@ -8,9 +8,9 @@ import java.util.List;
  * @author dqcer
  * @version 2022/12/07
  */
-public abstract class TreeVO<E, ID> implements VO {
+public class TreeVO<E, ID> implements VO {
 
-    private static final long serialVersionUID = 5907562174896953932L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * ID
@@ -25,12 +25,23 @@ public abstract class TreeVO<E, ID> implements VO {
     /**
      * 是否含有子节点
      */
-    protected boolean hasChild = false;
+    protected Boolean hasChild;
 
     /**
      * 子节点集合
      */
     protected List<E> children;
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("TreeVO{");
+        sb.append("id=").append(id);
+        sb.append(", pid=").append(pid);
+        sb.append(", hasChild=").append(hasChild);
+        sb.append(", children=").append(children);
+        sb.append('}');
+        return sb.toString();
+    }
 
     public ID getId() {
         return id;
@@ -49,7 +60,7 @@ public abstract class TreeVO<E, ID> implements VO {
     }
 
     public boolean isHasChild() {
-        return hasChild;
+        return hasChild == null ? false : hasChild;
     }
 
     public void setHasChild(boolean hasChild) {

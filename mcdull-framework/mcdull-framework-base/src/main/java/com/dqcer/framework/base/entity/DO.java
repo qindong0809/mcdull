@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author dqcer
  * @version  22:21 2021/4/28
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("all")
 public interface DO extends Serializable {
 
 }

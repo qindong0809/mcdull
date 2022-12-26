@@ -2,7 +2,11 @@ package com.dqcer.mcdull.uac.provider.config;
 
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * feign 配置
