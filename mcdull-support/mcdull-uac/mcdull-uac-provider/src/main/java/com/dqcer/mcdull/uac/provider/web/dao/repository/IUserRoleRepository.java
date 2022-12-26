@@ -5,6 +5,12 @@ import com.dqcer.mcdull.uac.provider.model.entity.UserRoleDO;
 
 import java.util.List;
 
+/**
+ * 用户角色 数据库操作封装接口层
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 public interface IUserRoleRepository extends IService<UserRoleDO> {
 
     /**

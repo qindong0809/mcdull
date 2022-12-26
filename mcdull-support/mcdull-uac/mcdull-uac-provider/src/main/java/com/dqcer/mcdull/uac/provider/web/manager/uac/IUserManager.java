@@ -3,6 +3,12 @@ package com.dqcer.mcdull.uac.provider.web.manager.uac;
 import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import com.dqcer.mcdull.uac.provider.model.vo.UserVO;
 
+/**
+ * 用户 通过逻辑定义
+ *
+ * @author QinDong
+ * @date 2022/12/26
+ */
 public interface IUserManager {
 
     /**

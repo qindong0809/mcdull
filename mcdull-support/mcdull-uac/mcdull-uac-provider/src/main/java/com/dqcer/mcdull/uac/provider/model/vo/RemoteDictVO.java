@@ -2,6 +2,12 @@ package com.dqcer.mcdull.uac.provider.model.vo;
 
 import com.dqcer.framework.base.vo.VO;
 
+/**
+ * 码表 VO
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 public class RemoteDictVO implements VO {
     /**
      * 编码

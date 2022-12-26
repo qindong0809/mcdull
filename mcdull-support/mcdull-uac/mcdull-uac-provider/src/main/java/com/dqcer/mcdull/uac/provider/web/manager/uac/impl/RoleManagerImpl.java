@@ -10,6 +10,12 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
+/**
+ * 角色 通用逻辑实现类
+ *
+ * @author QinDong
+ * @date 2022/12/26
+ */
 @Service
 public class RoleManagerImpl implements IRoleManager {
 

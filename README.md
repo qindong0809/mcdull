@@ -61,4 +61,11 @@ mcdull
     Result<DictVO> detail(@SpringQueryMap @Validated(value = ValidGroup.One.class) DictLiteDTO dto);
 ```
 
+#### 禁止使用bean进行copy
+```java
+// 反例
+BeanUtil.copyProperties(source, target)
+```
+> 说明：使用反射效率低，其次增加可维护性成本增高，后面接手的小伙伴不知道程序哪些是需要的字段
+
 国际化 测试

@@ -9,6 +9,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
+/**
+ * 元数据 应用程序
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 @EnableDynamicDataSource
 @EnableFeignClients(basePackages = {"com.dqcer.mcdull.framework.web.feign", "com.dqcer.mcdull.uac.client.service"})
 @MapperScan("com.dqcer.mcdull.mdc.provider.web.dao.mapper")

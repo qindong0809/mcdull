@@ -5,6 +5,12 @@ import com.dqcer.framework.base.entity.IdDO;
 
 import java.util.Date;
 
+/**
+ * 日志 实体
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 @TableName("sys_log")
 public class LogDO extends IdDO {
 

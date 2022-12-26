@@ -5,7 +5,19 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.dqcer.mcdull.mdc.provider.model.dto.LogLiteDTO;
 import com.dqcer.mcdull.mdc.provider.model.entity.LogDO;
 
+/**
+ * log 数据库操作封装接口层
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 public interface ILogRepository extends IService<LogDO> {
 
+    /**
+     * 分页查询
+     *
+     * @param dto dto
+     * @return {@link Page}<{@link LogDO}>
+     */
     Page<LogDO> selectPage(LogLiteDTO dto);
 }

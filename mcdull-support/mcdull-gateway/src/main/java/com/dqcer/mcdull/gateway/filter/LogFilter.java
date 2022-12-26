@@ -24,6 +24,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * 日志过滤器
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 @Component
 public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {
 

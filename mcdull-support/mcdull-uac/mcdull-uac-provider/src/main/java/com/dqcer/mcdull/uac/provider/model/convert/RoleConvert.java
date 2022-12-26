@@ -4,6 +4,12 @@ import com.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
 import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import com.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 
+/**
+ * 角色 对象转换工具类
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 public class RoleConvert {
 
     public static RoleDO dto2Entity(RoleLiteDTO dto) {

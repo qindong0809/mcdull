@@ -4,6 +4,12 @@ import com.dqcer.mcdull.mdc.provider.model.entity.LogDO;
 import com.dqcer.mcdull.mdc.client.vo.DictClientVO;
 import com.dqcer.mcdull.mdc.provider.model.vo.LogVO;
 
+/**
+ * log 转换工具类
+ *
+ * @author dqcedr
+ * @version 2022/12/26
+ */
 public class LogConvert {
 
 

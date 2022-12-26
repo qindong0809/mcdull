@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * 日志 feign 实现层
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 @RestController
 public class LogServerFeign {
 

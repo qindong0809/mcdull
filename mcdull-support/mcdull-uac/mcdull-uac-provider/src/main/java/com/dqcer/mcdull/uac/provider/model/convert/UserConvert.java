@@ -5,7 +5,7 @@ import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import com.dqcer.mcdull.uac.provider.model.vo.UserVO;
 
 /**
- * 用户转换
+ * 用户 对象转换工具类
  *
  * @author dqcer
  * @version  2022/11/25

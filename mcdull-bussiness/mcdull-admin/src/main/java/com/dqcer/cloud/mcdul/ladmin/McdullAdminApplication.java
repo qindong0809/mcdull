@@ -5,6 +5,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * 麦兜管理应用程序
+ *
+ * @author QinDong
+ * @date 2022/12/26
+ */
 @Controller
 @SpringBootApplication
 public class McdullAdminApplication {

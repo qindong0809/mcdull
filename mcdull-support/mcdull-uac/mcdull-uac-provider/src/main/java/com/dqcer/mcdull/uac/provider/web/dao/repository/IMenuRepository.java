@@ -6,6 +6,12 @@ import com.dqcer.mcdull.uac.provider.model.dto.MenuLiteDTO;
 import com.dqcer.mcdull.uac.provider.model.entity.MenuDO;
 import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 
+/**
+ * 菜单 数据库操作封装接口层
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 public interface IMenuRepository extends IService<MenuDO> {
 
     /**

@@ -5,6 +5,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
 import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 
+/**
+ * 角色 数据库操作封装接口层
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 public interface IRoleRepository extends IService<RoleDO> {
 
     /**

@@ -8,6 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * 邮件服务 feign 实现层
+ *
+ * @author QinDong
+ * @date 2022/12/26
+ */
 @RestController
 public class MailServerFeign implements MailServiceApi {
 

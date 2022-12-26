@@ -2,6 +2,12 @@ package com.dqcer.mcdull.uac.provider.model.dto;
 
 import com.dqcer.framework.base.dto.DTO;
 
+/**
+ * 登录 dto
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 public class LoginDTO implements DTO {
 
     private String account;

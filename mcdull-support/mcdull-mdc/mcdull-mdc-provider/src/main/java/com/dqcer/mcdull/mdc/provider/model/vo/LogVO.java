@@ -4,6 +4,12 @@ import com.dqcer.mcdull.mdc.provider.model.entity.LogDO;
 
 import java.util.StringJoiner;
 
+/**
+ * 日志视图对象
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 public class LogVO extends LogDO {
 
     private String accountIdStr;

@@ -9,6 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
+/**
+ * 日志 对外调用客户端
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 @FeignClient(value = "mcdull-mdc-provider",  contextId = "commonLog")
 public interface LogFeignClient {
 

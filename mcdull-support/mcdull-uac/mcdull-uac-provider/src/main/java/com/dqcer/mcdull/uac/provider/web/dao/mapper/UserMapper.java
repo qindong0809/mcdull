@@ -7,6 +7,12 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * 用户 mapper
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 public interface UserMapper extends BaseMapper<UserDO> {
 
     /**

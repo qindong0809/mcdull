@@ -4,6 +4,12 @@ import com.dqcer.framework.base.dto.DTO;
 
 import java.util.Date;
 
+/**
+ * 日志 dto
+ *
+ * @author dqcer
+ * @version 2022/12/26
+ */
 public class LogDTO implements DTO {
 
     private String userAgent;
