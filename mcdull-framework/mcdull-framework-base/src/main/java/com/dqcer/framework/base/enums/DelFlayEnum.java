@@ -1,36 +1,35 @@
 package com.dqcer.framework.base.enums;
 
 /**
- * 删除枚举
+ * 删除枚举 针对数据库 0/false 1/true
  *
  * @author dqcer
  * @version 2022/07/26
  */
 @SuppressWarnings("unused")
-public enum DelFlayEnum implements IEnum<Integer> {
+public enum DelFlayEnum implements IEnum<Boolean> {
     /**
      * 1 = 正常
      */
-    NORMAL(1, "正常"),
+    NORMAL(false, "正常"),
 
     /**
      * 2 = 已删除
      */
-    DELETED(2, "已删除")
+    DELETED(true, "已删除")
     ;
 
-    DelFlayEnum(Integer code, String text) {
+    DelFlayEnum(Boolean code, String text) {
         init(code, text);
     }
 
-    public static DelFlayEnum toEnum(Integer value) {
-        switch (value) {
-            case 1:
-                return DelFlayEnum.NORMAL;
-            case 2:
-                return DelFlayEnum.DELETED;
-            default:
-                throw new IllegalArgumentException("invalid value , only [1, 2] is allowed");
+    public static DelFlayEnum toEnum(Boolean value) {
+        if (value == null) {
+            throw new IllegalArgumentException(String.format("invalid value , only %s is allowed", IEnum.getCodes(DelFlayEnum.class)));
         }
+        if (value) {
+            return DelFlayEnum.DELETED;
+        }
+        return DelFlayEnum.NORMAL;
     }
 }

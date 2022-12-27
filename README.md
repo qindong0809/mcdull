@@ -128,3 +128,16 @@ BeanUtil.copyProperties(source, target)
 - 4.  新建 Pull Request
 
 ### 后期规划
+```java
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    @Bean
+    public HttpMessageConverter<String> responseBodyConverter() {
+        StringHttpMessageConverter converter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
+        return converter;
+    }
+```

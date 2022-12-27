@@ -144,7 +144,7 @@ public class RoleService {
             log.warn("数据不存在 id:{}", id);
             return Result.error(ResultCode.DATA_NOT_EXIST);
         }
-        Integer delFlag = dto.getDelFlag();
+        Boolean delFlag = dto.getDelFlag();
         if (dbData.getDelFlag().equals(delFlag)) {
             log.warn("数据已存在 id: {} status: {}", id, delFlag);
             return Result.error(ResultCode.DATA_EXIST);

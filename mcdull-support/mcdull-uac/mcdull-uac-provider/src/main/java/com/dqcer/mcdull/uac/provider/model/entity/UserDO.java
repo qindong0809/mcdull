@@ -15,11 +15,6 @@ import java.time.LocalTime;
 public class UserDO extends BaseDO {
 
     /**
-     * 删除标识（1/正常 2/删除）
-     */
-    private Integer delFlag;
-
-    /**
      * 昵称
      */
     private String nickname;
@@ -95,14 +90,6 @@ public class UserDO extends BaseDO {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public Integer getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
     }
 
     public String getAccount() {

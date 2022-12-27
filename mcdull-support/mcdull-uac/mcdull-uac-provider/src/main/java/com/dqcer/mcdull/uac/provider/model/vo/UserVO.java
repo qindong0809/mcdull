@@ -56,9 +56,9 @@ public class UserVO implements VO {
 
 
     /**
-     * 删除标识（1/正常 2/删除）
+     * 删除标识（false/正常 true/删除）
      */
-    private Integer delFlag;
+    private Boolean delFlag;
 
     /**
      * 删除str
@@ -242,12 +242,13 @@ public class UserVO implements VO {
         this.statusStr = statusStr;
     }
 
-    public Integer getDelFlag() {
+    public Boolean getDelFlag() {
         return delFlag;
     }
 
-    public void setDelFlag(Integer delFlag) {
+    public UserVO setDelFlag(Boolean delFlag) {
         this.delFlag = delFlag;
+        return this;
     }
 
     public String getAccount() {

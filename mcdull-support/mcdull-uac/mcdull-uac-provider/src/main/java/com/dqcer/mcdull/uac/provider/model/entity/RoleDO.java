@@ -13,17 +13,12 @@ import com.dqcer.framework.base.entity.BaseDO;
 public class RoleDO extends BaseDO {
 
     /**
-     * 删除标识（1/正常 2/删除）
-     */
-    private Integer delFlag;
-
-    /**
-     * 昵称
+     * 名称
      */
     private String name;
 
     /**
-     * 账户
+     * 编码
      */
     private String code;
 
@@ -39,20 +34,20 @@ public class RoleDO extends BaseDO {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("RoleDO{");
-        sb.append("delFlag=").append(delFlag);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", code='").append(code).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", type=").append(type);
-        sb.append(", createdTime=").append(createdTime);
-        sb.append(", createdBy=").append(createdBy);
-        sb.append(", updatedTime=").append(updatedTime);
-        sb.append(", updatedBy=").append(updatedBy);
-        sb.append(", status=").append(status);
-        sb.append(", id=").append(id);
-        sb.append('}');
-        return sb.toString();
+        return "RoleDO{" +
+                "name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", description='" + description + '\'' +
+                ", type=" + type +
+                ", delBy=" + delBy +
+                ", createdBy=" + createdBy +
+                ", updatedTime=" + updatedTime +
+                ", updatedBy=" + updatedBy +
+                ", status=" + status +
+                ", createdTime=" + createdTime +
+                ", delFlag=" + delFlag +
+                ", id=" + id +
+                "} " + super.toString();
     }
 
     public Integer getType() {
@@ -61,14 +56,6 @@ public class RoleDO extends BaseDO {
 
     public void setType(Integer type) {
         this.type = type;
-    }
-
-    public Integer getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
     }
 
     public String getName() {

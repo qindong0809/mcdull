@@ -14,19 +14,21 @@ import java.util.Date;
 @SuppressWarnings("unused")
 public class MiddleDO extends IdDO {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * 创建时间，方便增量同步
      */
     @TableField(fill = FieldFill.INSERT)
     protected Date createdTime;
 
+
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("MiddleDO{");
-        sb.append("createdTime=").append(createdTime);
-        sb.append(", id=").append(id);
-        sb.append('}');
-        return sb.toString();
+        return "MiddleDO{" +
+                "createdTime=" + createdTime +
+                ", id=" + id +
+                "} " + super.toString();
     }
 
     public Date getCreatedTime() {

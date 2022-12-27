@@ -4,11 +4,13 @@ import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.enums.StatusEnum;
 import com.dqcer.framework.base.exception.DatabaseRowException;
 import com.dqcer.framework.base.util.StrUtil;
+import com.dqcer.framework.base.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dqcer.framework.base.enums.StatusEnum;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ${cfg.apiDto}.${cfg.dtoName};
+import java.util.Collections;
 import java.util.List;
 import ${cfg.apiEntity}.${cfg.entityName};
 import ${cfg.repository}.${cfg.repositoryName};
@@ -40,10 +42,15 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
      */
     @Override
     public List<${cfg.entityName}> queryListByIds(List<Long> idList) {
-        LambdaQueryWrapper<${cfg.entityName}> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.in(${cfg.entityName}::getId, idList);
-        queryWrapper.eq(${cfg.entityName}::getStatus, StatusEnum.ENABLE.getCode());
-        return baseMapper.selectList(queryWrapper);
+        LambdaQueryWrapper<${cfg.entityName}> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(${cfg.entityName}::getId, idList);
+        wrapper.eq(${cfg.entityName}::getStatus, StatusEnum.ENABLE.getCode());
+        wrapper.eq(${cfg.entityName}::getDelFlag, DelFlayEnum.NORMAL.getCode());
+        List<${cfg.entityName}> list =  baseMapper.selectList(queryWrapper);
+        if (ObjUtil.isNotNull(list)) {
+            return list;
+        }
+        return Collections.emptyList();
     }
 
     /**

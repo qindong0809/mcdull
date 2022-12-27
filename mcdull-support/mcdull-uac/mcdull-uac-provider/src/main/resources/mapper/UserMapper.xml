@@ -8,7 +8,7 @@
             sr.name as roleName
         FROM sys_user_role t
         left join sys_role sr on sr.id = t.role_id
-        where t.user_id = #{userId} and sr.del_flag = 1 and sr.status = 1
+        where t.user_id = #{userId} and sr.del_flag = false and sr.status = 1
     </select>
     <select id="queryModulesByRoleId" resultType="java.lang.String">
         select
@@ -20,6 +20,6 @@
         where
             t.role_id = #{roleId}
           and m.status = 1
-          and m.del_flag = 1
+          and m.del_flag = false
     </select>
 </mapper>

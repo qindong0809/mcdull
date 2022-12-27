@@ -11,15 +11,22 @@ import java.util.Date;
  * @author dqcer
  * @version 2022/01/12
  */
-public class BaseDO extends IdDO {
+public class BaseDO extends MiddleDO {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 创建时间
+     * 删除标识，默认FALSE
+     * @see com.dqcer.framework.base.enums.DelFlayEnum
      */
     @TableField(fill = FieldFill.INSERT)
-    protected Date createdTime;
+    protected Boolean delFlag;
+
+
+    /**
+     * 删除人
+     */
+    protected Long delBy;
 
     /**
      * 创建人
@@ -48,23 +55,34 @@ public class BaseDO extends IdDO {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("BaseDO{");
-        sb.append("createdTime=").append(createdTime);
-        sb.append(", createdBy=").append(createdBy);
-        sb.append(", updatedTime=").append(updatedTime);
-        sb.append(", updatedBy=").append(updatedBy);
-        sb.append(", status=").append(status);
-        sb.append(", id=").append(id);
-        sb.append('}');
-        return sb.toString();
+        return "BaseDO{" +
+                "delFlag=" + delFlag +
+                ", delBy=" + delBy +
+                ", createdBy=" + createdBy +
+                ", updatedTime=" + updatedTime +
+                ", updatedBy=" + updatedBy +
+                ", status=" + status +
+                ", createdTime=" + createdTime +
+                ", id=" + id +
+                "} " + super.toString();
     }
 
-    public Date getCreatedTime() {
-        return createdTime;
+    public Boolean getDelFlag() {
+        return delFlag;
     }
 
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
+    public BaseDO setDelFlag(Boolean delFlag) {
+        this.delFlag = delFlag;
+        return this;
+    }
+
+    public Long getDelBy() {
+        return delBy;
+    }
+
+    public BaseDO setDelBy(Long delBy) {
+        this.delBy = delBy;
+        return this;
     }
 
     public Long getCreatedBy() {

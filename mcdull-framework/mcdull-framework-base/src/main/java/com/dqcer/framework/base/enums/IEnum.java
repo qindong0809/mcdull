@@ -118,6 +118,17 @@ public interface IEnum<T>  extends Serializable {
     }
 
     /**
+     * 获取 code集合
+     *
+     * @param clazz clazz 字典枚举类
+     * @return {@link List}<{@link T}>
+     */
+    static <T> List<T> getCodes(Class<? extends IEnum<T>> clazz) {
+        List<IEnum<T>> all = getAll(clazz);
+        return all.stream().map(IEnum::getCode).collect(Collectors.toList());
+    }
+
+    /**
      * 初始化
      *
      * @param code 字典编码
