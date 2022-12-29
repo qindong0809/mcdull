@@ -4,24 +4,14 @@ import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
-import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
-import com.baomidou.mybatisplus.generator.config.FileOutConfig;
-import com.baomidou.mybatisplus.generator.config.GlobalConfig;
-import com.baomidou.mybatisplus.generator.config.PackageConfig;
-import com.baomidou.mybatisplus.generator.config.StrategyConfig;
-import com.baomidou.mybatisplus.generator.config.TemplateConfig;
+import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * 代码生成器
@@ -171,7 +161,6 @@ public class CodeGenerator {
         mpg.execute();
     }
 
-    @NotNull
     private static GlobalConfig getGlobalConfig(String author, String outPath) {
         GlobalConfig gc = new GlobalConfig();
         gc.setDateType(DateType.ONLY_DATE);
@@ -183,7 +172,6 @@ public class CodeGenerator {
         return gc;
     }
 
-    @NotNull
     private static TemplateConfig getTemplateConfig(AutoGenerator mpg) {
         TemplateConfig templateConfig = new TemplateConfig();
         templateConfig.setXml(null);
@@ -197,7 +185,6 @@ public class CodeGenerator {
         return templateConfig;
     }
 
-    @NotNull
     private static StrategyConfig getStrategyConfig(String split, PackageConfig pc) {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
@@ -216,7 +203,6 @@ public class CodeGenerator {
         return strategy;
     }
 
-    @NotNull
     private static InjectionConfig getInjectionConfig(String projectName, String modelName, String className, String repositoryPackage, String repositoryImplPackage, String controllerSuffix, String serviceSuffix, String serviceImplSuffix, String repositorySuffix, String repositoryImplSuffix, String mapperSuffix, String entitySuffix, String voSuffix, String dtoSuffix, String convertSuffix, String entityPackage, String dtoPackage, String voPackage, String convertPackage) {
         // 自定义配置
         return new InjectionConfig() {
