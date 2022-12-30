@@ -27,7 +27,7 @@
 
 * 在线文档： 待补充...
 * 如果满足您的需求，很期待您右上角点个 star)
-* 
+
 
 #### 介绍
 麦兜框架：依赖管理 基类/超类 效验参数 架构规则库 操作稽查组件 缓存组件 多级缓存 多数据源 动态数据源 加解密 MQ组件
@@ -35,7 +35,9 @@
 ### 架构图
 ![](https://gitee.com/dqcer/mcdull/raw/master/doc/assets/%E6%9E%B6%E6%9E%84%E5%9B%BE.png)
 
-#### 项目结构 
+> 画图工具 [excalidraw](https://excalidraw.com/)
+
+### 项目结构 
 
 ```
 mcdull
@@ -65,7 +67,7 @@ mcdull
 
 ```
 
-# 功能特性
+### 功能特性
 
 - [x] <img src="https://img.shields.io/badge/-全链路日志追踪-brightgreen.svg" alt="全链路日志追踪">
 - [x] 网关动态路由
@@ -84,6 +86,15 @@ mcdull
 - [x] 代码生成器
 - [x] 分布式锁
 - [x] 基于IP的雪花算法
+
+### 框架优势
+
+1. 模块化架构设计，层次清晰，方便升级。
+2. 最小依赖原则，杜绝循环重复依赖。
+3. 从真实线上环境中提炼而来。
+4. 前沿技术与技术成熟度的平衡选型。
+5. 代码洁癖者。
+6. 有节制的使用第三方开源组件，最大程度上实现自主可控。
 
 
 ### 编码常识
@@ -137,40 +148,19 @@ BeanUtil.copyProperties(source, target)
 - 缩写：如write 简化为 w, read 简化为 r
 - 压缩：文件压缩处理
 
-> 多说一句： 日志用时方恨少，切记避免过于冗余
+> 多说一句： 日志用时方恨少，但切记避免过于冗余
 
 
-### 框架优势
+### 常见问题
 
-1. 模块化架构设计，层次清晰，方便升级。
-2. 最小依赖原则，杜绝循环重复依赖。
-3. 从真实线上环境中提炼而来。
-4. 前沿技术与技术成熟度的平衡选型。
-5. 代码洁癖者。
-6. 有节制的使用第三方开源组件，最大程度上实现自主可控。
+#### 是否使用swagger
+- 结论：尽量避免使用``swagger``
+- 原因：代码侵入性强，部分存在兼容问题
 
-### 框架功能
+#### 是否lombok
+- 结论：科学使用``lombok``，不要一上来就使用``@Data``注解
+- 原因：有时候bean只需要``get``、``set`` 和 ``toString``,但这哥们给我们生成太多东西了。另外因为是在编译的时候生成的，导致编译速度下降
 
-
-### 参与贡献
-
-- 期待您的加入！ 联系作者(dqcer@sina.com)
-- 1.  Fork 本仓库
-- 2.  新建 Feat_xxx 分支
-- 3.  提交代码
-- 4.  新建 Pull Request
 
 ### 后期规划
-```java
-
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        registry.addFormatter(new DateFormatter("yyyy-MM-dd HH:mm:ss"));
-    }
-
-    @Bean
-    public HttpMessageConverter<String> responseBodyConverter() {
-        StringHttpMessageConverter converter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
-        return converter;
-    }
-```
+> 如有需求请联系作者(dqcer@sina.com)
