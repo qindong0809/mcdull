@@ -6,6 +6,8 @@ import com.dqcer.framework.base.util.ObjUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.function.Function;
+
 /**
  * feign结果解析
  *
@@ -15,6 +17,22 @@ import org.slf4j.LoggerFactory;
 public class FeignResultParse {
 
     public final static Logger log = LoggerFactory.getLogger(FeignResultParse.class);
+
+    /**
+     * 获得实例，支持函数式但不推荐使用
+     * eg:
+     *         Result<String> result = Result.error(ResultCode.DATA_EXIST);
+     *         String instance = getInstance(result, Result::getData);
+     *         System.out.println(instance);
+     *
+     * @param result   结果
+     * @param function 函数
+     * @return {@link T}
+     */
+    public static <T> T getInstance(Result<T> result, Function<Result<T>, T> function) {
+        return function.apply(result);
+    }
+
 
     /**
      * 解析result并获取实例，并处理null值
