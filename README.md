@@ -32,6 +32,9 @@
 #### 介绍
 麦兜框架：依赖管理 基类/超类 效验参数 架构规则库 操作稽查组件 缓存组件 多级缓存 多数据源 动态数据源 加解密 MQ组件
 
+### 架构图
+![](https://gitee.com/dqcer/mcdull/raw/master/doc/assets/%E6%9E%B6%E6%9E%84%E5%9B%BE.png)
+
 #### 项目结构 
 
 ```
