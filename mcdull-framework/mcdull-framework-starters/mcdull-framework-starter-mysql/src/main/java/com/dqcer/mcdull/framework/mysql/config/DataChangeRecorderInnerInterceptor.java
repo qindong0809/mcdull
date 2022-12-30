@@ -75,6 +75,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author yuxiaobin
  * @date 2022-8-21
  */
+@SuppressWarnings("all")
 public class DataChangeRecorderInnerInterceptor implements InnerInterceptor {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     @SuppressWarnings("unused")

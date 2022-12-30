@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @version 2022/12/29
  */
 @Component
-public class TestJob extends IJob {
+public class TestJob extends BaseJob {
 
     private static final Logger log = LoggerFactory.getLogger(TestJob.class);
 
