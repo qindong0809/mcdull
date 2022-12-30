@@ -62,6 +62,25 @@ mcdull
 
 ```
 
+# 功能特性
+
+- [x] <img src="https://img.shields.io/badge/-全链路日志追踪-brightgreen.svg" alt="全链路日志追踪">
+- [x] 网关动态路由
+- [x] 日志打印
+  - [x] 基于网关
+  - [x] 基于controller
+  - [x] 基于数据库表
+- [x] RBAC权限控制
+- [x] 参数效验
+- [x] 枚举封装
+- [x] 动态数据源
+- [x] 多级缓存
+- [x] VO/DO/DTO定义
+- [x] 异常拦截
+- [x] 码表自动翻译
+- [x] 代码生成器
+- [x] 分布式锁
+- [x] 基于IP的雪花算法
 
 
 ### 编码常识
