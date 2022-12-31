@@ -22,7 +22,9 @@
 
 --- 
 ### 架构图
-<img src="../assets/架构图.png" style="zoom:20%">
+<div align="center">
+    <img src="../assets/架构图.png" style="zoom:20%" >
+</div>
 
 ### 2、当前用户修改资料
 - 接口
