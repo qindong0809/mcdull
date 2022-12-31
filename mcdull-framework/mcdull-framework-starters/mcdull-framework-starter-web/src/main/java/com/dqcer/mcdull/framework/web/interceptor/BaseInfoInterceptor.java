@@ -101,7 +101,9 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
                 boolean anyMatch = userPower.stream().anyMatch(i -> i.getModules().contains(code));
                 if (!anyMatch) {
                     log.warn("没有对应的模块权限: {}, userPower: {}", ResultCode.POWER_CHECK_MODULE, userPower);
-                    response.getWriter().write("{\"code\":999410, \"data\":null, \"msg\":\"无权限\"}");
+                    String json = "{\"code\":"+ResultCode.POWER_CHECK_MODULE.getCode()+
+                                    ", \"data\":null, \"message\":\""+ResultCode.POWER_CHECK_MODULE.getMessage()+"\"}";
+                    response.getWriter().write(json);
                     return false;
                 }
             }

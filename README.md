@@ -96,6 +96,24 @@ mcdull
 5. 代码洁癖者。
 6. 有节制的使用第三方开源组件，最大程度上实现自主可控。
 
+### 快速开始
+
+#### 文档部署
+
+- 全局安装``docsify`` ，安装之前必须要安装``nodeJS``
+```shell
+npm i docsify-cli -g
+```
+- 进入到文档目录下
+```shell
+cd doc
+```
+- 启动文档系统
+```shell
+docsify serve .
+```
+
+
 
 ### 编码常识
 

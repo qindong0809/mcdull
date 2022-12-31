@@ -14,17 +14,17 @@ public enum ResultCode implements IResultCode , IEnum<Integer> {
 	/**
 	 * 操作成功
 	 */
-	SUCCESS(0, "操作成功"),
+	SUCCESS(200, "操作成功"),
 
 	/**
 	 * 服务异常
 	 */
-	ERROR_UNKNOWN(999500, "未知异常: {0}"),
+	ERROR_UNKNOWN(500, "未知异常: {0}"),
 
 	/**
 	 * 服务不可用
 	 */
-	SERVICE_UNAVAILABLE(999503, "服务不可用: {0}"),
+	SERVICE_UNAVAILABLE(503, "服务不可用: {0}"),
 
 	/**
 	 * sql语法错误
@@ -49,7 +49,7 @@ public enum ResultCode implements IResultCode , IEnum<Integer> {
 	/**
 	 * 无权限
 	 */
-	UN_AUTHORIZATION(999401, "无权限"),
+	UN_AUTHORIZATION(401, "无权限"),
 
 	/**
 	 * 异地登录
@@ -72,9 +72,9 @@ public enum ResultCode implements IResultCode , IEnum<Integer> {
 	LOGOUT(999405, "客户端已主动退出"),
 
 	/**
-	 * 没有对应模块
+	 * 权限不足，此接口需要具备相应的权限才能访问
 	 */
-	POWER_CHECK_MODULE(999410, "没有对应的模块权限"),
+	POWER_CHECK_MODULE(403, "权限不足，此接口需要具备相应的权限才能访问"),
 
 	/**
 	 * 没有traceId
