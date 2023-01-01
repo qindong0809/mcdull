@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.uac.provider.config;
+package com.dqcer.mcdull.uac.provider.config.interceptor;
 
 
 import com.dqcer.mcdull.framework.mysql.interceptor.DynamicDatasourceInterceptor;
@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @version 2022/05/10
  */
 @Configuration
-public class Interceptor implements WebMvcConfigurer {
+public class WebInterceptor implements WebMvcConfigurer {
 
     /**
      * 添加拦截器

@@ -8,7 +8,7 @@ import com.dqcer.framework.base.enums.IEnum;
  * @author dqcer
  * @version 2022/01/11
  */
-public enum ResultCode implements IResultCode , IEnum<Integer> {
+public enum CodeEnum implements ICode , IEnum<Integer> {
 
 
 	/**
@@ -144,7 +144,7 @@ public enum ResultCode implements IResultCode , IEnum<Integer> {
 		return this.message;
 	}
 
-	ResultCode(int code, String message) {
+	CodeEnum(int code, String message) {
 		init(code, message);
 		this.code = code;
 		this.message = message;

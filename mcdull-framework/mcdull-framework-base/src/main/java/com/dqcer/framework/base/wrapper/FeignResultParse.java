@@ -21,7 +21,7 @@ public class FeignResultParse {
     /**
      * 获得实例，支持函数式但不推荐使用
      * eg:
-     *         Result<String> result = Result.error(ResultCode.DATA_EXIST);
+     *         Result<String> result = Result.error(CodeEnum.DATA_EXIST);
      *         String instance = getInstance(result, Result::getData);
      *         System.out.println(instance);
      *

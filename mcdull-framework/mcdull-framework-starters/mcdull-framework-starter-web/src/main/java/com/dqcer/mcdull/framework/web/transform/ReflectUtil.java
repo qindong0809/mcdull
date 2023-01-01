@@ -1,6 +1,7 @@
 package com.dqcer.mcdull.framework.web.transform;
 
 
+import com.dqcer.framework.base.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +60,7 @@ public class ReflectUtil {
             setMethod.invoke(obj, param);
         } catch (IllegalAccessException | InvocationTargetException e) {
             log.error("invoke set exception", e);
-            throw new RuntimeException("invoke set exception");
+            throw new BusinessException("invoke set exception");
         }
     }
 
@@ -91,7 +92,7 @@ public class ReflectUtil {
             return getMethod.invoke(obj);
         } catch (IllegalAccessException | InvocationTargetException e) {
             log.error("invoke get exception", e);
-            throw new RuntimeException("invoke get exception");
+            throw new BusinessException("invoke get exception");
         }
     }
 
@@ -156,7 +157,7 @@ public class ReflectUtil {
             }
         }
         log.error("no such method by set");
-        throw new RuntimeException("no such method by set");
+        throw new BusinessException("no such method by set");
     }
 
 }

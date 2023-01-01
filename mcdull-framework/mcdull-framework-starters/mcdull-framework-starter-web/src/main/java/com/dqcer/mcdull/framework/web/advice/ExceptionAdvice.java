@@ -4,7 +4,7 @@ import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.exception.DatabaseRowException;
 import com.dqcer.framework.base.exception.FeignBizException;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.mcdull.framework.web.util.IpUtil;
 import feign.FeignException;
 import org.slf4j.Logger;
@@ -62,7 +62,7 @@ public class ExceptionAdvice {
 
         String errorStack = stringWriter.toString();
         errorStack = errorStack.substring(0, 1000);
-        return Result.error(ResultCode.ERROR_UNKNOWN, Collections.singletonList(errorStack));
+        return Result.error(CodeEnum.ERROR_UNKNOWN, Collections.singletonList(errorStack));
     }
 
     /**
@@ -74,7 +74,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(value = FeignException.class)
     public Result<?> feignException(FeignException exception) {
         log.error("feign调用异常: ", exception);
-        return Result.error(ResultCode.FEIGN_BIZ, Collections.singletonList(exception.contentUTF8()));
+        return Result.error(CodeEnum.FEIGN_BIZ, Collections.singletonList(exception.contentUTF8()));
     }
 
     /**
@@ -86,7 +86,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(value = FeignBizException.class)
     public Result<?> feignBizException(FeignBizException exception) {
         log.error("feign调用异常: ", exception);
-        return Result.error(ResultCode.FEIGN_BIZ, Collections.singletonList(exception.getResult()));
+        return Result.error(CodeEnum.FEIGN_BIZ, Collections.singletonList(exception.getResult()));
     }
 
     /**
@@ -110,7 +110,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(value = DatabaseRowException.class)
     public Result<?> databaseRowException(DatabaseRowException exception) {
         log.error("数据库实际影响行数与预期不同: ", exception);
-        return Result.error(ResultCode.DB_ERROR);
+        return Result.error(CodeEnum.DB_ERROR);
     }
 
     /**
@@ -122,7 +122,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)
     public Result<?> httpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException exception) {
         log.error("请求头Content-Type异常: ", exception);
-        return Result.error(ResultCode.ERROR_CONTENT_TYPE);
+        return Result.error(CodeEnum.ERROR_CONTENT_TYPE);
     }
 
     /**
@@ -134,7 +134,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(value = MissingResourceException.class)
     public Result<?> missingResourceException(MissingResourceException exception) {
         log.error("无法找到对应properties文件中对应的key: ", exception);
-        return Result.error(ResultCode.NOT_FIND_PROPERTIES_KEY);
+        return Result.error(CodeEnum.NOT_FIND_PROPERTIES_KEY);
     }
 
     /**
@@ -146,7 +146,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     public Result<?> httpMessageConversionException(HttpMessageNotReadableException exception) {
         log.error("参数接收时，类型转换异常: ", exception);
-        return Result.error(ResultCode.ERROR_CONVERSION);
+        return Result.error(CodeEnum.ERROR_CONVERSION);
     }
 
 
@@ -167,18 +167,18 @@ public class ExceptionAdvice {
             if (arguments == null) {
                 errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,，错误提示：%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), objectError.getDefaultMessage());
                 log.error("参数异常: {}", errorMessage);
-                return Result.error(ResultCode.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
+                return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
             }
             DefaultMessageSourceResolvable a = (DefaultMessageSourceResolvable) arguments[0];
             errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,字段名称：%s，错误提示：%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), a.getDefaultMessage(), objectError.getDefaultMessage());
             log.error("参数异常: {}", errorMessage);
-            return Result.error(ResultCode.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
+            return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
         if (e instanceof ConstraintViolationException) {
             ConstraintViolationException ex = (ConstraintViolationException) e;
             errorMessage = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining("; "));
             log.error("参数异常: {}", errorMessage);
-            return Result.error(ResultCode.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
+            return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
 
         if (e instanceof BindException) {
@@ -193,7 +193,7 @@ public class ExceptionAdvice {
                         applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), fieldName, objectError.getDefaultMessage());
             }
             log.error("参数异常: {}", errorMessage);
-            return Result.error(ResultCode.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
+            return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
 
         if (e instanceof MissingServletRequestParameterException) {
@@ -201,10 +201,10 @@ public class ExceptionAdvice {
             String parameterName = ex.getParameterName();
 
             log.error("参数异常, parameterName: {}, {}", parameterName, String.format("appName=%s, clientIp=%s, requestURI=%s,message:%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), ex.getMessage()));
-            return Result.error(ResultCode.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
+            return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
         errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,message:%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), e.getMessage());
         log.error("参数异常: {}", errorMessage);
-        return Result.error(ResultCode.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
+        return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
     }
 }

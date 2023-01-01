@@ -28,12 +28,12 @@ public class DataSourceBuilder {
         try {
             Class.forName(HIKARI_DATASOURCE);
         } catch (ClassNotFoundException e) {
-            e.getStackTrace();
+            log.error(e.getMessage(), e);
         }
         try {
             configCopyMethod = HikariConfig.class.getMethod("copyStateTo", HikariConfig.class);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

@@ -1,9 +1,9 @@
 package com.dqcer.framework.base.wrapper;
 
 
-import com.dqcer.framework.base.vo.VO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.StringJoiner;
@@ -15,7 +15,7 @@ import java.util.StringJoiner;
  * @version 2022/07/26
  */
 @SuppressWarnings("unused")
-public class Result<T> implements VO {
+public class Result<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -49,8 +49,8 @@ public class Result<T> implements VO {
      */
     public static <T> Result<T> ok() {
         return Result.<T>builder()
-                .withCode(ResultCode.SUCCESS.code)
-                .withMessage(ResultCode.SUCCESS.message)
+                .withCode(CodeEnum.SUCCESS.code)
+                .withMessage(CodeEnum.SUCCESS.message)
                 .build();
     }
 
@@ -62,8 +62,8 @@ public class Result<T> implements VO {
      */
     public static <T> Result<T> ok(T data) {
         return Result.<T>builder()
-                .withCode(ResultCode.SUCCESS.code)
-                .withMessage(ResultCode.SUCCESS.message)
+                .withCode(CodeEnum.SUCCESS.code)
+                .withMessage(CodeEnum.SUCCESS.message)
                 .withData(data)
                 .build();
     }
@@ -75,7 +75,7 @@ public class Result<T> implements VO {
      * @param resultCode 结果代码
      * @return 警告消息
      */
-    public static <T> Result<T> error(IResultCode resultCode) {
+    public static <T> Result<T> error(ICode resultCode) {
         return Result.<T>builder()
                 .withCode(resultCode.getCode())
                 .withMessage(resultCode.getMessage())
@@ -89,7 +89,7 @@ public class Result<T> implements VO {
      * @param param      参数
      * @return {@link Result}<{@link T}>
      */
-    public static <T> Result<T> error(IResultCode resultCode, List<Object> param) {
+    public static <T> Result<T> error(ICode resultCode, List<Object> param) {
         return Result.<T>builder()
                 .withCode(resultCode.getCode())
                 .withMessage(MessageFormat.format(resultCode.getMessage(), param.toArray()))
@@ -116,7 +116,7 @@ public class Result<T> implements VO {
      */
     @JsonIgnore
     public boolean isOk() {
-        return code == ResultCode.SUCCESS.code;
+        return code == CodeEnum.SUCCESS.code;
     }
 
     @Override

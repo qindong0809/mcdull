@@ -10,7 +10,7 @@ import com.dqcer.framework.base.enums.StatusEnum;
 import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.StrUtil;
-import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.mcdull.uac.provider.model.dto.MenuLiteDTO;
 import com.dqcer.mcdull.uac.provider.model.entity.MenuDO;
 import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
@@ -60,7 +60,7 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
         entity.setCreatedTime(new Date());
         int insert = baseMapper.insert(entity);
         if (insert != 1) {
-            throw new BusinessException(ResultCode.DB_ERROR);
+            throw new BusinessException(CodeEnum.DB_ERROR);
         }
         return entity.getId();
     }

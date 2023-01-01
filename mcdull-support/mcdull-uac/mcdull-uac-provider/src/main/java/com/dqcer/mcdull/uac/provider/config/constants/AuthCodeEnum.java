@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac.provider.config.constants;
 
 import com.dqcer.framework.base.enums.IEnum;
-import com.dqcer.framework.base.wrapper.IResultCode;
+import com.dqcer.framework.base.wrapper.ICode;
 
 /**
  * 返回码实现
@@ -9,7 +9,7 @@ import com.dqcer.framework.base.wrapper.IResultCode;
  * @author dqcer
  * @version 2022/01/11
  */
-public enum AuthCode implements IResultCode, IEnum<Integer> {
+public enum AuthCodeEnum implements ICode, IEnum<Integer> {
 
 
 	/**
@@ -48,7 +48,7 @@ public enum AuthCode implements IResultCode, IEnum<Integer> {
 		return this.message;
 	}
 
-	AuthCode(int code, String message) {
+	AuthCodeEnum(int code, String message) {
 		init(code, message);
 		this.code = code;
 		this.message = message;

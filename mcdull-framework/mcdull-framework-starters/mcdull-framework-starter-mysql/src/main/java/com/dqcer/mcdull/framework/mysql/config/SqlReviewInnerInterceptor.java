@@ -71,6 +71,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SqlReviewInnerInterceptor extends JsqlParserSupport implements InnerInterceptor {
 
+
     private final ApplicationContext context;
 
     /**
@@ -334,7 +335,7 @@ public class SqlReviewInnerInterceptor extends JsqlParserSupport implements Inne
                     INDEX_INFO_MAP.put(key, indexInfos);
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("SQLException ", e);
             }
         }
         return indexInfos;

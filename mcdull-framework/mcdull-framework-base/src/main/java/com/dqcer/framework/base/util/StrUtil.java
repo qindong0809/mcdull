@@ -7,12 +7,11 @@ package com.dqcer.framework.base.util;
  * @version 2022/10/04
  */
 @SuppressWarnings("unused")
-public enum StrUtil {
+public class StrUtil {
 
-    /**
-     * 实例
-     */
-    INSTANCE;
+    private StrUtil() {
+        throw new AssertionError();
+    }
 
     /**
      * 判断是否为空

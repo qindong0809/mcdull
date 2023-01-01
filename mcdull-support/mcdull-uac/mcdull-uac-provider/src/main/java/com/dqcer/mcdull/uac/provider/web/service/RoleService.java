@@ -9,7 +9,7 @@ import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.PageUtil;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.mcdull.uac.provider.model.convert.RoleConvert;
 import com.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
 import com.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
@@ -84,7 +84,7 @@ public class RoleService {
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
         List<RoleDO> list = roleRepository.list(query);
         if (!list.isEmpty()) {
-            return Result.error(ResultCode.DATA_EXIST);
+            return Result.error(CodeEnum.DATA_EXIST);
         }
 
         RoleDO entity = RoleConvert.dto2Entity(dto);
@@ -106,12 +106,12 @@ public class RoleService {
         RoleDO dbData = roleRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
-            return Result.error(ResultCode.DATA_NOT_EXIST);
+            return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
         Integer status = dto.getStatus();
         if (dbData.getStatus().equals(status)) {
             log.warn("数据已存在 id: {} status: {}", id, status);
-            return Result.error(ResultCode.DATA_EXIST);
+            return Result.error(CodeEnum.DATA_EXIST);
         }
 
         RoleDO entity = new RoleDO();
@@ -122,7 +122,7 @@ public class RoleService {
         boolean success = roleRepository.updateById(entity);
         if (!success) {
             log.error("数据更新失败，entity:{}", entity);
-            throw new BusinessException(ResultCode.DB_ERROR);
+            throw new BusinessException(CodeEnum.DB_ERROR);
         }
 
         return Result.ok(id);
@@ -142,12 +142,12 @@ public class RoleService {
         RoleDO dbData = roleRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
-            return Result.error(ResultCode.DATA_NOT_EXIST);
+            return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
         Boolean delFlag = dto.getDelFlag();
         if (dbData.getDelFlag().equals(delFlag)) {
             log.warn("数据已存在 id: {} status: {}", id, delFlag);
-            return Result.error(ResultCode.DATA_EXIST);
+            return Result.error(CodeEnum.DATA_EXIST);
         }
 
         RoleDO entity = new RoleDO();
@@ -158,7 +158,7 @@ public class RoleService {
         boolean success = roleRepository.updateById(entity);
         if (!success) {
             log.error("数据删除失败，entity:{}", entity);
-            throw new BusinessException(ResultCode.DB_ERROR);
+            throw new BusinessException(CodeEnum.DB_ERROR);
         }
 
         return Result.ok(id);

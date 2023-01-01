@@ -3,7 +3,7 @@ package com.dqcer.mcdull.gateway.filter;
 import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.mcdull.gateway.properties.FilterProperties;
 import com.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
 import com.dqcer.mcdull.gateway.utils.SpringUtils;
@@ -74,7 +74,7 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
         // feign拦截
         if(requestUrl.toLowerCase().contains(GlobalConstant.FEIGN_PREFIX)) {
             log.warn("内部feign接口，外部非法调用");
-            return errorResponse(response, ResultCode.NOT_FOUND.getCode(), ResultCode.NOT_FOUND.getMessage());
+            return errorResponse(response, CodeEnum.NOT_FOUND.getCode(), CodeEnum.NOT_FOUND.getMessage());
         }
 
         //  租户id效验
@@ -86,11 +86,11 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
             }
             if (null == tenantIdStr || tenantIdStr.trim().length() == 0) {
                 log.error("头部tid参数缺失");
-                return errorResponse(response, ResultCode.ERROR_PARAMETERS.getCode(), ResultCode.ERROR_PARAMETERS.getMessage());
+                return errorResponse(response, CodeEnum.ERROR_PARAMETERS.getCode(), CodeEnum.ERROR_PARAMETERS.getMessage());
             }
             if (!isNumber(tenantIdStr)) {
                 log.error("头部tid参数异常");
-                return errorResponse(response, ResultCode.ERROR_PARAMETERS.getCode(), ResultCode.ERROR_PARAMETERS.getMessage());
+                return errorResponse(response, CodeEnum.ERROR_PARAMETERS.getCode(), CodeEnum.ERROR_PARAMETERS.getMessage());
             }
             addHeader(mutate, HttpHeaderConstants.T_ID, tenantIdStr);
         }
@@ -102,13 +102,13 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
         }
         if (null == authorization || authorization.trim().length() == 0) {
             log.error("头部Authorization参数缺失");
-            return errorResponse(response, ResultCode.UN_AUTHORIZATION.getCode(), ResultCode.UN_AUTHORIZATION.getMessage());
+            return errorResponse(response, CodeEnum.UN_AUTHORIZATION.getCode(), CodeEnum.UN_AUTHORIZATION.getMessage());
         }
 
         String token = authorization.substring(HttpHeaderConstants.BEARER.length());
         if (token.trim().length() == 0) {
             log.error("头部Authorization参数缺失Bearer ");
-            return errorResponse(response, ResultCode.UN_AUTHORIZATION.getCode(), ResultCode.UN_AUTHORIZATION.getMessage());
+            return errorResponse(response, CodeEnum.UN_AUTHORIZATION.getCode(), CodeEnum.UN_AUTHORIZATION.getMessage());
         }
 
         String traceId = headers.getFirst(HttpHeaderConstants.TRACE_ID_HEADER);

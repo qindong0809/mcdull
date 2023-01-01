@@ -1,6 +1,7 @@
 package com.dqcer.mcdull.framework.mysql.config;
 
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
+import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.util.Snowflake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +56,7 @@ public class CustomIdGenerator implements IdentifierGenerator {
 
             return nextId;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new BusinessException(e);
         }
 
 

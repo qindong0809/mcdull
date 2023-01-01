@@ -11,7 +11,7 @@ import com.dqcer.framework.base.enums.StatusEnum;
 import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.StrUtil;
-import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
 import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import com.dqcer.mcdull.uac.provider.web.dao.mapper.RoleMapper;
@@ -60,7 +60,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
         entity.setCreatedTime(new Date());
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {
-            throw new BusinessException(ResultCode.DB_ERROR);
+            throw new BusinessException(CodeEnum.DB_ERROR);
         }
         return entity.getId();
     }

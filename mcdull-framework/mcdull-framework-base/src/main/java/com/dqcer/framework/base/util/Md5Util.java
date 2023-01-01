@@ -1,5 +1,8 @@
 package com.dqcer.framework.base.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
@@ -11,6 +14,8 @@ import java.security.MessageDigest;
  */
 @SuppressWarnings("unused")
 public class Md5Util {
+
+    private static final Logger log = LoggerFactory.getLogger(Md5Util.class);
 
     /**
      * 禁止实例化
@@ -33,7 +38,7 @@ public class Md5Util {
             byte[] md5Byte = md.digest(messageByte);
             md5 = bytesToHex(md5Byte);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return md5;
     }

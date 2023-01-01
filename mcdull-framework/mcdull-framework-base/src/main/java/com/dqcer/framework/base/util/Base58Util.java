@@ -1,5 +1,9 @@
 package com.dqcer.framework.base.util;
 
+import com.dqcer.framework.base.exception.BusinessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 
 /**
@@ -10,6 +14,8 @@ import java.util.Arrays;
  */
 @SuppressWarnings("unused")
 public class Base58Util {
+
+    private static final Logger log = LoggerFactory.getLogger(Base58Util.class);
 
     /**
      * 禁止实例化
@@ -90,7 +96,7 @@ public class Base58Util {
                 digit58 = INDEXES[c];
             }
             if (digit58 < 0) {
-                throw new RuntimeException("Not a Base58 input: " + input);
+                throw new BusinessException("Not a Base58 input: " + input);
             }
 
             input58[i] = (byte) digit58;
@@ -152,13 +158,6 @@ public class Base58Util {
         byte[] range = new byte[to - from];
         System.arraycopy(source, from, range, 0, range.length);
         return range;
-    }
-
-    public static void main(String[] args) {
-        String encode = encode("mddd".getBytes());
-        System.out.println(encode);
-        byte[] decode = decode(encode);
-        System.out.println(new String(decode));
     }
 
 }

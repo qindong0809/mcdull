@@ -3,7 +3,7 @@ package com.dqcer.mcdull.framework.redis.aspect;
 
 import com.dqcer.framework.base.constants.SymbolConstants;
 import com.dqcer.framework.base.exception.BusinessException;
-import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.mcdull.framework.redis.annotation.RedisLock;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -87,7 +87,7 @@ public class RedisLockAspect {
                     }
                 }
             }
-            throw new BusinessException(ResultCode.LOCK_TIMEOUT);
+            throw new BusinessException(CodeEnum.LOCK_TIMEOUT);
         } catch (InterruptedException e) {
             log.error("Interrupted! {} {}", e.getMessage(), e);
             Thread.currentThread().interrupt();

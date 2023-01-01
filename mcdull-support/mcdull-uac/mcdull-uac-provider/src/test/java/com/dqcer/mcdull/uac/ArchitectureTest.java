@@ -1,0 +1,58 @@
+package com.dqcer.mcdull.uac;
+
+import com.dqcer.framework.base.dto.DTO;
+import com.dqcer.framework.base.vo.VO;
+import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.lang.ArchRule;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+
+
+public class ArchitectureTest {
+
+    private JavaClasses classes;
+
+    @BeforeEach
+    public void setUp() {
+        classes = new ClassFileImporter().importPackages("com.dqcer");
+    }
+
+    @Test
+    public void requiredRules() {
+        for (ArchRule rule : ArchitectureEnforcer.requiredRules) {
+            rule.check(classes);
+        }
+    }
+
+    /**
+     * dto实现类名称规则
+     */
+    @Test
+    public void dto_implement_class_name_rule() {
+        JavaClasses importedClasses = new ClassFileImporter().importPackages("com.dqcer");
+        ArchRule myRule = classes().that().implement(DTO.class)
+                .should().haveSimpleNameEndingWith("DTO");
+        myRule.check(importedClasses);
+
+        myRule = classes().that().implement(VO.class)
+                .should().haveSimpleNameEndingWith("VO");
+        myRule.check(importedClasses);
+    }
+
+
+    /**
+     * 一些建筑规则
+     */
+    @Test
+    public void some_architecture_rule() {
+        JavaClasses importedClasses = new ClassFileImporter().importPackages("com.dqcer");
+        ArchRule myRule = classes()
+                .that().resideInAPackage("..web.service..")
+                .should().onlyBeAccessed().byAnyPackage("..controller..","..api..", "..service..", "..interceptor..");
+
+        myRule.check(importedClasses);
+    }
+}

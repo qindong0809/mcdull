@@ -1,7 +1,7 @@
 package com.dqcer.framework.base.exception;
 
 
-import com.dqcer.framework.base.wrapper.IResultCode;
+import com.dqcer.framework.base.wrapper.ICode;
 
 /**
  * 业务异常
@@ -13,13 +13,13 @@ public class BusinessException extends RuntimeException {
 
 	private static final long serialVersionUID = -8454250231269196534L;
 
-	protected IResultCode code;
+	protected ICode code;
 
-	public void setCode(IResultCode code) {
+	public void setCode(ICode code) {
 		this.code = code;
 	}
 
-	public IResultCode getCode() {
+	public ICode getCode() {
 		return code;
 	}
 
@@ -27,7 +27,7 @@ public class BusinessException extends RuntimeException {
 		super();
 	}
 
-	public BusinessException(IResultCode codeEnum) {
+	public BusinessException(ICode codeEnum) {
 		super(codeEnum == null ? "" : String.format("code=%d,message=%s", codeEnum.getCode(), codeEnum.getMessage()));
 		this.code = codeEnum;
 	}

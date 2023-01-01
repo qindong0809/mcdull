@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.gateway.handler;
 
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -58,30 +58,30 @@ public class ExceptionHandler implements WebExceptionHandler, Ordered {
                     switch (status) {
                         case NOT_FOUND:
                             // 404
-                            error = Result.error(ResultCode.NOT_FOUND);
+                            error = Result.error(CodeEnum.NOT_FOUND);
                             break;
                         case METHOD_NOT_ALLOWED:
                             // 405
-                            error = Result.error(ResultCode.METHOD_NOT_ALLOWED);
+                            error = Result.error(CodeEnum.METHOD_NOT_ALLOWED);
                             break;
                         case BAD_REQUEST:
                             // 参数异常
                             log.warn("网关异常处理", ex);
-                            error = Result.error(ResultCode.ERROR_PARAMETERS);
+                            error = Result.error(CodeEnum.ERROR_PARAMETERS);
                             break;
                         case SERVICE_UNAVAILABLE:
                             // 服务不可用
-                            error = Result.error(ResultCode.SERVICE_UNAVAILABLE, Collections.singletonList(ex.getMessage()));
+                            error = Result.error(CodeEnum.SERVICE_UNAVAILABLE, Collections.singletonList(ex.getMessage()));
                             break;
                         default:
                             // 其他异常默认为500
                             log.warn("网关异常处理", ex);
-                            error = Result.error(ResultCode.ERROR_UNKNOWN, Collections.singletonList(ex.getMessage()));
+                            error = Result.error(CodeEnum.ERROR_UNKNOWN, Collections.singletonList(ex.getMessage()));
                             break;
                     }
                 } else {
                     log.warn("网关异常处理: {}", ex.getMessage());
-                    error = Result.error(ResultCode.ERROR_UNKNOWN, Collections.singletonList(ex.getMessage()));
+                    error = Result.error(CodeEnum.ERROR_UNKNOWN, Collections.singletonList(ex.getMessage()));
                 }
                 return bufferFactory.wrap(objectMapper.writeValueAsBytes(error));
             } catch (JsonProcessingException e) {

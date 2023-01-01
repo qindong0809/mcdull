@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.uac.provider.config;
+package com.dqcer.mcdull.uac.provider.config.interceptor;
 
 import com.dqcer.framework.base.annotation.Authorized;
 import com.dqcer.framework.base.annotation.UnAuthorize;
@@ -10,7 +10,7 @@ import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.ObjUtil;
 import com.dqcer.framework.base.util.StrUtil;
 import com.dqcer.framework.base.wrapper.FeignResultParse;
-import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import com.dqcer.mcdull.uac.provider.web.service.UserService;
@@ -63,22 +63,8 @@ public class BaseInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        // 获取当前用户信息
-        UnifySession unifySession = new UnifySession();
-        String language = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        if (language == null) {
-            language = LanguageEnum.ZH_CN.getCode();
-        } else {
-            language = language.substring(0, language.indexOf(','));
-        }
-        unifySession.setLanguage(language);
-        unifySession.setUserId(Long.valueOf(request.getHeader(HttpHeaderConstants.U_ID)));
-        String tenantId = request.getHeader(HttpHeaderConstants.T_ID);
-        if (StrUtil.isNotBlank(tenantId)) {
-            unifySession.setTenantId(Long.valueOf(tenantId));
-        }
-        unifySession.setTraceId(request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER));
-        UserContextHolder.setSession(unifySession);
+        // 设置用户上下文
+        UnifySession unifySession = setUserContextHolder(request);
 
         if (requestUrl.startsWith(GlobalConstant.FEIGN_PREFIX)) {
             return true;
@@ -87,7 +73,20 @@ public class BaseInterceptor implements HandlerInterceptor {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
 
-        // 资源模块效验
+        // 资源模块权限检查
+        return powerCheckModule(response, method, unifySession);
+    }
+
+    /**
+     * 资源模块权限检查
+     *
+     * @param response     响应
+     * @param method       方法
+     * @param unifySession 统一会话
+     * @return boolean
+     * @throws IOException ioexception
+     */
+    private boolean powerCheckModule(HttpServletResponse response, HandlerMethod method, UnifySession unifySession) throws IOException {
         Authorized authorized = method.getMethodAnnotation(Authorized.class);
         if (null != authorized) {
             String code = authorized.value();
@@ -103,9 +102,9 @@ public class BaseInterceptor implements HandlerInterceptor {
                 }
                 boolean anyMatch = userPower.stream().anyMatch(i -> i.getModules().contains(code));
                 if (!anyMatch) {
-                    log.warn("没有对应的模块权限, 模块：{}, userPower: {}", ResultCode.POWER_CHECK_MODULE, userPower);
-                    String json = "{\"code\":"+ResultCode.POWER_CHECK_MODULE.getCode()+
-                            ", \"data\":null, \"message\":\""+ResultCode.POWER_CHECK_MODULE.getMessage()+"\"}";
+                    log.warn("没有对应的模块权限, 模块：{}, userPower: {}", CodeEnum.POWER_CHECK_MODULE, userPower);
+                    String json = "{\"code\":"+CodeEnum.POWER_CHECK_MODULE.getCode()+
+                            ", \"data\":null, \"message\":\""+CodeEnum.POWER_CHECK_MODULE.getMessage()+"\"}";
                     response.getWriter().write(json);
                     return false;
                 }
@@ -114,22 +113,34 @@ public class BaseInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    /**
+     * 设置用户上下文
+     *
+     * @param request 请求
+     * @return {@link UnifySession}
+     */
+    private static UnifySession setUserContextHolder(HttpServletRequest request) {
+        UnifySession unifySession = new UnifySession();
+        String language = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
+        if (language == null) {
+            language = LanguageEnum.ZH_CN.getCode();
+        } else {
+            language = language.substring(0, language.indexOf(','));
+        }
+        unifySession.setLanguage(language);
+        unifySession.setUserId(Long.valueOf(request.getHeader(HttpHeaderConstants.U_ID)));
+        String tenantId = request.getHeader(HttpHeaderConstants.T_ID);
+        if (StrUtil.isNotBlank(tenantId)) {
+            unifySession.setTenantId(Long.valueOf(tenantId));
+        }
+        unifySession.setTraceId(request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER));
+        UserContextHolder.setSession(unifySession);
+        return unifySession;
+    }
+
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         UserContextHolder.clearSession();
-    }
-
-    /**
-     * 是否执行
-     *
-     * @param object 对象
-     * @return boolean
-     */
-    public boolean isExecute(Object object) {
-        if (object instanceof HttpServletRequest) {
-            return false;
-        }
-        return !(object instanceof HttpServletResponse);
     }
 }

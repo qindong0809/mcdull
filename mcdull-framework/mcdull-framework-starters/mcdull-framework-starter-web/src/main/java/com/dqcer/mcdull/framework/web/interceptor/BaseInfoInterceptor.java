@@ -10,7 +10,7 @@ import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.ObjUtil;
 import com.dqcer.framework.base.util.StrUtil;
 import com.dqcer.framework.base.wrapper.FeignResultParse;
-import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import com.dqcer.mcdull.framework.web.feign.service.PowerCheckFeignClient;
@@ -100,9 +100,9 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
                 }
                 boolean anyMatch = userPower.stream().anyMatch(i -> i.getModules().contains(code));
                 if (!anyMatch) {
-                    log.warn("没有对应的模块权限: {}, userPower: {}", ResultCode.POWER_CHECK_MODULE, userPower);
-                    String json = "{\"code\":"+ResultCode.POWER_CHECK_MODULE.getCode()+
-                                    ", \"data\":null, \"message\":\""+ResultCode.POWER_CHECK_MODULE.getMessage()+"\"}";
+                    log.warn("没有对应的模块权限: {}, userPower: {}", CodeEnum.POWER_CHECK_MODULE, userPower);
+                    String json = "{\"code\":"+CodeEnum.POWER_CHECK_MODULE.getCode()+
+                                    ", \"data\":null, \"message\":\""+CodeEnum.POWER_CHECK_MODULE.getMessage()+"\"}";
                     response.getWriter().write(json);
                     return false;
                 }

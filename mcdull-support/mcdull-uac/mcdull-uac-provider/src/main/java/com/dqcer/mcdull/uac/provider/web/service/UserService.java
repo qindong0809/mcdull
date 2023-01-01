@@ -12,7 +12,7 @@ import com.dqcer.framework.base.util.RandomUtil;
 import com.dqcer.framework.base.util.Sha1Util;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import com.dqcer.mcdull.uac.provider.model.convert.UserConvert;
 import com.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
@@ -89,7 +89,7 @@ public class UserService {
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
         List<UserDO> list = userRepository.list(query);
         if (!list.isEmpty()) {
-            return Result.error(ResultCode.DATA_EXIST);
+            return Result.error(CodeEnum.DATA_EXIST);
         }
 
         UserDO entity = UserConvert.dto2Entity(dto);
@@ -118,12 +118,12 @@ public class UserService {
         UserDO dbData = userRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
-            return Result.error(ResultCode.DATA_NOT_EXIST);
+            return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
         Integer status = dto.getStatus();
         if (dbData.getStatus().equals(status)) {
             log.warn("数据已存在 id: {} status: {}", id, status);
-            return Result.error(ResultCode.DATA_EXIST);
+            return Result.error(CodeEnum.DATA_EXIST);
         }
 
         UserDO entity = new UserDO();
@@ -134,7 +134,7 @@ public class UserService {
         boolean success = userRepository.updateById(entity);
         if (!success) {
             log.error("数据更新失败，entity:{}", entity);
-            throw new BusinessException(ResultCode.DB_ERROR);
+            throw new BusinessException(CodeEnum.DB_ERROR);
         }
 
         return Result.ok(id);
@@ -154,12 +154,12 @@ public class UserService {
         UserDO dbData = userRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
-            return Result.error(ResultCode.DATA_NOT_EXIST);
+            return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
         Boolean delFlag = dto.getDelFlag();
         if (dbData.getDelFlag().equals(delFlag)) {
             log.warn("数据已存在 id: {} status: {}", id, delFlag);
-            return Result.error(ResultCode.DATA_EXIST);
+            return Result.error(CodeEnum.DATA_EXIST);
         }
 
         UserDO entity = new UserDO();
@@ -170,7 +170,7 @@ public class UserService {
         boolean success = userRepository.updateById(entity);
         if (!success) {
             log.error("数据删除失败，entity:{}", entity);
-            throw new BusinessException(ResultCode.DB_ERROR);
+            throw new BusinessException(CodeEnum.DB_ERROR);
         }
 
         return Result.ok(id);
@@ -188,7 +188,7 @@ public class UserService {
         UserDO entity = userRepository.getById(id);
         if (entity == null) {
             log.warn("数据不存在 id:{}", id);
-            return Result.error(ResultCode.DATA_NOT_EXIST);
+            return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
         String password = Sha1Util.getSha1(Md5Util.getMd5(entity.getAccount() + entity.getSalt()));
         UserDO user = new UserDO();
@@ -197,7 +197,7 @@ public class UserService {
         boolean success = userRepository.updateById(user);
         if (!success) {
             log.error("重置密码失败，entity:{}", user);
-            throw new BusinessException(ResultCode.DB_ERROR);
+            throw new BusinessException(CodeEnum.DB_ERROR);
         }
         return Result.ok(id);
     }
@@ -208,14 +208,14 @@ public class UserService {
         UserDO entity = userRepository.getById(id);
         if (entity == null) {
             log.warn("数据不存在 id:{}", id);
-            return Result.error(ResultCode.DATA_NOT_EXIST);
+            return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
 
         UserDO userDO = userRepository.oneByAccount(dto.getAccount());
         if (userDO != null) {
             if (!userDO.getId().equals(id)) {
                 log.warn("账号名称已存在 account: {}", dto.getAccount());
-                return Result.error(ResultCode.DATA_EXIST);
+                return Result.error(CodeEnum.DATA_EXIST);
             }
         }
 

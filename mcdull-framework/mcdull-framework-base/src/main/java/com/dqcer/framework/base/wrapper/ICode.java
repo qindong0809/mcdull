@@ -6,7 +6,7 @@ package com.dqcer.framework.base.wrapper;
  * @author dqcer
  * @version 2022/07/26
  */
-public interface IResultCode {
+public interface ICode {
 
 	/**
 	 * 返回码

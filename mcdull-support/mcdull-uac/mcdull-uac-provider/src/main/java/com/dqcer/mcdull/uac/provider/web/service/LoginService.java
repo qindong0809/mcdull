@@ -10,10 +10,10 @@ import com.dqcer.framework.base.util.ObjUtil;
 import com.dqcer.framework.base.util.RandomUtil;
 import com.dqcer.framework.base.util.Sha1Util;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import com.dqcer.mcdull.framework.redis.operation.RedissonCache;
-import com.dqcer.mcdull.uac.provider.config.constants.AuthCode;
+import com.dqcer.mcdull.uac.provider.config.constants.AuthCodeEnum;
 import com.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
 import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserLoginRepository;
@@ -65,21 +65,21 @@ public class LoginService {
         UserDO userEntity = userRepository.queryUserByAccount(account);
         if (null == userEntity) {
             log.warn("账号不存在 account: {}", account);
-            return Result.error(AuthCode.NOT_EXIST);
+            return Result.error(AuthCodeEnum.NOT_EXIST);
         }
         String password = userEntity.getPassword();
 
         if (!password.equals(Sha1Util.getSha1(loginDTO.getPd() + userEntity.getSalt()))) {
             log.warn("用户密码错误");
-            return Result.error(AuthCode.NOT_EXIST);
+            return Result.error(AuthCodeEnum.NOT_EXIST);
         }
         if (!userEntity.getStatus().equals(StatusEnum.ENABLE.getCode())) {
             log.warn("账号已停用 account: {}", account);
-            return Result.error(AuthCode.DISABLE);
+            return Result.error(AuthCodeEnum.DISABLE);
         }
         if (!userEntity.getDelFlag().equals(DelFlayEnum.NORMAL.getCode())) {
             log.warn("账号已被删除 account: {}", account);
-            return Result.error(AuthCode.NOT_EXIST);
+            return Result.error(AuthCodeEnum.NOT_EXIST);
         }
 
         Long userId = userEntity.getId();
@@ -114,17 +114,17 @@ public class LoginService {
 
         if (ObjUtil.isNull(user)) {
             log.warn("token valid:  7天强制过期下线");
-            return Result.error(ResultCode.UN_AUTHORIZATION);
+            return Result.error(CodeEnum.UN_AUTHORIZATION);
         }
 
         if (CacheUser.OFFLINE.equals(user.getOnlineStatus())) {
             log.warn("token valid:  异地登录");
-            return Result.error(ResultCode.OTHER_LOGIN);
+            return Result.error(CodeEnum.OTHER_LOGIN);
         }
 
         if (CacheUser.LOGOUT.equals(user.getOnlineStatus())) {
             log.warn("token valid:  客户端主动退出");
-            return Result.error(ResultCode.LOGOUT);
+            return Result.error(CodeEnum.LOGOUT);
         }
 
         LocalDateTime lastActiveTime = user.getLastActiveTime();
@@ -134,7 +134,7 @@ public class LoginService {
         int expirationTime = 30;
         if (lastActiveTime.plusMinutes(expirationTime).isBefore(now)) {
             log.warn("token valid:  用户操作已过期");
-            return Result.error(ResultCode.TIMEOUT_LOGIN);
+            return Result.error(CodeEnum.TIMEOUT_LOGIN);
         }
         redisClient.putIfExists(tokenKey, user.setLastActiveTime(now));
 

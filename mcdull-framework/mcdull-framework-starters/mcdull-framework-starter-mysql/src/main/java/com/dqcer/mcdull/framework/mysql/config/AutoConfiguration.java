@@ -82,7 +82,6 @@ public class AutoConfiguration {
         DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor = new DynamicTableNameInnerInterceptor();
         dynamicTableNameInnerInterceptor.setTableNameHandler(((sql, tableName) -> {
             // 获取参数方法
-            System.out.println(sql);
             return tableName ;
         }));
 

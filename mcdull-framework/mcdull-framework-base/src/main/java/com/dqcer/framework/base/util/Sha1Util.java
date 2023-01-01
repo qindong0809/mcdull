@@ -1,5 +1,8 @@
 package com.dqcer.framework.base.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -12,6 +15,8 @@ import java.security.NoSuchAlgorithmException;
  */
 @SuppressWarnings("unused")
 public class Sha1Util {
+
+    private static final Logger log = LoggerFactory.getLogger(Sha1Util.class);
 
     /**
      * 禁止实例化
@@ -36,7 +41,7 @@ public class Sha1Util {
             }
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return null;
     }

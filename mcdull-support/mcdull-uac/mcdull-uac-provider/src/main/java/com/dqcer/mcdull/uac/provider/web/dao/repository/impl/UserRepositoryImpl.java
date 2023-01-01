@@ -13,7 +13,7 @@ import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.exception.DatabaseRowException;
 import com.dqcer.framework.base.util.ObjUtil;
 import com.dqcer.framework.base.util.StrUtil;
-import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.mcdull.framework.web.config.ThreadPoolConfig;
 import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import com.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
@@ -68,7 +68,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
     public Long insert(UserDO entity) {
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {
-            throw new BusinessException(ResultCode.DB_ERROR);
+            throw new BusinessException(CodeEnum.DB_ERROR);
         }
         return entity.getId();
     }

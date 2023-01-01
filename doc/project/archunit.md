@@ -18,10 +18,11 @@ Archunit是一个免费、简单、可扩展的类库，用于检查Java代码�
 ## 导入坐标
 
 ```xml
-        <dependency>
-            <groupId>com.tngtech.archunit</groupId>
-            <artifactId>archunit-junit5</artifactId>
-            <version>0.23.1</version>
-        </dependency>
+    <dependency>
+        <groupId>com.tngtech.archunit</groupId>
+        <artifactId>archunit-junit5</artifactId>
+        <version>1.0.1</version>
+        <scope>test</scope>
+    </dependency>
 ```
 

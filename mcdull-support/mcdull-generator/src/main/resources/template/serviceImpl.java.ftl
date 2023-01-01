@@ -3,7 +3,7 @@ package ${package.ServiceImpl};
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.exception.DatabaseRowException;
-import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.util.PageUtil;
 import com.dqcer.framework.base.vo.PagedVO;
@@ -55,7 +55,7 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
         boolean exist = ${(cfg.repositoryName?substring(1))?uncap_first}.exist(existEntity);
         if (exist) {
             log.warn("数据已存在 query:{}", existEntity);
-            return Result.error(ResultCode.DATA_EXIST);
+            return Result.error(CodeEnum.DATA_EXIST);
         }
 
         ${cfg.entityName} entity = ${cfg.convertName}.convertTo${cfg.entityName}(dto);
@@ -75,7 +75,7 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
         ${cfg.entityName} entity = ${(cfg.repositoryName?substring(1))?uncap_first}.getById(dto.getId());
         if (null == entity) {
             log.warn("数据不存在 id:{}", dto.getId());
-            return Result.error(ResultCode.DATA_NOT_EXIST);
+            return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
         return Result.ok(${cfg.convertName}.convertTo${cfg.voName}(entity));
     }
@@ -94,7 +94,7 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
         ${cfg.entityName} dbData = ${(cfg.repositoryName?substring(1))?uncap_first}.getById(id);
         if(null == dbData) {
             log.warn("数据不存在 id:{}", id);
-            return Result.error(ResultCode.DATA_NOT_EXIST);
+            return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
         ${cfg.entityName} entity = ${cfg.convertName}.convertTo${cfg.entityName}(dto);
         entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
@@ -121,7 +121,7 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
         ${cfg.entityName} dbData = ${(cfg.repositoryName?substring(1))?uncap_first}.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
-            return Result.error(ResultCode.DATA_NOT_EXIST);
+            return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
 
         ${cfg.entityName} entity = new ${cfg.entityName}();

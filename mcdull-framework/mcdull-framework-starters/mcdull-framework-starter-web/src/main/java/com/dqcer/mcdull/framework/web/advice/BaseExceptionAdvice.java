@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.framework.web.advice;
 
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.framework.base.wrapper.ResultCode;
+import com.dqcer.framework.base.wrapper.CodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
@@ -32,6 +32,6 @@ public class BaseExceptionAdvice {
     @ExceptionHandler(value = SQLException.class)
     public Result<?> exception(SQLException exception) {
         log.error("sql异常: ", exception);
-        return Result.error(ResultCode.SQL_SYNTAX_ERROR, Collections.singletonList(exception.getMessage()));
+        return Result.error(CodeEnum.SQL_SYNTAX_ERROR, Collections.singletonList(exception.getMessage()));
     }
 }
