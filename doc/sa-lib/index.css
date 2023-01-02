@@ -11,7 +11,7 @@
 
 /* ============== 样式优化 ================ */
 
-/* .main-box [class="lang-api"]{color: red;} */
+/* .main-box [class="lang-feign"]{color: red;} */
 
 #main table{margin-left: 25px;}
 @media screen and (min-width: 800px) {

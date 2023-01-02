@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.uac.provider.web.api;
+package com.dqcer.mcdull.uac.provider.web.feign;
 
 import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.storage.UserContextHolder;
@@ -20,7 +20,7 @@ import java.util.List;
  * @version 2022/12/25
  */
 @RestController
-public class UserApi implements UserServiceApi {
+public class UserServerFeign implements UserServiceApi {
 
     @Resource
     private UserService userService;

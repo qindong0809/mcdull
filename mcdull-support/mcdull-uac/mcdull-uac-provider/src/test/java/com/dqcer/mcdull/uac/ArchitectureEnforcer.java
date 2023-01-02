@@ -3,13 +3,20 @@ package com.dqcer.mcdull.uac;
 import com.dqcer.framework.base.dto.DTO;
 import com.dqcer.framework.base.entity.DO;
 import com.dqcer.framework.base.vo.VO;
+import com.dqcer.mcdull.uac.provider.config.interceptor.BaseInterceptor;
+import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.library.GeneralCodingRules;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.no;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClass;
+import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 
 /**
  * 架构守护神规则库,提供了静态检查机制(配合单元测试使用)，杜绝线上出现不合规范的使用
@@ -25,12 +32,14 @@ public final class ArchitectureEnforcer {
     }
 
     static {
-        requiredRules.add(mapperNamingRules());
 
+
+        requiredRules.add(layerChecks());
+
+        requiredRules.add(mapperNamingRules());
         requiredRules.add(dtoNamingRules());
         requiredRules.add(doNamingRules());
         requiredRules.add(voNamingRules());
-//        requiredRules.add(interfacesNamingRules());
         requiredRules.add(enumNamingRules());
 
         // 禁止使用e.printStackTrace, System.err/System.out
@@ -69,6 +78,28 @@ public final class ArchitectureEnforcer {
 //                .allowEmptyShould(true)
 //                .as("controller 层下的类应该以'Controller'结尾");
 //    }
+
+    /**
+     * 层级调用规则
+     *
+     * @return {@link ArchRule}
+     */
+    public static ArchRule layerChecks() {
+        return layeredArchitecture()
+                .consideringAllDependencies()
+                .layer("Controller").definedBy("..web.controller..")
+                .layer("ServerFeign").definedBy("..web.feign..")
+                .layer("Service").definedBy("..web.service..")
+                .layer("Manager").definedBy("..web.manager..")
+                .layer("Repository").definedBy("..web.dao.repository..")
+                .layer("Mapper").definedBy("..web.dao.mapper..")
+
+                .whereLayer("Controller").mayNotBeAccessedByAnyLayer()
+                .whereLayer("Service").mayOnlyBeAccessedByLayers("Controller", "ServerFeign")
+                .whereLayer("Manager").mayOnlyBeAccessedByLayers("Service")
+                .whereLayer("Repository").mayOnlyBeAccessedByLayers("Service", "Manager")
+                .whereLayer("Mapper").mayOnlyBeAccessedByLayers("Repository");
+    }
 
     /**
      * mapper 层命名规则

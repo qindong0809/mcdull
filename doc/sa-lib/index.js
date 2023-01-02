@@ -105,8 +105,8 @@ function f5_test_btn() {
 				// }
 				// 如果是地址 
 				if(tag.prop("tagName") == 'UL') {
-					// 如果能搜索到 data-lang="api"
-					var tg = $(tag).find('[class=lang-api]');
+					// 如果能搜索到 data-lang="feign"
+					var tg = $(tag).find('[class=lang-feign]');
 					if(tg.length > 0) {
 						var url_i = tg.get(0).innerHTML;
 						if(url_i.indexOf('http') != 0) {
@@ -122,9 +122,9 @@ function f5_test_btn() {
 			// 后面添加一个按钮
 			// parTag.after('<button>测试接口</button>');
 			// console.log(parTag.find('a span').text());
-			// var button = '<button class="test-api-btn" type="button" '+
+			// var button = '<button class="test-feign-btn" type="button" '+
 			// 	' cc-id="' + cc_id + '" ' +
-			// 	' api-title="' + parTag.find('a span').text() + '" ' +
+			// 	' feign-title="' + parTag.find('a span').text() + '" ' +
 			// 	' onclick="test_api(this)">接口测试</button>';
 			// parTag.append(button);
 		}catch(e){
@@ -142,7 +142,7 @@ function test_api(event) {
 	var title = document.title;
 	if(j_index > -1) {
 		title = title.substr(0, j_index);
-		title = event.getAttribute('api-title') + '	&emsp;&emsp;----by&emsp; ' + title;
+		title = event.getAttribute('feign-title') + '	&emsp;&emsp;----by&emsp; ' + title;
 	}
 	
 	// 获取地址、参数等信息 
@@ -157,7 +157,7 @@ function test_api(event) {
 	// }
 	sessionStorage.setItem('sa-doc-cc-' + id, JSON.stringify(cc));
 	
-	sa.showIframe3(title, './sa-lib/api-test/index.html?id=' + id, '1000px', '90%');
+	sa.showIframe3(title, './sa-lib/feign-test/index.html?id=' + id, '1000px', '90%');
 }
 
 // 移除数组中所有空白字符串 
@@ -301,7 +301,7 @@ function refMd_import2content(content) {
 
 
 
-// 加工md，将其中的```api 去除空格
+// 加工md，将其中的```feign 去除空格
 function refMd_api2trim(content) {
 	// 1、取出全文中所有的 ```d 
 	var reg = /```\s*api[\s\S]*?```/igm; // [\s\S]*=任意字符n次，?=非贪婪模式
@@ -319,7 +319,7 @@ function refMd_api2trim(content) {
 			str += p;
 		});
 		
-		str = '``` api\n' + str + '```\n';
+		str = '``` feign\n' + str + '```\n';
 		// console.log(str);
 		
 		// 加上按钮

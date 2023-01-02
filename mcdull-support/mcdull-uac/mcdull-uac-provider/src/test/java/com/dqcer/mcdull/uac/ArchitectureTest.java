@@ -4,6 +4,7 @@ import com.dqcer.framework.base.dto.DTO;
 import com.dqcer.framework.base.vo.VO;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,9 @@ public class ArchitectureTest {
 
     @BeforeEach
     public void setUp() {
-        classes = new ClassFileImporter().importPackages("com.dqcer");
+
+        classes = new ClassFileImporter().withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_JARS)
+                .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS).importPackages("com.dqcer");
     }
 
     @Test
@@ -39,20 +42,6 @@ public class ArchitectureTest {
 
         myRule = classes().that().implement(VO.class)
                 .should().haveSimpleNameEndingWith("VO");
-        myRule.check(importedClasses);
-    }
-
-
-    /**
-     * 一些建筑规则
-     */
-    @Test
-    public void some_architecture_rule() {
-        JavaClasses importedClasses = new ClassFileImporter().importPackages("com.dqcer");
-        ArchRule myRule = classes()
-                .that().resideInAPackage("..web.service..")
-                .should().onlyBeAccessed().byAnyPackage("..controller..","..api..", "..service..", "..interceptor..");
-
         myRule.check(importedClasses);
     }
 }
