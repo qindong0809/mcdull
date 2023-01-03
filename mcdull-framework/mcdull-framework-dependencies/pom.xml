@@ -100,6 +100,11 @@
             </dependency>
             <dependency>
                 <groupId>com.dqcer.mcdull</groupId>
+                <artifactId>mcdull-framework-enforcer</artifactId>
+                <version>${mcdull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dqcer.mcdull</groupId>
                 <artifactId>mcdull-framework-starter-feign</artifactId>
                 <version>${mcdull.version}</version>
             </dependency>

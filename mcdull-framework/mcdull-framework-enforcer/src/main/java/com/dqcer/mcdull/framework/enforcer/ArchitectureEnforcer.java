@@ -1,21 +1,15 @@
-package com.dqcer.mcdull.uac;
+package com.dqcer.mcdull.framework.enforcer;
 
 import com.dqcer.framework.base.dto.DTO;
 import com.dqcer.framework.base.entity.DO;
 import com.dqcer.framework.base.vo.VO;
-import com.dqcer.mcdull.uac.provider.config.interceptor.BaseInterceptor;
-import com.tngtech.archunit.core.domain.JavaClasses;
-import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.library.GeneralCodingRules;
-import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.no;
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClass;
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 
 /**
@@ -33,7 +27,7 @@ public final class ArchitectureEnforcer {
 
     static {
 
-
+        // 层级调用关系检查
         requiredRules.add(layerChecks());
 
         requiredRules.add(mapperNamingRules());
@@ -49,35 +43,6 @@ public final class ArchitectureEnforcer {
         requiredRules.add(GeneralCodingRules.NO_CLASSES_SHOULD_THROW_GENERIC_EXCEPTIONS.as("不能直接抛出 Throwable、Exception、RuntimeException异常"));
     }
 
-//    /**
-//     * service 层命名规则
-//     *
-//     * @return {@link ArchRule}
-//     */
-//    public static ArchRule serviceNamingRules() {
-//        return classes()
-//                .that()
-//                .resideInAPackage("..service")
-//                .should()
-//                .haveSimpleNameEndingWith("Service")
-//                .allowEmptyShould(true)
-//                .as("service 层下的类应该以'Service'结尾");
-//    }
-//
-//    /**
-//     * controller 层命名规则
-//     *
-//     * @return {@link ArchRule}
-//     */
-//    public static ArchRule controllerNamingRules() {
-//        return classes()
-//                .that()
-//                .resideInAPackage("..controller")
-//                .should()
-//                .haveSimpleNameEndingWith("Controller")
-//                .allowEmptyShould(true)
-//                .as("controller 层下的类应该以'Controller'结尾");
-//    }
 
     /**
      * 层级调用规则
@@ -95,10 +60,10 @@ public final class ArchitectureEnforcer {
                 .layer("Mapper").definedBy("..web.dao.mapper..")
 
                 .whereLayer("Controller").mayNotBeAccessedByAnyLayer()
-                .whereLayer("Service").mayOnlyBeAccessedByLayers("Controller", "ServerFeign")
-                .whereLayer("Manager").mayOnlyBeAccessedByLayers("Service")
-                .whereLayer("Repository").mayOnlyBeAccessedByLayers("Service", "Manager")
-                .whereLayer("Mapper").mayOnlyBeAccessedByLayers("Repository");
+                .whereLayer("Service").mayOnlyBeAccessedByLayers("Controller", "ServerFeign").as("Service业务层仅被Controller层和ServerFeign层调用")
+                .whereLayer("Manager").mayOnlyBeAccessedByLayers("Service").as("Manager数据库访问层仅被Service业务层调用")
+                .whereLayer("Repository").mayOnlyBeAccessedByLayers("Service", "Manager").as("Repository数据库包装层仅被Service业务层、Manager通用逻辑层调用")
+                .whereLayer("Mapper").mayOnlyBeAccessedByLayers("Repository").as("Mapper数据库访问层仅被Repository数据库包装层调用");
     }
 
     /**
@@ -149,15 +114,6 @@ public final class ArchitectureEnforcer {
                 .as("实现VO的类名应该以'VO'结尾");
     }
 
-
-    /**
-     * 接口命名规则
-     *
-     * @return {@link ArchRule}
-     */
-    public static ArchRule interfacesNamingRules() {
-        return classes().that().areInterfaces().should().haveSimpleNameStartingWith("I").as("接口名称必须以I开头");
-    }
 
     /**
      * enum命名规则

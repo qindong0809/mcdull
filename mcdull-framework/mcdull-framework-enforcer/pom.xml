@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>mcdull-framework</artifactId>
+        <groupId>com.dqcer.mcdull</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>mcdull-framework-enforcer</artifactId>
+
+    <description>自动测试架构和编码规则相关规约</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dqcer.mcdull</groupId>
+            <artifactId>mcdull-framework-base</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

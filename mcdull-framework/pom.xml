@@ -16,6 +16,7 @@
         <module>mcdull-framework-starters</module>
         <module>mcdull-framework-agent</module>
         <module>mcdull-framework-config</module>
+        <module>mcdull-framework-enforcer</module>
     </modules>
 
     <artifactId>mcdull-framework</artifactId>

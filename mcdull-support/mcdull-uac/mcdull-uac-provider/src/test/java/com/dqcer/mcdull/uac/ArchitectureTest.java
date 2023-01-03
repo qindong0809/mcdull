@@ -2,6 +2,7 @@ package com.dqcer.mcdull.uac;
 
 import com.dqcer.framework.base.dto.DTO;
 import com.dqcer.framework.base.vo.VO;
+import com.dqcer.mcdull.framework.enforcer.ArchitectureEnforcer;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
@@ -19,8 +20,11 @@ public class ArchitectureTest {
     @BeforeEach
     public void setUp() {
 
-        classes = new ClassFileImporter().withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_JARS)
-                .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS).importPackages("com.dqcer");
+        classes = new ClassFileImporter()
+                .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_JARS)
+                .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
+                .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_PACKAGE_INFOS)
+                .importPackages("com.dqcer");
     }
 
     @Test
