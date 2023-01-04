@@ -20,7 +20,7 @@ import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
  */
 public final class ArchitectureEnforcer {
 
-    public static final List<ArchRule> requiredRules = new LinkedList<>();
+    public static final List<ArchRule> REQUIRED_RULES = new LinkedList<>();
 
     public ArchitectureEnforcer() {
     }
@@ -28,19 +28,19 @@ public final class ArchitectureEnforcer {
     static {
 
         // 层级调用关系检查
-        requiredRules.add(layerChecks());
+        REQUIRED_RULES.add(layerChecks());
 
-        requiredRules.add(mapperNamingRules());
-        requiredRules.add(dtoNamingRules());
-        requiredRules.add(doNamingRules());
-        requiredRules.add(voNamingRules());
-        requiredRules.add(enumNamingRules());
+        REQUIRED_RULES.add(mapperNamingRules());
+        REQUIRED_RULES.add(dtoNamingRules());
+        REQUIRED_RULES.add(doNamingRules());
+        REQUIRED_RULES.add(voNamingRules());
+        REQUIRED_RULES.add(enumNamingRules());
 
         // 禁止使用e.printStackTrace, System.err/System.out
-        requiredRules.add(GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.as("禁止使用 e.printStackTrace, System.err/System.out"));
+        REQUIRED_RULES.add(GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.as("禁止使用 e.printStackTrace, System.err/System.out"));
 
         // 不能直接抛出 Throwable、Exception、RuntimeException异常
-        requiredRules.add(GeneralCodingRules.NO_CLASSES_SHOULD_THROW_GENERIC_EXCEPTIONS.as("不能直接抛出 Throwable、Exception、RuntimeException异常"));
+        REQUIRED_RULES.add(GeneralCodingRules.NO_CLASSES_SHOULD_THROW_GENERIC_EXCEPTIONS.as("不能直接抛出 Throwable、Exception、RuntimeException异常"));
     }
 
 

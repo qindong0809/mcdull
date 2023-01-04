@@ -15,7 +15,6 @@ import java.lang.annotation.Target;
  * @author dqcer
  * @version 2022/07/26
  */
-@SuppressWarnings("unused")
 @Documented
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

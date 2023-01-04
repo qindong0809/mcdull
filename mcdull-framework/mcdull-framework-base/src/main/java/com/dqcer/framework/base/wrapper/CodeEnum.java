@@ -27,6 +27,37 @@ public enum CodeEnum implements ICode , IEnum<Integer> {
 	SERVICE_UNAVAILABLE(503, "服务不可用: {0}"),
 
 	/**
+	 * 404
+	 */
+	NOT_FOUND(404, "找不到资源"),
+
+	/**
+	 * 客户端已主动退出
+	 */
+	LOGOUT(405, "客户端已主动退出"),
+
+	/**
+	 * 权限不足，此接口需要具备相应的权限才能访问
+	 */
+	POWER_CHECK_MODULE(403, "权限不足，此接口需要具备相应的权限才能访问"),
+
+	/**
+	 * 无权限
+	 */
+	UN_AUTHORIZATION(401, "无权限"),
+
+	/**
+	 * 异地登录
+	 */
+	OTHER_LOGIN(402, "异地登录"),
+
+	/**
+	 * 登录超时
+	 */
+	TIMEOUT_LOGIN(403, "token过期"),
+
+
+	/**
 	 * sql语法错误
 	 */
 	SQL_SYNTAX_ERROR(999510, "sql异常: {0}"),
@@ -45,41 +76,6 @@ public enum CodeEnum implements ICode , IEnum<Integer> {
 	 * feign 调用异常
 	 */
 	FEIGN_BIZ(999520, "上游服务调用异常： {0}"),
-
-	/**
-	 * 无权限
-	 */
-	UN_AUTHORIZATION(401, "无权限"),
-
-	/**
-	 * 异地登录
-	 */
-	OTHER_LOGIN(999402, "异地登录"),
-
-	/**
-	 * 登录超时
-	 */
-	TIMEOUT_LOGIN(999403, "token过期"),
-
-	/**
-	 * 404
-	 */
-	NOT_FOUND(999404, "找不到资源"),
-
-	/**
-	 * 客户端已主动退出
-	 */
-	LOGOUT(999405, "客户端已主动退出"),
-
-	/**
-	 * 权限不足，此接口需要具备相应的权限才能访问
-	 */
-	POWER_CHECK_MODULE(403, "权限不足，此接口需要具备相应的权限才能访问"),
-
-	/**
-	 * 没有traceId
-	 */
-	NOT_TRACE_ID(999415, "没有traceId"),
 
 
 	/**
