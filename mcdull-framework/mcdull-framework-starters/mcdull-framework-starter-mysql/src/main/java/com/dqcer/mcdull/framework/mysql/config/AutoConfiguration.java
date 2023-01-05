@@ -40,10 +40,6 @@ public class AutoConfiguration {
     @Resource
     private ApplicationContext context;
 
-    public String getActiveProfile() {
-        return context.getEnvironment().getActiveProfiles()[0];
-    }
-
     /**
      * 调整 SqlSessionFactory 为 MyBatis-Plus 的 SqlSessionFactory
      *

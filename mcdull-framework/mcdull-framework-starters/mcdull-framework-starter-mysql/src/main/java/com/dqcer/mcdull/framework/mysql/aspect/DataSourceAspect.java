@@ -1,5 +1,6 @@
 package com.dqcer.mcdull.framework.mysql.aspect;
 
+import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.constants.SymbolConstants;
 import com.dqcer.mcdull.framework.mysql.annotation.DynamicDataSource;
 import com.dqcer.mcdull.framework.mysql.config.DynamicContextHolder;
@@ -31,7 +32,7 @@ import java.util.Deque;
  * @version 2021/10/09
  */
 @Aspect
-@Order(Ordered.HIGHEST_PRECEDENCE + 1)
+@Order(GlobalConstant.Order.ASPECT_DATA_SOURCE)
 public class DataSourceAspect {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 

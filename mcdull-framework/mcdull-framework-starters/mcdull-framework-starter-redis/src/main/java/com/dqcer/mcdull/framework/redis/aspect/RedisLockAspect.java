@@ -1,6 +1,7 @@
 package com.dqcer.mcdull.framework.redis.aspect;
 
 
+import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.constants.SymbolConstants;
 import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.wrapper.CodeEnum;
@@ -33,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  * @author dqcer
  * @version 2022/10/05
  */
-@Order(-100)
+@Order(GlobalConstant.Order.ASPECT_REDIS_LOCK)
 @Aspect
 public class RedisLockAspect {
 

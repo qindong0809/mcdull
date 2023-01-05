@@ -1,6 +1,7 @@
 package com.dqcer.mcdull.framework.redis.aspect;
 
 
+import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.mcdull.framework.redis.annotation.CacheExpire;
 import com.dqcer.mcdull.framework.redis.annotation.CacheExpireHolder;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -20,7 +21,7 @@ import java.lang.reflect.Method;
  * @author dqcer
  * @version 2022/10/05
  */
-@Order(-100)
+@Order(GlobalConstant.Order.ASPECT_CACHE_EXPIRE)
 @Aspect
 public class CacheExpireAspect {
 

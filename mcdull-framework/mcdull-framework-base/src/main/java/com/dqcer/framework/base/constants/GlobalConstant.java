@@ -40,6 +40,29 @@ public class GlobalConstant {
         public static final String SQL_LIMIT_1 = "LIMIT 1";
     }
 
+    public static class Order {
+
+        /**
+         * aop redis lock
+         */
+        public static final Integer ASPECT_REDIS_LOCK = -100;
+
+        /**
+         * aop cache expire
+         */
+        public static final Integer ASPECT_CACHE_EXPIRE = -200;
+
+        /**
+         * aop datasource
+         */
+        public static final Integer ASPECT_DATA_SOURCE = -50;
+
+        /**
+         * aop operation log
+         */
+        public static final Integer ASPECT_OPERATION_LOG = -20;
+    }
+
     public static class Number {
 
         public static final Integer NUMBER_0 = 0;

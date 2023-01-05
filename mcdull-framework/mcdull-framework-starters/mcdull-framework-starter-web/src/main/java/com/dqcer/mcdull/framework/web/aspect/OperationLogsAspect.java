@@ -1,6 +1,7 @@
 package com.dqcer.mcdull.framework.web.aspect;
 
 import com.dqcer.framework.base.annotation.UnAuthorize;
+import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.JsonUtil;
@@ -39,7 +40,7 @@ import java.util.Map;
  * @version 2022/12/26
  */
 @Aspect
-@Order(-1000)
+@Order(GlobalConstant.Order.ASPECT_OPERATION_LOG)
 public class OperationLogsAspect {
 
     private static final Logger log = LoggerFactory.getLogger(OperationLogsAspect.class);
