@@ -29,7 +29,7 @@ public class ArchitectureTest {
 
     @Test
     public void requiredRules() {
-        for (ArchRule rule : ArchitectureEnforcer.requiredRules) {
+        for (ArchRule rule : ArchitectureEnforcer.REQUIRED_RULES) {
             rule.check(classes);
         }
     }
