@@ -51,6 +51,7 @@ mcdull
 │    ├─mcdull-framework-base                    底层定义
 │    ├─mcdull-framework-config                  配置定义
 │    ├─mcdull-framework-dependencies            依赖管理
+│    ├─mcdull-framework-enforcer                框架规则
 │    └─mcdull-framework-starters                组件starters  
 │       └─mcdull-framework-starter-feign        feign组件
 │       ├─mcdull-framework-starter-mysql        mysql组件
@@ -182,4 +183,5 @@ BeanUtil.copyProperties(source, target)
 
 
 ### 后期规划
-> 如有需求请联系作者(dqcer@sina.com)
+>动态表单： https://segmentfault.com/q/1010000009146625 
+>如有需求请联系作者(dqcer@sina.com)
