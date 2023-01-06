@@ -17,7 +17,7 @@ public class KeywordDTO implements DTO {
      * 关键字 最大长度512
      */
     @Length(groups = {ValidGroup.Paged.class, ValidGroup.Keyword.class}, max = 256)
-    private String keyword;
+    protected String keyword;
 
     @Override
     public String toString() {

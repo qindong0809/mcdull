@@ -5,6 +5,7 @@ import com.dqcer.framework.base.validator.ValidGroup;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 
 /**
@@ -21,21 +22,29 @@ public class PagedDTO extends KeywordDTO implements IPaged {
     @NotNull(groups = ValidGroup.Paged.class)
     @Max(groups = ValidGroup.Paged.class, value = 1000)
     @Min(groups = ValidGroup.Paged.class, value = 1)
-    private Long pageSize;
+    protected Long pageSize;
 
     /**
      * 当前页数
      */
     @NotNull(groups = ValidGroup.Paged.class)
     @Min(groups = ValidGroup.Paged.class, value = 1)
-    private Long currentPage;
+    protected Long currentPage;
+
+    /**
+     * 排序字段信息
+     */
+    protected List<OrderItem> orders;
 
     @Override
     public String toString() {
-        return "PagedDTO{" +
-                "pageSize=" + pageSize +
-                ", currentPage=" + currentPage +
-                "} " + super.toString();
+        final StringBuffer sb = new StringBuffer("PagedDTO{");
+        sb.append("pageSize=").append(pageSize);
+        sb.append(", currentPage=").append(currentPage);
+        sb.append(", orders=").append(orders);
+        sb.append(", keyword='").append(keyword).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 
     @Override

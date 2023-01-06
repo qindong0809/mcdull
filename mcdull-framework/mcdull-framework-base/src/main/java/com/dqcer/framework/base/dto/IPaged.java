@@ -23,6 +23,4 @@ public interface IPaged {
      */
     Long getPageSize();
 
-    // TODO: 2022/4/3 排序处理
-
 }
