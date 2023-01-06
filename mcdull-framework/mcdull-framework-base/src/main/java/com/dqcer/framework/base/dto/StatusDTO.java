@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
  */
 public class StatusDTO implements DTO {
 
-    private static final long serialVersionUID = 6698271402380430318L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * id

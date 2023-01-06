@@ -6,7 +6,6 @@ package com.dqcer.framework.base.dto;
  * @author dqcer
  * @version 2022/07/26
  */
-@SuppressWarnings("unused")
 public interface IPaged {
 
     /**

@@ -6,7 +6,6 @@ package com.dqcer.framework.base.constants;
  * @author dqcer
  * @version 2022/07/26
  */
-@SuppressWarnings("unused")
 public class SymbolConstants {
 
     /**

@@ -1,7 +1,7 @@
 package com.dqcer.framework.base.annotation;
 
 /**
- * 变压器
+ * 翻译接口
  *
  * @author dqcer
  * @version 2022/10/05

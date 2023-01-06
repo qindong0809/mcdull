@@ -10,7 +10,7 @@ import com.dqcer.framework.base.dto.PagedDTO;
  */
 public class LogLiteDTO extends PagedDTO {
 
-    private static final long serialVersionUID = -8148867774616839857L;
+    private static final long serialVersionUID = 1L;
 
     @Override
     public String toString() {

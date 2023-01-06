@@ -7,11 +7,10 @@ package com.dqcer.framework.base.exception;
  * @author dqcer
  * @version  17:49 2021/3/5
  */
-@SuppressWarnings("unused")
 public class DatabaseRowException extends RuntimeException {
 
 
-	private static final long serialVersionUID = 3551704466277075773L;
+	private static final long serialVersionUID = 1L;
 
 	public DatabaseRowException() {
 	}

@@ -18,7 +18,6 @@ import java.util.stream.Stream;
  * @author dqcer
  * @version 2022/10/04
  */
-@SuppressWarnings("unused")
 public interface IEnum<T>  extends Serializable {
 
 

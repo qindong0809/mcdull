@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class MailClientDTO implements DTO {
 
-    private static final long serialVersionUID = -2080117833993961145L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 编码

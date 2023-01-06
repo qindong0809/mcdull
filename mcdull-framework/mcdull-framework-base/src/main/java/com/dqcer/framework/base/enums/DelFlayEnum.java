@@ -6,7 +6,6 @@ package com.dqcer.framework.base.enums;
  * @author dqcer
  * @version 2022/07/26
  */
-@SuppressWarnings("unused")
 public enum DelFlayEnum implements IEnum<Boolean> {
     /**
      * 1 = 正常

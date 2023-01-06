@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
  * @author dqcer
  * @version 2022/07/26
  */
-@SuppressWarnings("unused")
 public class PagedDTO extends KeywordDTO implements IPaged {
 
     /**

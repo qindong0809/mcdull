@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  */
 public class CacheUser implements Serializable {
 
-    private static final long serialVersionUID = 5099451915233476755L;
+    private static final long serialVersionUID = 1L;
 
 
     /**

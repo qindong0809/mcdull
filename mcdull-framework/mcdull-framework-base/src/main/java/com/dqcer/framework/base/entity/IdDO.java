@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
  * @author dqcer
  * @version 2022/01/12
  */
-@SuppressWarnings("unused")
 public class IdDO implements DO {
 
     private static final long serialVersionUID = 1L;

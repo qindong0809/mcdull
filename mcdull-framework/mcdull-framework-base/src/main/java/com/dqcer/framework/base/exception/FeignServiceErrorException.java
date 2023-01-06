@@ -6,10 +6,9 @@ package com.dqcer.framework.base.exception;
  * @author dqcer
  * @version 2022/04/22
  */
-@SuppressWarnings("unused")
 public class FeignServiceErrorException extends RuntimeException{
 
-    private static final long serialVersionUID = -3136595945932321595L;
+    private static final long serialVersionUID = 1L;
 
     public FeignServiceErrorException() {
         super();

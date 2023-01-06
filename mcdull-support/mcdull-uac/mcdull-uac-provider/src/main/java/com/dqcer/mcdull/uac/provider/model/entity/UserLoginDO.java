@@ -17,7 +17,7 @@ import java.util.Date;
 @TableName("sys_user_login")
 public class UserLoginDO extends IdDO {
 
-    private static final long serialVersionUID = 8275559175477580456L;
+    private static final long serialVersionUID = 1L;
     /**
      * 创建时间
      */

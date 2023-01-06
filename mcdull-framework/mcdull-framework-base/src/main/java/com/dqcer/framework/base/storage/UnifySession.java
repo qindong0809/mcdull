@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class UnifySession implements Serializable {
 
-    private static final long serialVersionUID = 3500705501444133486L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 账号主键

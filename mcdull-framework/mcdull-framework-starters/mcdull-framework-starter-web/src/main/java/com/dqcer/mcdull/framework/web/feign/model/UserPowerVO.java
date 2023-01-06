@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class UserPowerVO implements VO {
 
-    private static final long serialVersionUID = -1051899719131525890L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 角色id

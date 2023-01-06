@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.Length;
  */
 public class KeywordDTO implements DTO {
 
-    private static final long serialVersionUID = -8417050850699510442L;
+    private static final long serialVersionUID = 1L;
     /**
      * 关键字 最大长度512
      */

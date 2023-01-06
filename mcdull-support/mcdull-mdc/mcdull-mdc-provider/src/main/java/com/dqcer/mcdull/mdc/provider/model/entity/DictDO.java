@@ -12,7 +12,7 @@ import com.dqcer.framework.base.entity.DO;
 @TableName("sys_dict")
 public class DictDO implements DO {
 
-    private static final long serialVersionUID = -3149487090464216421L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 编码

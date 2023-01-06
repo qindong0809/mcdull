@@ -11,7 +11,7 @@ public class UserContextHolder {
     /**
      * 统一的会话
      */
-    static ThreadLocal<UnifySession> UNIFY_SESSION = new InheritableThreadLocal();
+    static InheritableThreadLocal<UnifySession> UNIFY_SESSION = new InheritableThreadLocal();
 
     /**
      * 获取会话

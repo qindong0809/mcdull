@@ -11,7 +11,7 @@ import com.dqcer.framework.base.wrapper.ICode;
  */
 public class BusinessException extends RuntimeException {
 
-	private static final long serialVersionUID = -8454250231269196534L;
+	private static final long serialVersionUID = 1L;
 
 	protected ICode code;
 

@@ -11,7 +11,6 @@ import java.util.Date;
  * @author dqcer
  * @version 2022/01/12
  */
-@SuppressWarnings("unused")
 public class MiddleDO extends IdDO {
 
     private static final long serialVersionUID = 1L;

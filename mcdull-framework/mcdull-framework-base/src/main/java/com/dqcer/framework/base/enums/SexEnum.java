@@ -1,7 +1,7 @@
 package com.dqcer.framework.base.enums;
 
 /**
- * 性枚举
+ * 性别枚举
  *
  * @author dqcer
  * @version 2022/07/26

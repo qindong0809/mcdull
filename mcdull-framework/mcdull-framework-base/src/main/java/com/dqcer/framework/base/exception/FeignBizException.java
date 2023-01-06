@@ -9,10 +9,9 @@ import com.dqcer.framework.base.wrapper.Result;
  * @author dqcer
  * @version  2022/04/22
  */
-@SuppressWarnings("unused")
 public class FeignBizException extends RuntimeException{
 
-    private static final long serialVersionUID = 6295445256074041773L;
+    private static final long serialVersionUID = 1L;
     private Result<?> result;
 
     public FeignBizException() {
