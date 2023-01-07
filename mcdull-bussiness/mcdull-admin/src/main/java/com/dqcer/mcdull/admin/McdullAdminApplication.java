@@ -1,6 +1,5 @@
 package com.dqcer.mcdull.admin;
 
-import com.dqcer.mcdull.framework.mysql.EnableDynamicDataSource;
 import com.dqcer.mcdull.framework.redis.EnableCache;
 import com.dqcer.mcdull.framework.web.EnableWebCore;
 import org.springframework.boot.SpringApplication;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 @EnableWebCore
 @EnableDiscoveryClient
-@EnableDynamicDataSource
+//@EnableDynamicDataSource
 @EnableFeignClients(basePackages = {"com.dqcer.mcdull.framework.web.feign"})
 @EnableCache
 @Controller

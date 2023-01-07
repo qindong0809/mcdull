@@ -270,4 +270,5 @@ try {
 ```
 ### 后期规划
 >动态表单： https://segmentfault.com/q/1010000009146625 
+>log.error("xxxxx", ThrowableUtil.getStackTraceAsString(e));
 >如有需求请联系作者(dqcer@sina.com)

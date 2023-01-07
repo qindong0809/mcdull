@@ -14,7 +14,6 @@ import java.util.StringJoiner;
  * @author dqcer
  * @version 2022/07/26
  */
-@SuppressWarnings("unused")
 public class Result<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,6 +50,7 @@ public class Result<T> implements Serializable {
         return Result.<T>builder()
                 .withCode(CodeEnum.SUCCESS.code)
                 .withMessage(CodeEnum.SUCCESS.message)
+                .withData(null)
                 .build();
     }
 

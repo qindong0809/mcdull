@@ -1,0 +1,8 @@
+[{
+  "id": "process_flow_simple",
+  "remark": "simple_project_test",
+  "nodeList": [
+    "user.param.check",
+    "user.get.id"
+  ]
+}]
