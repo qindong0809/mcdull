@@ -45,22 +45,22 @@ public class GlobalConstant {
         /**
          * aop redis lock
          */
-        public static final Integer ASPECT_REDIS_LOCK = -100;
+        public static final int ASPECT_REDIS_LOCK = -100;
 
         /**
          * aop cache expire
          */
-        public static final Integer ASPECT_CACHE_EXPIRE = -200;
+        public static final int ASPECT_CACHE_EXPIRE = -200;
 
         /**
          * aop datasource
          */
-        public static final Integer ASPECT_DATA_SOURCE = -50;
+        public static final int ASPECT_DATA_SOURCE = -50;
 
         /**
          * aop operation log
          */
-        public static final Integer ASPECT_OPERATION_LOG = -20;
+        public static final int ASPECT_OPERATION_LOG = -20;
     }
 
     public static class Number {
