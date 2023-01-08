@@ -16,6 +16,7 @@
         <module>mcdull-framework-starter-redis</module>
         <module>mcdull-framework-starter-mysql</module>
         <module>mcdull-framework-starter-feign</module>
+        <module>mcdull-framework-starter-flow</module>
     </modules>
 
     <artifactId>mcdull-framework-starters</artifactId>
