@@ -18,18 +18,11 @@ import java.text.MessageFormat;
  * @author dqcer
  * @version 2022/12/23
  */
-@Component
+//@Component
 public class DictTransformer implements ITransformer<Object> {
-
-    private final DictFeignClient dictFeignClient;
 
     @Resource
     private CacheChannel cacheChannel;
-
-    public DictTransformer(DictFeignClient dictFeignClient) {
-        this.dictFeignClient = dictFeignClient;
-    }
-
 
     /**
      * 翻译
@@ -52,9 +45,14 @@ public class DictTransformer implements ITransformer<Object> {
             return o.getName();
         }
 
-        DictVO vo = FeignResultParse.getInstance(dictFeignClient.detail(dto));
+        DictVO vo = getVO(dto);
 
         cacheChannel.put(key, vo, 3000);
         return vo.getName();
+    }
+
+    public DictVO getVO(DictLiteDTO dto) {
+        DictFeignClient bean = SpringContextHolder.getBean(DictFeignClient.class);
+        return FeignResultParse.getInstance(bean.detail(dto));
     }
 }

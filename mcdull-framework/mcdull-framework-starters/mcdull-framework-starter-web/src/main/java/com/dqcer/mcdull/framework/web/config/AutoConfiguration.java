@@ -25,16 +25,11 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 @Configuration
 public class AutoConfiguration {
 
-    private final LogFeignClient logFeignClient;
 
-    public AutoConfiguration(LogFeignClient logFeignClient) {
-        this.logFeignClient = logFeignClient;
-    }
-
-    @Bean
-    public LogEventListener logListener() {
-        return new LogEventListener(logFeignClient);
-    }
+//    @Bean
+//    public LogEventListener logListener() {
+//        return new LogEventListener();
+//    }
 
     @Bean
     public SpringContextHolder springContextHolder() {
@@ -61,10 +56,10 @@ public class AutoConfiguration {
         return new TranslatorAspect();
     }
 
-    @Bean
-    public OperationLogsAspect operationLogsAspect() {
-        return new OperationLogsAspect();
-    }
+//    @Bean
+//    public OperationLogsAspect operationLogsAspect() {
+//        return new OperationLogsAspect();
+//    }
 
     /**
      * 添加Long转json精度丢失的配置

@@ -45,9 +45,6 @@ public class OperationLogsAspect {
 
     private static final Logger log = LoggerFactory.getLogger(OperationLogsAspect.class);
 
-    @Resource
-    private LogEventListener logEventListener;
-
     /**
      * 操作日志拦截 ..* 表示任意包或子包
      */
@@ -89,9 +86,13 @@ public class OperationLogsAspect {
             Object[] args = joinPoint.getArgs();
             LogDTO entity = listenerLog(request, args, startTime);
             RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
-            logEventListener.listenLog(entity);
+            saveLog(entity);
         }
 
+    }
+
+    protected void saveLog(LogDTO entity) {
+//        logEventListener.listenLog(entity);
     }
 
     private LogDTO listenerLog(HttpServletRequest request, Object[] args, long startTime) {

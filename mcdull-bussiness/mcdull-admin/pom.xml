@@ -24,22 +24,22 @@
             <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.dqcer.mcdull</groupId>
-            <artifactId>mcdull-framework-starter-nacos</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.dqcer.mcdull</groupId>
-            <artifactId>mcdull-framework-starter-feign</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.dqcer.mcdull</groupId>-->
+<!--            <artifactId>mcdull-framework-starter-nacos</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.dqcer.mcdull</groupId>-->
+<!--            <artifactId>mcdull-framework-starter-feign</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.dqcer.mcdull</groupId>
             <artifactId>mcdull-framework-starter-redis</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.dqcer.mcdull</groupId>-->
-<!--            <artifactId>mcdull-framework-starter-mysql</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.dqcer.mcdull</groupId>
+            <artifactId>mcdull-framework-starter-mysql</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

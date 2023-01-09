@@ -1,6 +1,8 @@
 package com.dqcer.mcdull.framework.web.filter;
 
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
+import com.dqcer.framework.base.storage.UnifySession;
+import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.RandomUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,9 +52,12 @@ public class HttpTraceLogFilter implements Filter {
                 traceId = RandomUtil.uuid();
             }
             MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
-
+            UnifySession unifySession = new UnifySession();
+            unifySession.setTraceId(traceId);
+            UserContextHolder.setSession(unifySession);
             filterChain.doFilter(request, response);
         } finally {
+            UserContextHolder.clearSession();
             MDC.remove(HttpHeaderConstants.LOG_TRACE_ID);
         }
     }

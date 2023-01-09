@@ -6,6 +6,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.Async;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +18,6 @@ import java.util.List;
  */
 public class LogEventListener {
 
-    private final LogFeignClient logService;
-
-    public LogEventListener(LogFeignClient logService) {
-        this.logService = logService;
-    }
 
     @Async("threadPoolTaskExecutor")
     @Order
@@ -29,7 +25,6 @@ public class LogEventListener {
     public void listenLog(LogDTO sysLog) {
         List<LogDTO> dtos = new ArrayList<>();
         dtos.add(sysLog);
-        logService.batchSave(dtos);
     }
 
 }

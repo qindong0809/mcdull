@@ -74,7 +74,7 @@
   </appender>
 
   <!-- ERROR 级别日志配置 -->
-  <appender name="error_file" class="com.dqcer.mcdull.soagov.AlarmRollingFileAppender">
+  <appender name="error_file" class="com.dqcer.mcdull.framework.web.config.AlarmRollingFileAppender">
     <file>${log.path}/${application.name}/error.log</file>
     <append>true</append>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">

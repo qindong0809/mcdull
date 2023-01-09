@@ -40,9 +40,6 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
     @Resource
     private CacheChannel cacheChannel;
 
-    @Resource
-    private PowerCheckFeignClient powerCheckFeignClient;
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         String requestUrl = request.getRequestURI();
@@ -63,8 +60,9 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
             return true;
         }
 
+
         // 获取当前用户信息
-        UnifySession unifySession = new UnifySession();
+        UnifySession unifySession = UserContextHolder.getSession();
         String language = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
         if (language == null) {
             language = LanguageEnum.ZH_CN.getCode();
@@ -77,7 +75,6 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         if (StrUtil.isNotBlank(tenantId)) {
             unifySession.setTenantId(Long.valueOf(tenantId));
         }
-        unifySession.setTraceId(request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER));
         UserContextHolder.setSession(unifySession);
 
         if (requestUrl.startsWith(GlobalConstant.FEIGN_PREFIX)) {
@@ -95,7 +92,7 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
                 String userPowerCacheKey = MessageFormat.format("framework:web:interceptor:power:{0}", unifySession.getUserId());
                 List<UserPowerVO> userPower = cacheChannel.get(userPowerCacheKey, List.class);
                 if (ObjUtil.isNull(userPower)) {
-                    userPower = FeignResultParse.getInstance(powerCheckFeignClient.queryResourceModules());
+                    userPower = getUserPower();
                     cacheChannel.put(userPowerCacheKey, userPower, 3000);
                 }
                 boolean anyMatch = userPower.stream().anyMatch(i -> i.getModules().contains(code));
@@ -111,9 +108,13 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    protected List<UserPowerVO> getUserPower() {
+//        return FeignResultParse.getInstance(powerCheckFeignClient.queryResourceModules());
+        return null;
+    }
+
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        UserContextHolder.clearSession();
     }
 }

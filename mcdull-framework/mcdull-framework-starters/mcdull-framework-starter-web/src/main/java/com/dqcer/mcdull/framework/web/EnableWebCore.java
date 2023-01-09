@@ -22,6 +22,6 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Import({ExceptionAdvice.class, BaseExceptionAdvice.class, AutoConfiguration.class, DateTimeConfig.class, DictTransformer.class, ThreadPoolConfig.class})
+@Import({ExceptionAdvice.class, BaseExceptionAdvice.class, AutoConfiguration.class, DateTimeConfig.class, ThreadPoolConfig.class})
 public @interface EnableWebCore {
 }

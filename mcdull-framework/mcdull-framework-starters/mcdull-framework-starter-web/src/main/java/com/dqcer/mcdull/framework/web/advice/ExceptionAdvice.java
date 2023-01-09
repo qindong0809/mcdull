@@ -2,11 +2,9 @@ package com.dqcer.mcdull.framework.web.advice;
 
 import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.exception.DatabaseRowException;
-import com.dqcer.framework.base.exception.FeignBizException;
-import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.CodeEnum;
+import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.framework.web.util.IpUtil;
-import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,29 +63,6 @@ public class ExceptionAdvice {
         return Result.error(CodeEnum.ERROR_UNKNOWN, Collections.singletonList(errorStack));
     }
 
-    /**
-     * 业务异常
-     *
-     * @param exception 异常
-     * @return {@link Result}<{@link ?}>
-     */
-    @ExceptionHandler(value = FeignException.class)
-    public Result<?> feignException(FeignException exception) {
-        log.error("feign调用异常: ", exception);
-        return Result.error(CodeEnum.FEIGN_BIZ, Collections.singletonList(exception.contentUTF8()));
-    }
-
-    /**
-     * 业务异常
-     *
-     * @param exception 异常
-     * @return {@link Result}<{@link ?}>
-     */
-    @ExceptionHandler(value = FeignBizException.class)
-    public Result<?> feignBizException(FeignBizException exception) {
-        log.error("feign调用异常: ", exception);
-        return Result.error(CodeEnum.FEIGN_BIZ, Collections.singletonList(exception.getResult()));
-    }
 
     /**
      * 业务异常

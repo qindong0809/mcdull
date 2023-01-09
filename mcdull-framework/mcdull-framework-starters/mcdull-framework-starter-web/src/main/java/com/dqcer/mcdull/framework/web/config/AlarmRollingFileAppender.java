@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.soagov;
+package com.dqcer.mcdull.framework.web.config;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
