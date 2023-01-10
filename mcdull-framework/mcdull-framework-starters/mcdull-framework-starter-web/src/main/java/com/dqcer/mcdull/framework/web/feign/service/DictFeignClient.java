@@ -27,7 +27,7 @@ public interface DictFeignClient {
      * @param dto dto
      * @return {@link Result < EnumVO >}
      */
-    @GetMapping(GlobalConstant.FEIGN_PREFIX + "/dict/detail")
+    @GetMapping(GlobalConstant.INTERIOR_API + "/dict/detail")
     Result<DictVO> detail(@SpringQueryMap @Validated(value = ValidGroup.One.class) DictLiteDTO dto);
 
 
@@ -37,6 +37,6 @@ public interface DictFeignClient {
      * @param dto dto
      * @return {@link Result}<{@link List}<{@link DictVO}>>
      */
-    @GetMapping(GlobalConstant.FEIGN_PREFIX + "/dict/list")
+    @GetMapping(GlobalConstant.INTERIOR_API + "/dict/list")
     Result<List<DictVO>> list(@SpringQueryMap @Validated(ValidGroup.List.class) DictLiteDTO dto);
 }

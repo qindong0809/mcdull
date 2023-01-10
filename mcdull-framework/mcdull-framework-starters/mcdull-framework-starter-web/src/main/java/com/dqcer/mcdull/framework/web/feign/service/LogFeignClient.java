@@ -24,6 +24,6 @@ public interface LogFeignClient {
      * @param dto dto
      * @return {@link Result < EnumVO >}
      */
-    @PostMapping(GlobalConstant.FEIGN_PREFIX + "/log/batch/save")
+    @PostMapping(GlobalConstant.INTERIOR_API + "/log/batch/save")
     Result<Integer> batchSave(@RequestBody List<LogDTO> dto);
 }

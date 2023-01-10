@@ -12,9 +12,9 @@ public class GlobalConstant {
     public static final String ROOT_PREFIX = "mcdull";
 
     /**
-     * feign 前缀
+     * 内部接口调用 前缀
      */
-    public static final String FEIGN_PREFIX = "/feign";
+    public static final String INTERIOR_API = "/interior-api";
 
 
 
