@@ -13,7 +13,11 @@ import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.*;
+import net.sf.jsqlparser.statement.select.AllColumns;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.select.SelectExpressionItem;
+import net.sf.jsqlparser.statement.select.SelectItem;
 import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.statement.update.UpdateSet;
 import org.apache.ibatis.executor.statement.StatementHandler;
@@ -29,9 +33,23 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.sql.*;
-import java.util.*;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -72,17 +90,25 @@ import java.util.concurrent.ConcurrentHashMap;
  * }
  * </p>
  *
- * @author yuxiaobin
+ * @author dqcer
  * @date 2022-8-21
  */
 @SuppressWarnings("all")
 public class DataChangeRecorderInnerInterceptor implements InnerInterceptor {
+
+    private final IDataChangeRecorder dataChangeRecorder;
+
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     @SuppressWarnings("unused")
     public static final String IGNORED_TABLE_COLUMN_PROPERTIES = "ignoredTableColumns";
 
     private final Map<String, Set<String>> ignoredTableColumns = new ConcurrentHashMap<>();
     private final Set<String> ignoreAllColumns = new HashSet<>();//全部表的这些字段名，INSERT/UPDATE都忽略，delete暂时保留
+
+
+    public DataChangeRecorderInnerInterceptor(IDataChangeRecorder dataChangeRecorder) {
+        this.dataChangeRecorder = dataChangeRecorder;
+    }
 
     @Override
     public void beforePrepare(StatementHandler sh, Connection connection, Integer transactionTimeout) {
@@ -113,7 +139,7 @@ public class DataChangeRecorderInnerInterceptor implements InnerInterceptor {
             long costThis = System.currentTimeMillis() - startTs;
             if (operationResult != null) {
                 operationResult.setCost(costThis);
-                dealOperationResult(operationResult);
+                dataChangeRecorder.dataInnerInterceptor(operationResult);
             }
         }
     }

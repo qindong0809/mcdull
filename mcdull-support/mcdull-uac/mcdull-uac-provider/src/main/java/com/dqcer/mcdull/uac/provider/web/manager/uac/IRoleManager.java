@@ -6,7 +6,7 @@ import com.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 /**
  * 角色 通用逻辑定义
  *
- * @author QinDong
+ * @author dqcer
  * @date 2022/12/26
  */
 public interface IRoleManager {

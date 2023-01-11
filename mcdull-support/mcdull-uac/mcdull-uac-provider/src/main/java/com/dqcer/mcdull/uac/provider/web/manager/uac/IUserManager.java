@@ -6,7 +6,7 @@ import com.dqcer.mcdull.uac.provider.model.vo.UserVO;
 /**
  * 用户 通过逻辑定义
  *
- * @author QinDong
+ * @author dqcer
  * @date 2022/12/26
  */
 public interface IUserManager {

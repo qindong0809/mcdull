@@ -103,7 +103,7 @@
   <logger name="springfox.documentation" level="ERROR" />
   <logger name="com.alibaba.nacos.client.naming" level="warn" />
   <logger name="com.dqcer.mcdull.framework" level="debug" />
-  <logger name="com.dqcer.mcdull" level="debug" />
+  <logger name="com.dqcer.mcdull" level="info" />
   <logger name="com.dqcer.mcdull.framework.redis.operation.CaffeineCache" level="INFO" />
   <root level="info">
     <appender-ref ref="CONSOLE" />

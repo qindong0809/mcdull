@@ -21,5 +21,4 @@ public class McdullAdminApplication {
     public static void main(String[] args) {
         SpringApplication.run(McdullAdminApplication.class, args);
     }
-
 }
