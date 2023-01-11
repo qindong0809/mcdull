@@ -42,7 +42,7 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         String requestUrl = request.getRequestURI();
         if (log.isDebugEnabled()) {
-            log.debug("Interceptor#preHandle requestURI:[{}]", requestUrl);
+            log.debug("Interceptor url:{}", requestUrl);
         }
 
         if (! (handler instanceof HandlerMethod)) {
@@ -53,7 +53,7 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         UnAuthorize unauthorize = method.getMethodAnnotation(UnAuthorize.class);
         if (null != unauthorize) {
             if (log.isDebugEnabled()) {
-                log.debug("UnAuthorize: {}", requestUrl);
+                log.debug("Un Authorize: {}", requestUrl);
             }
             return true;
         }

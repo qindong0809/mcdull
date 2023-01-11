@@ -37,7 +37,7 @@ public class HttpTraceLogFilter implements Filter {
         String requestUrl = request.getRequestURI();
 
         if (log.isDebugEnabled()) {
-            log.debug("doFilter url: {}", requestUrl);
+            log.debug("Filter url: {}", requestUrl);
         }
         if (!isRequestValid(request)) {
             log.warn("非法请求....");
@@ -48,7 +48,6 @@ public class HttpTraceLogFilter implements Filter {
         try {
             String traceId = request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER);
             if(null == traceId || traceId.trim().length() == 0) {
-                log.warn("url: {} traceId is null", requestUrl);
                 traceId = RandomUtil.uuid();
             }
             MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
