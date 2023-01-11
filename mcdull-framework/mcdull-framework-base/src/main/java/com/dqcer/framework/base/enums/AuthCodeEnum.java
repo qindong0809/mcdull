@@ -1,6 +1,5 @@
-package com.dqcer.mcdull.uac.provider.config.constants;
+package com.dqcer.framework.base.enums;
 
-import com.dqcer.framework.base.enums.IEnum;
 import com.dqcer.framework.base.wrapper.ICode;
 
 /**

@@ -66,7 +66,7 @@ public class BaseInterceptor implements HandlerInterceptor {
         // 设置用户上下文
         UnifySession unifySession = setUserContextHolder(request);
 
-        if (requestUrl.startsWith(GlobalConstant.FEIGN_PREFIX)) {
+        if (requestUrl.startsWith(GlobalConstant.INTERIOR_API)) {
             return true;
         }
 

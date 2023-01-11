@@ -13,4 +13,9 @@ public class SimpleBaseInfoInterceptor extends BaseInfoInterceptor {
     protected List<UserPowerVO> getUserPower() {
         return super.getUserPower();
     }
+
+    @Override
+    protected boolean enableAuth() {
+        return true;
+    }
 }

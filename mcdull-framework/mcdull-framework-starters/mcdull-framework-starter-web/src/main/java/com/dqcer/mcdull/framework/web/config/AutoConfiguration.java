@@ -1,10 +1,7 @@
 package com.dqcer.mcdull.framework.web.config;
 
-import com.dqcer.mcdull.framework.web.aspect.OperationLogsAspect;
 import com.dqcer.mcdull.framework.web.aspect.TranslatorAspect;
-import com.dqcer.mcdull.framework.web.feign.service.LogFeignClient;
 import com.dqcer.mcdull.framework.web.filter.HttpTraceLogFilter;
-import com.dqcer.mcdull.framework.web.listener.LogEventListener;
 import com.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -64,13 +61,13 @@ public class AutoConfiguration {
     /**
      * 添加Long转json精度丢失的配置
      */
-    @Bean
-    public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder builder) {
-        ObjectMapper objectMapper = builder.createXmlMapper(false).build();
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(Long.class, ToStringSerializer.instance);
-        module.addSerializer(Long.TYPE, ToStringSerializer.instance);
-        objectMapper.registerModule(module);
-        return objectMapper;
-    }
+//    @Bean
+//    public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder builder) {
+//        ObjectMapper objectMapper = builder.createXmlMapper(false).build();
+//        SimpleModule module = new SimpleModule();
+//        module.addSerializer(Long.class, ToStringSerializer.instance);
+//        module.addSerializer(Long.TYPE, ToStringSerializer.instance);
+//        objectMapper.registerModule(module);
+//        return objectMapper;
+//    }
 }

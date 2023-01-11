@@ -44,14 +44,4 @@ public class Interceptor implements WebMvcConfigurer {
         return new DynamicDatasourceInterceptor();
     }
 
-    /**
-     * 获取安全拦截器
-     *
-     * @return {@link HandlerInterceptor}
-     */
-    @Bean
-    public HandlerInterceptor getBaseInterceptor() {
-        return new BaseInfoInterceptor();
-    }
-
 }

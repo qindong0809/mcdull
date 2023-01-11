@@ -1,6 +1,7 @@
-package com.dqcer.mcdull.uac.provider.web.service;
+package com.dqcer.mcdull.admin.web.service.sso.impl;
 
 import com.dqcer.framework.base.constants.HttpHeaderConstants;
+import com.dqcer.framework.base.enums.AuthCodeEnum;
 import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.enums.StatusEnum;
 import com.dqcer.framework.base.exception.BusinessException;
@@ -9,15 +10,15 @@ import com.dqcer.framework.base.storage.SsoConstant;
 import com.dqcer.framework.base.util.ObjUtil;
 import com.dqcer.framework.base.util.RandomUtil;
 import com.dqcer.framework.base.util.Sha1Util;
-import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.framework.base.wrapper.CodeEnum;
+import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.admin.model.dto.sys.LoginDTO;
+import com.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import com.dqcer.mcdull.admin.web.dao.repository.sys.IUserLoginRepository;
+import com.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
+import com.dqcer.mcdull.admin.web.service.sso.IAuthService;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import com.dqcer.mcdull.framework.redis.operation.RedissonCache;
-import com.dqcer.framework.base.enums.AuthCodeEnum;
-import com.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
-import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
-import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserLoginRepository;
-import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,15 +32,15 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 
 /**
- * 登录服务
+ * 身份验证服务 业务实现类
  *
- * @author dqwcer
- * @version 2022/11/07
+ * @author dqcer
+ * @date 2023/01/11 22:01:06
  */
 @Service
-public class LoginService {
+public class AuthServiceImpl implements IAuthService {
 
-    private static final Logger log = LoggerFactory.getLogger(LoginService.class);
+    private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     @Resource
     private IUserRepository userRepository;
@@ -59,6 +60,7 @@ public class LoginService {
      * @param loginDTO 登录dto
      * @return {@link Result}<{@link String}>
      */
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Result<String> login(LoginDTO loginDTO) {
         String account = loginDTO.getAccount();
@@ -104,6 +106,7 @@ public class LoginService {
      * @param token 令牌
      * @return {@link Result}<{@link Long}>
      */
+    @Override
     public Result<Long> tokenValid(String token) {
         String tokenKey = MessageFormat.format(SsoConstant.SSO_TOKEN, token);
         CacheUser user = cacheChannel.get(tokenKey, CacheUser.class);
@@ -146,6 +149,7 @@ public class LoginService {
      *
      * @return {@link Result<String>}
      */
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Result<String> logout() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
