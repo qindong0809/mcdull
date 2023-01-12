@@ -24,7 +24,7 @@ public interface DictServiceApi {
      * @param dto dto
      * @return {@link Result<DictClientVO>}
      */
-    @GetMapping(GlobalConstant.FEIGN_PREFIX + "/dict/detail")
+    @GetMapping(GlobalConstant.INTERIOR_API + "/dict/detail")
     Result<DictClientVO> one(@Validated(value = ValidGroup.One.class) DictClientDTO dto);
 
     /**
@@ -33,7 +33,7 @@ public interface DictServiceApi {
      * @param dto dto
      * @return {@link Result}<{@link List}<{@link DictClientVO}>>
      */
-    @GetMapping( GlobalConstant.FEIGN_PREFIX + "/dict/list")
+    @GetMapping( GlobalConstant.INTERIOR_API + "/dict/list")
     Result<List<DictClientVO>> list(@Validated(ValidGroup.List.class) DictClientDTO dto);
 
 }
