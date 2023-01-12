@@ -16,8 +16,9 @@ public class DemoController {
         return Result.ok("hello word ");
     }
 
-    @GetMapping("/404")
+    @GetMapping("/error")
     public Result<?> unAuth_404() {
+        Integer.valueOf("dfd");
         return Result.ok();
     }
 

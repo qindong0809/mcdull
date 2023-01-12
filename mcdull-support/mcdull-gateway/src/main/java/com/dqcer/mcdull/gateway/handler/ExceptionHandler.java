@@ -76,12 +76,12 @@ public class ExceptionHandler implements WebExceptionHandler, Ordered {
                         default:
                             // 其他异常默认为500
                             log.warn("网关异常处理", ex);
-                            error = Result.error(CodeEnum.ERROR_UNKNOWN, Collections.singletonList(ex.getMessage()));
+                            error = Result.error(CodeEnum.INTERNAL_SERVER_ERROR, Collections.singletonList(ex.getMessage()));
                             break;
                     }
                 } else {
                     log.warn("网关异常处理: {}", ex.getMessage());
-                    error = Result.error(CodeEnum.ERROR_UNKNOWN, Collections.singletonList(ex.getMessage()));
+                    error = Result.error(CodeEnum.INTERNAL_SERVER_ERROR, Collections.singletonList(ex.getMessage()));
                 }
                 return bufferFactory.wrap(objectMapper.writeValueAsBytes(error));
             } catch (JsonProcessingException e) {

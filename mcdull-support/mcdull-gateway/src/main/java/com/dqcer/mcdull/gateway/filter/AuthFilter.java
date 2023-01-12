@@ -72,7 +72,7 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
         }
 
         // feign拦截
-        if(requestUrl.toLowerCase().contains(GlobalConstant.INTERIOR_API)) {
+        if(requestUrl.toLowerCase().contains(GlobalConstant.INNER_API)) {
             log.warn("内部feign接口，外部非法调用");
             return errorResponse(response, CodeEnum.NOT_FOUND.getCode(), CodeEnum.NOT_FOUND.getMessage());
         }

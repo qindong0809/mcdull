@@ -14,7 +14,7 @@ public class GlobalConstant {
     /**
      * 内部接口调用 前缀
      */
-    public static final String INTERIOR_API = "/interior-api";
+    public static final String INNER_API = "/interior-api";
 
 
 

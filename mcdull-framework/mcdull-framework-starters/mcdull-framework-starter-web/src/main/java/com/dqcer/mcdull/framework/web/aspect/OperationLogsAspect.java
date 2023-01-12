@@ -2,11 +2,9 @@ package com.dqcer.mcdull.framework.web.aspect;
 
 import com.dqcer.framework.base.annotation.UnAuthorize;
 import com.dqcer.framework.base.constants.GlobalConstant;
-import com.dqcer.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.JsonUtil;
 import com.dqcer.mcdull.framework.web.feign.model.LogDTO;
-import com.dqcer.mcdull.framework.web.listener.LogEventListener;
 import com.dqcer.mcdull.framework.web.util.IpUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -15,14 +13,12 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
@@ -131,8 +127,7 @@ public class OperationLogsAspect {
         entity.setMethod(request.getMethod());
         entity.setCreatedTime(new Date());
         entity.setTimeTaken(System.currentTimeMillis() - startTime);
-        entity.setAccountId(Long.valueOf(request.getHeader(HttpHeaderConstants.U_ID)));
-        entity.setTraceId(MDC.get(HttpHeaderConstants.LOG_TRACE_ID));
+        entity.setTraceId(UserContextHolder.getSession().getTraceId());
         return entity;
     }
 

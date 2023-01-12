@@ -60,7 +60,7 @@ public class ExceptionAdvice {
 
         String errorStack = stringWriter.toString();
         errorStack = errorStack.substring(0, 1000);
-        return Result.error(CodeEnum.ERROR_UNKNOWN, Collections.singletonList(errorStack));
+        return Result.error(CodeEnum.INTERNAL_SERVER_ERROR, Collections.singletonList(errorStack));
     }
 
 

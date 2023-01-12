@@ -9,12 +9,14 @@ import com.dqcer.framework.base.storage.UnifySession;
 import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.ObjUtil;
 import com.dqcer.framework.base.wrapper.CodeEnum;
+import com.dqcer.framework.base.wrapper.ICode;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -45,10 +47,21 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
             log.debug("Interceptor url:{}", requestUrl);
         }
 
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+
+        int status = response.getStatus();
+
+        if (status != HttpStatus.OK.value()) {
+            log.error("请求异常 url: {}", requestUrl);
+            return true;
+        }
+
         if (! (handler instanceof HandlerMethod)) {
             return true;
         }
         HandlerMethod method = (HandlerMethod) handler;
+
         // 无需认证
         UnAuthorize unauthorize = method.getMethodAnnotation(UnAuthorize.class);
         if (null != unauthorize) {
@@ -68,35 +81,36 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         }
         unifySession.setLanguage(language);
 
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json");
+
 
         if (enableAuth()) {
             String authorization = request.getHeader(HttpHeaderConstants.AUTHORIZATION);
             if (authorization == null || authorization.trim().length() == 0) {
                 log.warn("认证失败 头部参数'authorization'缺失 url: {}", requestUrl);
-                response.getWriter().write(authErrorJson());
+                response.getWriter().write(errorJson(CodeEnum.UN_AUTHORIZATION));
                 return false;
             }
 
             String token = authorization.substring(HttpHeaderConstants.BEARER.length());
             if (token.trim().length() == 0) {
                 log.warn("认证失败 头部参数缺失缺失'Bearer '");
-                response.getWriter().write(authErrorJson());
+                response.getWriter().write(errorJson(CodeEnum.UN_AUTHORIZATION));
                 return false;
             }
 
-            Result<?> result = authCheck(token, unifySession);
+            Result<Long> result = authCheck(token);
             if (!result.isOk()) {
                 log.warn("认证失败 result: {}", result);
-                response.getWriter().write(authErrorJson());
+                response.getWriter().write(errorResult(result));
                 return false;
             }
+            Long userId = result.getData();
+            unifySession.setUserId(userId);
         }
 
         UserContextHolder.setSession(unifySession);
 
-        if (requestUrl.startsWith(GlobalConstant.INTERIOR_API)) {
+        if (requestUrl.startsWith(GlobalConstant.INNER_API)) {
             return true;
         }
 
@@ -114,9 +128,7 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
                 boolean anyMatch = userPower.stream().anyMatch(i -> i.getModules().contains(code));
                 if (!anyMatch) {
                     log.warn("没有对应的模块权限: {}, userPower: {}", CodeEnum.POWER_CHECK_MODULE, userPower);
-                    String json = "{\"code\":"+CodeEnum.POWER_CHECK_MODULE.getCode()+
-                                    ", \"data\":null, \"message\":\""+CodeEnum.POWER_CHECK_MODULE.getMessage()+"\"}";
-                    response.getWriter().write(json);
+                    response.getWriter().write(errorJson(CodeEnum.POWER_CHECK_MODULE));
                     return false;
                 }
             }
@@ -128,12 +140,17 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         return false;
     }
 
-    private String authErrorJson() {
-        return "{\"code\":"+ CodeEnum.UN_AUTHORIZATION.getCode() +
-                        ", \"data\":null, \"message\":\""+CodeEnum.UN_AUTHORIZATION.getMessage()+"\"}";
+    private String errorJson(ICode codeEnum) {
+        return "{\"code\":"+ codeEnum.getCode() +
+                        ", \"data\":null, \"message\":\"" + codeEnum.getMessage() + "\"}";
     }
 
-    protected Result<?> authCheck(String token, UnifySession unifySession) {
+    private String errorResult(Result<?> result) {
+        return "{\"code\":"+ result.getCode() +
+                ", \"data\":" + result.getData() + ", \"message\":\"" + result.getMessage() + "\"}";
+    }
+
+    protected Result<Long> authCheck(String token) {
         return Result.ok();
     }
 

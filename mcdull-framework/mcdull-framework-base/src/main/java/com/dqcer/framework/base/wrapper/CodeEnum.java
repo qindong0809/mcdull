@@ -19,7 +19,7 @@ public enum CodeEnum implements ICode , IEnum<Integer> {
 	/**
 	 * 服务异常
 	 */
-	ERROR_UNKNOWN(500, "未知异常: {0}"),
+	INTERNAL_SERVER_ERROR(500, "未知异常: {0}"),
 
 	/**
 	 * 服务不可用

@@ -22,7 +22,7 @@ public interface PowerCheckFeignClient {
      *
      * @return {@link Result}<{@link Boolean}>
      */
-    @PostMapping(GlobalConstant.INTERIOR_API + "/user/res-module/list")
+    @PostMapping(GlobalConstant.INNER_API + "/user/res-module/list")
     Result<List<UserPowerVO>> queryResourceModules();
 
 }
