@@ -22,7 +22,7 @@ public interface MailServiceApi {
      * @param dto dto
      * @return {@link Result}<{@link Boolean}>
      */
-    @PostMapping(GlobalConstant.INTERIOR_API + "/mail/send")
+    @PostMapping(GlobalConstant.INNER_API + "/mail/send")
     Result<Boolean> send(@RequestBody @Valid MailClientDTO dto);
 
 }

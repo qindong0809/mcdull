@@ -29,7 +29,7 @@ public class LogServerFeign {
      * @param dto dto
      * @return {@link Result <Long> 返回新增主键}
      */
-    @PostMapping(GlobalConstant.FEIGN_PREFIX + "/log/batch/save")
+    @PostMapping(GlobalConstant.INNER_API + "/log/batch/save")
     public Result<Integer> batchSave(@RequestBody List<SysLogFeignDTO> dto){
         return logService.batchSave(dto);
     }
