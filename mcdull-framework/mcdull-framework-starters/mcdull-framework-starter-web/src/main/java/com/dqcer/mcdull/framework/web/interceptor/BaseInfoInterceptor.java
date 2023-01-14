@@ -51,13 +51,11 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
 
-        int status = response.getStatus();
-
-        HttpStatus httpStatus = HttpStatus.valueOf(status);
+        HttpStatus httpStatus = HttpStatus.valueOf(response.getStatus());
 
         if (!httpStatus.equals(HttpStatus.OK)) {
             // 404 会重定向到 /error
-            log.warn("http 请求异常 requestUrl: {}, httpStatus: {} ", requestUrl, httpStatus);
+            log.error("http 请求异常 requestUrl: {}, httpStatus: {} ", requestUrl, httpStatus);
             response.getWriter().write(errorJson(httpStatus));
             return false;
         }

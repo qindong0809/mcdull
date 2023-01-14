@@ -4,7 +4,7 @@
   <include resource="org/springframework/boot/logging/logback/defaults.xml" />
   <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
-  <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} | %p | %t | %X{traceId} | %c | %m%n"/>
+  <property name="LOG_PATTERN" value="|%d{yyyy-MM-dd HH:mm:ss.SSS} | %-5level | %15t | %X{traceId} | %-42logger{36}:%line | %m | %n"/>
 
   <!-- 定义项目名称和日志路径 -->
   <springProperty scope="context" name="application.name" source="spring.application.name" />

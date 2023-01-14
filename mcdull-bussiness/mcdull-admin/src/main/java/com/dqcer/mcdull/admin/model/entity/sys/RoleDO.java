@@ -32,6 +32,8 @@ public class RoleDO extends BaseDO {
      */
     private Integer type;
 
+    private Integer status;
+
     @Override
     public String toString() {
         return "RoleDO{" +
@@ -80,5 +82,13 @@ public class RoleDO extends BaseDO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

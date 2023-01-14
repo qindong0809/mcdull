@@ -27,8 +27,8 @@ public class CodeGenerator {
 
     public static final String USER_DIR = System.getProperty("user.dir");
 
-    public static final String API_PROJECT = "com.dqcer.%s.provider.model.%s";
-    public static final String WBB_PROJECT = "com.dqcer.%s.provider.web.%s.%s";
+    public static final String API_PROJECT = "com.dqcer.%s.model.%s";
+    public static final String WBB_PROJECT = "com.dqcer.%s.web.%s.%s";
 
     public static final String S_ = ".%s";
 
@@ -65,7 +65,7 @@ public class CodeGenerator {
         String driverName = "com.mysql.cj.jdbc.Driver";
         String username = "root";
         String password = "123456";
-        String projectNames = "mcdull.auth";
+        String projectNames = "mcdull.admin";
         boolean isGeneratorWeb = true;
 
         String outPath = USER_DIR + outputBase + SRC + "/";

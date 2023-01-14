@@ -40,9 +40,6 @@ public class AutoConfiguration {
     @Resource
     private ApplicationContext context;
 
-    @Resource
-    private IDataChangeRecorder dataChangeRecorder;
-
     /**
      * 调整 SqlSessionFactory 为 MyBatis-Plus 的 SqlSessionFactory
      *
@@ -91,8 +88,13 @@ public class AutoConfiguration {
         // SQL规范检查
         interceptor.addInnerInterceptor(new SqlReviewInnerInterceptor(context));
         // 数据变更记录（数据审计）
-        interceptor.addInnerInterceptor(new DataChangeRecorderInnerInterceptor(dataChangeRecorder));
+        interceptor.addInnerInterceptor(new DataChangeRecorderInnerInterceptor(dataChangeRecorder()));
         return interceptor;
+    }
+
+    @Bean
+    public IDataChangeRecorder dataChangeRecorder() {
+        return new DefaultDataChangeRecorder();
     }
 
     @Bean

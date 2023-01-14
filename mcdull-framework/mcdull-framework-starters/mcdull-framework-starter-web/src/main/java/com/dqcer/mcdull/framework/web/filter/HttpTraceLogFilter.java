@@ -37,15 +37,6 @@ public class HttpTraceLogFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String requestUrl = request.getRequestURI();
 
-        if (log.isDebugEnabled()) {
-            log.debug("Filter url: {}", requestUrl);
-        }
-        if (!isRequestValid(request)) {
-            log.warn("非法请求....");
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         try {
             String traceId = request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER);
             if(null == traceId || traceId.trim().length() == 0) {
@@ -57,6 +48,16 @@ public class HttpTraceLogFilter implements Filter {
             unifySession.setRequestUrl(requestUrl);
             unifySession.setNow(new Date());
             UserContextHolder.setSession(unifySession);
+
+            if (log.isDebugEnabled()) {
+                log.debug("Filter url: {}", requestUrl);
+            }
+            if (!isRequestValid(request)) {
+                log.warn("非法请求....");
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             filterChain.doFilter(request, response);
         } finally {
             UserContextHolder.clearSession();

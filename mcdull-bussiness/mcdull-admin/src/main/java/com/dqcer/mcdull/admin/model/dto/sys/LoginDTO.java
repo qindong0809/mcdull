@@ -2,6 +2,8 @@ package com.dqcer.mcdull.admin.model.dto.sys;
 
 import com.dqcer.framework.base.dto.DTO;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * 登录 dto
  *
@@ -10,8 +12,10 @@ import com.dqcer.framework.base.dto.DTO;
  */
 public class LoginDTO implements DTO {
 
+    @NotEmpty
     private String account;
 
+    @NotEmpty
     private String pd;
 
     private String code;

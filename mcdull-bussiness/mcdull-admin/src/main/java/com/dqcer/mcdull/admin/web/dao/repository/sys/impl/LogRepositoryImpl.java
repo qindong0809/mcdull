@@ -1,4 +1,4 @@
-package ${cfg.repositoryImpl};
+package com.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
 import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.enums.DelFlayEnum;
@@ -9,43 +9,43 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dqcer.framework.base.enums.StatusEnum;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import ${cfg.apiDto}.${cfg.dtoName};
+import com.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
 import java.util.Collections;
 import java.util.List;
-import ${cfg.apiEntity}.${cfg.entityName};
-import ${cfg.repository}.${cfg.repositoryName};
+import com.dqcer.mcdull.admin.model.entity.sys.LogDO;
+import com.dqcer.mcdull.admin.web.dao.repository.sys.ILogRepository;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.stereotype.Service;
-import ${package.Mapper}.${cfg.mapperName};
+import com.dqcer.mcdull.admin.web.dao.mapper.sys.LogMapper;
 import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.framework.base.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
-* ${table.comment!} 数据库操作封装实现层
+* 日志记录 数据库操作封装实现层
 *
-* @author ${author}
-* @version ${date}
+* @author dqcer
+* @version 2023-01-14
 */
 @Service
-public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${cfg.entityName}>  implements ${cfg.repositoryName} {
+public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO>  implements ILogRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(${cfg.repositoryImplName}.class);
+    private static final Logger log = LoggerFactory.getLogger(LogRepositoryImpl.class);
 
     /**
      * 根据ID列表批量查询数据
      *
      * @param idList id列表
-     * @return {@link List<${cfg.entityName}>}
+     * @return {@link List<LogDO>}
      */
     @Override
-    public List<${cfg.entityName}> queryListByIds(List<Long> idList) {
-        LambdaQueryWrapper<${cfg.entityName}> wrapper = Wrappers.lambdaQuery();
-        wrapper.in(${cfg.entityName}::getId, idList);
-        wrapper.eq(${cfg.entityName}::getDelFlag, DelFlayEnum.NORMAL.getCode());
-        List<${cfg.entityName}> list =  baseMapper.selectList(wrapper);
+    public List<LogDO> queryListByIds(List<Long> idList) {
+        LambdaQueryWrapper<LogDO> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(LogDO::getId, idList);
+        wrapper.eq(LogDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
+        List<LogDO> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;
         }
@@ -56,11 +56,11 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
      * 按条件分页查询
      *
      * @param param 参数
-     * @return {@link Page<${cfg.entityName}>}
+     * @return {@link Page<LogDO>}
      */
     @Override
-    public Page<${cfg.entityName}> selectPage(${cfg.dtoName} param) {
-        LambdaQueryWrapper<${cfg.entityName}> lambda = new QueryWrapper<${cfg.entityName}>().lambda();
+    public Page<LogDO> selectPage(LogLiteDTO param) {
+        LambdaQueryWrapper<LogDO> lambda = new QueryWrapper<LogDO>().lambda();
         String keyword = param.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
             //TODO 组装查询条件
@@ -72,10 +72,10 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
      * 根据ID获取单条数据
      *
      * @param id 主键
-     * @return {@link ${cfg.entityName}}
+     * @return {@link LogDO}
      */
     @Override
-    public ${cfg.entityName} getById(Long id) {
+    public LogDO getById(Long id) {
         return baseMapper.selectById(id);
     }
 
@@ -86,7 +86,7 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
      * @return Long id
      */
     @Override
-    public Long insert(${cfg.entityName} entity) {
+    public Long insert(LogDO entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
@@ -124,8 +124,8 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
      * @return boolean true/存在 false/不存在
      */
     @Override
-    public boolean exist(${cfg.entityName} entity) {
-        List<${cfg.entityName}> list = baseMapper.selectList(Wrappers.lambdaQuery(entity));
+    public boolean exist(LogDO entity) {
+        List<LogDO> list = baseMapper.selectList(Wrappers.lambdaQuery(entity));
         return list.isEmpty();
     }
 }

@@ -139,7 +139,12 @@ public class AuthServiceImpl implements IAuthService {
             log.warn("token valid:  用户操作已过期");
             return Result.error(CodeEnum.TIMEOUT_LOGIN);
         }
-        redisClient.putIfExists(tokenKey, user.setLastActiveTime(now));
+
+        // 控制更新频率 lastActiveTime + 2 < now
+        int updateFrequency = 2;
+        if (lastActiveTime.plusMinutes(updateFrequency).isBefore(now)) {
+            redisClient.putIfExists(tokenKey, user.setLastActiveTime(now));
+        }
 
         return Result.ok(user.getUserId());
     }

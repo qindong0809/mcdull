@@ -54,6 +54,8 @@ public class UserDO extends BaseDO {
      */
     private Integer type;
 
+    private Integer status;
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("UserDO{");
@@ -138,5 +140,13 @@ public class UserDO extends BaseDO {
 
     public void setLastLoginTime(LocalTime lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

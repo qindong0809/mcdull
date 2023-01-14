@@ -1,0 +1,34 @@
+package com.dqcer.mcdull.admin.web.controller.sys;
+
+import com.dqcer.framework.base.validator.ValidGroup;
+import com.dqcer.framework.base.vo.PagedVO;
+import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
+import com.dqcer.mcdull.admin.model.vo.sys.LogVO;
+import com.dqcer.mcdull.admin.web.service.sys.ILogService;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+
+@RestController
+@RequestMapping("log-operation")
+public class LogOperationController {
+
+
+    @Resource
+    private ILogService logService;
+
+    /**
+     * 查询分页数据
+     *
+     * @param dto dto
+     * @return {@link Result<PagedVO>}
+     */
+    @GetMapping("base/list")
+    public Result<PagedVO<LogVO>> listByPage(@Validated(value = {ValidGroup.Paged.class}) LogLiteDTO dto){
+        return logService.listByPage(dto);
+    }
+}

@@ -140,6 +140,7 @@ public class DataChangeRecorderInnerInterceptor implements InnerInterceptor {
             if (operationResult != null) {
                 operationResult.setCost(costThis);
                 dataChangeRecorder.dataInnerInterceptor(operationResult);
+
             }
         }
     }

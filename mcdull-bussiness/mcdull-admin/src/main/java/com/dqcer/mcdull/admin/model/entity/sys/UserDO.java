@@ -54,6 +54,8 @@ public class UserDO extends BaseDO {
      */
     private Integer type;
 
+    private Integer status;
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("UserDO{");
@@ -74,6 +76,14 @@ public class UserDO extends BaseDO {
         sb.append(", id=").append(id);
         sb.append('}');
         return sb.toString();
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Integer getType() {
