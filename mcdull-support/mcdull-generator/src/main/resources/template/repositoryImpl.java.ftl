@@ -1,7 +1,7 @@
 package ${cfg.repositoryImpl};
 
 import com.dqcer.framework.base.constants.GlobalConstant;
-import com.dqcer.framework.base.enums.StatusEnum;
+import com.dqcer.framework.base.enums.DelFlayEnum;
 import com.dqcer.framework.base.exception.DatabaseRowException;
 import com.dqcer.framework.base.util.StrUtil;
 import com.dqcer.framework.base.util.ObjUtil;
@@ -46,7 +46,7 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
         wrapper.in(${cfg.entityName}::getId, idList);
         wrapper.eq(${cfg.entityName}::getStatus, StatusEnum.ENABLE.getCode());
         wrapper.eq(${cfg.entityName}::getDelFlag, DelFlayEnum.NORMAL.getCode());
-        List<${cfg.entityName}> list =  baseMapper.selectList(queryWrapper);
+        List<${cfg.entityName}> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;
         }

@@ -128,7 +128,7 @@ public class CodeGenerator {
         String dtoSuffix = "LiteDTO";
         String convertSuffix = "Convert";
 
-        String entityPackage = String.format(API_PROJECT, projectName, "entity");
+        String entityPackage = String.format(API_PROJECT + S_, projectName, "entity", modelName);
         String entityPath = entityPackage.replaceAll("\\.", "/");
         String dtoPackage = String.format(API_PROJECT + S_, projectName, "dto", modelName);
         String dtoPath = dtoPackage.replaceAll("\\.", "/");
@@ -194,7 +194,7 @@ public class CodeGenerator {
         strategy.setRestControllerStyle(true);
         strategy.setEntityTableFieldAnnotationEnable(true);
         // 写于父类中的公共字段
-        String[] strings = { "created_by", "created_time", "updated_by", "updated_time"};
+        String[] strings = { "created_by", "created_time", "updated_by", "updated_time", "del_flag", "del_by"};
         strategy.setSuperEntityColumns(strings);
 
         strategy.setInclude(split);

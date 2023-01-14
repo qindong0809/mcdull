@@ -42,6 +42,7 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+
         String requestUrl = request.getRequestURI();
         if (log.isDebugEnabled()) {
             log.debug("Interceptor url:{}", requestUrl);
@@ -52,12 +53,16 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
 
         int status = response.getStatus();
 
-        if (status != HttpStatus.OK.value()) {
-            log.error("请求异常 url: {}", requestUrl);
-            return true;
+        HttpStatus httpStatus = HttpStatus.valueOf(status);
+
+        if (!httpStatus.equals(HttpStatus.OK)) {
+            // 404 会重定向到 /error
+            log.warn("http 请求异常 requestUrl: {}, httpStatus: {} ", requestUrl, httpStatus);
+            response.getWriter().write(errorJson(httpStatus));
+            return false;
         }
 
-        if (! (handler instanceof HandlerMethod)) {
+        if (!(handler instanceof HandlerMethod)) {
             return true;
         }
         HandlerMethod method = (HandlerMethod) handler;
@@ -71,8 +76,8 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        // 获取当前语言环境
         UnifySession unifySession = UserContextHolder.getSession();
+        // 获取当前语言环境
         String language = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
         if (language == null) {
             language = LanguageEnum.ZH_CN.getCode();
@@ -80,7 +85,6 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
             language = language.substring(0, language.indexOf(','));
         }
         unifySession.setLanguage(language);
-
 
 
         if (enableAuth()) {
@@ -143,6 +147,11 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
     private String errorJson(ICode codeEnum) {
         return "{\"code\":"+ codeEnum.getCode() +
                         ", \"data\":null, \"message\":\"" + codeEnum.getMessage() + "\"}";
+    }
+
+    private String errorJson(HttpStatus codeEnum) {
+        return "{\"code\":"+ codeEnum.value() +
+                ", \"data\":null, \"message\":\"" + codeEnum.getReasonPhrase() + "\"}";
     }
 
     private String errorResult(Result<?> result) {

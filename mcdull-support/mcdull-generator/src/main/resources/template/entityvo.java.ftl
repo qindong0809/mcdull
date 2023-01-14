@@ -1,6 +1,7 @@
 package ${cfg.apiVo};
 
 import com.dqcer.framework.base.vo.VO;
+import java.util.Date;
 
 /**
 * ${table.comment!} 返回客户端值

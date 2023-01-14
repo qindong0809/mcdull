@@ -3,7 +3,7 @@ package ${cfg.apiEntity};
 import com.baomidou.mybatisplus.annotation.TableName;
 import ${cfg.baseEntity};
 
-
+import java.util.Date;
 
 /**
  * ${table.comment!} 实体类
@@ -17,7 +17,7 @@ public class ${cfg.entityName} extends BaseDO {
     private static final long serialVersionUID = 1L;
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
-<#if "id" != field.name && "status" != field.name>
+<#if "id" != field.name >
     <#if field.keyFlag>
         <#assign keyPropertyName="${field.propertyName}"/>
     </#if>
@@ -34,7 +34,7 @@ public class ${cfg.entityName} extends BaseDO {
 
 <#if !entityLombokModel>
     <#list table.fields as field>
-        <#if "id" != field.name && "status" != field.name>
+        <#if "id" != field.name >
         <#if field.propertyType == "boolean">
             <#assign getprefix="is"/>
         <#else>

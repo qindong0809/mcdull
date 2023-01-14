@@ -53,6 +53,7 @@ public class HttpTraceLogFilter implements Filter {
             MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
             UnifySession unifySession = new UnifySession();
             unifySession.setTraceId(traceId);
+            unifySession.setRequestUrl(requestUrl);
             UserContextHolder.setSession(unifySession);
             filterChain.doFilter(request, response);
         } finally {

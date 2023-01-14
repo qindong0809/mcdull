@@ -22,7 +22,6 @@ public class BaseDO extends MiddleDO {
     @TableField(fill = FieldFill.INSERT)
     protected Boolean delFlag;
 
-
     /**
      * 删除人
      */
@@ -46,13 +45,6 @@ public class BaseDO extends MiddleDO {
     @TableField(fill = FieldFill.UPDATE)
     protected Long updatedBy;
 
-    /**
-     * 状态 默认启用
-     * @see com.dqcer.framework.base.enums.StatusEnum
-     */
-    @TableField(fill = FieldFill.INSERT)
-    protected Integer status;
-
     @Override
     public String toString() {
         return "BaseDO{" +
@@ -61,7 +53,6 @@ public class BaseDO extends MiddleDO {
                 ", createdBy=" + createdBy +
                 ", updatedTime=" + updatedTime +
                 ", updatedBy=" + updatedBy +
-                ", status=" + status +
                 ", createdTime=" + createdTime +
                 ", id=" + id +
                 "} " + super.toString();
@@ -107,14 +98,6 @@ public class BaseDO extends MiddleDO {
 
     public void setUpdatedBy(Long updatedBy) {
         this.updatedBy = updatedBy;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 
 }
