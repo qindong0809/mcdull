@@ -73,7 +73,8 @@ public class HttpTraceLogFilter implements Filter {
         try {
             new URI(request.getRequestURL().toString());
             return true;
-        } catch (URISyntaxException ex) {
+        } catch (URISyntaxException e) {
+            log.warn(e.getMessage(), e);
             return false;
         }
     }
