@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Date;
 
 /**
  * http日志
@@ -54,6 +55,7 @@ public class HttpTraceLogFilter implements Filter {
             UnifySession unifySession = new UnifySession();
             unifySession.setTraceId(traceId);
             unifySession.setRequestUrl(requestUrl);
+            unifySession.setNow(new Date());
             UserContextHolder.setSession(unifySession);
             filterChain.doFilter(request, response);
         } finally {
