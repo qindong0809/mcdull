@@ -292,11 +292,22 @@ try {
 
 ### 插件推荐
 #### GenerateAllSetter
-> DTO, VO, POJO、entity等对象的相互转化，一键代码生成，无入侵，速度快，尤其支持复杂对象（对象包含对象，对象包含list、set）。 
->定义好bean的转化方法和出入参，光标定位于方法中，右键鼠标点击generate菜单，或使用快捷键command + N, ALT + INSERT,然后点击插件 代码就生成好了
+> 通过alt+enter对变量类生成对类的所有setter方法的调用
+
+#### Free Mybatis plugin
+>快速从代码跳转到mapper及从mapper返回代码
+
+#### RestfulTool
+>一套 Restful 服务开发辅助工具集
+
+#### Easy Javadoc
+>自动生成javadoc文档注释
+
 
 ### 后期规划
+- 翻译转换支持批量提高效率
+- 文件上传下载
+- pdf生成器
 >动态表单： https://segmentfault.com/q/1010000009146625 
 >log.error("xxxxx", ThrowableUtil.getStackTraceAsString(e));
-> INTERIOR_API
 >如有需求请联系作者(dqcer@sina.com)
