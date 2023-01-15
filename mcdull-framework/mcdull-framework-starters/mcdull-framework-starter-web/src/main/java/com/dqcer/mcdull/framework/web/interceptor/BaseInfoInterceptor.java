@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -138,6 +139,11 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    /**
+     * 是否启用token验证
+     *
+     * @return boolean
+     */
     protected boolean enableAuth() {
         return false;
     }
@@ -157,14 +163,24 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
                 ", \"data\":" + result.getData() + ", \"message\":\"" + result.getMessage() + "\"}";
     }
 
+    /**
+     * token 验证
+     *
+     * @param token 令牌
+     * @return {@link Result<Long>}
+     */
     protected Result<Long> authCheck(String token) {
         return Result.ok();
     }
 
 
+    /**
+     * 获取当前用户模块权限
+     *
+     * @return {@link List<UserPowerVO>}
+     */
     protected List<UserPowerVO> getUserPower() {
-//        return FeignResultParse.getInstance(powerCheckFeignClient.queryResourceModules());
-        return null;
+        return Collections.EMPTY_LIST;
     }
 
 

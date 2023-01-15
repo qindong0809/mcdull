@@ -12,6 +12,7 @@ import com.dqcer.framework.base.util.RandomUtil;
 import com.dqcer.framework.base.util.Sha1Util;
 import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.admin.framework.auth.ISecurityService;
 import com.dqcer.mcdull.admin.model.dto.sys.LoginDTO;
 import com.dqcer.mcdull.admin.model.entity.sys.UserDO;
 import com.dqcer.mcdull.admin.web.dao.repository.sys.IUserLoginRepository;
@@ -19,6 +20,7 @@ import com.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
 import com.dqcer.mcdull.admin.web.service.sso.IAuthService;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import com.dqcer.mcdull.framework.redis.operation.RedissonCache;
+import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 身份验证服务 业务实现类
@@ -38,7 +41,7 @@ import java.time.LocalDateTime;
  * @date 2023/01/11 22:01:06
  */
 @Service
-public class AuthServiceImpl implements IAuthService {
+public class AuthServiceImpl implements IAuthService, ISecurityService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
@@ -147,6 +150,17 @@ public class AuthServiceImpl implements IAuthService {
         }
 
         return Result.ok(user.getUserId());
+    }
+
+    /**
+     * 查询资源模块
+     *
+     * @param userId 用户id
+     * @return {@link Result}<{@link List}<{@link UserPowerVO}>>
+     */
+    @Override
+    public List<UserPowerVO> queryResourceModules(Long userId) {
+        return userRepository.queryResourceModules(userId);
     }
 
     /**

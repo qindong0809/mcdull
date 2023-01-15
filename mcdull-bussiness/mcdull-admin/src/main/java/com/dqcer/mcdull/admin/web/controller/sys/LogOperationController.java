@@ -1,5 +1,6 @@
 package com.dqcer.mcdull.admin.web.controller.sys;
 
+import com.dqcer.framework.base.annotation.Transform;
 import com.dqcer.framework.base.validator.ValidGroup;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
@@ -13,6 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * 日志操作 控制器
+ *
+ * @author dqcer
+ * @date 2023/01/14 18:01:66
+ */
 @RestController
 @RequestMapping("log-operation")
 public class LogOperationController {
@@ -27,6 +34,7 @@ public class LogOperationController {
      * @param dto dto
      * @return {@link Result<PagedVO>}
      */
+    @Transform
     @GetMapping("base/list")
     public Result<PagedVO<LogVO>> listByPage(@Validated(value = {ValidGroup.Paged.class}) LogLiteDTO dto){
         return logService.listByPage(dto);

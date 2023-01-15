@@ -7,6 +7,7 @@ import com.dqcer.framework.base.wrapper.CodeEnum;
 import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.util.PageUtil;
 import com.dqcer.framework.base.vo.PagedVO;
+import com.dqcer.framework.base.dto.StatusDTO;
 import ${cfg.apiDto}.${cfg.dtoName};
 import ${cfg.apiConvert}.${cfg.convertName};
 
@@ -115,7 +116,7 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<Long> updateStatus(${cfg.dtoName} dto) {
+    public Result<Long> updateStatus(StatusDTO dto) {
         Long id = dto.getId();
 
         ${cfg.entityName} dbData = ${(cfg.repositoryName?substring(1))?uncap_first}.getById(id);

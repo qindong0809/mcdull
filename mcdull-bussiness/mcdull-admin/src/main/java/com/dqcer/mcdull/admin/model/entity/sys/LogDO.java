@@ -2,17 +2,18 @@ package com.dqcer.mcdull.admin.model.entity.sys;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.dqcer.framework.base.entity.BaseDO;
+import com.dqcer.framework.base.entity.MiddleDO;
 
 import java.util.Date;
 
 /**
- * 日志记录 实体类
+ * 用户操作日志 实体类
  *
  * @author dqcer
  * @version 2023-01-14
  */
-@TableName("sys_log")
-public class LogDO extends BaseDO {
+@TableName("sys_operation_log")
+public class LogDO extends MiddleDO {
 
     private static final long serialVersionUID = 1L;
 
@@ -65,6 +66,48 @@ public class LogDO extends BaseDO {
     * 请求头
     */
     private String headers;
+
+    /**
+     * 所属系统
+     */
+    private String model;
+
+    /**
+     * 所属菜单
+     */
+    private String menu;
+
+    /**
+     * 所属操作类型
+     */
+    private String type;
+
+    public String getModel() {
+        return model;
+    }
+
+    public LogDO setModel(String model) {
+        this.model = model;
+        return this;
+    }
+
+    public String getMenu() {
+        return menu;
+    }
+
+    public LogDO setMenu(String menu) {
+        this.menu = menu;
+        return this;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public LogDO setType(String type) {
+        this.type = type;
+        return this;
+    }
 
     public Long getAccountId() {
         return accountId;

@@ -1,0 +1,57 @@
+package com.dqcer.mcdull.admin.web.service.sys.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.dqcer.framework.base.constants.GlobalConstant;
+import com.dqcer.framework.base.enums.DelFlayEnum;
+import com.dqcer.framework.base.exception.DatabaseRowException;
+import com.dqcer.framework.base.vo.KeyValueVO;
+import com.dqcer.mcdull.admin.framework.transformer.IDictTransformerService;
+import com.dqcer.mcdull.admin.model.entity.sys.DictDO;
+import com.dqcer.mcdull.admin.web.dao.repository.sys.IDictRepository;
+import com.dqcer.mcdull.admin.web.service.sys.IDictService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+
+/**
+ * sys dict服务
+ *
+ * @author dqcer
+ * @version  2022/11/08
+ */
+@Service
+public class DictServiceImplDict implements IDictService, IDictTransformerService {
+
+    private static final Logger log = LoggerFactory.getLogger(DictServiceImplDict.class);
+
+    @Resource
+    private IDictRepository dictRepository;
+
+    /**
+     * 翻译
+     *
+     * @param code       代码
+     * @param selectType 选择类型
+     * @param language   语言
+     * @return {@link KeyValueVO}
+     */
+    @Override
+    public KeyValueVO<String, String> transformer(String code, String selectType, String language) {
+        LambdaQueryWrapper<DictDO> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(DictDO::getCode, code);
+        wrapper.eq(DictDO::getSelectType, selectType);
+        wrapper.eq(DictDO::getLanguage, language);
+        wrapper.eq(DictDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
+        wrapper.last(GlobalConstant.Database.SQL_LIMIT_1);
+        DictDO dictDO = dictRepository.getOne(wrapper);
+        if (dictDO == null) {
+            log.error("查无数据 code: {}, selectType: {}, language: {}", code, selectType, language);
+            throw new DatabaseRowException();
+        }
+        return new KeyValueVO<String, String>().setId(dictDO.getCode()).setName(dictDO.getName());
+    }
+
+}

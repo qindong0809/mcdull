@@ -3,6 +3,7 @@ package com.dqcer.mcdull.admin.model.convert.sys;
 import com.dqcer.mcdull.admin.model.vo.sys.LogVO;
 import com.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
 import com.dqcer.mcdull.admin.model.entity.sys.LogDO;
+import com.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 
 /**
 * 日志记录 对象转换工具类
@@ -12,30 +13,25 @@ import com.dqcer.mcdull.admin.model.entity.sys.LogDO;
 */
 public class LogConvert {
 
-   /**
-    * LogLiteDTO转换为LogDO
-    *
-    * @param item LogLiteDTO
-    * @return {@link LogDO}
-    */
-    public static LogDO convertToLogDO(LogLiteDTO item){
-        if (item == null){
+
+    public static LogDO convertToLogDO(LogOperationDTO dto) {
+        if (dto == null) {
             return null;
         }
-        LogDO entity = new LogDO();
-        entity.setId(item.getId());
-        entity.setAccountId(item.getAccountId());
-        entity.setTenantId(item.getTenantId());
-        entity.setClientIp(item.getClientIp());
-        entity.setUserAgent(item.getUserAgent());
-        entity.setMethod(item.getMethod());
-        entity.setPath(item.getPath());
-        entity.setTraceId(item.getTraceId());
-        entity.setTimeTaken(item.getTimeTaken());
-        entity.setParameterMap(item.getParameterMap());
-        entity.setHeaders(item.getHeaders());
+        LogDO logDO = new LogDO();
+        logDO.setAccountId(dto.getAccountId());
+        logDO.setTenantId(dto.getTenantId());
+        logDO.setClientIp(dto.getClientIp());
+        logDO.setUserAgent(dto.getUserAgent());
+        logDO.setMethod(dto.getMethod());
+        logDO.setPath(dto.getPath());
+        logDO.setTraceId(dto.getTraceId());
+        logDO.setTimeTaken(dto.getTimeTaken());
+        logDO.setParameterMap(dto.getParameterMap());
+        logDO.setHeaders(dto.getHeaders());
+        logDO.setCreatedTime(dto.getCreatedTime());
+        return logDO;
 
-        return entity;
     }
 
 
@@ -61,6 +57,9 @@ public class LogConvert {
         vo.setTimeTaken(item.getTimeTaken());
         vo.setParameterMap(item.getParameterMap());
         vo.setHeaders(item.getHeaders());
+        vo.setMenu(item.getMenu());
+        vo.setModel(item.getModel());
+        vo.setType(item.getType());
 
         return vo;
     }

@@ -3,6 +3,7 @@ package ${package.Controller};
 import com.dqcer.framework.base.annotation.Authorized;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.validator.ValidGroup;
+import com.dqcer.framework.base.dto.StatusDTO;
 import ${package.Service}.${cfg.serviceName};
 import ${cfg.apiVo}.${cfg.voName};
 import ${cfg.apiDto}.${cfg.dtoName};
@@ -73,7 +74,7 @@ public class ${cfg.controller} {
     */
     @Authorized("${cfg.modelName}:base:status")
     @PutMapping("base/status")
-    public Result<Long> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) ${cfg.dtoName} dto){
+    public Result<Long> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) StatusDTO dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.updateStatus(dto);
     }
 

@@ -6,7 +6,7 @@ import java.io.StringWriter;
 /**
  * 异常 工具类
  *
- * @author dongqin
+ * @author dqcer
  * @date 2023/01/07 17:01:28
  */
 public class ThrowableUtil {

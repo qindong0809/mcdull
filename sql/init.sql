@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `sys_user_login` (
     `token` varchar(64) NOT NULL COMMENT '所用token',
     `type` int(4) NOT NULL COMMENT '类型（1/登录 2/注销）',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户登录记录表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户登录/注销';
 
 DROP TABLE IF EXISTS `sys_dict`;
 CREATE TABLE IF NOT EXISTS `sys_dict` (
@@ -64,8 +64,8 @@ INSERT INTO `sys_dict` VALUES ('1', null, '自定义', null, 'data_type', 1, 1, 
 INSERT INTO `sys_dict` VALUES ('2', null, '内置', null, 'data_type', 2, 2, 1, '数据类型',  'zh-CN',  0);
 
 
-DROP TABLE IF EXISTS `sys_log`;
-CREATE TABLE `sys_log`  (
+DROP TABLE IF EXISTS `sys_operation_log`;
+CREATE TABLE `sys_operation_log`  (
 `id` bigint(20) NOT NULL COMMENT '主键',
 `account_id` bigint(20)  NOT NULL COMMENT '操作人的账号主键',
 `tenant_id` bigint(20)  DEFAULT NULL COMMENT '租户主键',
@@ -78,9 +78,12 @@ CREATE TABLE `sys_log`  (
 `time_taken` bigint(20) NOT NULL COMMENT '耗时',
 `parameter_map` varchar(1024)  DEFAULT NULL COMMENT '参数map',
 `headers` text  NOT NULL COMMENT '请求头',
+`model` varchar(128) NOT NULL COMMENT '所属系统/模块',
+`menu` varchar(256) NOT NULL COMMENT '所属菜单',
+`type` varchar(16) NOT NULL COMMENT '所属操作类型',
 PRIMARY KEY (`id`) USING BTREE
 
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '日志记录';
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户操作日志';
 
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE IF NOT EXISTS `sys_role` (

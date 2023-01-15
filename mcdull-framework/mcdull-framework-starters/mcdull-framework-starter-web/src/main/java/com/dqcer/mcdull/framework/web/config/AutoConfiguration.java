@@ -22,12 +22,6 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 @Configuration
 public class AutoConfiguration {
 
-
-//    @Bean
-//    public LogEventListener logListener() {
-//        return new LogEventListener();
-//    }
-
     @Bean
     public SpringContextHolder springContextHolder() {
         return new SpringContextHolder();
@@ -53,10 +47,6 @@ public class AutoConfiguration {
         return new TranslatorAspect();
     }
 
-//    @Bean
-//    public OperationLogsAspect operationLogsAspect() {
-//        return new OperationLogsAspect();
-//    }
 
     /**
      * 添加Long转json精度丢失的配置

@@ -6,7 +6,6 @@ import com.dqcer.mcdull.framework.web.advice.ExceptionAdvice;
 import com.dqcer.mcdull.framework.web.config.AutoConfiguration;
 import com.dqcer.mcdull.framework.web.config.DateTimeConfig;
 import com.dqcer.mcdull.framework.web.config.ThreadPoolConfig;
-import com.dqcer.mcdull.framework.web.transform.DictTransformer;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;

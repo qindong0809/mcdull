@@ -2,7 +2,7 @@ package com.dqcer.mcdull.framework.web.feign.service;
 
 import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.mcdull.framework.web.feign.model.LogDTO;
+import com.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,5 +25,5 @@ public interface LogFeignClient {
      * @return {@link Result < EnumVO >}
      */
     @PostMapping(GlobalConstant.INNER_API + "/log/batch/save")
-    Result<Integer> batchSave(@RequestBody List<LogDTO> dto);
+    Result<Integer> batchSave(@RequestBody List<LogOperationDTO> dto);
 }

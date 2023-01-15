@@ -11,7 +11,7 @@ import java.util.function.Function;
 /**
  * feign结果解析
  *
- * @author dongqin
+ * @author dqcer
  * @version 2022/04/22
  */
 public class FeignResultParse {

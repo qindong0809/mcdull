@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.admin.config;
+package com.dqcer.mcdull.admin.framework;
 
 
+import com.dqcer.mcdull.admin.framework.auth.SimpleSecurityInterceptor;
 import com.dqcer.mcdull.framework.mysql.interceptor.DynamicDatasourceInterceptor;
-import com.dqcer.mcdull.framework.web.interceptor.BaseInfoInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 public class Interceptor implements WebMvcConfigurer {
 
     @Resource
-    private SimpleBaseInfoInterceptor baseInfoInterceptor;
+    private SimpleSecurityInterceptor securityInterceptor;
 
     /**
      * 添加拦截器
@@ -30,7 +30,7 @@ public class Interceptor implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(baseInfoInterceptor).addPathPatterns("/**").excludePathPatterns("/login");
+        registry.addInterceptor(securityInterceptor).addPathPatterns("/**").excludePathPatterns("/login");
         registry.addInterceptor(getDynamicDataSource()).addPathPatterns("/**").excludePathPatterns("/login");
     }
 

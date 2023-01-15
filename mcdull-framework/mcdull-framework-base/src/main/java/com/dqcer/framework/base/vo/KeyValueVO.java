@@ -33,15 +33,17 @@ public class KeyValueVO<K, V> implements VO{
         return id;
     }
 
-    public void setId(K id) {
+    public KeyValueVO<K, V> setId(K id) {
         this.id = id;
+        return this;
     }
 
     public V getName() {
         return name;
     }
 
-    public void setName(V name) {
+    public KeyValueVO<K, V> setName(V name) {
         this.name = name;
+        return this;
     }
 }

@@ -1,6 +1,7 @@
 package ${package.Service};
 
 import com.dqcer.framework.base.vo.PagedVO;
+import com.dqcer.framework.base.dto.StatusDTO;
 import ${cfg.apiVo}.${cfg.voName};
 import ${cfg.apiDto}.${cfg.dtoName};
 import ${cfg.result};
@@ -44,7 +45,7 @@ public interface ${cfg.serviceName} {
      * @param dto    参数
      * @return {@link Result<Long> }
      */
-    Result<Long> updateStatus(${cfg.dtoName} dto);
+    Result<Long> updateStatus(StatusDTO dto);
 
     /**
      * 根据主键删除

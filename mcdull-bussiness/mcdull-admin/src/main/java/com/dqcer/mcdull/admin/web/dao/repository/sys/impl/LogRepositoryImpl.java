@@ -44,7 +44,6 @@ public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO>  implements
     public List<LogDO> queryListByIds(List<Long> idList) {
         LambdaQueryWrapper<LogDO> wrapper = Wrappers.lambdaQuery();
         wrapper.in(LogDO::getId, idList);
-        wrapper.eq(LogDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         List<LogDO> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;

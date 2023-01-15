@@ -2,6 +2,7 @@ package com.dqcer.mcdull.framework.web.transform;
 
 import com.dqcer.framework.base.annotation.ITransformer;
 import com.dqcer.framework.base.enums.IEnum;
+import com.dqcer.framework.base.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,6 @@ public class EnumTransformer implements ITransformer<Object> {
 
     private static final Logger log = LoggerFactory.getLogger(EnumTransformer.class);
 
-
     /**
      * 翻译
      *
@@ -24,6 +24,7 @@ public class EnumTransformer implements ITransformer<Object> {
      * @param param      翻译后取值参数名字
      * @return 翻译后的值
      */
+    @SuppressWarnings("unchecked")
     @Override
     public String transform(Object original, Class<?> datasource, String param) {
         Class<IEnum<?>> iDict = (Class<IEnum<?>>) datasource;
@@ -33,6 +34,6 @@ public class EnumTransformer implements ITransformer<Object> {
             }
         }
         log.error("匹配未成功 original: {}, datasource: {} param: {}", original, datasource, param);
-        return null;
+        throw new BusinessException();
     }
 }

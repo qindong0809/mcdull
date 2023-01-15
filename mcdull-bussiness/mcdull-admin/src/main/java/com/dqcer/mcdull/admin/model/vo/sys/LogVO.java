@@ -1,6 +1,12 @@
 package com.dqcer.mcdull.admin.model.vo.sys;
 
+import com.dqcer.framework.base.annotation.Transform;
 import com.dqcer.framework.base.vo.VO;
+import com.dqcer.mcdull.admin.config.OperationTypeEnum;
+import com.dqcer.mcdull.admin.framework.transformer.UserTransformer;
+import com.dqcer.mcdull.admin.model.entity.sys.LogDO;
+import com.dqcer.mcdull.admin.model.enums.MenuTypeEnum;
+
 import java.util.Date;
 
 /**
@@ -21,6 +27,9 @@ public class LogVO implements VO {
      * 操作人的账号主键
      */
     private Long accountId;
+
+    @Transform(from = "accountId", transformer = UserTransformer.class)
+    private String accountStr;
 
     /**
      * 租户主键
@@ -67,6 +76,72 @@ public class LogVO implements VO {
      */
     private String headers;
 
+
+    /**
+     * 所属系统
+     */
+    private String model;
+
+    /**
+     * 所属菜单
+     */
+    private String menu;
+
+    /**
+     * 所属操作类型
+     */
+    private String type;
+
+    /**
+     * 所属操作 str类型
+     */
+    @Transform(from = "type", dataSource = OperationTypeEnum.class)
+    private String typeStr;
+
+    public String getAccountStr() {
+        return accountStr;
+    }
+
+    public LogVO setAccountStr(String accountStr) {
+        this.accountStr = accountStr;
+        return this;
+    }
+
+    public String getTypeStr() {
+        return typeStr;
+    }
+
+    public LogVO setTypeStr(String typeStr) {
+        this.typeStr = typeStr;
+        return this;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public LogVO setModel(String model) {
+        this.model = model;
+        return this;
+    }
+
+    public String getMenu() {
+        return menu;
+    }
+
+    public LogVO setMenu(String menu) {
+        this.menu = menu;
+        return this;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public LogVO setType(String type) {
+        this.type = type;
+        return this;
+    }
 
     public Long getId() {
         return id;

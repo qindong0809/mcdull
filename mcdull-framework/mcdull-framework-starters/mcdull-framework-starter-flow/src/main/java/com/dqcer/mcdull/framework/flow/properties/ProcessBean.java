@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 过程
  *
- * @author dongqin
+ * @author dqcer
  * @date 2023/01/08 17:01:92
  */
 public class ProcessBean implements Serializable {

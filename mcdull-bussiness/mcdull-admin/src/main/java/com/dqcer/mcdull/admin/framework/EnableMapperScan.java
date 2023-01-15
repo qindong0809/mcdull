@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.admin.config;
+package com.dqcer.mcdull.admin.framework;
 
 import com.dqcer.mcdull.framework.mysql.EnableDynamicDataSource;
 import org.mybatis.spring.annotation.MapperScan;

@@ -4,7 +4,7 @@ import com.dqcer.framework.base.annotation.UnAuthorize;
 import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.JsonUtil;
-import com.dqcer.mcdull.framework.web.feign.model.LogDTO;
+import com.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 import com.dqcer.mcdull.framework.web.util.IpUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -75,23 +76,49 @@ public class OperationLogsAspect {
             return joinPoint.proceed();
         }
 
+        if (!isInterceptor(request, method)) {
+            return joinPoint.proceed();
+        }
+
         long startTime = System.currentTimeMillis();
         try {
             return joinPoint.proceed();
         } finally {
             Object[] args = joinPoint.getArgs();
-            LogDTO entity = listenerLog(request, args, startTime);
+            LogOperationDTO entity = listenerLog(request, args, startTime);
             RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
-            saveLog(entity);
+            if (log.isDebugEnabled()) {
+                log.debug("Operation log dto: {}", entity);
+            }
+            saveLog(entity, method);
         }
 
     }
 
-    protected void saveLog(LogDTO entity) {
-//        logEventListener.listenLog(entity);
+    /**
+     * 是拦截器
+     *
+     * @param request 请求
+     * @param method  方法
+     * @return boolean
+     */
+    protected boolean isInterceptor(HttpServletRequest request, Method method) {
+        if (!request.getMethod().equalsIgnoreCase(RequestMethod.GET.name())) {
+            return true;
+        }
+        return false;
     }
 
-    private LogDTO listenerLog(HttpServletRequest request, Object[] args, long startTime) {
+    /**
+     * 保存日志
+     *
+     * @param dto dto
+     */
+    protected void saveLog(LogOperationDTO dto, Method method) {
+        //logEventListener.listenLog(entity);
+    }
+
+    private LogOperationDTO listenerLog(HttpServletRequest request, Object[] args, long startTime) {
 
         Map<String, String> headers = new HashMap<>(16);
         Enumeration<String> headerNames = request.getHeaderNames();
@@ -117,12 +144,12 @@ public class OperationLogsAspect {
             params.put(arg.getClass().getName(), string);
         }
 
-        LogDTO entity = new LogDTO();
+        LogOperationDTO entity = new LogOperationDTO();
         entity.setAccountId(UserContextHolder.getSession().getUserId());
         entity.setClientIp(IpUtil.getIpAddr(request));
         entity.setUserAgent(getUserAgent(request));
         entity.setHeaders(JsonUtil.toJsonString(headers));
-        entity.setParameterMap(JsonUtil.toJsonString(params));
+        entity.setParameterMap(JsonUtil.toJsonString(params).replaceAll("\\\\", ""));
         entity.setPath(request.getRequestURI());
         entity.setMethod(request.getMethod());
         entity.setCreatedTime(new Date());
@@ -149,7 +176,7 @@ public class OperationLogsAspect {
     public static final List<String> PATH_LIST = new ArrayList<>();
 
     static {
-        PATH_LIST.add("/feign/**");
+        PATH_LIST.add(GlobalConstant.INNER_API + "/**");
     }
 
 

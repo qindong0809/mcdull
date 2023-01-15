@@ -4,29 +4,43 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dqcer.framework.base.util.PageUtil;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.admin.framework.log.IOperationLog;
 import com.dqcer.mcdull.admin.model.convert.sys.LogConvert;
 import com.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
 import com.dqcer.mcdull.admin.model.entity.sys.LogDO;
 import com.dqcer.mcdull.admin.model.vo.sys.LogVO;
 import com.dqcer.mcdull.admin.web.dao.repository.sys.ILogRepository;
 import com.dqcer.mcdull.admin.web.service.sys.ILogService;
-import com.dqcer.mcdull.framework.mysql.config.DataChangeRecorderInnerInterceptor;
-import com.dqcer.mcdull.framework.mysql.config.IDataChangeRecorder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 日志服务 实现类
+ *
+ * @author dqcer
+ * @version 2023/01/15 16:01:06
+ */
 @Service
-public class LogServiceImpl implements ILogService {
-
-    private static final Logger log = LoggerFactory.getLogger(LogServiceImpl.class);
+public class LogServiceImpl implements ILogService, IOperationLog {
 
     @Resource
     private ILogRepository logRepository;
+
+    /**
+     * 保存
+     *
+     * @param dto dto
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void save(LogDO dto) {
+        logRepository.save(dto);
+    }
 
 
     /**
@@ -44,4 +58,6 @@ public class LogServiceImpl implements ILogService {
         }
         return Result.ok(PageUtil.toPage(voList, entityPage));
     }
+
+
 }

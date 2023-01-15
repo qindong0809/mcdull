@@ -10,7 +10,7 @@ import java.util.Date;
  * @author dqcer
  * @version 2022/12/26
  */
-public class LogDTO implements DTO {
+public class LogOperationDTO implements DTO {
 
     private String userAgent;
 
@@ -166,7 +166,7 @@ public class LogDTO implements DTO {
         return traceId;
     }
 
-    public LogDTO setTraceId(String traceId) {
+    public LogOperationDTO setTraceId(String traceId) {
         this.traceId = traceId;
         return this;
     }

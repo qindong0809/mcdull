@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.admin;
 
-import com.dqcer.mcdull.admin.config.EnableMapperScan;
+import com.dqcer.mcdull.admin.framework.EnableMapperScan;
 import com.dqcer.mcdull.framework.redis.EnableCache;
 import com.dqcer.mcdull.framework.web.EnableWebCore;
 import org.springframework.boot.SpringApplication;

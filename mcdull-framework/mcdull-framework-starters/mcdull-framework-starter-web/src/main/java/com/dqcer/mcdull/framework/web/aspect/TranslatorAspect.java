@@ -3,10 +3,12 @@ package com.dqcer.mcdull.framework.web.aspect;
 import com.dqcer.framework.base.annotation.ITransformer;
 import com.dqcer.framework.base.annotation.Transform;
 import com.dqcer.framework.base.enums.IEnum;
+import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.vo.PagedVO;
 import com.dqcer.framework.base.wrapper.Result;
 import com.dqcer.mcdull.framework.web.transform.EnumTransformer;
 import com.dqcer.mcdull.framework.web.transform.ReflectUtil;
+import com.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -14,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.util.Collection;
 
@@ -30,8 +31,6 @@ public class TranslatorAspect {
 
     private static final Logger log = LoggerFactory.getLogger(TranslatorAspect.class);
 
-    @Resource
-    private ITransformer transform;
 
     @Pointcut("@annotation(com.dqcer.framework.base.annotation.Transform) ")
     public void translatorPointCut() {
@@ -57,7 +56,8 @@ public class TranslatorAspect {
             doTranslateObject(data);
             return;
         }
-        log.warn("未命中@Transform,返回值必须为Result");
+        log.error("未命中@Transform,返回值必须为Result");
+        throw new BusinessException();
     }
 
     private void doTranslateObject(Object result) {
@@ -93,32 +93,30 @@ public class TranslatorAspect {
 
     private void doTransform(Object result, Field field) {
         Transform annotation = field.getAnnotation(Transform.class);
-        Class<?> aClass = annotation.dataSource();
+        Class<?> dataSourceClass = annotation.dataSource();
         Object filedValue = ReflectUtil.invokeGet(result, annotation.from());
         if (null == filedValue) {
             return;
         }
-        if (IEnum.class.isAssignableFrom(aClass)) {
-            String translate = new EnumTransformer().transform(filedValue, aClass, null);
+        if (IEnum.class.isAssignableFrom(dataSourceClass)) {
+            String translate = new EnumTransformer().transform(filedValue, dataSourceClass, null);
             if (null != translate) {
                 ReflectUtil.invokeSet(result, field, translate);
             }
             return;
         }
         // TODO: 2022/11/26 需要改造，目前是直接调用mdc接口的需要改为feign
-////        ITransformer<Object> transformer = SpringContextHolder.getBean(annotation.transformer());
-//        Object bean = SpringContextHolder.getBean("dictTransformer");
-//        if (bean instanceof ITransformer) {
-//            ITransformer transformer = (ITransformer) bean;
-//            String translate = transformer.transform(filedValue, annotation.dataSource(), annotation.param());
-//            if (null != translate) {
-//                ReflectUtil.invokeSet(result, field, translate);
-//            }
-//        }
-
-        String translate = transform.transform(filedValue, annotation.dataSource(), annotation.param());
+        ITransformer<Object> transformer = SpringContextHolder.getBean(annotation.transformer());
+        String translate = transformer.transform(filedValue, annotation.dataSource(), annotation.param());
         if (null != translate) {
             ReflectUtil.invokeSet(result, field, translate);
         }
+
+//        String translate = transform.transform(filedValue, dataSourceClass, annotation.param());
+//        if (null != translate) {
+//            ReflectUtil.invokeSet(result, field, translate);
+//        }
+//
+
     }
 }
