@@ -3,6 +3,8 @@ package com.dqcer.mcdull.admin.model.vo.sys;
 import com.dqcer.framework.base.annotation.Transform;
 import com.dqcer.framework.base.vo.BaseVO;
 import com.dqcer.framework.base.vo.VO;
+import com.dqcer.mcdull.admin.framework.transformer.DictTransformer;
+import com.dqcer.mcdull.admin.framework.transformer.UserTransformer;
 
 import java.time.LocalTime;
 import java.util.Date;
@@ -31,6 +33,7 @@ public class UserVO implements VO {
      */
     private Long createdBy;
 
+    @Transform(from = "createdBy", transformer = UserTransformer.class)
     private String createdByStr;
 
     /**
@@ -43,6 +46,7 @@ public class UserVO implements VO {
      */
     private Long updatedBy;
 
+    @Transform(from = "updatedBy", transformer = UserTransformer.class)
     private String updatedByStr;
 
     /**
@@ -51,7 +55,7 @@ public class UserVO implements VO {
      */
     private Integer status;
 
-    @Transform(from = "status", param = "status_type")
+    @Transform(from = "status", param = "status_type", transformer = DictTransformer.class)
     private String statusStr;
 
 
@@ -63,7 +67,7 @@ public class UserVO implements VO {
     /**
      * 删除str
      */
-    @Transform(from = "delFlag", param = "del_flag_type")
+    @Transform(from = "delFlag", param = "del_flag_type", transformer = DictTransformer.class)
     private String delFlagStr;
 
     /**
@@ -97,7 +101,7 @@ public class UserVO implements VO {
      */
     private Integer type;
 
-    @Transform(from = "type", param = "data_type")
+    @Transform(from = "type", param = "data_type", transformer = DictTransformer.class)
     private String typeStr;
 
     /**

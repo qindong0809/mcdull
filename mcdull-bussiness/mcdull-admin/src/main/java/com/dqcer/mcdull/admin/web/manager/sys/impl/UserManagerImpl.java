@@ -45,12 +45,6 @@ public class UserManagerImpl implements IUserManager {
         if (vo == null) {
             return null;
         }
-        vo.setCreatedByStr(userRepository.getById(entity.getCreatedBy()).getNickname());
-        Long updatedBy = entity.getUpdatedBy();
-        if (updatedBy != null) {
-            vo.setUpdatedByStr(userRepository.getById(updatedBy).getNickname());
-        }
-
         List<BaseVO> baseRoles = new ArrayList<>();
         List<Long> list = userRoleRepository.listRoleByUserId(vo.getId());
         if (!list.isEmpty()) {
