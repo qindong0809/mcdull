@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.framework.redis.aspect;
 
 
-import com.dqcer.framework.base.constants.GlobalConstant;
+import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import com.dqcer.mcdull.framework.redis.annotation.CacheExpire;
 import com.dqcer.mcdull.framework.redis.annotation.CacheExpireHolder;
 import org.aspectj.lang.ProceedingJoinPoint;

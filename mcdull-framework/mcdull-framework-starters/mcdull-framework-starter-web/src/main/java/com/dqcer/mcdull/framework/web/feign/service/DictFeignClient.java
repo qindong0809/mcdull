@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.framework.web.feign.service;
 
-import com.dqcer.framework.base.constants.GlobalConstant;
-import com.dqcer.framework.base.validator.ValidGroup;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import com.dqcer.mcdull.framework.base.validator.ValidGroup;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.framework.web.feign.model.DictLiteDTO;
 import com.dqcer.mcdull.framework.web.feign.model.DictVO;
 import org.springframework.cloud.openfeign.FeignClient;

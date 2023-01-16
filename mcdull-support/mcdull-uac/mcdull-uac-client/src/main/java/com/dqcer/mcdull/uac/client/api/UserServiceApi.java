@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.uac.client.api;
 
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.uac.client.vo.RemoteUserVO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

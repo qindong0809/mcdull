@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.mdc.client.dto;
 
-import com.dqcer.framework.base.dto.DTO;
-import com.dqcer.framework.base.util.ValidateUtil;
+import com.dqcer.mcdull.framework.base.dto.DTO;
+import com.dqcer.mcdull.framework.base.util.ValidateUtil;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;

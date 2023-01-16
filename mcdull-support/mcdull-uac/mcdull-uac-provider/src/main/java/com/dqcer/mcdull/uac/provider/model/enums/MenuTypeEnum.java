@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.uac.provider.model.enums;
 
-import com.dqcer.framework.base.enums.IEnum;
+import com.dqcer.mcdull.framework.base.enums.IEnum;
 
 /**
  * 菜单枚举

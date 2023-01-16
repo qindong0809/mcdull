@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac.client.api;
 
-import com.dqcer.framework.base.constants.HttpHeaderConstants;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;

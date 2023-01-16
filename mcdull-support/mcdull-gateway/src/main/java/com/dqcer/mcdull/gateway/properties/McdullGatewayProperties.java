@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.gateway.properties;
 
-import com.dqcer.framework.base.constants.GlobalConstant;
+import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 

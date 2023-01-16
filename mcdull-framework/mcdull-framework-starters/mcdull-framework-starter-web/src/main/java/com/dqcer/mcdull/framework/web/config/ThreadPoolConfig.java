@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.framework.web.config;
 
-import com.dqcer.framework.base.constants.GlobalConstant;
+import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import com.dqcer.mcdull.framework.config.properties.McdullProperties;
 import com.dqcer.mcdull.framework.config.properties.ThreadPoolProperties;
 import org.slf4j.Logger;

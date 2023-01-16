@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.mdc.provider.web.feign;
 
-import com.dqcer.framework.base.validator.ValidGroup;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.validator.ValidGroup;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.mdc.client.api.DictServiceApi;
 import com.dqcer.mcdull.mdc.client.dto.DictClientDTO;
 import com.dqcer.mcdull.mdc.client.vo.DictClientVO;

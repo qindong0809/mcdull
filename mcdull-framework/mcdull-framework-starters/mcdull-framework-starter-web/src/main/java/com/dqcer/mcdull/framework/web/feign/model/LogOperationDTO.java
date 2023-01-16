@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.framework.web.feign.model;
 
-import com.dqcer.framework.base.dto.DTO;
+import com.dqcer.mcdull.framework.base.dto.DTO;
 
 import java.util.Date;
 

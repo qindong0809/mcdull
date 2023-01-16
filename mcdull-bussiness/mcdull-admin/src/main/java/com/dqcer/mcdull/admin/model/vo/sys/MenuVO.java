@@ -1,8 +1,9 @@
 package com.dqcer.mcdull.admin.model.vo.sys;
 
-import com.dqcer.framework.base.annotation.Transform;
-import com.dqcer.framework.base.vo.TreeVO;
+import com.dqcer.mcdull.framework.base.annotation.Transform;
+import com.dqcer.mcdull.framework.base.vo.TreeVO;
 import com.dqcer.mcdull.admin.model.enums.MenuTypeEnum;
+import com.dqcer.mcdull.framework.base.enums.StatusEnum;
 
 /**
  * 角色视图对象
@@ -15,7 +16,7 @@ public class MenuVO extends TreeVO<MenuVO, Long> {
     /**
      * 状态
      *
-     * @see com.dqcer.framework.base.enums.StatusEnum
+     * @see StatusEnum
      */
     private Integer status;
 

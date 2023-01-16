@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.uac.provider.web.feign;
 
-import com.dqcer.framework.base.constants.GlobalConstant;
-import com.dqcer.framework.base.storage.UserContextHolder;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import com.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import com.dqcer.mcdull.uac.client.api.UserServiceApi;
 import com.dqcer.mcdull.uac.client.vo.RemoteUserVO;

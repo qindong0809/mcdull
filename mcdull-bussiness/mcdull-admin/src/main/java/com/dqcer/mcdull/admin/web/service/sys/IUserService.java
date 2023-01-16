@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.admin.web.service.sys;
 
-import com.dqcer.framework.base.dto.StatusDTO;
-import com.dqcer.framework.base.vo.PagedVO;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.dto.StatusDTO;
+import com.dqcer.mcdull.framework.base.vo.PagedVO;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import com.dqcer.mcdull.admin.model.vo.sys.UserVO;
 

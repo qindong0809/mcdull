@@ -1,9 +1,9 @@
 package com.dqcer.mcdull.framework.web.advice;
 
-import com.dqcer.framework.base.exception.BusinessException;
-import com.dqcer.framework.base.exception.DatabaseRowException;
-import com.dqcer.framework.base.wrapper.CodeEnum;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.exception.BusinessException;
+import com.dqcer.mcdull.framework.base.exception.DatabaseRowException;
+import com.dqcer.mcdull.framework.base.wrapper.CodeEnum;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.framework.web.util.IpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.mdc.provider.web.service;
 
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.mdc.client.dto.MailClientDTO;
 import com.dqcer.mcdull.mdc.provider.config.mail.MailTemplate;
 import org.slf4j.Logger;

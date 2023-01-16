@@ -1,10 +1,7 @@
 package com.dqcer.mcdull.admin.web.service.sso;
 
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.admin.model.dto.sys.LoginDTO;
-import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-
-import java.util.List;
 
 /**
  * 身份验证服务 接口定义

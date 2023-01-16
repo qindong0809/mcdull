@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.framework.flow.registry;
 
-import com.dqcer.framework.base.util.ObjUtil;
+import com.dqcer.mcdull.framework.base.util.ObjUtil;
 import com.dqcer.mcdull.framework.flow.factory.ProcessDefinitionRegistry;
 import com.dqcer.mcdull.framework.flow.load.ProcessDefinitionReader;
 import com.dqcer.mcdull.framework.flow.properties.ProcessBean;

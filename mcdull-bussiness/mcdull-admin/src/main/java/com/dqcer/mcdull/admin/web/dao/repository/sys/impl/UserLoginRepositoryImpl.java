@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dqcer.framework.base.constants.GlobalConstant;
-import com.dqcer.framework.base.exception.DatabaseRowException;
+import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import com.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import com.dqcer.mcdull.admin.model.entity.sys.UserLoginDO;
 import com.dqcer.mcdull.admin.web.dao.mapper.sys.UserLoginMapper;
 import com.dqcer.mcdull.admin.web.dao.repository.sys.IUserLoginRepository;

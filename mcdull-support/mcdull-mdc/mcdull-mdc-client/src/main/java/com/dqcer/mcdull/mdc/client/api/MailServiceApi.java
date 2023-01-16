@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.mdc.client.api;
 
-import com.dqcer.framework.base.constants.GlobalConstant;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.mdc.client.dto.MailClientDTO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

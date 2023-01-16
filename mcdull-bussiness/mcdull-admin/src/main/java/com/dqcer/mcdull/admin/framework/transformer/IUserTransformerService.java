@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.admin.framework.transformer;
 
-import com.dqcer.framework.base.vo.KeyValueVO;
+import com.dqcer.mcdull.framework.base.vo.KeyValueVO;
 
 /**
  * 翻译转换接口

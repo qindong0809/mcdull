@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.framework.web.feign.model;
 
-import com.dqcer.framework.base.vo.VO;
+import com.dqcer.mcdull.framework.base.vo.VO;
 
 import java.util.List;
 

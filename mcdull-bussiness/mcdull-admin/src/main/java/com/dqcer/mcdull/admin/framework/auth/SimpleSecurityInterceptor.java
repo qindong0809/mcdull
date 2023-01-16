@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.admin.framework.auth;
 
-import com.dqcer.framework.base.storage.UserContextHolder;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import com.dqcer.mcdull.framework.web.interceptor.BaseInfoInterceptor;
 import org.springframework.stereotype.Component;

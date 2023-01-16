@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.mdc.client.vo;
 
-import com.dqcer.framework.base.vo.VO;
+import com.dqcer.mcdull.framework.base.vo.VO;
 
 /**
  * sys dict

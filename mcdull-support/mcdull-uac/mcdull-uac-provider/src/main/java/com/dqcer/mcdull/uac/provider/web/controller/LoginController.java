@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac.provider.web.controller;
 
-import com.dqcer.framework.base.annotation.UnAuthorize;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.annotation.UnAuthorize;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.uac.client.api.AuthServiceApi;
 import com.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
 import com.dqcer.mcdull.uac.provider.model.vo.LoginVO;

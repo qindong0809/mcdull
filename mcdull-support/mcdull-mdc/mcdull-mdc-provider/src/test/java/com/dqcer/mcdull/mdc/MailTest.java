@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.mdc;
 
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.mdc.client.dto.MailClientDTO;
 import com.dqcer.mcdull.mdc.provider.MetaDataContentApplication;
 import com.dqcer.mcdull.mdc.provider.config.mail.MailTemplate;

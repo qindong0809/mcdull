@@ -1,10 +1,7 @@
 package com.dqcer.mcdull.admin.model.entity.sys;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.dqcer.framework.base.entity.BaseDO;
-import com.dqcer.framework.base.entity.MiddleDO;
-
-import java.util.Date;
+import com.dqcer.mcdull.framework.base.entity.MiddleDO;
 
 /**
  * 用户操作日志 实体类

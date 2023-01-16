@@ -1,10 +1,11 @@
 package com.dqcer.mcdull.admin.model.vo.sys;
 
-import com.dqcer.framework.base.annotation.Transform;
-import com.dqcer.framework.base.vo.BaseVO;
-import com.dqcer.framework.base.vo.VO;
+import com.dqcer.mcdull.framework.base.annotation.Transform;
+import com.dqcer.mcdull.framework.base.vo.BaseVO;
+import com.dqcer.mcdull.framework.base.vo.VO;
 import com.dqcer.mcdull.admin.framework.transformer.DictTransformer;
 import com.dqcer.mcdull.admin.framework.transformer.UserTransformer;
+import com.dqcer.mcdull.framework.base.enums.StatusEnum;
 
 import java.time.LocalTime;
 import java.util.Date;
@@ -51,7 +52,7 @@ public class UserVO implements VO {
 
     /**
      * 状态
-     * @see com.dqcer.framework.base.enums.StatusEnum
+     * @see StatusEnum
      */
     private Integer status;
 

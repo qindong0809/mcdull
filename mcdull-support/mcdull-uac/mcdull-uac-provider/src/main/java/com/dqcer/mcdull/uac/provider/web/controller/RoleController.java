@@ -1,9 +1,9 @@
 package com.dqcer.mcdull.uac.provider.web.controller;
 
-import com.dqcer.framework.base.annotation.Transform;
-import com.dqcer.framework.base.validator.ValidGroup;
-import com.dqcer.framework.base.vo.PagedVO;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.annotation.Transform;
+import com.dqcer.mcdull.framework.base.validator.ValidGroup;
+import com.dqcer.mcdull.framework.base.vo.PagedVO;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
 import com.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
 import com.dqcer.mcdull.uac.provider.model.vo.RoleVO;

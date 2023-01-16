@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.uac.provider.web.manager.mdc.impl;
 
-import com.dqcer.framework.base.storage.UserContextHolder;
-import com.dqcer.framework.base.util.StrUtil;
-import com.dqcer.framework.base.wrapper.FeignResultParse;
+import com.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import com.dqcer.mcdull.framework.base.util.StrUtil;
+import com.dqcer.mcdull.framework.base.wrapper.FeignResultParse;
 import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import com.dqcer.mcdull.mdc.client.dto.DictClientDTO;
 import com.dqcer.mcdull.mdc.client.service.DictClientService;

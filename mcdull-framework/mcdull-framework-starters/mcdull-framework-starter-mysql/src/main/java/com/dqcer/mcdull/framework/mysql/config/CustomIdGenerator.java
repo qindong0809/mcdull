@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.framework.mysql.config;
 
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
-import com.dqcer.framework.base.exception.BusinessException;
-import com.dqcer.framework.base.util.Snowflake;
+import com.dqcer.mcdull.framework.base.exception.BusinessException;
+import com.dqcer.mcdull.framework.base.util.Snowflake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

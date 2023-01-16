@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.admin.framework.auth;
 
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 
 import java.util.List;

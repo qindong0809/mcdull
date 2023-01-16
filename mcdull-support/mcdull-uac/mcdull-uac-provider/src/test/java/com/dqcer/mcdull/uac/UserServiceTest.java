@@ -2,7 +2,7 @@ package com.dqcer.mcdull.uac;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.dqcer.framework.base.entity.BaseDO;
+import com.dqcer.mcdull.framework.base.entity.BaseDO;
 import com.dqcer.mcdull.uac.provider.UserDataContentApplication;
 import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;

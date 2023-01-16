@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac.provider.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.dqcer.framework.base.entity.BaseDO;
+import com.dqcer.mcdull.framework.base.entity.BaseDO;
 
 /**
  * 系统角色实体

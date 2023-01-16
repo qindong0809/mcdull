@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.admin.web.manager.sys.impl;
 
-import com.dqcer.framework.base.vo.BaseVO;
+import com.dqcer.mcdull.framework.base.vo.BaseVO;
 import com.dqcer.mcdull.admin.model.convert.sys.UserConvert;
 import com.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import com.dqcer.mcdull.admin.model.entity.sys.UserDO;

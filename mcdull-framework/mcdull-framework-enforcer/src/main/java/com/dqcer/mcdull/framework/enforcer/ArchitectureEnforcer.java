@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.framework.enforcer;
 
-import com.dqcer.framework.base.dto.DTO;
-import com.dqcer.framework.base.entity.DO;
-import com.dqcer.framework.base.vo.VO;
+import com.dqcer.mcdull.framework.base.dto.DTO;
+import com.dqcer.mcdull.framework.base.entity.DO;
+import com.dqcer.mcdull.framework.base.vo.VO;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.library.GeneralCodingRules;
 

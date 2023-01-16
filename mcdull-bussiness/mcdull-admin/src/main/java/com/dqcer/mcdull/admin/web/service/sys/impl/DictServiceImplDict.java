@@ -2,10 +2,10 @@ package com.dqcer.mcdull.admin.web.service.sys.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.dqcer.framework.base.constants.GlobalConstant;
-import com.dqcer.framework.base.enums.DelFlayEnum;
-import com.dqcer.framework.base.exception.DatabaseRowException;
-import com.dqcer.framework.base.vo.KeyValueVO;
+import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import com.dqcer.mcdull.framework.base.enums.DelFlayEnum;
+import com.dqcer.mcdull.framework.base.exception.DatabaseRowException;
+import com.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import com.dqcer.mcdull.admin.framework.transformer.IDictTransformerService;
 import com.dqcer.mcdull.admin.model.entity.sys.DictDO;
 import com.dqcer.mcdull.admin.web.dao.repository.sys.IDictRepository;

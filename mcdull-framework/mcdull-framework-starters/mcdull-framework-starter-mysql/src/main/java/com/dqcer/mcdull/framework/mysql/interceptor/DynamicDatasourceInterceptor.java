@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.framework.mysql.interceptor;
 
-import com.dqcer.framework.base.constants.HttpHeaderConstants;
+import com.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import com.dqcer.mcdull.framework.mysql.config.DynamicContextHolder;
 import com.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
 import org.slf4j.Logger;

@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.mdc.provider.model.dto;
 
-import com.dqcer.framework.base.dto.PagedDTO;
+import com.dqcer.mcdull.framework.base.dto.PagedDTO;
 
 /**
  * sys dict dto

@@ -1,7 +1,7 @@
 package ${package.Service};
 
-import com.dqcer.framework.base.vo.PagedVO;
-import com.dqcer.framework.base.dto.StatusDTO;
+import vo.com.dqcer.mcdull.framework.base.PagedVO;
+import dto.com.dqcer.mcdull.framework.base.StatusDTO;
 import ${cfg.apiVo}.${cfg.voName};
 import ${cfg.apiDto}.${cfg.dtoName};
 import ${cfg.result};

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dqcer.framework.base.util.StrUtil;
+import com.dqcer.mcdull.framework.base.util.StrUtil;
 import com.dqcer.mcdull.admin.model.dto.sys.DictLiteDTO;
 import com.dqcer.mcdull.admin.model.entity.sys.DictDO;
 import com.dqcer.mcdull.admin.web.dao.mapper.sys.DictMapper;

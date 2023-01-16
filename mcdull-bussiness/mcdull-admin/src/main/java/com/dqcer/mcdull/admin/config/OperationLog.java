@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.admin.config;
 
-import com.dqcer.framework.base.enums.IEnum;
+import com.dqcer.mcdull.framework.base.enums.IEnum;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

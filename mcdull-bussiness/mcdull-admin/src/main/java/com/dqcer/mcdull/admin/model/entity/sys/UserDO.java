@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.admin.model.entity.sys;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.dqcer.framework.base.entity.BaseDO;
+import com.dqcer.mcdull.framework.base.entity.BaseDO;
 
 import java.time.LocalTime;
 

@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.framework.web.util;
 
-import com.dqcer.framework.base.constants.HttpHeaderConstants;
+import com.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -1,9 +1,9 @@
 package com.dqcer.mcdull.gateway.filter;
 
-import com.dqcer.framework.base.constants.GlobalConstant;
-import com.dqcer.framework.base.constants.HttpHeaderConstants;
-import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.framework.base.wrapper.CodeEnum;
+import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import com.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import com.dqcer.mcdull.gateway.properties.FilterProperties;
 import com.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
 import com.dqcer.mcdull.gateway.utils.SpringUtils;

@@ -1,13 +1,13 @@
 package ${cfg.repositoryImpl};
 
-import com.dqcer.framework.base.constants.GlobalConstant;
-import com.dqcer.framework.base.enums.DelFlayEnum;
-import com.dqcer.framework.base.exception.DatabaseRowException;
-import com.dqcer.framework.base.util.StrUtil;
-import com.dqcer.framework.base.util.ObjUtil;
+import constants.com.dqcer.mcdull.framework.base.GlobalConstant;
+import enums.com.dqcer.mcdull.framework.base.DelFlayEnum;
+import exception.com.dqcer.mcdull.framework.base.DatabaseRowException;
+import util.com.dqcer.mcdull.framework.base.StrUtil;
+import util.com.dqcer.mcdull.framework.base.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.dqcer.framework.base.enums.StatusEnum;
+import enums.com.dqcer.mcdull.framework.base.StatusEnum;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ${cfg.apiDto}.${cfg.dtoName};
 import java.util.Collections;
@@ -18,8 +18,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.stereotype.Service;
 import ${package.Mapper}.${cfg.mapperName};
-import com.dqcer.framework.base.wrapper.CodeEnum;
-import com.dqcer.framework.base.exception.BusinessException;
+import wrapper.com.dqcer.mcdull.framework.base.CodeEnum;
+import exception.com.dqcer.mcdull.framework.base.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

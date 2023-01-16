@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.gateway.handler;
 
-import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.framework.base.wrapper.CodeEnum;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

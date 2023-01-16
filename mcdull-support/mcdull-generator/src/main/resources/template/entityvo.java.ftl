@@ -1,6 +1,6 @@
 package ${cfg.apiVo};
 
-import com.dqcer.framework.base.vo.VO;
+import vo.com.dqcer.mcdull.framework.base.VO;
 import java.util.Date;
 
 /**

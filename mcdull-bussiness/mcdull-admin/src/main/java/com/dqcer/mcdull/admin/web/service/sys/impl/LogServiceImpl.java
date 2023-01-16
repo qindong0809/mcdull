@@ -1,9 +1,9 @@
 package com.dqcer.mcdull.admin.web.service.sys.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.dqcer.framework.base.util.PageUtil;
-import com.dqcer.framework.base.vo.PagedVO;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.util.PageUtil;
+import com.dqcer.mcdull.framework.base.vo.PagedVO;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.admin.framework.log.IOperationLog;
 import com.dqcer.mcdull.admin.model.convert.sys.LogConvert;
 import com.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
@@ -11,7 +11,6 @@ import com.dqcer.mcdull.admin.model.entity.sys.LogDO;
 import com.dqcer.mcdull.admin.model.vo.sys.LogVO;
 import com.dqcer.mcdull.admin.web.dao.repository.sys.ILogRepository;
 import com.dqcer.mcdull.admin.web.service.sys.ILogService;
-import com.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

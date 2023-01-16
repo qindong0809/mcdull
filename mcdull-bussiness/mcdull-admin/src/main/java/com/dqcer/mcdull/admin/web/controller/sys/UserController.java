@@ -1,11 +1,11 @@
 package com.dqcer.mcdull.admin.web.controller.sys;
 
-import com.dqcer.framework.base.annotation.Authorized;
-import com.dqcer.framework.base.annotation.Transform;
-import com.dqcer.framework.base.dto.StatusDTO;
-import com.dqcer.framework.base.validator.ValidGroup;
-import com.dqcer.framework.base.vo.PagedVO;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.annotation.Authorized;
+import com.dqcer.mcdull.framework.base.annotation.Transform;
+import com.dqcer.mcdull.framework.base.dto.StatusDTO;
+import com.dqcer.mcdull.framework.base.validator.ValidGroup;
+import com.dqcer.mcdull.framework.base.vo.PagedVO;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.admin.config.OperationLog;
 import com.dqcer.mcdull.admin.config.OperationTypeEnum;
 import com.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;

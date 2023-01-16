@@ -1,10 +1,10 @@
 package com.dqcer.mcdull.mdc.provider.web.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.dqcer.framework.base.util.PageUtil;
-import com.dqcer.framework.base.vo.PagedVO;
-import com.dqcer.framework.base.wrapper.FeignResultParse;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.util.PageUtil;
+import com.dqcer.mcdull.framework.base.vo.PagedVO;
+import com.dqcer.mcdull.framework.base.wrapper.FeignResultParse;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.mdc.provider.model.convert.LogConvert;
 import com.dqcer.mcdull.mdc.provider.model.dto.LogLiteDTO;
 import com.dqcer.mcdull.mdc.provider.model.dto.SysLogFeignDTO;

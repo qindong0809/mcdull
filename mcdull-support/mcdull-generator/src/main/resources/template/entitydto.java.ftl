@@ -1,10 +1,10 @@
 package ${cfg.apiDto};
 
-import com.dqcer.framework.base.enums.StatusEnum;
-import com.dqcer.framework.base.dto.PagedDTO;
-import com.dqcer.framework.base.validator.ValidGroup;
+import enums.com.dqcer.mcdull.framework.base.StatusEnum;
+import dto.com.dqcer.mcdull.framework.base.PagedDTO;
+import validator.com.dqcer.mcdull.framework.base.ValidGroup;
 
-import com.dqcer.framework.base.annotation.EnumsIntValid;
+import annotation.com.dqcer.mcdull.framework.base.EnumsIntValid;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;

@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.uac.provider.model.dto;
 
-import com.dqcer.framework.base.dto.DTO;
+import com.dqcer.mcdull.framework.base.dto.DTO;
 
 /**
  * 登录 dto

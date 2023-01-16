@@ -1,8 +1,8 @@
 package com.dqcer.mcdull.framework.feign;
 
-import com.dqcer.framework.base.exception.FeignBizException;
-import com.dqcer.framework.base.wrapper.CodeEnum;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.exception.FeignBizException;
+import com.dqcer.mcdull.framework.base.wrapper.CodeEnum;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

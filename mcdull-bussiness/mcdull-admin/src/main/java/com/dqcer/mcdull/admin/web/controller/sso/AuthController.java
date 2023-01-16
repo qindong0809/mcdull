@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.admin.web.controller.sso;
 
-import com.dqcer.framework.base.annotation.UnAuthorize;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.annotation.UnAuthorize;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.admin.model.dto.sys.LoginDTO;
 import com.dqcer.mcdull.admin.web.service.sso.IAuthService;
 import org.springframework.web.bind.annotation.PostMapping;

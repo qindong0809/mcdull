@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.uac.provider.web.manager.uac.impl;
 
-import com.dqcer.framework.base.vo.BaseVO;
+import com.dqcer.mcdull.framework.base.vo.BaseVO;
 import com.dqcer.mcdull.uac.provider.model.convert.UserConvert;
 import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import com.dqcer.mcdull.uac.provider.model.entity.UserDO;

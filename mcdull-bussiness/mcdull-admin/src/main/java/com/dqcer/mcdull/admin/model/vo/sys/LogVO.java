@@ -1,13 +1,9 @@
 package com.dqcer.mcdull.admin.model.vo.sys;
 
-import com.dqcer.framework.base.annotation.Transform;
-import com.dqcer.framework.base.vo.VO;
+import com.dqcer.mcdull.framework.base.annotation.Transform;
+import com.dqcer.mcdull.framework.base.vo.VO;
 import com.dqcer.mcdull.admin.config.OperationTypeEnum;
 import com.dqcer.mcdull.admin.framework.transformer.UserTransformer;
-import com.dqcer.mcdull.admin.model.entity.sys.LogDO;
-import com.dqcer.mcdull.admin.model.enums.MenuTypeEnum;
-
-import java.util.Date;
 
 /**
 * 日志记录 返回客户端值

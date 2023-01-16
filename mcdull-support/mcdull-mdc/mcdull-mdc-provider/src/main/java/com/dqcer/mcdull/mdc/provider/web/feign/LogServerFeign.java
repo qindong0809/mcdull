@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.mdc.provider.web.feign;
 
-import com.dqcer.framework.base.constants.GlobalConstant;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.mdc.provider.model.dto.SysLogFeignDTO;
 import com.dqcer.mcdull.mdc.provider.web.service.LogService;
 import org.springframework.web.bind.annotation.PostMapping;

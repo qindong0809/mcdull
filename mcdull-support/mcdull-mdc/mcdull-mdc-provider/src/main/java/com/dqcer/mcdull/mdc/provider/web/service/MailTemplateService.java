@@ -2,8 +2,8 @@ package com.dqcer.mcdull.mdc.provider.web.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.dqcer.framework.base.enums.DelFlayEnum;
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.enums.DelFlayEnum;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.mdc.provider.model.convert.MailTemplateConvert;
 import com.dqcer.mcdull.mdc.provider.model.dto.MailTemplateLiteDTO;
 import com.dqcer.mcdull.mdc.provider.model.entity.SysMailTemplateDO;

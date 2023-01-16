@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.uac;
 
-import com.dqcer.framework.base.dto.DTO;
-import com.dqcer.framework.base.vo.VO;
+import com.dqcer.mcdull.framework.base.dto.DTO;
+import com.dqcer.mcdull.framework.base.vo.VO;
 import com.dqcer.mcdull.framework.enforcer.ArchitectureEnforcer;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;

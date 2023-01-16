@@ -1,6 +1,6 @@
 package com.dqcer.mcdull.mdc.provider.web.feign;
 
-import com.dqcer.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
 import com.dqcer.mcdull.mdc.client.api.MailServiceApi;
 import com.dqcer.mcdull.mdc.client.dto.MailClientDTO;
 import com.dqcer.mcdull.mdc.provider.web.service.MailService;

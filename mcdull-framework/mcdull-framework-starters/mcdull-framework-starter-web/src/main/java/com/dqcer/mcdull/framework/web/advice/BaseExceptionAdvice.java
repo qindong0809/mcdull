@@ -1,7 +1,7 @@
 package com.dqcer.mcdull.framework.web.advice;
 
-import com.dqcer.framework.base.wrapper.Result;
-import com.dqcer.framework.base.wrapper.CodeEnum;
+import com.dqcer.mcdull.framework.base.wrapper.Result;
+import com.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;

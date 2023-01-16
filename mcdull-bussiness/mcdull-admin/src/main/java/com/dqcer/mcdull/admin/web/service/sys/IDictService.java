@@ -1,7 +1,5 @@
 package com.dqcer.mcdull.admin.web.service.sys;
 
-import com.dqcer.framework.base.vo.KeyValueVO;
-
 /**
  * 码表服务 接口定义
  *
