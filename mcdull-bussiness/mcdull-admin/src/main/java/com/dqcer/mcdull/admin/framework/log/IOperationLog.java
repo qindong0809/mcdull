@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.admin.framework.log;
+package io.gitee.dqcer.admin.framework.log;
 
-import com.dqcer.mcdull.admin.model.entity.sys.LogDO;
+import io.gitee.dqcer.admin.model.entity.sys.LogDO;
 
 /**
  * 操作日志

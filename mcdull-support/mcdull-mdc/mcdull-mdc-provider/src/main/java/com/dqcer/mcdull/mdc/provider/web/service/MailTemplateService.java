@@ -1,15 +1,15 @@
-package com.dqcer.mcdull.mdc.provider.web.service;
+package io.gitee.dqcer.mdc.provider.web.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.dqcer.mcdull.framework.base.enums.DelFlayEnum;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.mdc.provider.model.convert.MailTemplateConvert;
-import com.dqcer.mcdull.mdc.provider.model.dto.MailTemplateLiteDTO;
-import com.dqcer.mcdull.mdc.provider.model.entity.SysMailTemplateDO;
-import com.dqcer.mcdull.mdc.provider.model.vo.MailTemplateBaseVO;
-import com.dqcer.mcdull.mdc.provider.model.vo.MailTemplateVO;
-import com.dqcer.mcdull.mdc.provider.web.dao.mapper.MailTemplateDAO;
+import io.gitee.dqcer.framework.base.enums.DelFlayEnum;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.mdc.provider.model.convert.MailTemplateConvert;
+import io.gitee.dqcer.mdc.provider.model.dto.MailTemplateLiteDTO;
+import io.gitee.dqcer.mdc.provider.model.entity.SysMailTemplateDO;
+import io.gitee.dqcer.mdc.provider.model.vo.MailTemplateBaseVO;
+import io.gitee.dqcer.mdc.provider.model.vo.MailTemplateVO;
+import io.gitee.dqcer.mdc.provider.web.dao.mapper.MailTemplateDAO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

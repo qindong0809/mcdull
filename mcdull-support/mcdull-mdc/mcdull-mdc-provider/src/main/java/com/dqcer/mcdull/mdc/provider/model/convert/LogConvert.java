@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.mdc.provider.model.convert;
+package io.gitee.dqcer.mdc.provider.model.convert;
 
-import com.dqcer.mcdull.mdc.client.vo.DictClientVO;
-import com.dqcer.mcdull.mdc.provider.model.entity.LogDO;
-import com.dqcer.mcdull.mdc.provider.model.vo.LogVO;
+import io.gitee.dqcer.mdc.client.vo.DictClientVO;
+import io.gitee.dqcer.mdc.provider.model.entity.LogDO;
+import io.gitee.dqcer.mdc.provider.model.vo.LogVO;
 
 /**
  * log 转换工具类

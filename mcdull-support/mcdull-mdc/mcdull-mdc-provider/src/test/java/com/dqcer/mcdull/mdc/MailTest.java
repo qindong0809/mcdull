@@ -1,10 +1,10 @@
-package com.dqcer.mcdull.mdc;
+package io.gitee.dqcer.mdc;
 
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.mdc.client.dto.MailClientDTO;
-import com.dqcer.mcdull.mdc.provider.MetaDataContentApplication;
-import com.dqcer.mcdull.mdc.provider.config.mail.MailTemplate;
-import com.dqcer.mcdull.mdc.provider.web.service.MailService;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.mdc.client.dto.MailClientDTO;
+import io.gitee.dqcer.mdc.provider.MetaDataContentApplication;
+import io.gitee.dqcer.mdc.provider.config.mail.MailTemplate;
+import io.gitee.dqcer.mdc.provider.web.service.MailService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.uac.provider.model.entity;
+package io.gitee.dqcer.uac.provider.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.dqcer.mcdull.framework.base.entity.BaseDO;
+import io.gitee.dqcer.framework.base.entity.BaseDO;
 
 import java.time.LocalTime;
 

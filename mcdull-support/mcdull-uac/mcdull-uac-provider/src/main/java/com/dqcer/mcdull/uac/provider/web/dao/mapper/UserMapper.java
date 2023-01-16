@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.uac.provider.web.dao.mapper;
+package io.gitee.dqcer.uac.provider.web.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
+import io.gitee.dqcer.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.uac.provider.model.entity.UserDO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

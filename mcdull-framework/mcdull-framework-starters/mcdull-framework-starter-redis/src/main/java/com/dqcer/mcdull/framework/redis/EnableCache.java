@@ -1,10 +1,10 @@
-package com.dqcer.mcdull.framework.redis;
+package io.gitee.dqcer.framework.redis;
 
 
-import com.dqcer.mcdull.framework.redis.config.RedissonAutoConfiguration;
-import com.dqcer.mcdull.framework.redis.operation.CaffeineCache;
-import com.dqcer.mcdull.framework.redis.operation.RedisClient;
-import com.dqcer.mcdull.framework.redis.operation.RedissonCache;
+import io.gitee.dqcer.framework.redis.config.RedissonAutoConfiguration;
+import io.gitee.dqcer.framework.redis.operation.CaffeineCache;
+import io.gitee.dqcer.framework.redis.operation.RedisClient;
+import io.gitee.dqcer.framework.redis.operation.RedissonCache;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Import;
 

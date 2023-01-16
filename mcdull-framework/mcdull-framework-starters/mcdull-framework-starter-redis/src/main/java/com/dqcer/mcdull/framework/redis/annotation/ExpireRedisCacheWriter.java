@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.redis.annotation;
+package io.gitee.dqcer.framework.redis.annotation;
 
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.data.redis.cache.CacheStatistics;

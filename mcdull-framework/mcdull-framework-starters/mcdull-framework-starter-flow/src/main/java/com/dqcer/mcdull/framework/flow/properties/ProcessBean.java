@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.flow.properties;
+package io.gitee.dqcer.framework.flow.properties;
 
 import java.io.Serializable;
 import java.util.List;

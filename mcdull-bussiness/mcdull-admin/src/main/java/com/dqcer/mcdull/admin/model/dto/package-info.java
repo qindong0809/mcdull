@@ -4,4 +4,4 @@
  * @author dqcer
  * @version 15:26 2022/10/26
  */
-package com.dqcer.mcdull.admin.model.dto;
+package io.gitee.dqcer.admin.model.dto;

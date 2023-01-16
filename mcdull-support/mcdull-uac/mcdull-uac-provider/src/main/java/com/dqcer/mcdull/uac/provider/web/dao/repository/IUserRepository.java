@@ -1,10 +1,10 @@
-package com.dqcer.mcdull.uac.provider.web.dao.repository;
+package io.gitee.dqcer.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import com.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
-import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
+import io.gitee.dqcer.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.uac.provider.model.dto.UserLiteDTO;
+import io.gitee.dqcer.uac.provider.model.entity.UserDO;
 
 import java.util.List;
 

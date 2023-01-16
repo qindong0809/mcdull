@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.framework.flow.test;
+package io.gitee.dqcer.framework.flow.test;
 
 
-import com.dqcer.mcdull.framework.flow.record.AbstractContext;
+import io.gitee.dqcer.framework.flow.record.AbstractContext;
 
 /**
  * 将需要传递的值放入context中

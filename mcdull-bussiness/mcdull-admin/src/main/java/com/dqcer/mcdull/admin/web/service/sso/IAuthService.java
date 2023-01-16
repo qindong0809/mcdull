@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.admin.web.service.sso;
+package io.gitee.dqcer.admin.web.service.sso;
 
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.admin.model.dto.sys.LoginDTO;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.admin.model.dto.sys.LoginDTO;
 
 /**
  * 身份验证服务 接口定义

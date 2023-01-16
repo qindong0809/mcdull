@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.uac.provider;
+package io.gitee.dqcer.uac.provider;
 
-import com.dqcer.mcdull.framework.redis.EnableCache;
-import com.dqcer.mcdull.framework.web.EnableWebCore;
-import com.dqcer.mcdull.uac.provider.config.EnableMapperScan;
-import com.dqcer.mcdull.uac.provider.config.EnableUacFeignClients;
+import io.gitee.dqcer.framework.redis.EnableCache;
+import io.gitee.dqcer.framework.web.EnableWebCore;
+import io.gitee.dqcer.uac.provider.config.EnableMapperScan;
+import io.gitee.dqcer.uac.provider.config.EnableUacFeignClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;

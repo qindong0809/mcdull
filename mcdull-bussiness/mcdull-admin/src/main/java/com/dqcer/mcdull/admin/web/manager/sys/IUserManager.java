@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.admin.web.manager.sys;
+package io.gitee.dqcer.admin.web.manager.sys;
 
 
-import com.dqcer.mcdull.admin.model.entity.sys.UserDO;
-import com.dqcer.mcdull.admin.model.vo.sys.UserVO;
+import io.gitee.dqcer.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.admin.model.vo.sys.UserVO;
 
 /**
  * 用户 通过逻辑定义

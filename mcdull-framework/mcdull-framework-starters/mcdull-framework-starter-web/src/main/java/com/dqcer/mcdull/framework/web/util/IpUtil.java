@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.framework.web.util;
+package io.gitee.dqcer.framework.web.util;
 
-import com.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
+import io.gitee.dqcer.framework.base.constants.HttpHeaderConstants;
 
 import javax.servlet.http.HttpServletRequest;
 

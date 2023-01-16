@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.framework.web.async;
+package io.gitee.dqcer.framework.web.async;
 
-import com.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
-import com.dqcer.mcdull.framework.base.exception.BusinessException;
-import com.dqcer.mcdull.framework.base.storage.UnifySession;
-import com.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.framework.base.constants.HttpHeaderConstants;
+import io.gitee.dqcer.framework.base.exception.BusinessException;
+import io.gitee.dqcer.framework.base.storage.UnifySession;
+import io.gitee.dqcer.framework.base.storage.UserContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;

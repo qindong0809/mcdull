@@ -4,4 +4,4 @@
  * @author dqcer
  * @version 15:36 2022/10/26
  */
-package com.dqcer.mcdull.mdc.client.constants;
+package io.gitee.dqcer.mdc.client.constants;

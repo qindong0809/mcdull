@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.mdc.provider.model.vo;
+package io.gitee.dqcer.mdc.provider.model.vo;
 
-import com.dqcer.mcdull.mdc.provider.model.entity.LogDO;
+import io.gitee.dqcer.mdc.provider.model.entity.LogDO;
 
 import java.util.StringJoiner;
 

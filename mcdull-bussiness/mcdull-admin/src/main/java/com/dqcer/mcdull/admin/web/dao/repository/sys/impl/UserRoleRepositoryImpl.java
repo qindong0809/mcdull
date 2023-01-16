@@ -1,14 +1,14 @@
-package com.dqcer.mcdull.admin.web.dao.repository.sys.impl;
+package io.gitee.dqcer.admin.web.dao.repository.sys.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import com.dqcer.mcdull.framework.base.util.ObjUtil;
-import com.dqcer.mcdull.admin.model.entity.sys.UserRoleDO;
-import com.dqcer.mcdull.admin.web.dao.mapper.sys.UserRoleMapper;
-import com.dqcer.mcdull.admin.web.dao.repository.sys.IUserRoleRepository;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.exception.DatabaseRowException;
+import io.gitee.dqcer.framework.base.util.ObjUtil;
+import io.gitee.dqcer.admin.model.entity.sys.UserRoleDO;
+import io.gitee.dqcer.admin.web.dao.mapper.sys.UserRoleMapper;
+import io.gitee.dqcer.admin.web.dao.repository.sys.IUserRoleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

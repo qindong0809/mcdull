@@ -1,10 +1,10 @@
-package com.dqcer.mcdull.mdc.client.api;
+package io.gitee.dqcer.mdc.client.api;
 
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.validator.ValidGroup;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.mdc.client.dto.DictClientDTO;
-import com.dqcer.mcdull.mdc.client.vo.DictClientVO;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.validator.ValidGroup;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.mdc.client.dto.DictClientDTO;
+import io.gitee.dqcer.mdc.client.vo.DictClientVO;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 

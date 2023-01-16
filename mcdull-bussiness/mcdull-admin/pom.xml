@@ -4,10 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>mcdull-bussiness</artifactId>
-        <groupId>com.dqcer.mcdull</groupId>
+        <groupId>io.gitee.dqcer</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <groupId>com.dqcer.mcdull</groupId>
+    <groupId>io.gitee.dqcer</groupId>
     <artifactId>mcdull-admin</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>mcdull-admin</name>
@@ -17,27 +17,27 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.dqcer.mcdull</groupId>
+            <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-framework-base</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.dqcer.mcdull</groupId>
+            <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-framework-starter-web</artifactId>
         </dependency>
 <!--        <dependency>-->
-<!--            <groupId>com.dqcer.mcdull</groupId>-->
+<!--            <groupId>io.gitee.dqcer</groupId>-->
 <!--            <artifactId>mcdull-framework-starter-nacos</artifactId>-->
 <!--        </dependency>-->
 <!--        <dependency>-->
-<!--            <groupId>com.dqcer.mcdull</groupId>-->
+<!--            <groupId>io.gitee.dqcer</groupId>-->
 <!--            <artifactId>mcdull-framework-starter-feign</artifactId>-->
 <!--        </dependency>-->
         <dependency>
-            <groupId>com.dqcer.mcdull</groupId>
+            <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-framework-starter-redis</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.dqcer.mcdull</groupId>
+            <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-framework-starter-mysql</artifactId>
         </dependency>
     </dependencies>

@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.admin.model.dto.sys;
+package io.gitee.dqcer.admin.model.dto.sys;
 
-import com.dqcer.mcdull.framework.base.dto.PagedDTO;
-import com.dqcer.mcdull.framework.base.validator.ValidGroup;
+import io.gitee.dqcer.framework.base.dto.PagedDTO;
+import io.gitee.dqcer.framework.base.validator.ValidGroup;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;

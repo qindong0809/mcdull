@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.mysql.config;
+package io.gitee.dqcer.framework.mysql.config;
 
 
 import com.baomidou.mybatisplus.annotation.DbType;
@@ -10,8 +10,8 @@ import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerIntercep
 import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
-import com.dqcer.mcdull.framework.mysql.aspect.DataSourceAspect;
-import com.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
+import io.gitee.dqcer.framework.mysql.aspect.DataSourceAspect;
+import io.gitee.dqcer.framework.mysql.properties.DataSourceProperties;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

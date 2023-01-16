@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.admin.web.dao.repository.sys;
+package io.gitee.dqcer.admin.web.dao.repository.sys;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.dqcer.mcdull.admin.model.entity.sys.UserRoleDO;
+import io.gitee.dqcer.admin.model.entity.sys.UserRoleDO;
 
 import java.util.List;
 

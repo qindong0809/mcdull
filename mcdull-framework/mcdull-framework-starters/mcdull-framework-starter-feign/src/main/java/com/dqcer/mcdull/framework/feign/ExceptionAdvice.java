@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.framework.feign;
+package io.gitee.dqcer.framework.feign;
 
-import com.dqcer.mcdull.framework.base.exception.FeignBizException;
-import com.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.framework.base.exception.FeignBizException;
+import io.gitee.dqcer.framework.base.wrapper.CodeEnum;
+import io.gitee.dqcer.framework.base.wrapper.Result;
 import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.framework.web.config;
+package io.gitee.dqcer.framework.web.config;
 
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.config.properties.McdullProperties;
-import com.dqcer.mcdull.framework.config.properties.ThreadPoolProperties;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.config.properties.McdullProperties;
+import io.gitee.dqcer.framework.config.properties.ThreadPoolProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;

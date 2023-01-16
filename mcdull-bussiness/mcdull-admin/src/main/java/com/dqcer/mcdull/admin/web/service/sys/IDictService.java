@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.admin.web.service.sys;
+package io.gitee.dqcer.admin.web.service.sys;
 
 /**
  * 码表服务 接口定义

@@ -1,14 +1,14 @@
-package com.dqcer.mcdull.uac.provider.web.dao.repository.impl;
+package io.gitee.dqcer.uac.provider.web.dao.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import com.dqcer.mcdull.framework.base.util.ObjUtil;
-import com.dqcer.mcdull.uac.provider.model.entity.UserRoleDO;
-import com.dqcer.mcdull.uac.provider.web.dao.mapper.UserRoleMapper;
-import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.exception.DatabaseRowException;
+import io.gitee.dqcer.framework.base.util.ObjUtil;
+import io.gitee.dqcer.uac.provider.model.entity.UserRoleDO;
+import io.gitee.dqcer.uac.provider.web.dao.mapper.UserRoleMapper;
+import io.gitee.dqcer.uac.provider.web.dao.repository.IUserRoleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

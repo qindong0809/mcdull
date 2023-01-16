@@ -1,11 +1,11 @@
-package com.dqcer.mcdull.framework.redis.aspect;
+package io.gitee.dqcer.framework.redis.aspect;
 
 
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.constants.SymbolConstants;
-import com.dqcer.mcdull.framework.base.exception.BusinessException;
-import com.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import com.dqcer.mcdull.framework.redis.annotation.RedisLock;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.constants.SymbolConstants;
+import io.gitee.dqcer.framework.base.exception.BusinessException;
+import io.gitee.dqcer.framework.base.wrapper.CodeEnum;
+import io.gitee.dqcer.framework.redis.annotation.RedisLock;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -53,7 +53,7 @@ public class RedisLockAspect {
      * @param proceedingJoinPoint 连接点
      * @return {@link Object}
      */
-    @Around("@annotation(com.dqcer.mcdull.framework.redis.annotation.RedisLock)")
+    @Around("@annotation(io.gitee.dqcer.framework.redis.annotation.RedisLock)")
     public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
         if (log.isDebugEnabled()) {
             log.debug("分布式锁开始执行");

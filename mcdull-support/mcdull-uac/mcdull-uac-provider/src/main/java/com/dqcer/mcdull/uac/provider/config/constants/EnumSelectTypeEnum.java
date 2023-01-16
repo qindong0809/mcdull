@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.uac.provider.config.constants;
+package io.gitee.dqcer.uac.provider.config.constants;
 
-import com.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.framework.base.enums.IEnum;
 
 /**
  * 枚举类型

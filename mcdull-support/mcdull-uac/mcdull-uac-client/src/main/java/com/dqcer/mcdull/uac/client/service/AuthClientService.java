@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.uac.client.service;
+package io.gitee.dqcer.uac.client.service;
 
-import com.dqcer.mcdull.uac.client.api.AuthServiceApi;
+import io.gitee.dqcer.uac.client.api.AuthServiceApi;
 import org.springframework.cloud.openfeign.FeignClient;
 
 /**

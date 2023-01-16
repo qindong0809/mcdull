@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.admin.web.controller;
+package io.gitee.dqcer.admin.web.controller;
 
-import com.dqcer.mcdull.framework.base.annotation.UnAuthorize;
-import com.dqcer.mcdull.framework.base.storage.UnifySession;
-import com.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.framework.base.annotation.UnAuthorize;
+import io.gitee.dqcer.framework.base.storage.UnifySession;
+import io.gitee.dqcer.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.framework.base.wrapper.Result;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.uac.provider.web.manager.uac;
+package io.gitee.dqcer.uac.provider.web.manager.uac;
 
-import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
-import com.dqcer.mcdull.uac.provider.model.vo.RoleVO;
+import io.gitee.dqcer.uac.provider.model.entity.RoleDO;
+import io.gitee.dqcer.uac.provider.model.vo.RoleVO;
 
 /**
  * 角色 通用逻辑定义

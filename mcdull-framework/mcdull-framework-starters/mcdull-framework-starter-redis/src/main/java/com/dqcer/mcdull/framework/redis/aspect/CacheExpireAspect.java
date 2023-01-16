@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.framework.redis.aspect;
+package io.gitee.dqcer.framework.redis.aspect;
 
 
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.redis.annotation.CacheExpire;
-import com.dqcer.mcdull.framework.redis.annotation.CacheExpireHolder;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.redis.annotation.CacheExpire;
+import io.gitee.dqcer.framework.redis.annotation.CacheExpireHolder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -33,7 +33,7 @@ public class CacheExpireAspect {
      * @param joinPoint 连接点
      * @return {@link Object}
      */
-    @Around("@annotation(com.dqcer.mcdull.framework.redis.annotation.CacheExpire)")
+    @Around("@annotation(io.gitee.dqcer.framework.redis.annotation.CacheExpire)")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();

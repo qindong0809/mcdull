@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.admin.model.vo.sys;
+package io.gitee.dqcer.admin.model.vo.sys;
 
-import com.dqcer.mcdull.framework.base.annotation.Transform;
-import com.dqcer.mcdull.framework.base.vo.VO;
-import com.dqcer.mcdull.admin.config.OperationTypeEnum;
-import com.dqcer.mcdull.admin.framework.transformer.UserTransformer;
+import io.gitee.dqcer.framework.base.annotation.Transform;
+import io.gitee.dqcer.framework.base.vo.VO;
+import io.gitee.dqcer.admin.config.OperationTypeEnum;
+import io.gitee.dqcer.admin.framework.transformer.UserTransformer;
 
 /**
 * 日志记录 返回客户端值

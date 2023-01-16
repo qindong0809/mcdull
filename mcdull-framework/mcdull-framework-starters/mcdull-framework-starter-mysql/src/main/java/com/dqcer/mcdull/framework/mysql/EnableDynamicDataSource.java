@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.framework.mysql;
+package io.gitee.dqcer.framework.mysql;
 
-import com.dqcer.mcdull.framework.mysql.config.AutoConfiguration;
+import io.gitee.dqcer.framework.mysql.config.AutoConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;

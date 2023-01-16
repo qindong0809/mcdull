@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.mdc.client.dto;
+package io.gitee.dqcer.mdc.client.dto;
 
-import com.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
-import com.dqcer.mcdull.framework.base.dto.DTO;
-import com.dqcer.mcdull.framework.base.enums.LanguageEnum;
-import com.dqcer.mcdull.framework.base.validator.ValidGroup;
+import io.gitee.dqcer.framework.base.annotation.EnumsStrValid;
+import io.gitee.dqcer.framework.base.dto.DTO;
+import io.gitee.dqcer.framework.base.enums.LanguageEnum;
+import io.gitee.dqcer.framework.base.validator.ValidGroup;
 
 import javax.validation.constraints.NotEmpty;
 

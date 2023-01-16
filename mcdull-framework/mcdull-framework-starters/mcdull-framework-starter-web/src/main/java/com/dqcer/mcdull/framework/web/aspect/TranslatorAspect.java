@@ -1,14 +1,14 @@
-package com.dqcer.mcdull.framework.web.aspect;
+package io.gitee.dqcer.framework.web.aspect;
 
-import com.dqcer.mcdull.framework.base.annotation.ITransformer;
-import com.dqcer.mcdull.framework.base.annotation.Transform;
-import com.dqcer.mcdull.framework.base.enums.IEnum;
-import com.dqcer.mcdull.framework.base.exception.BusinessException;
-import com.dqcer.mcdull.framework.base.vo.PagedVO;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.framework.web.transform.EnumTransformer;
-import com.dqcer.mcdull.framework.web.transform.ReflectUtil;
-import com.dqcer.mcdull.framework.web.transform.SpringContextHolder;
+import io.gitee.dqcer.framework.base.annotation.ITransformer;
+import io.gitee.dqcer.framework.base.annotation.Transform;
+import io.gitee.dqcer.framework.base.enums.IEnum;
+import io.gitee.dqcer.framework.base.exception.BusinessException;
+import io.gitee.dqcer.framework.base.vo.PagedVO;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.framework.web.transform.EnumTransformer;
+import io.gitee.dqcer.framework.web.transform.ReflectUtil;
+import io.gitee.dqcer.framework.web.transform.SpringContextHolder;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -32,7 +32,7 @@ public class TranslatorAspect {
     private static final Logger log = LoggerFactory.getLogger(TranslatorAspect.class);
 
 
-    @Pointcut("@annotation(com.dqcer.mcdull.framework.base.annotation.Transform) ")
+    @Pointcut("@annotation(io.gitee.dqcer.framework.base.annotation.Transform) ")
     public void translatorPointCut() {
         // 切点
     }

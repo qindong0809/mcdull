@@ -1,11 +1,11 @@
-package com.dqcer.mcdull.uac.provider.web.controller;
+package io.gitee.dqcer.uac.provider.web.controller;
 
-import com.dqcer.mcdull.framework.base.annotation.UnAuthorize;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.uac.client.api.AuthServiceApi;
-import com.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
-import com.dqcer.mcdull.uac.provider.model.vo.LoginVO;
-import com.dqcer.mcdull.uac.provider.web.service.LoginService;
+import io.gitee.dqcer.framework.base.annotation.UnAuthorize;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.uac.client.api.AuthServiceApi;
+import io.gitee.dqcer.uac.provider.model.dto.LoginDTO;
+import io.gitee.dqcer.uac.provider.model.vo.LoginVO;
+import io.gitee.dqcer.uac.provider.web.service.LoginService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

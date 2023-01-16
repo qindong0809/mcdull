@@ -1,14 +1,14 @@
-package com.dqcer.mcdull.uac.provider.web.manager.uac.impl;
+package io.gitee.dqcer.uac.provider.web.manager.uac.impl;
 
-import com.dqcer.mcdull.framework.base.vo.BaseVO;
-import com.dqcer.mcdull.uac.provider.model.convert.UserConvert;
-import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
-import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
-import com.dqcer.mcdull.uac.provider.model.vo.UserVO;
-import com.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
-import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
-import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
-import com.dqcer.mcdull.uac.provider.web.manager.uac.IUserManager;
+import io.gitee.dqcer.framework.base.vo.BaseVO;
+import io.gitee.dqcer.uac.provider.model.convert.UserConvert;
+import io.gitee.dqcer.uac.provider.model.entity.RoleDO;
+import io.gitee.dqcer.uac.provider.model.entity.UserDO;
+import io.gitee.dqcer.uac.provider.model.vo.UserVO;
+import io.gitee.dqcer.uac.provider.web.dao.repository.IRoleRepository;
+import io.gitee.dqcer.uac.provider.web.dao.repository.IUserRepository;
+import io.gitee.dqcer.uac.provider.web.dao.repository.IUserRoleRepository;
+import io.gitee.dqcer.uac.provider.web.manager.uac.IUserManager;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

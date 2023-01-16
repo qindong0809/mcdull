@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.mdc.provider.model.convert;
+package io.gitee.dqcer.mdc.provider.model.convert;
 
-import com.dqcer.mcdull.mdc.client.vo.DictClientVO;
-import com.dqcer.mcdull.mdc.provider.model.entity.DictDO;
+import io.gitee.dqcer.mdc.client.vo.DictClientVO;
+import io.gitee.dqcer.mdc.provider.model.entity.DictDO;
 
 import java.util.ArrayList;
 import java.util.Collections;

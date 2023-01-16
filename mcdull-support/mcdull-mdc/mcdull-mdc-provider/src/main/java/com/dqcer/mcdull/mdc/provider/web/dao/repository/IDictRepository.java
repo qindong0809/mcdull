@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.mdc.provider.web.dao.repository;
+package io.gitee.dqcer.mdc.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.dqcer.mcdull.mdc.provider.model.dto.DictLiteDTO;
-import com.dqcer.mcdull.mdc.provider.model.entity.DictDO;
+import io.gitee.dqcer.mdc.provider.model.dto.DictLiteDTO;
+import io.gitee.dqcer.mdc.provider.model.entity.DictDO;
 
 /**
  * 码表 数据库操作封装接口层

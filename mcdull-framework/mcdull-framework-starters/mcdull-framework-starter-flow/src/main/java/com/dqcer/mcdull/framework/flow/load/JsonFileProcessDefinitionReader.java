@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.framework.flow.load;
+package io.gitee.dqcer.framework.flow.load;
 
-import com.dqcer.mcdull.framework.base.util.JsonUtil;
-import com.dqcer.mcdull.framework.base.util.ObjUtil;
-import com.dqcer.mcdull.framework.flow.properties.ProcessBean;
+import io.gitee.dqcer.framework.base.util.JsonUtil;
+import io.gitee.dqcer.framework.base.util.ObjUtil;
+import io.gitee.dqcer.framework.flow.properties.ProcessBean;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;

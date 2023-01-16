@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.soagov;
+package io.gitee.dqcer.soagov;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  * 配置内容（如下所示）：
  root=debug
  mybatis-plus=warn
- com.dqcer=debug
+ io.github=debug
  com.zaxxer.hikari=warn
  com.alibaba.nacos=error
 

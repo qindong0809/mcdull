@@ -76,7 +76,7 @@
   </appender>
 
   <!-- ERROR 级别日志配置 -->
-  <appender name="error_file" class="com.dqcer.mcdull.framework.web.config.AlarmRollingFileAppender">
+  <appender name="error_file" class="io.gitee.dqcer.framework.web.config.AlarmRollingFileAppender">
     <file>${log.path}/${application.name}/error.log</file>
     <append>true</append>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -102,9 +102,9 @@
   <logger name="springfox.bean.validators" level="ERROR"/>
   <logger name="springfox.documentation" level="ERROR" />
   <logger name="com.alibaba.nacos.client.naming" level="warn" />
-  <logger name="com.dqcer.mcdull.framework" level="debug" />
-  <logger name="com.dqcer.mcdull" level="info" />
-  <logger name="com.dqcer.mcdull.framework.redis.operation.CaffeineCache" level="INFO" />
+  <logger name="io.gitee.dqcer.framework" level="debug" />
+  <logger name="io.gitee.dqcer" level="info" />
+  <logger name="io.gitee.dqcer.framework.redis.operation.CaffeineCache" level="INFO" />
   <root level="info">
     <appender-ref ref="CONSOLE" />
 <!--    <appender-ref ref="console" />-->

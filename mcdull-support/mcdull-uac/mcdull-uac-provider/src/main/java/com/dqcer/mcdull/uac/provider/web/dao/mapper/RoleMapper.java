@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.uac.provider.web.dao.mapper;
+package io.gitee.dqcer.uac.provider.web.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
+import io.gitee.dqcer.uac.provider.model.entity.RoleDO;
 
 /**
  * 角色 mapper

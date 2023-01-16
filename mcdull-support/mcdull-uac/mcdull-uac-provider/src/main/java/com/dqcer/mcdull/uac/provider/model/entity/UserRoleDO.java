@@ -1,10 +1,10 @@
-package com.dqcer.mcdull.uac.provider.model.entity;
+package io.gitee.dqcer.uac.provider.model.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.framework.base.entity.IdDO;
 
 import java.util.Date;
 

@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.admin.web.dao.mapper.sys;
+package io.gitee.dqcer.admin.web.dao.mapper.sys;
 
-import com.dqcer.mcdull.admin.model.entity.sys.LogDO;
+import io.gitee.dqcer.admin.model.entity.sys.LogDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

@@ -1,13 +1,13 @@
 package ${package.ServiceImpl};
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import storage.com.dqcer.mcdull.framework.base.UserContextHolder;
-import exception.com.dqcer.mcdull.framework.base.DatabaseRowException;
-import wrapper.com.dqcer.mcdull.framework.base.CodeEnum;
-import exception.com.dqcer.mcdull.framework.base.BusinessException;
-import util.com.dqcer.mcdull.framework.base.PageUtil;
-import vo.com.dqcer.mcdull.framework.base.PagedVO;
-import dto.com.dqcer.mcdull.framework.base.StatusDTO;
+import storage.io.gitee.dqcer.framework.base.UserContextHolder;
+import exception.io.gitee.dqcer.framework.base.DatabaseRowException;
+import wrapper.io.gitee.dqcer.framework.base.CodeEnum;
+import exception.io.gitee.dqcer.framework.base.BusinessException;
+import util.io.gitee.dqcer.framework.base.PageUtil;
+import vo.io.gitee.dqcer.framework.base.PagedVO;
+import dto.io.gitee.dqcer.framework.base.StatusDTO;
 import ${cfg.apiDto}.${cfg.dtoName};
 import ${cfg.apiConvert}.${cfg.convertName};
 

@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.framework.config.properties;
+package io.gitee.dqcer.framework.config.properties;
 
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**

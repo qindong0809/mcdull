@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.framework.web.feign.service;
+package io.gitee.dqcer.framework.web.feign.service;
 
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.framework.web.feign.model.UserPowerVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 

@@ -1,20 +1,20 @@
-package com.dqcer.mcdull.uac.provider.web.dao.repository.impl;
+package io.gitee.dqcer.uac.provider.web.dao.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dqcer.mcdull.framework.base.entity.BaseDO;
-import com.dqcer.mcdull.framework.base.enums.DelFlayEnum;
-import com.dqcer.mcdull.framework.base.exception.BusinessException;
-import com.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import com.dqcer.mcdull.framework.base.util.StrUtil;
-import com.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import com.dqcer.mcdull.uac.provider.model.dto.MenuLiteDTO;
-import com.dqcer.mcdull.uac.provider.model.entity.MenuDO;
-import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
-import com.dqcer.mcdull.uac.provider.web.dao.mapper.MenuMapper;
-import com.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
+import io.gitee.dqcer.framework.base.entity.BaseDO;
+import io.gitee.dqcer.framework.base.enums.DelFlayEnum;
+import io.gitee.dqcer.framework.base.exception.BusinessException;
+import io.gitee.dqcer.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.framework.base.util.StrUtil;
+import io.gitee.dqcer.framework.base.wrapper.CodeEnum;
+import io.gitee.dqcer.uac.provider.model.dto.MenuLiteDTO;
+import io.gitee.dqcer.uac.provider.model.entity.MenuDO;
+import io.gitee.dqcer.uac.provider.model.entity.RoleDO;
+import io.gitee.dqcer.uac.provider.web.dao.mapper.MenuMapper;
+import io.gitee.dqcer.uac.provider.web.dao.repository.IMenuRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.mysql.annotation;
+package io.gitee.dqcer.framework.mysql.annotation;
 
 
 import java.lang.annotation.Documented;

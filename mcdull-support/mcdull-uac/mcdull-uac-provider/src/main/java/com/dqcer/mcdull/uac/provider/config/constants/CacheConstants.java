@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.uac.provider.config.constants;
+package io.gitee.dqcer.uac.provider.config.constants;
 
 /**
  * 缓存常量

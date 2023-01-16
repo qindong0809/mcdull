@@ -1,13 +1,13 @@
-package com.dqcer.mcdull.mdc.provider.web.controller;
+package io.gitee.dqcer.mdc.provider.web.controller;
 
 
-import com.dqcer.mcdull.framework.base.validator.ValidGroup;
-import com.dqcer.mcdull.framework.base.vo.PagedVO;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.mdc.client.vo.DictClientVO;
-import com.dqcer.mcdull.mdc.provider.model.dto.LogLiteDTO;
-import com.dqcer.mcdull.mdc.provider.model.vo.LogVO;
-import com.dqcer.mcdull.mdc.provider.web.service.LogService;
+import io.gitee.dqcer.framework.base.validator.ValidGroup;
+import io.gitee.dqcer.framework.base.vo.PagedVO;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.mdc.client.vo.DictClientVO;
+import io.gitee.dqcer.mdc.provider.model.dto.LogLiteDTO;
+import io.gitee.dqcer.mdc.provider.model.vo.LogVO;
+import io.gitee.dqcer.mdc.provider.web.service.LogService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

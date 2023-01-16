@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.flow.test;
+package io.gitee.dqcer.framework.flow.test;
 
 
 import java.io.Serializable;

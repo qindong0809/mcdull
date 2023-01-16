@@ -1,13 +1,13 @@
-package com.dqcer.mcdull.gateway.filter;
+package io.gitee.dqcer.gateway.filter;
 
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import com.dqcer.mcdull.gateway.properties.FilterProperties;
-import com.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
-import com.dqcer.mcdull.gateway.utils.SpringUtils;
-import com.dqcer.mcdull.uac.client.service.AuthClientService;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.constants.HttpHeaderConstants;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.framework.base.wrapper.CodeEnum;
+import io.gitee.dqcer.gateway.properties.FilterProperties;
+import io.gitee.dqcer.gateway.properties.McdullGatewayProperties;
+import io.gitee.dqcer.gateway.utils.SpringUtils;
+import io.gitee.dqcer.uac.client.service.AuthClientService;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.mdc.provider.web.dao.repository;
+package io.gitee.dqcer.mdc.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.dqcer.mcdull.mdc.provider.model.dto.LogLiteDTO;
-import com.dqcer.mcdull.mdc.provider.model.entity.LogDO;
+import io.gitee.dqcer.mdc.provider.model.dto.LogLiteDTO;
+import io.gitee.dqcer.mdc.provider.model.entity.LogDO;
 
 /**
  * log 数据库操作封装接口层

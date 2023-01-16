@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.framework.mysql.aspect;
+package io.gitee.dqcer.framework.mysql.aspect;
 
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.constants.SymbolConstants;
-import com.dqcer.mcdull.framework.mysql.annotation.DynamicDataSource;
-import com.dqcer.mcdull.framework.mysql.config.DynamicContextHolder;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.constants.SymbolConstants;
+import io.gitee.dqcer.framework.mysql.annotation.DynamicDataSource;
+import io.gitee.dqcer.framework.mysql.config.DynamicContextHolder;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -38,7 +38,7 @@ public class DataSourceAspect {
     private static final ParameterNameDiscoverer NAME_DISCOVERER = new DefaultParameterNameDiscoverer();
     private static final ExpressionParser PARSER = new SpelExpressionParser();
 
-    @Pointcut("@annotation(com.dqcer.mcdull.framework.mysql.annotation.DynamicDataSource) ")
+    @Pointcut("@annotation(io.gitee.dqcer.framework.mysql.annotation.DynamicDataSource) ")
     public void dataSourcePointCut() {
         // 切点
     }

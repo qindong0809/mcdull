@@ -1,15 +1,15 @@
-package com.dqcer.mcdull.uac.provider.web.manager.mdc.impl;
+package io.gitee.dqcer.uac.provider.web.manager.mdc.impl;
 
-import com.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import com.dqcer.mcdull.framework.base.util.StrUtil;
-import com.dqcer.mcdull.framework.base.wrapper.FeignResultParse;
-import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
-import com.dqcer.mcdull.mdc.client.dto.DictClientDTO;
-import com.dqcer.mcdull.mdc.client.service.DictClientService;
-import com.dqcer.mcdull.mdc.client.vo.DictClientVO;
-import com.dqcer.mcdull.uac.provider.config.constants.CacheConstants;
-import com.dqcer.mcdull.uac.provider.model.vo.RemoteDictVO;
-import com.dqcer.mcdull.uac.provider.web.manager.mdc.IDictManager;
+import io.gitee.dqcer.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.framework.base.util.StrUtil;
+import io.gitee.dqcer.framework.base.wrapper.FeignResultParse;
+import io.gitee.dqcer.framework.redis.operation.CacheChannel;
+import io.gitee.dqcer.mdc.client.dto.DictClientDTO;
+import io.gitee.dqcer.mdc.client.service.DictClientService;
+import io.gitee.dqcer.mdc.client.vo.DictClientVO;
+import io.gitee.dqcer.uac.provider.config.constants.CacheConstants;
+import io.gitee.dqcer.uac.provider.model.vo.RemoteDictVO;
+import io.gitee.dqcer.uac.provider.web.manager.mdc.IDictManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

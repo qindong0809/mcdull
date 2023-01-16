@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.mdc.provider;
+package io.gitee.dqcer.mdc.provider;
 
-import com.dqcer.mcdull.framework.mysql.EnableDynamicDataSource;
-import com.dqcer.mcdull.framework.redis.EnableCache;
-import com.dqcer.mcdull.framework.web.EnableWebCore;
+import io.gitee.dqcer.framework.mysql.EnableDynamicDataSource;
+import io.gitee.dqcer.framework.redis.EnableCache;
+import io.gitee.dqcer.framework.web.EnableWebCore;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,8 +16,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @version 2022/12/26
  */
 @EnableDynamicDataSource
-@EnableFeignClients(basePackages = {"com.dqcer.mcdull.framework.web.feign", "com.dqcer.mcdull.uac.client.service"})
-@MapperScan("com.dqcer.mcdull.mdc.provider.web.dao.mapper")
+@EnableFeignClients(basePackages = {"io.gitee.dqcer.framework.web.feign", "io.gitee.dqcer.uac.client.service"})
+@MapperScan("io.gitee.dqcer.mdc.provider.web.dao.mapper")
 @EnableWebCore
 @EnableCache
 @EnableDiscoveryClient

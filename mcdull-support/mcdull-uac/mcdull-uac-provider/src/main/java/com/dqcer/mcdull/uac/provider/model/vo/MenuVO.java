@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.uac.provider.model.vo;
+package io.gitee.dqcer.uac.provider.model.vo;
 
-import com.dqcer.mcdull.framework.base.annotation.Transform;
-import com.dqcer.mcdull.framework.base.vo.TreeVO;
-import com.dqcer.mcdull.framework.base.enums.StatusEnum;
-import com.dqcer.mcdull.uac.provider.model.enums.MenuTypeEnum;
+import io.gitee.dqcer.framework.base.annotation.Transform;
+import io.gitee.dqcer.framework.base.vo.TreeVO;
+import io.gitee.dqcer.framework.base.enums.StatusEnum;
+import io.gitee.dqcer.uac.provider.model.enums.MenuTypeEnum;
 
 /**
  * 角色视图对象

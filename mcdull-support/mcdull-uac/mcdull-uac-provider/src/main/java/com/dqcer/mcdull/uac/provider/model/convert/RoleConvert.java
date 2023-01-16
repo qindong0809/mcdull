@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.uac.provider.model.convert;
+package io.gitee.dqcer.uac.provider.model.convert;
 
-import com.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
-import com.dqcer.mcdull.uac.provider.model.entity.RoleDO;
-import com.dqcer.mcdull.uac.provider.model.vo.RoleVO;
+import io.gitee.dqcer.uac.provider.model.dto.RoleLiteDTO;
+import io.gitee.dqcer.uac.provider.model.entity.RoleDO;
+import io.gitee.dqcer.uac.provider.model.vo.RoleVO;
 
 /**
  * 角色 对象转换工具类

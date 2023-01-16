@@ -1,21 +1,21 @@
-package com.dqcer.mcdull.admin.web.dao.repository.sys.impl;
+package io.gitee.dqcer.admin.web.dao.repository.sys.impl;
 
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import com.dqcer.mcdull.framework.base.util.StrUtil;
-import com.dqcer.mcdull.framework.base.util.ObjUtil;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.exception.DatabaseRowException;
+import io.gitee.dqcer.framework.base.util.StrUtil;
+import io.gitee.dqcer.framework.base.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
+import io.gitee.dqcer.admin.model.dto.sys.LogLiteDTO;
 import java.util.Collections;
 import java.util.List;
-import com.dqcer.mcdull.admin.model.entity.sys.LogDO;
-import com.dqcer.mcdull.admin.web.dao.repository.sys.ILogRepository;
+import io.gitee.dqcer.admin.model.entity.sys.LogDO;
+import io.gitee.dqcer.admin.web.dao.repository.sys.ILogRepository;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.stereotype.Service;
-import com.dqcer.mcdull.admin.web.dao.mapper.sys.LogMapper;
+import io.gitee.dqcer.admin.web.dao.mapper.sys.LogMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

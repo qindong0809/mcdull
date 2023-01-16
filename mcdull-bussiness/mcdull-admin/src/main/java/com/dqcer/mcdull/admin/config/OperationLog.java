@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.admin.config;
+package io.gitee.dqcer.admin.config;
 
-import com.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.framework.base.enums.IEnum;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

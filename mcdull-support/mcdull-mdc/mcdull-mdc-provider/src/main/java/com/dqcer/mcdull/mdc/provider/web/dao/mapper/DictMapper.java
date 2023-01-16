@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.mdc.provider.web.dao.mapper;
+package io.gitee.dqcer.mdc.provider.web.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dqcer.mcdull.mdc.provider.model.entity.DictDO;
+import io.gitee.dqcer.mdc.provider.model.entity.DictDO;
 
 /**
  * 码表 mapper

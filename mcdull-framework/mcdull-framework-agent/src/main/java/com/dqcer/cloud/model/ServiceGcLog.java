@@ -1,4 +1,4 @@
-package com.dqcer.cloud.model;
+package io.github.cloud.model;
 
 import java.io.Serializable;
 

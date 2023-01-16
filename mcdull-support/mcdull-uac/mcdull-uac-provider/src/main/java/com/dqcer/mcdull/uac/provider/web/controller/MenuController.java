@@ -1,14 +1,14 @@
-package com.dqcer.mcdull.uac.provider.web.controller;
+package io.gitee.dqcer.uac.provider.web.controller;
 
-import com.dqcer.mcdull.framework.base.annotation.Transform;
-import com.dqcer.mcdull.framework.base.validator.ValidGroup;
-import com.dqcer.mcdull.framework.base.vo.PagedVO;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
-import com.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
-import com.dqcer.mcdull.uac.provider.model.vo.RoleVO;
-import com.dqcer.mcdull.uac.provider.model.vo.UserVO;
-import com.dqcer.mcdull.uac.provider.web.service.RoleService;
+import io.gitee.dqcer.framework.base.annotation.Transform;
+import io.gitee.dqcer.framework.base.validator.ValidGroup;
+import io.gitee.dqcer.framework.base.vo.PagedVO;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.uac.provider.model.dto.RoleLiteDTO;
+import io.gitee.dqcer.uac.provider.model.dto.UserLiteDTO;
+import io.gitee.dqcer.uac.provider.model.vo.RoleVO;
+import io.gitee.dqcer.uac.provider.model.vo.UserVO;
+import io.gitee.dqcer.uac.provider.web.service.RoleService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

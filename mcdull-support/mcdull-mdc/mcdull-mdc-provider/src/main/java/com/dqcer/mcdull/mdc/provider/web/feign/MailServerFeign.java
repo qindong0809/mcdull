@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.mdc.provider.web.feign;
+package io.gitee.dqcer.mdc.provider.web.feign;
 
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.mdc.client.api.MailServiceApi;
-import com.dqcer.mcdull.mdc.client.dto.MailClientDTO;
-import com.dqcer.mcdull.mdc.provider.web.service.MailService;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.mdc.client.api.MailServiceApi;
+import io.gitee.dqcer.mdc.client.dto.MailClientDTO;
+import io.gitee.dqcer.mdc.provider.web.service.MailService;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;

@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.uac.provider.web.dao.repository;
+package io.gitee.dqcer.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.dqcer.mcdull.uac.provider.model.entity.UserLoginDO;
+import io.gitee.dqcer.uac.provider.model.entity.UserLoginDO;
 
 /**
  * 用户登录信息 数据库操作封装接口层

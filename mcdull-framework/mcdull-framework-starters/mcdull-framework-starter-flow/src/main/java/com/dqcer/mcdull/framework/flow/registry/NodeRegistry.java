@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.framework.flow.registry;
+package io.gitee.dqcer.framework.flow.registry;
 
-import com.dqcer.mcdull.framework.flow.node.ProcessHandler;
+import io.gitee.dqcer.framework.flow.node.ProcessHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

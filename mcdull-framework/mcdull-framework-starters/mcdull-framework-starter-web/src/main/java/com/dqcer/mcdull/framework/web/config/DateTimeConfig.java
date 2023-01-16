@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.web.config;
+package io.gitee.dqcer.framework.web.config;
 
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;

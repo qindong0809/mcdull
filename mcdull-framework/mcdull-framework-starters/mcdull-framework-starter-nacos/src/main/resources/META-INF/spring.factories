@@ -1,6 +1,6 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.dqcer.mcdull.soagov.PrometheusConfiguration,\
-  com.dqcer.mcdull.soagov.LogLevelListener,\
-  com.dqcer.mcdull.soagov.ShutdownDiscovery
+  io.gitee.dqcer.soagov.PrometheusConfiguration,\
+  io.gitee.dqcer.soagov.LogLevelListener,\
+  io.gitee.dqcer.soagov.ShutdownDiscovery
 
 

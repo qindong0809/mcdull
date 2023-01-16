@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.config.properties;
+package io.gitee.dqcer.framework.config.properties;
 
 import java.util.ArrayList;
 import java.util.List;

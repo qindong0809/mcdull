@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.framework.mysql.config;
+package io.gitee.dqcer.framework.mysql.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.dqcer.mcdull.framework.base.enums.DelFlayEnum;
-import com.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.framework.base.enums.DelFlayEnum;
+import io.gitee.dqcer.framework.base.storage.UserContextHolder;
 import org.apache.ibatis.reflection.MetaObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

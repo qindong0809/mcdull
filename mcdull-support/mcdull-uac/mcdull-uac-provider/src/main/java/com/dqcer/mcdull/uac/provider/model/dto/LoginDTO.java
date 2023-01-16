@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.uac.provider.model.dto;
+package io.gitee.dqcer.uac.provider.model.dto;
 
-import com.dqcer.mcdull.framework.base.dto.DTO;
+import io.gitee.dqcer.framework.base.dto.DTO;
 
 /**
  * 登录 dto

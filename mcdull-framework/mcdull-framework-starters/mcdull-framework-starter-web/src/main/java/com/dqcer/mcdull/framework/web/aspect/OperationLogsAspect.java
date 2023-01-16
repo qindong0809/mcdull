@@ -1,11 +1,11 @@
-package com.dqcer.mcdull.framework.web.aspect;
+package io.gitee.dqcer.framework.web.aspect;
 
-import com.dqcer.mcdull.framework.base.annotation.UnAuthorize;
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import com.dqcer.mcdull.framework.base.util.JsonUtil;
-import com.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
-import com.dqcer.mcdull.framework.web.util.IpUtil;
+import io.gitee.dqcer.framework.base.annotation.UnAuthorize;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.framework.base.util.JsonUtil;
+import io.gitee.dqcer.framework.web.feign.model.LogOperationDTO;
+import io.gitee.dqcer.framework.web.util.IpUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -45,7 +45,7 @@ public class OperationLogsAspect {
     /**
      * 操作日志拦截 ..* 表示任意包或子包
      */
-    @Pointcut("execution(* com.dqcer..*.controller..*.*(..))")
+    @Pointcut("execution(* io.github..*.controller..*.*(..))")
     public void operationLogsCut() {
         // 切点
     }

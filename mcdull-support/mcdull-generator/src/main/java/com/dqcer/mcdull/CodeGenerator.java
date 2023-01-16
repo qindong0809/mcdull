@@ -1,4 +1,4 @@
-package com.dqcer.mcdull;
+package io.gitee.dqcer;
 
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -21,14 +21,14 @@ import java.util.*;
  */
 public class CodeGenerator {
 
-    public static final String COM = "com.dqcer.";
+    public static final String COM = "io.github.";
 
     public static final String SRC = "/src/main/java";
 
     public static final String USER_DIR = System.getProperty("user.dir");
 
-    public static final String API_PROJECT = "com.dqcer.%s.model.%s";
-    public static final String WBB_PROJECT = "com.dqcer.%s.web.%s.%s";
+    public static final String API_PROJECT = "io.github.%s.model.%s";
+    public static final String WBB_PROJECT = "io.github.%s.web.%s.%s";
 
     public static final String S_ = ".%s";
 
@@ -216,9 +216,9 @@ public class CodeGenerator {
                 map.put("apiVo", voPackage);
                 map.put("apiConvert", convertPackage);
                 map.put("modelName", modelName);
-                map.put("baseController", "com.dqcer.common.core.supert.BaseController");
-                map.put("result", "com.dqcer.framework.base.wrapper.Result");
-                map.put("baseEntity", "com.dqcer.framework.base.entity.BaseDO");
+                map.put("baseController", "io.github.common.core.supert.BaseController");
+                map.put("result", "io.github.framework.base.wrapper.Result");
+                map.put("baseEntity", "io.github.framework.base.entity.BaseDO");
                 map.put("repository",repositoryPackage);
                 map.put("repositoryImpl", repositoryImplPackage);
                 map.put("controller", className + controllerSuffix);

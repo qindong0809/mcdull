@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.mdc.provider.web.service;
+package io.gitee.dqcer.mdc.provider.web.service;
 
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.mdc.client.dto.MailClientDTO;
-import com.dqcer.mcdull.mdc.provider.config.mail.MailTemplate;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.mdc.client.dto.MailClientDTO;
+import io.gitee.dqcer.mdc.provider.config.mail.MailTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

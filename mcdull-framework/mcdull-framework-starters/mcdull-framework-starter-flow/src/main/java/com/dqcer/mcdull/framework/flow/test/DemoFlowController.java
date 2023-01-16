@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.framework.flow.test;
+package io.gitee.dqcer.framework.flow.test;
 
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.framework.flow.ProcessFlow;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.framework.flow.ProcessFlow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

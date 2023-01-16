@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.framework.flow.factory;
+package io.gitee.dqcer.framework.flow.factory;
 
-import com.dqcer.mcdull.framework.base.util.ObjUtil;
-import com.dqcer.mcdull.framework.flow.properties.ProcessBean;
-import com.dqcer.mcdull.framework.flow.node.ProcessHandler;
+import io.gitee.dqcer.framework.base.util.ObjUtil;
+import io.gitee.dqcer.framework.flow.properties.ProcessBean;
+import io.gitee.dqcer.framework.flow.node.ProcessHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

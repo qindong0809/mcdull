@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.admin.web.dao.mapper.sys;
+package io.gitee.dqcer.admin.web.dao.mapper.sys;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dqcer.mcdull.admin.model.entity.sys.MenuDO;
+import io.gitee.dqcer.admin.model.entity.sys.MenuDO;
 
 /**
  * 菜单 mapper

@@ -1,12 +1,12 @@
-package com.dqcer.cloud;
+package io.github.cloud;
 
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.dqcer.cloud.model.ServiceGcLog;
-import com.dqcer.cloud.model.ServiceLog;
+import io.github.cloud.model.ServiceGcLog;
+import io.github.cloud.model.ServiceLog;
 import net.bytebuddy.implementation.bind.annotation.AllArguments;
 import net.bytebuddy.implementation.bind.annotation.Origin;
 import net.bytebuddy.implementation.bind.annotation.RuntimeType;

@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.admin.framework.auth;
+package io.gitee.dqcer.admin.framework.auth;
 
-import com.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import com.dqcer.mcdull.framework.web.interceptor.BaseInfoInterceptor;
+import io.gitee.dqcer.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.framework.web.interceptor.BaseInfoInterceptor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.uac.provider.web.manager.mdc;
+package io.gitee.dqcer.uac.provider.web.manager.mdc;
 
-import com.dqcer.mcdull.uac.provider.model.vo.RemoteDictVO;
+import io.gitee.dqcer.uac.provider.model.vo.RemoteDictVO;
 
 /**
  * 码表通用逻辑接口层

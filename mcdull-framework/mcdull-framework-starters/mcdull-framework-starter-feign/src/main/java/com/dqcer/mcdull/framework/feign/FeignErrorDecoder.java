@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.feign;
+package io.gitee.dqcer.framework.feign;
 
 import feign.FeignException;
 import feign.Request;

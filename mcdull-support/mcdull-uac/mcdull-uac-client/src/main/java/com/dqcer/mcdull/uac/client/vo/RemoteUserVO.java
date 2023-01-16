@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.uac.client.vo;
+package io.gitee.dqcer.uac.client.vo;
 
-import com.dqcer.mcdull.framework.base.annotation.Transform;
-import com.dqcer.mcdull.framework.base.vo.BaseVO;
-import com.dqcer.mcdull.framework.base.vo.VO;
-import com.dqcer.mcdull.framework.base.enums.StatusEnum;
+import io.gitee.dqcer.framework.base.annotation.Transform;
+import io.gitee.dqcer.framework.base.vo.BaseVO;
+import io.gitee.dqcer.framework.base.vo.VO;
+import io.gitee.dqcer.framework.base.enums.StatusEnum;
 
 import java.time.LocalTime;
 import java.util.Date;

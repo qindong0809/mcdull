@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.uac;
+package io.gitee.dqcer.uac;
 
-import com.dqcer.mcdull.framework.base.dto.DTO;
-import com.dqcer.mcdull.framework.base.vo.VO;
-import com.dqcer.mcdull.framework.enforcer.ArchitectureEnforcer;
+import io.gitee.dqcer.framework.base.dto.DTO;
+import io.gitee.dqcer.framework.base.vo.VO;
+import io.gitee.dqcer.framework.enforcer.ArchitectureEnforcer;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
@@ -24,7 +24,7 @@ public class ArchitectureTest {
                 .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_JARS)
                 .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
                 .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_PACKAGE_INFOS)
-                .importPackages("com.dqcer");
+                .importPackages("io.github");
     }
 
     @Test
@@ -39,7 +39,7 @@ public class ArchitectureTest {
      */
     @Test
     public void dto_implement_class_name_rule() {
-        JavaClasses importedClasses = new ClassFileImporter().importPackages("com.dqcer");
+        JavaClasses importedClasses = new ClassFileImporter().importPackages("io.github");
         ArchRule myRule = classes().that().implement(DTO.class)
                 .should().haveSimpleNameEndingWith("DTO");
         myRule.check(importedClasses);

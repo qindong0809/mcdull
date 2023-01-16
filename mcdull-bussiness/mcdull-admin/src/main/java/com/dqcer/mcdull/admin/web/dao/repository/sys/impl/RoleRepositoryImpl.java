@@ -1,21 +1,21 @@
-package com.dqcer.mcdull.admin.web.dao.repository.sys.impl;
+package io.gitee.dqcer.admin.web.dao.repository.sys.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.entity.BaseDO;
-import com.dqcer.mcdull.framework.base.enums.DelFlayEnum;
-import com.dqcer.mcdull.framework.base.enums.StatusEnum;
-import com.dqcer.mcdull.framework.base.exception.BusinessException;
-import com.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import com.dqcer.mcdull.framework.base.util.StrUtil;
-import com.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import com.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
-import com.dqcer.mcdull.admin.model.entity.sys.RoleDO;
-import com.dqcer.mcdull.admin.web.dao.mapper.sys.RoleMapper;
-import com.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.entity.BaseDO;
+import io.gitee.dqcer.framework.base.enums.DelFlayEnum;
+import io.gitee.dqcer.framework.base.enums.StatusEnum;
+import io.gitee.dqcer.framework.base.exception.BusinessException;
+import io.gitee.dqcer.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.framework.base.util.StrUtil;
+import io.gitee.dqcer.framework.base.wrapper.CodeEnum;
+import io.gitee.dqcer.admin.model.dto.sys.RoleLiteDTO;
+import io.gitee.dqcer.admin.model.entity.sys.RoleDO;
+import io.gitee.dqcer.admin.web.dao.mapper.sys.RoleMapper;
+import io.gitee.dqcer.admin.web.dao.repository.sys.IRoleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

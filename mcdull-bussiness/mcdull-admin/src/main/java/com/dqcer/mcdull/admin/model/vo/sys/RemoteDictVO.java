@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.admin.model.vo.sys;
+package io.gitee.dqcer.admin.model.vo.sys;
 
-import com.dqcer.mcdull.framework.base.vo.VO;
+import io.gitee.dqcer.framework.base.vo.VO;
 
 /**
  * 码表 VO

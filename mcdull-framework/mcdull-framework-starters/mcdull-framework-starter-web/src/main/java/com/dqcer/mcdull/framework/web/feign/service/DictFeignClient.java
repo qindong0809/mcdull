@@ -1,10 +1,10 @@
-package com.dqcer.mcdull.framework.web.feign.service;
+package io.gitee.dqcer.framework.web.feign.service;
 
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.validator.ValidGroup;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.framework.web.feign.model.DictLiteDTO;
-import com.dqcer.mcdull.framework.web.feign.model.DictVO;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.validator.ValidGroup;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.framework.web.feign.model.DictLiteDTO;
+import io.gitee.dqcer.framework.web.feign.model.DictVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.validation.annotation.Validated;

@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.redis.annotation;
+package io.gitee.dqcer.framework.redis.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

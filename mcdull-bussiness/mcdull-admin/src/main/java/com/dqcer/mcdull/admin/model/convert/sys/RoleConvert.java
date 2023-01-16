@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.admin.model.convert.sys;
+package io.gitee.dqcer.admin.model.convert.sys;
 
 
-import com.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
-import com.dqcer.mcdull.admin.model.entity.sys.RoleDO;
-import com.dqcer.mcdull.admin.model.vo.sys.RoleVO;
+import io.gitee.dqcer.admin.model.dto.sys.RoleLiteDTO;
+import io.gitee.dqcer.admin.model.entity.sys.RoleDO;
+import io.gitee.dqcer.admin.model.vo.sys.RoleVO;
 
 /**
  * 角色 对象转换工具类

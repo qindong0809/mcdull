@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.mdc.provider.web.feign;
+package io.gitee.dqcer.mdc.provider.web.feign;
 
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.mdc.provider.model.dto.SysLogFeignDTO;
-import com.dqcer.mcdull.mdc.provider.web.service.LogService;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.mdc.provider.model.dto.SysLogFeignDTO;
+import io.gitee.dqcer.mdc.provider.web.service.LogService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

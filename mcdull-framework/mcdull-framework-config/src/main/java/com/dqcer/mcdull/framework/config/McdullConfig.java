@@ -8,10 +8,10 @@
  * 博客地址: http://blog.paascloud.net
  * 项目官网: http://paascloud.net
  */
-package com.dqcer.mcdull.framework.config;
+package io.gitee.dqcer.framework.config;
 
 
-import com.dqcer.mcdull.framework.config.properties.McdullProperties;
+import io.gitee.dqcer.framework.config.properties.McdullProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 

@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.uac.provider.config;
+package io.gitee.dqcer.uac.provider.config;
 
-import com.dqcer.mcdull.framework.mysql.EnableDynamicDataSource;
+import io.gitee.dqcer.framework.mysql.EnableDynamicDataSource;
 import org.mybatis.spring.annotation.MapperScan;
 
 import java.lang.annotation.Documented;
@@ -23,5 +23,5 @@ import java.lang.annotation.Target;
 public @interface EnableMapperScan {
 
     @SuppressWarnings("unused")
-    String[] basePackages() default {"com.dqcer.mcdull.uac.provider.web.dao.mapper"};
+    String[] basePackages() default {"io.gitee.dqcer.uac.provider.web.dao.mapper"};
 }

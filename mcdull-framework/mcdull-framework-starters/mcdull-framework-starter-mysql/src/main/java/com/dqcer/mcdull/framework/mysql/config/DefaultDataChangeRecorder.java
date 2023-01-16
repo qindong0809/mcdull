@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.mysql.config;
+package io.gitee.dqcer.framework.mysql.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.admin.model.convert.sys;
+package io.gitee.dqcer.admin.model.convert.sys;
 
-import com.dqcer.mcdull.admin.model.vo.sys.LogVO;
-import com.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
-import com.dqcer.mcdull.admin.model.entity.sys.LogDO;
-import com.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
+import io.gitee.dqcer.admin.model.vo.sys.LogVO;
+import io.gitee.dqcer.admin.model.dto.sys.LogLiteDTO;
+import io.gitee.dqcer.admin.model.entity.sys.LogDO;
+import io.gitee.dqcer.framework.web.feign.model.LogOperationDTO;
 
 /**
 * 日志记录 对象转换工具类

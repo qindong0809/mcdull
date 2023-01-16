@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.admin.model.convert.sys;
+package io.gitee.dqcer.admin.model.convert.sys;
 
 
-import com.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
-import com.dqcer.mcdull.admin.model.entity.sys.UserDO;
-import com.dqcer.mcdull.admin.model.vo.sys.UserVO;
+import io.gitee.dqcer.admin.model.dto.sys.UserLiteDTO;
+import io.gitee.dqcer.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.admin.model.vo.sys.UserVO;
 
 /**
  * 用户 对象转换工具类

@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.uac.provider.config;
+package io.gitee.dqcer.uac.provider.config;
 
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 public @interface EnableUacFeignClients {
 
     @SuppressWarnings("unused")
-    String[] basePackages() default {"com.dqcer.mcdull.*.client.service", "com.dqcer.mcdull.framework.web.feign"};
+    String[] basePackages() default {"io.gitee.dqcer.*.client.service", "io.gitee.dqcer.framework.web.feign"};
 
 
 }

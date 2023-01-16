@@ -1,12 +1,12 @@
-package com.dqcer.mcdull.uac.provider.web.feign;
+package io.gitee.dqcer.uac.provider.web.feign;
 
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import com.dqcer.mcdull.uac.client.api.UserServiceApi;
-import com.dqcer.mcdull.uac.client.vo.RemoteUserVO;
-import com.dqcer.mcdull.uac.provider.web.service.UserService;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.uac.client.api.UserServiceApi;
+import io.gitee.dqcer.uac.client.vo.RemoteUserVO;
+import io.gitee.dqcer.uac.provider.web.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 

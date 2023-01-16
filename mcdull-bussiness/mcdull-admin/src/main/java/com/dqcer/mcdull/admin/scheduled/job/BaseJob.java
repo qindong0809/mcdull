@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.admin.scheduled.job;
+package io.gitee.dqcer.admin.scheduled.job;
 
 
 /**

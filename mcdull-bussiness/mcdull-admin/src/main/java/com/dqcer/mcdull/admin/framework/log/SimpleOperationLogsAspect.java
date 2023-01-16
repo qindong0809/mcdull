@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.admin.framework.log;
+package io.gitee.dqcer.admin.framework.log;
 
-import com.dqcer.mcdull.admin.config.OperationLog;
-import com.dqcer.mcdull.admin.model.entity.sys.LogDO;
-import com.dqcer.mcdull.framework.web.aspect.OperationLogsAspect;
-import com.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
+import io.gitee.dqcer.admin.config.OperationLog;
+import io.gitee.dqcer.admin.model.entity.sys.LogDO;
+import io.gitee.dqcer.framework.web.aspect.OperationLogsAspect;
+import io.gitee.dqcer.framework.web.feign.model.LogOperationDTO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.admin.web.dao.mapper.sys;
+package io.gitee.dqcer.admin.web.dao.mapper.sys;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dqcer.mcdull.admin.model.entity.sys.UserLoginDO;
+import io.gitee.dqcer.admin.model.entity.sys.UserLoginDO;
 
 /**
  * 用户登录信息 mapper

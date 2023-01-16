@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.framework.mysql.config;
+package io.gitee.dqcer.framework.mysql.config;
 
-import com.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
+import io.gitee.dqcer.framework.mysql.properties.DataSourceProperties;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;

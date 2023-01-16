@@ -1,9 +1,9 @@
 package ${package.Controller};
 
-import annotation.com.dqcer.mcdull.framework.base.Authorized;
-import vo.com.dqcer.mcdull.framework.base.PagedVO;
-import validator.com.dqcer.mcdull.framework.base.ValidGroup;
-import dto.com.dqcer.mcdull.framework.base.StatusDTO;
+import annotation.io.gitee.dqcer.framework.base.Authorized;
+import vo.io.gitee.dqcer.framework.base.PagedVO;
+import validator.io.gitee.dqcer.framework.base.ValidGroup;
+import dto.io.gitee.dqcer.framework.base.StatusDTO;
 import ${package.Service}.${cfg.serviceName};
 import ${cfg.apiVo}.${cfg.voName};
 import ${cfg.apiDto}.${cfg.dtoName};

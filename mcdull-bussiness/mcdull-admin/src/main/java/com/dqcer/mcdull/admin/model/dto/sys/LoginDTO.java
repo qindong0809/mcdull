@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.admin.model.dto.sys;
+package io.gitee.dqcer.admin.model.dto.sys;
 
-import com.dqcer.mcdull.framework.base.dto.DTO;
+import io.gitee.dqcer.framework.base.dto.DTO;
 
 import javax.validation.constraints.NotEmpty;
 

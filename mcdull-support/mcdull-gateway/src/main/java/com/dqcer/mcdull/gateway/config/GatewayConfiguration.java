@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.gateway.config;
+package io.gitee.dqcer.gateway.config;
 
 
-import com.dqcer.mcdull.gateway.handler.ExceptionHandler;
-import com.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
+import io.gitee.dqcer.gateway.handler.ExceptionHandler;
+import io.gitee.dqcer.gateway.properties.McdullGatewayProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

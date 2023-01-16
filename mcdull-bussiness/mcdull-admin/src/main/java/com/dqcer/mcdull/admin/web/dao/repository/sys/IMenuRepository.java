@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.admin.web.dao.repository.sys;
+package io.gitee.dqcer.admin.web.dao.repository.sys;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.dqcer.mcdull.admin.model.dto.sys.MenuLiteDTO;
-import com.dqcer.mcdull.admin.model.entity.sys.MenuDO;
+import io.gitee.dqcer.admin.model.dto.sys.MenuLiteDTO;
+import io.gitee.dqcer.admin.model.entity.sys.MenuDO;
 
 /**
  * 菜单 数据库操作封装接口层

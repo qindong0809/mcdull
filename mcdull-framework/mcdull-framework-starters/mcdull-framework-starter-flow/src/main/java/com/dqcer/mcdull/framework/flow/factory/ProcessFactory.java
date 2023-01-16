@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.framework.flow.factory;
+package io.gitee.dqcer.framework.flow.factory;
 
-import com.dqcer.mcdull.framework.flow.node.ProcessHandler;
-import com.dqcer.mcdull.framework.flow.properties.ProcessBean;
+import io.gitee.dqcer.framework.flow.node.ProcessHandler;
+import io.gitee.dqcer.framework.flow.properties.ProcessBean;
 
 import java.util.List;
 

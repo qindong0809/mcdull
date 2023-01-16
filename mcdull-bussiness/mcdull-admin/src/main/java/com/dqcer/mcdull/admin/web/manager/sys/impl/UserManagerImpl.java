@@ -1,14 +1,14 @@
-package com.dqcer.mcdull.admin.web.manager.sys.impl;
+package io.gitee.dqcer.admin.web.manager.sys.impl;
 
-import com.dqcer.mcdull.framework.base.vo.BaseVO;
-import com.dqcer.mcdull.admin.model.convert.sys.UserConvert;
-import com.dqcer.mcdull.admin.model.entity.sys.RoleDO;
-import com.dqcer.mcdull.admin.model.entity.sys.UserDO;
-import com.dqcer.mcdull.admin.model.vo.sys.UserVO;
-import com.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
-import com.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
-import com.dqcer.mcdull.admin.web.dao.repository.sys.IUserRoleRepository;
-import com.dqcer.mcdull.admin.web.manager.sys.IUserManager;
+import io.gitee.dqcer.framework.base.vo.BaseVO;
+import io.gitee.dqcer.admin.model.convert.sys.UserConvert;
+import io.gitee.dqcer.admin.model.entity.sys.RoleDO;
+import io.gitee.dqcer.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.admin.model.vo.sys.UserVO;
+import io.gitee.dqcer.admin.web.dao.repository.sys.IRoleRepository;
+import io.gitee.dqcer.admin.web.dao.repository.sys.IUserRepository;
+import io.gitee.dqcer.admin.web.dao.repository.sys.IUserRoleRepository;
+import io.gitee.dqcer.admin.web.manager.sys.IUserManager;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

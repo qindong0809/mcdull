@@ -1,14 +1,14 @@
-package com.dqcer.mcdull.admin.web.dao.repository.sys.impl;
+package io.gitee.dqcer.admin.web.dao.repository.sys.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dqcer.mcdull.framework.base.util.StrUtil;
-import com.dqcer.mcdull.admin.model.dto.sys.DictLiteDTO;
-import com.dqcer.mcdull.admin.model.entity.sys.DictDO;
-import com.dqcer.mcdull.admin.web.dao.mapper.sys.DictMapper;
-import com.dqcer.mcdull.admin.web.dao.repository.sys.IDictRepository;
+import io.gitee.dqcer.framework.base.util.StrUtil;
+import io.gitee.dqcer.admin.model.dto.sys.DictLiteDTO;
+import io.gitee.dqcer.admin.model.entity.sys.DictDO;
+import io.gitee.dqcer.admin.web.dao.mapper.sys.DictMapper;
+import io.gitee.dqcer.admin.web.dao.repository.sys.IDictRepository;
 import org.springframework.stereotype.Service;
 
 /**

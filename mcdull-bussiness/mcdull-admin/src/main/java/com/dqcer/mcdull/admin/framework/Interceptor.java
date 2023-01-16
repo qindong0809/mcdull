@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.admin.framework;
+package io.gitee.dqcer.admin.framework;
 
 
-import com.dqcer.mcdull.admin.framework.auth.SimpleSecurityInterceptor;
-import com.dqcer.mcdull.framework.mysql.interceptor.DynamicDatasourceInterceptor;
+import io.gitee.dqcer.admin.framework.auth.SimpleSecurityInterceptor;
+import io.gitee.dqcer.framework.mysql.interceptor.DynamicDatasourceInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;

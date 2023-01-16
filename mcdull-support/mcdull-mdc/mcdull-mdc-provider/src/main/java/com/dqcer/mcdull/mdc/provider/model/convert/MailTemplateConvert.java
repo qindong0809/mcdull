@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.mdc.provider.model.convert;
+package io.gitee.dqcer.mdc.provider.model.convert;
 
-import com.dqcer.mcdull.mdc.provider.model.entity.SysMailTemplateDO;
-import com.dqcer.mcdull.mdc.provider.model.vo.MailTemplateBaseVO;
-import com.dqcer.mcdull.mdc.provider.model.vo.MailTemplateVO;
+import io.gitee.dqcer.mdc.provider.model.entity.SysMailTemplateDO;
+import io.gitee.dqcer.mdc.provider.model.vo.MailTemplateBaseVO;
+import io.gitee.dqcer.mdc.provider.model.vo.MailTemplateVO;
 
 /**
  * 邮件模板转换

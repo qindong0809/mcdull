@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.mdc.provider.model.dto;
+package io.gitee.dqcer.mdc.provider.model.dto;
 
-import com.dqcer.mcdull.mdc.provider.model.entity.LogDO;
+import io.gitee.dqcer.mdc.provider.model.entity.LogDO;
 
 /**
  * 系统日志 feign dto

@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.mysql.properties;
+package io.gitee.dqcer.framework.mysql.properties;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

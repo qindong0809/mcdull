@@ -1,11 +1,11 @@
-package com.dqcer.mcdull.admin.web.dao.repository.sys.impl;
+package io.gitee.dqcer.admin.web.dao.repository.sys.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import com.dqcer.mcdull.admin.model.entity.sys.UserLoginDO;
-import com.dqcer.mcdull.admin.web.dao.mapper.sys.UserLoginMapper;
-import com.dqcer.mcdull.admin.web.dao.repository.sys.IUserLoginRepository;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.exception.DatabaseRowException;
+import io.gitee.dqcer.admin.model.entity.sys.UserLoginDO;
+import io.gitee.dqcer.admin.web.dao.mapper.sys.UserLoginMapper;
+import io.gitee.dqcer.admin.web.dao.repository.sys.IUserLoginRepository;
 import org.springframework.stereotype.Service;
 
 /**

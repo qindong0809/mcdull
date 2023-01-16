@@ -8,7 +8,7 @@
 ```properties
 root=warn
 mybatis-plus=warn
-com.dqcer=info
+io.github=info
 com.zaxxer.hikari=warn
 com.alibaba.nacos=error
 

@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.framework.redis.config;
+package io.gitee.dqcer.framework.redis.config;
 
-import com.dqcer.mcdull.framework.redis.annotation.ExpireRedisCacheWriter;
-import com.dqcer.mcdull.framework.redis.aspect.CacheExpireAspect;
-import com.dqcer.mcdull.framework.redis.aspect.RedisLockAspect;
-import com.dqcer.mcdull.framework.redis.operation.CacheChannel;
+import io.gitee.dqcer.framework.redis.annotation.ExpireRedisCacheWriter;
+import io.gitee.dqcer.framework.redis.aspect.CacheExpireAspect;
+import io.gitee.dqcer.framework.redis.aspect.RedisLockAspect;
+import io.gitee.dqcer.framework.redis.operation.CacheChannel;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;

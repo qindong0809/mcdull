@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.admin.framework.transformer;
+package io.gitee.dqcer.admin.framework.transformer;
 
-import com.dqcer.mcdull.framework.base.vo.KeyValueVO;
-import com.dqcer.mcdull.framework.web.transform.AbstractTransformer;
+import io.gitee.dqcer.framework.base.vo.KeyValueVO;
+import io.gitee.dqcer.framework.web.transform.AbstractTransformer;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

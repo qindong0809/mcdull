@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.admin.web.service.sys;
+package io.gitee.dqcer.admin.web.service.sys;
 
-import com.dqcer.mcdull.framework.base.vo.PagedVO;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
-import com.dqcer.mcdull.admin.model.vo.sys.LogVO;
+import io.gitee.dqcer.framework.base.vo.PagedVO;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.admin.model.dto.sys.LogLiteDTO;
+import io.gitee.dqcer.admin.model.vo.sys.LogVO;
 
 /**
  * log 服务

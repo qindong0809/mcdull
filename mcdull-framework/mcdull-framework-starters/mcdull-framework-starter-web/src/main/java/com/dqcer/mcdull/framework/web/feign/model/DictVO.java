@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.framework.web.feign.model;
+package io.gitee.dqcer.framework.web.feign.model;
 
-import com.dqcer.mcdull.framework.base.vo.VO;
+import io.gitee.dqcer.framework.base.vo.VO;
 
 /**
  * sys dict

@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.mdc.provider.config.mail;
+package io.gitee.dqcer.mdc.provider.config.mail;
 
 import javax.mail.MessagingException;
 

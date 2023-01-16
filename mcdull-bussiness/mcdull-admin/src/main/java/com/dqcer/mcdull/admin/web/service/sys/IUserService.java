@@ -1,10 +1,10 @@
-package com.dqcer.mcdull.admin.web.service.sys;
+package io.gitee.dqcer.admin.web.service.sys;
 
-import com.dqcer.mcdull.framework.base.dto.StatusDTO;
-import com.dqcer.mcdull.framework.base.vo.PagedVO;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
-import com.dqcer.mcdull.admin.model.vo.sys.UserVO;
+import io.gitee.dqcer.framework.base.dto.StatusDTO;
+import io.gitee.dqcer.framework.base.vo.PagedVO;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.admin.model.dto.sys.UserLiteDTO;
+import io.gitee.dqcer.admin.model.vo.sys.UserVO;
 
 /**
  * user 服务

@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.admin.web.controller.sso;
+package io.gitee.dqcer.admin.web.controller.sso;
 
-import com.dqcer.mcdull.framework.base.annotation.UnAuthorize;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.admin.model.dto.sys.LoginDTO;
-import com.dqcer.mcdull.admin.web.service.sso.IAuthService;
+import io.gitee.dqcer.framework.base.annotation.UnAuthorize;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.admin.model.dto.sys.LoginDTO;
+import io.gitee.dqcer.admin.web.service.sso.IAuthService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.framework.enforcer;
+package io.gitee.dqcer.framework.enforcer;
 
-import com.dqcer.mcdull.framework.base.dto.DTO;
-import com.dqcer.mcdull.framework.base.entity.DO;
-import com.dqcer.mcdull.framework.base.vo.VO;
+import io.gitee.dqcer.framework.base.dto.DTO;
+import io.gitee.dqcer.framework.base.entity.DO;
+import io.gitee.dqcer.framework.base.vo.VO;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.library.GeneralCodingRules;
 

@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.mdc.provider.model.vo;
+package io.gitee.dqcer.mdc.provider.model.vo;
 
-import com.dqcer.mcdull.framework.base.vo.VO;
+import io.gitee.dqcer.framework.base.vo.VO;
 
 
 /**

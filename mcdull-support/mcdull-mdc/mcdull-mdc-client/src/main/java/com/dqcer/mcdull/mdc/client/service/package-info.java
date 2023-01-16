@@ -4,4 +4,4 @@
  * @author dqcer
  * @version 15:35 2022/10/26
  */
-package com.dqcer.mcdull.mdc.client.service;
+package io.gitee.dqcer.mdc.client.service;

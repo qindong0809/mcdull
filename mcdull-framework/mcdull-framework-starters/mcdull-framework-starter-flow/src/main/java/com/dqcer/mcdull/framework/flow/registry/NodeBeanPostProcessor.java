@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.framework.flow.registry;
+package io.gitee.dqcer.framework.flow.registry;
 
-import com.dqcer.mcdull.framework.base.util.ClassUtil;
-import com.dqcer.mcdull.framework.flow.node.ProcessHandler;
-import com.dqcer.mcdull.framework.flow.node.TreeNode;
+import io.gitee.dqcer.framework.base.util.ClassUtil;
+import io.gitee.dqcer.framework.flow.node.ProcessHandler;
+import io.gitee.dqcer.framework.flow.node.TreeNode;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;

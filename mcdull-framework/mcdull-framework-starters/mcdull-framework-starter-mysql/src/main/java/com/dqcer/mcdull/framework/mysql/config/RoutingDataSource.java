@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.framework.mysql.config;
+package io.gitee.dqcer.framework.mysql.config;
 
-import com.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
+import io.gitee.dqcer.framework.mysql.properties.DataSourceProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;

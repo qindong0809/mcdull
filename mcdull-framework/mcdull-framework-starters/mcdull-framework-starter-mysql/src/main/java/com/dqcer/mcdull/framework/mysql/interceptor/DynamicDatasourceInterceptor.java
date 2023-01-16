@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.framework.mysql.interceptor;
+package io.gitee.dqcer.framework.mysql.interceptor;
 
-import com.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
-import com.dqcer.mcdull.framework.mysql.config.DynamicContextHolder;
-import com.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
+import io.gitee.dqcer.framework.base.constants.HttpHeaderConstants;
+import io.gitee.dqcer.framework.mysql.config.DynamicContextHolder;
+import io.gitee.dqcer.framework.mysql.properties.DataSourceProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;

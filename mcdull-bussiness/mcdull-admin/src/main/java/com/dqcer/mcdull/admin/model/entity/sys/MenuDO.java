@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.admin.model.entity.sys;
+package io.gitee.dqcer.admin.model.entity.sys;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.dqcer.mcdull.framework.base.entity.BaseDO;
+import io.gitee.dqcer.framework.base.entity.BaseDO;
 
 /**
  * 系统角色实体

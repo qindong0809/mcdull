@@ -1,15 +1,15 @@
-package com.dqcer.mcdull.admin.web.service.sys.impl;
+package io.gitee.dqcer.admin.web.service.sys.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.enums.DelFlayEnum;
-import com.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import com.dqcer.mcdull.framework.base.vo.KeyValueVO;
-import com.dqcer.mcdull.admin.framework.transformer.IDictTransformerService;
-import com.dqcer.mcdull.admin.model.entity.sys.DictDO;
-import com.dqcer.mcdull.admin.web.dao.repository.sys.IDictRepository;
-import com.dqcer.mcdull.admin.web.service.sys.IDictService;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.enums.DelFlayEnum;
+import io.gitee.dqcer.framework.base.exception.DatabaseRowException;
+import io.gitee.dqcer.framework.base.vo.KeyValueVO;
+import io.gitee.dqcer.admin.framework.transformer.IDictTransformerService;
+import io.gitee.dqcer.admin.model.entity.sys.DictDO;
+import io.gitee.dqcer.admin.web.dao.repository.sys.IDictRepository;
+import io.gitee.dqcer.admin.web.service.sys.IDictService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

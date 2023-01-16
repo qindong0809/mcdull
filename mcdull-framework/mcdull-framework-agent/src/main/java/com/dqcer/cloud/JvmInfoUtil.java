@@ -1,7 +1,7 @@
-package com.dqcer.cloud;
+package io.github.cloud;
 
-import com.dqcer.cloud.model.ServiceGcLog;
-import com.dqcer.cloud.model.ServiceLog;
+import io.github.cloud.model.ServiceGcLog;
+import io.github.cloud.model.ServiceLog;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;

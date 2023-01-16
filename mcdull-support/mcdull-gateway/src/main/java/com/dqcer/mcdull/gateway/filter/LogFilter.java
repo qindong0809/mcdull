@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.gateway.filter;
+package io.gitee.dqcer.gateway.filter;
 
-import com.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
-import com.dqcer.mcdull.framework.base.util.RandomUtil;
-import com.dqcer.mcdull.gateway.utils.IpUtils;
+import io.gitee.dqcer.framework.base.constants.HttpHeaderConstants;
+import io.gitee.dqcer.framework.base.util.RandomUtil;
+import io.gitee.dqcer.gateway.utils.IpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;

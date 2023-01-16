@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.admin.framework.auth;
+package io.gitee.dqcer.admin.framework.auth;
 
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.framework.web.feign.model.UserPowerVO;
 
 import java.util.List;
 

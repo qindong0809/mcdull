@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.admin.scheduled;
+package io.gitee.dqcer.admin.scheduled;
 
-import com.dqcer.mcdull.framework.web.transform.SpringContextHolder;
+import io.gitee.dqcer.framework.web.transform.SpringContextHolder;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
@@ -27,7 +27,7 @@ public class ScheduledConfig implements SchedulingConfigurer {
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         try {
-            String className ="com.dqcer.mcdull.admin.scheduled.job.TestJob";
+            String className ="io.gitee.dqcer.admin.scheduled.job.TestJob";
             String cron = "0/5 * * * * ?";
             taskRegistrar(taskRegistrar, className, cron);
         } catch (Exception e) {

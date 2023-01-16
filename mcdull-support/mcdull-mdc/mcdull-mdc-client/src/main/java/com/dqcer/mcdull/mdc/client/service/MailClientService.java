@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.mdc.client.service;
+package io.gitee.dqcer.mdc.client.service;
 
-import com.dqcer.mcdull.mdc.client.api.MailServiceApi;
+import io.gitee.dqcer.mdc.client.api.MailServiceApi;
 import org.springframework.cloud.openfeign.FeignClient;
 
 /**

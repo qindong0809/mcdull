@@ -10,7 +10,7 @@
 
 ```xml
         <dependency>
-            <groupId>com.dqcer.mcdull</groupId>
+            <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-framework-enforcer</artifactId>
             <scope>test</scope>
         </dependency>
@@ -29,7 +29,7 @@
                 .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_JARS)
                 .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
                 .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_PACKAGE_INFOS)
-                .importPackages("com.dqcer");
+                .importPackages("io.github");
     }
 
     @Test

@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.framework.redis.operation;
+package io.gitee.dqcer.framework.redis.operation;
 
-import com.dqcer.mcdull.framework.redis.ICache;
+import io.gitee.dqcer.framework.redis.ICache;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.slf4j.Logger;

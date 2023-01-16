@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.framework.web.config;
+package io.gitee.dqcer.framework.web.config;
 
-import com.dqcer.mcdull.framework.web.aspect.TranslatorAspect;
-import com.dqcer.mcdull.framework.web.filter.HttpTraceLogFilter;
-import com.dqcer.mcdull.framework.web.transform.SpringContextHolder;
+import io.gitee.dqcer.framework.web.aspect.TranslatorAspect;
+import io.gitee.dqcer.framework.web.filter.HttpTraceLogFilter;
+import io.gitee.dqcer.framework.web.transform.SpringContextHolder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;

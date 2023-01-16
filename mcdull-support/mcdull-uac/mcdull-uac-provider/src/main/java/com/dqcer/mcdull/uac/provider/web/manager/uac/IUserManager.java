@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.uac.provider.web.manager.uac;
+package io.gitee.dqcer.uac.provider.web.manager.uac;
 
-import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
-import com.dqcer.mcdull.uac.provider.model.vo.UserVO;
+import io.gitee.dqcer.uac.provider.model.entity.UserDO;
+import io.gitee.dqcer.uac.provider.model.vo.UserVO;
 
 /**
  * 用户 通过逻辑定义

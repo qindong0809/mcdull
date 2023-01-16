@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.framework.feign;
+package io.gitee.dqcer.framework.feign;
 
 
-import com.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
+import io.gitee.dqcer.framework.base.constants.HttpHeaderConstants;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.slf4j.Logger;

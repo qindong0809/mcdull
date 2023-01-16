@@ -1,13 +1,13 @@
-package com.dqcer.mcdull.mdc.provider.web.dao.repository.impl;
+package io.gitee.dqcer.mdc.provider.web.dao.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dqcer.mcdull.mdc.provider.model.dto.LogLiteDTO;
-import com.dqcer.mcdull.mdc.provider.model.entity.LogDO;
-import com.dqcer.mcdull.mdc.provider.web.dao.mapper.LogMapper;
-import com.dqcer.mcdull.mdc.provider.web.dao.repository.ILogRepository;
+import io.gitee.dqcer.mdc.provider.model.dto.LogLiteDTO;
+import io.gitee.dqcer.mdc.provider.model.entity.LogDO;
+import io.gitee.dqcer.mdc.provider.web.dao.mapper.LogMapper;
+import io.gitee.dqcer.mdc.provider.web.dao.repository.ILogRepository;
 import org.springframework.stereotype.Service;
 
 /**

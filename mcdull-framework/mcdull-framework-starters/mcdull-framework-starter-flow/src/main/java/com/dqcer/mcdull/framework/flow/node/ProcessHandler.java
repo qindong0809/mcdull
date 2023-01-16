@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.framework.flow.node;
+package io.gitee.dqcer.framework.flow.node;
 
-import com.dqcer.mcdull.framework.base.util.StrUtil;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.framework.base.util.StrUtil;
+import io.gitee.dqcer.framework.base.wrapper.Result;
 import org.springframework.core.annotation.AnnotationUtils;
 
 /**

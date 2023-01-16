@@ -1,10 +1,10 @@
-package com.dqcer.mcdull.admin.web.dao.repository.sys;
+package io.gitee.dqcer.admin.web.dao.repository.sys;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
-import com.dqcer.mcdull.admin.model.entity.sys.LogDO;
-import com.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
+import io.gitee.dqcer.admin.model.entity.sys.LogDO;
+import io.gitee.dqcer.admin.model.dto.sys.LogLiteDTO;
 
 /**
 * 日志记录 数据库操作封装接口层

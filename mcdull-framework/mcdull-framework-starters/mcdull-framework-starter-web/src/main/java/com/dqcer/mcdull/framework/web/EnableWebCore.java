@@ -1,11 +1,11 @@
-package com.dqcer.mcdull.framework.web;
+package io.gitee.dqcer.framework.web;
 
 
-import com.dqcer.mcdull.framework.web.advice.BaseExceptionAdvice;
-import com.dqcer.mcdull.framework.web.advice.ExceptionAdvice;
-import com.dqcer.mcdull.framework.web.config.AutoConfiguration;
-import com.dqcer.mcdull.framework.web.config.DateTimeConfig;
-import com.dqcer.mcdull.framework.web.config.ThreadPoolConfig;
+import io.gitee.dqcer.framework.web.advice.BaseExceptionAdvice;
+import io.gitee.dqcer.framework.web.advice.ExceptionAdvice;
+import io.gitee.dqcer.framework.web.config.AutoConfiguration;
+import io.gitee.dqcer.framework.web.config.DateTimeConfig;
+import io.gitee.dqcer.framework.web.config.ThreadPoolConfig;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;

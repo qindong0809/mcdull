@@ -1,11 +1,11 @@
-package com.dqcer.mcdull.uac;
+package io.gitee.dqcer.uac;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.dqcer.mcdull.framework.base.entity.BaseDO;
-import com.dqcer.mcdull.uac.provider.UserDataContentApplication;
-import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
-import com.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
+import io.gitee.dqcer.framework.base.entity.BaseDO;
+import io.gitee.dqcer.uac.provider.UserDataContentApplication;
+import io.gitee.dqcer.uac.provider.model.entity.UserDO;
+import io.gitee.dqcer.uac.provider.web.dao.repository.IUserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.MyBatisSystemException;

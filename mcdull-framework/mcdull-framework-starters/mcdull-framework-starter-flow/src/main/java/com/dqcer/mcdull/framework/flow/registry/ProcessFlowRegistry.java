@@ -1,10 +1,10 @@
-package com.dqcer.mcdull.framework.flow.registry;
+package io.gitee.dqcer.framework.flow.registry;
 
-import com.dqcer.mcdull.framework.base.util.ObjUtil;
-import com.dqcer.mcdull.framework.flow.factory.ProcessDefinitionRegistry;
-import com.dqcer.mcdull.framework.flow.load.ProcessDefinitionReader;
-import com.dqcer.mcdull.framework.flow.properties.ProcessBean;
-import com.dqcer.mcdull.framework.flow.node.ProcessHandler;
+import io.gitee.dqcer.framework.base.util.ObjUtil;
+import io.gitee.dqcer.framework.flow.factory.ProcessDefinitionRegistry;
+import io.gitee.dqcer.framework.flow.load.ProcessDefinitionReader;
+import io.gitee.dqcer.framework.flow.properties.ProcessBean;
+import io.gitee.dqcer.framework.flow.node.ProcessHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

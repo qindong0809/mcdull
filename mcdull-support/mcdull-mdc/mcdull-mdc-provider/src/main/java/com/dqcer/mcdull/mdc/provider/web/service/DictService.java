@@ -1,19 +1,19 @@
-package com.dqcer.mcdull.mdc.provider.web.service;
+package io.gitee.dqcer.mdc.provider.web.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import com.dqcer.mcdull.framework.base.enums.DelFlayEnum;
-import com.dqcer.mcdull.framework.base.util.PageUtil;
-import com.dqcer.mcdull.framework.base.vo.PagedVO;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.mdc.client.dto.DictClientDTO;
-import com.dqcer.mcdull.mdc.client.vo.DictClientVO;
-import com.dqcer.mcdull.mdc.provider.model.convert.DictConvert;
-import com.dqcer.mcdull.mdc.provider.model.dto.DictLiteDTO;
-import com.dqcer.mcdull.mdc.provider.model.entity.DictDO;
-import com.dqcer.mcdull.mdc.provider.web.dao.repository.IDictRepository;
+import io.gitee.dqcer.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.framework.base.enums.DelFlayEnum;
+import io.gitee.dqcer.framework.base.util.PageUtil;
+import io.gitee.dqcer.framework.base.vo.PagedVO;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.mdc.client.dto.DictClientDTO;
+import io.gitee.dqcer.mdc.client.vo.DictClientVO;
+import io.gitee.dqcer.mdc.provider.model.convert.DictConvert;
+import io.gitee.dqcer.mdc.provider.model.dto.DictLiteDTO;
+import io.gitee.dqcer.mdc.provider.model.entity.DictDO;
+import io.gitee.dqcer.mdc.provider.web.dao.repository.IDictRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

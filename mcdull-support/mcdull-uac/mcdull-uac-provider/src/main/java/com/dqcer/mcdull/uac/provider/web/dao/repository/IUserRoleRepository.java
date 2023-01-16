@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.uac.provider.web.dao.repository;
+package io.gitee.dqcer.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.dqcer.mcdull.uac.provider.model.entity.UserRoleDO;
+import io.gitee.dqcer.uac.provider.model.entity.UserRoleDO;
 
 import java.util.List;
 

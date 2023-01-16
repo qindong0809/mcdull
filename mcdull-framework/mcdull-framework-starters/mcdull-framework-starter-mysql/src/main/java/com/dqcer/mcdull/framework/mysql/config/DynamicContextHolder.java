@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.mysql.config;
+package io.gitee.dqcer.framework.mysql.config;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

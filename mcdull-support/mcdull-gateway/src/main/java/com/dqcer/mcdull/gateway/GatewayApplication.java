@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.gateway;
+package io.gitee.dqcer.gateway;
 
-import com.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.framework.base.wrapper.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @author dqcer
  * @version 2022/10/24
  */
-@EnableFeignClients(basePackages = "com.dqcer.mcdull.uac.client.service")
+@EnableFeignClients(basePackages = "io.gitee.dqcer.uac.client.service")
 @RestController
 @EnableDiscoveryClient
 @SpringBootApplication

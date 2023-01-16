@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.mdc.provider.config;
+package io.gitee.dqcer.mdc.provider.config;
 
 
-import com.dqcer.mcdull.framework.mysql.interceptor.DynamicDatasourceInterceptor;
-import com.dqcer.mcdull.framework.web.interceptor.BaseInfoInterceptor;
+import io.gitee.dqcer.framework.mysql.interceptor.DynamicDatasourceInterceptor;
+import io.gitee.dqcer.framework.web.interceptor.BaseInfoInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;

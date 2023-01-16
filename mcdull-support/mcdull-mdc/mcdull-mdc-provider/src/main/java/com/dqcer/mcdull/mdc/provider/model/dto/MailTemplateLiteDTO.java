@@ -1,9 +1,9 @@
-package com.dqcer.mcdull.mdc.provider.model.dto;
+package io.gitee.dqcer.mdc.provider.model.dto;
 
-import com.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
-import com.dqcer.mcdull.framework.base.dto.PagedDTO;
-import com.dqcer.mcdull.framework.base.enums.StatusEnum;
-import com.dqcer.mcdull.framework.base.validator.ValidGroup;
+import io.gitee.dqcer.framework.base.annotation.EnumsStrValid;
+import io.gitee.dqcer.framework.base.dto.PagedDTO;
+import io.gitee.dqcer.framework.base.enums.StatusEnum;
+import io.gitee.dqcer.framework.base.validator.ValidGroup;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;

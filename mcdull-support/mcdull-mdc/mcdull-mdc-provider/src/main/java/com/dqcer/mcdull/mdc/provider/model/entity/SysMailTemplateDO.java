@@ -1,7 +1,7 @@
-package com.dqcer.mcdull.mdc.provider.model.entity;
+package io.gitee.dqcer.mdc.provider.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.framework.base.entity.IdDO;
 
 import java.util.Date;
 

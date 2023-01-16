@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.framework.redis;
+package io.gitee.dqcer.framework.redis;
 
 
 /**

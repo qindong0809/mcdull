@@ -1,4 +1,4 @@
-package com.dqcer.mcdull.soagov;
+package io.gitee.dqcer.soagov;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;

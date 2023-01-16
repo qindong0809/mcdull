@@ -1,6 +1,6 @@
-package com.dqcer.mcdull.admin.framework;
+package io.gitee.dqcer.admin.framework;
 
-import com.dqcer.mcdull.framework.mysql.EnableDynamicDataSource;
+import io.gitee.dqcer.framework.mysql.EnableDynamicDataSource;
 import org.mybatis.spring.annotation.MapperScan;
 
 import java.lang.annotation.Documented;
@@ -23,5 +23,5 @@ import java.lang.annotation.Target;
 public @interface EnableMapperScan {
 
     @SuppressWarnings("unused")
-    String[] basePackages() default {"com.dqcer.mcdull.admin.web.dao.mapper"};
+    String[] basePackages() default {"io.gitee.dqcer.admin.web.dao.mapper"};
 }

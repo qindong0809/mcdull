@@ -1,10 +1,10 @@
-package com.dqcer.mcdull.framework.flow;
+package io.gitee.dqcer.framework.flow;
 
-import com.dqcer.mcdull.framework.base.util.ObjUtil;
-import com.dqcer.mcdull.framework.base.wrapper.Result;
-import com.dqcer.mcdull.framework.flow.factory.ProcessFactory;
-import com.dqcer.mcdull.framework.flow.node.Context;
-import com.dqcer.mcdull.framework.flow.node.ProcessHandler;
+import io.gitee.dqcer.framework.base.util.ObjUtil;
+import io.gitee.dqcer.framework.base.wrapper.Result;
+import io.gitee.dqcer.framework.flow.factory.ProcessFactory;
+import io.gitee.dqcer.framework.flow.node.Context;
+import io.gitee.dqcer.framework.flow.node.ProcessHandler;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

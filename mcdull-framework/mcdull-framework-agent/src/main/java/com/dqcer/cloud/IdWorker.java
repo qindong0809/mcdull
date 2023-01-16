@@ -1,4 +1,4 @@
-package com.dqcer.cloud;
+package io.github.cloud;
 
 /**
  * id生成器

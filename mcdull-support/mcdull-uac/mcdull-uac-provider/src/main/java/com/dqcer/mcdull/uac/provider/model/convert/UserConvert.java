@@ -1,8 +1,8 @@
-package com.dqcer.mcdull.uac.provider.model.convert;
+package io.gitee.dqcer.uac.provider.model.convert;
 
-import com.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
-import com.dqcer.mcdull.uac.provider.model.entity.UserDO;
-import com.dqcer.mcdull.uac.provider.model.vo.UserVO;
+import io.gitee.dqcer.uac.provider.model.dto.UserLiteDTO;
+import io.gitee.dqcer.uac.provider.model.entity.UserDO;
+import io.gitee.dqcer.uac.provider.model.vo.UserVO;
 
 /**
  * 用户 对象转换工具类
