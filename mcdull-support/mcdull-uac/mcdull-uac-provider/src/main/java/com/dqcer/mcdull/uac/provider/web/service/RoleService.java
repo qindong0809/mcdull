@@ -109,14 +109,14 @@ public class RoleService {
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
         Integer status = dto.getStatus();
-        if (dbData.getStatus().equals(status)) {
-            log.warn("数据已存在 id: {} status: {}", id, status);
-            return Result.error(CodeEnum.DATA_EXIST);
-        }
+//        if (dbData.getStatus().equals(status)) {
+//            log.warn("数据已存在 id: {} status: {}", id, status);
+//            return Result.error(CodeEnum.DATA_EXIST);
+//        }
 
         RoleDO entity = new RoleDO();
         entity.setId(id);
-        entity.setStatus(status);
+//        entity.setStatus(status);
         entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
         entity.setUpdatedTime(new Date());
         boolean success = roleRepository.updateById(entity);

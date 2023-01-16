@@ -43,7 +43,6 @@ public class RoleDO extends BaseDO {
                 ", createdBy=" + createdBy +
                 ", updatedTime=" + updatedTime +
                 ", updatedBy=" + updatedBy +
-                ", status=" + status +
                 ", createdTime=" + createdTime +
                 ", delFlag=" + delFlag +
                 ", id=" + id +

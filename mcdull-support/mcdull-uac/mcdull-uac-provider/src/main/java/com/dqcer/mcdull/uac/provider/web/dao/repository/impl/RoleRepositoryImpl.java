@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dqcer.framework.base.constants.GlobalConstant;
 import com.dqcer.framework.base.entity.BaseDO;
 import com.dqcer.framework.base.enums.DelFlayEnum;
-import com.dqcer.framework.base.enums.StatusEnum;
 import com.dqcer.framework.base.exception.BusinessException;
 import com.dqcer.framework.base.storage.UserContextHolder;
 import com.dqcer.framework.base.util.StrUtil;
@@ -55,7 +54,6 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
     @Override
     public Long insert(RoleDO entity) {
         entity.setDelFlag(DelFlayEnum.NORMAL.getCode());
-        entity.setStatus(StatusEnum.ENABLE.getCode());
         entity.setCreatedBy(UserContextHolder.getSession().getUserId());
         entity.setCreatedTime(new Date());
         int row = baseMapper.insert(entity);

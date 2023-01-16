@@ -55,7 +55,6 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
     @Override
     public Long insert(MenuDO entity) {
         entity.setDelFlag(DelFlayEnum.NORMAL.getCode());
-        entity.setStatus(StatusEnum.ENABLE.getCode());
         entity.setCreatedBy(UserContextHolder.getSession().getUserId());
         entity.setCreatedTime(new Date());
         int insert = baseMapper.insert(entity);
