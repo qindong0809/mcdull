@@ -31,7 +31,7 @@
 
     <logger name="org.springframework" level="ERROR" />
     <logger name="org.apache.commons" level="ERROR" />
-    <logger name="io.github" level="INFO" />
+    <logger name="io.gitee" level="INFO" />
 
     <root level="${LOG_ROOT_LEVEL}">
         <appender-ref ref="${log.appender:-STDOUT}" />

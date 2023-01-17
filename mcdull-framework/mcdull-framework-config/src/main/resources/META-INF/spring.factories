@@ -1,4 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.gitee.dqcer.framework.config.McdullConfig
+  io.gitee.dqcer.mcdull.framework.config.McdullConfig
 
 

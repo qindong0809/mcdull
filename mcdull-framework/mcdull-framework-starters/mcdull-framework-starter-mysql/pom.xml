@@ -6,10 +6,10 @@
     <parent>
         <artifactId>mcdull-framework-starters</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.0.3-RELEASE</version>
     </parent>
 
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.3-RELEASE</version>
     <artifactId>mcdull-framework-starter-mysql</artifactId>
 
 

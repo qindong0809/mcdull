@@ -1,6 +1,6 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.gitee.dqcer.framework.feign.FeignConfiguration,\
-  io.gitee.dqcer.framework.feign.FeignErrorDecoder,\
-  io.gitee.dqcer.framework.feign.ExceptionAdvice
+  io.gitee.dqcer.mcdull.framework.feign.FeignConfiguration,\
+  io.gitee.dqcer.mcdull.framework.feign.FeignErrorDecoder,\
+  io.gitee.dqcer.mcdull.framework.feign.ExceptionAdvice
 
 

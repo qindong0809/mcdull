@@ -1,0 +1,47 @@
+package io.gitee.dqcer.mcdull.admin.framework;
+
+
+import io.gitee.dqcer.mcdull.admin.framework.auth.SimpleSecurityInterceptor;
+import io.gitee.dqcer.mcdull.framework.mysql.interceptor.DynamicDatasourceInterceptor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.annotation.Resource;
+
+/**
+ * 拦截器
+ *
+ * @author dqcer
+ * @version 2022/05/10
+ */
+@Configuration
+public class Interceptor implements WebMvcConfigurer {
+
+    @Resource
+    private SimpleSecurityInterceptor securityInterceptor;
+
+    /**
+     * 添加拦截器
+     *
+     * @param registry 注册表
+     */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry){
+        registry.addInterceptor(securityInterceptor).addPathPatterns("/**").excludePathPatterns("/login");
+        registry.addInterceptor(getDynamicDataSource()).addPathPatterns("/**").excludePathPatterns("/login");
+    }
+
+    /**
+     * 获取动态数据源
+     *
+     * @return {@link HandlerInterceptor}
+     */
+    @Bean
+    public HandlerInterceptor getDynamicDataSource() {
+        return new DynamicDatasourceInterceptor();
+    }
+
+}

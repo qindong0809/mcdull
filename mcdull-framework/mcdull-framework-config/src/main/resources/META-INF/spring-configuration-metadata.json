@@ -2,53 +2,53 @@
   "groups": [
     {
       "name": "mcdull",
-      "type": "io.gitee.dqcer.framework.config.properties.McdullProperties",
-      "sourceType": "io.gitee.dqcer.framework.config.properties.McdullProperties"
+      "type": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties",
+      "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
     }
   ],
   "properties": [
     {
       "name": "mcdull.gateway",
-      "type": "io.gitee.dqcer.framework.config.properties.GatewayProperties",
+      "type": "io.gitee.dqcer.mcdull.framework.config.properties.GatewayProperties",
       "description": "Gateway Config",
-      "sourceType": "io.gitee.dqcer.framework.config.properties.McdullProperties"
+      "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
     },
     {
       "name": "mcdull.gateway.noAuth",
       "type": "java.util.List",
       "description": "Ignore Token Url",
-      "sourceType": "io.gitee.dqcer.framework.config.properties.GatewayPropertie",
+      "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.GatewayPropertie",
       "defaultValue": ["valid/token"]
     },
     {
       "name": "mcdull.thread-pool",
-      "type": "io.gitee.dqcer.framework.config.properties.ThreadPoolProperties",
+      "type": "io.gitee.dqcer.mcdull.framework.config.properties.ThreadPoolProperties",
       "description": "线程池",
-      "sourceType": "io.gitee.dqcer.framework.config.properties.McdullProperties"
+      "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
     },
     {
       "name": "mcdull.thread-pool.corePoolSize",
       "type": "java.lang.Integer",
       "description": "线程池中的核心线程数量,默认为2",
-      "sourceType": "io.gitee.dqcer.framework.config.properties.McdullProperties"
+      "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
     },
     {
       "name": "mcdull.thread-pool.maxPoolSize",
       "type": "java.lang.Integer",
       "description": "线程池中的最大线程数量, 默认为10",
-      "sourceType": "io.gitee.dqcer.framework.config.properties.McdullProperties"
+      "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
     },
     {
       "name": "mcdull.thread-pool.keepAliveTime",
       "type": "java.lang.Integer",
       "description": "线程池中允许线程的空闲时间,默认为 60s",
-      "sourceType": "io.gitee.dqcer.framework.config.properties.McdullProperties"
+      "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
     },
     {
       "name": "mcdull.thread-pool.queueCapacity",
       "type": "java.lang.Integer",
       "description": "线程池中的队列最大数量,默认为 10000",
-      "sourceType": "io.gitee.dqcer.framework.config.properties.McdullProperties"
+      "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
     }
   ],
   "hints": []

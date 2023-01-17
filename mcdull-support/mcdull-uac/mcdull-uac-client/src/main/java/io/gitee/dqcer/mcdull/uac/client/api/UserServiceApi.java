@@ -1,0 +1,25 @@
+package io.gitee.dqcer.mcdull.uac.client.api;
+
+import io.gitee.dqcer.mcdull.uac.client.vo.RemoteUserVO;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+/**
+ * 人员服务api
+ *
+ * @author dqcer
+ * @version 2022/10/28
+ */
+public interface UserServiceApi {
+
+    /**
+     * 用户详情
+     *
+     * @param userId 用户id
+     * @return {@link Result< RemoteUserVO >}
+     */
+    @PostMapping("feign/user/base/detail")
+    Result<RemoteUserVO> getDetail(@RequestParam(value = "userId")Long userId);
+
+}
