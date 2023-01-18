@@ -22,5 +22,11 @@ public interface ProcessDefinitionRegistry {
      */
     void registryProcess(String bizCode, List<ProcessHandler> processHandlerList);
 
+    /**
+     * 注册一个流程
+     *
+     * @param processBean     processBean
+     * @param processHandlers 该流程下面的所有结点
+     */
     void registryProcess(ProcessBean processBean, List<ProcessHandler> processHandlers);
 }

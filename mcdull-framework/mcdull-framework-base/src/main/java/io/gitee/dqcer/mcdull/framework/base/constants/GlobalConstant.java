@@ -16,6 +16,10 @@ public class GlobalConstant {
      */
     public static final String INNER_API = "/interior-api";
 
+    public static final String ALL_PATTERNS = "/**";
+
+    public static final String LOGIN_URL = "/login";
+
 
 
     public static class Environment {
@@ -61,6 +65,17 @@ public class GlobalConstant {
          * aop operation log
          */
         public static final int ASPECT_OPERATION_LOG = -20;
+
+
+        /**
+         * 拦截器基础
+         */
+        public static final int INTERCEPTOR_BASE = -100;
+
+        /**
+         * 拦截器数据源
+         */
+        public static final int INTERCEPTOR_DS = -200;
     }
 
     public static class Number {

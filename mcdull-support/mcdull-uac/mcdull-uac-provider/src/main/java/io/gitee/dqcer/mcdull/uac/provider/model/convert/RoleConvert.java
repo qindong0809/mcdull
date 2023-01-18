@@ -17,7 +17,6 @@ public class RoleConvert {
         entity.setDelFlag(dto.getDelFlag());
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
-//        entity.setStatus(dto.getStatus());
         return entity;
     }
 
@@ -29,7 +28,6 @@ public class RoleConvert {
         roleVO.setId(entity.getId());
         roleVO.setCreatedTime(entity.getCreatedTime());
         roleVO.setCreatedBy(entity.getCreatedBy());
-//        roleVO.setStatus(entity.getStatus());
         roleVO.setDelFlag(entity.getDelFlag());
         roleVO.setName(entity.getName());
         roleVO.setDescription(entity.getDescription());

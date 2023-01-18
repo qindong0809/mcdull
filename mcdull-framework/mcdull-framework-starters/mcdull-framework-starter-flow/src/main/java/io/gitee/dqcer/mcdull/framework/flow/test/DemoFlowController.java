@@ -6,10 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
+
+/**
+ * 演示流程控制器
+ *
+ * @author dqcer
+ * @date 2023/01/18 22:01:83
+ */
 @RestController
 public class DemoFlowController {
 
-    @Autowired
+    @Resource
     private ProcessFlow processFlow;
 
     private final  static  String BIZ_CODE = "process_flow_simple";

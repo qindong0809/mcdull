@@ -1,15 +1,14 @@
 package io.gitee.dqcer.mcdull.admin.framework;
 
 
-import io.gitee.dqcer.mcdull.admin.framework.auth.SimpleSecurityInterceptor;
+import io.gitee.dqcer.mcdull.admin.framework.auth.SecurityInterceptor;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.mysql.interceptor.DynamicDatasourceInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import javax.annotation.Resource;
 
 /**
  * 拦截器
@@ -20,9 +19,6 @@ import javax.annotation.Resource;
 @Configuration
 public class Interceptor implements WebMvcConfigurer {
 
-    @Resource
-    private SimpleSecurityInterceptor securityInterceptor;
-
     /**
      * 添加拦截器
      *
@@ -30,8 +26,22 @@ public class Interceptor implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(securityInterceptor).addPathPatterns("/**").excludePathPatterns("/login");
-        registry.addInterceptor(getDynamicDataSource()).addPathPatterns("/**").excludePathPatterns("/login");
+        registry.addInterceptor(dynamicDataSource())
+                .addPathPatterns(GlobalConstant.ALL_PATTERNS).excludePathPatterns(GlobalConstant.LOGIN_URL)
+                .order(GlobalConstant.Order.INTERCEPTOR_DS);
+        registry.addInterceptor(securityInterceptor())
+                .addPathPatterns(GlobalConstant.ALL_PATTERNS).excludePathPatterns(GlobalConstant.LOGIN_URL)
+                .order(GlobalConstant.Order.INTERCEPTOR_BASE);
+    }
+
+    /**
+     * 安全拦截器
+     *
+     * @return {@link HandlerInterceptor}
+     */
+    @Bean
+    public HandlerInterceptor securityInterceptor() {
+        return new SecurityInterceptor();
     }
 
     /**
@@ -40,7 +50,7 @@ public class Interceptor implements WebMvcConfigurer {
      * @return {@link HandlerInterceptor}
      */
     @Bean
-    public HandlerInterceptor getDynamicDataSource() {
+    public HandlerInterceptor dynamicDataSource() {
         return new DynamicDatasourceInterceptor();
     }
 

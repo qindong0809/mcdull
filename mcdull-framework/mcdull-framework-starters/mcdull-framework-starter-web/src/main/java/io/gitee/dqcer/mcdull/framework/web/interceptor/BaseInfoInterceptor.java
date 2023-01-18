@@ -34,7 +34,7 @@ import java.util.List;
  * @author dqcer
  * @version 2021/08/19
  */
-public class BaseInfoInterceptor implements HandlerInterceptor {
+public abstract class BaseInfoInterceptor implements HandlerInterceptor {
 
     private static final Logger log = LoggerFactory.getLogger(BaseInfoInterceptor.class);
 
@@ -43,17 +43,14 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-
         String requestUrl = request.getRequestURI();
         if (log.isDebugEnabled()) {
             log.debug("Interceptor url:{}", requestUrl);
         }
-
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
 
         HttpStatus httpStatus = HttpStatus.valueOf(response.getStatus());
-
         if (!httpStatus.equals(HttpStatus.OK)) {
             // 404 会重定向到 /error
             log.error("http 请求异常 requestUrl: {}, httpStatus: {} ", requestUrl, httpStatus);
@@ -70,21 +67,15 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         UnAuthorize unauthorize = method.getMethodAnnotation(UnAuthorize.class);
         if (null != unauthorize) {
             if (log.isDebugEnabled()) {
-                log.debug("Un Authorize: {}", requestUrl);
+                log.debug("Interceptor Un Authorize: {}", requestUrl);
             }
             return true;
         }
 
         UnifySession unifySession = UserContextHolder.getSession();
         // 获取当前语言环境
-        String language = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        if (language == null) {
-            language = LanguageEnum.ZH_CN.getCode();
-        } else {
-            language = language.substring(0, language.indexOf(','));
-        }
+        String language = getCurrentLanguage(request);
         unifySession.setLanguage(language);
-
 
         if (enableAuth()) {
             String authorization = request.getHeader(HttpHeaderConstants.AUTHORIZATION);
@@ -93,14 +84,13 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
                 response.getWriter().write(errorJson(CodeEnum.UN_AUTHORIZATION));
                 return false;
             }
-
             String token = authorization.substring(HttpHeaderConstants.BEARER.length());
             if (token.trim().length() == 0) {
                 log.warn("认证失败 头部参数缺失缺失'Bearer '");
                 response.getWriter().write(errorJson(CodeEnum.UN_AUTHORIZATION));
                 return false;
             }
-
+            // token 校验
             Result<Long> result = authCheck(token);
             if (!result.isOk()) {
                 log.warn("认证失败 result: {}", result);
@@ -122,10 +112,18 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
         if (null != authorized) {
             String code = authorized.value();
             if (code.trim().length() > 0) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Interceptor check power code: {}", code);
+                }
                 String userPowerCacheKey = MessageFormat.format("framework:web:interceptor:power:{0}", unifySession.getUserId());
                 List<UserPowerVO> userPower = cacheChannel.get(userPowerCacheKey, List.class);
                 if (ObjUtil.isNull(userPower)) {
                     userPower = getUserPower();
+                    if (ObjUtil.isNull(userPower)) {
+                        log.warn("数据库无 userId: {} 对应配置的角色权限", UserContextHolder.getSession().getUserId());
+                        response.getWriter().write(errorJson(CodeEnum.POWER_CHECK_MODULE));
+                        return false;
+                    }
                     cacheChannel.put(userPowerCacheKey, userPower, 3000);
                 }
                 boolean anyMatch = userPower.stream().anyMatch(i -> i.getModules().contains(code));
@@ -137,6 +135,22 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
             }
         }
         return true;
+    }
+
+    /**
+     * 得到当前的语言
+     *
+     * @param request 请求
+     * @return {@link String}
+     */
+    private String getCurrentLanguage(HttpServletRequest request) {
+        String language = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
+        if (language == null) {
+            language = LanguageEnum.ZH_CN.getCode();
+        } else {
+            language = language.substring(0, language.indexOf(','));
+        }
+        return language;
     }
 
     /**
@@ -180,7 +194,7 @@ public class BaseInfoInterceptor implements HandlerInterceptor {
      * @return {@link List<UserPowerVO>}
      */
     protected List<UserPowerVO> getUserPower() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
 

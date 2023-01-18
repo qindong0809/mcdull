@@ -23,9 +23,9 @@ import javax.annotation.Resource;
  * @version  2022/11/08
  */
 @Service
-public class DictServiceImplDict implements IDictService, IDictTransformerService {
+public class DictServiceImpl implements IDictService, IDictTransformerService {
 
-    private static final Logger log = LoggerFactory.getLogger(DictServiceImplDict.class);
+    private static final Logger log = LoggerFactory.getLogger(DictServiceImpl.class);
 
     @Resource
     private IDictRepository dictRepository;

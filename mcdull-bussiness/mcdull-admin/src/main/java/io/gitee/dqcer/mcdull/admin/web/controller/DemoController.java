@@ -7,6 +7,12 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 演示控制器
+ *
+ * @author dqcer
+ * @date 2023/01/18 22:01:33
+ */
 @RestController
 public class DemoController {
 
@@ -17,7 +23,7 @@ public class DemoController {
     }
 
     @GetMapping("/error")
-    public Result<?> unAuth_404() {
+    public Result<?> unAuth404() {
         Integer.valueOf("dfd");
         return Result.ok();
     }

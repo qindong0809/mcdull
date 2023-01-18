@@ -15,8 +15,7 @@ import java.util.List;
  * @author dqcer
  * @date 2023/01/15 15:01:50
  */
-@Component
-public class SimpleSecurityInterceptor extends BaseInfoInterceptor {
+public class SecurityInterceptor extends BaseInfoInterceptor {
 
     @Resource
     private ISecurityService securityService;

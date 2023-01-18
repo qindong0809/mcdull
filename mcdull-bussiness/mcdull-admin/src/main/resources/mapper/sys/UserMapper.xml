@@ -5,7 +5,8 @@
     <select id="queryRoles" resultType="io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO">
         select
             sr.id as roleId,
-            sr.name as roleName
+            sr.name as roleName,
+            sr.type as roleType
         FROM sys_user_role t
         left join sys_role sr on sr.id = t.role_id
         where t.user_id = #{userId} and sr.del_flag = false and sr.status = 1
