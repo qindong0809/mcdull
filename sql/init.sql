@@ -102,8 +102,8 @@ CREATE TABLE IF NOT EXISTS `sys_role` (
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色表';
 
-INSERT INTO sys_role VALUES(1, '系统管理员', 'sys-admin', '这是系统管理员', 2, 1589631293412503554, '2022-10-31 07:20:54', 1589631293412503554, '2022-12-05 22:53:42', 1, 0, null);
-INSERT INTO sys_role VALUES(2, '日志管理员', 'log-admin', '这是日志管理员', 2, 1589631293412503554, '2022-10-31 07:20:54', 1589631293412503554, '2022-12-05 22:53:42', 1, 0, null);
+INSERT INTO sys_role VALUES(0, '系统管理员', 'sys-admin', '这是系统管理员', 2, 1589631293412503554, '2022-10-31 07:20:54', 1589631293412503554, '2022-12-05 22:53:42', 1, 0, null);
+INSERT INTO sys_role VALUES(1, '日志管理员', 'log-admin', '这是日志管理员', 1, 1589631293412503554, '2022-10-31 07:20:54', 1589631293412503554, '2022-12-05 22:53:42', 1, 0, null);
 
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE IF NOT EXISTS `sys_user_role` (
@@ -121,40 +121,29 @@ INSERT INTO sys_user_role VALUES(2, '2022-10-31 07:20:54', 1589631293412503554, 
 
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE IF NOT EXISTS `sys_menu` (
-`id` bigint(20) NOT NULL COMMENT '主键',
-`parent_id` bigint(20) NOT NULL COMMENT '父级',
+`code` varchar(128) NOT NULL COMMENT 'code',
+`parent_code` varchar(128) NOT NULL COMMENT '父级code',
 `name` varchar(128) NOT NULL COMMENT '名称',
-`icon` varchar(128) DEFAULT NULL COMMENT '图标',
 `sort` int(16) NOT NULL COMMENT '排序',
-`res_code` varchar(128) NOT NULL COMMENT '模块code 如sys:user:list',
 `path` varchar(128) DEFAULT NULL COMMENT '路由',
-`component` varchar(128) DEFAULT NULL COMMENT '组件',
 `type` varchar(8) NOT NULL COMMENT '类型(sys/子系统 menu/菜单、button/按钮)',
-`created_by` bigint(20) NOT NULL COMMENT '创建人',
-`created_time` datetime NOT NULL COMMENT '创建时间',
-`updated_by` bigint(20) DEFAULT NULL COMMENT '更新人',
-`updated_time` datetime DEFAULT NULL COMMENT '更新时间',
 `status` int(1) NOT NULL COMMENT '状态（1/正常 2/停用）',
-`del_flag` bit(1) NOT NULL COMMENT '删除标识（0/正常 1/删除）',
-`del_by` bigint(20) DEFAULT NULL COMMENT '删除人',
-PRIMARY KEY (`id`)
+PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='菜单表';
 BEGIN;
 -- 系统级
-INSERT INTO sys_menu VALUES(100, 0, '基础管理系统', NULL, 1, 'sys', NULL, NULL, 'sys', 1589631293412503554, '2022-10-31 07:20:54', NULL, NULL, 1, 0, null);
-
+INSERT INTO sys_menu VALUES('sys', 'root', '基础管理系统', 1, NULL,   'sys', 1);
 -- 菜单级
-INSERT INTO sys_menu VALUES(10010001, 100, '用户管理', NULL, 1, 'sys:user', NULL, NULL, 'menu', 1589631293412503554, '2022-10-31 07:20:54', NULL, NULL, 1, 0, null);
-INSERT INTO sys_menu VALUES(10010002, 100, '角色管理', NULL, 2, 'sys:role', NULL, NULL, 'menu', 1589631293412503554, '2022-10-31 07:20:54', NULL, NULL, 1, 0, null);
-INSERT INTO sys_menu VALUES(10010009, 100, '日志管理', NULL, 3, 'sys:log', NULL, NULL, 'menu', 1589631293412503554, '2022-10-31 07:20:54', NULL, NULL, 1, 0, null);
-
+INSERT INTO sys_menu VALUES('sys:user', 'sys', '用户管理', 1, NULL, 'menu', 1);
+INSERT INTO sys_menu VALUES('sys:role', 'sys', '角色管理', 2, NULL, 'menu', 1);
+INSERT INTO sys_menu VALUES('sys:log',  'sys', '日志管理', 3, NULL, 'menu', 1);
 -- 按钮级
-INSERT INTO sys_menu VALUES(100100011001, 10010001, '查看', NULL, 1, 'sys:user:view', NULL, NULL, 'button', 1589631293412503554, '2022-10-31 07:20:54', NULL, NULL, 1, 0, null);
-INSERT INTO sys_menu VALUES(100100011002, 10010001, '添加', NULL, 2, 'sys:user:add', NULL, NULL, 'button', 1589631293412503554, '2022-10-31 07:20:54', NULL, NULL, 1, 0, null);
-INSERT INTO sys_menu VALUES(100100011003, 10010001, '更新', NULL, 3, 'sys:user:update', NULL, NULL, 'button', 1589631293412503554, '2022-10-31 07:20:54', NULL, NULL, 1, 0, null);
-INSERT INTO sys_menu VALUES(100100011004, 10010001, '删除', NULL, 4, 'sys:user:delete', NULL, NULL, 'button', 1589631293412503554, '2022-10-31 07:20:54', NULL, NULL, 1, 0, null);
-INSERT INTO sys_menu VALUES(100100011005, 10010001, '启停', NULL, 5, 'sys:user:status', NULL, NULL, 'button', 1589631293412503554, '2022-10-31 07:20:54', NULL, NULL, 1, 0, null);
-INSERT INTO sys_menu VALUES(100100011006, 10010001, '导出', NULL, 5, 'sys:user:export', NULL, NULL, 'button', 1589631293412503554, '2022-10-31 07:20:54', NULL, NULL, 1, 0, null);
+INSERT INTO sys_menu VALUES('sys:user:view',   'sys:user', '查看', 1, NULL, 'button', 1);
+INSERT INTO sys_menu VALUES('sys:user:save',   'sys:user', '添加', 2, NULL, 'button', 1);
+INSERT INTO sys_menu VALUES('sys:user:update', 'sys:user', '更新', 3, NULL, 'button', 1);
+INSERT INTO sys_menu VALUES('sys:user:delete', 'sys:user', '删除', 4, NULL, 'button', 1);
+INSERT INTO sys_menu VALUES('sys:user:status', 'sys:user', '启停', 5, NULL, 'button', 1);
+INSERT INTO sys_menu VALUES('sys:user:export', 'sys:user', '导出', 5, NULL, 'button', 1);
 COMMIT;
 
 DROP TABLE IF EXISTS `sys_role_menu`;
@@ -162,18 +151,35 @@ CREATE TABLE IF NOT EXISTS `sys_role_menu` (
 `id` bigint(20) NOT NULL COMMENT '主键',
 `created_time` datetime NOT NULL COMMENT '创建时间',
 `role_id` bigint(20) NOT NULL COMMENT '角色主键',
-`menu_id` bigint(20) NOT NULL COMMENT '菜单主键',
+`menu_code` varchar(128) NOT NULL COMMENT '菜单code',
 KEY `idx_role_id` (`role_id`) USING BTREE,
-KEY `idx_menu_id` (`menu_id`) USING BTREE,
+KEY `idx_menu_code` (`menu_code`) USING BTREE,
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色菜单资源中间表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色单资源中间表';
 BEGIN;
-INSERT INTO sys_role_menu VALUES(1001, '2022-10-31 07:20:54', 1, 100);
-INSERT INTO sys_role_menu VALUES(1002, '2022-10-31 07:20:54', 1, 10010001);
-INSERT INTO sys_role_menu VALUES(1003, '2022-10-31 07:20:54', 1, 100100011001);
-INSERT INTO sys_role_menu VALUES(1004, '2022-10-31 07:20:54', 1, 100100011002);
-INSERT INTO sys_role_menu VALUES(1005, '2022-10-31 07:20:54', 1, 100100011003);
-INSERT INTO sys_role_menu VALUES(1006, '2022-10-31 07:20:54', 1, 100100011004);
-INSERT INTO sys_role_menu VALUES(1007, '2022-10-31 07:20:54', 1, 100100011005);
-INSERT INTO sys_role_menu VALUES(1008, '2022-10-31 07:20:54', 1, 100100011006);
+INSERT INTO sys_role_menu VALUES(1001, '2022-10-31 07:20:54', 1, 'sys');
+INSERT INTO sys_role_menu VALUES(1002, '2022-10-31 07:20:54', 1, 'sys:user');
+INSERT INTO sys_role_menu VALUES(1003, '2022-10-31 07:20:54', 1, 'sys:user:view');
+INSERT INTO sys_role_menu VALUES(1004, '2022-10-31 07:20:54', 1, 'sys:user:save');
+INSERT INTO sys_role_menu VALUES(1005, '2022-10-31 07:20:54', 1, 'sys:user:update');
+INSERT INTO sys_role_menu VALUES(1006, '2022-10-31 07:20:54', 1, 'sys:user:delete');
+INSERT INTO sys_role_menu VALUES(1007, '2022-10-31 07:20:54', 1, 'sys:user:status');
+INSERT INTO sys_role_menu VALUES(1008, '2022-10-31 07:20:54', 1, 'sys:user:export');
 COMMIT;
+
+
+DROP TABLE IF EXISTS `sys_notice`;
+CREATE TABLE `sys_notice`  (
+`id` bigint(20) NOT NULL COMMENT '主键',
+`title` varchar(512) NOT NULL COMMENT '公告标题',
+`content` longtext NOT NULL COMMENT '公告内容',
+`type` tinyint NOT NULL COMMENT '公告类型（1通知 2公告）',
+`status` int(1) NOT NULL COMMENT '状态（1/正常 2/停用）',
+`created_by` bigint(20) NOT NULL COMMENT '创建人',
+`created_time` datetime NOT NULL COMMENT '创建时间',
+`updated_by` bigint(20) DEFAULT NULL COMMENT '更新人',
+`updated_time` datetime DEFAULT NULL COMMENT '更新时间',
+`del_flag` bit(1) NOT NULL COMMENT '删除标识（0/正常 1/删除）',
+`del_by` bigint(20) DEFAULT NULL COMMENT '删除人',
+PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='通知公告表';

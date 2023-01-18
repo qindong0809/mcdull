@@ -1,6 +1,6 @@
 package ${cfg.apiVo};
 
-import vo.io.gitee.dqcer.mcdull.framework.base.VO;
+import ${cfg.baseVO};
 import java.util.Date;
 
 /**

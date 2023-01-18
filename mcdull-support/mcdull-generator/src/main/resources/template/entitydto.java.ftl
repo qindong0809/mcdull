@@ -1,10 +1,13 @@
 package ${cfg.apiDto};
 
-import enums.io.gitee.dqcer.mcdull.framework.base.StatusEnum;
-import dto.io.gitee.dqcer.mcdull.framework.base.PagedDTO;
-import validator.io.gitee.dqcer.mcdull.framework.base.ValidGroup;
+import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
+import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
+import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
+import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
+import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 
-import annotation.io.gitee.dqcer.mcdull.framework.base.EnumsIntValid;
+import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
+import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;

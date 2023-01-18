@@ -12,14 +12,14 @@
     </select>
     <select id="queryModulesByRoleId" resultType="java.lang.String">
         select
-            m.res_code
+            m.code
         from
             sys_role_menu t
                 left join sys_menu m on
-                m.id = t.menu_id
+                m.code = t.menu_code
         where
             t.role_id = #{roleId}
           and m.status = 1
-          and m.del_flag = false
+
     </select>
 </mapper>

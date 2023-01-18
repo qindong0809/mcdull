@@ -1,7 +1,7 @@
 package ${package.Service};
 
-import vo.io.gitee.dqcer.mcdull.framework.base.PagedVO;
-import dto.io.gitee.dqcer.mcdull.framework.base.StatusDTO;
+import ${cfg.PagedVO};
+import ${cfg.StatusDTO};
 import ${cfg.apiVo}.${cfg.voName};
 import ${cfg.apiDto}.${cfg.dtoName};
 import ${cfg.result};

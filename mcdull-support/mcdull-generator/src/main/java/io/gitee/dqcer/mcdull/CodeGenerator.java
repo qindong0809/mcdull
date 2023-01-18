@@ -27,8 +27,10 @@ public class CodeGenerator {
 
     public static final String USER_DIR = System.getProperty("user.dir");
 
-    public static final String API_PROJECT = "io.gitee.%s.model.%s";
-    public static final String WBB_PROJECT = "io.gitee.%s.web.%s.%s";
+    public static final String API_PROJECT = "io.gitee.dqcer.%s.model.%s";
+    public static final String WBB_PROJECT = "io.gitee.dqcer.%s.web.%s.%s";
+
+    public static final String BASIC = "io.gitee.dqcer.mcdull.framework.base";
 
     public static final String S_ = ".%s";
 
@@ -53,6 +55,8 @@ public class CodeGenerator {
     }
 
 
+
+
     @SuppressWarnings("all")
     public static void main(String[] args) {
 
@@ -68,10 +72,13 @@ public class CodeGenerator {
         String projectNames = "mcdull.admin";
         boolean isGeneratorWeb = true;
 
-        String outPath = USER_DIR + outputBase + SRC + "/";
+        Long parentMenuId = 1L;
+
+
+
 
         /**********************************end**********************************/
-
+        String outPath = USER_DIR + outputBase + SRC + "/";
         String projectName = projectNames.replace("-", "");
         String modelName = scanner("包名称如：auth、pub");
         String split = scanner("表名");
@@ -216,9 +223,21 @@ public class CodeGenerator {
                 map.put("apiVo", voPackage);
                 map.put("apiConvert", convertPackage);
                 map.put("modelName", modelName);
-                map.put("baseController", "io.gitee.common.core.supert.BaseController");
-                map.put("result", "io.gitee.framework.base.wrapper.Result");
-                map.put("baseEntity", "io.gitee.framework.base.entity.BaseDO");
+//                map.put("baseController", "io.gitee.common.core.supert.BaseController");
+                map.put("result", BASIC + "wrapper.Result");
+                map.put("baseEntity", BASIC + "entity.BaseDO");
+                map.put("baseVO", BASIC + "vo.VO");
+                map.put("GlobalConstant", BASIC + "constants.GlobalConstant");
+                map.put("DelFlayEnum", BASIC + "enums.DelFlayEnum");
+                map.put("DatabaseRowException", BASIC + "exception.DatabaseRowException");
+                map.put("ObjUtil", BASIC + "util.ObjUtil");
+                map.put("PagedVO", BASIC + "vo.PagedVO");
+                map.put("StatusDTO", BASIC + "dto.StatusDTO");
+                map.put("UserContextHolder", BASIC + "storage.UserContextHolder");
+                map.put("CodeEnum", BASIC + "wrapper.CodeEnum");
+                map.put("PageUtil", BASIC + "util.PageUtil");
+                map.put("Authorized", BASIC + "annotation.Authorized");
+                map.put("ValidGroup", BASIC + "validator.ValidGroup");
                 map.put("repository",repositoryPackage);
                 map.put("repositoryImpl", repositoryImplPackage);
                 map.put("controller", className + controllerSuffix);

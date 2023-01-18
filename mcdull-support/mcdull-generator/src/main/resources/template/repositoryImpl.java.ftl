@@ -1,27 +1,24 @@
 package ${cfg.repositoryImpl};
 
-import constants.io.gitee.dqcer.mcdull.framework.base.GlobalConstant;
-import enums.io.gitee.dqcer.mcdull.framework.base.DelFlayEnum;
-import exception.io.gitee.dqcer.mcdull.framework.base.DatabaseRowException;
-import util.io.gitee.dqcer.mcdull.framework.base.StrUtil;
-import util.io.gitee.dqcer.mcdull.framework.base.ObjUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import enums.io.gitee.dqcer.mcdull.framework.base.StatusEnum;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ${cfg.apiDto}.${cfg.dtoName};
-import java.util.Collections;
-import java.util.List;
 import ${cfg.apiEntity}.${cfg.entityName};
-import ${cfg.repository}.${cfg.repositoryName};
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import org.springframework.stereotype.Service;
 import ${package.Mapper}.${cfg.mapperName};
-import wrapper.io.gitee.dqcer.mcdull.framework.base.CodeEnum;
-import exception.io.gitee.dqcer.mcdull.framework.base.BusinessException;
+import ${cfg.repository}.${cfg.repositoryName};
+import ${cfg.GlobalConstant};
+import ${cfg.DelFlayEnum};
+import ${cfg.DatabaseRowException};
+import ${cfg.ObjUtil};
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
 * ${table.comment!} 数据库操作封装实现层
@@ -62,7 +59,7 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
     public Page<${cfg.entityName}> selectPage(${cfg.dtoName} param) {
         LambdaQueryWrapper<${cfg.entityName}> lambda = new QueryWrapper<${cfg.entityName}>().lambda();
         String keyword = param.getKeyword();
-        if (StrUtil.isNotBlank(keyword)) {
+        if (ObjUtil.isNotNull(keyword)) {
             //TODO 组装查询条件
         }
         return baseMapper.selectPage(new Page<>(param.getCurrentPage(), param.getPageSize()), lambda);
