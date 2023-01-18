@@ -45,7 +45,7 @@ public class OperationLogsAspect {
     /**
      * 操作日志拦截 ..* 表示任意包或子包
      */
-    @Pointcut("execution(* io.gitee.*.controller..*.*(..))")
+    @Pointcut("execution(* io.gitee..*.controller..*.*(..))")
     public void operationLogsCut() {
         // 切点
     }
