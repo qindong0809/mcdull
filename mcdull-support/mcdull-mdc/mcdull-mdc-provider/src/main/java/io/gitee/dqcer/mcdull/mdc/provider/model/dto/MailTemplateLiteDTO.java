@@ -32,50 +32,50 @@ public class MailTemplateLiteDTO extends PagedDTO {
     /**
      * 删除标识（1/正常 2/删除）
      */
-    @NotNull(groups = {ValidGroup.Add.class})
-    @EnumsStrValid(groups = {ValidGroup.Add.class}, value = StatusEnum.class)
+    @NotNull(groups = {ValidGroup.Insert.class})
+    @EnumsStrValid(groups = {ValidGroup.Insert.class}, value = StatusEnum.class)
     private Integer delFlag;
 
     /**
      * 所属模块编码 如：user:register
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private String modelCode;
 
     /**
      * 模板名称
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private String templateName;
 
     /**
      * 模板类型
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private String templateType;
 
     /**
      * 备注说明
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private String descr;
 
     /**
      * 标题（包含占位符）
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private String subject;
 
     /**
      * 正文（包含占位符）
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private String content;
 
 

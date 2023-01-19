@@ -1,19 +1,19 @@
-package ${package.Service};
+package io.gitee.dqcer.mcdull.admin.web.service.sys;
 
-import ${cfg.PagedVO};
-import ${cfg.StatusDTO};
-import ${cfg.apiVo}.${cfg.voName};
-import ${cfg.apiDto}.${cfg.dtoName};
-import ${cfg.result};
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.NoticeVO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.NoticeLiteDTO;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import java.util.List;
 
 /**
-* ${table.comment!} 业务接口类
+* 通知公告表 业务接口类
 *
-* @author ${author}
-* @version ${date}
+* @author dqcer
+* @version 2023-01-19
 */
-public interface ${cfg.serviceName} {
+public interface INoticeService {
 
     /**
      * 新增数据
@@ -21,15 +21,15 @@ public interface ${cfg.serviceName} {
      * @param dto dto
      * @return {@link Result<Long> 返回主键}
      */
-    Result<Long> insert(${cfg.dtoName} dto);
+    Result<Long> insert(NoticeLiteDTO dto);
 
     /**
      * 通过主键查询单条数据
      *
      * @param id 主键
-     * @return {@link Result<${cfg.voName}> }
+     * @return {@link Result<NoticeVO> }
      */
-    Result<${cfg.voName}> detail(Long id);
+    Result<NoticeVO> detail(Long id);
 
     /**
      * 编辑数据
@@ -37,7 +37,7 @@ public interface ${cfg.serviceName} {
      * @param dto  参数
      * @return {@link Result<Long> }
      */
-    Result<Long> update(${cfg.dtoName} dto);
+    Result<Long> update(NoticeLiteDTO dto);
 
     /**
      * 状态更新
@@ -53,7 +53,7 @@ public interface ${cfg.serviceName} {
      * @param dto 参数
      * @return {@link Result<Long>}
      */
-    Result<Long> delete(${cfg.dtoName} dto);
+    Result<Long> delete(NoticeLiteDTO dto);
 
     /**
      * 根据主键集删除
@@ -69,7 +69,7 @@ public interface ${cfg.serviceName} {
      * @param ids id
      * @return {@link Result<List>}
      */
-    Result<List<${cfg.voName}>> queryByIds(List<Long> ids);
+    Result<List<NoticeVO>> queryByIds(List<Long> ids);
 
     /**
      * 分页查询
@@ -77,5 +77,5 @@ public interface ${cfg.serviceName} {
      * @param dto 参数
      * @return {@link Result<PagedVO>}
      */
-    Result<PagedVO<${cfg.voName}>> listByPage(${cfg.dtoName} dto);
+    Result<PagedVO<NoticeVO>> listByPage(NoticeLiteDTO dto);
 }

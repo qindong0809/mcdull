@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.web.advice;
 
+import io.gitee.dqcer.mcdull.framework.base.wrapper.ICode;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
@@ -84,7 +85,11 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(value = DatabaseRowException.class)
     public Result<?> databaseRowException(DatabaseRowException exception) {
-        log.error("数据库实际影响行数与预期不同: ", exception);
+        log.error("数据库实际预期执行不同: ", exception);
+        ICode exceptionCode = exception.getCode();
+        if (exceptionCode != null) {
+            return Result.error(exceptionCode);
+        }
         return Result.error(CodeEnum.DB_ERROR);
     }
 

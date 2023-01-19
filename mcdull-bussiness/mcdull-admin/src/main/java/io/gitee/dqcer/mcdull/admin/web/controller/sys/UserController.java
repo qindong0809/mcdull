@@ -67,7 +67,7 @@ public class UserController {
     @OperationLog(module = "基础系统", menu = "用户管理", type = OperationTypeEnum.INSERT)
     @RedisLock(key = "'lock:uac:user:' + #dto.nickname + '-' + #dto.account", timeout = 3)
     @PostMapping("user/base/save")
-    public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Add.class})UserLiteDTO dto){
+    public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Insert.class})UserLiteDTO dto){
         return userService.insert(dto);
     }
 

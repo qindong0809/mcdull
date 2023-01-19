@@ -12,7 +12,7 @@ public interface ValidGroup {
     /**
      * 保存
      */
-    interface Add { }
+    interface Insert { }
 
     /**
      * 更新
@@ -53,6 +53,11 @@ public interface ValidGroup {
      * 关键字
      */
     interface Keyword { }
+
+    /**
+     * id
+     */
+    interface Id {}
 
     /**
      * 单个

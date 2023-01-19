@@ -1,18 +1,18 @@
-package ${cfg.repositoryImpl};
+package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import ${cfg.apiDto}.${cfg.dtoName};
-import ${cfg.apiEntity}.${cfg.entityName};
-import ${package.Mapper}.${cfg.mapperName};
-import ${cfg.repository}.${cfg.repositoryName};
-import ${cfg.GlobalConstant};
-import ${cfg.DelFlayEnum};
-import ${cfg.DatabaseRowException};
-import ${cfg.ObjUtil};
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.NoticeLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeDO;
+import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.NoticeMapper;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.INoticeRepository;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
+import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
+import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,28 +21,28 @@ import java.util.Collections;
 import java.util.List;
 
 /**
-* ${table.comment!} 数据库操作封装实现层
+* 通知公告表 数据库操作封装实现层
 *
-* @author ${author}
-* @version ${date}
+* @author dqcer
+* @version 2023-01-19
 */
 @Service
-public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${cfg.entityName}>  implements ${cfg.repositoryName} {
+public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeDO>  implements INoticeRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(${cfg.repositoryImplName}.class);
+    private static final Logger log = LoggerFactory.getLogger(NoticeRepositoryImpl.class);
 
     /**
      * 根据ID列表批量查询数据
      *
      * @param idList id列表
-     * @return {@link List<${cfg.entityName}>}
+     * @return {@link List<NoticeDO>}
      */
     @Override
-    public List<${cfg.entityName}> queryListByIds(List<Long> idList) {
-        LambdaQueryWrapper<${cfg.entityName}> wrapper = Wrappers.lambdaQuery();
-        wrapper.in(${cfg.entityName}::getId, idList);
-        wrapper.eq(${cfg.entityName}::getDelFlag, DelFlayEnum.NORMAL.getCode());
-        List<${cfg.entityName}> list =  baseMapper.selectList(wrapper);
+    public List<NoticeDO> queryListByIds(List<Long> idList) {
+        LambdaQueryWrapper<NoticeDO> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(NoticeDO::getId, idList);
+        wrapper.eq(NoticeDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
+        List<NoticeDO> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;
         }
@@ -53,11 +53,11 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
      * 按条件分页查询
      *
      * @param param 参数
-     * @return {@link Page<${cfg.entityName}>}
+     * @return {@link Page<NoticeDO>}
      */
     @Override
-    public Page<${cfg.entityName}> selectPage(${cfg.dtoName} param) {
-        LambdaQueryWrapper<${cfg.entityName}> lambda = new QueryWrapper<${cfg.entityName}>().lambda();
+    public Page<NoticeDO> selectPage(NoticeLiteDTO param) {
+        LambdaQueryWrapper<NoticeDO> lambda = new QueryWrapper<NoticeDO>().lambda();
         String keyword = param.getKeyword();
         if (ObjUtil.isNotNull(keyword)) {
             // TODO 组装查询条件
@@ -69,10 +69,10 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
      * 根据ID获取单条数据
      *
      * @param id 主键
-     * @return {@link ${cfg.entityName}}
+     * @return {@link NoticeDO}
      */
     @Override
-    public ${cfg.entityName} getById(Long id) {
+    public NoticeDO getById(Long id) {
         return baseMapper.selectById(id);
     }
 
@@ -83,7 +83,7 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
      * @return Long id
      */
     @Override
-    public Long insert(${cfg.entityName} entity) {
+    public Long insert(NoticeDO entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
@@ -124,8 +124,8 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
      * @return boolean true/存在 false/不存在
      */
     @Override
-    public boolean exist(${cfg.entityName} entity) {
-        List<${cfg.entityName}> list = baseMapper.selectList(Wrappers.lambdaQuery(entity));
+    public boolean exist(NoticeDO entity) {
+        List<NoticeDO> list = baseMapper.selectList(Wrappers.lambdaQuery(entity));
         return list.isEmpty();
     }
 }

@@ -1,19 +1,19 @@
-package ${package.ServiceImpl};
+package io.gitee.dqcer.mcdull.admin.web.service.sys.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import ${cfg.apiDto}.${cfg.dtoName};
-import ${cfg.apiConvert}.${cfg.convertName};
-import ${package.Service}.${cfg.serviceName};
-import ${cfg.apiEntity}.${cfg.entityName};
-import ${cfg.apiVo}.${cfg.voName};
-import ${cfg.repository}.${cfg.repositoryName};
-import ${cfg.StatusDTO};
-import ${cfg.UserContextHolder};
-import ${cfg.DatabaseRowException};
-import ${cfg.PageUtil};
-import ${cfg.PagedVO};
-import ${cfg.CodeEnum};
-import ${cfg.result};
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.NoticeLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.convert.sys.NoticeConvert;
+import io.gitee.dqcer.mcdull.admin.web.service.sys.INoticeService;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeDO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.NoticeVO;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.INoticeRepository;
+import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
+import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,18 +25,18 @@ import java.util.List;
 
 
 /**
-* ${table.comment!} 业务实现类
+* 通知公告表 业务实现类
 *
-* @author ${author}
-* @version ${date}
+* @author dqcer
+* @version 2023-01-19
 */
 @Service
-public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
+public class NoticeServiceImpl implements INoticeService {
 
-    private static final Logger log = LoggerFactory.getLogger(${cfg.serviceImplName}.class);
+    private static final Logger log = LoggerFactory.getLogger(NoticeServiceImpl.class);
 
     @Resource
-    private ${cfg.repositoryName} ${(cfg.repositoryName?substring(1))?uncap_first};
+    private INoticeRepository noticeRepository;
 
     /**
      * 新增数据
@@ -46,18 +46,18 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<Long> insert(${cfg.dtoName} dto) {
+    public Result<Long> insert(NoticeLiteDTO dto) {
 
-        ${cfg.entityName} tempEntity = new ${cfg.entityName}();
+        NoticeDO tempEntity = new NoticeDO();
         // TODO: 业务唯一性效验, 除非业务场景不需要
-        boolean exist = ${(cfg.repositoryName?substring(1))?uncap_first}.exist(tempEntity);
+        boolean exist = noticeRepository.exist(tempEntity);
         if (exist) {
             log.warn("数据已存在 query:{}", tempEntity);
             return Result.error(CodeEnum.DATA_EXIST);
         }
 
-        ${cfg.entityName} entity = ${cfg.convertName}.convertTo${cfg.entityName}(dto);
-        Long entityId = ${(cfg.repositoryName?substring(1))?uncap_first}.insert(entity);
+        NoticeDO entity = NoticeConvert.convertToNoticeDO(dto);
+        Long entityId = noticeRepository.insert(entity);
         return Result.ok(entityId);
     }
 
@@ -65,17 +65,17 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
      * 详情
      *
      * @param id 主键
-     * @return {@link Result<${cfg.voName}> }
+     * @return {@link Result<NoticeVO> }
      */
     @Transactional(readOnly = true)
     @Override
-    public Result<${cfg.voName}> detail(Long id) {
-        ${cfg.entityName} entity = ${(cfg.repositoryName?substring(1))?uncap_first}.getById(id);
+    public Result<NoticeVO> detail(Long id) {
+        NoticeDO entity = noticeRepository.getById(id);
         if (null == entity) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
-        return Result.ok(${cfg.convertName}.convertTo${cfg.voName}(entity));
+        return Result.ok(NoticeConvert.convertToNoticeVO(entity));
     }
 
     /**
@@ -86,17 +86,17 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<Long> update(${cfg.dtoName} dto) {
+    public Result<Long> update(NoticeLiteDTO dto) {
         Long id = dto.getId();
 
-        ${cfg.entityName} dbData = ${(cfg.repositoryName?substring(1))?uncap_first}.getById(id);
+        NoticeDO dbData = noticeRepository.getById(id);
         if(null == dbData) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
-        ${cfg.entityName} entity = ${cfg.convertName}.convertTo${cfg.entityName}(dto);
+        NoticeDO entity = NoticeConvert.convertToNoticeDO(dto);
         entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
-        boolean success = ${(cfg.repositoryName?substring(1))?uncap_first}.updateById(entity);
+        boolean success = noticeRepository.updateById(entity);
         if (!success) {
             log.error("数据更新失败, entity:{}", entity);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
@@ -115,17 +115,17 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
     public Result<Long> updateStatus(StatusDTO dto) {
         Long id = dto.getId();
 
-        ${cfg.entityName} dbData = ${(cfg.repositoryName?substring(1))?uncap_first}.getById(id);
+        NoticeDO dbData = noticeRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
 
-        ${cfg.entityName} entity = new ${cfg.entityName}();
+        NoticeDO entity = new NoticeDO();
         entity.setId(id);
         entity.setStatus(dto.getStatus());
         entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
-        boolean success = ${(cfg.repositoryName?substring(1))?uncap_first}.updateById(entity);
+        boolean success = noticeRepository.updateById(entity);
 
         if (!success) {
             log.error("数据更新失败，entity:{}", entity);
@@ -142,9 +142,9 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<Long> delete(${cfg.dtoName} dto) {
+    public Result<Long> delete(NoticeLiteDTO dto) {
         Long id = dto.getId();
-        ${(cfg.repositoryName?substring(1))?uncap_first}.deleteById(dto.getId());
+        noticeRepository.deleteById(dto.getId());
         return Result.ok(id);
     }
 
@@ -157,7 +157,7 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<List<Long>> deleteByIds(List<Long> ids) {
-        ${(cfg.repositoryName?substring(1))?uncap_first}.deleteBatchIds(ids);
+        noticeRepository.deleteBatchIds(ids);
         return Result.ok(ids);
     }
 
@@ -169,11 +169,11 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
      */
     @Transactional(readOnly = true)
     @Override
-    public Result<List<${cfg.voName}>> queryByIds(List<Long> ids) {
-         List<${cfg.entityName}> listEntity = ${(cfg.repositoryName?substring(1))?uncap_first}.queryListByIds(ids);
-         List<${cfg.voName}> voList = new ArrayList<>();
-         for (${cfg.entityName} entity : listEntity) {
-            voList.add(${cfg.convertName}.convertTo${cfg.voName}(entity));
+    public Result<List<NoticeVO>> queryByIds(List<Long> ids) {
+         List<NoticeDO> listEntity = noticeRepository.queryListByIds(ids);
+         List<NoticeVO> voList = new ArrayList<>();
+         for (NoticeDO entity : listEntity) {
+            voList.add(NoticeConvert.convertToNoticeVO(entity));
          }
          return Result.ok(voList);
     }
@@ -186,11 +186,11 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
      */
     @Transactional(readOnly = true)
     @Override
-    public Result<PagedVO<${cfg.voName}>> listByPage(${cfg.dtoName} dto) {
-        Page<${cfg.entityName}> entityPage = ${(cfg.repositoryName?substring(1))?uncap_first}.selectPage(dto);
-        List<${cfg.voName}> voList = new ArrayList<>();
-        for (${cfg.entityName} entity : entityPage.getRecords()) {
-            voList.add(${cfg.convertName}.convertTo${cfg.voName}(entity));
+    public Result<PagedVO<NoticeVO>> listByPage(NoticeLiteDTO dto) {
+        Page<NoticeDO> entityPage = noticeRepository.selectPage(dto);
+        List<NoticeVO> voList = new ArrayList<>();
+        for (NoticeDO entity : entityPage.getRecords()) {
+            voList.add(NoticeConvert.convertToNoticeVO(entity));
         }
         return Result.ok(PageUtil.toPage(voList, entityPage));
     }

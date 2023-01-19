@@ -63,7 +63,7 @@ public class MenuController {
      * @return {@link Result<Long> 返回新增主键}
      */
     @PostMapping("base/save")
-    public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Add.class})RoleLiteDTO dto){
+    public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Insert.class})RoleLiteDTO dto){
         return roleService.insert(dto);
     }
 

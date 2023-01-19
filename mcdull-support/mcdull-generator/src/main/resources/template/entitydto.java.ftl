@@ -55,21 +55,21 @@ public class ${cfg.dtoName} extends PagedDTO {
      * ${field.comment}
      */
     <#if "Long" == field.propertyType>
-    @NotNull(groups = {ValidGroup.Add.class})
+    @NotNull(groups = {ValidGroup.Insert.class})
     private ${field.propertyType} ${field.propertyName};
     </#if>
     <#if "Integer" == field.propertyType>
-    @NotNull(groups = {ValidGroup.Add.class})
-    @EnumsIntValid(groups = {ValidGroup.Add.class}, value = StatusEnum.class)
+    @NotNull(groups = {ValidGroup.Insert.class})
+    @EnumsIntValid(groups = {ValidGroup.Insert.class}, value = StatusEnum.class)
     private ${field.propertyType} ${field.propertyName};
     </#if>
     <#if "String" == field.propertyType>
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private ${field.propertyType} ${field.propertyName};
     </#if>
     <#if "Date" == field.propertyType>
-    @NotNull(groups = {ValidGroup.Add.class})
+    @NotNull(groups = {ValidGroup.Insert.class})
     private ${field.propertyType} ${field.propertyName};
     </#if>
     </#if>

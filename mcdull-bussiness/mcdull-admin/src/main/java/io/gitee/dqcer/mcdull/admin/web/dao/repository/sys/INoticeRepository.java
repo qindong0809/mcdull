@@ -1,42 +1,42 @@
-package ${cfg.repository};
+package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
-import ${cfg.apiEntity}.${cfg.entityName};
-import ${cfg.apiDto}.${cfg.dtoName};
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeDO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.NoticeLiteDTO;
 
 /**
-* ${table.comment!} 数据库操作封装接口层
+* 通知公告表 数据库操作封装接口层
 *
-* @author ${author}
-* @version ${date}
+* @author dqcer
+* @version 2023-01-19
 */
-public interface ${cfg.repositoryName} extends IService<${cfg.entityName}>  {
+public interface INoticeRepository extends IService<NoticeDO>  {
 
    /**
     * 根据ID列表批量查询数据
     *
     * @param idList id列表
-    * @return {@link List<${cfg.entityName}>}
+    * @return {@link List<NoticeDO>}
     */
-    List<${cfg.entityName}> queryListByIds(List<Long> idList);
+    List<NoticeDO> queryListByIds(List<Long> idList);
 
    /**
     * 按条件分页查询
     *
     * @param param 参数
-    * @return {@link Page<${cfg.entityName}>}
+    * @return {@link Page<NoticeDO>}
     */
-    Page<${cfg.entityName}> selectPage(${cfg.dtoName} param);
+    Page<NoticeDO> selectPage(NoticeLiteDTO param);
 
     /**
      * 根据ID获取单条数据
      *
      * @param id 主键
-     * @return {@link ${cfg.entityName}}
+     * @return {@link NoticeDO}
      */
-    ${cfg.entityName} getById(Long id);
+    NoticeDO getById(Long id);
 
     /**
      * 插入数据
@@ -44,7 +44,7 @@ public interface ${cfg.repositoryName} extends IService<${cfg.entityName}>  {
      * @param entity 实体对象
      * @return Long id
      */
-    Long insert(${cfg.entityName} entity);
+    Long insert(NoticeDO entity);
 
     /**
      * 通过主键删除
@@ -67,5 +67,5 @@ public interface ${cfg.repositoryName} extends IService<${cfg.entityName}>  {
      * @param entity 实体对象
      * @return boolean true/存在 false/不存在
      */
-    boolean exist(${cfg.entityName} entity);
+    boolean exist(NoticeDO entity);
 }

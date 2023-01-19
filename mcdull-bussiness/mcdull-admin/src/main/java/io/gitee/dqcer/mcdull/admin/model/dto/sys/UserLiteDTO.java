@@ -42,27 +42,27 @@ public class UserLiteDTO extends PagedDTO {
     /**
      * 昵称
      */
-    @NotBlank(groups = {ValidGroup.Add.class, ValidGroup.Update.class})
-    @Length(groups = {ValidGroup.Add.class, ValidGroup.Update.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class, ValidGroup.Update.class})
+    @Length(groups = {ValidGroup.Insert.class, ValidGroup.Update.class}, min = 1, max = 512)
     private String nickname;
 
     /**
      * 账户
      */
-    @NotBlank(groups = {ValidGroup.Add.class, ValidGroup.Update.class})
-    @Length(groups = {ValidGroup.Add.class, ValidGroup.Update.class}, min = 5, max = 64)
+    @NotBlank(groups = {ValidGroup.Insert.class, ValidGroup.Update.class})
+    @Length(groups = {ValidGroup.Insert.class, ValidGroup.Update.class}, min = 5, max = 64)
     private String account;
 
     /**
      * 电子邮件
      */
-    @Length(groups = {ValidGroup.Add.class, ValidGroup.Update.class}, min = 5, max = 64)
+    @Length(groups = {ValidGroup.Insert.class, ValidGroup.Update.class}, min = 5, max = 64)
     private String email;
 
     /**
      * 电话
      */
-    @Length(groups = {ValidGroup.Add.class, ValidGroup.Update.class}, min = 8, max = 11)
+    @Length(groups = {ValidGroup.Insert.class, ValidGroup.Update.class}, min = 8, max = 11)
     private String phone;
 
     /**

@@ -30,9 +30,11 @@ public class CodeGenerator {
     public static final String API_PROJECT = "io.gitee.dqcer.%s.model.%s";
     public static final String WBB_PROJECT = "io.gitee.dqcer.%s.web.%s.%s";
 
-    public static final String BASIC = "io.gitee.dqcer.mcdull.framework.base";
+    public static final String BASIC = "io.gitee.dqcer.mcdull.framework.base.";
 
     public static final String S_ = ".%s";
+
+    public static String MODULE_CODE = "";
 
 
     /**
@@ -82,6 +84,10 @@ public class CodeGenerator {
         String projectName = projectNames.replace("-", "");
         String modelName = scanner("包名称如：auth、pub");
         String split = scanner("表名");
+
+        String modelCode = split.substring(split.indexOf("_")  + 1);
+        MODULE_CODE = modelCode.toLowerCase();
+
         // 首字符小写
         String valName = toCamelCase(split);
         //  大写
@@ -216,6 +222,7 @@ public class CodeGenerator {
             @Override
             public void initMap() {
                 Map<String, Object> map = new HashMap<>(16);
+                map.put("moduleCode", MODULE_CODE);
                 map.put("dto", String.format("%s%s.dto.%s", COM, projectName, modelName));
                 map.put("suffix", entitySuffix);
                 map.put("apiEntity", entityPackage);
@@ -238,6 +245,7 @@ public class CodeGenerator {
                 map.put("PageUtil", BASIC + "util.PageUtil");
                 map.put("Authorized", BASIC + "annotation.Authorized");
                 map.put("ValidGroup", BASIC + "validator.ValidGroup");
+                map.put("QueryByIdDTO", BASIC + "dto.QueryByIdDTO");
                 map.put("repository",repositoryPackage);
                 map.put("repositoryImpl", repositoryImplPackage);
                 map.put("controller", className + controllerSuffix);

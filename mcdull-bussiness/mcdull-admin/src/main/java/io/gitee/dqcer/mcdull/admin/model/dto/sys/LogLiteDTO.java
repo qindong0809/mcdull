@@ -26,68 +26,68 @@ public class LogLiteDTO extends PagedDTO {
     /**
      * 操作人的账号主键
      */
-    @NotNull(groups = {ValidGroup.Add.class})
+    @NotNull(groups = {ValidGroup.Insert.class})
     private Long accountId;
 
     /**
      * 租户主键
      */
-    @NotNull(groups = {ValidGroup.Add.class})
+    @NotNull(groups = {ValidGroup.Insert.class})
     private Long tenantId;
 
     /**
      * 客户端ip
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private String clientIp;
 
     /**
      * 用户代理
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private String userAgent;
 
     /**
      * 请求方法
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private String method;
 
     /**
      * 路径
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private String path;
 
     /**
      * 日志跟踪id
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private String traceId;
 
     /**
      * 耗时
      */
-    @NotNull(groups = {ValidGroup.Add.class})
+    @NotNull(groups = {ValidGroup.Insert.class})
     private Long timeTaken;
 
     /**
      * 参数map
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private String parameterMap;
 
     /**
      * 请求头
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private String headers;
 
 

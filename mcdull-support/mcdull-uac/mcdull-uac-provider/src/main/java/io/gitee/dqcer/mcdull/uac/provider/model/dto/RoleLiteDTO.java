@@ -40,14 +40,14 @@ public class RoleLiteDTO extends PagedDTO {
     /**
      * 昵称
      */
-    @NotBlank(groups = {ValidGroup.Add.class})
-    @Length(groups = {ValidGroup.Add.class}, min = 1, max = 512)
+    @NotBlank(groups = {ValidGroup.Insert.class})
+    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
     private String name;
 
     /**
      * 描述
      */
-    @Length(groups = {ValidGroup.Add.class},  max = 2048)
+    @Length(groups = {ValidGroup.Insert.class},  max = 2048)
     private String description;
 
     @Override
