@@ -17,6 +17,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +88,7 @@ public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO>  implements
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
-            throw new DatabaseRowException();
+            throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
         return entity.getId();
     }

@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.gitee.dqcer.mcdull.frameowrk.mongodb.MongoDBTemplate
+

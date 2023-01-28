@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserRoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.UserRoleMapper;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
@@ -54,7 +55,7 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
         query.eq(UserRoleDO::getUserId, userId);
         int row = baseMapper.delete(query);
         if (row == GlobalConstant.Database.ROW_0) {
-            throw new DatabaseRowException();
+            throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
 
 
@@ -71,7 +72,7 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
         }
         boolean saveBatch = saveBatch(entities);
         if (!saveBatch) {
-            throw new DatabaseRowException();
+            throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
     }
 }

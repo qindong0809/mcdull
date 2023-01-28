@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserLoginDO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserLoginRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
@@ -63,7 +64,7 @@ public class UserLoginRepositoryImpl extends ServiceImpl<UserLoginMapper, UserLo
         loginDO.setUserId(userId);
         int rowSize = baseMapper.insert(loginDO);
         if (rowSize == GlobalConstant.Database.ROW_0) {
-            throw new DatabaseRowException();
+            throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
     }
 }

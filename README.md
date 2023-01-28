@@ -310,5 +310,6 @@ try {
 - pdf生成器
 - transmittable-thread-local
 >动态表单： https://segmentfault.com/q/1010000009146625 
+> https://www.jianshu.com/p/b2f4ad0ec396
 >log.error("xxxxx", ThrowableUtil.getStackTraceAsString(e));
 >如有需求请联系作者(dqcer@sina.com)

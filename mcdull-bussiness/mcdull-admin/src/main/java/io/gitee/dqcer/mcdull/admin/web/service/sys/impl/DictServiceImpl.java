@@ -10,6 +10,7 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class DictServiceImpl implements IDictService, IDictTransformerService {
         DictDO dictDO = dictRepository.getOne(wrapper);
         if (dictDO == null) {
             log.error("查无数据 code: {}, selectType: {}, language: {}", code, selectType, language);
-            throw new DatabaseRowException();
+            throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
         return new KeyValueVO<String, String>().setId(dictDO.getCode()).setName(dictDO.getName());
     }

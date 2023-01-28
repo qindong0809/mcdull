@@ -1,11 +1,15 @@
 package io.gitee.dqcer.mcdull.admin.web.controller;
 
+import io.gitee.dqcer.mcdull.frameowrk.mongodb.MongoDBService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * 演示控制器
@@ -30,6 +34,20 @@ public class DemoController {
 
     @GetMapping("/user")
     public Result<UnifySession> getCurrentUserInfo() {
+        return Result.ok(UserContextHolder.getSession());
+    }
+
+    @Resource
+    private MongoDBService mongoDBService;
+
+    @UnAuthorize
+    @GetMapping("/db")
+    public Result<UnifySession> mongodbTest() {
+        UnifySession session = new UnifySession();
+        session.setLanguage("zh-CN");
+        session.setUserId(123L);
+        session.setNow(new Date());
+        mongoDBService.insertOrUpdate("user", session);
         return Result.ok(UserContextHolder.getSession());
     }
 }

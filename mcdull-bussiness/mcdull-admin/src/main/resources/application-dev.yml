@@ -10,6 +10,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     host: mcdull.io
+  data:
+    mongodb:
+      uri: mongodb://mcdull.io:27017/dev
 # 指定日志的文件名（nacos）
 logging:
   dataId: log

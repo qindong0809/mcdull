@@ -9,6 +9,7 @@ import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserRoleDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.UserRoleMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRoleRepository;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
         query.eq(UserRoleDO::getUserId, userId);
         int row = baseMapper.delete(query);
         if (row == GlobalConstant.Database.ROW_0) {
-            throw new DatabaseRowException();
+            throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
 
 
@@ -71,7 +72,7 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
         }
         boolean saveBatch = saveBatch(entities);
         if (!saveBatch) {
-            throw new DatabaseRowException();
+            throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
     }
 }

@@ -6,6 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserLoginDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.UserLoginMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserLoginRepository;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.springframework.stereotype.Service;
 
 /**
@@ -63,7 +64,7 @@ public class UserLoginRepositoryImpl extends ServiceImpl<UserLoginMapper, UserLo
         loginDO.setUserId(userId);
         int rowSize = baseMapper.insert(loginDO);
         if (rowSize == GlobalConstant.Database.ROW_0) {
-            throw new DatabaseRowException();
+            throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
     }
 }

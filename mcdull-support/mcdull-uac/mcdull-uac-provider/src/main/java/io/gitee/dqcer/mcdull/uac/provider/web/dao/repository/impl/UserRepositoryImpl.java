@@ -127,7 +127,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
         update.eq(IdDO::getId, userId);
         int rowSize = baseMapper.update(null, update);
         if (rowSize == GlobalConstant.Database.ROW_0) {
-            throw new DatabaseRowException();
+            throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
     }
 
