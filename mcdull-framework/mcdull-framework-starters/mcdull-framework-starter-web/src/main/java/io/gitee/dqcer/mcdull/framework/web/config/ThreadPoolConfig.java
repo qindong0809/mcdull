@@ -41,6 +41,9 @@ public class ThreadPoolConfig {
         executor.setQueueCapacity(threadPool.getQueueCapacity());
         executor.setThreadNamePrefix(GlobalConstant.ROOT_PREFIX + "-");
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        // 传递上下文
+        executor.setTaskDecorator(new ThreadPoolDecorator());
+        executor.setWaitForTasksToCompleteOnShutdown(true);
 
         executor.initialize();
 

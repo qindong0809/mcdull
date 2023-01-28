@@ -1,12 +1,5 @@
 package io.gitee.dqcer.mcdull.framework.web.async;
 
-import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
-import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
-import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 
 /**
@@ -17,9 +10,6 @@ import org.springframework.scheduling.annotation.Async;
  */
 public class BaseAsyncEvent<T> {
 
-    private static final Logger log = LoggerFactory.getLogger(BaseAsyncEvent.class);
-
-
     /**
      * 基于异步处理事件, 多个可添加
      * @see org.springframework.core.annotation.Order
@@ -28,14 +18,6 @@ public class BaseAsyncEvent<T> {
      */
     @Async("threadPoolTaskExecutor")
     public void asyncEvent(T t) {
-        UnifySession session = UserContextHolder.getSession();
-        if (session == null) {
-            throw new BusinessException("UnifySession is null");
-        }
-        MDC.put(HttpHeaderConstants.LOG_TRACE_ID, session.getTraceId());
-        if (log.isDebugEnabled()) {
-            log.debug("Async event: {}", t);
-        }
         execute(t);
     }
 

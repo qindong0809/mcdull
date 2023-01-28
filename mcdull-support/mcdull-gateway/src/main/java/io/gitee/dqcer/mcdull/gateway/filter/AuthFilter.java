@@ -112,7 +112,7 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
         }
 
         String traceId = headers.getFirst(HttpHeaderConstants.TRACE_ID_HEADER);
-        RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
+//        RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
         Result<Long> result = remoteValid(token, traceId);
 
 

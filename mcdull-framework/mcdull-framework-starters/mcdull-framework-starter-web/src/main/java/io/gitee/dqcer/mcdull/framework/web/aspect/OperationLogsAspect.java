@@ -86,7 +86,6 @@ public class OperationLogsAspect {
         } finally {
             Object[] args = joinPoint.getArgs();
             LogOperationDTO entity = listenerLog(request, args, startTime);
-            RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
             if (log.isDebugEnabled()) {
                 log.debug("Operation log dto: {}", entity);
             }
