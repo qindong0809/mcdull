@@ -1,7 +1,9 @@
 package io.gitee.dqcer.mcdull.frameowrk.mongodb;
 
 import io.gitee.dqcer.mcdull.frameowrk.mongodb.wrapper.CriteriaVo;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import org.bson.conversions.Bson;
+import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -23,8 +25,8 @@ public class MongoDBTemplate implements MongoDBService{
      * @return
      */
     @Override
-    public List<Object> queryData(DocumentQueryDTO queryDTO) {
-        return mongoTemplate.find(new Query(), Object.class);
+    public List<UnifySession> queryData(DocumentQueryDTO queryDTO) {
+        return mongoTemplate.find(new Query(), UnifySession.class, queryDTO.getCollectionName());
     }
 
     /**

@@ -21,12 +21,4 @@ public interface IMenuRepository extends IService<MenuDO> {
      * @return {@link Page}<{@link RoleDO}>
      */
     Page<MenuDO> selectPage(MenuLiteDTO dto);
-
-    /**
-     * 插入
-     *
-     * @param entity 实体
-     * @return {@link Long}
-     */
-    Long insert(MenuDO entity);
 }

@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.frameowrk.mongodb;
 
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import org.bson.conversions.Bson;
+import org.springframework.data.mapping.PersistentEntity;
 
 import java.util.List;
 
@@ -11,7 +13,7 @@ public interface MongoDBService {
      * @param queryDTO
      * @return
      */
-    List<Object> queryData(DocumentQueryDTO queryDTO);
+    List<UnifySession> queryData(DocumentQueryDTO queryDTO);
 
     /**
      * 查询单条记录
