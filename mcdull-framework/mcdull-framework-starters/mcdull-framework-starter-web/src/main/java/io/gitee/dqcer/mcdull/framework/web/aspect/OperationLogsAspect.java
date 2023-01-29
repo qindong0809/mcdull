@@ -102,10 +102,7 @@ public class OperationLogsAspect {
      * @return boolean
      */
     protected boolean isInterceptor(HttpServletRequest request, Method method) {
-        if (!request.getMethod().equalsIgnoreCase(RequestMethod.GET.name())) {
-            return true;
-        }
-        return false;
+        return !request.getMethod().equalsIgnoreCase(RequestMethod.GET.name());
     }
 
     /**

@@ -25,7 +25,7 @@ public class Interceptor implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(getBaseInterceptor()).addPathPatterns("/**").excludePathPatterns("/login");
+//        registry.addInterceptor(getBaseInterceptor()).addPathPatterns("/**").excludePathPatterns("/login");
     }
 
     /**
@@ -43,9 +43,9 @@ public class Interceptor implements WebMvcConfigurer {
      *
      * @return {@link HandlerInterceptor}
      */
-    @Bean
-    public HandlerInterceptor getBaseInterceptor() {
-        return new BaseInfoInterceptor();
-    }
+//    @Bean
+//    public HandlerInterceptor getBaseInterceptor() {
+//        return new BaseInfoInterceptor();
+//    }
 
 }

@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.mongodb.client.model.Filters;
 import io.gitee.dqcer.mcdull.frameowrk.mongodb.DocumentQueryDTO;
@@ -9,11 +10,15 @@ import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import org.bson.conversions.Bson;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -66,5 +71,12 @@ public class DemoController {
         Bson filter = Filters.and(Filters.eq("userId", 123L), Filters.eq("language", "zh-CN"));
         queryDTO.setFilter(filter);
         return Result.ok(mongoDBService.queryData(queryDTO));
+    }
+
+    @UnAuthorize
+    @GetMapping("download")
+    public void download(HttpServletResponse response) throws IOException {
+        ServletUtil.setDownloadExcelHttpHeader(response, "测试");
+//        EasyExcel.write(response.getOutputStream(), DownloadData.class).sheet("模板").doWrite(data());
     }
 }
