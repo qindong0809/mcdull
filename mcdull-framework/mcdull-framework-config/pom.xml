@@ -5,12 +5,12 @@
     <parent>
         <artifactId>mcdull-framework</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.0.4-RELEASE</version>
+        <version>0.0.5-RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mcdull-framework-config</artifactId>
-    <version>0.0.4-RELEASE</version>
+    <version>0.0.5-RELEASE</version>
     <name>mcdull-framework-config</name>
 
     <dependencies>

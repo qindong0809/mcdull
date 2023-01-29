@@ -6,7 +6,7 @@
 
     <groupId>io.gitee.dqcer</groupId>
     <artifactId>mcdull</artifactId>
-    <version>0.0.4-RELEASE</version>
+    <version>0.0.5-RELEASE</version>
     <name>mcdull</name>
     <packaging>pom</packaging>
 

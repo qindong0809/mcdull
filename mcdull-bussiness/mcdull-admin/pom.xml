@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mcdull-bussiness</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.0.4-RELEASE</version>
+        <version>0.0.5-RELEASE</version>
     </parent>
     <groupId>io.gitee.dqcer</groupId>
     <artifactId>mcdull-admin</artifactId>
@@ -43,7 +43,7 @@
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdul-framework-starter-mongodb</artifactId>
-            <version>0.0.4-RELEASE</version>
+            <version>0.0.5-RELEASE</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-generator</artifactId>
-            <version>0.0.4-RELEASE</version>
+            <version>0.0.5-RELEASE</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

@@ -7,7 +7,7 @@
     <parent>
         <artifactId>mcdull</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.0.4-RELEASE</version>
+        <version>0.0.5-RELEASE</version>
     </parent>
 
     <modules>
@@ -20,7 +20,7 @@
     </modules>
 
     <artifactId>mcdull-framework</artifactId>
-    <version>0.0.4-RELEASE</version>
+    <version>0.0.5-RELEASE</version>
     <name>mcdull-framework</name>
 
     <packaging>pom</packaging>
@@ -34,7 +34,7 @@
             <dependency>
                 <groupId>io.gitee.dqcer</groupId>
                 <artifactId>mcdull-framework-dependencies</artifactId>
-                <version>0.0.4-RELEASE</version>
+                <version>0.0.5-RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

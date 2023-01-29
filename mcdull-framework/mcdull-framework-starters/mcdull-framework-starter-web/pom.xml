@@ -6,11 +6,11 @@
     <parent>
         <artifactId>mcdull-framework-starters</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.0.4-RELEASE</version>
+        <version>0.0.5-RELEASE</version>
     </parent>
 
     <artifactId>mcdull-framework-starter-web</artifactId>
-    <version>0.0.4-RELEASE</version>
+    <version>0.0.5-RELEASE</version>
 
 
     <dependencies>
