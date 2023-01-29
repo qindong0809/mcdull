@@ -1,14 +1,18 @@
-package io.gitee.dqcer.mcdull.frameowrk.mongodb;
+package io.gitee.dqcer.mcdull.framework.mongodb;
 
-import io.gitee.dqcer.mcdull.frameowrk.mongodb.wrapper.CriteriaVo;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
+import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,19 +29,29 @@ public class MongoDBTemplate implements MongoDBService{
      * @return
      */
     @Override
-    public List<UnifySession> queryData(DocumentQueryDTO queryDTO) {
-        return mongoTemplate.find(new Query(), UnifySession.class, queryDTO.getCollectionName());
+    public <T> List<T> queryData(DocumentQueryDTO queryDTO, Class<T> entityClass) {
+        MongoCollection<Document> collection = mongoTemplate.getCollection(queryDTO.getCollectionName());
+        FindIterable<Document> documents = collection.find(queryDTO.getFilter());
+        List<T> list = new ArrayList<>();
+        documents.forEach(item -> {
+            list.add((T) item);
+        });
+        return list;
     }
 
     /**
      * 查询单条记录
      *
-     * @param collectionName
-     * @param uid
-     * @return
+     * @param queryDTO    查询dto
+     * @param entityClass 实体类
+     * @return {@link T}
      */
     @Override
-    public <T> T selectOne(String collectionName, String uid) {
+    public <T> T selectOne(DocumentQueryDTO queryDTO, Class<T> entityClass) {
+        List<T> list = queryData(queryDTO, entityClass);
+        if (!list.isEmpty()) {
+            return list.get(0);
+        }
         return null;
     }
 

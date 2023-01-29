@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.framework.audit;
 
-import io.gitee.dqcer.mcdull.frameowrk.mongodb.MongoDBService;
+import io.gitee.dqcer.mcdull.framework.mongodb.MongoDBService;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.JsonUtil;
 import io.gitee.dqcer.mcdull.framework.mysql.config.DataChangeRecorderInnerInterceptor;

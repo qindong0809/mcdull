@@ -1,8 +1,7 @@
-package io.gitee.dqcer.mcdull.frameowrk.mongodb;
+package io.gitee.dqcer.mcdull.framework.mongodb;
 
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import org.bson.conversions.Bson;
-import org.springframework.data.mapping.PersistentEntity;
 
 import java.util.List;
 
@@ -10,18 +9,21 @@ public interface MongoDBService {
 
     /**
      * 查询记录
-     * @param queryDTO
-     * @return
+     *
+     * @param queryDTO    查询dto
+     * @param entityClass 实体类
+     * @return {@link List}<{@link T}>
      */
-    List<UnifySession> queryData(DocumentQueryDTO queryDTO);
+    <T> List<T> queryData(DocumentQueryDTO queryDTO, Class<T> entityClass);
 
     /**
      * 查询单条记录
-     * @param collectionName
-     * @param uid
-     * @return
+     *
+     * @param queryDTO    查询dto
+     * @param entityClass 实体类
+     * @return {@link T}
      */
-    <T> T selectOne(String collectionName, String uid);
+    <T> T selectOne(DocumentQueryDTO queryDTO, Class<T> entityClass);
 
     /**
      * 分页查询

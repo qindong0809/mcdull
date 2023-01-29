@@ -9,3 +9,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://admin:123456@mcdull.io:27017/admin?authSource=admin&authMechanism=SCRAM-SHA-1
+logging:
+  level:
+    root: info
+    io.gitee.dqcer.mcdull.framework: info

@@ -2,8 +2,8 @@ package io.gitee.dqcer.mcdull.admin.web.controller;
 
 import com.mongodb.client.model.Filters;
 import io.gitee.dqcer.mcdull.CodeGenerator;
-import io.gitee.dqcer.mcdull.frameowrk.mongodb.DocumentQueryDTO;
-import io.gitee.dqcer.mcdull.frameowrk.mongodb.MongoDBService;
+import io.gitee.dqcer.mcdull.framework.mongodb.DocumentQueryDTO;
+import io.gitee.dqcer.mcdull.framework.mongodb.MongoDBService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -68,7 +68,7 @@ public class DemoController {
         queryDTO.setCollectionName("user");
         Bson filter = Filters.and(Filters.eq("userId", 123L), Filters.eq("language", "zh-CN"));
         queryDTO.setFilter(filter);
-        return Result.ok(mongoDBService.queryData(queryDTO));
+        return Result.ok(mongoDBService.queryData(queryDTO, UnifySession.class));
     }
 
     /**

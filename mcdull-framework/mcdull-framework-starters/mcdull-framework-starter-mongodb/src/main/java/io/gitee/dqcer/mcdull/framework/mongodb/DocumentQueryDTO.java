@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.frameowrk.mongodb;
+package io.gitee.dqcer.mcdull.framework.mongodb;
 
 
 import io.gitee.dqcer.mcdull.framework.base.dto.DTO;

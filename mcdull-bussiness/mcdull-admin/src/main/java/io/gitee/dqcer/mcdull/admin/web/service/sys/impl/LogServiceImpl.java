@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.LogVO;
-import io.gitee.dqcer.mcdull.frameowrk.mongodb.MongoDBService;
+import io.gitee.dqcer.mcdull.framework.mongodb.MongoDBService;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
