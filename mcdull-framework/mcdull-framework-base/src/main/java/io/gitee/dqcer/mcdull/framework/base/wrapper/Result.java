@@ -12,7 +12,7 @@ import java.util.StringJoiner;
  * 统一返回前端包装类
  *
  * @author dqcer
- * @version 2022/07/26
+ * @since 2022/07/26
  */
 public class Result<T> implements Serializable {
 

@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
  * 登录 dto
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 public class LoginDTO implements DTO {
 

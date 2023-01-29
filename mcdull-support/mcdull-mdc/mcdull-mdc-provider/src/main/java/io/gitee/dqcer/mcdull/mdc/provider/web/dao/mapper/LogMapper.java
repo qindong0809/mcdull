@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.mdc.provider.model.entity.LogDO;
  * 日志 mapper
  *
  * @author dqcer
- * @version 2022/12/25
+ * @since 2022/12/25
  */
 public interface LogMapper extends BaseMapper<LogDO> {
 }

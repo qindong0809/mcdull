@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
  * web core
  *
  * @author dqcer
- * @version 2021/10/05 00:10:22
+ * @since 2021/10/05 00:10:22
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

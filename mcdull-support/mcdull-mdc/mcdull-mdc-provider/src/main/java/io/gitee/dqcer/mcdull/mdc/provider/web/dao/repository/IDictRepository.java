@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.mdc.provider.model.entity.DictDO;
  * 码表 数据库操作封装接口层
  *
  * @author dqcer
- * @version 2022/12/25
+ * @since 2022/12/25
  */
 public interface IDictRepository extends IService<DictDO> {
 

@@ -18,7 +18,7 @@ import java.util.List;
  * 邮箱模板 控制器
  *
  * @author dqcer
- * @version  2022/11/08
+ * @since  2022/11/08
  */
 @RestController
 public class MailTemplateController {

@@ -7,7 +7,7 @@ import java.util.List;
  * 过滤配置
  *
  * @author dqcer
- * @version 2022/10/27
+ * @since 2022/10/27
  */
 public class FilterProperties {
 

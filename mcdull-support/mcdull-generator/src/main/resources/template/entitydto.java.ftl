@@ -1,11 +1,7 @@
 package ${cfg.apiDto};
 
-import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
-import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
-import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
-
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import org.hibernate.validator.constraints.Length;
@@ -18,7 +14,7 @@ import java.util.Date;
 * ${table.comment!} 接收客户端参数
 *
 * @author ${author}
-* @version ${date}
+* @since ${date}
 */
 public class ${cfg.dtoName} extends PagedDTO {
 

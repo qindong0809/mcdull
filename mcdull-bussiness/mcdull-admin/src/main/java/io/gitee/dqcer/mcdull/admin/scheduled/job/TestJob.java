@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * test job
  *
  * @author dqcer
- * @version 2022/12/29
+ * @since 2022/12/29
  */
 @Component
 public class TestJob extends BaseJob {

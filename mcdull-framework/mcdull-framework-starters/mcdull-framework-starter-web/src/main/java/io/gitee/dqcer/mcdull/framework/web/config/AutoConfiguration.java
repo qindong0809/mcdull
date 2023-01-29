@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.web.config;
 
+import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsAspect;
 import io.gitee.dqcer.mcdull.framework.web.aspect.TranslatorAspect;
 import io.gitee.dqcer.mcdull.framework.web.filter.HttpTraceLogFilter;
 import io.gitee.dqcer.mcdull.framework.web.transform.SpringContextHolder;
@@ -20,7 +21,7 @@ import javax.servlet.MultipartConfigElement;
  * 自动配置
  *
  * @author dqcer
- * @version  22:21 2021/4/28
+ * @since  22:21 2021/4/28
  */
 @ConditionalOnWebApplication
 @Configuration
@@ -51,6 +52,10 @@ public class AutoConfiguration {
         return new TranslatorAspect();
     }
 
+    @Bean
+    public OperationLogsAspect operationLogsAspect() {
+        return new OperationLogsAspect();
+    }
 
     /**
      * 添加Long转json精度丢失的配置

@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
  * 角色视图对象
  *
  * @author dqcer
- * @version  2022/11/27
+ * @since  2022/11/27
  */
 public class MenuVO extends TreeVO<MenuVO, Long> {
 

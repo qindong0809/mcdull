@@ -12,7 +12,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * 身份验证应用程序
  *
  * @author dqcer
- * @version 2022/10/31
+ * @since 2022/10/31
  */
 @EnableWebCore
 @EnableMapperScan

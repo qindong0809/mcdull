@@ -8,7 +8,7 @@ import java.util.Date;
  * 日志 dto
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 public class LogOperationDTO implements DTO {
 

@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  * 认证过滤器
  *
  * @author dqcer
- * @version  2022/10/27
+ * @since  2022/10/27
  */
 @Component
 public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered {

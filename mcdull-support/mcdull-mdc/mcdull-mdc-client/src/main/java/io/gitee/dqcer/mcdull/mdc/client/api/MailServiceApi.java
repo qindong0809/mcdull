@@ -12,7 +12,7 @@ import javax.validation.Valid;
  * 邮件服务api
  *
  * @author dqcer
- * @version 2022/10/28
+ * @since 2022/10/28
  */
 public interface MailServiceApi {
 

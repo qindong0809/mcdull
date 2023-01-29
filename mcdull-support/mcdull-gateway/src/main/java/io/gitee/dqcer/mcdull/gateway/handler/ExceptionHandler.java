@@ -25,7 +25,7 @@ import java.util.Collections;
  * 异常处理程序
  *
  * @author dqcer
- * @version  2021/12/20
+ * @since  2021/12/20
  */
 public class ExceptionHandler implements WebExceptionHandler, Ordered {
 

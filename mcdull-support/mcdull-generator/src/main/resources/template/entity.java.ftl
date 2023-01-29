@@ -9,7 +9,7 @@ import java.util.Date;
  * ${table.comment!} 实体类
  *
  * @author ${author}
- * @version ${date}
+ * @since ${date}
  */
 @TableName("${table.name}")
 public class ${cfg.entityName} extends BaseDO {

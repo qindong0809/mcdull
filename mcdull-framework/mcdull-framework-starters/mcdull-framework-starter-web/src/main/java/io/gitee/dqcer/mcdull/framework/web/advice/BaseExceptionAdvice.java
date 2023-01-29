@@ -15,7 +15,7 @@ import java.util.Collections;
  * sql异常拦截
  *
  * @author dqcer
- * @version 2022/12/24
+ * @since 2022/12/24
  */
 @RestControllerAdvice
 @Order(0)

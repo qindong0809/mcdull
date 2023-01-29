@@ -11,7 +11,7 @@ import java.util.List;
 * 通知公告表 业务接口类
 *
 * @author dqcer
-* @version 2023-01-19
+* @since 2023-01-19
 */
 public interface INoticeService {
 

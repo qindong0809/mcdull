@@ -28,7 +28,7 @@ import java.util.List;
 * ${table.comment!} 业务实现类
 *
 * @author ${author}
-* @version ${date}
+* @since ${date}
 */
 @Service
 public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
@@ -104,6 +104,8 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
         return Result.ok(id);
     }
 
+<#list table.fields as field>
+<#if "status" == field.name>
     /**
      * 更新状态
      *
@@ -133,7 +135,8 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
         }
         return Result.ok(id);
     }
-
+</#if>
+</#list>
     /**
      * 根据主键删除
      *

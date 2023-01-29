@@ -15,7 +15,7 @@ import java.util.List;
 * 用户 接收客户端参数
 *
 * @author dqcer
-* @version 2022-11-16
+* @since 2022-11-16
 */
 public class UserLiteDTO extends PagedDTO {
 

@@ -17,7 +17,7 @@ import java.util.List;
  * 反射工具类
  *
  * @author dqcer
- * @version 2022/4/14
+ * @since 2022/4/14
  */
 public class ReflectUtil {
 
@@ -38,7 +38,7 @@ public class ReflectUtil {
      * @param field：字段
      * @param param：参数
      * @author peng.xy
-     * @version 2022/4/14
+     * @since 2022/4/14
      */
     public static void invokeSet(Object obj, Field field, Object param) {
         invokeSet(obj, field.getName(), param);
@@ -51,7 +51,7 @@ public class ReflectUtil {
      * @param fieldName：字段名
      * @param param：参数
      * @author peng.xy
-     * @version 2022/4/14
+     * @since 2022/4/14
      */
     public static void invokeSet(Object obj, String fieldName, Object param) {
         String setMethodName = SET.concat(fieldName.substring(0, 1).toUpperCase().concat(fieldName.substring(1)));
@@ -71,7 +71,7 @@ public class ReflectUtil {
      * @param obj：对象
      * @param field：字段
      * @author peng.xy
-     * @version 2022/4/14
+     * @since 2022/4/14
      */
     public static Object invokeGet(Object obj, Field field) {
         return invokeGet(obj, field.getName());
@@ -83,7 +83,7 @@ public class ReflectUtil {
      * @param obj：对象
      * @param fieldName：字段名
      * @author peng.xy
-     * @version 2022/4/14
+     * @since 2022/4/14
      */
     public static Object invokeGet(Object obj, String fieldName) {
         String getMethodName = GET.concat(fieldName.substring(0, 1).toUpperCase().concat(fieldName.substring(1)));

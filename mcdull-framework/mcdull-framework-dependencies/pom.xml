@@ -6,16 +6,16 @@
 
     <groupId>io.gitee.dqcer</groupId>
     <artifactId>mcdull-framework-dependencies</artifactId>
-    <version>0.0.3-RELEASE</version>
+    <version>0.0.4-RELEASE</version>
     <name>mcdull-framework-dependencies</name>
     <packaging>pom</packaging>
 
 
-    <description>Spring Boot Parent</description>
+    <description>mcdull-framework-dependencies</description>
     <url>https://gitee.com/dqcer/mcdull</url>
 
     <properties>
-        <mcdull.version>0.0.3-RELEASE</mcdull.version>
+        <mcdull.version>0.0.4-RELEASE</mcdull.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
         <spring-boot.version>2.7.1</spring-boot.version>

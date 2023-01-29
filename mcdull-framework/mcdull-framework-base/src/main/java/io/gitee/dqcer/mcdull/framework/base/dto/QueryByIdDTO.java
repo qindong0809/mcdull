@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
  * 查询通过id
  *
  * @author dqcer
- * @version 2023/01/19
+ * @since 2023/01/19
  */
 public class QueryByIdDTO implements DTO{
 

@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * 动态数据源属性
  *
  * @author dqcer
- * @version 2021/08/31
+ * @since 2021/08/31
  */
 @ConfigurationProperties(prefix = "spring.datasource")
 public class DataSourceProperties {

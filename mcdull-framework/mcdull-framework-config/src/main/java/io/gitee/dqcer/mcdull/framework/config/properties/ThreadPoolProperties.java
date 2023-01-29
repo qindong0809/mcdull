@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
  * 线程池配置
  *
  * @author dqcer
- * @version 2022/12/18
+ * @since 2022/12/18
  */
 public class ThreadPoolProperties {
 

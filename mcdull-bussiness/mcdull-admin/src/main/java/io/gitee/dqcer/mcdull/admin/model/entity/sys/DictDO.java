@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.framework.base.entity.DO;
  * sys dict实体
  *
  * @author dqcer
- * @version 2022/11/01 22:11:06
+ * @since 2022/11/01 22:11:06
  */
 @TableName("sys_dict")
 public class DictDO implements DO {

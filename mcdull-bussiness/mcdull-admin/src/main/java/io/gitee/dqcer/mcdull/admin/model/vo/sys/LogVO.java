@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.admin.framework.transformer.UserTransformer;
 * 日志记录 返回客户端值
 *
 * @author dqcer
-* @version 2023-01-14
+* @since 2023-01-14
 */
 public class LogVO implements VO {
 

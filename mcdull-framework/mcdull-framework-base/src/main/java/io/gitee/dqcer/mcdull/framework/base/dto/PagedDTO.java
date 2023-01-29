@@ -12,7 +12,7 @@ import java.util.List;
  * 分页 DTO
  *
  * @author dqcer
- * @version 2022/07/26
+ * @since 2022/07/26
  */
 public class PagedDTO extends KeywordDTO implements IPaged {
 

@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
  * 角色 对象转换工具类
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 public class RoleConvert {
 

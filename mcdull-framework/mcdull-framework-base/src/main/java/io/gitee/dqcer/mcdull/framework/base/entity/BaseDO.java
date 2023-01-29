@@ -10,7 +10,7 @@ import java.util.Date;
  * 基础的实体
  *
  * @author dqcer
- * @version 2022/01/12
+ * @since 2022/01/12
  */
 public class BaseDO extends MiddleDO {
 

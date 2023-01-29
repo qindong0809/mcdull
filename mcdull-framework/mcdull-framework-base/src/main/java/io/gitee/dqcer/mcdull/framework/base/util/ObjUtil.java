@@ -7,7 +7,7 @@ import java.util.Map;
  * obj工具
  *
  * @author dqcer
- * @version 2022/10/04
+ * @since 2022/10/04
  */
 public class ObjUtil {
 

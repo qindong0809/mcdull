@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.RemoteDictVO;
  * 码表通用逻辑接口层
  *
  * @author dqcer
- * @version 2022/12/25
+ * @since 2022/12/25
  */
 public interface IDictManager {
 

@@ -13,7 +13,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * 元数据 应用程序
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 @EnableDynamicDataSource
 @EnableFeignClients(basePackages = {"io.gitee.dqcer.mcdull.framework.web.feign", "io.gitee.dqcer.uac.client.service"})

@@ -12,7 +12,7 @@ import java.util.function.Function;
  * feign结果解析
  *
  * @author dqcer
- * @version 2022/04/22
+ * @since 2022/04/22
  */
 public class FeignResultParse {
 

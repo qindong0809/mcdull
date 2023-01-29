@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.VO;
  * sys dict
  *
  * @author dqcer
- * @version 2022/11/01 22:11:78
+ * @since 2022/11/01 22:11:78
  */
 public class DictClientVO implements VO {
 

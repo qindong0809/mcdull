@@ -31,7 +31,7 @@ import java.util.Map;
  * 自动配置
  *
  * @author dqcer
- * @version   2021/10/09
+ * @since   2021/10/09
  */
 @Configuration
 @EnableConfigurationProperties(DataSourceProperties.class)
@@ -88,13 +88,8 @@ public class AutoConfiguration {
         // SQL规范检查
         interceptor.addInnerInterceptor(new SqlReviewInnerInterceptor(context));
         // 数据变更记录（数据审计）
-        interceptor.addInnerInterceptor(new DataChangeRecorderInnerInterceptor(dataChangeRecorder()));
+        interceptor.addInnerInterceptor(new DataChangeRecorderInnerInterceptor(context));
         return interceptor;
-    }
-
-    @Bean
-    public IDataChangeRecorder dataChangeRecorder() {
-        return new DefaultDataChangeRecorder();
     }
 
     @Bean

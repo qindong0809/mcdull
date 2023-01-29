@@ -14,7 +14,7 @@ import javax.annotation.Resource;
  * 邮件配置
  *
  * @author dqcer
- * @version 2022/12/20
+ * @since 2022/12/20
  */
 @Configuration
 @AutoConfigureAfter(MailSenderAutoConfiguration.class)

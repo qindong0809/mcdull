@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
  * 枚举类型
  *
  * @author dqcer
- * @version 2022/12/25
+ * @since 2022/12/25
  */
 public enum EnumSelectTypeEnum implements IEnum<String> {
 

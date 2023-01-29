@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * 翻译（由key翻译为value）
  *
  * @author dqcer
- * @version 2022/10/05
+ * @since 2022/10/05
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

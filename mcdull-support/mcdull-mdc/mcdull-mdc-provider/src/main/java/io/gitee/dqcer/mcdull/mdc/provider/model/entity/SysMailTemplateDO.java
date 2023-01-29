@@ -9,7 +9,7 @@ import java.util.Date;
  * 系统邮件模板实体
  *
  * @author dqcer
- * @version  2022/11/16
+ * @since  2022/11/16
  */
 @TableName("sys_mail_template")
 public class SysMailTemplateDO extends IdDO {

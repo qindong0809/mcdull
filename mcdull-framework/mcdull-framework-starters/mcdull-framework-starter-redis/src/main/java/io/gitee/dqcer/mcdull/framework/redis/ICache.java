@@ -5,7 +5,7 @@ package io.gitee.dqcer.mcdull.framework.redis;
  * 缓存
  *
  * @author dqcer
- * @version  22:21 2021/4/28
+ * @since  22:21 2021/4/28
  */
 public interface ICache {
 

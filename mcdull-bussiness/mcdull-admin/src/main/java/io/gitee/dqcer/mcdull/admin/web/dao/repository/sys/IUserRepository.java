@@ -12,7 +12,7 @@ import java.util.List;
  * 用户 数据库操作封装接口层
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 public interface IUserRepository extends IService<UserDO> {
 

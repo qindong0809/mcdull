@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  * redis lock Aspect
  *
  * @author dqcer
- * @version 2022/10/05
+ * @since 2022/10/05
  */
 @Order(GlobalConstant.Order.ASPECT_REDIS_LOCK)
 @Aspect

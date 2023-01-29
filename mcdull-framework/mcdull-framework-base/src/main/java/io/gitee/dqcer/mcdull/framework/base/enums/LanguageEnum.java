@@ -4,7 +4,7 @@ package io.gitee.dqcer.mcdull.framework.base.enums;
  * 语言枚举
  *
  * @author dqcer
- * @version 2022/07/26
+ * @since 2022/07/26
  */
 public enum LanguageEnum implements IEnum<String> {
     /**

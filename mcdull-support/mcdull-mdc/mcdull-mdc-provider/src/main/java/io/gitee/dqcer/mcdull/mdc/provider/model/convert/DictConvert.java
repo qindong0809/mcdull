@@ -11,7 +11,7 @@ import java.util.List;
  * 码表转换
  *
  * @author dqcer
- * @version 2022/12/24
+ * @since 2022/12/24
  */
 public class DictConvert {
 

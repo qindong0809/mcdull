@@ -10,7 +10,7 @@ import java.util.Arrays;
  * base58工具
  *
  * @author dqcer
- * @version 2022/10/21
+ * @since 2022/10/21
  */
 @SuppressWarnings("unused")
 public class Base58Util {

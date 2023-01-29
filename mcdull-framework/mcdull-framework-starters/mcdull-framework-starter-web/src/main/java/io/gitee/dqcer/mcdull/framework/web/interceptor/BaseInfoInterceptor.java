@@ -32,7 +32,7 @@ import java.util.List;
  * 基础信息拦截器
  *
  * @author dqcer
- * @version 2021/08/19
+ * @since 2021/08/19
  */
 public abstract class BaseInfoInterceptor implements HandlerInterceptor {
 

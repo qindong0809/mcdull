@@ -6,7 +6,7 @@ import java.io.Serializable;
  * gc 日志详细信息
  *
  * @author dqcer
- * @version 2022/11/11
+ * @since 2022/11/11
  */
 @SuppressWarnings("unused")
 public class ServiceGcLog implements Serializable {

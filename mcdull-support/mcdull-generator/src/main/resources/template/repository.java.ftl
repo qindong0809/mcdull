@@ -10,7 +10,7 @@ import ${cfg.apiDto}.${cfg.dtoName};
 * ${table.comment!} 数据库操作封装接口层
 *
 * @author ${author}
-* @version ${date}
+* @since ${date}
 */
 public interface ${cfg.repositoryName} extends IService<${cfg.entityName}>  {
 

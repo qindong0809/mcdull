@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  * 如果不使用该注解指定@Cacheable的过期时间，将会采取RedisCacheAutoConfiguration中配置的全局缓存失效时间
  *
  * @author dqcer
- * @version 2022/10/05
+ * @since 2022/10/05
  */
 
 @Target({ElementType.METHOD})

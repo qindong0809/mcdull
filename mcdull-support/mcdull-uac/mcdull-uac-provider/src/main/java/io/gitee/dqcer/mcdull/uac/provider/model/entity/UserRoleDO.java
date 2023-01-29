@@ -12,7 +12,7 @@ import java.util.Date;
  * 系统角色实体
  *
  * @author dqcer
- * @version 2022/11/07
+ * @since 2022/11/07
  */
 @TableName("sys_user_role")
 public class UserRoleDO extends IdDO {

@@ -21,7 +21,7 @@ import java.text.MessageFormat;
  *  码表通用逻辑实现类
  *
  * @author dqcer
- * @version 2022/12/24
+ * @since 2022/12/24
  */
 @Service
 public class DictManagerImpl implements IDictManager {

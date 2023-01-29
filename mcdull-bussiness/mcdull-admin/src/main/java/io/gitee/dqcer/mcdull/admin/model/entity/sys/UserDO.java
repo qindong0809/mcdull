@@ -9,7 +9,7 @@ import java.time.LocalTime;
  * 系统用户实体
  *
  * @author dqcer
- * @version 2022/11/07
+ * @since 2022/11/07
  */
 @TableName("sys_user")
 public class UserDO extends BaseDO {

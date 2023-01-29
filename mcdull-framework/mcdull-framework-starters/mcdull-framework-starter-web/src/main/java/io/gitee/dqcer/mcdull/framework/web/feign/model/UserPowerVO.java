@@ -8,7 +8,7 @@ import java.util.List;
  * 用户权力对象
  *
  * @author dqcer
- * @version 2022/12/17
+ * @since 2022/12/17
  */
 public class UserPowerVO implements VO {
 

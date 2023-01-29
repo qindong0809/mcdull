@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.VO;
  * 登录VO
  *
  * @author dqcer
- * @version 2022/11/01
+ * @since 2022/11/01
  */
 public class LoginVO implements VO {
 

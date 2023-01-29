@@ -17,7 +17,7 @@ import java.io.File;
  * JavaMail邮件发送者实现类
  *
  * @author dqcer
- * @version 2022/12/20
+ * @since 2022/12/20
  */
 @Service
 public class JavaMailTemplate implements MailTemplate {

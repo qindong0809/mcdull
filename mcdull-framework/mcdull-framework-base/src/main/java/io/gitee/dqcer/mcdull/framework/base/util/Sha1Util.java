@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
  * sha1工具
  *
  * @author dqcer
- * @version 2022/10/04
+ * @since 2022/10/04
  */
 @SuppressWarnings("unused")
 public class Sha1Util {

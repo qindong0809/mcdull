@@ -4,7 +4,7 @@ package io.gitee.dqcer.cloud;
  * id生成器
  *
  * @author dqcer
- * @version 2022/11/16
+ * @since 2022/11/16
  */
 public class IdWorker {
 

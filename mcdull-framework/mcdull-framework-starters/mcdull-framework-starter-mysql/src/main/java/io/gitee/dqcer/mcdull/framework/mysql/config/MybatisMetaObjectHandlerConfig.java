@@ -13,7 +13,7 @@ import java.util.Date;
  * 数据库字段自动填充配置
  *
  * @author dqcer
- * @version 2021/08/21 20:08:55
+ * @since 2021/08/21 20:08:55
  */
 public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
 

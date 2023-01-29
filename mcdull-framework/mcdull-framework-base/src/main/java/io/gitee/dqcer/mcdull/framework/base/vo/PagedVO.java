@@ -8,7 +8,7 @@ import java.util.List;
  * 分页对象
  *
  * @author dqcer
- * @version 2022/05/06
+ * @since 2022/05/06
  */
 @SuppressWarnings("unused")
 public class PagedVO<T> implements IPaged, VO {

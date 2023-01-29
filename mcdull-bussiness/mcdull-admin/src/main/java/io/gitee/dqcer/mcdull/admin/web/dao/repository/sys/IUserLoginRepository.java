@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserLoginDO;
  * 用户登录信息 数据库操作封装接口层
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 public interface IUserLoginRepository extends IService<UserLoginDO> {
 

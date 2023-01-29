@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.admin.framework.log;
 
 import io.gitee.dqcer.mcdull.admin.config.OperationLog;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogDO;
-import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsAspect;
+import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsService;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 import org.springframework.stereotype.Component;
 
@@ -14,28 +14,30 @@ import java.lang.reflect.Method;
  * 简单的操作日志拦截
  *
  * @author dqcer
- * @version 2023/01/15 15:01:22
+ * @since 2023/01/15 15:01:22
  */
 @Component
-public class SimpleOperationLogsAspect extends OperationLogsAspect {
+public class SimpleOperationLogsAspect implements OperationLogsService {
 
     @Resource
     private OperationLogAsyncEvent asyncEvent;
 
     /**
-     * 是拦截器
+     * 是否需要拦截器
      *
      * @param request 请求
      * @param method  方法
      * @return boolean
      */
     @Override
-    protected boolean isInterceptor(HttpServletRequest request, Method method) {
+    public boolean needInterceptor(HttpServletRequest request, Method method) {
         return method.isAnnotationPresent(OperationLog.class);
     }
 
+
+
     @Override
-    protected void saveLog(LogOperationDTO dto, Method method) {
+    public void saveLog(LogOperationDTO dto, Method method) {
         OperationLog annotation = method.getAnnotation(OperationLog.class);
         LogDO logDO = of(dto);
         logDO.setModel(annotation.module());

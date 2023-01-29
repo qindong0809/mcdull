@@ -15,7 +15,7 @@ import java.util.List;
  * 日志 feign 实现层
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 @RestController
 public class LogServerFeign {

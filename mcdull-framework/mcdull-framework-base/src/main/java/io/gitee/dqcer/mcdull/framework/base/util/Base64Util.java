@@ -7,7 +7,7 @@ import java.util.Base64;
  * base64工具类
  *
  * @author dqcer
- * @version 2021/10/08 20:10:17
+ * @since 2021/10/08 20:10:17
  */
 @SuppressWarnings("unused")
 public class Base64Util {

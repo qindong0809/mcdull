@@ -4,7 +4,7 @@ package io.gitee.dqcer.mcdull.framework.base.exception;
  * 服务错误异常
  *
  * @author dqcer
- * @version 2022/04/22
+ * @since 2022/04/22
  */
 public class FeignServiceErrorException extends RuntimeException{
 

@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 * 邮件模板 接收客户端参数
 *
 * @author dqcer
-* @version 2022-11-16
+* @since 2022-11-16
 */
 public class MailTemplateLiteDTO extends PagedDTO {
 

@@ -12,7 +12,7 @@ import java.util.Date;
  * 用户登录实体
  *
  * @author dqcer
- * @version 2022/12/18
+ * @since 2022/12/18
  */
 @TableName("sys_user_login")
 public class UserLoginDO extends IdDO {

@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
  * 返回码实现
  *
  * @author dqcer
- * @version 2022/01/11
+ * @since 2022/01/11
  */
 public enum CodeEnum implements ICode , IEnum<Integer> {
 

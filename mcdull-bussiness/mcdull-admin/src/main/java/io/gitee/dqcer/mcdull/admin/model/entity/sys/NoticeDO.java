@@ -9,7 +9,7 @@ import java.util.Date;
  * 通知公告表 实体类
  *
  * @author dqcer
- * @version 2023-01-18
+ * @since 2023-01-18
  */
 @TableName("sys_notice")
 public class NoticeDO extends BaseDO {

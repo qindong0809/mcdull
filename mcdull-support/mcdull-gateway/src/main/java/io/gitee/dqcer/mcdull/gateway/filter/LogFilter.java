@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * 日志过滤器
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 @Component
 public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {

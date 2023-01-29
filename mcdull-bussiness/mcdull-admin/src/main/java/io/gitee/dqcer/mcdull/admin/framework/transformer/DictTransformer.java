@@ -11,7 +11,7 @@ import javax.annotation.Resource;
  * 简单的翻译转换器
  *
  * @author dqcer
- * @version 2023/01/15 15:01:37
+ * @since 2023/01/15 15:01:37
  */
 @Component
 public class DictTransformer extends AbstractTransformer {

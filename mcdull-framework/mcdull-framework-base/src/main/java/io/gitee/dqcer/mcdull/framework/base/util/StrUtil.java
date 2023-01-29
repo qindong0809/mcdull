@@ -4,7 +4,7 @@ package io.gitee.dqcer.mcdull.framework.base.util;
  * 字符串验证工具
  *
  * @author dqcer
- * @version 2022/10/04
+ * @since 2022/10/04
  */
 @SuppressWarnings("unused")
 public class StrUtil {

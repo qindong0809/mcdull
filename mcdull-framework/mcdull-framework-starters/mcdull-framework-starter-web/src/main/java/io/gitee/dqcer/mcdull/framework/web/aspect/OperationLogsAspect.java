@@ -5,6 +5,7 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.JsonUtil;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
+import io.gitee.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -16,25 +17,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 操作日志
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 @Aspect
 @Order(GlobalConstant.Order.ASPECT_OPERATION_LOG)
@@ -76,7 +71,9 @@ public class OperationLogsAspect {
             return joinPoint.proceed();
         }
 
-        if (!isInterceptor(request, method)) {
+        OperationLogsService bean = SpringContextHolder.getBean(OperationLogsService.class);
+
+        if (!bean.needInterceptor(request, method)) {
             return joinPoint.proceed();
         }
 
@@ -85,36 +82,25 @@ public class OperationLogsAspect {
             return joinPoint.proceed();
         } finally {
             Object[] args = joinPoint.getArgs();
-            LogOperationDTO entity = listenerLog(request, args, startTime);
+            LogOperationDTO entity = buildLog(request, args, startTime);
             if (log.isDebugEnabled()) {
                 log.debug("Operation log dto: {}", entity);
             }
-            saveLog(entity, method);
+
+            bean.saveLog(entity, method);
         }
-
     }
+
 
     /**
-     * 是拦截器
+     * 构建日志
      *
-     * @param request 请求
-     * @param method  方法
-     * @return boolean
+     * @param request   request
+     * @param args      参数集
+     * @param startTime 开始时间
+     * @return {@link LogOperationDTO}
      */
-    protected boolean isInterceptor(HttpServletRequest request, Method method) {
-        return !request.getMethod().equalsIgnoreCase(RequestMethod.GET.name());
-    }
-
-    /**
-     * 保存日志
-     *
-     * @param dto dto
-     */
-    protected void saveLog(LogOperationDTO dto, Method method) {
-        //logEventListener.listenLog(entity);
-    }
-
-    private LogOperationDTO listenerLog(HttpServletRequest request, Object[] args, long startTime) {
+    private LogOperationDTO buildLog(HttpServletRequest request, Object[] args, long startTime) {
 
         Map<String, String> headers = new HashMap<>(16);
         Enumeration<String> headerNames = request.getHeaderNames();

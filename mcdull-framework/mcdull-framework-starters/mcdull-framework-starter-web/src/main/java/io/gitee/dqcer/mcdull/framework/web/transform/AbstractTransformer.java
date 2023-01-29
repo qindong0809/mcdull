@@ -12,7 +12,7 @@ import java.text.MessageFormat;
  * Abstract Transformer
  *
  * @author dqcer
- * @version 2022/12/23
+ * @since 2022/12/23
  */
 public abstract class AbstractTransformer implements ITransformer<Object> {
 

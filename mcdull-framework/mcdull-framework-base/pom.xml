@@ -6,17 +6,12 @@
     <parent>
         <artifactId>mcdull-framework</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.0.3-RELEASE</version>
+        <version>0.0.4-RELEASE</version>
     </parent>
 
     <artifactId>mcdull-framework-base</artifactId>
-    <version>0.0.3-RELEASE</version>
+    <version>0.0.4-RELEASE</version>
     <name>mcdull-framework-base</name>
-
-    <properties>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
-    </properties>
 
     <dependencies>
         <dependency>

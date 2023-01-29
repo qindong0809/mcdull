@@ -4,7 +4,7 @@ package io.gitee.dqcer.mcdull.framework.base.constants;
  * 全局常量
  *
  * @author dqcer
- * @version 2022/10/26
+ * @since 2022/10/26
  */
 @SuppressWarnings("unused")
 public class GlobalConstant {

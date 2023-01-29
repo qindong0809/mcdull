@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  * feign 配置
  *
  * @author dqcer
- * @version 2022/06/12
+ * @since 2022/06/12
  */
 @Configuration
 public class FeignConfiguration implements RequestInterceptor {

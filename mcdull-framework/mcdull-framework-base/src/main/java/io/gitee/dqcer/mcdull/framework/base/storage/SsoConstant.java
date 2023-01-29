@@ -4,7 +4,7 @@ package io.gitee.dqcer.mcdull.framework.base.storage;
  * 缓存常量
  *
  * @author dqcer
- * @version 2021/09/10
+ * @since 2021/09/10
  */
 public class SsoConstant {
 

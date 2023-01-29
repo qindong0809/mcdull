@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 * 通知公告表 控制器
 *
 * @author dqcer
-* @version 2023-01-19
+* @since 2023-01-19
 */
 @RestController
 @RequestMapping("/sys-notice")

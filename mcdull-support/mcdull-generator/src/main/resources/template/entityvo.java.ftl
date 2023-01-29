@@ -7,7 +7,7 @@ import java.util.Date;
 * ${table.comment!} 返回客户端值
 *
 * @author ${author}
-* @version ${date}
+* @since ${date}
 */
 public class ${cfg.voName} implements VO {
 

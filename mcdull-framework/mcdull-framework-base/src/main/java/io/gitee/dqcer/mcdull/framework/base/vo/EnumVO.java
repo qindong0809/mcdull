@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
  * 只有code和text，可以用于展示下拉框
  *
  * @author dqcer
- * @version 2022/10/04
+ * @since 2022/10/04
  */
 @SuppressWarnings("unused")
 public class EnumVO<T> implements IEnum<T> {

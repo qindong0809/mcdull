@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.VO;
  * 码表 VO
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 public class RemoteDictVO implements VO {
     /**

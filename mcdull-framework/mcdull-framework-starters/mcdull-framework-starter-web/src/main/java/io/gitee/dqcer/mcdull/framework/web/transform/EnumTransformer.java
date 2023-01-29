@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  * enum类翻译统一处理
  *
  * @author dqcer
- * @version 2022/10/05
+ * @since 2022/10/05
  */
 public class EnumTransformer implements ITransformer<Object> {
 

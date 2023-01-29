@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * 登录服务api
  *
  * @author dqcer
- * @version 2022/10/28
+ * @since 2022/10/28
  */
 public interface AuthServiceApi {
 

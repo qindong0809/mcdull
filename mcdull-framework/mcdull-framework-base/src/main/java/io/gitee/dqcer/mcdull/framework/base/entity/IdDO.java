@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
  * 主键
  *
  * @author dqcer
- * @version 2022/01/12
+ * @since 2022/01/12
  */
 public class IdDO implements DO {
 

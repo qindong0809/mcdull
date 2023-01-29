@@ -24,7 +24,7 @@ import java.util.List;
  * sys dict服务
  *
  * @author dqcer
- * @version  2022/11/08
+ * @since  2022/11/08
  */
 @Service
 public class DictService {

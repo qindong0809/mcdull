@@ -13,7 +13,7 @@ import org.springframework.scheduling.support.SimpleTriggerContext;
  * 定时任务配置
  *
  * @author dqcer
- * @version 2022/12/29
+ * @since 2022/12/29
  */
 @EnableScheduling
 @Configuration

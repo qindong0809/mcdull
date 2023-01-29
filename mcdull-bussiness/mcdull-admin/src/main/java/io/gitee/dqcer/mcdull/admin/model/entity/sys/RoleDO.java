@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
  * 系统角色实体
  *
  * @author dqcer
- * @version 2022/11/07
+ * @since 2022/11/07
  */
 @TableName("sys_role")
 public class RoleDO extends BaseDO {

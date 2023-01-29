@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
  * 翻译转换接口
  *
  * @author dqcer
- * @version 2023/01/15 15:01:68
+ * @since 2023/01/15 15:01:68
  */
 public interface IUserTransformerService {
 

@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * mcdull 全局配置
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 @ConfigurationProperties(prefix = GlobalConstant.ROOT_PREFIX)
 public class McdullProperties {

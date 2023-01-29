@@ -4,7 +4,7 @@ package io.gitee.dqcer.mcdull.framework.base.annotation;
  * 翻译接口
  *
  * @author dqcer
- * @version 2022/10/05
+ * @since 2022/10/05
  */
 @FunctionalInterface
 public interface ITransformer<ID> {

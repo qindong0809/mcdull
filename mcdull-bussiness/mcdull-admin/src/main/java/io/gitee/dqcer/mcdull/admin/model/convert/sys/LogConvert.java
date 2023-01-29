@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 * 日志记录 对象转换工具类
 *
 * @author dqcer
-* @version 2023-01-14
+* @since 2023-01-14
 */
 public class LogConvert {
 

@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
  * 角色 数据库操作封装接口层
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 public interface IRoleRepository extends IService<RoleDO> {
 

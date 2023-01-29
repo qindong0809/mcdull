@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.ICode;
  * 业务异常
  *
  * @author dqcer
- * @version  17:49 2021/3/5
+ * @since  17:49 2021/3/5
  */
 public class BusinessException extends RuntimeException {
 

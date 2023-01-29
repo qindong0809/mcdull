@@ -17,7 +17,7 @@ import java.util.List;
  * sys dict控制器
  *
  * @author dqcer
- * @version  2022/11/08
+ * @since  2022/11/08
  */
 @RestController
 public class DictController {

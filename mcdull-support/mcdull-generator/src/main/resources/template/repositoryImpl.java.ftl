@@ -13,6 +13,7 @@ import ${cfg.GlobalConstant};
 import ${cfg.DelFlayEnum};
 import ${cfg.DatabaseRowException};
 import ${cfg.ObjUtil};
+import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ import java.util.List;
 * ${table.comment!} 数据库操作封装实现层
 *
 * @author ${author}
-* @version ${date}
+* @since ${date}
 */
 @Service
 public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${cfg.entityName}>  implements ${cfg.repositoryName} {

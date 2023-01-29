@@ -14,7 +14,7 @@ import java.util.List;
  * 码表服务api
  *
  * @author dqcer
- * @version 2022/10/28
+ * @since 2022/10/28
  */
 public interface DictServiceApi {
 

@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
  * 菜单枚举
  *
  * @author dqcer
- * @version 2022/07/26
+ * @since 2022/07/26
  */
 @SuppressWarnings("unused")
 public enum MenuTypeEnum implements IEnum<String> {

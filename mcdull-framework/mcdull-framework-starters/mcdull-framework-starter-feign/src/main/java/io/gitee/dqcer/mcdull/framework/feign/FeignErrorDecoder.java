@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * feign错误拦截
  *
  * @author dqcer
- * @version 2022/12/25
+ * @since 2022/12/25
  */
 @Configuration
 public class FeignErrorDecoder implements ErrorDecoder {

@@ -9,7 +9,7 @@ import java.util.List;
  * security 服务
  *
  * @author dqcer
- * @version 2023/01/15 16:01:75
+ * @since 2023/01/15 16:01:75
  */
 public interface ISecurityService {
 

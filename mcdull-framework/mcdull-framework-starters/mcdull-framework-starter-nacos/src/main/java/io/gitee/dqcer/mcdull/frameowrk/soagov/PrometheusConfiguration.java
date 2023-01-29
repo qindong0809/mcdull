@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * Prometheus配置
  *
  * @author dqcer
- * @version 2022/10/09
+ * @since 2022/10/09
  */
 @Configuration
 @ConditionalOnClass({MeterRegistry.class})

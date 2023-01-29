@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 * ${table.comment!} 控制器
 *
 * @author ${author}
-* @version ${date}
+* @since ${date}
 */
 @RestController
 @RequestMapping("<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>")
@@ -66,7 +66,8 @@ public class ${cfg.controller} {
     public Result<Long> update(@RequestBody @Validated(value = {ValidGroup.Update.class}) ${cfg.dtoName} dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.update(dto);
     }
-
+<#list table.fields as field>
+<#if "status" == field.name>
     /**
     * 状态更新
     *
@@ -78,6 +79,8 @@ public class ${cfg.controller} {
     public Result<Long> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) StatusDTO dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.updateStatus(dto);
     }
+</#if>
+</#list>
 
     /**
     * 根据主键删除

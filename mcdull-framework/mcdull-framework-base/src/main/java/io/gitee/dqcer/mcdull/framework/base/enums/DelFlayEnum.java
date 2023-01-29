@@ -4,7 +4,7 @@ package io.gitee.dqcer.mcdull.framework.base.enums;
  * 删除枚举 针对数据库 0/false 1/true
  *
  * @author dqcer
- * @version 2022/07/26
+ * @since 2022/07/26
  */
 public enum DelFlayEnum implements IEnum<Boolean> {
     /**

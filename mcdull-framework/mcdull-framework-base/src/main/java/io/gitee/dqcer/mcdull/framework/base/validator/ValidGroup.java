@@ -4,7 +4,7 @@ package io.gitee.dqcer.mcdull.framework.base.validator;
  * 效验组 @NotNull/基本类型、@NotBlank/字符串、@Length/字符串长度、@NotEmpty/集合
  *
  * @author dqcer
- * @version 2022/01/11
+ * @since 2022/01/11
  */
 @SuppressWarnings("unused")
 public interface ValidGroup {

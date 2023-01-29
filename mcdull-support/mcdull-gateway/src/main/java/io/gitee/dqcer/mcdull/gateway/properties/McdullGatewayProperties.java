@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * 网关属性
  *
  * @author dqcer
- * @version 2022/10/27
+ * @since 2022/10/27
  */
 @ConfigurationProperties(prefix = GlobalConstant.ROOT_PREFIX)
 public class McdullGatewayProperties {

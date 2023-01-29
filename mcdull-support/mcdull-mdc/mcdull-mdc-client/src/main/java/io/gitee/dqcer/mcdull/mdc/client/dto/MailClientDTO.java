@@ -12,7 +12,7 @@ import java.util.List;
  * 邮件发送 请求类
  *
  * @author dqcer
- * @version 2022/11/01 22:11:30
+ * @since 2022/11/01 22:11:30
  */
 public class MailClientDTO implements DTO {
 

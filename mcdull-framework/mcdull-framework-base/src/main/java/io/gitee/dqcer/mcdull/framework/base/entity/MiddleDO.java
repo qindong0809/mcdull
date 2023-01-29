@@ -9,7 +9,7 @@ import java.util.Date;
  * 中间实体表， 针对中间1对多、多对多关联表
  *
  * @author dqcer
- * @version 2022/01/12
+ * @since 2022/01/12
  */
 public class MiddleDO extends IdDO {
 

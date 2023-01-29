@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * 网关应用程序
  *
  * @author dqcer
- * @version 2022/10/24
+ * @since 2022/10/24
  */
 @EnableFeignClients(basePackages = "io.gitee.dqcer.mcdull.uac.client.service")
 @RestController

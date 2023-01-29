@@ -10,7 +10,7 @@ import io.gitee.dqcer.mcdull.admin.model.dto.sys.NoticeLiteDTO;
 * 通知公告表 数据库操作封装接口层
 *
 * @author dqcer
-* @version 2023-01-19
+* @since 2023-01-19
 */
 public interface INoticeRepository extends IService<NoticeDO>  {
 

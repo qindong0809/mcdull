@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.Length;
  * 关键字查询
  *
  * @author dqcer
- * @version 11:20 2020/3/16
+ * @since 11:20 2020/3/16
  */
 public class KeywordDTO implements DTO {
 

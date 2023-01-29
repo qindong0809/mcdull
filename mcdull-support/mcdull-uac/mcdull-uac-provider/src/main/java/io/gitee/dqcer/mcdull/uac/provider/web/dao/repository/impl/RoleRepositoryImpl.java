@@ -23,7 +23,7 @@ import java.util.Date;
  * 角色 数据库操作封装实现层
  *
  * @author dqcer
- * @version 2022/12/25
+ * @since 2022/12/25
  */
 @Service
 public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implements IRoleRepository {

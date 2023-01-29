@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
  * feign业务异常
  *
  * @author dqcer
- * @version  2022/04/22
+ * @since  2022/04/22
  */
 public class FeignBizException extends RuntimeException{
 

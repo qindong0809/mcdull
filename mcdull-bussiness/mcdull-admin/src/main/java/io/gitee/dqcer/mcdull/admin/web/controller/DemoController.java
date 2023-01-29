@@ -3,6 +3,10 @@ package io.gitee.dqcer.mcdull.admin.web.controller;
 import com.alibaba.excel.EasyExcel;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.mongodb.client.model.Filters;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeBodyPart;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeMultipart;
+import io.gitee.dqcer.mcdull.CodeGenerator;
 import io.gitee.dqcer.mcdull.frameowrk.mongodb.DocumentQueryDTO;
 import io.gitee.dqcer.mcdull.frameowrk.mongodb.MongoDBService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
@@ -15,8 +19,19 @@ import org.bson.conversions.Bson;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.annotation.Resource;
+import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Date;
@@ -71,6 +86,10 @@ public class DemoController {
         Bson filter = Filters.and(Filters.eq("userId", 123L), Filters.eq("language", "zh-CN"));
         queryDTO.setFilter(filter);
         return Result.ok(mongoDBService.queryData(queryDTO));
+    }
+
+    public static void demoCodeGenerator() {
+        CodeGenerator.run("demo", "sys_log", false);
     }
 
     @UnAuthorize

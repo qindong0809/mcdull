@@ -6,7 +6,7 @@ import java.util.List;
  * 树型数据对象
  *
  * @author dqcer
- * @version 2022/12/07
+ * @since 2022/12/07
  */
 public class TreeVO<E, ID> implements VO {
 

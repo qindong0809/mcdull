@@ -7,7 +7,7 @@ import java.util.Date;
 * 通知公告表 返回客户端值
 *
 * @author dqcer
-* @version 2023-01-18
+* @since 2023-01-18
 */
 public class NoticeVO implements VO {
 

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 缓存的用户
  *
  * @author dqcer
- * @version 2021/11/14
+ * @since 2021/11/14
  */
 public class CacheUser implements Serializable {
 

@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 节点注册
  *
  * @author dqcer
- * @version 2023/01/08 16:01:74
+ * @since 2023/01/08 16:01:74
  */
 @Component
 public class NodeRegistry {

@@ -17,7 +17,7 @@ import java.util.List;
  * 用户 feign 实现层
  *
  * @author dqcer
- * @version 2022/12/25
+ * @since 2022/12/25
  */
 @RestController
 public class UserServerFeign implements UserServiceApi {

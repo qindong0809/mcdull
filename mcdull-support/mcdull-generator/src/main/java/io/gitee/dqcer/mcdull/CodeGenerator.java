@@ -17,7 +17,7 @@ import java.util.*;
  * 代码生成器
  *
  * @author dqcer
- * @version 2022/12/26 21:12:71
+ * @since 2022/12/26 21:12:71
  */
 public class CodeGenerator {
 
@@ -57,10 +57,15 @@ public class CodeGenerator {
     }
 
 
-
-
+    /**
+     * 运行
+     *
+     * @param modelName      模块名称 如： auth、pub
+     * @param tableName      表名
+     * @param isGeneratorWeb 是否生成 controller和service层 和 repository层
+     */
     @SuppressWarnings("all")
-    public static void main(String[] args) {
+    public static void run(String modelName, String tableName, boolean isGeneratorWeb) {
 
         /**************************要修改的信息*********************************/
         //  项目的根路径
@@ -72,7 +77,6 @@ public class CodeGenerator {
         String username = "root";
         String password = "123456";
         String projectNames = "mcdull.admin";
-        boolean isGeneratorWeb = true;
 
         Long parentMenuId = 1L;
 
@@ -82,8 +86,7 @@ public class CodeGenerator {
         /**********************************end**********************************/
         String outPath = USER_DIR + outputBase + SRC + "/";
         String projectName = projectNames.replace("-", "");
-        String modelName = scanner("包名称如：auth、pub");
-        String split = scanner("表名");
+        String split = tableName;
 
         String modelCode = split.substring(split.indexOf("_")  + 1);
         MODULE_CODE = modelCode.toLowerCase();
@@ -264,37 +267,10 @@ public class CodeGenerator {
     }
 
     private static void extracted(String outputBase, boolean isGeneratorWeb, String outPath, String className, String controllerPath, String servicePath, String serviceImplPath, String repositoryPath, String repositoryImplPath, String daoPath, String mapperXmlPath, String controllerSuffix, String serviceSuffix, String serviceImplSuffix, String repositorySuffix, String repositoryImplSuffix, String mapperSuffix, String entitySuffix, String voSuffix, String dtoSuffix, String convertSuffix, String entityPath, String dtoPath, String voPath, String convertPath, String templatePath, List<FileOutConfig> focList) {
-        focList.add(new FileOutConfig(templatePath) {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return USER_DIR + outputBase + "/src/main/resources/mapper/" + mapperXmlPath
-                        + "/" + className + mapperSuffix + StringPool.DOT_XML;
-            }
-        });
-
-        focList.add(new FileOutConfig("/template/entitydto.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return outPath + dtoPath + "/" + className + dtoSuffix + StringPool.DOT_JAVA;
-            }
-        });
-        focList.add(new FileOutConfig("/template/convert.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return outPath + convertPath + "/" + className + convertSuffix + StringPool.DOT_JAVA;
-            }
-        });
         focList.add(new FileOutConfig("/template/entity.java.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 return outPath + entityPath + "/" + className + entitySuffix + StringPool.DOT_JAVA;
-            }
-        });
-        focList.add(new FileOutConfig("/template/entityvo.java.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                return outPath + voPath +"/" + className + voSuffix + StringPool.DOT_JAVA;
             }
         });
         focList.add(new FileOutConfig("/template/mapper.java.ftl") {
@@ -304,6 +280,33 @@ public class CodeGenerator {
             }
         });
         if (isGeneratorWeb) {
+            focList.add(new FileOutConfig(templatePath) {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
+                    return USER_DIR + outputBase + "/src/main/resources/mapper/" + mapperXmlPath
+                            + "/" + className + mapperSuffix + StringPool.DOT_XML;
+                }
+            });
+
+            focList.add(new FileOutConfig("/template/entitydto.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    return outPath + dtoPath + "/" + className + dtoSuffix + StringPool.DOT_JAVA;
+                }
+            });
+            focList.add(new FileOutConfig("/template/convert.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    return outPath + convertPath + "/" + className + convertSuffix + StringPool.DOT_JAVA;
+                }
+            });
+            focList.add(new FileOutConfig("/template/entityvo.java.ftl") {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    return outPath + voPath +"/" + className + voSuffix + StringPool.DOT_JAVA;
+                }
+            });
             focList.add(new FileOutConfig("/template/controller.java.ftl") {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
@@ -335,6 +338,7 @@ public class CodeGenerator {
                 }
             });
         }
+
     }
 
     private static String toPath(String packageName) {

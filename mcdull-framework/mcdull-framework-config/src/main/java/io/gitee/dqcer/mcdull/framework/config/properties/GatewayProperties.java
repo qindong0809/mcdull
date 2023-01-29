@@ -7,7 +7,7 @@ import java.util.List;
  * 网关属性
  *
  * @author dqcer
- * @version 2022/12/25
+ * @since 2022/12/25
  */
 public class GatewayProperties {
 

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 * 日志记录 接收客户端参数
 *
 * @author dqcer
-* @version 2023-01-14
+* @since 2023-01-14
 */
 public class LogLiteDTO extends PagedDTO {
 

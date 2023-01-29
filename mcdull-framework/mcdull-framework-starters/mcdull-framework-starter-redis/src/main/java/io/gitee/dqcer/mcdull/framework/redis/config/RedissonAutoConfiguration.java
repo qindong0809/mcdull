@@ -42,7 +42,7 @@ import java.util.stream.Stream;
  * redis 配置
  *
  * @author dqcer
- * @version 2021/09/10
+ * @since 2021/09/10
  */
 @Configuration
 public class RedissonAutoConfiguration extends CachingConfigurerSupport {

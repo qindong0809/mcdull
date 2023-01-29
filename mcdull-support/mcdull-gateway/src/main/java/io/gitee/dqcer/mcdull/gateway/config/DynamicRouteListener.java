@@ -2,10 +2,10 @@ package io.gitee.dqcer.mcdull.gateway.config;
 
 import com.alibaba.cloud.nacos.NacosConfigManager;
 import com.alibaba.cloud.nacos.NacosConfigProperties;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.config.listener.Listener;
 import com.alibaba.nacos.api.exception.NacosException;
+import io.gitee.dqcer.mcdull.framework.base.util.JsonUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +77,7 @@ import java.util.concurrent.TimeUnit;
 
  *
  * @author dqcer
- * @version 2022/10/26
+ * @since 2022/10/26
  */
 @Component
 public class DynamicRouteListener implements InitializingBean, ApplicationEventPublisherAware {
@@ -155,7 +155,7 @@ public class DynamicRouteListener implements InitializingBean, ApplicationEventP
         }
         ROUTE_IDS.clear();
 
-        List<RouteDefinition> routeDefinitions = JSONObject.parseArray(configInfo, RouteDefinition.class);
+        List<RouteDefinition> routeDefinitions = JsonUtil.parseArray(configInfo, RouteDefinition.class);
         for (RouteDefinition routeDefinition : routeDefinitions) {
             routeDefinitionWriter.save(Mono.just(routeDefinition)).subscribe();
             ROUTE_IDS.add(routeDefinition.getId());

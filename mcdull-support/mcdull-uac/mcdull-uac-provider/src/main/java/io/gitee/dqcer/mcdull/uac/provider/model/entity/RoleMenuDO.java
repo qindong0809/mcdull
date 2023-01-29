@@ -12,7 +12,7 @@ import java.util.Date;
  * 系统角色菜单实体
  *
  * @author dqcer
- * @version 2022/11/07
+ * @since 2022/11/07
  */
 @TableName("sys_role_menu")
 public class RoleMenuDO extends IdDO {

@@ -8,7 +8,7 @@ import ${cfg.apiEntity}.${cfg.entityName};
 * ${table.comment!} 对象转换工具类
 *
 * @author ${author}
-* @version ${date}
+* @since ${date}
 */
 public class ${cfg.convertName} {
 

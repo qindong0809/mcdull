@@ -10,7 +10,7 @@ import io.gitee.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
 * 日志记录 数据库操作封装接口层
 *
 * @author dqcer
-* @version 2023-01-14
+* @since 2023-01-14
 */
 public interface ILogRepository extends IService<LogDO>  {
 

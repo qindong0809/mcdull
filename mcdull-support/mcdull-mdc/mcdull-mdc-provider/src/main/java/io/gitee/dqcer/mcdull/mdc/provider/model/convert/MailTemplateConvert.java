@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.mdc.provider.model.entity.SysMailTemplateDO;
  * 邮件模板转换
  *
  * @author dqcer
- * @version 2022/12/26 21:12:88
+ * @since 2022/12/26 21:12:88
  */
 public class MailTemplateConvert {
 

@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeDO;
 * 通知公告表 对象转换工具类
 *
 * @author dqcer
-* @version 2023-01-18
+* @since 2023-01-18
 */
 public class NoticeConvert {
 

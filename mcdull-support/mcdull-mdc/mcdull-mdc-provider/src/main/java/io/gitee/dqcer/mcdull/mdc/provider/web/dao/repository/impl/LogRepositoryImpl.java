@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * 日志 数据库操作封装实现层
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 @Service
 public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO> implements ILogRepository {

@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.mdc.provider.model.entity.LogDO;
  * 系统日志 feign dto
  *
  * @author dqcer
- * @version 2022/12/25
+ * @since 2022/12/25
  */
 public class SysLogFeignDTO extends LogDO {
     @Override

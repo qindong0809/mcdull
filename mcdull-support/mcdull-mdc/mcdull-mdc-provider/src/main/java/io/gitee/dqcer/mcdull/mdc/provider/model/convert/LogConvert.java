@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.mdc.provider.model.vo.LogVO;
  * log 转换工具类
  *
  * @author dqcedr
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 public class LogConvert {
 

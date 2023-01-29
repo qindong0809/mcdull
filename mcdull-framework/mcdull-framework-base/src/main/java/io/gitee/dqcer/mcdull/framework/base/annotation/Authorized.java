@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * 授权
  *
  * @author dqcer
- * @version 2022/07/26
+ * @since 2022/07/26
  */
 @Documented
 @Target({ElementType.METHOD})

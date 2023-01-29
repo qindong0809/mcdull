@@ -11,7 +11,7 @@ import java.util.List;
 * ${table.comment!} 业务接口类
 *
 * @author ${author}
-* @version ${date}
+* @since ${date}
 */
 public interface ${cfg.serviceName} {
 
@@ -38,14 +38,17 @@ public interface ${cfg.serviceName} {
      * @return {@link Result<Long> }
      */
     Result<Long> update(${cfg.dtoName} dto);
-
+<#list table.fields as field>
+    <#if "status" == field.name>
     /**
      * 状态更新
      *
      * @param dto   参数
      * @return {@link Result<Long> }
      */
-    Result<Long> updateStatus(StatusDTO dto);
+     Result<Long> updateStatus(StatusDTO dto);
+    </#if>
+</#list>
 
     /**
      * 根据主键删除

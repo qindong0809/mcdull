@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
  * 用户操作日志 实体类
  *
  * @author dqcer
- * @version 2023-01-14
+ * @since 2023-01-14
  */
 @TableName("sys_operation_log")
 public class LogDO extends MiddleDO {

@@ -25,7 +25,7 @@ import java.util.List;
 * 通知公告表 数据库操作封装实现层
 *
 * @author dqcer
-* @version 2023-01-19
+* @since 2023-01-19
 */
 @Service
 public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeDO>  implements INoticeRepository {

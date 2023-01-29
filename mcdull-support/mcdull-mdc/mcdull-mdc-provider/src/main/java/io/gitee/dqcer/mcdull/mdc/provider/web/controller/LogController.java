@@ -19,7 +19,7 @@ import java.util.List;
  * 日志控制器
  *
  * @author dqcer
- * @version 2022/12/25
+ * @since 2022/12/25
  */
 @RestController
 public class LogController {

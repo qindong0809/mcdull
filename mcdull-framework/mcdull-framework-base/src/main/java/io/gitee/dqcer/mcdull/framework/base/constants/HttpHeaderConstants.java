@@ -4,7 +4,7 @@ package io.gitee.dqcer.mcdull.framework.base.constants;
  * http头部常量
  *
  * @author dqcer
- * @version 2022/07/26
+ * @since 2022/07/26
  */
 @SuppressWarnings("unused")
 public class HttpHeaderConstants {

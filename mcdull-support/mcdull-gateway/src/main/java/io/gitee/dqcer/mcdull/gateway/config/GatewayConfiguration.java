@@ -27,7 +27,7 @@ import java.util.List;
  * 网关配置
  *
  * @author dqcer
- * @version 2022/10/26
+ * @since 2022/10/26
  */
 @Configuration
 @EnableConfigurationProperties(McdullGatewayProperties.class)

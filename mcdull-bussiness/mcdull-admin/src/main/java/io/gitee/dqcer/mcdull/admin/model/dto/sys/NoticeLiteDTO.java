@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 * 通知公告表 接收客户端参数
 *
 * @author dqcer
-* @version 2023-01-18
+* @since 2023-01-18
 */
 public class NoticeLiteDTO extends PagedDTO {
 

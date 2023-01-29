@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  * 通用枚举基类
  *
  * @author dqcer
- * @version 2022/10/04
+ * @since 2022/10/04
  */
 public interface IEnum<T>  extends Serializable {
 

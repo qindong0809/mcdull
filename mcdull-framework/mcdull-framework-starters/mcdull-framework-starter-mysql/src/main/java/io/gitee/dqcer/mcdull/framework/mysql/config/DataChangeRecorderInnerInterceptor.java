@@ -30,6 +30,7 @@ import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -96,7 +97,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("all")
 public class DataChangeRecorderInnerInterceptor implements InnerInterceptor {
 
-    private final IDataChangeRecorder dataChangeRecorder;
+    private final ApplicationContext applicationContext;
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     @SuppressWarnings("unused")
@@ -106,8 +107,8 @@ public class DataChangeRecorderInnerInterceptor implements InnerInterceptor {
     private final Set<String> ignoreAllColumns = new HashSet<>();//全部表的这些字段名，INSERT/UPDATE都忽略，delete暂时保留
 
 
-    public DataChangeRecorderInnerInterceptor(IDataChangeRecorder dataChangeRecorder) {
-        this.dataChangeRecorder = dataChangeRecorder;
+    public DataChangeRecorderInnerInterceptor(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 
     @Override
@@ -139,8 +140,8 @@ public class DataChangeRecorderInnerInterceptor implements InnerInterceptor {
             long costThis = System.currentTimeMillis() - startTs;
             if (operationResult != null) {
                 operationResult.setCost(costThis);
-                dataChangeRecorder.dataInnerInterceptor(operationResult);
-
+                IDataChangeRecorder bean = applicationContext.getBean(IDataChangeRecorder.class);
+                bean.dataInnerInterceptor(operationResult);
             }
         }
     }

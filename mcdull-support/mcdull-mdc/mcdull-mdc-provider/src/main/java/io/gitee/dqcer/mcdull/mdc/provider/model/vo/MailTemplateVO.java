@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.VO;
  * 邮件模板 视图对象
  *
  * @author dqcer
- * @version  2022/11/16
+ * @since  2022/11/16
  */
 public class MailTemplateVO implements VO {
 

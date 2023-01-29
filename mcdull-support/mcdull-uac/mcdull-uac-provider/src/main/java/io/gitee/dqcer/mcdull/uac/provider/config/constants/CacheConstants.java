@@ -4,7 +4,7 @@ package io.gitee.dqcer.mcdull.uac.provider.config.constants;
  * 缓存常量
  *
  * @author dqcer
- * @version 2022/12/24
+ * @since 2022/12/24
  */
 public final class CacheConstants {
 

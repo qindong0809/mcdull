@@ -15,7 +15,7 @@ import java.util.List;
  * jvm  info util
  *
  * @author dqcer
- * @version  2022/11/11
+ * @since  2022/11/11
  */
 @SuppressWarnings("unused")
 public class JvmInfoUtil {

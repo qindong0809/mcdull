@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
  * 用户 对象转换工具类
  *
  * @author dqcer
- * @version  2022/11/25
+ * @since  2022/11/25
  */
 public class UserConvert {
 

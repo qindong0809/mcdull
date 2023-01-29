@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
  * 枚举字符串验证器
  *
  * @author dqcer
- * @version 2022/01/11
+ * @since 2022/01/11
  */
 public class EnumsIntValidator implements ConstraintValidator<EnumsIntValid, Integer> {
 

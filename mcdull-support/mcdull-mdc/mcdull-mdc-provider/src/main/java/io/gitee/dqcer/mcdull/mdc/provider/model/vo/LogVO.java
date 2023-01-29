@@ -8,7 +8,7 @@ import java.util.StringJoiner;
  * 日志视图对象
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 public class LogVO extends LogDO {
 

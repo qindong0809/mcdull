@@ -19,7 +19,7 @@ import java.util.List;
  * 自定义id生成器
  *
  * @author dqcer
- * @version 2022/12/24
+ * @since 2022/12/24
  */
 public class CustomIdGenerator implements IdentifierGenerator {
 

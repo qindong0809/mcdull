@@ -6,7 +6,7 @@ import java.lang.annotation.Annotation;
  * class 工具类
  *
  * @author dqcer
- * @version 2023/01/07 19:01:24
+ * @since 2023/01/07 19:01:24
  */
 public class ClassUtil {
 

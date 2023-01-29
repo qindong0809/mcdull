@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 * 日志记录 数据库操作封装实现层
 *
 * @author dqcer
-* @version 2023-01-14
+* @since 2023-01-14
 */
 @Service
 public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO>  implements ILogRepository {

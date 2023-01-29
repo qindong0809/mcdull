@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.mdc.provider.model.entity.LogDO;
  * log 数据库操作封装接口层
  *
  * @author dqcer
- * @version 2022/12/26
+ * @since 2022/12/26
  */
 public interface ILogRepository extends IService<LogDO> {
 

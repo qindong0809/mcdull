@@ -16,7 +16,7 @@ import java.util.List;
  * 码表 feign 实现层
  *
  * @author dqcer
- * @version 2022/12/25
+ * @since 2022/12/25
  */
 @RestController
 public class DictServerFeign implements DictServiceApi {

@@ -6,7 +6,7 @@ import javax.mail.MessagingException;
  * 邮件通用操作
  *
  * @author dqcer
- * @version 2022/12/20
+ * @since 2022/12/20
  */
 public interface MailTemplate {
 

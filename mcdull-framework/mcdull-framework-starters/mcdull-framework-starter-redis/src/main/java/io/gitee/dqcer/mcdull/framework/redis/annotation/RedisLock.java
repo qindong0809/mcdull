@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * redis锁
  *
  * @author dqcer
- * @version 2022/12/13
+ * @since 2022/12/13
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

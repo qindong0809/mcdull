@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * mapper 配置
  *
  * @author dqcer
- * @version 2022/07/25
+ * @since 2022/07/25
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

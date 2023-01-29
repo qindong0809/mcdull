@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
  * 更新状态
  *
  * @author dqcer
- * @date 2022/12/07
+ * @since 2022/12/07
  */
 public class StatusDTO implements DTO {
 

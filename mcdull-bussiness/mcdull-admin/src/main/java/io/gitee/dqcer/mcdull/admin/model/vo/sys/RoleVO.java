@@ -10,7 +10,7 @@ import java.util.Date;
  * 角色视图对象
  *
  * @author dqcer
- * @version  2022/11/27
+ * @since  2022/11/27
  */
 public class RoleVO implements VO {
 
