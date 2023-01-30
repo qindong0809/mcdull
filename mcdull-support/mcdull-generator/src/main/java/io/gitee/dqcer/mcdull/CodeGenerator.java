@@ -347,7 +347,7 @@ public class CodeGenerator {
 
 
     public static String toCamelCase(String s) {
-        s = s.substring(s.indexOf("_")  + 1);
+        s = s.substring(s.indexOf('_')  + 1);
         s = s.toLowerCase();
         StringBuilder sb = new StringBuilder(s.length());
         boolean upperCase = false;

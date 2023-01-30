@@ -313,3 +313,43 @@ try {
 > https://www.jianshu.com/p/b2f4ad0ec396
 >log.error("xxxxx", ThrowableUtil.getStackTraceAsString(e));
 >如有需求请联系作者(dqcer@sina.com)
+
+### 编码建议
+
+#### 控制流语句“if”、“for”、“while”、“switch”和“try”不应该嵌套得太深
+```java
+// 反例
+if (condition1) {                  // Compliant - depth = 1
+  /* ... */
+  if (condition2) {                // Compliant - depth = 2
+    /* ... */
+    for(int i = 0; i < 10; i++) {  // Compliant - depth = 3, not exceeding the limit
+      /* ... */
+      if (condition4) {            // Noncompliant - depth = 4
+        if (condition5) {          // Depth = 5, exceeding the limit, but issues are only reported on depth = 4
+          /* ... */
+        }
+        return;
+      }
+    }
+  }
+}
+// 正例
+if (!condition1) {                 
+  /* ... */
+    return;
+}
+if (!condition2) {                
+   /* ... */
+    return;
+}
+for(int i = 0; i < 10; i++) {  
+ /* ... */
+ if (condition4) {            
+   if (condition5) {          
+     /* ... */
+   }
+   return;
+ }
+}
+```

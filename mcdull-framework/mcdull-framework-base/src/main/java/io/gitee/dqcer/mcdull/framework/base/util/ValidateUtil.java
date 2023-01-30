@@ -22,7 +22,7 @@ public class ValidateUtil {
     /**
      * regexp密码
      */
-    public static final String REGEXP_PASSWORD = "^[a-z0-9_-]{6,18}$";
+    public static final String REGEXP_PD = "^[a-z0-9_-]{6,18}$";
 
     /**
      * regexp邮件

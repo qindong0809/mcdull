@@ -33,17 +33,23 @@ public enum SexEnum implements IEnum<Integer> {
     }
 
     public static SexEnum toEnum(int code) {
+        SexEnum sexEnum;
         switch (code) {
             case 0:
-                return SexEnum.UNKNOWN;
+                sexEnum = SexEnum.UNKNOWN;
+                break;
             case 1:
-                return SexEnum.MALE;
+                sexEnum = SexEnum.MALE;
+                break;
             case 2:
-                return SexEnum.FEMALE;
+                sexEnum = SexEnum.FEMALE;
+                break;
             case 9:
-                return SexEnum.UNSPECIFIED;
+                sexEnum = SexEnum.UNSPECIFIED;
+                break;
             default:
                 throw new IllegalArgumentException("invalid value , only [0, 1, 2, 9] is allowed");
         }
+        return sexEnum;
     }
 }

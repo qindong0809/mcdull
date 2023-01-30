@@ -111,27 +111,29 @@ public abstract class BaseInfoInterceptor implements HandlerInterceptor {
         Authorized authorized = method.getMethodAnnotation(Authorized.class);
         if (null != authorized) {
             String code = authorized.value();
-            if (code.trim().length() > 0) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Interceptor check power code: {}", code);
-                }
-                String userPowerCacheKey = MessageFormat.format("framework:web:interceptor:power:{0}", unifySession.getUserId());
-                List<UserPowerVO> userPower = cacheChannel.get(userPowerCacheKey, List.class);
+            if (code.trim().length() == 0) {
+                return true;
+            }
+
+            if (log.isDebugEnabled()) {
+                log.debug("Interceptor check power code: {}", code);
+            }
+            String userPowerCacheKey = MessageFormat.format("framework:web:interceptor:power:{0}", unifySession.getUserId());
+            List<UserPowerVO> userPower = cacheChannel.get(userPowerCacheKey, List.class);
+            if (ObjUtil.isNull(userPower)) {
+                userPower = getUserPower();
                 if (ObjUtil.isNull(userPower)) {
-                    userPower = getUserPower();
-                    if (ObjUtil.isNull(userPower)) {
-                        log.warn("数据库无 userId: {} 对应配置的角色权限", UserContextHolder.getSession().getUserId());
-                        response.getWriter().write(errorJson(CodeEnum.POWER_CHECK_MODULE));
-                        return false;
-                    }
-                    cacheChannel.put(userPowerCacheKey, userPower, 3000);
-                }
-                boolean anyMatch = userPower.stream().anyMatch(i -> i.getModules().contains(code));
-                if (!anyMatch) {
-                    log.warn("没有对应的模块权限: {}, userPower: {}", CodeEnum.POWER_CHECK_MODULE, userPower);
+                    log.warn("数据库无 userId: {} 对应配置的角色权限", UserContextHolder.getSession().getUserId());
                     response.getWriter().write(errorJson(CodeEnum.POWER_CHECK_MODULE));
                     return false;
                 }
+                cacheChannel.put(userPowerCacheKey, userPower, 3000);
+            }
+            boolean anyMatch = userPower.stream().anyMatch(i -> i.getModules().contains(code));
+            if (!anyMatch) {
+                log.warn("没有对应的模块权限: {}, userPower: {}", CodeEnum.POWER_CHECK_MODULE, userPower);
+                response.getWriter().write(errorJson(CodeEnum.POWER_CHECK_MODULE));
+                return false;
             }
         }
         return true;

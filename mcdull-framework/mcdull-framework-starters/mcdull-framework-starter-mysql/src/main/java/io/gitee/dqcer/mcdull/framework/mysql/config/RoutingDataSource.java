@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.JdbcUtils;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Map;
@@ -66,14 +67,17 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
             conn = dataSource.getConnection();
             stmt = conn.createStatement();
 
-
             // TODO: 2022/12/14
             /*
                 select * from information_schema.TABLES
                 where TABLE_NAME = '需要查询的数据表名';
              */
 
-            ResultSet rs = stmt.executeQuery(properties.getTenantSql() + " where tenant_id = " + lookupKey);
+            String sql = properties.getTenantSql() + " where tenant_id = ?";
+
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, lookupKey);
+            ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
                 String name = rs.getString("database");

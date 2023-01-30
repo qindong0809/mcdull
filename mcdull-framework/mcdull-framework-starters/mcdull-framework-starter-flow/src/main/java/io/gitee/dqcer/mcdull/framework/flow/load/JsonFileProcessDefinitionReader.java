@@ -4,6 +4,8 @@ import io.gitee.dqcer.mcdull.framework.base.util.JsonUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.flow.properties.ProcessBean;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -22,6 +24,8 @@ import java.util.Set;
  * @date 2023/01/08 16:01:54
  */
 public class JsonFileProcessDefinitionReader implements ProcessDefinitionReader {
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private static final TypeReference<List<ProcessBean>> LIST_OF_PROCESS = new TypeReference<List<ProcessBean>>() {};
 
@@ -59,7 +63,7 @@ public class JsonFileProcessDefinitionReader implements ProcessDefinitionReader 
             List<ProcessBean> load = load(DEFAULT_PROCESS_FILE_PATH);
             this.definedProcessBeans = Collections.unmodifiableSet(new HashSet<>(load));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return this.definedProcessBeans;
     }

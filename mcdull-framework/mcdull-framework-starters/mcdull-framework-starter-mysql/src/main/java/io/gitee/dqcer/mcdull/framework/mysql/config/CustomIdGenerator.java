@@ -40,7 +40,7 @@ public class CustomIdGenerator implements IdentifierGenerator {
                 hostAddress = ipAddress.get(0);
             }
 
-            String lastStrOfIp = hostAddress.substring(hostAddress.lastIndexOf(".") + 1);
+            String lastStrOfIp = hostAddress.substring(hostAddress.lastIndexOf('.') + 1);
             Long num = Long.valueOf(lastStrOfIp);
 
             long dataCenterId = num / 32;

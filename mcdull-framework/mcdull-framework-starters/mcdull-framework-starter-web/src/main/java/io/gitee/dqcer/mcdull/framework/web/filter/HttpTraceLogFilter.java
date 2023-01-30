@@ -65,18 +65,13 @@ public class HttpTraceLogFilter implements Filter {
         }
     }
 
-
-    /**
-     * @param request http request
-     * @return boolean
-     */
     private boolean isRequestValid(HttpServletRequest request) {
         try {
             new URI(request.getRequestURL().toString());
-            return true;
         } catch (URISyntaxException e) {
             log.warn(e.getMessage(), e);
             return false;
         }
+        return true;
     }
 }

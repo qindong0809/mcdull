@@ -16,6 +16,6 @@ public class SsoConstant {
     /**
      * sso令牌名称空间超时
      */
-    public static final long SSO_TOKEN_NAMESPACE_TIMEOUT = 60 * 60 * 24 * 7;
+    public static final long SSO_TOKEN_NAMESPACE_TIMEOUT = 60 * 60 * 24 * 7L;
 
 }

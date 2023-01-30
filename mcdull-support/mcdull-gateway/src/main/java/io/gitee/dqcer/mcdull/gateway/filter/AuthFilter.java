@@ -144,6 +144,7 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
         try {
             result = future.get();
         } catch (InterruptedException | ExecutionException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
         return result;
