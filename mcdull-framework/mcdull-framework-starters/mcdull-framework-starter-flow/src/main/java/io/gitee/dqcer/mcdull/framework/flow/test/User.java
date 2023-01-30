@@ -4,8 +4,10 @@ package io.gitee.dqcer.mcdull.framework.flow.test;
 import java.io.Serializable;
 
 /**
- * @author Kevin Liu
- * @date 2020/5/4 10:42 上午
+ * 用户
+ *
+ * @author dqcer
+ * @date 2023/01/30 22:01:28
  */
 
 public class User implements Serializable {

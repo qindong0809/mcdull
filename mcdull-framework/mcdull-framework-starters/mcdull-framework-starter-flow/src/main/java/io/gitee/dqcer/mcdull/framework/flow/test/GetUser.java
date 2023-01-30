@@ -6,8 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Kevin Liu
- * @date 2020/5/4 9:16 上午
+ * 获取用户
+ *
+ * @author dqcer
+ * @date 2023/01/30 22:01:57
  */
 @TreeNode(code = "user.get.id")
 public class GetUser implements ProcessHandler<SimpleContext> {

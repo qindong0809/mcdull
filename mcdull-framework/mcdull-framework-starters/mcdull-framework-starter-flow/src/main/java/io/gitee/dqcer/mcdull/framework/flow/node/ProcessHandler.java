@@ -40,10 +40,10 @@ public interface ProcessHandler<Context> {
     /**
      * 终止该业务整个流程
      *
-     * @return {@link Result<T>}
+     * @return boolean
      */
-    default <T> Result<T> stopFlow() {
-        return null;
+    default boolean stopFlow() {
+        return false;
     }
 
 }

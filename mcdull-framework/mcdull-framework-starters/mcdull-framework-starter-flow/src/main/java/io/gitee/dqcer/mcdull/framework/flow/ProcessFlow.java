@@ -30,8 +30,8 @@ public class ProcessFlow {
         }
         for (ProcessHandler processHandler : processHandlers) {
             processHandler.execute(context);
-            Result<?> result = processHandler.stopFlow();
-            if (result != null) {
+            boolean stopFlow = processHandler.stopFlow();
+            if (stopFlow) {
                 break;
             }
         }
