@@ -13,6 +13,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "spring.datasource")
 public class DataSourceProperties {
 
+    public static final String DRUID = "Druid";
+
+    public static final String HIKARI = "Hikari";
+
 
     /**
      * 默认的key
@@ -37,9 +41,23 @@ public class DataSourceProperties {
     private String password;
 
     /**
+     * 连接池类型 默认 Hikari / Druid
+     */
+    private String poolType = HIKARI;
+
+    /**
      * 租户sql
      */
     private String tenantSql;
+
+    public String getPoolType() {
+        return poolType;
+    }
+
+    public DataSourceProperties setPoolType(String poolType) {
+        this.poolType = poolType;
+        return this;
+    }
 
     public String getTenantSql() {
         return tenantSql;

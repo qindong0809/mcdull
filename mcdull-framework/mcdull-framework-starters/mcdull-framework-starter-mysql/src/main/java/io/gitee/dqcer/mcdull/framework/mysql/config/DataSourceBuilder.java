@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.mysql.config;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import io.gitee.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 
 /**
  * 数据源建造
@@ -44,20 +46,40 @@ public class DataSourceBuilder {
      * @return {@link DataSource}
      */
     public static DataSource builder(DataSourceProperties dataSourceProperty) {
-        HikariConfig config = new HikariConfig();
-        config.setUsername(dataSourceProperty.getUsername());
-        config.setPassword(dataSourceProperty.getPassword());
-        config.setJdbcUrl(dataSourceProperty.getUrl());
-        config.setPoolName("DS-Pool");
-        config.setDriverClassName(dataSourceProperty.getDriverClassName());
-        config.validate();
-        HikariDataSource source = new HikariDataSource();
-        try {
-            configCopyMethod.invoke(config, source);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            log.error("builder error", e);
-        }
-        return source;
-    }
 
+        String poolType = dataSourceProperty.getPoolType();
+        if (DataSourceProperties.DRUID.equals(poolType)) {
+            DruidDataSource druidDataSource = new DruidDataSource();
+            druidDataSource.setUsername(dataSourceProperty.getUsername());
+            druidDataSource.setPassword(dataSourceProperty.getPassword());
+            druidDataSource.setUrl(dataSourceProperty.getUrl());
+            druidDataSource.setDriverClassName(dataSourceProperty.getDriverClassName());
+            druidDataSource.setName("DS-Pool");
+            try {
+                druidDataSource.setFilters("stat, wall, log4j");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return druidDataSource;
+        }
+
+        if (DataSourceProperties.HIKARI.equals(poolType)) {
+            HikariConfig config = new HikariConfig();
+            config.setUsername(dataSourceProperty.getUsername());
+            config.setPassword(dataSourceProperty.getPassword());
+            config.setJdbcUrl(dataSourceProperty.getUrl());
+            config.setPoolName("DS-Pool");
+
+            config.setDriverClassName(dataSourceProperty.getDriverClassName());
+            config.validate();
+            HikariDataSource source = new HikariDataSource();
+            try {
+                configCopyMethod.invoke(config, source);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                log.error("builder error", e);
+            }
+            return source;
+        }
+        return null;
+    }
 }

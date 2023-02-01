@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.framework.mysql.config;
 
 
+import com.alibaba.druid.support.http.StatViewServlet;
+import com.alibaba.druid.support.http.WebStatFilter;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
@@ -14,7 +16,10 @@ import io.gitee.dqcer.mcdull.framework.mysql.aspect.DataSourceAspect;
 import io.gitee.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -150,5 +155,41 @@ public class AutoConfiguration {
     public DataSourceTransactionManager transactionManager(RoutingDataSource dynamicDataSource) {
         return new DataSourceTransactionManager(dynamicDataSource);
     }
+
+    @ConditionalOnProperty(name = "spring.datasource.poolType", havingValue = DataSourceProperties.DRUID)
+    @Bean
+    public ServletRegistrationBean<StatViewServlet> statViewServlet() {
+        ServletRegistrationBean<StatViewServlet> bean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
+
+        // 这些参数可以在 com.alibaba.druid.support.http.StatViewServlet
+        // 的父类 com.alibaba.druid.support.http.ResourceServlet 中找到
+        Map<String, String> initParams = new HashMap<>(100);
+        initParams.put("loginUsername", "admin");
+        initParams.put("loginPassword", "admin");
+
+        //后台允许谁可以访问
+        //initParams.put("allow", "localhost")：表示只有本机可以访问
+        //initParams.put("allow", "")：为空或者为null时，表示允许所有访问
+        initParams.put("allow", "");
+
+        //设置初始化参数
+        bean.setInitParameters(initParams);
+        return bean;
+    }
+
+    @ConditionalOnProperty(name = "spring.datasource.poolType", havingValue = DataSourceProperties.DRUID)
+    @Bean
+    public FilterRegistrationBean<WebStatFilter> webStaticFilter() {
+        FilterRegistrationBean<WebStatFilter> bean = new FilterRegistrationBean<>();
+        bean.setFilter(new WebStatFilter());
+        // 设置过滤器过滤路径
+        bean.addUrlPatterns("/*");
+        Map<String, String> initParams = new HashMap<>(100);
+        // 这些东西不进行统计
+        initParams.put("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
+        bean.setInitParameters(initParams);
+        return bean;
+    }
+
 
 }

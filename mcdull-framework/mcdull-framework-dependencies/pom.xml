@@ -27,6 +27,7 @@
         <redisson.spring.boot.version>3.16.2</redisson.spring.boot.version>
         <hutool.version>5.8.9</hutool.version>
         <archunit.version>1.0.1</archunit.version>
+        <druid.version>1.2.14</druid.version>
     </properties>
 
     <dependencyManagement>
@@ -80,6 +81,11 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.redisson</groupId>
