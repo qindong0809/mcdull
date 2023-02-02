@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.admin.framework.audit;
 
-import io.gitee.dqcer.mcdull.framework.mongodb.MongoDBService;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.JsonUtil;
 import io.gitee.dqcer.mcdull.framework.mysql.config.DataChangeRecorderInnerInterceptor;
@@ -9,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +22,8 @@ public class DefaultDataChangeRecorder implements IDataChangeRecorder {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultDataChangeRecorder.class);
 
-    @Resource
-    private MongoDBService mongoDBService;
+//    @Resource
+//    private MongoDBService mongoDBService;
 
     /**
      * 打印
@@ -37,7 +35,7 @@ public class DefaultDataChangeRecorder implements IDataChangeRecorder {
         if (log.isDebugEnabled()) {
             log.debug("{}", operationResult);
         }
-        mongoDBService.insertOrUpdate("data_change_record", build(operationResult));
+//        mongoDBService.insertOrUpdate("data_change_record", build(operationResult));
     }
 
     public static TableAudit build(DataChangeRecorderInnerInterceptor.OperationResult operationResult) {

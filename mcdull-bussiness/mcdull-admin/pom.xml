@@ -40,12 +40,12 @@
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-framework-starter-mysql</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.gitee.dqcer</groupId>
-            <artifactId>mcdul-framework-starter-mongodb</artifactId>
-            <version>0.0.5-RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.gitee.dqcer</groupId>-->
+<!--            <artifactId>mcdul-framework-starter-mongodb</artifactId>-->
+<!--            <version>0.0.5-RELEASE</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel-core</artifactId>

@@ -13,4 +13,4 @@ spring:
 logging:
   level:
     root: info
-    io.gitee.dqcer.mcdull.framework: info
+    io.gitee.dqcer.mcdull.framework: debug

@@ -1,24 +1,16 @@
 package io.gitee.dqcer.mcdull.admin.web.controller;
 
-import com.mongodb.client.model.Filters;
 import io.gitee.dqcer.mcdull.CodeGenerator;
-import io.gitee.dqcer.mcdull.framework.mongodb.DocumentQueryDTO;
-import io.gitee.dqcer.mcdull.framework.mongodb.MongoDBService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
-import org.bson.conversions.Bson;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 演示控制器
@@ -46,30 +38,30 @@ public class DemoController {
         return Result.ok(UserContextHolder.getSession());
     }
 
-    @Resource
-    private MongoDBService mongoDBService;
+//    @Resource
+//    private MongoDBService mongoDBService;
 
-    @UnAuthorize
-    @GetMapping("/db")
-    public Result<UnifySession> mongodbInsert() {
-        UnifySession session = new UnifySession();
-        session.setLanguage("zh-CN");
-        session.setUserId(123L);
-        session.setNow(new Date());
-        session.setTraceId(RandomUtil.uuid());
-        mongoDBService.insertOrUpdate("user", session);
-        return Result.ok(UserContextHolder.getSession());
-    }
-
-    @UnAuthorize
-    @GetMapping("/dblist")
-    public Result<List<UnifySession>> mongodbList() {
-        DocumentQueryDTO queryDTO = new DocumentQueryDTO();
-        queryDTO.setCollectionName("user");
-        Bson filter = Filters.and(Filters.eq("userId", 123L), Filters.eq("language", "zh-CN"));
-        queryDTO.setFilter(filter);
-        return Result.ok(mongoDBService.queryData(queryDTO, UnifySession.class));
-    }
+//    @UnAuthorize
+//    @GetMapping("/db")
+//    public Result<UnifySession> mongodbInsert() {
+//        UnifySession session = new UnifySession();
+//        session.setLanguage("zh-CN");
+//        session.setUserId(123L);
+//        session.setNow(new Date());
+//        session.setTraceId(RandomUtil.uuid());
+//        mongoDBService.insertOrUpdate("user", session);
+//        return Result.ok(UserContextHolder.getSession());
+//    }
+//
+//    @UnAuthorize
+//    @GetMapping("/dblist")
+//    public Result<List<UnifySession>> mongodbList() {
+//        DocumentQueryDTO queryDTO = new DocumentQueryDTO();
+//        queryDTO.setCollectionName("user");
+//        Bson filter = Filters.and(Filters.eq("userId", 123L), Filters.eq("language", "zh-CN"));
+//        queryDTO.setFilter(filter);
+//        return Result.ok(mongoDBService.queryData(queryDTO, UnifySession.class));
+//    }
 
     /**
      * 演示代码生成器
