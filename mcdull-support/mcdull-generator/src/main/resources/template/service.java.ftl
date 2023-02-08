@@ -1,5 +1,6 @@
 package ${package.Service};
 
+import ${cfg.IdDTO};
 import ${cfg.PagedVO};
 import ${cfg.StatusDTO};
 import ${cfg.apiVo}.${cfg.voName};
@@ -51,20 +52,13 @@ public interface ${cfg.serviceName} {
 </#list>
 
     /**
-     * 根据主键删除
+     * 根据主键批量删除
      *
      * @param dto 参数
      * @return {@link Result<Long>}
      */
-    Result<Long> delete(${cfg.dtoName} dto);
+    Result<List<Long> deleteBatchByIds(DeleteDTO dto);
 
-    /**
-     * 根据主键集删除
-     *
-     * @param ids id集
-     * @return {@link Result<List>}
-     */
-    Result<List<Long>> deleteByIds(List<Long> ids);
 
     /**
      * 根据主键集查询

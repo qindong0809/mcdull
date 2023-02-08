@@ -13,7 +13,7 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
  */
 public class RoleConvert {
 
-    public static RoleDO dto2Entity(RoleLiteDTO dto) {
+    public static RoleDO convertToRoleDO(RoleLiteDTO dto) {
         RoleDO entity = new RoleDO();
         entity.setDelFlag(dto.getDelFlag());
         entity.setName(dto.getName());
@@ -22,7 +22,7 @@ public class RoleConvert {
         return entity;
     }
 
-    public static RoleVO entity2VO(RoleDO entity) {
+    public static RoleVO convertToRoleVO(RoleDO entity) {
         if (entity == null) {
             return null;
         }

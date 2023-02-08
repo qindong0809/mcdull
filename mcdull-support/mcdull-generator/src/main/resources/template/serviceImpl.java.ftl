@@ -7,6 +7,7 @@ import ${package.Service}.${cfg.serviceName};
 import ${cfg.apiEntity}.${cfg.entityName};
 import ${cfg.apiVo}.${cfg.voName};
 import ${cfg.repository}.${cfg.repositoryName};
+import ${cfg.IdDTO};
 import ${cfg.StatusDTO};
 import ${cfg.UserContextHolder};
 import ${cfg.DatabaseRowException};
@@ -48,17 +49,27 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
     @Override
     public Result<Long> insert(${cfg.dtoName} dto) {
 
-        ${cfg.entityName} tempEntity = new ${cfg.entityName}();
-        // TODO: 业务唯一性效验, 除非业务场景不需要
-        boolean exist = ${(cfg.repositoryName?substring(1))?uncap_first}.exist(tempEntity);
-        if (exist) {
-            log.warn("数据已存在 query:{}", tempEntity);
+        boolean dataExist = this.doCheckDataExist(dto);
+        if (dataExist) {
+            log.warn("数据已存在 dto: {}", dto);
             return Result.error(CodeEnum.DATA_EXIST);
         }
 
         ${cfg.entityName} entity = ${cfg.convertName}.convertTo${cfg.entityName}(dto);
         Long entityId = ${(cfg.repositoryName?substring(1))?uncap_first}.insert(entity);
         return Result.ok(entityId);
+    }
+
+   /**
+    * 检查数据是否存在
+    *
+    * @param dto dto
+    * @return boolean
+    */
+    private boolean doCheckDataExist(RoleLiteDTO dto) {
+        RoleDO tempEntity = new RoleDO();
+        // TODO: 业务唯一性效验, 除非业务场景不需要
+        return roleRepository.exist(tempEntity);
     }
 
     /**
@@ -138,17 +149,17 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
 </#if>
 </#list>
     /**
-     * 根据主键删除
+     * 根据主键批量删除
      *
      * @param dto 参数
      * @return {@link Result<Long>}
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<Long> delete(${cfg.dtoName} dto) {
-        Long id = dto.getId();
-        ${(cfg.repositoryName?substring(1))?uncap_first}.deleteById(dto.getId());
-        return Result.ok(id);
+    public Result<List<Long>> deleteBatchByIds(IdDTO<Long> dto) {
+        List<Long> ids = dto.getIds();
+        ${(cfg.repositoryName?substring(1))?uncap_first}.deleteBatchByIds(ids);
+        return Result.ok(ids);
     }
 
     /**

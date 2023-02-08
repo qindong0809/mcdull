@@ -1,6 +1,7 @@
 package ${package.Controller};
 
 import ${cfg.Authorized};
+import ${cfg.IdDTO};
 import ${cfg.PagedVO};
 import ${cfg.ValidGroup};
 import ${cfg.StatusDTO};
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 /**
 * ${table.comment!} 控制器
@@ -83,15 +85,15 @@ public class ${cfg.controller} {
 </#list>
 
     /**
-    * 根据主键删除
+    * 根据主键批量删除
     *
     * @param dto dto
     * @return {@link Result<Long>}
     */
     @Authorized("${cfg.modelName}:${cfg.moduleCode}:delete")
     @PostMapping("base/delete")
-    public Result<Long> delete(@RequestBody @Validated(value = {ValidGroup.Delete.class}) ${cfg.dtoName} dto){
-        return ${(cfg.serviceName?substring(1))?uncap_first}.delete(dto);
+    public Result<List<Long>> deleteBatchByIds(@RequestBody @Valid DeleteDTO dto){
+        return ${(cfg.serviceName?substring(1))?uncap_first}.deleteBatchByIds(dto);
     }
 
     /**

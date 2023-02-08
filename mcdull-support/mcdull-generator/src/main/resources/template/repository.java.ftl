@@ -47,19 +47,11 @@ public interface ${cfg.repositoryName} extends IService<${cfg.entityName}>  {
     Long insert(${cfg.entityName} entity);
 
     /**
-     * 通过主键删除
-     *
-     * @param id 主键
-     */
-    void deleteById(Long id);
-
-    /**
      * 批量删除
      *
      * @param ids 主键集
-     * @return int 受影响的行数
      */
-    int deleteBatchIds(List<Long> ids);
+    void deleteBatchIds(List<Long> ids);
 
     /**
      * 是否存在

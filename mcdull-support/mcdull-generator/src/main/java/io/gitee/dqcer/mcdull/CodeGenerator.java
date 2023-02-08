@@ -243,6 +243,7 @@ public class CodeGenerator {
                 map.put("ObjUtil", BASIC + "util.ObjUtil");
                 map.put("PagedVO", BASIC + "vo.PagedVO");
                 map.put("StatusDTO", BASIC + "dto.StatusDTO");
+                map.put("IdDTO", BASIC + "dto.IdDTO");
                 map.put("UserContextHolder", BASIC + "storage.UserContextHolder");
                 map.put("CodeEnum", BASIC + "wrapper.CodeEnum");
                 map.put("PageUtil", BASIC + "util.PageUtil");

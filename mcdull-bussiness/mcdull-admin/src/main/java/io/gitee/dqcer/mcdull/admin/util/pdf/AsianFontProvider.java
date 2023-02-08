@@ -13,6 +13,7 @@ import com.itextpdf.tool.xml.XMLWorkerFontProvider;
  */
 public class AsianFontProvider extends XMLWorkerFontProvider {
 
+    @Override
     public Font getFont(final String fontname, final String encoding, final boolean embedded, final float size, final int style, final BaseColor color) {
         BaseFont bf = null;
         try {

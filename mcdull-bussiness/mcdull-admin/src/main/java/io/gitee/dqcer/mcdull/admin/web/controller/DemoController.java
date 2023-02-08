@@ -63,11 +63,14 @@ public class DemoController {
 //        return Result.ok(mongoDBService.queryData(queryDTO, UnifySession.class));
 //    }
 
+    public static void main(String[] args) {
+        demoCodeGenerator();
+    }
     /**
      * 演示代码生成器
      */
     public static void demoCodeGenerator() {
-        CodeGenerator.run("demo", "sys_log", false);
+        CodeGenerator.run("sys", "sys_role", true);
     }
 
     @UnAuthorize

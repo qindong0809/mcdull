@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 
+import java.util.List;
+
 /**
  * 角色 数据库操作封装接口层
  *
@@ -12,6 +14,15 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
  * @since 2022/12/26
  */
 public interface IRoleRepository extends IService<RoleDO> {
+
+
+    /**
+     * 根据ID列表批量查询数据
+     *
+     * @param ids id列表
+     * @return {@link List<RoleDO}>}
+     */
+    List<RoleDO> queryListByIds(List<Long> ids);
 
     /**
      * 分页查询
@@ -28,5 +39,20 @@ public interface IRoleRepository extends IService<RoleDO> {
      * @return {@link Long}
      */
     Long insert(RoleDO entity);
+
+    /**
+     * 存在
+     *
+     * @param roleDO 角色
+     * @return boolean
+     */
+    boolean exist(RoleDO roleDO);
+
+    /**
+     * 根据id删除批处理
+     *
+     * @param ids id
+     */
+    void deleteBatchByIds(List<Long> ids);
 
 }

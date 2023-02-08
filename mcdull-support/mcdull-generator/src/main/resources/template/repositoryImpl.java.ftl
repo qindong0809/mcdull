@@ -114,7 +114,7 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
      * @return int 受影响的行数
      */
     @Override
-    public int deleteBatchIds(List<Long> ids) {
+    public void deleteBatchIds(List<Long> ids) {
          return baseMapper.deleteBatchIds(ids);
     }
 
@@ -126,7 +126,20 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
      */
     @Override
     public boolean exist(${cfg.entityName} entity) {
-        List<${cfg.entityName}> list = baseMapper.selectList(Wrappers.lambdaQuery(entity));
-        return list.isEmpty();
+        return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
+    }
+
+    /**
+    * 根据id删除批处理
+    *
+    * @param ids id集
+    */
+    @Override
+    public void deleteBatchByIds(List<Long> ids) {
+        int rowSize = baseMapper.deleteBatchIds(ids);
+        if (rowSize != ids.size()) {
+            log.error("数据插入失败 actual: {}, plan: {}, ids: {}", rowSize, ids.size(), ids);
+            throw new DatabaseRowException(CodeEnum.DB_ERROR);
+        }
     }
 }
