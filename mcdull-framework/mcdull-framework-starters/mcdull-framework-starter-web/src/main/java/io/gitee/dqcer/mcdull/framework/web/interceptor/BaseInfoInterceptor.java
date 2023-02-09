@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 基础信息拦截器
@@ -128,6 +129,11 @@ public abstract class BaseInfoInterceptor implements HandlerInterceptor {
                     return false;
                 }
                 cacheChannel.put(userPowerCacheKey, userPower, 3000);
+            }
+            // 管理员放过
+            Optional<UserPowerVO> first = userPower.stream().filter(i -> GlobalConstant.ADMIN_ROLE.equals(i.getRoleId())).findFirst();
+            if (first.isPresent()) {
+                return true;
             }
             boolean anyMatch = userPower.stream().anyMatch(i -> i.getModules().contains(code));
             if (!anyMatch) {

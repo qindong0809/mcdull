@@ -29,7 +29,7 @@ public class PagedDTO extends KeywordDTO implements IPaged {
      */
     @NotNull(groups = ValidGroup.Paged.class)
     @Min(groups = ValidGroup.Paged.class, value = 1)
-    protected Long currentPage;
+    protected Long page;
 
     /**
      * 排序字段信息
@@ -40,7 +40,7 @@ public class PagedDTO extends KeywordDTO implements IPaged {
     public String toString() {
         final StringBuffer sb = new StringBuffer("PagedDTO{");
         sb.append("pageSize=").append(pageSize);
-        sb.append(", currentPage=").append(currentPage);
+        sb.append(", page=").append(page);
         sb.append(", orders=").append(orders);
         sb.append(", keyword='").append(keyword).append('\'');
         sb.append('}');
@@ -62,11 +62,11 @@ public class PagedDTO extends KeywordDTO implements IPaged {
      * @return {@link Long}
      */
     @Override
-    public Long getCurrentPage() {
-        return currentPage;
+    public Long getPage() {
+        return page;
     }
 
-    public void setCurrentPage(Long currentPage) {
-        this.currentPage = currentPage;
+    public void setPage(Long page) {
+        this.page = page;
     }
 }

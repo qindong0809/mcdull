@@ -63,7 +63,7 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
         if (ObjUtil.isNotNull(keyword)) {
             // TODO 组装查询条件
         }
-        return baseMapper.selectPage(new Page<>(param.getCurrentPage(), param.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(param.getPage(), param.getPageSize()), lambda);
     }
 
     /**

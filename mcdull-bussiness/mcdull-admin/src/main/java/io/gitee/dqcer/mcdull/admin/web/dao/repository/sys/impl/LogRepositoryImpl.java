@@ -63,7 +63,7 @@ public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO>  implements
         if (StrUtil.isNotBlank(keyword)) {
             //TODO 组装查询条件
         }
-        return baseMapper.selectPage(new Page<>(param.getCurrentPage(), param.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(param.getPage(), param.getPageSize()), lambda);
     }
 
     /**

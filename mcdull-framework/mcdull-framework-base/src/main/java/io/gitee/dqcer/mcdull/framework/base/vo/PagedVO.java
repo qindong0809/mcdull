@@ -29,7 +29,7 @@ public class PagedVO<T> implements IPaged, VO {
     /**
      * 当前页数
      */
-    private Long currentPage;
+    private Long page;
     /**
      * 列表数据
      */
@@ -41,13 +41,13 @@ public class PagedVO<T> implements IPaged, VO {
      * @param list       列表数据
      * @param totalCount 总记录数
      * @param pageSize   每页记录数
-     * @param currentPage   当前页数
+     * @param page   当前页数
      */
-    public PagedVO(List<T> list, Long totalCount, Long pageSize, Long currentPage) {
+    public PagedVO(List<T> list, Long totalCount, Long pageSize, Long page) {
         this.list = list;
         this.totalCount = totalCount;
         this.pageSize = pageSize;
-        this.currentPage = currentPage;
+        this.page = page;
         this.totalPage = (long) (int) Math.ceil((double) totalCount / pageSize);
     }
 
@@ -83,12 +83,12 @@ public class PagedVO<T> implements IPaged, VO {
      * @return {@link Long}
      */
     @Override
-    public Long getCurrentPage() {
-        return currentPage;
+    public Long getPage() {
+        return page;
     }
 
-    public void setCurrentPage(Long currentPage) {
-        this.currentPage = currentPage;
+    public void setPage(Long page) {
+        this.page = page;
     }
 
     public List<T> getList() {
@@ -105,7 +105,7 @@ public class PagedVO<T> implements IPaged, VO {
                 "totalCount=" + totalCount +
                 ", pageSize=" + pageSize +
                 ", totalPage=" + totalPage +
-                ", currentPage=" + currentPage +
+                ", page=" + page +
                 ", list=" + list +
                 '}';
     }

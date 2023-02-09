@@ -42,7 +42,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
             query.and(i-> i.like(RoleDO::getName, keyword));
         }
         query.orderByDesc(BaseDO::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
+        return baseMapper.selectPage(new Page<>(dto.getPage(), dto.getPageSize()), query);
     }
 
     /**

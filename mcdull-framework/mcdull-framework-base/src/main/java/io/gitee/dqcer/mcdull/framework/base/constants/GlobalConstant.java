@@ -21,6 +21,12 @@ public class GlobalConstant {
     public static final String LOGIN_URL = "/login";
 
 
+    /**
+     * 管理角色
+     */
+    public static final Long ADMIN_ROLE = 1L;
+
+
 
     public static class Environment {
 

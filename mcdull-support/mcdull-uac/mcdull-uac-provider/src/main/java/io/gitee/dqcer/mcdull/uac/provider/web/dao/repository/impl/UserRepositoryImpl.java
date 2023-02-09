@@ -55,7 +55,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
         }
         query.orderByDesc(BaseDO::getCreatedTime);
         query.eq(UserDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
-        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
+        return baseMapper.selectPage(new Page<>(dto.getPage(), dto.getPageSize()), query);
     }
 
     /**
