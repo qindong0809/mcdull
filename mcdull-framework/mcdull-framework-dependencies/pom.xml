@@ -99,6 +99,11 @@
                 <version>${hutool.version}</version>
             </dependency>
             <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-core</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.gitee.dqcer</groupId>
                 <artifactId>mcdull-framework-base</artifactId>
                 <version>${mcdull.version}</version>

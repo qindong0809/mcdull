@@ -11,7 +11,7 @@
 
     <artifactId>mcdull-bussiness</artifactId>
     <version>0.0.5-RELEASE</version>
-    <name>mcdull-bussiness</name>
+    <name>mcdull-business</name>
     <packaging>pom</packaging>
 
     <properties>
@@ -21,6 +21,7 @@
 
     <modules>
         <module>mcdull-admin</module>
+        <module>mcdull-business-common</module>
     </modules>
 
     <dependencyManagement>
