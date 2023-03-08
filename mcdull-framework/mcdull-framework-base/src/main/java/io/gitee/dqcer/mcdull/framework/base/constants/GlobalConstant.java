@@ -20,6 +20,11 @@ public class GlobalConstant {
 
     public static final String LOGIN_URL = "/login";
 
+    /**
+     * 服务器临时路径目录
+     */
+    public static final String TMP_DIR = System.getProperty("java.io.tmpdir");
+
 
     /**
      * 管理角色

@@ -77,6 +77,8 @@ public class HtmlConvertPdf {
             RightFooterHandler rightFooterHandler = new RightFooterHandler();
             pdfDocument.addEventHandler(PdfDocumentEvent.END_PAGE, rightFooterHandler);
             ConverterProperties converterProperties = new ConverterProperties();
+            // 添加字体
+            converterProperties.setFontProvider(FontUtils.getFontProvider());
             Document doc = HtmlConverter.convertToDocument(new ByteArrayInputStream(htmlStr.getBytes()), pdfDocument, converterProperties);
             doc.flush();
             rightFooterHandler.writeTotal(pdfDocument);
