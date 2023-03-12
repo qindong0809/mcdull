@@ -164,7 +164,6 @@ public class UserService {
 
         UserDO entity = new UserDO();
         entity.setId(id);
-        entity.setDelFlag(delFlag);
         entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
         entity.setUpdatedTime(new Date());
         boolean success = userRepository.updateById(entity);

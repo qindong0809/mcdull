@@ -5,14 +5,14 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRoleRepository;
-import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IUserManager;
+import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,9 +23,6 @@ import java.util.List;
  */
 @Service
 public class UserManagerImpl implements IUserManager {
-
-    @Resource
-    private IUserRepository userRepository;
 
     @Resource
     private IUserRoleRepository userRoleRepository;
@@ -57,5 +54,23 @@ public class UserManagerImpl implements IUserManager {
         }
         vo.setRoles(baseRoles);
         return vo;
+    }
+
+    /**
+     * 得到用户角色
+     *
+     * @param userId 用户id
+     * @return {@link List}<{@link RoleDO}>
+     */
+    @Override
+    public List<RoleDO> getUserRoles(Long userId) {
+        List<Long> roleIds = userRoleRepository.listRoleByUserId(userId);
+        if (!roleIds.isEmpty()) {
+            List<RoleDO> roleDOList = roleRepository.listByIds(roleIds);
+            if (!roleDOList.isEmpty()) {
+                return roleDOList;
+            }
+        }
+        return Collections.emptyList();
     }
 }

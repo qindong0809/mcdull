@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
 
+import java.util.List;
+
 /**
  * 菜单 数据库操作封装接口层
  *
@@ -28,4 +30,12 @@ public interface IMenuRepository extends IService<MenuDO> {
      * @return {@link Long}
      */
     Long insert(MenuDO entity);
+
+    /**
+     * 获取菜单
+     *
+     * @param menuIds 菜单id
+     * @return {@link List}<{@link MenuDO}>
+     */
+    List<MenuDO> getMenuByIds(List<Long> menuIds);
 }

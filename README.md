@@ -163,6 +163,24 @@ docsify serve .
         </dependency>
 ```
 
+##### 上传文件 子线程无法获取文件
+```java
+    private void biz(MultipartFile[] attachmentFiles) {
+        this.前置逻辑();
+        EmailUtil.sendEmailAsyn(
+                () -> {
+                    // 模拟复现条件 Thread.sleep(25000);
+                    // 可能存在的场景：主线程结束，临时文件被清空，导致子线程业务类无法获取到临时文件而报错(系统找不到指定的文件)。
+                    mailApi.sendEmailToMultipleReceiverWithAttachment(attachmentFiles, sendTo, ccs, subject, html(text));
+                });
+
+        this.后续逻辑();
+    }
+```
+- 解决方案
+> 改成主线程、或者使用file.getInputStream()，以文件流信息存储在内存中
+
+
 ##### feign get传对象
 
 - 解决方案

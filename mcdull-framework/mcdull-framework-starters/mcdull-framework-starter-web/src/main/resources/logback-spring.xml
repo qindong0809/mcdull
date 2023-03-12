@@ -105,6 +105,8 @@
   <logger name="io.gitee.dqcer.mcdull.framework" level="debug" />
   <logger name="io.gitee.dqcer" level="info" />
   <logger name="io.gitee.dqcer.mcdull.framework.redis.operation.CaffeineCache" level="INFO" />
+  <logger name="io.gitee.dqcer.mcdull.admin.web.dao" level="debug" />
+
   <root level="info">
     <appender-ref ref="CONSOLE" />
 <!--    <appender-ref ref="console" />-->

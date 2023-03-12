@@ -83,6 +83,19 @@ public class Result<T> implements Serializable {
     }
 
     /**
+     * 错误
+     *
+     * @param message 消息
+     * @return {@link Result}<{@link T}>
+     */
+    public static <T> Result<T> error(String message) {
+        return Result.<T>builder()
+                .withCode(CodeEnum.INTERNAL_SERVER_ERROR.getCode())
+                .withMessage(MessageFormat.format(CodeEnum.INTERNAL_SERVER_ERROR.getMessage(), message))
+                .build();
+    }
+
+    /**
      * 返回错误消息
      *
      * @param resultCode 结果代码

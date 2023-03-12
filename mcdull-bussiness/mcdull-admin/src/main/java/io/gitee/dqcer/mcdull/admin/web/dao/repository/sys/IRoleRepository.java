@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleMenuDO;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface IRoleRepository extends IService<RoleDO> {
      * 根据ID列表批量查询数据
      *
      * @param ids id列表
-     * @return {@link List<RoleDO}>}
+     * @return {@link List<RoleDO>}
      */
     List<RoleDO> queryListByIds(List<Long> ids);
 
@@ -55,4 +56,11 @@ public interface IRoleRepository extends IService<RoleDO> {
      */
     void deleteBatchByIds(List<Long> ids);
 
+    /**
+     * 获取菜单
+     *
+     * @param roleId 角色id
+     * @return {@link List}<{@link RoleMenuDO}>
+     */
+    List<RoleMenuDO> getMenuByRole(Long roleId);
 }

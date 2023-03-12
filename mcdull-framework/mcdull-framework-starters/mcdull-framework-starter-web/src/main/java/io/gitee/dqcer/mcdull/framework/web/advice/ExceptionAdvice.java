@@ -74,7 +74,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(value = BusinessException.class)
     public Result<?> businessException(BusinessException exception) {
         log.error("业务系统异常: ", exception);
-        return Result.error(exception.getCode());
+        return Result.error(exception.getMessage());
     }
 
     /**

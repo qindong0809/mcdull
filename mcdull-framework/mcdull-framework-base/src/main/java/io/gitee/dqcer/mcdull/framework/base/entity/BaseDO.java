@@ -17,11 +17,11 @@ public class BaseDO extends MiddleDO {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 删除标识，默认FALSE
+     * 删除标识，默认1
      * @see DelFlayEnum
      */
     @TableField(fill = FieldFill.INSERT)
-    protected Boolean delFlag;
+    protected Integer delFlag;
 
     /**
      * 删除人
@@ -59,11 +59,11 @@ public class BaseDO extends MiddleDO {
                 "} " + super.toString();
     }
 
-    public Boolean getDelFlag() {
+    public Integer getDelFlag() {
         return delFlag;
     }
 
-    public BaseDO setDelFlag(Boolean delFlag) {
+    public BaseDO setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
         return this;
     }

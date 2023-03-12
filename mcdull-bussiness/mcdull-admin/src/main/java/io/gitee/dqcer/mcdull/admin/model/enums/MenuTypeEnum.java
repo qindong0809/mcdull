@@ -10,15 +10,21 @@ import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
  */
 @SuppressWarnings("unused")
 public enum MenuTypeEnum implements IEnum<String> {
+
+    /**
+     * 目录
+     */
+    DIRECTORY("M", "目录"),
+
     /**
      * 菜单
      */
-    MENU("menu", "菜单"),
+    MENU("C", "菜单"),
 
     /**
      * 按钮
      */
-    BUTTON("button", "按钮")
+    BUTTON("C", "菜单")
     ;
 
     MenuTypeEnum(String code, String text) {

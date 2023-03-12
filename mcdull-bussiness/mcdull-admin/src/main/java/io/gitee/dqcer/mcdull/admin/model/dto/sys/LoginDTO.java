@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.admin.model.dto.sys;
 
 import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 /**
  * 登录 dto
@@ -12,37 +12,49 @@ import javax.validation.constraints.NotEmpty;
  */
 public class LoginDTO implements DTO {
 
-    @NotEmpty
-    private String account;
+    @NotBlank
+    private String username;
 
-    @NotEmpty
-    private String pd;
+    @NotBlank
+    private String password;
 
     private String code;
+
+    private String uuid;
 
     @Override
     public String toString() {
         return "LoginDTO{" +
-                "account='" + account + '\'' +
-                ", pd='" + pd + '\'' +
+                "account='" + username + '\'' +
+                ", pd='" + password + '\'' +
                 ", code='" + code + '\'' +
+                ", uuid='" + uuid + '\'' +
                 '}';
     }
 
-    public String getAccount() {
-        return account;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public LoginDTO setUuid(String uuid) {
+        this.uuid = uuid;
+        return this;
     }
 
-    public String getPd() {
-        return pd;
+    public String getUsername() {
+        return username;
     }
 
-    public void setPd(String pd) {
-        this.pd = pd;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getCode() {

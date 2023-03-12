@@ -152,7 +152,6 @@ public class RoleService {
 
         RoleDO entity = new RoleDO();
         entity.setId(id);
-        entity.setDelFlag(delFlag);
         entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
         entity.setUpdatedTime(new Date());
         boolean success = roleRepository.updateById(entity);

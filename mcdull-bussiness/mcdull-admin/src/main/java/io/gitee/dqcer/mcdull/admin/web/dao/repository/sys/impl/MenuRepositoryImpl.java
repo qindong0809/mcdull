@@ -4,26 +4,28 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
-import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.util.StrUtil;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.MenuMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
+import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
+import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.framework.base.util.StrUtil;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 菜单 数据库操作封装实现层
  *
  * @author dqcer
- * @date 2022/12/26
+ * @since 2022/12/26
  */
 @Service
 public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implements IMenuRepository {
@@ -41,7 +43,7 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
         if (StrUtil.isNotBlank(keyword)) {
             query.and(i-> i.like(MenuDO::getName, keyword));
         }
-        query.orderByDesc(BaseDO::getCreatedTime);
+        query.orderByDesc(MiddleDO::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getPage(), dto.getPageSize()), query);
     }
 
@@ -53,7 +55,6 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
      */
     @Override
     public Long insert(MenuDO entity) {
-        entity.setDelFlag(DelFlayEnum.NORMAL.getCode());
         entity.setCreatedBy(UserContextHolder.getSession().getUserId());
         entity.setCreatedTime(new Date());
         int insert = baseMapper.insert(entity);
@@ -61,5 +62,23 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
             throw new BusinessException(CodeEnum.DB_ERROR);
         }
         return entity.getId();
+    }
+
+    /**
+     * 获取菜单
+     *
+     * @param menuIds 菜单id
+     * @return {@link List}<{@link MenuDO}>
+     */
+    @Override
+    public List<MenuDO> getMenuByIds(List<Long> menuIds) {
+        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
+        query.eq(MenuDO::getStatus, StatusEnum.ENABLE.getCode());
+        query.in(IdDO::getId, menuIds);
+        List<MenuDO> list = baseMapper.selectList(query);
+        if (list.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return list;
     }
 }

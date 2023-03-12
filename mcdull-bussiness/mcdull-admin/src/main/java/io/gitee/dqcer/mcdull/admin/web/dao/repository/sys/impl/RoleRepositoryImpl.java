@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleMenuDO;
+import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.RoleMenuMapper;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
@@ -22,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +39,10 @@ import java.util.List;
 public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implements IRoleRepository {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+
+    @Resource
+    private RoleMenuMapper roleMenuMapper;
 
 
     /**
@@ -81,7 +88,6 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
      */
     @Override
     public Long insert(RoleDO entity) {
-        entity.setDelFlag(DelFlayEnum.NORMAL.getCode());
         entity.setStatus(StatusEnum.ENABLE.getCode());
         entity.setCreatedBy(UserContextHolder.getSession().getUserId());
         entity.setCreatedTime(new Date());
@@ -115,5 +121,22 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
             log.error("数据插入失败 actual: {}, plan:{}", rowSize, ids.size());
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
+    }
+
+    /**
+     * 获取菜单
+     *
+     * @param roleId 角色id
+     * @return {@link List}<{@link RoleMenuDO}>
+     */
+    @Override
+    public List<RoleMenuDO> getMenuByRole(Long roleId) {
+        LambdaQueryWrapper<RoleMenuDO> query = Wrappers.lambdaQuery();
+        query.eq(RoleMenuDO::getRoleId, roleId);
+        List<RoleMenuDO> list = roleMenuMapper.selectList(query);
+        if (list.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return list;
     }
 }

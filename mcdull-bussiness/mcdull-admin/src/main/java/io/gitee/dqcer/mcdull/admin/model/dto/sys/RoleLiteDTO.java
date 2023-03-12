@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.StringJoiner;
 
 /**
 * 角色 接收客户端参数
@@ -32,10 +33,10 @@ public class RoleLiteDTO extends PagedDTO {
      private Integer status;
 
     /**
-     * 删除标识（false/正常 true/删除）
+     * 删除标识（1/正常 2/删除）
      */
     @EnumsIntValid(groups = {ValidGroup.Delete.class}, value = DelFlayEnum.class)
-    private Boolean delFlag;
+    private Integer delFlag;
 
     /**
      * 昵称
@@ -52,14 +53,17 @@ public class RoleLiteDTO extends PagedDTO {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("RoleLiteDTO{");
-        sb.append("id=").append(id);
-        sb.append(", status=").append(status);
-        sb.append(", delFlag=").append(delFlag);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return new StringJoiner(", ", RoleLiteDTO.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("status=" + status)
+                .add("delFlag=" + delFlag)
+                .add("name='" + name + "'")
+                .add("description='" + description + "'")
+                .add("pageSize=" + pageSize)
+                .add("page=" + page)
+                .add("orders=" + orders)
+                .add("keyword='" + keyword + "'")
+                .toString();
     }
 
     public String getDescription() {
@@ -86,11 +90,11 @@ public class RoleLiteDTO extends PagedDTO {
         this.status = status;
     }
 
-    public Boolean getDelFlag() {
+    public Integer getDelFlag() {
         return delFlag;
     }
 
-    public RoleLiteDTO setDelFlag(Boolean delFlag) {
+    public RoleLiteDTO setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
         return this;
     }

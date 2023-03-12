@@ -28,6 +28,7 @@
         <hutool.version>5.8.14</hutool.version>
         <archunit.version>1.0.1</archunit.version>
         <druid.version>1.2.14</druid.version>
+        <kaptcha.version>2.3.3</kaptcha.version>
     </properties>
 
     <dependencyManagement>
@@ -98,6 +99,11 @@
                 <version>${hutool.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>pro.fessional</groupId>
+                <artifactId>kaptcha</artifactId>
+                <version>${kaptcha.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.gitee.dqcer</groupId>
@@ -243,7 +249,7 @@
     </scm>
     <developers>
         <developer>
-            <name>dongqin</name>
+            <name>dqcer</name>
             <email>dqcer@sina.com</email>
             <organization>https://gitee.com/dqcer</organization>
             <timezone>+8</timezone>

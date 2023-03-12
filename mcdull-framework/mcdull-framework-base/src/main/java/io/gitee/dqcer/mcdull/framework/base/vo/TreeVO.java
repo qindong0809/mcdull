@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.base.vo;
 
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * 树型数据对象
@@ -20,7 +21,7 @@ public class TreeVO<E, ID> implements VO {
     /**
      * 父ID
      */
-    protected ID pid;
+    protected ID parentId;
 
     /**
      * 是否含有子节点
@@ -34,13 +35,12 @@ public class TreeVO<E, ID> implements VO {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("TreeVO{");
-        sb.append("id=").append(id);
-        sb.append(", pid=").append(pid);
-        sb.append(", hasChild=").append(hasChild);
-        sb.append(", children=").append(children);
-        sb.append('}');
-        return sb.toString();
+        return new StringJoiner(", ", TreeVO.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("parentId=" + parentId)
+                .add("hasChild=" + hasChild)
+                .add("children=" + children)
+                .toString();
     }
 
     public ID getId() {
@@ -51,12 +51,12 @@ public class TreeVO<E, ID> implements VO {
         this.id = id;
     }
 
-    public ID getPid() {
-        return pid;
+    public ID getParentId() {
+        return parentId;
     }
 
-    public void setPid(ID pid) {
-        this.pid = pid;
+    public void setParentId(ID parentId) {
+        this.parentId = parentId;
     }
 
     public boolean isHasChild() {

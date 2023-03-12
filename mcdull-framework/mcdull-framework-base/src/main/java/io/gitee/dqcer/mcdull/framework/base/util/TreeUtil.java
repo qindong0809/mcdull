@@ -11,7 +11,7 @@ import java.util.Objects;
  * tree 工具类
  *
  * @author dqcer
- * @date 2022/12/09
+ * @since 2022/12/09
  */
 public class TreeUtil {
 
@@ -29,10 +29,10 @@ public class TreeUtil {
     public static <T extends TreeVO<T, ID>, ID extends Serializable> List<T> getChildTreeObjects(List<T> list, ID parentId) {
         List<T> returnList = new java.util.ArrayList<>(Collections.emptyList());
         for (T res : list) {
-            if (res.getPid() == null) {
+            if (res.getParentId() == null) {
                 continue;
             }
-            if (Objects.equals(res.getPid(), parentId)) {
+            if (Objects.equals(res.getParentId(), parentId)) {
                 recursionFn(list, res);
                 returnList.add(res);
             }
@@ -48,10 +48,8 @@ public class TreeUtil {
      */
     public static <T extends TreeVO<T, ID>, ID extends Serializable> void recursionFn(List<T> list, T t) {
         List<T> children = getChildList(list, t);
-        if (Objects.nonNull(children)) {
-            t.setChildren(children);
-            t.setHasChild(true);
-        }
+        t.setChildren(children);
+        t.setHasChild(true);
         for (T nextChild : children) {
             boolean hasChild = false;
             // 下一个对象，与所有的资源集进行判断
@@ -78,11 +76,11 @@ public class TreeUtil {
     public static <T extends TreeVO<T, ID>, ID extends Serializable> List<T> getChildList(List<T> list, T t) {
         List<T> childList = new java.util.ArrayList<>(Collections.emptyList());
         for (T child : list) {
-            if (Objects.isNull(child.getPid())) {
+            if (Objects.isNull(child.getParentId())) {
                 continue;
             }
             // 判断集合的父ID是否等于上一级的id
-            if (Objects.equals(child.getPid(), t.getId())) {
+            if (Objects.equals(child.getParentId(), t.getId())) {
                 childList.add(child);
             }
         }

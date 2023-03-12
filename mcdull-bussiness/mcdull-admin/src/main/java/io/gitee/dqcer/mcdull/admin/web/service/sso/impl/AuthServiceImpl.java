@@ -1,8 +1,25 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sso.impl;
 
+import cn.hutool.core.util.StrUtil;
+import io.gitee.dqcer.mcdull.admin.framework.auth.ISecurityService;
+import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.LoginDTO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.enums.MenuTypeEnum;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.CurrentUserInfVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuTreeVo;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.MetaVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.RouterVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserLoginRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
+import io.gitee.dqcer.mcdull.admin.web.manager.sys.IMenuManager;
+import io.gitee.dqcer.mcdull.admin.web.manager.sys.IRoleManager;
+import io.gitee.dqcer.mcdull.admin.web.manager.sys.IUserManager;
+import io.gitee.dqcer.mcdull.admin.web.service.common.ICaptchaService;
+import io.gitee.dqcer.mcdull.admin.web.service.sso.IAuthService;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.enums.AuthCodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
@@ -10,14 +27,13 @@ import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
 import io.gitee.dqcer.mcdull.framework.base.storage.SsoConstant;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
+import io.gitee.dqcer.mcdull.framework.base.util.TreeUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.admin.framework.auth.ISecurityService;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
-import io.gitee.dqcer.mcdull.admin.web.service.sso.IAuthService;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
@@ -32,13 +48,18 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 身份验证服务 业务实现类
  *
  * @author dqcer
- * @date 2023/01/11 22:01:06
+ * @since 2023/01/11 22:01:06
  */
 @Service
 public class AuthServiceImpl implements IAuthService, ISecurityService {
@@ -57,6 +78,18 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
     @Resource
     private CacheChannel cacheChannel;
 
+    @Resource
+    private IUserManager userManager;
+
+    @Resource
+    private IRoleManager roleManager;
+
+    @Resource
+    private IMenuManager menuManager;
+
+    @Resource
+    private ICaptchaService captchaService;
+
     /**
      * 登录
      *
@@ -66,7 +99,14 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Result<String> login(LoginDTO loginDTO) {
-        String account = loginDTO.getAccount();
+
+        boolean validateResult = captchaService.validateCaptcha(loginDTO.getCode(), loginDTO.getUuid());
+        if (!validateResult) {
+            return Result.error("验证码错误");
+        }
+
+
+        String account = loginDTO.getUsername();
         UserDO userEntity = userRepository.queryUserByAccount(account);
         if (null == userEntity) {
             log.warn("账号不存在 account: {}", account);
@@ -74,7 +114,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         }
         String password = userEntity.getPassword();
 
-        if (!password.equals(Sha1Util.getSha1(loginDTO.getPd() + userEntity.getSalt()))) {
+        if (!password.equals(Sha1Util.getSha1(loginDTO.getPassword() + userEntity.getSalt()))) {
             log.warn("用户密码错误");
             return Result.error(AuthCodeEnum.NOT_EXIST);
         }
@@ -190,4 +230,168 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         userLoginRepository.saveLogoutInfoByUserIdAndToken(user.getUserId(), token);
         return Result.ok();
     }
+
+    /**
+     * 得到当前用户信息
+     *
+     * @return {@link Result}<{@link CurrentUserInfVO}>
+     */
+    @Override
+    public Result<CurrentUserInfVO> getCurrentUserInfo() {
+        CurrentUserInfVO vo = new CurrentUserInfVO();
+        Long userId = UserContextHolder.getSession().getUserId();
+        UserDO user = userRepository.getById(userId);
+        UserVO userVO = UserConvert.entity2VO(user);
+        vo.setUser(userVO);
+
+        List<RoleDO> userRoles = userManager.getUserRoles(userId);
+        Set<String> roles = userRoles.stream().map(RoleDO::getCode).collect(Collectors.toSet());
+        vo.setRoles(roles);
+
+        Set<String> permissions = new HashSet<>();
+        permissions.add("*:*:*");
+
+        vo.setPermissions(permissions);
+
+        return Result.ok(vo);
+    }
+
+    /**
+     * 获得当前用户路由信息
+     *
+     * @return {@link Result}<{@link List}<{@link RouterVO}>>
+     */
+    @Override
+    public Result<List<RouterVO>> getCurrentUserRouters() {
+        List<RouterVO> voList = new ArrayList<>();
+        Long userId = UserContextHolder.getSession().getUserId();
+        List<RoleDO> userRoles = userManager.getUserRoles(userId);
+        if (userRoles.isEmpty()) {
+            return Result.ok(voList);
+        }
+        RoleDO roleDO = userRoles.get(1);
+        Long roleId = roleDO.getId();
+
+        List<MenuDO> menus = roleManager.getMenuByRole(roleId);
+
+        List<MenuTreeVo> treeVoList = new ArrayList<>();
+        for (MenuDO menu : menus) {
+            treeVoList.add(convert(menu));
+        }
+
+        // tree vo
+        List<MenuTreeVo> treeObjects = TreeUtil.getChildTreeObjects(treeVoList, 0L);
+
+        return Result.ok(this.buildMenus(treeObjects));
+    }
+
+    /**
+     * 构建菜单
+     *
+     * @param treeObjects 树对象
+     * @return {@link List}<{@link RouterVO}>
+     */
+    private List<RouterVO> buildMenus(List<MenuTreeVo> treeObjects) {
+        List<RouterVO> routers = new LinkedList<>();
+
+        for (MenuTreeVo treeVo : treeObjects) {
+
+            MenuDO menu = convertDO(treeVo);
+            RouterVO router = new RouterVO();
+            router.setHidden("1".equals(menu.getVisible()));
+            router.setName(StrUtil.upperFirst(menu.getPath()));
+            router.setPath(menuManager.getRouterPath(menu));
+            router.setComponent(menuManager.getComponent(menu));
+            router.setQuery(menu.getQuery());
+            router.setMeta(new MetaVO()
+                    .setTitle(menu.getName())
+                    .setIcon(menu.getIcon())
+                    .setNoCache("1".equals(menu.getIsCache()))
+                    .setLink(null));
+            List<MenuTreeVo> cMenus = treeVo.getChildren();
+            if (!cMenus.isEmpty() && MenuTypeEnum.DIRECTORY.getCode().equals(treeVo.getMenuType())) {
+                router.setAlwaysShow(true);
+                router.setRedirect("noRedirect");
+                router.setChildren(this.buildMenus(cMenus));
+            } else if (menuManager.isMenuFrame(menu)) {
+                router.setMeta(null);
+                List<RouterVO> childrenList = new ArrayList<>();
+                RouterVO children = new RouterVO();
+                children.setPath(menu.getPath());
+                children.setComponent(menu.getComponent());
+                children.setName(menu.getPath());
+                children.setMeta(new MetaVO()
+                        .setTitle(menu.getName())
+                        .setIcon(menu.getIcon())
+                        .setNoCache("1".equals(menu.getIsCache()))
+                        .setLink(null));
+                children.setQuery(menu.getQuery());
+                childrenList.add(children);
+                router.setChildren(childrenList);
+            } else if (menu.getParentId().intValue() == 0 && menuManager.isInnerLink(menu)) {
+                router.setMeta(new MetaVO().setTitle(menu.getName()).setIcon(menu.getIcon()));
+                router.setPath("/");
+                List<RouterVO> childrenList = new ArrayList<>();
+                RouterVO children = new RouterVO();
+                String routerPath = menuManager.innerLinkReplaceEach(menu.getPath());
+                children.setPath(routerPath);
+                children.setComponent("InnerLink");
+                children.setName(routerPath);
+                children.setMeta(new MetaVO().setTitle(menu.getName()).setIcon(menu.getIcon()).setLink(menu.getPath()));
+                childrenList.add(children);
+                router.setChildren(childrenList);
+            }
+            routers.add(router);
+        }
+        return routers;
+    }
+
+    private MenuDO convertDO(MenuTreeVo treeVo) {
+        MenuDO menuDO = new MenuDO();
+        menuDO.setName(treeVo.getName());
+        menuDO.setParentId(treeVo.getParentId());
+        menuDO.setOrderNum(treeVo.getOrderNum());
+        menuDO.setPath(treeVo.getPath());
+        menuDO.setComponent(treeVo.getComponent());
+        menuDO.setQuery(treeVo.getQuery());
+        menuDO.setIsFrame(treeVo.getIsFrame());
+        menuDO.setIsCache(treeVo.getIsCache());
+        menuDO.setMenuType(treeVo.getMenuType());
+        menuDO.setVisible(treeVo.getVisible());
+        menuDO.setStatus(treeVo.getStatus());
+        menuDO.setPerms(treeVo.getPerms());
+        menuDO.setIcon(treeVo.getIcon());
+        menuDO.setCreatedBy(treeVo.getCreatedBy());
+        menuDO.setUpdatedTime(treeVo.getUpdatedTime());
+        menuDO.setUpdatedBy(treeVo.getUpdatedBy());
+        menuDO.setRemark(treeVo.getRemark());
+        menuDO.setId(treeVo.getId());
+        return menuDO;
+    }
+
+    private MenuTreeVo convert(MenuDO menu) {
+        MenuTreeVo menuTreeVo = new MenuTreeVo();
+        menuTreeVo.setName(menu.getName());
+        menuTreeVo.setOrderNum(menu.getOrderNum());
+        menuTreeVo.setPath(menu.getPath());
+        menuTreeVo.setComponent(menu.getComponent());
+        menuTreeVo.setQuery(menu.getQuery());
+        menuTreeVo.setIsFrame(menu.getIsFrame());
+        menuTreeVo.setIsCache(menu.getIsCache());
+        menuTreeVo.setMenuType(menu.getMenuType());
+        menuTreeVo.setVisible(menu.getVisible());
+        menuTreeVo.setStatus(menu.getStatus());
+        menuTreeVo.setPerms(menu.getPerms());
+        menuTreeVo.setIcon(menu.getIcon());
+        menuTreeVo.setCreatedBy(menu.getCreatedBy());
+        menuTreeVo.setUpdatedTime(menu.getUpdatedTime());
+        menuTreeVo.setUpdatedBy(menu.getUpdatedBy());
+        menuTreeVo.setRemark(menu.getRemark());
+        menuTreeVo.setId(menu.getId());
+        menuTreeVo.setParentId(menu.getParentId());
+        return menuTreeVo;
+    }
+
+
+
 }

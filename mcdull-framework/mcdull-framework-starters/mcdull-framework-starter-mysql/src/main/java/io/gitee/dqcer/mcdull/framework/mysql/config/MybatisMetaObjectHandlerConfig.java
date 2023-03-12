@@ -31,7 +31,7 @@ public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
         }
         this.strictInsertFill(metaObject, "createdTime", () -> UserContextHolder.getSession().getNow(), Date.class);
         this.strictInsertFill(metaObject, "createdBy", () -> UserContextHolder.getSession().getUserId(), Long.class);
-        this.strictInsertFill(metaObject, "delFlag", DelFlayEnum.NORMAL::getCode, Boolean.class);
+        this.strictInsertFill(metaObject, "delFlag", DelFlayEnum.NORMAL::getCode, Integer.class);
     }
 
     @Override

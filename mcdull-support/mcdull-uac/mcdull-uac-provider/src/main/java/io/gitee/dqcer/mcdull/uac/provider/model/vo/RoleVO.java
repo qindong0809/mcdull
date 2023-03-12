@@ -5,6 +5,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.VO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 
 import java.util.Date;
+import java.util.StringJoiner;
 
 /**
  * 角色视图对象
@@ -55,9 +56,9 @@ public class RoleVO implements VO {
 
 
     /**
-     * 删除标识（false/正常 true/删除）
+     * 删除标识（1/正常 2/删除）
      */
-    private Boolean delFlag;
+    private Integer delFlag;
 
     /**
      * 删除str
@@ -85,24 +86,23 @@ public class RoleVO implements VO {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("RoleVO{");
-        sb.append("id=").append(id);
-        sb.append(", createdTime=").append(createdTime);
-        sb.append(", createdBy=").append(createdBy);
-        sb.append(", createdByStr='").append(createdByStr).append('\'');
-        sb.append(", updatedTime=").append(updatedTime);
-        sb.append(", updatedBy=").append(updatedBy);
-        sb.append(", updatedByStr='").append(updatedByStr).append('\'');
-        sb.append(", status=").append(status);
-        sb.append(", statusStr='").append(statusStr).append('\'');
-        sb.append(", delFlag=").append(delFlag);
-        sb.append(", delFlagStr='").append(delFlagStr).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", type=").append(type);
-        sb.append(", typeStr='").append(typeStr).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return new StringJoiner(", ", RoleVO.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("createdTime=" + createdTime)
+                .add("createdBy=" + createdBy)
+                .add("createdByStr='" + createdByStr + "'")
+                .add("updatedTime=" + updatedTime)
+                .add("updatedBy=" + updatedBy)
+                .add("updatedByStr='" + updatedByStr + "'")
+                .add("status=" + status)
+                .add("statusStr='" + statusStr + "'")
+                .add("delFlag=" + delFlag)
+                .add("delFlagStr='" + delFlagStr + "'")
+                .add("name='" + name + "'")
+                .add("description='" + description + "'")
+                .add("type=" + type)
+                .add("typeStr='" + typeStr + "'")
+                .toString();
     }
 
     public String getTypeStr() {
@@ -194,11 +194,11 @@ public class RoleVO implements VO {
         this.statusStr = statusStr;
     }
 
-    public Boolean getDelFlag() {
+    public Integer getDelFlag() {
         return delFlag;
     }
 
-    public RoleVO setDelFlag(Boolean delFlag) {
+    public RoleVO setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
         return this;
     }
