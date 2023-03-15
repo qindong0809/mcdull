@@ -16,7 +16,7 @@ import java.util.Date;
  * 并且可以通过生成的id反推出生成时间,datacenterId和workerId
  *
  * @author dqcer
- * @date 2022/12/19
+ * @since 2022/12/19
  */
 public class Snowflake implements Serializable {
     private static final long serialVersionUID = 1L;

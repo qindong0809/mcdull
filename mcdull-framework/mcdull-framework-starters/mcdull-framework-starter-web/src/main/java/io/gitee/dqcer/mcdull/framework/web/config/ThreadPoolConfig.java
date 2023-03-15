@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * 线程池配置
  *
  * @author dqcer
- * @date 2022/12/18
+ * @since 2022/12/18
  */
 @EnableAsync
 @Configuration

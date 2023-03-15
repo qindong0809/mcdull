@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
  * 验证工具类
  *
  * @author dqcer
- * @date 2022/12/19
+ * @since 2022/12/19
  */
 public class ValidateUtil {
 

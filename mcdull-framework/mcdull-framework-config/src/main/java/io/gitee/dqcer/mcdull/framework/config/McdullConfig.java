@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
  * mcdull 配置
  *
  * @author dqcer
- * @date 2022/12/18
+ * @since 2022/12/18
  */
 @Configuration
 @EnableConfigurationProperties(McdullProperties.class)

@@ -26,7 +26,7 @@ public class UserCF {
      * @param userId 当前用户
      * @param list 用户电影评分数据
      * @return {@link List <Integer>}
-     * @date 2023年02月02日 14:51:42
+     * @since 2023年02月02日 14:51:42
      */
     public static <S, T> List<T> recommend(S userId, List<RelateDTO<S, T>> list) {
         //按用户分组

@@ -10,7 +10,7 @@ import java.util.Random;
  * 随机数工具类
  *
  * @author dqcer
- * @date 2022/12/19
+ * @since 2022/12/19
  */
 public class RandomUtil {
 

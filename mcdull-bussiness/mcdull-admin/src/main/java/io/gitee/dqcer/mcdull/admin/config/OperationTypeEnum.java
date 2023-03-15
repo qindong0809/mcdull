@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
  * 操作类型的枚举
  *
  * @author dqcer
- * @date 2023/01/18 22:01:95
+ * @since 2023/01/18 22:01:95
  */
 public enum OperationTypeEnum implements IEnum<String> {
 

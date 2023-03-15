@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
  * 用户 通过逻辑定义
  *
  * @author dqcer
- * @date 2022/12/26
+ * @since 2022/12/26
  */
 public interface IUserManager {
 

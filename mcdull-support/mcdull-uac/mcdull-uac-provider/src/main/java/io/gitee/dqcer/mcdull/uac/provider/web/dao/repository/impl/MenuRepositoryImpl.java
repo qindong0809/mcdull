@@ -24,7 +24,7 @@ import java.util.Date;
  * 菜单 数据库操作封装实现层
  *
  * @author dqcer
- * @date 2022/12/26
+ * @since 2022/12/26
  */
 @Service
 public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implements IMenuRepository {

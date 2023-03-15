@@ -10,7 +10,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
  * user 服务
  *
  * @author dqcer
- * @date 2023/01/15 13:01:86
+ * @since 2023/01/15 13:01:86
  */
 public interface IUserService {
 

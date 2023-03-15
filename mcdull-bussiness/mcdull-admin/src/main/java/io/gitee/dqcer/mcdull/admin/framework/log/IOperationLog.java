@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogDO;
  * 操作日志
  *
  * @author dqcer
- * @date 2023/01/15 15:01:03
+ * @since 2023/01/15 15:01:03
  */
 public interface IOperationLog {
 

@@ -12,7 +12,7 @@ import java.util.List;
  * 权限验证
  *
  * @author dqcer
- * @date 2022/12/17
+ * @since 2022/12/17
  */
 @FeignClient(name = "mcdull-uac-provider",  contextId = "permission")
 public interface PowerCheckFeignClient {

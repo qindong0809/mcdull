@@ -10,7 +10,7 @@ import java.util.List;
  * 推荐算法入口
  *
  * @author dqcer
- * @date 2023/03/06
+ * @since 2023/03/06
  */
 public class Recommend {
 

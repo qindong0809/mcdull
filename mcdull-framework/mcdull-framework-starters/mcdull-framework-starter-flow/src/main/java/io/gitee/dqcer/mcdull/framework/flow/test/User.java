@@ -7,7 +7,7 @@ import java.io.Serializable;
  * 用户
  *
  * @author dqcer
- * @date 2023/01/30 22:01:28
+ * @since 2023/01/30 22:01:28
  */
 
 public class User implements Serializable {

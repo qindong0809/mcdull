@@ -16,7 +16,7 @@ import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
  * 架构守护神规则库,提供了静态检查机制(配合单元测试使用)，杜绝线上出现不合规范的使用
  *
  * @author dqcer
- * @date 2022/10/04
+ * @since 2022/10/04
  */
 public final class ArchitectureEnforcer {
 

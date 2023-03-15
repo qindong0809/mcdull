@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
  * 角色 通用逻辑定义
  *
  * @author dqcer
- * @date 2022/12/26
+ * @since 2022/12/26
  */
 public interface IRoleManager {
 

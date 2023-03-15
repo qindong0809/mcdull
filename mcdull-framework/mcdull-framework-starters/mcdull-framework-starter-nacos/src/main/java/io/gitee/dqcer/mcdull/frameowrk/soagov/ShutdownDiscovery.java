@@ -13,7 +13,7 @@ import javax.annotation.Resource;
  * 监听关闭事件
  *
  * @author dqcer
- * @date 2022/12/12
+ * @since 2022/12/12
  */
 @Component
 public class ShutdownDiscovery implements ApplicationListener<ContextClosedEvent> {

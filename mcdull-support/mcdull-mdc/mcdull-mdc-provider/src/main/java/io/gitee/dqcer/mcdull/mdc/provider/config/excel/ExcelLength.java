@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * excel长度
  *
  * @author dqcer
- * @date 2022/11/20 22:11:27
+ * @since 2022/11/20 22:11:27
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

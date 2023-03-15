@@ -12,7 +12,7 @@ import javax.annotation.Resource;
  * 邮件服务 feign 实现层
  *
  * @author dqcer
- * @date 2022/12/26
+ * @since 2022/12/26
  */
 @RestController
 public class MailServerFeign implements MailServiceApi {

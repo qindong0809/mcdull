@@ -13,7 +13,7 @@ import java.util.List;
  * 简单的基础信息拦截器
  *
  * @author dqcer
- * @date 2023/01/15 15:01:50
+ * @since 2023/01/15 15:01:50
  */
 public class SecurityInterceptor extends BaseInfoInterceptor {
 

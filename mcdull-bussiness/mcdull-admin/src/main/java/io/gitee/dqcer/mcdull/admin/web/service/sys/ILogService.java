@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
  * log 服务
  *
  * @author dqcer
- * @date 2023/01/15 13:01:34
+ * @since 2023/01/15 13:01:34
  */
 public interface ILogService {
 

@@ -10,7 +10,7 @@ import javax.annotation.Resource;
  * 简单的基本事件监听器
  *
  * @author dqcere
- * @date 2023/01/15 16:01:34
+ * @since 2023/01/15 16:01:34
  */
 @Component
 public class OperationLogAsyncEvent extends BaseAsyncEvent<LogDO> {

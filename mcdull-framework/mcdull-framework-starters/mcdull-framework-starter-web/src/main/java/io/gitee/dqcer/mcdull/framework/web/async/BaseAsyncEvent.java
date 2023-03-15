@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.Async;
  * 日志事件监听器
  *
  * @author dqcer
- * @date 2021/08/19
+ * @since 2021/08/19
  */
 public class BaseAsyncEvent<T> {
 

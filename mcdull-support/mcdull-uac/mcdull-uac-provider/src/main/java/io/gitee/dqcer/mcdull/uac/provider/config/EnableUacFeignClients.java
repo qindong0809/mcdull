@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * feign 配置
  *
  * @author dqcer
- * @date 2022/07/25
+ * @since 2022/07/25
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

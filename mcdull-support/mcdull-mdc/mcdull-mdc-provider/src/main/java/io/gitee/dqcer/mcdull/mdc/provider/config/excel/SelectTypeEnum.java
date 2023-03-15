@@ -5,7 +5,7 @@ package io.gitee.dqcer.mcdull.mdc.provider.config.excel;
  * 下拉类型的枚举
  *
  * @author dqcer
- * @date 2022/11/20 22:11:86
+ * @since 2022/11/20 22:11:86
  */
 public enum SelectTypeEnum {
 
