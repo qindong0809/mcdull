@@ -16,7 +16,7 @@ import java.util.Collections;
  * 麦兜管理应用程序
  *
  * @author dqcer
- * @date 2022/12/26
+ * @since 2022/12/26
  */
 @EnableWebCore
 @EnableMapperScan

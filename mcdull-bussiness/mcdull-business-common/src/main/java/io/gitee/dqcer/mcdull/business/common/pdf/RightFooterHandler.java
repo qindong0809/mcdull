@@ -26,7 +26,7 @@ import java.io.IOException;
 /**
  * 右页脚处理程序
  *
- * @author QinDong
+ * @author dqcer
  * @since 2023/03/02
  */
 public class RightFooterHandler implements IEventHandler {

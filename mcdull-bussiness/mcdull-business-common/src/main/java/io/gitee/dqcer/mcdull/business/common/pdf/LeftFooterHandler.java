@@ -15,7 +15,7 @@ import com.itextpdf.layout.properties.TextAlignment;
 /**
  * 左页脚处理程序
  *
- * @author QinDong
+ * @author dqcer
  * @since 2023/03/02
  */
 public class LeftFooterHandler implements IEventHandler {
