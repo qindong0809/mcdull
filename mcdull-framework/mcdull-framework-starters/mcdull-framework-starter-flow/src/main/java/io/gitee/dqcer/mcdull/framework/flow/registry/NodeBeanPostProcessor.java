@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.framework.flow.registry;
 
+import cn.hutool.core.annotation.AnnotationUtil;
 import io.gitee.dqcer.mcdull.framework.flow.node.ProcessHandler;
 import io.gitee.dqcer.mcdull.framework.flow.node.TreeNode;
-import io.gitee.dqcer.mcdull.framework.base.util.ClassUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class NodeBeanPostProcessor implements BeanPostProcessor {
            return bean;
         }
 
-        TreeNode annotation = ClassUtil.findAnnotation(bean.getClass(), TreeNode.class);
+        TreeNode annotation = AnnotationUtil.getAnnotation(bean.getClass(), TreeNode.class);
         if (annotation == null) {
             return bean;
         }
