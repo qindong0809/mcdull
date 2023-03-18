@@ -44,7 +44,7 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
             query.and(i-> i.like(MenuDO::getName, keyword));
         }
         query.orderByDesc(MiddleDO::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getPage(), dto.getPageSize()), query);
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 
     /**

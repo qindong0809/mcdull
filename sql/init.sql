@@ -387,3 +387,115 @@ primary key (id)
 ) engine=innodb auto_increment=100 comment = '参数配置表';
 
 insert into sys_config values(4, '账号自助-验证码开关','sys.account.captchaEnabled','true', 'Y','是否开启验证码功能（true开启，false关闭）', null,  null, null, null, 1, null);
+
+
+drop table if exists sys_dept;
+create table sys_dept (
+  id                bigint(20)      not null                   comment '部门id',
+  parent_id         bigint(20)      default null               comment '父部门id',
+  ancestors         varchar(1024)   default ''                 comment '祖级列表',
+  name              varchar(512)     not null                   comment '部门名称',
+  order_num         int(4)          not null                   comment '显示顺序',
+  leader_id         varchar(20)     default null               comment '负责人',
+  status            int(1)          not null                   comment '部门状态（1正常 2停用）',
+  created_by        bigint(20)      not null                   comment '创建人',
+  created_time      datetime        not null                   comment '创建时间',
+  updated_by        bigint(20)      default null               comment '更新人',
+  updated_time      datetime        default null               comment '更新时间',
+  del_flag          int(1)          not null                   comment '删除标识（1/正常 2/删除）',
+  del_by            bigint(20)      default null               comment '删除人',
+primary key (id)
+) engine=innodb  comment = '部门表';
+
+insert into sys_dept values(100,  0,   '0',          'McDull科技',   0,  null,  1, 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(101,  100, '0,100',      '成都总公司',    1,  null,  1, 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(102,  100, '0,100',      '武汉分公司',    2,  null,  1, 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(103,  101, '0,100,101',  '研发部门',   1, null,  1, 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(104,  101, '0,100,101',  '市场部门',   2, null,  1, 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(105,  101, '0,100,101',  '测试部门',   3, null,  1, 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(106,  101, '0,100,101',  '财务部门',   4, null,  1, 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(107,  101, '0,100,101',  '运维部门',   5, null,  1, 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(108,  102, '0,100,102',  '市场部门',   1, null,  1, 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(109,  102, '0,100,102',  '财务部门',   2, null,  1, 0, sysdate(), null, null, 1, null);
+
+drop table if exists sys_dict_type;
+create table sys_dict_type
+(
+    id                bigint(20)      not null auto_increment    comment '字典主键',
+    dict_name         varchar(100)    default ''                 comment '字典名称',
+    dict_type         varchar(100)    default ''                 comment '字典类型',
+    status            char(1)         default '0'                comment '状态（1正常 2停用）',
+    created_by        varchar(64)     default null               comment '创建者',
+    created_time      datetime        not null                   comment '创建时间',
+    updated_by        varchar(64)     default ''                 comment '更新者',
+    updated_time      datetime        default null               comment '更新时间',
+    remark           varchar(500)     default null               comment '备注',
+    del_flag          int(1)          not null                   comment '删除标识（1/正常 2/删除）',
+    del_by            bigint(20)      default null               comment '删除人',
+    primary key (id),
+    unique (dict_type)
+) engine=innodb auto_increment=100 comment = '字典类型表';
+
+insert into sys_dict_type values(1,  '用户性别', 'sys_user_sex',        '1', null, sysdate(), '', null, '用户性别列表', 1, null);
+insert into sys_dict_type values(2,  '菜单状态', 'sys_show_hide',       '1', null, sysdate(), '', null, '菜单状态列表', 1, null);
+insert into sys_dict_type values(3,  '系统开关', 'sys_normal_disable',  '1', null, sysdate(), '', null, '系统开关列表', 1, null);
+insert into sys_dict_type values(4,  '任务状态', 'sys_job_status',      '1', null, sysdate(), '', null, '任务状态列表', 1, null);
+insert into sys_dict_type values(5,  '任务分组', 'sys_job_group',       '1', null, sysdate(), '', null, '任务分组列表', 1, null);
+insert into sys_dict_type values(6,  '系统是否', 'sys_yes_no',          '1', null, sysdate(), '', null, '系统是否列表', 1, null);
+insert into sys_dict_type values(7,  '通知类型', 'sys_notice_type',     '1', null, sysdate(), '', null, '通知类型列表', 1, null);
+insert into sys_dict_type values(8,  '通知状态', 'sys_notice_status',   '1', null, sysdate(), '', null, '通知状态列表', 1, null);
+insert into sys_dict_type values(9,  '操作类型', 'sys_oper_type',       '1', null, sysdate(), '', null, '操作类型列表', 1, null);
+insert into sys_dict_type values(10, '系统状态', 'sys_common_status',   '1', null, sysdate(), '', null, '登录状态列表', 1, null);
+
+
+drop table if exists sys_dict_data;
+create table sys_dict_data
+(
+    id        bigint(20)      not null auto_increment    comment '字典编码',
+    dict_sort        int(4)          default 0                  comment '字典排序',
+    dict_label       varchar(100)    default ''                 comment '字典标签',
+    dict_value       varchar(100)    default ''                 comment '字典键值',
+    dict_type        varchar(100)    default ''                 comment '字典类型',
+    css_class        varchar(100)    default null               comment '样式属性（其他样式扩展）',
+    list_class       varchar(100)    default null               comment '表格回显样式',
+    is_default       char(1)         default 'N'                comment '是否默认（Y是 N否）',
+    status           char(1)         default '0'                comment '状态（0正常 1停用）',
+    created_by        varchar(64)    default null               comment '创建者',
+    created_time      datetime                                  comment '创建时间',
+    updated_by        varchar(64)    default null               comment '更新者',
+    updated_time      datetime                                  comment '更新时间',
+    remark           varchar(500)    default null               comment '备注',
+    del_flag          int(1)          not null                   comment '删除标识（1/正常 2/删除）',
+    del_by            bigint(20)      default null               comment '删除人',
+    primary key (id)
+) engine=innodb auto_increment=100 comment = '字典数据表';
+
+insert into sys_dict_data values(1,  1,  '男',       '0',       'sys_user_sex',        '',   '',        'Y', '1', null, sysdate(), '', null, '性别男',    1, null);
+insert into sys_dict_data values(2,  2,  '女',       '1',       'sys_user_sex',        '',   '',        'N', '1', null, sysdate(), '', null, '性别女',    1, null);
+insert into sys_dict_data values(3,  3,  '未知',     '2',       'sys_user_sex',        '',   '',        'N', '1', null, sysdate(), '', null, '性别未知',   1, null);
+insert into sys_dict_data values(4,  1,  '显示',     '0',       'sys_show_hide',       '',   'primary', 'Y', '1', null, sysdate(), '', null, '显示菜单',   1, null);
+insert into sys_dict_data values(5,  2,  '隐藏',     '1',       'sys_show_hide',       '',   'danger',  'N', '1', null, sysdate(), '', null, '隐藏菜单',   1, null);
+insert into sys_dict_data values(6,  1,  '正常',     '1',       'sys_normal_disable',  '',   'primary', 'Y', '1', null, sysdate(), '', null, '正常状态',   1, null);
+insert into sys_dict_data values(7,  2,  '停用',     '2',       'sys_normal_disable',  '',   'danger',  'N', '1', null, sysdate(), '', null, '停用状态',   1, null);
+insert into sys_dict_data values(8,  1,  '正常',     '0',       'sys_job_status',      '',   'primary', 'Y', '1', null, sysdate(), '', null, '正常状态',   1, null);
+insert into sys_dict_data values(9,  2,  '暂停',     '1',       'sys_job_status',      '',   'danger',  'N', '1', null, sysdate(), '', null, '停用状态',   1, null);
+insert into sys_dict_data values(10, 1,  '默认',     'DEFAULT', 'sys_job_group',       '',   '',        'Y', '1', null, sysdate(), '', null, '默认分组',   1, null);
+insert into sys_dict_data values(11, 2,  '系统',     'SYSTEM',  'sys_job_group',       '',   '',        'N', '1', null, sysdate(), '', null, '系统分组',   1, null);
+insert into sys_dict_data values(12, 1,  '是',       'Y',       'sys_yes_no',          '',   'primary', 'Y', '1', null, sysdate(), '', null, '系统默认是', 1, null);
+insert into sys_dict_data values(13, 2,  '否',       'N',       'sys_yes_no',          '',   'danger',  'N', '1', null, sysdate(), '', null, '系统默认否', 1, null);
+insert into sys_dict_data values(14, 1,  '通知',     '1',       'sys_notice_type',     '',   'warning', 'Y', '1', null, sysdate(), '', null, '通知',      1, null);
+insert into sys_dict_data values(15, 2,  '公告',     '2',       'sys_notice_type',     '',   'success', 'N', '1', null, sysdate(), '', null, '公告',      1, null);
+insert into sys_dict_data values(16, 1,  '正常',     '0',       'sys_notice_status',   '',   'primary', 'Y', '1', null, sysdate(), '', null, '正常状态',   1, null);
+insert into sys_dict_data values(17, 2,  '关闭',     '1',       'sys_notice_status',   '',   'danger',  'N', '1', null, sysdate(), '', null, '关闭状态',   1, null);
+insert into sys_dict_data values(18, 99, '其他',     '0',       'sys_oper_type',       '',   'info',    'N', '1', null, sysdate(), '', null, '其他操作',   1, null);
+insert into sys_dict_data values(19, 1,  '新增',     '1',       'sys_oper_type',       '',   'info',    'N', '1', null, sysdate(), '', null, '新增操作',   1, null);
+insert into sys_dict_data values(20, 2,  '修改',     '2',       'sys_oper_type',       '',   'info',    'N', '1', null, sysdate(), '', null, '修改操作',   1, null);
+insert into sys_dict_data values(21, 3,  '删除',     '3',       'sys_oper_type',       '',   'danger',  'N', '1', null, sysdate(), '', null, '删除操作',   1, null);
+insert into sys_dict_data values(22, 4,  '授权',     '4',       'sys_oper_type',       '',   'primary', 'N', '1', null, sysdate(), '', null, '授权操作',   1, null);
+insert into sys_dict_data values(23, 5,  '导出',     '5',       'sys_oper_type',       '',   'warning', 'N', '1', null, sysdate(), '', null, '导出操作',   1, null);
+insert into sys_dict_data values(24, 6,  '导入',     '6',       'sys_oper_type',       '',   'warning', 'N', '1', null, sysdate(), '', null, '导入操作',   1, null);
+insert into sys_dict_data values(25, 7,  '强退',     '7',       'sys_oper_type',       '',   'danger',  'N', '1', null, sysdate(), '', null, '强退操作',   1, null);
+insert into sys_dict_data values(26, 8,  '生成代码', '8',       'sys_oper_type',       '',   'warning', 'N', '1', null, sysdate(), '', null, '生成操作',    1, null);
+insert into sys_dict_data values(27, 9,  '清空数据', '9',       'sys_oper_type',       '',   'danger',  'N', '1', null, sysdate(), '', null, '清空操作',    1, null);
+insert into sys_dict_data values(28, 1,  '成功',     '0',       'sys_common_status',   '',   'primary', 'N', '1', null, sysdate(), '', null, '正常状态',   1, null);
+insert into sys_dict_data values(29, 2,  '失败',     '1',       'sys_common_status',   '',   'danger',  'N', '1', null, sysdate(), '', null, '停用状态',   1, null);

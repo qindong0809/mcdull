@@ -13,7 +13,7 @@ public interface IPaged {
      *
      * @return {@link Long}
      */
-    Long getPage();
+    Long getPageNum();
 
 
     /**

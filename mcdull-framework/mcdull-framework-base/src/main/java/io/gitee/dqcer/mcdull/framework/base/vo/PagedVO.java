@@ -83,7 +83,7 @@ public class PagedVO<T> implements IPaged, VO {
      * @return {@link Long}
      */
     @Override
-    public Long getPage() {
+    public Long getPageNum() {
         return page;
     }
 

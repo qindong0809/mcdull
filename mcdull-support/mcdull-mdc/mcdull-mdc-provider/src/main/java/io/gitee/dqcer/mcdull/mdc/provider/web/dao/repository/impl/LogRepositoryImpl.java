@@ -29,6 +29,6 @@ public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO> implements 
     public Page<LogDO> selectPage(LogLiteDTO dto) {
         LambdaQueryWrapper<LogDO> query = Wrappers.lambdaQuery();
         query.orderByDesc(LogDO::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getPage(), dto.getPageSize()), query);
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 }

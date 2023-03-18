@@ -23,10 +23,12 @@ public class IdDTO<T> implements DTO{
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("DeleteDTO{");
-        sb.append("ids=").append(ids);
-        sb.append('}');
-        return sb.toString();
+        return "IdDTO{" + "ids=" + ids +
+                '}';
+    }
+
+    public void setIds(List<T> ids) {
+        this.ids = ids;
     }
 
     public List<T> getIds() {

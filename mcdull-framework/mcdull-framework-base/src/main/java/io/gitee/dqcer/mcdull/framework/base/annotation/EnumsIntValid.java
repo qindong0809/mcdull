@@ -25,6 +25,8 @@ public @interface EnumsIntValid {
 
     String message() default "值不在枚举值中";
 
+    boolean required() default false;
+
     Class<?>[] groups() default {};
 
     Class<? extends Enum> value();

@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.gitee.dqcer.mcdull.admin.framework.transformer.IDictTransformerService;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.DictDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IDictRepository;
-import io.gitee.dqcer.mcdull.admin.web.service.sys.IDictService;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
@@ -18,13 +17,13 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
- * sys dict服务
+ * 字典 业务层
  *
  * @author dqcer
  * @since  2022/11/08
  */
 @Service
-public class DictServiceImpl implements IDictService, IDictTransformerService {
+public class DictServiceImpl implements  IDictTransformerService {
 
     private static final Logger log = LoggerFactory.getLogger(DictServiceImpl.class);
 
@@ -54,5 +53,6 @@ public class DictServiceImpl implements IDictService, IDictTransformerService {
         }
         return new KeyValueVO<String, String>().setId(dictDO.getCode()).setName(dictDO.getName());
     }
+
 
 }

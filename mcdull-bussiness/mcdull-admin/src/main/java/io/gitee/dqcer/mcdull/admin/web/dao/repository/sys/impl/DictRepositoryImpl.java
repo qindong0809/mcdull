@@ -34,7 +34,7 @@ public class DictRepositoryImpl extends ServiceImpl<DictMapper, DictDO> implemen
             query.and(i-> i.like(DictDO::getCode, keyword).or().like(DictDO::getSelectType, keyword).or().like(DictDO::getName, keyword));
         }
         query.orderByAsc(DictDO::getSelectType, DictDO::getSort);
-        return baseMapper.selectPage(new Page<>(dto.getPage(), dto.getPageSize()), query);
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 
 }

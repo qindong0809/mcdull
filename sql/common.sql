@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS `demo` (
   `updated_time` datetime DEFAULT NULL COMMENT '更新时间',
   `status` int(1) NOT NULL COMMENT '状态（1/正常 2/停用）',
   `del_flag` int(1) NOT NULL DEFAULT 1 COMMENT '删除标识（1/正常 2/删除）',
-  PRIMARY KEY (`id`)
+    `sort_number`         int(4)          not null         comment '排序编号',
+     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='这是demo表';
 
 

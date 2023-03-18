@@ -9,6 +9,7 @@ import io.gitee.dqcer.mcdull.framework.base.entity.DO;
  * @author dqcer
  * @since 2022/11/01 22:11:06
  */
+@Deprecated
 @TableName("sys_dict")
 public class DictDO implements DO {
 

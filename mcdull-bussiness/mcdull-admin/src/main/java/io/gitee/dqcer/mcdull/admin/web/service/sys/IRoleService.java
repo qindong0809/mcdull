@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.DeptLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.DeptVO;
 import io.gitee.dqcer.mcdull.framework.base.dto.IdDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;

@@ -1,7 +1,8 @@
 package io.gitee.dqcer.mcdull.admin.model.dto.sys;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
-import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
+import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
+import io.gitee.dqcer.mcdull.framework.base.dto.KeywordDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
@@ -9,7 +10,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.StringJoiner;
 
 /**
 * 角色 接收客户端参数
@@ -17,7 +17,7 @@ import java.util.StringJoiner;
 * @author dqcer
 * @since 2022-11-16
 */
-public class RoleLiteDTO extends PagedDTO {
+public class DeptLiteDTO extends KeywordDTO implements DTO {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,7 +29,7 @@ public class RoleLiteDTO extends PagedDTO {
     /**
      * 状态（1/正常 2/停用）
      */
-     @EnumsIntValid(groups = {ValidGroup.Status.class}, value = StatusEnum.class)
+     @EnumsIntValid(groups = {ValidGroup.List.class}, value = StatusEnum.class)
      private Integer status;
 
     /**
@@ -42,8 +42,8 @@ public class RoleLiteDTO extends PagedDTO {
      * 昵称
      */
     @NotBlank(groups = {ValidGroup.Insert.class})
-    @Length(groups = {ValidGroup.Insert.class}, min = 1, max = 512)
-    private String name;
+    @Length(groups = {ValidGroup.Insert.class, ValidGroup.List.class}, min = 1, max = 512)
+    private String deptName;
 
     /**
      * 描述
@@ -51,20 +51,7 @@ public class RoleLiteDTO extends PagedDTO {
     @Length(groups = {ValidGroup.Insert.class},  max = 2048)
     private String description;
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", RoleLiteDTO.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
-                .add("status=" + status)
-                .add("delFlag=" + delFlag)
-                .add("name='" + name + "'")
-                .add("description='" + description + "'")
-                .add("pageSize=" + pageSize)
-                .add("page=" + pageNum)
-                .add("orders=" + orders)
-                .add("keyword='" + keyword + "'")
-                .toString();
-    }
+
 
     public String getDescription() {
         return description;
@@ -94,16 +81,16 @@ public class RoleLiteDTO extends PagedDTO {
         return delFlag;
     }
 
-    public RoleLiteDTO setDelFlag(Integer delFlag) {
+    public DeptLiteDTO setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
         return this;
     }
 
-    public String getName() {
-        return name;
+    public String getDeptName() {
+        return deptName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 }
