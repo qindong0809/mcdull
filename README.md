@@ -195,6 +195,20 @@ docsify serve .
     Result<DictVO> detail(@SpringQueryMap @Validated(value = ValidGroup.One.class) DictLiteDTO dto);
 ```
 
+##### 使用工具类Arrays.asList()把数组转换成集合时，不能使用其修改集合相关的方法，因为它的add/remove/clear方法会抛出UnsupportedOperationException异常
+> asList的返回对象是一个Arrays内部类，并没有实现集合的修改方法。Arrays.asList体现的是适配器模式，只是转换接口，后台的数据仍是数据
+```java
+        // 反例
+        String[] str = new String[]{"1", "2"};
+        List<String> list = Arrays.asList(str);
+        // 第一种情况运行时异常
+        list.add(3);
+        // 第二种情况也会随之修改，反之亦然
+        str[0] = "1-1";
+        System.out.println(list);
+        
+```
+
 #### 禁止使用bean进行copy
 ```java
 // 反例

@@ -90,7 +90,7 @@ public class BaseInterceptor implements HandlerInterceptor {
         Authorized authorized = method.getMethodAnnotation(Authorized.class);
         if (null != authorized) {
             String code = authorized.value();
-            if (StrUtil.isNotBlank(code)) {
+            if (code != null && code.trim().length() > 0) {
                 String userPowerCacheKey = MessageFormat.format("web:interceptor:power:{0}", unifySession.getUserId());
                 List<UserPowerVO> userPower = cacheChannel.get(userPowerCacheKey, List.class);
                 if (ObjUtil.isNull(userPower)) {
