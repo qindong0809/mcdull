@@ -29,6 +29,7 @@
         <archunit.version>1.0.1</archunit.version>
         <druid.version>1.2.14</druid.version>
         <kaptcha.version>2.3.3</kaptcha.version>
+        <qiniu.version>[7.7.0, 7.7.99]</qiniu.version>
     </properties>
 
     <dependencyManagement>
@@ -106,6 +107,11 @@
                 <version>${kaptcha.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.qiniu</groupId>
+                <artifactId>qiniu-java-sdk</artifactId>
+                <version>${qiniu.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.gitee.dqcer</groupId>
                 <artifactId>mcdull-framework-base</artifactId>
                 <version>${mcdull.version}</version>
@@ -138,6 +144,11 @@
             <dependency>
                 <groupId>io.gitee.dqcer</groupId>
                 <artifactId>mcdull-framework-starter-redis</artifactId>
+                <version>${mcdull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-framework-starter-oss</artifactId>
                 <version>${mcdull.version}</version>
             </dependency>
             <dependency>

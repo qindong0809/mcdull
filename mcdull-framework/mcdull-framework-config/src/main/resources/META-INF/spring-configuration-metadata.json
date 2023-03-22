@@ -49,6 +49,36 @@
       "type": "java.lang.Integer",
       "description": "线程池中的队列最大数量,默认为 10000",
       "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
+    },
+    {
+      "name": "mcdull.oss",
+      "type": "io.gitee.dqcer.mcdull.framework.config.properties.OssProperties",
+      "description": "oss对象存储",
+      "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
+    },
+    {
+      "name": "mcdull.oss.url",
+      "type": "java.lang.String",
+      "description": "域名地址",
+      "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
+    },
+    {
+      "name": "mcdull.oss.accessKey",
+      "type": "java.lang.String",
+      "description": "访问口令",
+      "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
+    },
+    {
+      "name": "mcdull.oss.accessSecretKey",
+      "type": "java.lang.String",
+      "description": "访问秘钥",
+      "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
+    },
+    {
+      "name": "mcdull.oss.type",
+      "type": "io.gitee.dqcer.mcdull.framework.config.properties.OssTypeEnum",
+      "description": "类型",
+      "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
     }
   ],
   "hints": []

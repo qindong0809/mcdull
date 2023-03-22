@@ -18,6 +18,7 @@
         <module>mcdull-framework-starter-feign</module>
         <module>mcdull-framework-starter-flow</module>
         <module>mcdull-framework-starter-mongodb</module>
+        <module>mcdull-framework-starter-oss</module>
     </modules>
 
     <artifactId>mcdull-framework-starters</artifactId>

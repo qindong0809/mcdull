@@ -22,6 +22,19 @@ public class McdullProperties {
      */
     private ThreadPoolProperties threadPool = new ThreadPoolProperties();
 
+    /**
+     * oss对象存储
+     */
+    private OssProperties oss = new OssProperties();
+
+    public OssProperties getOss() {
+        return oss;
+    }
+
+    public void setOss(OssProperties oss) {
+        this.oss = oss;
+    }
+
     public ThreadPoolProperties getThreadPool() {
         return threadPool;
     }

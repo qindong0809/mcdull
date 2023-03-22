@@ -76,6 +76,10 @@
             <groupId>pro.fessional</groupId>
             <artifactId>kaptcha</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.gitee.dqcer</groupId>
+            <artifactId>mcdull-framework-starter-oss</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

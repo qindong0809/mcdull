@@ -14,3 +14,9 @@ logging:
   level:
     root: info
     io.gitee.dqcer.mcdull.framework: debug
+mcdull:
+  oss:
+    url: rqoy1bmgr.hn-bkt.clouddn.com
+    accessKey: DOpFajq-y9E77CmLz9Qm5GsF7nY_zXJ0R3ngfOYLD
+    accessSecretKey: QRXPsheK_j_AaXZS8CqXoH5g4ed2WqrFgbcLRhqmF
+    type: qiniu
