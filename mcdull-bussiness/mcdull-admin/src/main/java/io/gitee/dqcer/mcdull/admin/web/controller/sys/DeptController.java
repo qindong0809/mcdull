@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.controller.sys;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DeptLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DeptVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IDeptService;
+import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -35,7 +36,7 @@ public class DeptController {
     * @param dto dto
     * @return {@link Result<PagedVO>}
     */
-//    @Authorized("system:dept:list")
+    @Authorized("system:dept:list")
     @GetMapping("list")
     public Result<List<DeptVO>> list(@Validated(value = {ValidGroup.List.class}) DeptLiteDTO dto){
         return deptService.list(dto);

@@ -27,9 +27,9 @@ public class GlobalConstant {
 
 
     /**
-     * 管理角色
+     * 管理角色类型
      */
-    public static final Long ADMIN_ROLE = 1L;
+    public static final Integer SUPER_ADMIN_ROLE_TYPE = 2;
 
 
 

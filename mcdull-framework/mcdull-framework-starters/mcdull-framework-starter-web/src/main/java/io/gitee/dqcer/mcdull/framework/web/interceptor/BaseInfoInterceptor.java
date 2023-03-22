@@ -131,7 +131,7 @@ public abstract class BaseInfoInterceptor implements HandlerInterceptor {
                 cacheChannel.put(userPowerCacheKey, userPower, 3000);
             }
             // 管理员放过
-            Optional<UserPowerVO> first = userPower.stream().filter(i -> GlobalConstant.ADMIN_ROLE.equals(i.getRoleId())).findFirst();
+            Optional<UserPowerVO> first = userPower.stream().filter(i -> GlobalConstant.SUPER_ADMIN_ROLE_TYPE.equals(i.getRoleType())).findFirst();
             if (first.isPresent()) {
                 return true;
             }
