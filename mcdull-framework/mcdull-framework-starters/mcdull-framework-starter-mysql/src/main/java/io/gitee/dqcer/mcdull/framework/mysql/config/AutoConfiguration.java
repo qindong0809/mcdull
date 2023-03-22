@@ -158,14 +158,14 @@ public class AutoConfiguration {
 
     @ConditionalOnProperty(name = "spring.datasource.poolType", havingValue = DataSourceProperties.DRUID)
     @Bean
-    public ServletRegistrationBean<StatViewServlet> statViewServlet() {
+    public ServletRegistrationBean<StatViewServlet> statViewServlet(DataSourceProperties dataSourceProperties) {
         ServletRegistrationBean<StatViewServlet> bean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
 
         // 这些参数可以在 com.alibaba.druid.support.http.StatViewServlet
         // 的父类 com.alibaba.druid.support.http.ResourceServlet 中找到
         Map<String, String> initParams = new HashMap<>(100);
-        initParams.put("loginUsername", "admin");
-        initParams.put("loginPassword", "admin");
+        initParams.put("loginUsername", dataSourceProperties.getDruidUsername());
+        initParams.put("loginPassword", dataSourceProperties.getDruidPassword());
 
         //后台允许谁可以访问
         //initParams.put("allow", "localhost")：表示只有本机可以访问

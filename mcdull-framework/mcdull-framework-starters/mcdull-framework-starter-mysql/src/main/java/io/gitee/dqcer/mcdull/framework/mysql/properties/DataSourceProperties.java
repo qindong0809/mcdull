@@ -45,10 +45,30 @@ public class DataSourceProperties {
      */
     private String poolType = HIKARI;
 
+    private String druidUsername;
+
+    private String druidPassword;
+
     /**
      * 租户sql
      */
     private String tenantSql;
+
+    public String getDruidUsername() {
+        return druidUsername;
+    }
+
+    public void setDruidUsername(String druidUsername) {
+        this.druidUsername = druidUsername;
+    }
+
+    public String getDruidPassword() {
+        return druidPassword;
+    }
+
+    public void setDruidPassword(String druidPassword) {
+        this.druidPassword = druidPassword;
+    }
 
     public String getPoolType() {
         return poolType;

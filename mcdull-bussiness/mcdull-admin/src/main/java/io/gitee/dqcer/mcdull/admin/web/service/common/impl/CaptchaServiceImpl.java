@@ -89,6 +89,7 @@ public class CaptchaServiceImpl implements ICaptchaService {
     public boolean validateCaptcha(String code, String uuid) {
         String valueByEnum = sysConfigManager.findValueByEnum(SysConfigKeyEnum.CAPTCHA);
         boolean enable = Convert.toBool(valueByEnum);
+        enable = false;
         if (!enable) {
             return true;
         }
