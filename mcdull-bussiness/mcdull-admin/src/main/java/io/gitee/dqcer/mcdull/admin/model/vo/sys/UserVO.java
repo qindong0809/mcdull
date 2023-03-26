@@ -79,7 +79,7 @@ public class UserVO implements VO {
     /**
      * 昵称
      */
-    private String nickname;
+    private String nickName;
 
     /**
      * 电子邮件
@@ -125,7 +125,7 @@ public class UserVO implements VO {
                 ", delFlag=" + delFlag +
                 ", delFlagStr='" + delFlagStr + '\'' +
                 ", account='" + account + '\'' +
-                ", nickname='" + nickname + '\'' +
+                ", nickName='" + nickName + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", lastLoginTime=" + lastLoginTime +
@@ -175,12 +175,13 @@ public class UserVO implements VO {
         this.updatedByStr = updatedByStr;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public UserVO setNickName(String nickName) {
+        this.nickName = nickName;
+        return this;
     }
 
     public String getDelFlagStr() {

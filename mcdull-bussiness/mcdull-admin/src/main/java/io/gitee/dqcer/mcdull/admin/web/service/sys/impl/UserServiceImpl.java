@@ -8,6 +8,7 @@ import io.gitee.dqcer.mcdull.admin.framework.transformer.IUserTransformerService
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IUserManager;
@@ -63,13 +64,16 @@ public class UserServiceImpl implements IUserService, IUserTransformerService {
     /**
      * 单个详情
      *
-     * @param dto dto
+     * @param userId userId
      * @return {@link Result<UserVO>}
      */
     @Override
-    public Result<UserVO> detail(UserLiteDTO dto) {
-        return null;
+    public Result<UserDetailVO> detail(Long userId) {
+        UserDO userDO = userRepository.getById(userId);
+        UserDetailVO detailVO = userManager.entityToDetailVo(userDO);
+        return Result.ok(detailVO);
     }
+
 
     /**
      * 插入
@@ -156,8 +160,8 @@ public class UserServiceImpl implements IUserService, IUserTransformerService {
     public KeyValueVO<String, String> transformer(String code) {
         UserDO userDO = userRepository.getById(code);
         if (ObjUtil.isNotNull(userDO)) {
-            return new KeyValueVO<String, String>().setId(userDO.getId().toString()).setName(userDO.getNickname());
+            return new KeyValueVO<String, String>().setId(userDO.getId().toString()).setName(userDO.getNickName());
         }
-        return new KeyValueVO<String, String>();
+        return new KeyValueVO<>();
     }
 }

@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -27,10 +28,10 @@ public interface IUserService {
     /**
      * 单个详情
      *
-     * @param dto dto
+     * @param userId userId
      * @return {@link Result<UserVO>}
      */
-    Result<UserVO> detail(UserLiteDTO dto);
+    Result<UserDetailVO> detail(Long userId);
 
 
     /**
@@ -72,4 +73,7 @@ public interface IUserService {
      * @return {@link Result<Long>}
      */
     Result<Long> resetPassword(UserLiteDTO dto);
+
+
+
 }

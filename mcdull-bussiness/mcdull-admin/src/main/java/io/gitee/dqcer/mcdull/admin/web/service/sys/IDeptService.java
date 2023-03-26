@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.admin.web.service.sys;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DeptLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DeptVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.TreeSelectVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface IDeptService {
     Result<List<DeptVO>> excludeChild(Long deptId);
 
     Result<DeptVO> detail(Long deptId);
+
+    Result<List<TreeSelectVO>> selectDeptTreeList();
 }

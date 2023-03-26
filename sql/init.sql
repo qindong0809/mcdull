@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE IF NOT EXISTS `sys_user` (
     `id` bigint(20) NOT NULL COMMENT '主键',
-    `nickname` varchar(256) NOT NULL COMMENT '昵称',
+    `nick_name` varchar(256) NOT NULL COMMENT '昵称',
     `account` varchar(128) NOT NULL COMMENT '账号',
     `password` varchar(128) NOT NULL COMMENT '密码',
     `salt` varchar(128) NOT NULL COMMENT '密码盐',
@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS `sys_user` (
     `phone` varchar(128) DEFAULT NULL COMMENT '手机号',
     `last_login_time` datetime DEFAULT NULL COMMENT '最后一次登录时间',
     `type` int(1) NOT NULL  COMMENT '类型（1/自定义 2/内置）',
+    `dept_id` bigint(20) NOT NULL COMMENT '部门id',
     `created_by` bigint(20) NOT NULL COMMENT '创建人',
     `created_time` datetime NOT NULL COMMENT '创建时间',
     `updated_by` bigint(20) DEFAULT NULL COMMENT '更新人',
@@ -19,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `sys_user` (
     PRIMARY KEY (`id`),
     KEY `idx_pa_account` (`account`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
-INSERT INTO sys_user VALUES(1589631293412503554, '麦兜', 'admin', '7a69d7186df1a65ed7af2ba00747488e2415bf1a', 'c7e87439-aef3-48e0-be26-678d0ab99345', 'admin@mcdull.com', '18238352145', null, 2, 1589631293412503554, '2022-10-31 07:20:54', null, null, '1', 1, null);
+INSERT INTO sys_user VALUES(1589631293412503554, '麦兜', 'admin', '7a69d7186df1a65ed7af2ba00747488e2415bf1a', 'c7e87439-aef3-48e0-be26-678d0ab99345', 'admin@mcdull.com', '18238352145', null, 2, 100,1589631293412503554, '2022-10-31 07:20:54', null, null, '1', 1, null);
 
 DROP TABLE IF EXISTS `sys_user_login`;
 CREATE TABLE IF NOT EXISTS `sys_user_login` (

@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 
 /**
@@ -20,7 +21,7 @@ public class UserConvert {
      * @param entity 实体
      * @return {@link UserVO}
      */
-    public static UserVO entity2VO(UserDO entity) {
+    public static UserVO entityToVO(UserDO entity) {
         if (entity == null) {
             return null;
         }
@@ -32,7 +33,7 @@ public class UserConvert {
         userVO.setUpdatedBy(entity.getUpdatedBy());
         userVO.setStatus(entity.getStatus());
         userVO.setDelFlag(entity.getDelFlag());
-        userVO.setNickname(entity.getNickname());
+        userVO.setNickName(entity.getNickName());
         userVO.setAccount(entity.getAccount());
         userVO.setEmail(entity.getEmail());
         userVO.setPhone(entity.getPhone());
@@ -43,10 +44,23 @@ public class UserConvert {
 
     public static UserDO dto2Entity(UserLiteDTO dto) {
         UserDO entity = new UserDO();
-        entity.setNickname(dto.getNickname());
-        entity.setAccount(dto.getAccount());
-        entity.setEmail(dto.getEmail());
-        entity.setPhone(dto.getPhone());
+//        entity.setNickName(dto.getNickname());
+//        entity.setAccount(dto.getAccount());
+//        entity.setEmail(dto.getEmail());
+//        entity.setPhone(dto.getPhone());
         return entity;
+    }
+
+    public static UserDetailVO convertToUserDetailVO(UserDO userDO) {
+        UserDetailVO userDetailVO = new UserDetailVO();
+        userDetailVO.setType(userDO.getType());
+        userDetailVO.setNickName(userDO.getNickName());
+        userDetailVO.setId(userDO.getId());
+        userDetailVO.setStatus(userDO.getStatus());
+        userDetailVO.setAccount(userDO.getAccount());
+        userDetailVO.setEmail(userDO.getEmail());
+        userDetailVO.setPhone(userDO.getPhone());
+        return userDetailVO;
+
     }
 }

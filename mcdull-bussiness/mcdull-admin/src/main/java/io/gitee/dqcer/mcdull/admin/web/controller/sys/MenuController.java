@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.admin.web.controller.sys;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleMenuTreeSelectVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IMenuService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
@@ -52,6 +53,11 @@ public class MenuController {
     @GetMapping("/{id}")
     public Result<MenuVO> detail(@PathVariable Long id){
         return menuService.detail(id);
+    }
+
+    @GetMapping("roleMenuTreeselect/{roleId}")
+    public Result<RoleMenuTreeSelectVO> roleMenuTreeSelect(@PathVariable("roleId") Long roleId){
+        return menuService.roleMenuTreeSelect(roleId);
     }
 
 }

@@ -5,6 +5,7 @@ import io.gitee.dqcer.mcdull.admin.model.convert.sys.RoleConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IRoleService;
 import io.gitee.dqcer.mcdull.framework.base.dto.IdDTO;
@@ -39,6 +40,9 @@ public class RoleServiceImpl implements IRoleService {
     @Resource
     private IRoleRepository roleRepository;
 
+    @Resource
+    private IMenuRepository menuRepository;
+
     /**
      * 分页列表
      *
@@ -55,6 +59,7 @@ public class RoleServiceImpl implements IRoleService {
         }
         return Result.ok(PageUtil.toPage(voList, entityPage));
     }
+
 
     /**
      * 新增数据
@@ -115,7 +120,7 @@ public class RoleServiceImpl implements IRoleService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> update(RoleLiteDTO dto) {
-        Long id = dto.getId();
+        Long id = null;
 
         RoleDO dbData = roleRepository.getById(id);
         if(null == dbData) {

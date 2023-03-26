@@ -5,13 +5,13 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IRoleService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.dto.IdDTO;
-import io.gitee.dqcer.mcdull.framework.base.dto.QueryByIdDTO;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,8 +43,19 @@ public class RoleController {
      */
     @Authorized("system:role:list")
     @GetMapping("list")
-    public Result<PagedVO<RoleVO>> listByPage(@Validated(value = {ValidGroup.Paged.class}) RoleLiteDTO dto){
+    public Result<PagedVO<RoleVO>> listByPage(@Validated(value = {ValidGroup.List.class}) RoleLiteDTO dto){
         return roleService.listByPage(dto);
+    }
+
+    /**
+     * 通过主键查询单条数据
+     *
+     * @param roleId roleId
+     * @return {@link Result<RoleVO>}
+     */
+    @GetMapping("{roleId}")
+    public Result<RoleVO> detail(@PathVariable Long roleId){
+        return roleService.detail(roleId);
     }
 
     /**
@@ -59,16 +70,7 @@ public class RoleController {
         return roleService.insert(dto);
     }
 
-    /**
-    * 通过主键查询单条数据
-    *
-    * @param dto dto
-    * @return {@link Result<RoleVO>}
-    */
-    @GetMapping("base/detail")
-    public Result<RoleVO> detail(@Validated(value = {ValidGroup.Id.class}) QueryByIdDTO dto){
-        return roleService.detail(dto.getId());
-    }
+
 
     /**
     * 编辑数据

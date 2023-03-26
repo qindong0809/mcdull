@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.admin.web.service.sso.impl;
 
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.admin.framework.auth.ISecurityService;
+import io.gitee.dqcer.mcdull.admin.model.convert.sys.MenuConvert;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.LoginDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
@@ -244,7 +245,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         CurrentUserInfVO vo = new CurrentUserInfVO();
         Long userId = UserContextHolder.getSession().getUserId();
         UserDO user = userRepository.getById(userId);
-        UserVO userVO = UserConvert.entity2VO(user);
+        UserVO userVO = UserConvert.entityToVO(user);
         vo.setUser(userVO);
 
         List<RoleDO> userRoles = userManager.getUserRoles(userId);
@@ -281,7 +282,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
 
         List<MenuTreeVo> treeVoList = new ArrayList<>();
         for (MenuDO menu : menus) {
-            treeVoList.add(convert(menu));
+            treeVoList.add(MenuConvert.convertMenuTreeVo(menu));
         }
 
         // tree vo
@@ -301,7 +302,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
 
         for (MenuTreeVo treeVo : treeObjects) {
 
-            MenuDO menu = convertDO(treeVo);
+            MenuDO menu = MenuConvert.convertDO(treeVo);
             RouterVO router = new RouterVO();
             router.setHidden("1".equals(menu.getVisible()));
             router.setName(StrUtil.upperFirst(menu.getPath()));
@@ -349,52 +350,6 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
             routers.add(router);
         }
         return routers;
-    }
-
-    private MenuDO convertDO(MenuTreeVo treeVo) {
-        MenuDO menuDO = new MenuDO();
-        menuDO.setName(treeVo.getName());
-        menuDO.setParentId(treeVo.getParentId());
-        menuDO.setOrderNum(treeVo.getOrderNum());
-        menuDO.setPath(treeVo.getPath());
-        menuDO.setComponent(treeVo.getComponent());
-        menuDO.setQuery(treeVo.getQuery());
-        menuDO.setIsFrame(treeVo.getIsFrame());
-        menuDO.setIsCache(treeVo.getIsCache());
-        menuDO.setMenuType(treeVo.getMenuType());
-        menuDO.setVisible(treeVo.getVisible());
-        menuDO.setStatus(treeVo.getStatus());
-        menuDO.setPerms(treeVo.getPerms());
-        menuDO.setIcon(treeVo.getIcon());
-        menuDO.setCreatedBy(treeVo.getCreatedBy());
-        menuDO.setUpdatedTime(treeVo.getUpdatedTime());
-        menuDO.setUpdatedBy(treeVo.getUpdatedBy());
-        menuDO.setRemark(treeVo.getRemark());
-        menuDO.setId(treeVo.getId());
-        return menuDO;
-    }
-
-    private MenuTreeVo convert(MenuDO menu) {
-        MenuTreeVo menuTreeVo = new MenuTreeVo();
-        menuTreeVo.setName(menu.getName());
-        menuTreeVo.setOrderNum(menu.getOrderNum());
-        menuTreeVo.setPath(menu.getPath());
-        menuTreeVo.setComponent(menu.getComponent());
-        menuTreeVo.setQuery(menu.getQuery());
-        menuTreeVo.setIsFrame(menu.getIsFrame());
-        menuTreeVo.setIsCache(menu.getIsCache());
-        menuTreeVo.setMenuType(menu.getMenuType());
-        menuTreeVo.setVisible(menu.getVisible());
-        menuTreeVo.setStatus(menu.getStatus());
-        menuTreeVo.setPerms(menu.getPerms());
-        menuTreeVo.setIcon(menu.getIcon());
-        menuTreeVo.setCreatedBy(menu.getCreatedBy());
-        menuTreeVo.setUpdatedTime(menu.getUpdatedTime());
-        menuTreeVo.setUpdatedBy(menu.getUpdatedBy());
-        menuTreeVo.setRemark(menu.getRemark());
-        menuTreeVo.setId(menu.getId());
-        menuTreeVo.setParentId(menu.getParentId());
-        return menuTreeVo;
     }
 
 

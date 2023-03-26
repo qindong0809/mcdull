@@ -15,9 +15,9 @@ public class RoleConvert {
 
     public static RoleDO convertToRoleDO(RoleLiteDTO dto) {
         RoleDO entity = new RoleDO();
-        entity.setDelFlag(dto.getDelFlag());
+//        entity.setDelFlag(dto.getDelFlag());
         entity.setName(dto.getName());
-        entity.setDescription(dto.getDescription());
+//        entity.setDescription(dto.getDescription());
         entity.setStatus(dto.getStatus());
         return entity;
     }
@@ -27,7 +27,7 @@ public class RoleConvert {
             return null;
         }
         RoleVO roleVO = new RoleVO();
-        roleVO.setId(entity.getId());
+        roleVO.setRoleId(entity.getId());
         roleVO.setCreatedTime(entity.getCreatedTime());
         roleVO.setCreatedBy(entity.getCreatedBy());
         roleVO.setStatus(entity.getStatus());

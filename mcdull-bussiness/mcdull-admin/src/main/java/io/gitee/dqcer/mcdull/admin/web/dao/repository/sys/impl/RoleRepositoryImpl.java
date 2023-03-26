@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,13 +10,12 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleMenuDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.RoleMenuMapper;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
-import io.gitee.dqcer.mcdull.framework.base.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
@@ -72,9 +73,18 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
     @Override
     public Page<RoleDO> selectPage(RoleLiteDTO dto) {
         LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
-        String keyword = dto.getKeyword();
-        if (StrUtil.isNotBlank(keyword)) {
-            query.and(i-> i.like(RoleDO::getName, keyword));
+        String name = dto.getName();
+        if (StrUtil.isNotBlank(name)) {
+            query.like(RoleDO::getName, name);
+        }
+        String status = dto.getStatus();
+        if (StrUtil.isNotBlank(status)) {
+            query.eq(RoleDO::getStatus, status);
+        }
+        Date startTime = dto.getStartTime();
+        Date endTime = dto.getEndTime();
+        if (ObjUtil.isNotNull(startTime) && ObjUtil.isNotNull(endTime)) {
+            query.between(MiddleDO::getCreatedTime, startTime, endTime);
         }
         query.orderByDesc(BaseDO::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
@@ -126,7 +136,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
     /**
      * 获取菜单
      *
-     * @param roleId 角色id
+     * @param roles 角色id集
      * @return {@link List}<{@link RoleMenuDO}>
      */
     @Override

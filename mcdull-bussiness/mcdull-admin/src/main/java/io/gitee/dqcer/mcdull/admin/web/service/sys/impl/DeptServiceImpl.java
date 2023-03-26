@@ -1,13 +1,18 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys.impl;
 
+import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.DeptConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DeptLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DeptVO;
+import io.gitee.dqcer.mcdull.admin.util.TreeExtensionUtil;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IDeptRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IDeptService;
+import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
+import io.gitee.dqcer.mcdull.framework.base.vo.TreeSelectVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.stereotype.Service;
 
@@ -55,5 +60,19 @@ public class DeptServiceImpl implements IDeptService {
     public Result<DeptVO> detail(Long deptId) {
         DeptDO dept = deptRepository.getById(deptId);
         return Result.ok(DeptConvert.convertToDeptVO(dept));
+    }
+
+    @Override
+    public Result<List<TreeSelectVO>> selectDeptTreeList() {
+        List<DeptDO> list = deptRepository.list(null, StatusEnum.ENABLE.getCode());
+
+        List<Tree<Long>> build = TreeUtil.build(list, 0L, (deptDO, treeNode) -> {
+            treeNode.setId(deptDO.getId());
+            treeNode.setParentId(deptDO.getParentId());
+            treeNode.setName(deptDO.getName());
+        });
+
+        List<TreeSelectVO> voList = TreeExtensionUtil.convertTreeSelect(build);
+        return Result.ok(voList);
     }
 }

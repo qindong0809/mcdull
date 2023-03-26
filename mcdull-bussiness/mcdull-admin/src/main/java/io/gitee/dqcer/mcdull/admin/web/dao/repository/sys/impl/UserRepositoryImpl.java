@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -25,8 +27,6 @@ import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
-import io.gitee.dqcer.mcdull.framework.base.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.web.config.ThreadPoolConfig;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
@@ -75,9 +75,17 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
     @Override
     public Page<UserDO> selectPage(UserLiteDTO dto) {
         LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
-        String keyword = dto.getKeyword();
-        if (StrUtil.isNotBlank(keyword)) {
-            query.and(i-> i.like(UserDO::getAccount, keyword).or().like(UserDO::getPhone, keyword).or().like(UserDO::getEmail, keyword));
+        String account = dto.getAccount();
+        if (StrUtil.isNotBlank(account)) {
+            query.like(UserDO::getAccount, account);
+        }
+        String status = dto.getStatus();
+        if (StrUtil.isNotBlank(status)) {
+            query.eq(UserDO::getStatus, status);
+        }
+        Long deptId = dto.getDeptId();
+        if (ObjUtil.isNotNull(deptId)) {
+            query.eq(UserDO::getDeptId, deptId);
         }
         query.orderByDesc(BaseDO::getCreatedTime);
         query.eq(UserDO::getDelFlag, DelFlayEnum.NORMAL.getCode());

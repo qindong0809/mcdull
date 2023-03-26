@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.manager.sys;
 
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 
 import java.util.List;
@@ -31,4 +32,6 @@ public interface IUserManager {
      * @return {@link List}<{@link RoleDO}>
      */
     List<RoleDO> getUserRoles(Long userId);
+
+    UserDetailVO entityToDetailVo(UserDO userDO);
 }

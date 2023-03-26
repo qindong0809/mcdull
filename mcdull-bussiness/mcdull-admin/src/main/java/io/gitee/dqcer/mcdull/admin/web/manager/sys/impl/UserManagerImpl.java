@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.manager.sys.impl;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRoleRepository;
@@ -38,12 +39,26 @@ public class UserManagerImpl implements IUserManager {
      */
     @Override
     public UserVO entityToVo(UserDO entity) {
-        UserVO vo = UserConvert.entity2VO(entity);
+        UserVO vo = UserConvert.entityToVO(entity);
         if (vo == null) {
             return null;
         }
+        List<BaseVO> baseRoles = this.getBaseRoles(vo.getId());
+        vo.setRoles(baseRoles);
+        return vo;
+    }
+
+    @Override
+    public UserDetailVO entityToDetailVo(UserDO userDO) {
+        UserDetailVO vo = UserConvert.convertToUserDetailVO(userDO);
+        List<BaseVO> baseRoles = this.getBaseRoles(vo.getId());
+        vo.setRoles(baseRoles);
+        return vo;
+    }
+
+    private List<BaseVO> getBaseRoles(Long vo) {
         List<BaseVO> baseRoles = new ArrayList<>();
-        List<Long> list = userRoleRepository.listRoleByUserId(vo.getId());
+        List<Long> list = userRoleRepository.listRoleByUserId(vo);
         if (!list.isEmpty()) {
             for (RoleDO roleDO : roleRepository.listByIds(list)) {
                 BaseVO role = new BaseVO();
@@ -52,8 +67,7 @@ public class UserManagerImpl implements IUserManager {
                 baseRoles.add(role);
             }
         }
-        vo.setRoles(baseRoles);
-        return vo;
+        return baseRoles;
     }
 
     /**
