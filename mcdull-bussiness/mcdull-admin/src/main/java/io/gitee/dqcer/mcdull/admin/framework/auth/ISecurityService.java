@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.admin.framework.auth;
 
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.mcdull.framework.web.feign.model.UserSession;
 
 import java.util.List;
 
@@ -17,9 +18,9 @@ public interface ISecurityService {
      * token验证
      *
      * @param token 令牌
-     * @return {@link Result}<{@link Long}>
+     * @return {@link Result}<{@link UserSession}>
      */
-    Result<Long> tokenValid(String token);
+    Result<UserSession> tokenValid(String token);
 
 
     /**

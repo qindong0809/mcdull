@@ -3,8 +3,8 @@ package io.gitee.dqcer.mcdull.admin.framework.auth;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.mcdull.framework.web.feign.model.UserSession;
 import io.gitee.dqcer.mcdull.framework.web.interceptor.BaseInfoInterceptor;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -27,7 +27,7 @@ public class SecurityInterceptor extends BaseInfoInterceptor {
      * @return {@link Result<Long>}
      */
     @Override
-    protected Result<Long> authCheck(String token) {
+    protected Result<UserSession> authCheck(String token) {
         return securityService.tokenValid(token);
     }
 

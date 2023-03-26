@@ -25,5 +25,7 @@ public class LocalClient implements OssClient{
     public void upload(byte[] content, String fileName, String bucket) {
         // TODO: 2023/3/22
         log.info("本地文件存储 ....");
+//        FileUtil.touch()
     }
+
 }

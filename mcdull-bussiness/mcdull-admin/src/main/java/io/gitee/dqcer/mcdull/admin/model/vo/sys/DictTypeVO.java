@@ -33,7 +33,7 @@ public class DictTypeVO implements VO {
      * 状态
      * @see io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum
      */
-    private Integer status;
+    private String status;
 
     private String remark;
 
@@ -91,11 +91,11 @@ public class DictTypeVO implements VO {
         this.dictType = dictType;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 }

@@ -30,6 +30,7 @@
         <druid.version>1.2.14</druid.version>
         <kaptcha.version>2.3.3</kaptcha.version>
         <qiniu.version>[7.7.0, 7.7.99]</qiniu.version>
+        <easyexcel.version>3.2.1</easyexcel.version>
     </properties>
 
     <dependencyManagement>
@@ -110,6 +111,11 @@
                 <groupId>com.qiniu</groupId>
                 <artifactId>qiniu-java-sdk</artifactId>
                 <version>${qiniu.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.gitee.dqcer</groupId>

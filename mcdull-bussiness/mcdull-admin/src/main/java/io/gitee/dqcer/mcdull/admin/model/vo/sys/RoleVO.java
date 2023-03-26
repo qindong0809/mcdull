@@ -49,7 +49,7 @@ public class RoleVO implements VO {
      *
      * @see StatusEnum
      */
-    private Integer status;
+    private String status;
 
     @Transform(from = "status", param = "status_type")
     private String statusStr;
@@ -178,11 +178,11 @@ public class RoleVO implements VO {
         this.updatedByStr = updatedByStr;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,7 +15,6 @@ import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.springframework.stereotype.Service;
 
@@ -77,6 +78,25 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
         query.in(IdDO::getId, menuIds);
         List<MenuDO> list = baseMapper.selectList(query);
         if (list.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return list;
+    }
+
+    @Override
+    public List<MenuDO> list(String menuName, String status, List<Long> menuIds) {
+        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
+        if (StrUtil.isNotBlank(menuName)) {
+            query.like(MenuDO::getName, menuName);
+        }
+        if (StrUtil.isNotBlank(status)) {
+            query.like(MenuDO::getStatus, status);
+        }
+        if (CollUtil.isNotEmpty(menuIds)) {
+            query.in(IdDO::getId, menuIds);
+        }
+        List<MenuDO> list = baseMapper.selectList(query);
+        if (CollUtil.isEmpty(list)) {
             return Collections.emptyList();
         }
         return list;

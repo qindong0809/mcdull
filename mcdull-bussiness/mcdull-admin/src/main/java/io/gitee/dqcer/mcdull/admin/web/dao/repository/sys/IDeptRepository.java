@@ -13,5 +13,5 @@ import java.util.List;
 */
 public interface IDeptRepository extends IService<DeptDO>  {
 
-    List<DeptDO> list(String name, Integer status);
+    List<DeptDO> list(String name, String status);
 }

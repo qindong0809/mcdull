@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.base.dto;
 
-import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
+import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 
@@ -26,8 +26,8 @@ public class StatusDTO implements DTO {
      * 状态
      * @see StatusEnum
      */
-    @EnumsIntValid(value = StatusEnum.class, groups = ValidGroup.Status.class)
-    private Integer status;
+    @EnumsStrValid(value = StatusEnum.class, groups = ValidGroup.Status.class)
+    private String status;
 
     @Override
     public String toString() {
@@ -46,11 +46,11 @@ public class StatusDTO implements DTO {
         this.id = id;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 }

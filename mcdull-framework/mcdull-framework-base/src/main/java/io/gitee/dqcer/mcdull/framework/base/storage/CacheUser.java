@@ -40,6 +40,11 @@ public class CacheUser implements Serializable {
     private Long tenantId;
 
     /**
+     * 用户类型类型 1/自定义 2/内置管理员
+     */
+    private Integer userType;
+
+    /**
      * 1/在线 2/挤下线 3/主动退出
      */
     private Integer onlineStatus;
@@ -57,6 +62,15 @@ public class CacheUser implements Serializable {
                 ", onlineStatus=" + onlineStatus +
                 ", lastActiveTime=" + lastActiveTime +
                 '}';
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public CacheUser setUserType(Integer userType) {
+        this.userType = userType;
+        return this;
     }
 
     public Long getTenantId() {

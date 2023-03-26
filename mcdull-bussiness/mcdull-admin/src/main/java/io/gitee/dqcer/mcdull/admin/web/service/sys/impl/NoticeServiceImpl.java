@@ -123,7 +123,7 @@ public class NoticeServiceImpl implements INoticeService {
 
         NoticeDO entity = new NoticeDO();
         entity.setId(id);
-        entity.setStatus(dto.getStatus());
+//        entity.setStatus(dto.getStatus());
         entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
         boolean success = noticeRepository.updateById(entity);
 

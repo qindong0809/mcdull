@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.dto.sys;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
+import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
 import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
 import io.gitee.dqcer.mcdull.framework.base.dto.KeywordDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
@@ -29,8 +30,8 @@ public class DeptLiteDTO extends KeywordDTO implements DTO {
     /**
      * 状态（1/正常 2/停用）
      */
-     @EnumsIntValid(groups = {ValidGroup.List.class}, value = StatusEnum.class)
-     private Integer status;
+     @EnumsStrValid(groups = {ValidGroup.List.class}, value = StatusEnum.class)
+     private String status;
 
     /**
      * 删除标识（1/正常 2/删除）
@@ -69,11 +70,11 @@ public class DeptLiteDTO extends KeywordDTO implements DTO {
         this.id = id;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

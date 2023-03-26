@@ -22,7 +22,7 @@ public class DictDataConvert {
         dictDataVO.setCssClass(dictDataDO.getCssClass());
         dictDataVO.setListClass(dictDataDO.getListClass());
         dictDataVO.setIsDefault(dictDataDO.getIsDefault());
-        dictDataVO.setStatus(dictDataDO.getStatus());
+        dictDataVO.setStatus(String.valueOf(dictDataDO.getStatus()));
         dictDataVO.setRemark(dictDataDO.getRemark());
         return dictDataVO;
     }

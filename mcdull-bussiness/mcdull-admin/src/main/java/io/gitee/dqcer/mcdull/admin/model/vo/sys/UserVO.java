@@ -54,7 +54,7 @@ public class UserVO implements VO {
      * 状态
      * @see StatusEnum
      */
-    private Integer status;
+    private String status;
 
     @Transform(from = "status", param = "status_type", transformer = DictTransformer.class)
     private String statusStr;
@@ -231,11 +231,11 @@ public class UserVO implements VO {
         this.updatedBy = updatedBy;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

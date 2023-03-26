@@ -19,5 +19,5 @@ public interface IRoleManager {
      * @param roleId 角色id
      * @return {@link List}<{@link MenuDO}>
      */
-    List<MenuDO> getMenuByRole(Long roleId);
+    List<MenuDO> getMenuByRole(List<Long> roles);
 }

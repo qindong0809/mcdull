@@ -27,9 +27,9 @@ public class GlobalConstant {
 
 
     /**
-     * 管理角色类型
+     * 管理人员类型
      */
-    public static final Integer SUPER_ADMIN_ROLE_TYPE = 2;
+    public static final Integer SUPER_ADMIN_USER_TYPE = 2;
 
 
 

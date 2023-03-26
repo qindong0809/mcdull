@@ -20,6 +20,11 @@ public class UnifySession implements Serializable {
     private Long userId;
 
     /**
+     * 用户类型
+     */
+    private Integer userType;
+
+    /**
      * 所属客户
      */
     private Long tenantId;
@@ -64,6 +69,15 @@ public class UnifySession implements Serializable {
                 ", traceId='" + traceId + '\'' +
                 ", extension=" + extension +
                 '}';
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public UnifySession setUserType(Integer userType) {
+        this.userType = userType;
+        return this;
     }
 
     public Long getUserId() {

@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.dto.sys;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
+import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
@@ -29,8 +30,8 @@ public class RoleLiteDTO extends PagedDTO {
     /**
      * 状态（1/正常 2/停用）
      */
-     @EnumsIntValid(groups = {ValidGroup.Status.class}, value = StatusEnum.class)
-     private Integer status;
+     @EnumsStrValid(groups = {ValidGroup.Status.class}, value = StatusEnum.class)
+     private String status;
 
     /**
      * 删除标识（1/正常 2/删除）
@@ -82,13 +83,14 @@ public class RoleLiteDTO extends PagedDTO {
         this.id = id;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
+
 
     public Integer getDelFlag() {
         return delFlag;

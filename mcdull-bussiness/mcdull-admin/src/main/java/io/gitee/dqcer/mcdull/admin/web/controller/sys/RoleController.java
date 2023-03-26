@@ -1,14 +1,14 @@
 package io.gitee.dqcer.mcdull.admin.web.controller.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
+import io.gitee.dqcer.mcdull.admin.web.service.sys.IRoleService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.dto.IdDTO;
-import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
-import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.dto.QueryByIdDTO;
-import io.gitee.dqcer.mcdull.admin.web.service.sys.IRoleService;
-import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
-import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
+import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
+import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,11 +29,23 @@ import java.util.List;
 * @since 2023-02-08
 */
 @RestController
-@RequestMapping("/sys-role")
+@RequestMapping("/system/role")
 public class RoleController {
 
     @Resource
     private IRoleService roleService;
+
+    /**
+     * 分页查询
+     *
+     * @param dto dto
+     * @return {@link Result< PagedVO >}
+     */
+    @Authorized("system:role:list")
+    @GetMapping("list")
+    public Result<PagedVO<RoleVO>> listByPage(@Validated(value = {ValidGroup.Paged.class}) RoleLiteDTO dto){
+        return roleService.listByPage(dto);
+    }
 
     /**
     * 新增数据
@@ -92,17 +104,4 @@ public class RoleController {
     public Result<List<Long>> deleteBatchByIds(@RequestBody @Valid IdDTO<Long> dto){
         return roleService.deleteBatchByIds(dto);
     }
-
-    /**
-    * 分页查询
-    *
-    * @param dto dto
-    * @return {@link Result<PagedVO>}
-    */
-    @Authorized("sys:role:view")
-    @GetMapping("base/list")
-    public Result<PagedVO<RoleVO>> listByPage(@Validated(value = {ValidGroup.Paged.class}) RoleLiteDTO dto){
-        return roleService.listByPage(dto);
-    }
-
 }

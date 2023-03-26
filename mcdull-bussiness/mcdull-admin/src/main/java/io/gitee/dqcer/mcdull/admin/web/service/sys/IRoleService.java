@@ -1,13 +1,12 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys;
 
-import io.gitee.dqcer.mcdull.admin.model.dto.sys.DeptLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.vo.sys.DeptVO;
-import io.gitee.dqcer.mcdull.framework.base.dto.IdDTO;
-import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
-import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
+import io.gitee.dqcer.mcdull.framework.base.dto.IdDTO;
+import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+
 import java.util.List;
 
 /**
@@ -17,6 +16,15 @@ import java.util.List;
 * @since 2023-02-08
 */
 public interface IRoleService {
+
+
+    /**
+     * 分页查询
+     *
+     * @param dto 参数
+     * @return {@link Result< PagedVO >}
+     */
+    Result<PagedVO<RoleVO>> listByPage(RoleLiteDTO dto);
 
     /**
      * 新增数据
@@ -65,11 +73,4 @@ public interface IRoleService {
      */
     Result<List<RoleVO>> queryByIds(List<Long> ids);
 
-    /**
-     * 分页查询
-     *
-     * @param dto 参数
-     * @return {@link Result<PagedVO>}
-     */
-    Result<PagedVO<RoleVO>> listByPage(RoleLiteDTO dto);
 }

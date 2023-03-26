@@ -25,7 +25,7 @@ public class DeptRepositoryImpl extends ServiceImpl<DeptMapper, DeptDO>  impleme
 
 
     @Override
-    public List<DeptDO> list(String name, Integer status) {
+    public List<DeptDO> list(String name, String status) {
         LambdaQueryWrapper<DeptDO> wrapper = Wrappers.lambdaQuery();
         if (ObjUtil.isNotEmpty(status)) {
             wrapper.eq(DeptDO::getStatus, status);

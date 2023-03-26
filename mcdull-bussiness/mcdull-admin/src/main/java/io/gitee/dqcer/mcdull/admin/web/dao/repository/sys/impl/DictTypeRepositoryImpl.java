@@ -38,7 +38,7 @@ public class DictTypeRepositoryImpl extends ServiceImpl<DictTypeMapper, DictType
         if (StrUtil.isNotBlank(dictName)) {
             lambda.like(DictTypeDO::getDictName, dictName);
         }
-        Integer status = dto.getStatus();
+        String status = dto.getStatus();
         if (ObjUtil.isNotNull(status)) {
             lambda.eq(DictTypeDO::getStatus, status);
         }

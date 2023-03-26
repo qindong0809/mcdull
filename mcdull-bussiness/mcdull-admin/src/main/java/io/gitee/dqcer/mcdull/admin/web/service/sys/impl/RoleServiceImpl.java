@@ -1,18 +1,16 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.mcdull.admin.model.dto.sys.DeptLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.RoleConvert;
-import io.gitee.dqcer.mcdull.admin.model.vo.sys.DeptVO;
-import io.gitee.dqcer.mcdull.admin.web.service.sys.IRoleService;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
+import io.gitee.dqcer.mcdull.admin.web.service.sys.IRoleService;
 import io.gitee.dqcer.mcdull.framework.base.dto.IdDTO;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
@@ -40,6 +38,23 @@ public class RoleServiceImpl implements IRoleService {
 
     @Resource
     private IRoleRepository roleRepository;
+
+    /**
+     * 分页列表
+     *
+     * @param dto 参数
+     * @return {@link Result<PagedVO>}
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public Result<PagedVO<RoleVO>> listByPage(RoleLiteDTO dto) {
+        Page<RoleDO> entityPage = roleRepository.selectPage(dto);
+        List<RoleVO> voList = new ArrayList<>();
+        for (RoleDO entity : entityPage.getRecords()) {
+            voList.add(RoleConvert.convertToRoleVO(entity));
+        }
+        return Result.ok(PageUtil.toPage(voList, entityPage));
+    }
 
     /**
      * 新增数据
@@ -178,20 +193,5 @@ public class RoleServiceImpl implements IRoleService {
          return Result.ok(voList);
     }
 
-    /**
-     * 分页列表
-     *
-     * @param dto 参数
-     * @return {@link Result<PagedVO>}
-     */
-    @Transactional(readOnly = true)
-    @Override
-    public Result<PagedVO<RoleVO>> listByPage(RoleLiteDTO dto) {
-        Page<RoleDO> entityPage = roleRepository.selectPage(dto);
-        List<RoleVO> voList = new ArrayList<>();
-        for (RoleDO entity : entityPage.getRecords()) {
-            voList.add(RoleConvert.convertToRoleVO(entity));
-        }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
-    }
+
 }

@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.base.storage;
 
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+
 /**
  * 用户上下文
  *
@@ -38,4 +40,16 @@ public class UserContextHolder {
         UNIFY_SESSION.remove();
     }
 
+    /**
+     * 是否为管理人员
+     *
+     * @return boolean
+     */
+    public static boolean isAdmin() {
+        UnifySession session = UNIFY_SESSION.get();
+        if (GlobalConstant.SUPER_ADMIN_USER_TYPE.equals(session.getUserType())) {
+            return true;
+        }
+        return false;
+    }
 }

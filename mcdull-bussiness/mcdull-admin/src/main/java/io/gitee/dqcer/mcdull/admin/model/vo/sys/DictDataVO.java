@@ -56,7 +56,7 @@ public class DictDataVO implements VO {
      * 状态
      * @see io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum
      */
-    private Integer status;
+    private String status;
 
     /**
      * 备注
@@ -137,11 +137,11 @@ public class DictDataVO implements VO {
         this.isDefault = isDefault;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

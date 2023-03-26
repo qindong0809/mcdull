@@ -52,7 +52,7 @@ public class DictDataDO extends BaseDO {
      * 状态
      * @see io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum
      */
-    private Integer status;
+    private String status;
 
     /**
      * 备注
@@ -116,11 +116,11 @@ public class DictDataDO extends BaseDO {
         this.isDefault = isDefault;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

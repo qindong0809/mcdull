@@ -53,6 +53,13 @@ public class TranslatorAspect {
                 }
                 return;
             }
+            if (data instanceof Collection<?>) {
+                Collection<?> collection = (Collection<?>) data;
+                for (Object o : collection) {
+                    doTranslateObject(o);
+                }
+            }
+
             doTranslateObject(data);
             return;
         }

@@ -1,28 +1,29 @@
-package io.gitee.dqcer.mcdull.admin.model.entity.sys;
+package io.gitee.dqcer.mcdull.admin.model.vo.sys;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
+import io.gitee.dqcer.mcdull.framework.base.vo.VO;
 
 import java.util.Date;
 
 /**
- * 系统角色实体
+ * 部门视图对象
  *
  * @author dqcer
- * @since 2022/11/07
+ * @since  2022/11/27
  */
-@TableName("sys_menu")
-public class MenuDO extends MiddleDO {
+public class MenuVO implements VO {
+
+    private Integer menuId;
+
 
     /**
      * 名字
      */
-    private String name;
+    private String menuName;
 
     /**
      * 父id
      */
-    private Long parentId;
+    private Integer parentId;
 
     /**
      * 显示顺序
@@ -87,6 +88,11 @@ public class MenuDO extends MiddleDO {
     private Long createdBy;
 
     /**
+     * 创建时间
+     */
+    private Date createdTime;
+
+    /**
      * 更新时间
      */
     private Date updatedTime;
@@ -101,165 +107,175 @@ public class MenuDO extends MiddleDO {
      */
     private String remark;
 
-    @Override
-    public String toString() {
-        return "MenuDO{" +
-                "name='" + name + '\'' +
-                ", parentId=" + parentId +
-                ", orderNum=" + orderNum +
-                ", path='" + path + '\'' +
-                ", component='" + component + '\'' +
-                ", query='" + query + '\'' +
-                ", isFrame='" + isFrame + '\'' +
-                ", isCache='" + isCache + '\'' +
-                ", menuType='" + menuType + '\'' +
-                ", visible='" + visible + '\'' +
-                ", status=" + status +
-                ", perms='" + perms + '\'' +
-                ", icon='" + icon + '\'' +
-                ", createdBy=" + createdBy +
-                ", updatedTime=" + updatedTime +
-                ", updatedBy=" + updatedBy +
-                ", remark='" + remark + '\'' +
-                ", createdTime=" + createdTime +
-                ", id=" + id +
-                "} " + super.toString();
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public MenuVO setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+        return this;
     }
 
 
-    public String getName() {
-        return name;
+    public String getMenuName() {
+        return menuName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public MenuVO setMenuName(String menuName) {
+        this.menuName = menuName;
+        return this;
     }
 
-    public Long getParentId() {
+    public Integer getMenuId() {
+        return menuId;
+    }
+
+    public MenuVO setMenuId(Integer menuId) {
+        this.menuId = menuId;
+        return this;
+    }
+
+    public Integer getParentId() {
         return parentId;
     }
 
-    public void setParentId(Long parentId) {
+    public MenuVO setParentId(Integer parentId) {
         this.parentId = parentId;
+        return this;
     }
 
     public Integer getOrderNum() {
         return orderNum;
     }
 
-    public void setOrderNum(Integer orderNum) {
+    public MenuVO setOrderNum(Integer orderNum) {
         this.orderNum = orderNum;
+        return this;
     }
 
     public String getPath() {
         return path;
     }
 
-    public void setPath(String path) {
+    public MenuVO setPath(String path) {
         this.path = path;
+        return this;
     }
 
     public String getComponent() {
         return component;
     }
 
-    public void setComponent(String component) {
+    public MenuVO setComponent(String component) {
         this.component = component;
+        return this;
     }
 
     public String getQuery() {
         return query;
     }
 
-    public void setQuery(String query) {
+    public MenuVO setQuery(String query) {
         this.query = query;
+        return this;
     }
 
     public String getIsFrame() {
         return isFrame;
     }
 
-    public void setIsFrame(String isFrame) {
+    public MenuVO setIsFrame(String isFrame) {
         this.isFrame = isFrame;
+        return this;
     }
 
     public String getIsCache() {
         return isCache;
     }
 
-    public void setIsCache(String isCache) {
+    public MenuVO setIsCache(String isCache) {
         this.isCache = isCache;
+        return this;
     }
 
     public String getMenuType() {
         return menuType;
     }
 
-    public void setMenuType(String menuType) {
+    public MenuVO setMenuType(String menuType) {
         this.menuType = menuType;
+        return this;
     }
 
     public String getVisible() {
         return visible;
     }
 
-    public void setVisible(String visible) {
+    public MenuVO setVisible(String visible) {
         this.visible = visible;
+        return this;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public MenuVO setStatus(String status) {
         this.status = status;
+        return this;
     }
 
     public String getPerms() {
         return perms;
     }
 
-    public void setPerms(String perms) {
+    public MenuVO setPerms(String perms) {
         this.perms = perms;
+        return this;
     }
 
     public String getIcon() {
         return icon;
     }
 
-    public void setIcon(String icon) {
+    public MenuVO setIcon(String icon) {
         this.icon = icon;
+        return this;
     }
 
     public Long getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Long createdBy) {
+    public MenuVO setCreatedBy(Long createdBy) {
         this.createdBy = createdBy;
+        return this;
     }
 
     public Date getUpdatedTime() {
         return updatedTime;
     }
 
-    public void setUpdatedTime(Date updatedTime) {
+    public MenuVO setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
+        return this;
     }
 
     public Long getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(Long updatedBy) {
+    public MenuVO setUpdatedBy(Long updatedBy) {
         this.updatedBy = updatedBy;
+        return this;
     }
 
     public String getRemark() {
         return remark;
     }
 
-    public void setRemark(String remark) {
+    public MenuVO setRemark(String remark) {
         this.remark = remark;
+        return this;
     }
 }

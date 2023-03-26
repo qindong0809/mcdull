@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -154,6 +155,9 @@ public class UserServiceImpl implements IUserService, IUserTransformerService {
     @Override
     public KeyValueVO<String, String> transformer(String code) {
         UserDO userDO = userRepository.getById(code);
-        return new KeyValueVO<String, String>().setId(userDO.getId().toString()).setName(userDO.getNickname());
+        if (ObjUtil.isNotNull(userDO)) {
+            return new KeyValueVO<String, String>().setId(userDO.getId().toString()).setName(userDO.getNickname());
+        }
+        return new KeyValueVO<String, String>();
     }
 }

@@ -64,7 +64,7 @@ public class MenuTreeVo extends TreeVO<MenuTreeVo, Long>  {
      * 状态（1/正常 2/停用）
      * @see io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum
      */
-    private Integer status;
+    private String status;
 
     /**
      * 权限标识 如sys:user:list
@@ -168,11 +168,11 @@ public class MenuTreeVo extends TreeVO<MenuTreeVo, Long>  {
         this.visible = visible;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

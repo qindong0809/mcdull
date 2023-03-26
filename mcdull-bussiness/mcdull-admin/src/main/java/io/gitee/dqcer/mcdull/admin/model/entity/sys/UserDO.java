@@ -54,7 +54,7 @@ public class UserDO extends BaseDO {
      */
     private Integer type;
 
-    private Integer status;
+    private String status;
 
     @Override
     public String toString() {
@@ -78,11 +78,11 @@ public class UserDO extends BaseDO {
         return sb.toString();
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

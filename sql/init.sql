@@ -13,13 +13,13 @@ CREATE TABLE IF NOT EXISTS `sys_user` (
     `created_time` datetime NOT NULL COMMENT '创建时间',
     `updated_by` bigint(20) DEFAULT NULL COMMENT '更新人',
     `updated_time` datetime DEFAULT NULL COMMENT '更新时间',
-    `status` int(4) NOT NULL COMMENT '状态（1/正常 2/停用）',
+    `status`  char(1)         default null               comment '状态（1正常 2停用）',
     `del_flag` int(1) NOT NULL COMMENT '删除标识（1/正常 2/删除）',
     `del_by` bigint(20) DEFAULT NULL COMMENT '删除人',
     PRIMARY KEY (`id`),
     KEY `idx_pa_account` (`account`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
-INSERT INTO sys_user VALUES(1589631293412503554, '麦兜', 'admin', '7a69d7186df1a65ed7af2ba00747488e2415bf1a', 'c7e87439-aef3-48e0-be26-678d0ab99345', 'admin@mcdull.com', '18238352145', null, 2, 1589631293412503554, '2022-10-31 07:20:54', null, null, 1, 1, null);
+INSERT INTO sys_user VALUES(1589631293412503554, '麦兜', 'admin', '7a69d7186df1a65ed7af2ba00747488e2415bf1a', 'c7e87439-aef3-48e0-be26-678d0ab99345', 'admin@mcdull.com', '18238352145', null, 2, 1589631293412503554, '2022-10-31 07:20:54', null, null, '1', 1, null);
 
 DROP TABLE IF EXISTS `sys_user_login`;
 CREATE TABLE IF NOT EXISTS `sys_user_login` (
@@ -40,28 +40,28 @@ CREATE TABLE IF NOT EXISTS `sys_dict` (
     `select_type` varchar(32) NOT NULL COMMENT '类别',
     `sort` int(4) NOT NULL COMMENT '排序',
     `defaulted` int(1) NOT NULL COMMENT '当前是否为默认（1/是 2/否）',
-    `status` int(1) NOT NULL COMMENT '状态（1/正常 2/停用）',
+    `status`    char(1)         not null               comment '状态（1正常 2停用）',
     `remark` varchar(128) DEFAULT NULL COMMENT '备注',
     `language` varchar(32) DEFAULT NULL,
     `del_flag` int(1) NOT NULL COMMENT '删除标识（1/正常 2/删除）'
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='公共码表';
 
-INSERT INTO `sys_dict` VALUES ('0', null, '未知的性别', null, 'sex_type', 1, 2, 1, '性别代码',  'zh-CN',  1);
-INSERT INTO `sys_dict` VALUES ('1', null, '男', null, 'sex_type', 2, 2, 1, '性别代码',  'zh-CN',  1);
-INSERT INTO `sys_dict` VALUES ('2', null, '女', null, 'sex_type', 3, 2, 1, '性别代码',  'zh-CN',  1);
-INSERT INTO `sys_dict` VALUES ('9', null, '未说明的性别', null, 'sex_type', 4, 1, 1, '性别代码',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('0', null, '未知的性别', null, 'sex_type', 1, 2, '1', '性别代码',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('1', null, '男', null, 'sex_type', 2, 2, '1', '性别代码',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('2', null, '女', null, 'sex_type', 3, 2, '1', '性别代码',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('9', null, '未说明的性别', null, 'sex_type', 4, 1, '1', '性别代码',  'zh-CN',  1);
 
-INSERT INTO `sys_dict` VALUES ('1', null, '启用', null, 'status_type', 1, 1, 1, '状态标识',  'zh-CN',  1);
-INSERT INTO `sys_dict` VALUES ('2', null, '停用', null, 'status_type', 2, 2, 1, '状态标识',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('1', null, '启用', null, 'status_type', 1, 1, '1', '状态标识',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('2', null, '停用', null, 'status_type', 2, 2, '1', '状态标识',  'zh-CN',  1);
 
-INSERT INTO `sys_dict` VALUES ('false', null, '正常', null, 'del_flag_type', 1, 1, 1, '删除标识',  'zh-CN',  1);
-INSERT INTO `sys_dict` VALUES ('true', null, '删除', null, 'del_flag_type', 2, 2, 1, '删除标识',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('false', null, '正常', null, 'del_flag_type', 1, 1, '1', '删除标识',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('true', null, '删除', null, 'del_flag_type', 2, 2, '1', '删除标识',  'zh-CN',  1);
 
-INSERT INTO `sys_dict` VALUES ('zh-CN', null, '中文', null, 'language_type', 1, 1, 1, '语言类型',  'zh-CN',  1);
-INSERT INTO `sys_dict` VALUES ('en-US', null, '英文', null, 'language_type', 2, 2, 1, '语言类型',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('zh-CN', null, '中文', null, 'language_type', 1, 1, '1', '语言类型',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('en-US', null, '英文', null, 'language_type', 2, 2, '1', '语言类型',  'zh-CN',  1);
 
-INSERT INTO `sys_dict` VALUES ('1', null, '自定义', null, 'data_type', 1, 1, 1, '数据类型',  'zh-CN',  1);
-INSERT INTO `sys_dict` VALUES ('2', null, '内置', null, 'data_type', 2, 2, 1, '数据类型',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('1', null, '自定义', null, 'data_type', 1, 1, '1', '数据类型',  'zh-CN',  1);
+INSERT INTO `sys_dict` VALUES ('2', null, '内置', null, 'data_type', 2, 2, '1', '数据类型',  'zh-CN',  1);
 
 
 DROP TABLE IF EXISTS `sys_operation_log`;
@@ -96,14 +96,14 @@ CREATE TABLE IF NOT EXISTS `sys_role` (
 `created_time` datetime NOT NULL COMMENT '创建时间',
 `updated_by` bigint(20) DEFAULT NULL COMMENT '更新人',
 `updated_time` datetime DEFAULT NULL COMMENT '更新时间',
-`status` int(1) NOT NULL COMMENT '状态（1/正常 2/停用）',
+`status` char(1)         not null               comment '状态（1正常 2停用）',
 `del_flag` int(1) NOT NULL COMMENT '删除标识（1/正常 2/删除）',
 `del_by` bigint(20) DEFAULT NULL COMMENT '删除人',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色表';
 
-INSERT INTO sys_role VALUES(1, '系统管理员', 'admin', '这是系统管理员', 2, 1589631293412503554, '2022-10-31 07:20:54', 1589631293412503554, '2022-12-05 22:53:42', 1, 0, null);
-INSERT INTO sys_role VALUES(2, '日志管理员', 'log-admin', '这是日志管理员', 1, 1589631293412503554, '2022-10-31 07:20:54', 1589631293412503554, '2022-12-05 22:53:42', 1, 0, null);
+INSERT INTO sys_role VALUES(1, '系统管理员', 'admin', '这是系统管理员', 2, 1589631293412503554, '2022-10-31 07:20:54', 1589631293412503554, '2022-12-05 22:53:42', '1', 0, null);
+INSERT INTO sys_role VALUES(2, '日志管理员', 'log-admin', '这是日志管理员', 1, 1589631293412503554, '2022-10-31 07:20:54', 1589631293412503554, '2022-12-05 22:53:42', '1', 0, null);
 
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE IF NOT EXISTS `sys_user_role` (
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `sys_menu` (
     `is_cache` int(1) NOT NULL COMMENT '是否缓存（0缓存 1不缓存）',
     `menu_type` varchar(8) NOT NULL COMMENT '菜单类型（M目录 C菜单 F按钮）',
     `visible` char(1) NOT NULL COMMENT '菜单状态（0显示 1隐藏）',
-    `status` int(1) NOT NULL COMMENT '状态（1/正常 2/停用）',
+    `status` char(1)         not null               comment '状态（1正常 2停用）',
     `perms` varchar(128) NOT NULL COMMENT '权限标识',
     `icon` varchar(128) DEFAULT NULL COMMENT '菜单图标',
     `created_by` bigint(20) NULL COMMENT '创建人',
@@ -397,7 +397,7 @@ create table sys_dept (
   name              varchar(512)     not null                   comment '部门名称',
   order_num         int(4)          not null                   comment '显示顺序',
   leader_id         varchar(20)     default null               comment '负责人',
-  status            int(1)          not null                   comment '部门状态（1正常 2停用）',
+  status            char(1)         not null                   comment '状态（1正常 2停用）',
   created_by        bigint(20)      not null                   comment '创建人',
   created_time      datetime        not null                   comment '创建时间',
   updated_by        bigint(20)      default null               comment '更新人',
@@ -407,16 +407,16 @@ create table sys_dept (
 primary key (id)
 ) engine=innodb  comment = '部门表';
 
-insert into sys_dept values(100,  0,   '0',          'McDull科技',   0,  null,  1, 0, sysdate(), null, null, 1, null);
-insert into sys_dept values(101,  100, '0,100',      '成都总公司',    1,  null,  1, 0, sysdate(), null, null, 1, null);
-insert into sys_dept values(102,  100, '0,100',      '武汉分公司',    2,  null,  1, 0, sysdate(), null, null, 1, null);
-insert into sys_dept values(103,  101, '0,100,101',  '研发部门',   1, null,  1, 0, sysdate(), null, null, 1, null);
-insert into sys_dept values(104,  101, '0,100,101',  '市场部门',   2, null,  1, 0, sysdate(), null, null, 1, null);
-insert into sys_dept values(105,  101, '0,100,101',  '测试部门',   3, null,  1, 0, sysdate(), null, null, 1, null);
-insert into sys_dept values(106,  101, '0,100,101',  '财务部门',   4, null,  1, 0, sysdate(), null, null, 1, null);
-insert into sys_dept values(107,  101, '0,100,101',  '运维部门',   5, null,  1, 0, sysdate(), null, null, 1, null);
-insert into sys_dept values(108,  102, '0,100,102',  '市场部门',   1, null,  1, 0, sysdate(), null, null, 1, null);
-insert into sys_dept values(109,  102, '0,100,102',  '财务部门',   2, null,  1, 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(100,  0,   '0',          'McDull科技',   0,  null,  '1', 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(101,  100, '0,100',      '成都总公司',    1,  null,  '1', 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(102,  100, '0,100',      '武汉分公司',    2,  null,  '1', 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(103,  101, '0,100,101',  '研发部门',   1, null,  '1', 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(104,  101, '0,100,101',  '市场部门',   2, null,  '1', 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(105,  101, '0,100,101',  '测试部门',   3, null,  '1', 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(106,  101, '0,100,101',  '财务部门',   4, null,  '1', 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(107,  101, '0,100,101',  '运维部门',   5, null,  '1', 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(108,  102, '0,100,102',  '市场部门',   1, null,  '1', 0, sysdate(), null, null, 1, null);
+insert into sys_dept values(109,  102, '0,100,102',  '财务部门',   2, null,  '1', 0, sysdate(), null, null, 1, null);
 
 drop table if exists sys_dict_type;
 create table sys_dict_type
@@ -459,7 +459,7 @@ create table sys_dict_data
     css_class        varchar(100)    default null               comment '样式属性（其他样式扩展）',
     list_class       varchar(100)    default null               comment '表格回显样式',
     is_default       char(1)         default 'N'                comment '是否默认（Y是 N否）',
-    status           char(1)         default '0'                comment '状态（0正常 1停用）',
+    status           char(1)         default null               comment '状态（1正常 2停用）',
     created_by        varchar(64)    default null               comment '创建者',
     created_time      datetime                                  comment '创建时间',
     updated_by        varchar(64)    default null               comment '更新者',

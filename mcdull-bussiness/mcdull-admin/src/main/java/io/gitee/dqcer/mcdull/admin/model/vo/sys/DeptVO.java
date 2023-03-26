@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.vo.sys;
 
+import io.gitee.dqcer.mcdull.admin.framework.transformer.DictTransformer;
+import io.gitee.dqcer.mcdull.admin.framework.transformer.UserTransformer;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.vo.VO;
@@ -55,6 +57,7 @@ public class DeptVO implements VO {
      */
     private Long createdBy;
 
+    @Transform(from = "createdBy", transformer = UserTransformer.class)
     private String createdByStr;
 
     /**
@@ -74,9 +77,9 @@ public class DeptVO implements VO {
      *
      * @see StatusEnum
      */
-    private Integer status;
+    private String status;
 
-    @Transform(from = "status", param = "status_type")
+    @Transform(from = "status", param = "sys_normal_disable", transformer = DictTransformer.class)
     private String statusStr;
 
 
@@ -88,7 +91,7 @@ public class DeptVO implements VO {
     /**
      * 删除str
      */
-    @Transform(from = "delFlag", param = "del_flag_type")
+    @Transform(from = "delFlag", param = "del_flag_type", transformer = DictTransformer.class)
     private String delFlagStr;
 
     @Override
@@ -209,11 +212,11 @@ public class DeptVO implements VO {
         this.updatedByStr = updatedByStr;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

@@ -41,6 +41,8 @@ public @interface Transform {
      *
      * @return {@link String}
      */
+//    Enum<? extends IEnum> param() default IEnum;
+
     String param() default "";
 
 

@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.framework.web.interceptor;
 
-import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
@@ -13,6 +12,8 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.ICode;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
+import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.mcdull.framework.web.feign.model.UserSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +28,6 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 基础信息拦截器
@@ -92,19 +92,26 @@ public abstract class BaseInfoInterceptor implements HandlerInterceptor {
                 return false;
             }
             // token 校验
-            Result<Long> result = authCheck(token);
+            Result<UserSession> result = authCheck(token);
             if (!result.isOk()) {
                 log.warn("认证失败 result: {}", result);
                 response.getWriter().write(errorResult(result));
                 return false;
             }
-            Long userId = result.getData();
+            UserSession userSession = result.getData();
+            Long userId = userSession.getUserId();
+            unifySession.setUserType(userSession.getType());
             unifySession.setUserId(userId);
         }
 
         UserContextHolder.setSession(unifySession);
 
         if (requestUrl.startsWith(GlobalConstant.INNER_API)) {
+            return true;
+        }
+
+        // 管理人员放过
+        if (UserContextHolder.isAdmin()) {
             return true;
         }
 
@@ -130,11 +137,7 @@ public abstract class BaseInfoInterceptor implements HandlerInterceptor {
                 }
                 cacheChannel.put(userPowerCacheKey, userPower, 3000);
             }
-            // 管理员放过
-            Optional<UserPowerVO> first = userPower.stream().filter(i -> GlobalConstant.SUPER_ADMIN_ROLE_TYPE.equals(i.getRoleType())).findFirst();
-            if (first.isPresent()) {
-                return true;
-            }
+
             boolean anyMatch = userPower.stream().anyMatch(i -> i.getModules().contains(code));
             if (!anyMatch) {
                 log.warn("没有对应的模块权限: {}, userPower: {}", CodeEnum.POWER_CHECK_MODULE, userPower);
@@ -191,7 +194,7 @@ public abstract class BaseInfoInterceptor implements HandlerInterceptor {
      * @param token 令牌
      * @return {@link Result<Long>}
      */
-    protected Result<Long> authCheck(String token) {
+    protected Result<UserSession> authCheck(String token) {
         return Result.ok();
     }
 

@@ -18,4 +18,6 @@ public interface IDictDataService {
     Result<List<DictDataVO>> dictType(String dictType);
 
     Result<PagedVO<DictDataVO>> list(DictDataLiteDTO dto);
+
+    Result<DictDataVO> detail(Long dictCode);
 }

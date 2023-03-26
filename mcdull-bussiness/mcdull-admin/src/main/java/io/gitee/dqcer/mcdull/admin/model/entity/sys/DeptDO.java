@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.model.entity.sys;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 
 import java.util.StringJoiner;
@@ -44,7 +43,7 @@ public class DeptDO extends BaseDO {
      * 状态
      * @see io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum
      */
-    private Integer status;
+    private String status;
 
     @Override
     public String toString() {
@@ -105,11 +104,11 @@ public class DeptDO extends BaseDO {
         this.leaderId = leaderId;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 }

@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.model.dto.sys;
 
-import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
+import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
@@ -22,8 +22,8 @@ public class DictTypeLiteDTO extends PagedDTO {
 
     private String dictType;
 
-    @EnumsIntValid(groups = {ValidGroup.List.class}, value = StatusEnum.class)
-    private Integer status;
+    @EnumsStrValid(groups = {ValidGroup.List.class}, value = StatusEnum.class)
+    private String status;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
@@ -46,11 +46,11 @@ public class DictTypeLiteDTO extends PagedDTO {
         this.dictType = dictType;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

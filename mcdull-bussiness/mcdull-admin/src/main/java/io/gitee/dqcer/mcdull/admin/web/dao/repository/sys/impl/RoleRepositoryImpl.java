@@ -130,9 +130,9 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
      * @return {@link List}<{@link RoleMenuDO}>
      */
     @Override
-    public List<RoleMenuDO> getMenuByRole(Long roleId) {
+    public List<RoleMenuDO> getMenuByRole(List<Long> roles) {
         LambdaQueryWrapper<RoleMenuDO> query = Wrappers.lambdaQuery();
-        query.eq(RoleMenuDO::getRoleId, roleId);
+        query.in(RoleMenuDO::getRoleId, roles);
         List<RoleMenuDO> list = roleMenuMapper.selectList(query);
         if (list.isEmpty()) {
             return Collections.emptyList();

@@ -42,4 +42,15 @@ public class DictDataController {
     public Result<List<DictDataVO>> dictType(@PathVariable String dictType) {
         return dictDataService.dictType(dictType);
     }
+
+    /**
+     * 查询字典数据详细
+     *
+     * @param dictCode dict类型代码
+     * @return {@link Result}<{@link DictDataVO}>
+     */
+    @GetMapping("{dictCode}")
+    public Result<DictDataVO> detail(@PathVariable Long dictCode) {
+        return dictDataService.detail(dictCode);
+    }
 }

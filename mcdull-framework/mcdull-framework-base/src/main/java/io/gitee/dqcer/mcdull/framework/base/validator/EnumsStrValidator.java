@@ -19,9 +19,12 @@ public class EnumsStrValidator implements ConstraintValidator<EnumsStrValid, Str
 
     private static final String METHOD_NAME = "toEnum";
 
+    private boolean required;
+
     @Override
     public void initialize(EnumsStrValid annotation) {
         enumClass = annotation.value();
+        required = annotation.required();
         try {
             enumClass.getDeclaredMethod(METHOD_NAME, String.class);
         } catch (NoSuchMethodException e){
@@ -32,15 +35,17 @@ public class EnumsStrValidator implements ConstraintValidator<EnumsStrValid, Str
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         Method declareMethod;
-        try {
-            declareMethod = enumClass.getDeclaredMethod(METHOD_NAME, String.class);
-        }catch (NoSuchMethodException e){
-            return false;
-        }
-        try {
-            declareMethod.invoke(null, value);
-        } catch (Exception e) {
-            return false;
+        if (required) {
+            try {
+                declareMethod = enumClass.getDeclaredMethod(METHOD_NAME, String.class);
+            }catch (NoSuchMethodException e){
+                return false;
+            }
+            try {
+                declareMethod.invoke(null, value);
+            } catch (Exception e) {
+                return false;
+            }
         }
         return true;
     }

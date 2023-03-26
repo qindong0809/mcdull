@@ -37,8 +37,8 @@ public class RoleManagerImpl implements IRoleManager {
      * @return {@link List}<{@link MenuDO}>
      */
     @Override
-    public List<MenuDO> getMenuByRole(Long roleId) {
-        List<RoleMenuDO> list = roleRepository.getMenuByRole(roleId);
+    public List<MenuDO> getMenuByRole(List<Long> roles) {
+        List<RoleMenuDO> list = roleRepository.getMenuByRole(roles);
         List<Long> menuIds = list.stream().map(RoleMenuDO::getMenuId).collect(Collectors.toList());
         if (menuIds.isEmpty()) {
             return Collections.emptyList();

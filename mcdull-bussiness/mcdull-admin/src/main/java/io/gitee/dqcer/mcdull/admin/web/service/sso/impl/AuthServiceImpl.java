@@ -37,6 +37,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.mcdull.framework.web.feign.model.UserSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -131,7 +132,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
 
         //  强制7天过期
         String token = RandomUtil.uuid();
-        CacheUser cacheUser = new CacheUser().setUserId(userId).setLastActiveTime(LocalDateTime.now());
+        CacheUser cacheUser = new CacheUser().setUserId(userId).setLastActiveTime(LocalDateTime.now()).setUserType(userEntity.getType());
         cacheChannel.put(MessageFormat.format(SsoConstant.SSO_TOKEN, token), cacheUser, SsoConstant.SSO_TOKEN_NAMESPACE_TIMEOUT);
 
         //  更新登录时间
@@ -150,7 +151,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
      * @return {@link Result}<{@link Long}>
      */
     @Override
-    public Result<Long> tokenValid(String token) {
+    public Result<UserSession> tokenValid(String token) {
         String tokenKey = MessageFormat.format(SsoConstant.SSO_TOKEN, token);
         CacheUser user = cacheChannel.get(tokenKey, CacheUser.class);
 
@@ -188,8 +189,10 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         if (lastActiveTime.plusMinutes(updateFrequency).isBefore(now)) {
             redisClient.putIfExists(tokenKey, user.setLastActiveTime(now));
         }
-
-        return Result.ok(user.getUserId());
+        UserSession session = new UserSession();
+        session.setUserId(user.getUserId());
+        session.setType(user.getUserType());
+        return Result.ok(session);
     }
 
     /**
@@ -272,7 +275,9 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         RoleDO roleDO = userRoles.get(1);
         Long roleId = roleDO.getId();
 
-        List<MenuDO> menus = roleManager.getMenuByRole(roleId);
+        List<Long> roles = new ArrayList<>();
+        roles.add(roleId);
+        List<MenuDO> menus = roleManager.getMenuByRole(roles);
 
         List<MenuTreeVo> treeVoList = new ArrayList<>();
         for (MenuDO menu : menus) {
