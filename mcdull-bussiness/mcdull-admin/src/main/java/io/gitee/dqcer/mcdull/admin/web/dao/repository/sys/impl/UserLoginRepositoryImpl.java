@@ -1,11 +1,15 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.LoginInfoLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserLoginDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.UserLoginMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserLoginRepository;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.springframework.stereotype.Service;
 
@@ -66,5 +70,11 @@ public class UserLoginRepositoryImpl extends ServiceImpl<UserLoginMapper, UserLo
         if (rowSize == GlobalConstant.Database.ROW_0) {
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
+    }
+
+    @Override
+    public Page<UserLoginDO> selectPage(LoginInfoLiteDTO dto) {
+        LambdaQueryWrapper<UserLoginDO> lambda = new QueryWrapper<UserLoginDO>().lambda();
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
     }
 }

@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.LoginInfoLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserLoginDO;
 
 /**
@@ -26,4 +28,7 @@ public interface IUserLoginRepository extends IService<UserLoginDO> {
      * @param token  令牌
      */
     void saveLogoutInfoByUserIdAndToken(Long userId, String token);
+
+    Page<UserLoginDO> selectPage(LoginInfoLiteDTO dto);
+
 }

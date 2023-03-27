@@ -25,7 +25,7 @@ public class UserLoginDO extends IdDO {
     private Date createdTime;
 
     /**
-     * 菜单id
+     * 用户id
      */
     private Long userId;
 
