@@ -387,7 +387,7 @@ create table `sys_config` (
 primary key (id)
 ) engine=innodb auto_increment=100 comment = '参数配置表';
 
-insert into sys_config values(4, '账号自助-验证码开关','sys.account.captchaEnabled','true', 'Y','是否开启验证码功能（true开启，false关闭）', null,  null, null, null, 1, null);
+insert into sys_config values(4, '账号自助-验证码开关','sys.account.captchaEnabled','true', 'Y','是否开启验证码功能（true开启，false关闭）', null,  sysdate(), null, null, 1, null);
 
 
 drop table if exists sys_dept;

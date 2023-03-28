@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.common;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.ConfigLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.common.SysConfigDO;
 
 /**
@@ -18,4 +20,6 @@ public interface ISysConfigRepository extends IService<SysConfigDO> {
      * @return {@link String}
      */
     SysConfigDO findByKey(String key);
+
+    Page<SysConfigDO> selectPage(ConfigLiteDTO dto);
 }
