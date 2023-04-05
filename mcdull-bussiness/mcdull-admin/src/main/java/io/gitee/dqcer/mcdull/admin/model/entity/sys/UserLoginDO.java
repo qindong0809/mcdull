@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.Date;
 
@@ -15,9 +18,17 @@ import java.util.Date;
  * @since 2022/12/18
  */
 @TableName("sys_user_login")
+@Data
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class UserLoginDO extends IdDO {
 
     private static final long serialVersionUID = 1L;
+
+    public static final String OK = "1";
+
+    public static final String FAIL = "2";
+
     /**
      * 创建时间
      */
@@ -25,65 +36,34 @@ public class UserLoginDO extends IdDO {
     private Date createdTime;
 
     /**
-     * 用户id
+     * 账户
      */
-    private Long userId;
-
-    /**
-     * token
-     */
-    private String token;
+    private String account;
 
 
     /**
-     * 类型（1/登录 2/注销）
+     * 类型（1/成功 2/失败）
      */
-    private Integer type;
+    private String type;
 
-    @Override
-    public String toString() {
-        return "UserLoginDO{" +
-                "createdTime=" + createdTime +
-                ", userId=" + userId +
-                ", token='" + token + '\'' +
-                ", type=" + type +
-                ", id=" + id +
-                "} " + super.toString();
-    }
+    /**
+     * 浏览器
+     */
+    private String browser;
 
-    public Date getCreatedTime() {
-        return createdTime;
-    }
+    /**
+     * 操作系统
+     */
+    private String os;
 
-    public UserLoginDO setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
-        return this;
-    }
+    /**
+     * 备注
+     */
+    private String remark;
 
-    public Long getUserId() {
-        return userId;
-    }
+    /**
+     * 操作类型
+     */
+    private String operationType;
 
-    public UserLoginDO setUserId(Long userId) {
-        this.userId = userId;
-        return this;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public UserLoginDO setToken(String token) {
-        this.token = token;
-        return this;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public UserLoginDO setType(Integer type) {
-        this.type = type;
-        return this;
-    }
 }

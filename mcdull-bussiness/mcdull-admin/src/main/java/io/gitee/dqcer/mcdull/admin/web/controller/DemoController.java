@@ -91,7 +91,7 @@ public class DemoController {
     @GetMapping("upload")
     public void upload() {
         OssClient instance = ossFactory.getInstance();
-        byte[] bytes = FileUtil.readBytes("D:/edetek/临床文档/Modernizing-Clinical-Oversight_White-Paper_July-2021.pdf");
+        byte[] bytes = FileUtil.readBytes("D:/temp/1.pdf");
         instance.upload(bytes, "demo.pdf", "mcdull");
     }
 }

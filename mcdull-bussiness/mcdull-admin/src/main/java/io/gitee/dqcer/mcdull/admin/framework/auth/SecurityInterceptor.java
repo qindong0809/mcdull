@@ -38,7 +38,7 @@ public class SecurityInterceptor extends BaseInfoInterceptor {
      */
     @Override
     protected List<UserPowerVO> getUserPower() {
-        return securityService.queryResourceModules(UserContextHolder.getSession().getUserId());
+        return securityService.queryResourceModules(UserContextHolder.currentUserId());
     }
 
     /**

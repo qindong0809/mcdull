@@ -32,6 +32,10 @@ public class GlobalConstant {
     public static final Integer SUPER_ADMIN_USER_TYPE = 2;
 
 
+    /**
+     * excel导出最大行
+     */
+    public static final Long EXCEL_EXPORT_MAX_ROW = 1048576L;
 
     public static class Environment {
 

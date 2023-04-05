@@ -131,7 +131,7 @@ public abstract class BaseInfoInterceptor implements HandlerInterceptor {
             if (ObjUtil.isNull(userPower)) {
                 userPower = getUserPower();
                 if (ObjUtil.isNull(userPower)) {
-                    log.warn("数据库无 userId: {} 对应配置的角色权限", UserContextHolder.getSession().getUserId());
+                    log.warn("数据库无 userId: {} 对应配置的角色权限", UserContextHolder.currentUserId());
                     response.getWriter().write(errorJson(CodeEnum.POWER_CHECK_MODULE));
                     return false;
                 }

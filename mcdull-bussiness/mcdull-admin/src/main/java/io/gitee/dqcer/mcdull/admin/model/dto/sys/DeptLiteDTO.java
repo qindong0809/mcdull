@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
-* 角色 接收客户端参数
+* 部门 接收客户端参数
 *
 * @author dqcer
 * @since 2022-11-16

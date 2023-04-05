@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.manager.sys.impl;
 
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
 import io.gitee.dqcer.mcdull.admin.model.enums.MenuTypeEnum;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IMenuManager;
@@ -47,7 +48,7 @@ public class MenuManagerImpl implements IMenuManager {
      */
     @Override
     public boolean isParentView(MenuDO menuDO) {
-        return false;
+        return menuDO.getParentId().intValue() != 0 && "M".equals(menuDO.getMenuType());
     }
 
     /**
@@ -82,16 +83,11 @@ public class MenuManagerImpl implements IMenuManager {
     @Override
     public String getComponent(MenuDO menu) {
         String component = "Layout";
-        if (StringUtils.isNotEmpty(menu.getComponent()) && !isMenuFrame(menu))
-        {
+        if (StrUtil.isNotEmpty(menu.getComponent()) && !isMenuFrame(menu)) {
             component = menu.getComponent();
-        }
-        else if (StringUtils.isEmpty(menu.getComponent()) && menu.getParentId().intValue() != 0 && isInnerLink(menu))
-        {
+        } else if (StrUtil.isEmpty(menu.getComponent()) && menu.getParentId().intValue() != 0 && isInnerLink(menu)) {
             component = "InnerLink";
-        }
-        else if (StringUtils.isEmpty(menu.getComponent()) && isParentView(menu))
-        {
+        } else if (StrUtil.isEmpty(menu.getComponent()) && isParentView(menu)) {
             component = "ParentView";
         }
         return component;

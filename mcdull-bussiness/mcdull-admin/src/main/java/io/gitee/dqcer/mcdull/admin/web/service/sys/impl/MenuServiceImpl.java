@@ -55,7 +55,7 @@ public class MenuServiceImpl implements IMenuService {
         }
 
         // 只显示当前用户所拥有的菜单
-        List<Long> roleByUserId = userRoleRepository.listRoleByUserId(UserContextHolder.getSession().getUserId());
+        List<Long> roleByUserId = userRoleRepository.listRoleByUserId(UserContextHolder.currentUserId());
         if (CollUtil.isEmpty(roleByUserId)) {
             return Result.ok(voList);
         }

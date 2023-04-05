@@ -117,7 +117,7 @@ public class RoleService {
         RoleDO entity = new RoleDO();
         entity.setId(id);
 //        entity.setStatus(status);
-        entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
+        entity.setUpdatedBy(UserContextHolder.currentUserId());
         entity.setUpdatedTime(new Date());
         boolean success = roleRepository.updateById(entity);
         if (!success) {
@@ -152,7 +152,7 @@ public class RoleService {
 
         RoleDO entity = new RoleDO();
         entity.setId(id);
-        entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
+        entity.setUpdatedBy(UserContextHolder.currentUserId());
         entity.setUpdatedTime(new Date());
         boolean success = roleRepository.updateById(entity);
         if (!success) {

@@ -208,7 +208,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
         LambdaQueryWrapper<UserDO> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(UserDO::getAccount, account);
         List<UserDO> list = baseMapper.selectList(wrapper);
-        if (ObjUtil.isNull(list)) {
+        if (CollUtil.isEmpty(list)) {
             return null;
         }
         return list.get(0);

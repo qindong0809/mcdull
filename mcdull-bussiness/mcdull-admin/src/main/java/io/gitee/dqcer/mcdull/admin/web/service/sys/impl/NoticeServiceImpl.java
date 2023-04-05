@@ -95,7 +95,7 @@ public class NoticeServiceImpl implements INoticeService {
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
         NoticeDO entity = NoticeConvert.convertToNoticeDO(dto);
-        entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
+        entity.setUpdatedBy(UserContextHolder.currentUserId());
         boolean success = noticeRepository.updateById(entity);
         if (!success) {
             log.error("数据更新失败, entity:{}", entity);
@@ -124,7 +124,7 @@ public class NoticeServiceImpl implements INoticeService {
         NoticeDO entity = new NoticeDO();
         entity.setId(id);
 //        entity.setStatus(dto.getStatus());
-        entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
+        entity.setUpdatedBy(UserContextHolder.currentUserId());
         boolean success = noticeRepository.updateById(entity);
 
         if (!success) {

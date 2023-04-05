@@ -129,7 +129,7 @@ public class UserService {
         UserDO entity = new UserDO();
         entity.setId(id);
         entity.setStatus(status);
-        entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
+        entity.setUpdatedBy(UserContextHolder.currentUserId());
         entity.setUpdatedTime(new Date());
         boolean success = userRepository.updateById(entity);
         if (!success) {
@@ -164,7 +164,7 @@ public class UserService {
 
         UserDO entity = new UserDO();
         entity.setId(id);
-        entity.setUpdatedBy(UserContextHolder.getSession().getUserId());
+        entity.setUpdatedBy(UserContextHolder.currentUserId());
         entity.setUpdatedTime(new Date());
         boolean success = userRepository.updateById(entity);
         if (!success) {

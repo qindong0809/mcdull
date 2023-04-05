@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sso.impl;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentUtil;
 import io.gitee.dqcer.mcdull.admin.framework.auth.ISecurityService;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.MenuConvert;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
@@ -8,6 +10,8 @@ import io.gitee.dqcer.mcdull.admin.model.dto.sys.LoginDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserLoginDO;
+import io.gitee.dqcer.mcdull.admin.model.enums.LoginOperationTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.enums.MenuTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.CurrentUserInfVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuTreeVo;
@@ -25,7 +29,6 @@ import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.enums.AuthCodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
-import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
 import io.gitee.dqcer.mcdull.framework.base.storage.SsoConstant;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -39,12 +42,12 @@ import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserSession;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -92,40 +95,43 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
     @Resource
     private ICaptchaService captchaService;
 
-    /**
-     * 登录
-     *
-     * @param loginDTO 登录dto
-     * @return {@link Result}<{@link String}>
-     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Result<String> login(LoginDTO loginDTO) {
 
+        HttpServletRequest request = ServletUtil.getRequest();
+
+        UserLoginDO userLoginDO = this.builderLoginOrLogoutInfo(loginDTO.getUsername(),
+                request.getHeader(HttpHeaders.USER_AGENT), LoginOperationTypeEnum.LOGIN);
+
         boolean validateResult = captchaService.validateCaptcha(loginDTO.getCode(), loginDTO.getUuid());
         if (!validateResult) {
-            return Result.error("验证码错误");
+            String error = "验证码错误";
+            this.listener(userLoginDO, UserLoginDO.FAIL, error);
+            return Result.error(error);
         }
-
-
         String account = loginDTO.getUsername();
         UserDO userEntity = userRepository.queryUserByAccount(account);
         if (null == userEntity) {
             log.warn("账号不存在 account: {}", account);
+            this.listener(userLoginDO, UserLoginDO.FAIL, AuthCodeEnum.NOT_EXIST.getMessage());
             return Result.error(AuthCodeEnum.NOT_EXIST);
         }
         String password = userEntity.getPassword();
 
         if (!password.equals(Sha1Util.getSha1(loginDTO.getPassword() + userEntity.getSalt()))) {
             log.warn("用户密码错误");
+            this.listener(userLoginDO, UserLoginDO.FAIL, AuthCodeEnum.NOT_EXIST.getMessage());
             return Result.error(AuthCodeEnum.NOT_EXIST);
         }
         if (!userEntity.getStatus().equals(StatusEnum.ENABLE.getCode())) {
             log.warn("账号已停用 account: {}", account);
+            this.listener(userLoginDO, UserLoginDO.FAIL, AuthCodeEnum.DISABLE.getMessage());
             return Result.error(AuthCodeEnum.DISABLE);
         }
         if (!userEntity.getDelFlag().equals(DelFlayEnum.NORMAL.getCode())) {
             log.warn("账号已被删除 account: {}", account);
+            this.listener(userLoginDO, UserLoginDO.FAIL, AuthCodeEnum.NOT_EXIST.getMessage());
             return Result.error(AuthCodeEnum.NOT_EXIST);
         }
 
@@ -139,10 +145,25 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         //  更新登录时间
         userRepository.updateLoginTimeById(userId);
 
-        //  记录登录信息
-        userLoginRepository.saveLoginInfoByUserIdAndToken(userId, token);
+        this.listener(userLoginDO, UserLoginDO.OK, CodeEnum.SUCCESS.getMessage());
 
         return Result.ok(token);
+    }
+
+    private void listener(UserLoginDO userLoginDO, String type, String error) {
+        userLoginDO.setType(type);
+        userLoginDO.setRemark(error);
+        userLoginRepository.save(userLoginDO);
+    }
+
+    private UserLoginDO builderLoginOrLogoutInfo(String account, String agentUrl, LoginOperationTypeEnum operationType) {
+        UserAgent agent = UserAgentUtil.parse(agentUrl);
+        UserLoginDO userLoginDO = new UserLoginDO();
+        userLoginDO.setAccount(account);
+        userLoginDO.setBrowser(agent.getBrowser().getName());
+        userLoginDO.setOs(agent.getOs().getName());
+        userLoginDO.setOperationType(operationType.getCode());
+        return userLoginDO;
     }
 
     /**
@@ -215,11 +236,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Result<String> logout() {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attributes == null) {
-            throw new BusinessException();
-        }
-        HttpServletRequest request = attributes.getRequest();
+        HttpServletRequest request = ServletUtil.getRequest();
         String token = request.getHeader(HttpHeaderConstants.TOKEN);
         String tokenKey = MessageFormat.format(SsoConstant.SSO_TOKEN, token);
         CacheUser user = redisClient.get(tokenKey, CacheUser.class);
@@ -231,7 +248,10 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         redisClient.putIfExists(tokenKey, user);
 
         //  记录注销信息
-        userLoginRepository.saveLogoutInfoByUserIdAndToken(user.getUserId(), token);
+        Long userId = UserContextHolder.currentUserId();
+        UserDO userDO = userRepository.getById(userId);
+        UserLoginDO userLoginDO = this.builderLoginOrLogoutInfo(userDO.getAccount(), request.getHeader(HttpHeaders.USER_AGENT), LoginOperationTypeEnum.LOGOUT);
+        this.listener(userLoginDO, UserLoginDO.OK, CodeEnum.SUCCESS.getMessage());
         return Result.ok();
     }
 
@@ -243,7 +263,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
     @Override
     public Result<CurrentUserInfVO> getCurrentUserInfo() {
         CurrentUserInfVO vo = new CurrentUserInfVO();
-        Long userId = UserContextHolder.getSession().getUserId();
+        Long userId = UserContextHolder.currentUserId();
         UserDO user = userRepository.getById(userId);
         UserVO userVO = UserConvert.entityToVO(user);
         vo.setUser(userVO);
@@ -268,7 +288,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
     @Override
     public Result<List<RouterVO>> getCurrentUserRouters() {
         List<RouterVO> voList = new ArrayList<>();
-        Long userId = UserContextHolder.getSession().getUserId();
+        Long userId = UserContextHolder.currentUserId();
         List<RoleDO> userRoles = userManager.getUserRoles(userId);
         if (userRoles.isEmpty()) {
             return Result.ok(voList);

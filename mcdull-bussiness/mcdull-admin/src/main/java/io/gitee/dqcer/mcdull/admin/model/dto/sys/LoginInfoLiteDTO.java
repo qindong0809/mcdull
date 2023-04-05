@@ -1,9 +1,11 @@
 package io.gitee.dqcer.mcdull.admin.model.dto.sys;
 
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
+import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 /**
@@ -25,5 +27,10 @@ public class LoginInfoLiteDTO extends PagedDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
 
+    /**
+     * 模块菜单名称
+     */
+    @NotBlank(groups = {ValidGroup.Export.class})
+    private String moduleMenuName;
 
 }

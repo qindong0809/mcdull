@@ -47,9 +47,15 @@ public class UserContextHolder {
      */
     public static boolean isAdmin() {
         UnifySession session = UNIFY_SESSION.get();
-        if (GlobalConstant.SUPER_ADMIN_USER_TYPE.equals(session.getUserType())) {
-            return true;
-        }
-        return false;
+        return GlobalConstant.SUPER_ADMIN_USER_TYPE.equals(session.getUserType());
+    }
+
+    /**
+     * 当前用户id
+     *
+     * @return {@link Long}
+     */
+    public static Long currentUserId() {
+        return UNIFY_SESSION.get().getUserId();
     }
 }

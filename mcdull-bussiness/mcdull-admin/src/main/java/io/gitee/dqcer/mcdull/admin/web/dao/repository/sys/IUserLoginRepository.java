@@ -13,22 +13,12 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserLoginDO;
  */
 public interface IUserLoginRepository extends IService<UserLoginDO> {
 
-    /**
-     * 保存登录信息根据用户id和令牌
-     *
-     * @param userId 用户id
-     * @param token  令牌
-     */
-    void saveLoginInfoByUserIdAndToken(Long userId, String token);
 
     /**
-     * 保存注销信息根据用户id和令牌
+     * 分页
      *
-     * @param userId 用户id
-     * @param token  令牌
+     * @param dto dto
+     * @return {@link Page}<{@link UserLoginDO}>
      */
-    void saveLogoutInfoByUserIdAndToken(Long userId, String token);
-
-    Page<UserLoginDO> selectPage(LoginInfoLiteDTO dto);
-
+    Page<UserLoginDO> paged(LoginInfoLiteDTO dto);
 }

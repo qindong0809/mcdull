@@ -6,6 +6,7 @@ import io.gitee.dqcer.mcdull.framework.web.advice.ExceptionAdvice;
 import io.gitee.dqcer.mcdull.framework.web.config.AutoConfiguration;
 import io.gitee.dqcer.mcdull.framework.web.config.DateTimeConfig;
 import io.gitee.dqcer.mcdull.framework.web.config.ThreadPoolConfig;
+import io.gitee.dqcer.mcdull.framework.web.config.UndertowWebServer;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
@@ -21,6 +22,6 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Import({ExceptionAdvice.class, BaseExceptionAdvice.class, AutoConfiguration.class, DateTimeConfig.class, ThreadPoolConfig.class})
+@Import({ExceptionAdvice.class, BaseExceptionAdvice.class, AutoConfiguration.class, DateTimeConfig.class, ThreadPoolConfig.class, UndertowWebServer.class})
 public @interface EnableWebCore {
 }

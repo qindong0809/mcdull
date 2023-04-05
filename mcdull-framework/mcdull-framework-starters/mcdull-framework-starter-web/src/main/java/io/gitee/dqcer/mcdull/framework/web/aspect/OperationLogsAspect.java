@@ -127,7 +127,7 @@ public class OperationLogsAspect {
         }
 
         LogOperationDTO entity = new LogOperationDTO();
-        entity.setAccountId(UserContextHolder.getSession().getUserId());
+        entity.setAccountId(UserContextHolder.currentUserId());
         entity.setClientIp(IpUtil.getIpAddr(request));
         entity.setUserAgent(getUserAgent(request));
         entity.setHeaders(JsonUtil.toJsonString(headers));

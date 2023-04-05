@@ -3,7 +3,11 @@ package io.gitee.dqcer.mcdull.framework.web.util;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -38,5 +42,27 @@ public class ServletUtil {
             throw new BusinessException();
         }
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+    }
+
+    public static HttpServletRequest getRequest() {
+        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            if (attributes instanceof ServletRequestAttributes) {
+                ServletRequestAttributes requestAttributes = (ServletRequestAttributes) attributes;
+                return requestAttributes.getRequest();
+            }
+        }
+        throw new IllegalStateException();
+    }
+
+    public static HttpServletResponse getResponse() {
+        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            if (attributes instanceof ServletRequestAttributes) {
+                ServletRequestAttributes requestAttributes = (ServletRequestAttributes) attributes;
+                return requestAttributes.getResponse();
+            }
+        }
+        throw new IllegalStateException();
     }
 }

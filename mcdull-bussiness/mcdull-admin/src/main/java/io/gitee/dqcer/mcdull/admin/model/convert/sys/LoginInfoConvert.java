@@ -12,13 +12,16 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.LoginInfoVO;
 public class LoginInfoConvert {
 
     public static LoginInfoVO convertToLoginInfoVO(UserLoginDO item){
-        LoginInfoVO loginInfoVO = new LoginInfoVO();
-        loginInfoVO.setId(item.getId());
-        loginInfoVO.setCreatedTime(item.getCreatedTime());
-        loginInfoVO.setUserId(item.getUserId());
-        loginInfoVO.setToken(item.getToken());
-        loginInfoVO.setType(item.getType());
-        return loginInfoVO;
+        LoginInfoVO vo = new LoginInfoVO();
+        vo.setId(item.getId());
+        vo.setCreatedTime(item.getCreatedTime());
+        vo.setAccount(item.getAccount());
+        vo.setType(item.getType());
+        vo.setBrowser(item.getBrowser());
+        vo.setOs(item.getOs());
+        vo.setRemark(item.getRemark());
+        vo.setOperationType(item.getOperationType());
+        return vo;
     }
 
 }

@@ -99,7 +99,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
     @Override
     public Long insert(RoleDO entity) {
         entity.setStatus(StatusEnum.ENABLE.getCode());
-        entity.setCreatedBy(UserContextHolder.getSession().getUserId());
+        entity.setCreatedBy(UserContextHolder.currentUserId());
         entity.setCreatedTime(new Date());
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {

@@ -13,5 +13,18 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
  */
 public interface ILoginInfoService {
 
+    /**
+     * 列表页
+     *
+     * @param dto dto
+     * @return {@link Result}<{@link PagedVO}<{@link LoginInfoVO}>>
+     */
     Result<PagedVO<LoginInfoVO>> listByPage(LoginInfoLiteDTO dto);
+
+    /**
+     * 导出excel
+     *
+     * @param dto dto
+     */
+    void exportExcel(LoginInfoLiteDTO dto);
 }

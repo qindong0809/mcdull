@@ -22,15 +22,45 @@ CREATE TABLE IF NOT EXISTS `sys_user` (
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 INSERT INTO sys_user VALUES(1589631293412503554, '麦兜', 'admin', '7a69d7186df1a65ed7af2ba00747488e2415bf1a', 'c7e87439-aef3-48e0-be26-678d0ab99345', 'admin@mcdull.com', '18238352145', null, 2, 100,1589631293412503554, '2022-10-31 07:20:54', null, null, '1', 1, null);
 
+
+drop table if exists sys_post;
+create table sys_post
+(
+    id            bigint(20)      not null                   comment '岗位ID',
+    post_code     varchar(64)     not null                   comment '岗位编码',
+    post_name     varchar(50)     not null                   comment '岗位名称',
+    post_sort     int(4)          not null                   comment '显示顺序',
+    status        char(1)         not null                   comment '状态（1正常 2停用）',
+    created_by     bigint(20)      default null               comment '创建者',
+    created_time   datetime        not null                   comment '创建时间',
+    updated_by     varchar(64)     default null			     comment '更新者',
+    updated_time   datetime        default null               comment '更新时间',
+    remark        varchar(500)    default null               comment '备注',
+    del_flag int(1) NOT NULL COMMENT '删除标识（1/正常 2/删除）',
+    del_by bigint(20) DEFAULT NULL COMMENT '删除人',
+    primary key (id)
+) engine=innodb comment = '岗位信息表';
+
+-- ----------------------------
+-- 初始化-岗位信息表数据
+-- ----------------------------
+insert into sys_post values(1, 'ceo',  '董事长',    1, '1', null, sysdate(), '', null, '', 1, null);
+insert into sys_post values(2, 'se',   '项目经理',  2, '1', null, sysdate(), '', null, '', 1, null);
+insert into sys_post values(3, 'hr',   '人力资源',  3, '1', null, sysdate(), '', null, '', 1, null);
+insert into sys_post values(4, 'user', '普通员工',  4, '1', null, sysdate(), '', null, '', 1, null);
+
 DROP TABLE IF EXISTS `sys_user_login`;
 CREATE TABLE IF NOT EXISTS `sys_user_login` (
     `id` bigint(20) NOT NULL COMMENT '主键',
     `created_time` datetime NOT NULL COMMENT '创建时间',
-    `user_id` bigint(20) NOT NULL COMMENT '用户主键',
-    `token` varchar(64) NOT NULL COMMENT '所用token',
-    `type` int(4) NOT NULL COMMENT '类型（1/登录 2/注销）',
+    `account` varchar(64) NOT NULL COMMENT '用户',
+    `remark` varchar(64) default '' COMMENT '备注',
+    `type` char(1) NOT NULL COMMENT '类型（1/成功 2/失败）',
+    `browser` varchar(64)  default ''  COMMENT '浏览器类型',
+    `os` varchar(64)  default ''  COMMENT '操作系统',
+    `operation_type` char(1) NOT NULL COMMENT '类型（1/登录 2/注销）',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户登录/注销';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户登录信息';
 
 DROP TABLE IF EXISTS `sys_dict`;
 CREATE TABLE IF NOT EXISTS `sys_dict` (
@@ -498,5 +528,5 @@ insert into sys_dict_data values(24, 6,  '导入',     '6',       'sys_oper_type
 insert into sys_dict_data values(25, 7,  '强退',     '7',       'sys_oper_type',       '',   'danger',  'N', '1', null, sysdate(), '', null, '强退操作',   1, null);
 insert into sys_dict_data values(26, 8,  '生成代码', '8',       'sys_oper_type',       '',   'warning', 'N', '1', null, sysdate(), '', null, '生成操作',    1, null);
 insert into sys_dict_data values(27, 9,  '清空数据', '9',       'sys_oper_type',       '',   'danger',  'N', '1', null, sysdate(), '', null, '清空操作',    1, null);
-insert into sys_dict_data values(28, 1,  '成功',     '0',       'sys_common_status',   '',   'primary', 'N', '1', null, sysdate(), '', null, '正常状态',   1, null);
-insert into sys_dict_data values(29, 2,  '失败',     '1',       'sys_common_status',   '',   'danger',  'N', '1', null, sysdate(), '', null, '停用状态',   1, null);
+insert into sys_dict_data values(28, 1,  '成功',     '1',       'sys_common_status',   '',   'primary', 'N', '1', null, sysdate(), '', null, '正常状态',   1, null);
+insert into sys_dict_data values(29, 2,  '失败',     '2',       'sys_common_status',   '',   'danger',  'N', '1', null, sysdate(), '', null, '停用状态',   1, null);
