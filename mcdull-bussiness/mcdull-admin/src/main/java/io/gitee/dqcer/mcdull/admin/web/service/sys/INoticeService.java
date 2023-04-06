@@ -1,10 +1,10 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys;
 
-import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
-import io.gitee.dqcer.mcdull.admin.model.vo.sys.NoticeVO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.NoticeLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.NoticeVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+
 import java.util.List;
 
 /**
@@ -39,37 +39,8 @@ public interface INoticeService {
      */
     Result<Long> update(NoticeLiteDTO dto);
 
-    /**
-     * 状态更新
-     *
-     * @param dto   参数
-     * @return {@link Result<Long> }
-     */
-    Result<Long> updateStatus(StatusDTO dto);
 
-    /**
-     * 根据主键删除
-     *
-     * @param dto 参数
-     * @return {@link Result<Long>}
-     */
-    Result<Long> delete(NoticeLiteDTO dto);
-
-    /**
-     * 根据主键集删除
-     *
-     * @param ids id集
-     * @return {@link Result<List>}
-     */
-    Result<List<Long>> deleteByIds(List<Long> ids);
-
-    /**
-     * 根据主键集查询
-     *
-     * @param ids id
-     * @return {@link Result<List>}
-     */
-    Result<List<NoticeVO>> queryByIds(List<Long> ids);
+    Result<List<Long>> logicDelete(List<Long> ids);
 
     /**
      * 分页查询
@@ -77,5 +48,5 @@ public interface INoticeService {
      * @param dto 参数
      * @return {@link Result<PagedVO>}
      */
-    Result<PagedVO<NoticeVO>> listByPage(NoticeLiteDTO dto);
+    Result<PagedVO<NoticeVO>> pagedQuery(NoticeLiteDTO dto);
 }

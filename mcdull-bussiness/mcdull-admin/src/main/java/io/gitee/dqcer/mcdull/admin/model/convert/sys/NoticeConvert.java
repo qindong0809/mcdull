@@ -19,17 +19,14 @@ public class NoticeConvert {
     * @return {@link NoticeDO}
     */
     public static NoticeDO convertToNoticeDO(NoticeLiteDTO item){
-        if (item == null){
-            return null;
-        }
-        NoticeDO entity = new NoticeDO();
-        entity.setId(item.getId());
-        entity.setTitle(item.getTitle());
-        entity.setContent(item.getContent());
-        entity.setType(item.getType());
-        entity.setStatus(item.getStatus());
-
-        return entity;
+       NoticeDO noticeDO = new NoticeDO();
+       noticeDO.setNoticeTitle(item.getNoticeTitle());
+       noticeDO.setNoticeContent(item.getNoticeContent());
+       noticeDO.setNoticeType(item.getNoticeType());
+       noticeDO.setRemark(item.getRemark());
+       noticeDO.setStatus(item.getStatus());
+       noticeDO.setId(item.getId());
+       return noticeDO;
     }
 
 
@@ -40,17 +37,17 @@ public class NoticeConvert {
     * @return {@link NoticeVO}
     */
     public static NoticeVO convertToNoticeVO(NoticeDO item){
-        if (item == null){
-            return null;
-        }
-        NoticeVO vo = new NoticeVO();
-        vo.setId(item.getId());
-        vo.setTitle(item.getTitle());
-        vo.setContent(item.getContent());
-        vo.setType(item.getType());
-        vo.setStatus(item.getStatus());
+        NoticeVO noticeVO = new NoticeVO();
+        noticeVO.setId(item.getId());
+        noticeVO.setNoticeTitle(item.getNoticeTitle());
+        noticeVO.setNoticeContent(item.getNoticeContent());
+        noticeVO.setNoticeType(item.getNoticeType());
+        noticeVO.setRemark(item.getRemark());
+        noticeVO.setStatus(item.getStatus());
+        noticeVO.setCreatedTime(item.getCreatedTime());
+        noticeVO.setCreatedBy(item.getCreatedBy());
+        return noticeVO;
 
-        return vo;
     }
     private NoticeConvert() {
     }

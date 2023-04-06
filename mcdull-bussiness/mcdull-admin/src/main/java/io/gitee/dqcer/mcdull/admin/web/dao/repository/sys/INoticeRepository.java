@@ -2,9 +2,10 @@ package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import java.util.List;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeDO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.NoticeLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeDO;
+
+import java.util.List;
 
 /**
 * 通知公告表 数据库操作封装接口层
@@ -13,6 +14,8 @@ import io.gitee.dqcer.mcdull.admin.model.dto.sys.NoticeLiteDTO;
 * @since 2023-01-19
 */
 public interface INoticeRepository extends IService<NoticeDO>  {
+
+    boolean checkBusinessUnique(NoticeDO entity);
 
    /**
     * 根据ID列表批量查询数据
@@ -61,11 +64,4 @@ public interface INoticeRepository extends IService<NoticeDO>  {
      */
     int deleteBatchIds(List<Long> ids);
 
-    /**
-     * 是否存在
-     *
-     * @param entity 实体对象
-     * @return boolean true/存在 false/不存在
-     */
-    boolean exist(NoticeDO entity);
 }

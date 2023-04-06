@@ -387,11 +387,12 @@ COMMIT;
 DROP TABLE IF EXISTS `sys_notice`;
 CREATE TABLE `sys_notice`  (
 `id` bigint(20) NOT NULL COMMENT '主键',
-`title` varchar(512) NOT NULL COMMENT '公告标题',
-`content` longtext NOT NULL COMMENT '公告内容',
-`type` tinyint NOT NULL COMMENT '公告类型（1通知 2公告）',
-`status` int(1) NOT NULL COMMENT '状态（1/正常 2/停用）',
-`created_by` bigint(20) NOT NULL COMMENT '创建人',
+`notice_title` varchar(512) NOT NULL COMMENT '公告标题',
+`notice_content` longblob NOT NULL COMMENT '公告内容',
+`notice_type` tinyint NOT NULL COMMENT '公告类型（1通知 2公告）',
+`remark` varchar(255)    default null comment '备注',
+`status` char(1) NOT NULL COMMENT '状态（1/正常 2/停用）',
+`created_by` bigint(20) DEFAULT NULL COMMENT '创建人',
 `created_time` datetime NOT NULL COMMENT '创建时间',
 `updated_by` bigint(20) DEFAULT NULL COMMENT '更新人',
 `updated_time` datetime DEFAULT NULL COMMENT '更新时间',
@@ -399,6 +400,9 @@ CREATE TABLE `sys_notice`  (
 `del_by` bigint(20) DEFAULT NULL COMMENT '删除人',
 PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='通知公告表';
+insert into sys_notice values(1, '维护通知：2023-04-05 系统凌晨维护','维护内容',  '1',  '备注', '1', null, sysdate(), null, null, 1, null);
+
+
 
 drop table if exists `sys_config`;
 create table `sys_config` (

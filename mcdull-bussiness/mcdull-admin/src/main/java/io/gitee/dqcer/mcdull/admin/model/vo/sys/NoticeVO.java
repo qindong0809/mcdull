@@ -1,6 +1,10 @@
 package io.gitee.dqcer.mcdull.admin.model.vo.sys;
 
+import io.gitee.dqcer.mcdull.admin.framework.transformer.UserTransformer;
+import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.vo.VO;
+import lombok.Data;
+
 import java.util.Date;
 
 /**
@@ -9,6 +13,7 @@ import java.util.Date;
 * @author dqcer
 * @since 2023-01-18
 */
+@Data
 public class NoticeVO implements VO {
 
     private static final long serialVersionUID = 1L;
@@ -20,68 +25,35 @@ public class NoticeVO implements VO {
     /**
      * 公告标题
      */
-    private String title;
+    private String noticeTitle;
 
     /**
      * 公告内容
      */
-    private String content;
+    private String noticeContent;
 
     /**
      * 公告类型（1通知 2公告）
      */
-    private Integer type;
+    private String noticeType;
 
     /**
-     * 状态（1/正常 2/停用）
+     * 备注
      */
-    private Integer status;
+    private String remark;
 
+    /**
+     * 状态
+     */
+    private String status;
 
-    public Long getId() {
-        return id;
-    }
+    /**
+     * 创建时间
+     */
+    private Date createdTime;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getTitle() {
-        return title;
-    }
+    private Long createdBy;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    @Override
-    public String toString() {
-    return "SysNotice{" +
-            "id=" + id +
-            ", title=" + title +
-            ", content=" + content +
-            ", type=" + type +
-            ", status=" + status +
-    "}";
-    }
+    @Transform(from = "createdBy", transformer = UserTransformer.class)
+    private String createdByStr;
 }

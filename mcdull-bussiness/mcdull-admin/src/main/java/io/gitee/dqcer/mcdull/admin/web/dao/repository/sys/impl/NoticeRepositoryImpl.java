@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -10,6 +11,9 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.NoticeMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.INoticeRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
@@ -32,6 +36,17 @@ public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeDO>  i
 
     private static final Logger log = LoggerFactory.getLogger(NoticeRepositoryImpl.class);
 
+    @Override
+    public boolean checkBusinessUnique(NoticeDO entity) {
+        LambdaQueryWrapper<NoticeDO> query = Wrappers.lambdaQuery();
+        Long entityId = entity.getId();
+        if (cn.hutool.core.util.ObjUtil.isNotNull(entityId)) {
+            query.ne(IdDO::getId, entityId);
+        }
+        query.eq(NoticeDO::getNoticeTitle, entity.getNoticeTitle());
+        return !baseMapper.exists(query);
+    }
+
     /**
      * 根据ID列表批量查询数据
      *
@@ -50,20 +65,20 @@ public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeDO>  i
         return Collections.emptyList();
     }
 
-    /**
-     * 按条件分页查询
-     *
-     * @param param 参数
-     * @return {@link Page<NoticeDO>}
-     */
     @Override
-    public Page<NoticeDO> selectPage(NoticeLiteDTO param) {
+    public Page<NoticeDO> selectPage(NoticeLiteDTO dto) {
         LambdaQueryWrapper<NoticeDO> lambda = new QueryWrapper<NoticeDO>().lambda();
-        String keyword = param.getKeyword();
-        if (ObjUtil.isNotNull(keyword)) {
-            // TODO 组装查询条件
+        String noticeTitle = dto.getNoticeTitle();
+        if (StrUtil.isNotBlank(noticeTitle)) {
+            lambda.like(NoticeDO::getNoticeTitle, noticeTitle);
         }
-        return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
+        String noticeType = dto.getNoticeType();
+        if (StrUtil.isNotBlank(noticeType)) {
+            lambda.eq(NoticeDO::getNoticeType, noticeType);
+        }
+        lambda.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
+        lambda.orderByDesc(MiddleDO::getCreatedTime);
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
     }
 
     /**
@@ -118,15 +133,4 @@ public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeDO>  i
          return baseMapper.deleteBatchIds(ids);
     }
 
-    /**
-     * 存在
-     *
-     * @param entity 实体对象
-     * @return boolean true/存在 false/不存在
-     */
-    @Override
-    public boolean exist(NoticeDO entity) {
-        List<NoticeDO> list = baseMapper.selectList(Wrappers.lambdaQuery(entity));
-        return list.isEmpty();
-    }
 }
