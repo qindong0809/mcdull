@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.base.vo;
 
-import io.gitee.dqcer.mcdull.framework.base.dto.IPaged;
+import io.gitee.dqcer.mcdull.framework.base.supert.IPaged;
 
 import java.util.List;
 

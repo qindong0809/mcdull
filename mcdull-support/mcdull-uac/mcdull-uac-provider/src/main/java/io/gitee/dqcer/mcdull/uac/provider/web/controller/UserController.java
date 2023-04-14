@@ -49,11 +49,11 @@ public class UserController {
      * @param dto dto
      * @return {@link Result}<{@link UserVO}>
      */
-    @GetMapping("user/base/detail")
-    @Transform
-    public Result<UserVO> detail(@Validated(ValidGroup.One.class) UserLiteDTO dto) {
-        return userService.detail(dto);
-    }
+//    @GetMapping("user/base/detail")
+//    @Transform
+//    public Result<UserVO> detail(@Validated(ValidGroup.One.class) UserLiteDTO dto) {
+//        return userService.detail(dto);
+//    }
 
     /**
      * 新增数据

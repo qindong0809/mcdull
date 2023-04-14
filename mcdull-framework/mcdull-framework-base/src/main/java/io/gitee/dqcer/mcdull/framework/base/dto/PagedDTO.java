@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.base.dto;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.supert.IPaged;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 
 import javax.validation.constraints.Max;

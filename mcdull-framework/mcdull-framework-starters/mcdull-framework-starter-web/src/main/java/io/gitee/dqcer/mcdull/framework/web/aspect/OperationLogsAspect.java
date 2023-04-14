@@ -7,6 +7,7 @@ import io.gitee.dqcer.mcdull.framework.base.util.JsonUtil;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 import io.gitee.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,13 +18,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 操作日志
@@ -47,32 +50,18 @@ public class OperationLogsAspect {
 
     @Around("operationLogsCut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (null == requestAttributes) {
-            log.warn("requestAttributes为null");
-            return joinPoint.proceed();
-        }
-
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Method method = signature.getMethod();
-        if (method.isAnnotationPresent(UnAuthorize.class)) {
-            return joinPoint.proceed();
-        }
-
-        HttpServletRequest request = requestAttributes.getRequest();
+        HttpServletRequest request = ServletUtil.getRequest();
         String requestUrl = request.getRequestURI();
-
         if (log.isDebugEnabled()) {
             log.debug("Operation Logs Url:{}", requestUrl);
         }
-
-        if (ignoreFilter(requestUrl, PATH_LIST)) {
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        if (method.isAnnotationPresent(UnAuthorize.class) || this.ignoreFilter(requestUrl, PATH_LIST)) {
             return joinPoint.proceed();
         }
 
         OperationLogsService bean = SpringContextHolder.getBean(OperationLogsService.class);
-
         if (!bean.needInterceptor(request, method)) {
             return joinPoint.proceed();
         }
@@ -86,7 +75,6 @@ public class OperationLogsAspect {
             if (log.isDebugEnabled()) {
                 log.debug("Operation log dto: {}", entity);
             }
-
             bean.saveLog(entity, method);
         }
     }
@@ -127,14 +115,14 @@ public class OperationLogsAspect {
         }
 
         LogOperationDTO entity = new LogOperationDTO();
-        entity.setAccountId(UserContextHolder.currentUserId());
+        entity.setUserId(UserContextHolder.currentUserId());
         entity.setClientIp(IpUtil.getIpAddr(request));
         entity.setUserAgent(getUserAgent(request));
         entity.setHeaders(JsonUtil.toJsonString(headers));
         entity.setParameterMap(JsonUtil.toJsonString(params).replaceAll("\\\\", ""));
         entity.setPath(request.getRequestURI());
         entity.setMethod(request.getMethod());
-        entity.setCreatedTime(new Date());
+        entity.setCreatedTime(UserContextHolder.getSession().getNow());
         entity.setTimeTaken(System.currentTimeMillis() - startTime);
         entity.setTraceId(UserContextHolder.getSession().getTraceId());
         return entity;

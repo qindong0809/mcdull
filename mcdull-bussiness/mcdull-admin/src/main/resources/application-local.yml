@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    poolType: Druid  # 指定对应的数据库连接池内置 Druid、Hikari
+    druid-username: admin
+    druid-password: admin
+    url: jdbc:h2:file:D:/H2/McDull-DB;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1;NON_KEYWORDS=USER
+    username: root
+    password: 123456
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2
+      settings:
+        web-allow-others: true
+  redis:
+    host: mcdull.io5
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:init.sql
+logging:
+  level:
+    root: info
+    io.gitee.dqcer.mcdull.framework: debug
+mcdull:
+  oss:
+    url: rqoy1bmgr.hn-bkt.clouddn.com
+    accessKey: DOpFajq-y9E77CmLz9Qm5GsF7nY_zXJ0R3ngfOYLD
+    accessSecretKey: QRXPsheK_j_AaXZS8CqXoH5g4ed2WqrFgbcLRhqmF
+    type: qiniu

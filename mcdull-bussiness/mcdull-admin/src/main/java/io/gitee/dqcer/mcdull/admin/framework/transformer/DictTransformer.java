@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.framework.transformer;
 
+import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.web.transform.AbstractTransformer;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +30,7 @@ public class DictTransformer extends AbstractTransformer {
     }
 
     @Override
-    protected KeyValueVO<String, String> getKeyValueVO(Object code, String param) {
+    protected KeyValueBO<String, String> getKeyValueVO(Object code, String param) {
         return transformer.transformer(String.valueOf(code), param, UserContextHolder.getSession().getLanguage());
     }
 }

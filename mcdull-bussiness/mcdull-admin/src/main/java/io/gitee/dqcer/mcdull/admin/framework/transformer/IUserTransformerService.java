@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.framework.transformer;
 
+import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 
 /**
@@ -16,5 +17,5 @@ public interface IUserTransformerService {
      * @param code       编码
      * @return {@link KeyValueVO}
      */
-    KeyValueVO<String, String> transformer(String code);
+    KeyValueBO<String, String> transformer(String code);
 }

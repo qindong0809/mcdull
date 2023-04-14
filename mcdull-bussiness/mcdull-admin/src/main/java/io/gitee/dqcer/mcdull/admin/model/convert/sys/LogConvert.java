@@ -18,7 +18,7 @@ public class LogConvert {
             return null;
         }
         LogDO logDO = new LogDO();
-        logDO.setAccountId(dto.getAccountId());
+        logDO.setAccountId(dto.getUserId());
         logDO.setTenantId(dto.getTenantId());
         logDO.setClientIp(dto.getClientIp());
         logDO.setUserAgent(dto.getUserAgent());
@@ -56,9 +56,7 @@ public class LogConvert {
         vo.setTimeTaken(item.getTimeTaken());
         vo.setParameterMap(item.getParameterMap());
         vo.setHeaders(item.getHeaders());
-        vo.setMenu(item.getMenu());
-        vo.setModel(item.getModel());
-        vo.setType(item.getType());
+        vo.setButton(item.getButton());
 
         return vo;
     }

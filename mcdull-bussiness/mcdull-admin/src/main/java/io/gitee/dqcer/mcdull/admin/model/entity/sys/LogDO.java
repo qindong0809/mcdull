@@ -3,6 +3,8 @@ package io.gitee.dqcer.mcdull.admin.model.entity.sys;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
 
+import java.util.StringJoiner;
+
 /**
  * 用户操作日志 实体类
  *
@@ -65,131 +67,125 @@ public class LogDO extends MiddleDO {
     private String headers;
 
     /**
-     * 所属系统
+     * 所属操作按钮
      */
-    private String model;
+    private String button;
 
-    /**
-     * 所属菜单
-     */
-    private String menu;
-
-    /**
-     * 所属操作类型
-     */
-    private String type;
-
-    public String getModel() {
-        return model;
-    }
-
-    public LogDO setModel(String model) {
-        this.model = model;
-        return this;
-    }
-
-    public String getMenu() {
-        return menu;
-    }
-
-    public LogDO setMenu(String menu) {
-        this.menu = menu;
-        return this;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public LogDO setType(String type) {
-        this.type = type;
-        return this;
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", LogDO.class.getSimpleName() + "[", "]")
+                .add("accountId=" + accountId)
+                .add("tenantId=" + tenantId)
+                .add("clientIp='" + clientIp + "'")
+                .add("userAgent='" + userAgent + "'")
+                .add("method='" + method + "'")
+                .add("path='" + path + "'")
+                .add("traceId='" + traceId + "'")
+                .add("timeTaken=" + timeTaken)
+                .add("parameterMap='" + parameterMap + "'")
+                .add("headers='" + headers + "'")
+                .add("button='" + button + "'")
+                .add("createdTime=" + createdTime)
+                .add("id=" + id)
+                .toString();
     }
 
     public Long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(Long accountId) {
+    public LogDO setAccountId(Long accountId) {
         this.accountId = accountId;
+        return this;
     }
+
     public Long getTenantId() {
         return tenantId;
     }
 
-    public void setTenantId(Long tenantId) {
+    public LogDO setTenantId(Long tenantId) {
         this.tenantId = tenantId;
+        return this;
     }
+
     public String getClientIp() {
         return clientIp;
     }
 
-    public void setClientIp(String clientIp) {
+    public LogDO setClientIp(String clientIp) {
         this.clientIp = clientIp;
+        return this;
     }
+
     public String getUserAgent() {
         return userAgent;
     }
 
-    public void setUserAgent(String userAgent) {
+    public LogDO setUserAgent(String userAgent) {
         this.userAgent = userAgent;
+        return this;
     }
+
     public String getMethod() {
         return method;
     }
 
-    public void setMethod(String method) {
+    public LogDO setMethod(String method) {
         this.method = method;
+        return this;
     }
+
     public String getPath() {
         return path;
     }
 
-    public void setPath(String path) {
+    public LogDO setPath(String path) {
         this.path = path;
+        return this;
     }
+
     public String getTraceId() {
         return traceId;
     }
 
-    public void setTraceId(String traceId) {
+    public LogDO setTraceId(String traceId) {
         this.traceId = traceId;
+        return this;
     }
+
     public Long getTimeTaken() {
         return timeTaken;
     }
 
-    public void setTimeTaken(Long timeTaken) {
+    public LogDO setTimeTaken(Long timeTaken) {
         this.timeTaken = timeTaken;
+        return this;
     }
+
     public String getParameterMap() {
         return parameterMap;
     }
 
-    public void setParameterMap(String parameterMap) {
+    public LogDO setParameterMap(String parameterMap) {
         this.parameterMap = parameterMap;
+        return this;
     }
+
     public String getHeaders() {
         return headers;
     }
 
-    public void setHeaders(String headers) {
+    public LogDO setHeaders(String headers) {
         this.headers = headers;
+        return this;
     }
 
-    @Override
-    public String toString() {
-        return "SysLog{" +
-            ", accountId=" + accountId +
-            ", tenantId=" + tenantId +
-            ", clientIp=" + clientIp +
-            ", userAgent=" + userAgent +
-            ", method=" + method +
-            ", path=" + path +
-            ", traceId=" + traceId +
-            ", timeTaken=" + timeTaken +
-            ", parameterMap=" + parameterMap +
-            ", headers=" + headers +
-        "}";
+    public String getButton() {
+        return button;
+    }
+
+    public LogDO setButton(String button) {
+        this.button = button;
+        return this;
     }
 }

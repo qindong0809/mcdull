@@ -1,15 +1,12 @@
 package io.gitee.dqcer.mcdull.admin.framework.audit;
 
+import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.util.JsonUtil;
 import io.gitee.dqcer.mcdull.framework.mysql.config.DataChangeRecorderInnerInterceptor;
 import io.gitee.dqcer.mcdull.framework.mysql.config.IDataChangeRecorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * 默认数据变化记录
@@ -32,9 +29,8 @@ public class DefaultDataChangeRecorder implements IDataChangeRecorder {
      */
     @Override
     public void dataInnerInterceptor(DataChangeRecorderInnerInterceptor.OperationResult operationResult) {
-        if (log.isDebugEnabled()) {
-            log.debug("{}", operationResult);
-        }
+        TableAudit build = build(operationResult);
+        log.info("audit: {}", build);
 //        mongoDBService.insertOrUpdate("data_change_record", build(operationResult));
     }
 
@@ -44,8 +40,15 @@ public class DefaultDataChangeRecorder implements IDataChangeRecorder {
         tableAudit.setRecordStatus(operationResult.isRecordStatus());
         tableAudit.setTableName(operationResult.getTableName());
         String changedData = operationResult.getChangedData();
-        List<Map> keyValueVOS = JsonUtil.parseArray(changedData, Map.class);
-        tableAudit.setFields(keyValueVOS);
+        JSONUtil.isTypeJSONArray(changedData);
+        if (JSONUtil.isTypeJSONArray(changedData)) {
+//            JSONConfig config = new JSONConfig();
+//            config.setIgnoreError(true);
+//            JSONArray jsonArray = JSONUtil.parseArray(changedData, config);
+//            List<Map> maps = JSONUtil.toList(jsonArray, Map.class);
+//            tableAudit.setFields(maps);
+        }
+//        List<Map> keyValueVOS = JsonUtil.parseArray(changedData, Map.class);
         tableAudit.setCost(operationResult.getCost());
         tableAudit.setTraceId(UserContextHolder.getSession().getTraceId());
         return tableAudit;

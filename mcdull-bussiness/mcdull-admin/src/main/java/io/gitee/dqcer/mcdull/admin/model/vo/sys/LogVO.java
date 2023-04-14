@@ -86,7 +86,7 @@ public class LogVO implements VO {
     /**
      * 所属操作类型
      */
-    private String type;
+    private String button;
 
     /**
      * 所属操作 str类型
@@ -130,12 +130,12 @@ public class LogVO implements VO {
         return this;
     }
 
-    public String getType() {
-        return type;
+    public String getButton() {
+        return button;
     }
 
-    public LogVO setType(String type) {
-        this.type = type;
+    public LogVO setButton(String button) {
+        this.button = button;
         return this;
     }
 

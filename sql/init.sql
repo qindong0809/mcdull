@@ -109,11 +109,8 @@ CREATE TABLE `sys_operation_log`  (
 `time_taken` bigint(20) NOT NULL COMMENT '耗时',
 `parameter_map` varchar(1024)  DEFAULT NULL COMMENT '参数map',
 `headers` text  NOT NULL COMMENT '请求头',
-`model` varchar(128) NOT NULL COMMENT '所属系统/模块',
-`menu` varchar(256) NOT NULL COMMENT '所属菜单',
-`type` varchar(16) NOT NULL COMMENT '所属操作类型',
-PRIMARY KEY (`id`) USING BTREE
-
+`button` varchar(16) NOT NULL COMMENT '所属操作类型',
+PRIMARY KEY (`id`) 
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户操作日志';
 
 DROP TABLE IF EXISTS `sys_role`;
@@ -398,7 +395,7 @@ CREATE TABLE `sys_notice`  (
 `updated_time` datetime DEFAULT NULL COMMENT '更新时间',
 `del_flag` int(1) NOT NULL COMMENT '删除标识（1/正常 2/删除）',
 `del_by` bigint(20) DEFAULT NULL COMMENT '删除人',
-PRIMARY KEY (`id`) USING BTREE
+PRIMARY KEY (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='通知公告表';
 insert into sys_notice values(1, '维护通知：2023-04-05 系统凌晨维护','维护内容',  '1',  '备注', '1', null, sysdate(), null, null, 1, null);
 

@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import java.util.List;
 
 /**
- * 用户 通过逻辑定义
+ * 用户 通用逻辑定义
  *
  * @author dqcer
  * @since 2022/12/26

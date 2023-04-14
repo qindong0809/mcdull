@@ -55,10 +55,10 @@ public class UserManagerImpl implements IUserManager {
         List<Long> list = userRoleRepository.listRoleByUserId(vo.getId());
         if (!list.isEmpty()) {
             for (RoleDO roleDO : roleRepository.listByIds(list)) {
-                BaseVO role = new BaseVO();
-                role.setId(roleDO.getId());
-                role.setName(roleDO.getName());
-                baseRoles.add(role);
+//                BaseVO role = new BaseVO();
+//                role.setId(roleDO.getId());
+//                role.setName(roleDO.getName());
+//                baseRoles.add(role);
             }
         }
         vo.setRoles(baseRoles);

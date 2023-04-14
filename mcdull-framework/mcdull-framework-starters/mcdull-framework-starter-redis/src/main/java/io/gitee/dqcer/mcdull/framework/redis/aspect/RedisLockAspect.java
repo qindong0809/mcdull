@@ -1,18 +1,15 @@
 package io.gitee.dqcer.mcdull.framework.redis.aspect;
 
 
-import io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.SymbolConstants;
-import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
+import io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock;
+import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.expression.MethodBasedEvaluationContext;
@@ -25,7 +22,6 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -45,7 +41,7 @@ public class RedisLockAspect {
     private static final ExpressionParser PARSER = new SpelExpressionParser();
 
     @Resource
-    private RedissonClient redissonClient;
+    private CacheChannel cacheChannel;
 
     /**
      * 设置方法对应的缓存过期时间
@@ -73,27 +69,28 @@ public class RedisLockAspect {
         }
         String key = calculateValue(redisLock.key(), ((MethodSignature) signature).getMethod(), proceedingJoinPoint.getArgs());
         long timeout = redisLock.timeout() < 1 ? 10 : redisLock.timeout();
-        RLock lock = redissonClient.getLock(key);
-        try {
-            if (lock.tryLock(timeout, TimeUnit.SECONDS)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("分布式锁成功加锁");
-                }
-                try {
-                    return proceedingJoinPoint.proceed();
-                } finally {
-                    lock.unlock();
-                    if (log.isDebugEnabled()) {
-                        log.debug("分布式锁成功释放锁");
-                    }
-                }
-            }
-            throw new BusinessException(CodeEnum.LOCK_TIMEOUT);
-        } catch (InterruptedException e) {
-            log.error("Interrupted! {} {}", e.getMessage(), e);
-            Thread.currentThread().interrupt();
-            throw new BusinessException();
-        }
+//        RLock lock = cacheChannel.getLock(key);
+//        try {
+//            if (lock.tryLock(timeout, TimeUnit.SECONDS)) {
+//                if (log.isDebugEnabled()) {
+//                    log.debug("分布式锁成功加锁");
+//                }
+//                try {
+//                    return proceedingJoinPoint.proceed();
+//                } finally {
+//                    lock.unlock();
+//                    if (log.isDebugEnabled()) {
+//                        log.debug("分布式锁成功释放锁");
+//                    }
+//                }
+//            }
+//            throw new BusinessException(CodeEnum.LOCK_TIMEOUT);
+//        } catch (InterruptedException e) {
+//            log.error("Interrupted! {} {}", e.getMessage(), e);
+//            Thread.currentThread().interrupt();
+//            throw new BusinessException();
+//        }
+        return proceedingJoinPoint.proceed();
     }
 
     /**

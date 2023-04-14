@@ -13,6 +13,7 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IUserManager;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IUserService;
+import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
@@ -157,11 +158,11 @@ public class UserServiceImpl implements IUserService, IUserTransformerService {
      * @return {@link KeyValueVO}
      */
     @Override
-    public KeyValueVO<String, String> transformer(String code) {
+    public KeyValueBO<String, String> transformer(String code) {
         UserDO userDO = userRepository.getById(code);
         if (ObjUtil.isNotNull(userDO)) {
-            return new KeyValueVO<String, String>().setId(userDO.getId().toString()).setName(userDO.getNickName());
+            return new KeyValueBO<String, String>().setKey(userDO.getId().toString()).setValue(userDO.getNickName());
         }
-        return new KeyValueVO<>();
+        return new KeyValueBO<>();
     }
 }

@@ -87,7 +87,7 @@ public class AutoConfiguration {
         }));
 
         // 分页插件
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.H2));
         // 防止全部更新删除
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
         // SQL规范检查

@@ -1,26 +1,27 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogDO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.LogVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.LogMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.ILogRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import io.gitee.dqcer.mcdull.framework.base.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.gitee.dqcer.mcdull.framework.base.util.StrUtil;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
 * 日志记录 数据库操作封装实现层
@@ -63,6 +64,7 @@ public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO>  implements
         if (StrUtil.isNotBlank(keyword)) {
             //TODO 组装查询条件
         }
+        IPage<LogVO> voiPage =  baseMapper.pagedQuery(new Page<>(param.getPageNum(), param.getPageSize()), param);
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 

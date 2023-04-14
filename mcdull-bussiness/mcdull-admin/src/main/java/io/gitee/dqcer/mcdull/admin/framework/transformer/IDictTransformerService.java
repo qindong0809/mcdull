@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.framework.transformer;
 
-import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
+import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 
 /**
  * 翻译转换接口
@@ -16,7 +16,7 @@ public interface IDictTransformerService {
      * @param code       代码
      * @param selectType 选择类型
      * @param language   语言
-     * @return {@link KeyValueVO}
+     * @return {@link KeyValueBO}
      */
-    KeyValueVO<String, String> transformer(String code, String selectType, String language);
+    KeyValueBO<String, String> transformer(String code, String selectType, String language);
 }

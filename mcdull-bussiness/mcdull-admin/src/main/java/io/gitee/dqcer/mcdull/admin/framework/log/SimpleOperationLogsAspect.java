@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.framework.log;
 
-import io.gitee.dqcer.mcdull.admin.config.OperationLog;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogDO;
+import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsService;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 import org.springframework.stereotype.Component;
@@ -31,24 +31,31 @@ public class SimpleOperationLogsAspect implements OperationLogsService {
      */
     @Override
     public boolean needInterceptor(HttpServletRequest request, Method method) {
-        return method.isAnnotationPresent(OperationLog.class);
+//        return method.isAnnotationPresent(OperationLog.class);
+        return method.isAnnotationPresent(Authorized.class);
     }
 
 
 
     @Override
     public void saveLog(LogOperationDTO dto, Method method) {
-        OperationLog annotation = method.getAnnotation(OperationLog.class);
+//        OperationLog annotation = method.getAnnotation(OperationLog.class);
+//        LogDO logDO = of(dto);
+//        logDO.setModel(annotation.module());
+//        logDO.setMenu(annotation.menu());
+//        logDO.setType(annotation.type().getCode());
+//        asyncEvent.asyncEvent(logDO);
+        Authorized annotation = method.getAnnotation(Authorized.class);
         LogDO logDO = of(dto);
-        logDO.setModel(annotation.module());
-        logDO.setMenu(annotation.menu());
-        logDO.setType(annotation.type().getCode());
+//        logDO.setModel(annotation.value());
+//        logDO.setMenu(annotation.menu());
+        logDO.setButton(annotation.value());
         asyncEvent.asyncEvent(logDO);
     }
 
     private static LogDO of(LogOperationDTO dto) {
         LogDO logDO = new LogDO();
-        logDO.setAccountId(dto.getAccountId());
+        logDO.setAccountId(dto.getUserId());
         logDO.setTenantId(dto.getTenantId());
         logDO.setClientIp(dto.getClientIp());
         logDO.setUserAgent(dto.getUserAgent());

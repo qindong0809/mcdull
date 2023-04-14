@@ -6,6 +6,7 @@ import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2021/09/10
  */
 @Component
+@ConditionalOnProperty(name = "spring.profiles.active", havingValue = "dev")
 public class RedissonCache implements ICache {
 
     protected static final Logger log = LoggerFactory.getLogger(RedissonCache.class);

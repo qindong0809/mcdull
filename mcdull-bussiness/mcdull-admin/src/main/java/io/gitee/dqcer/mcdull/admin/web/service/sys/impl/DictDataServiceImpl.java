@@ -10,6 +10,7 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.DictDataDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictDataVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IDictDataRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IDictDataService;
+import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -63,15 +64,15 @@ public class DictDataServiceImpl implements IDictDataService, IDictTransformerSe
      * @return {@link KeyValueVO}
      */
     @Override
-    public KeyValueVO<String, String> transformer(String code, String selectType, String language) {
+    public KeyValueBO<String, String> transformer(String code, String selectType, String language) {
         List<DictDataDO> doList = dictDataRepository.dictType(selectType);
         if (CollUtil.isNotEmpty(doList)) {
             DictDataDO first = doList.stream().filter(i -> i.getDictValue().equals(code)).findFirst().orElse(null);
             if (ObjUtil.isNotNull(first)) {
-                return new KeyValueVO<String, String>().setId(first.getDictValue()).setName(first.getDictLabel());
+                return new KeyValueBO<String, String>().setKey(first.getDictValue()).setValue(first.getDictLabel());
             }
         }
-        return new KeyValueVO<>();
+        return new KeyValueBO<>();
     }
 
     @Override

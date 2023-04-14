@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.web.transform;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.ITransformer;
+import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
@@ -40,14 +41,14 @@ public abstract class AbstractTransformer implements ITransformer<Object> {
         }
         String key = MessageFormat.format(keyFormat, cacheName, original, param);
 
-        KeyValueVO<?, ?> keyValueVO = cacheChannel.get(key, KeyValueVO.class);
-        if (keyValueVO != null) {
-            return String.valueOf(keyValueVO.getName());
+        KeyValueBO<?, ?> bo = cacheChannel.get(key, KeyValueBO.class);
+        if (bo != null) {
+            return String.valueOf(bo.getValue());
         }
 
-        keyValueVO = getKeyValueVO(original, param);
-        cacheChannel.put(key, keyValueVO, cacheExpireTime());
-        return String.valueOf(keyValueVO.getName());
+        bo = getKeyValueVO(original, param);
+        cacheChannel.put(key, bo, cacheExpireTime());
+        return String.valueOf(bo.getValue());
     }
 
     /**
@@ -66,7 +67,7 @@ public abstract class AbstractTransformer implements ITransformer<Object> {
      * @param param 参数
      * @return {@link KeyValueVO}
      */
-    protected abstract KeyValueVO<String, String> getKeyValueVO(Object code, String param);
+    protected abstract KeyValueBO<String, String> getKeyValueVO(Object code, String param);
 
     /**
      * 模块缓存名称，比如 user

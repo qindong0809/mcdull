@@ -18,12 +18,5 @@ public interface ICaptchaService {
      */
     Result<CaptchaVO> getLoginCode();
 
-    /**
-     * 验证验证码
-     *
-     * @param code 代码
-     * @param uuid uuid
-     * @return boolean
-     */
-    boolean validateCaptcha(String code, String uuid);
+
 }

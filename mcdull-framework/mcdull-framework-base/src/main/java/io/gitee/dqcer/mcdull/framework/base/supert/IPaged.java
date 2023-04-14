@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.framework.base.dto;
+package io.gitee.dqcer.mcdull.framework.base.supert;
 
 /**
  * 分页接口

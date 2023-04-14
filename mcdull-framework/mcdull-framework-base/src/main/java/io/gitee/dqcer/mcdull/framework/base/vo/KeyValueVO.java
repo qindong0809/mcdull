@@ -1,49 +1,44 @@
 package io.gitee.dqcer.mcdull.framework.base.vo;
 
+import io.gitee.dqcer.mcdull.framework.base.supert.KeyValue;
+
 /**
  * key value 视图对象
  *
  * @author dqcer
  * @date 2022/12/07
  */
-public class KeyValueVO<K, V> implements VO{
+public class KeyValueVO<K, V> implements KeyValue {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * key
      */
-    protected K id;
+    protected K key;
 
     /**
      * value
      */
-    protected V name;
+    protected V value;
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("KeyValueVO{");
-        sb.append("id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append('}');
-        return sb.toString();
+
+
+    public K getKey() {
+        return key;
     }
 
-    public K getId() {
-        return id;
-    }
-
-    public KeyValueVO<K, V> setId(K id) {
-        this.id = id;
+    public KeyValueVO<K, V> setKey(K key) {
+        this.key = key;
         return this;
     }
 
-    public V getName() {
-        return name;
+    public V getValue() {
+        return value;
     }
 
-    public KeyValueVO<K, V> setName(V name) {
-        this.name = name;
+    public KeyValueVO<K, V> setValue(V value) {
+        this.value = value;
         return this;
     }
 }

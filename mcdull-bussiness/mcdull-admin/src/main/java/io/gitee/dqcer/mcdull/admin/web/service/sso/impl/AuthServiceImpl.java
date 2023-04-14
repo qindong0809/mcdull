@@ -39,7 +39,6 @@ import io.gitee.dqcer.mcdull.framework.base.util.TreeUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
-import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserSession;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
@@ -77,8 +76,8 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
     @Resource
     private IUserLoginRepository userLoginRepository;
 
-    @Resource
-    private RedissonCache redisClient;
+//    @Resource
+//    private RedissonCache redisClient;
 
     @Resource
     private CacheChannel cacheChannel;
@@ -104,7 +103,8 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         UserLoginDO userLoginDO = this.builderLoginOrLogoutInfo(loginDTO.getUsername(),
                 request.getHeader(HttpHeaders.USER_AGENT), LoginOperationTypeEnum.LOGIN);
 
-        boolean validateResult = captchaService.validateCaptcha(loginDTO.getCode(), loginDTO.getUuid());
+//        boolean validateResult = captchaService.validateCaptcha(loginDTO.getCode(), loginDTO.getUuid());
+        boolean validateResult = true;
         if (!validateResult) {
             String error = "验证码错误";
             this.listener(userLoginDO, UserLoginDO.FAIL, error);
@@ -209,7 +209,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         // 控制更新频率 lastActiveTime + 2 < now
         int updateFrequency = 2;
         if (lastActiveTime.plusMinutes(updateFrequency).isBefore(now)) {
-            redisClient.putIfExists(tokenKey, user.setLastActiveTime(now));
+            cacheChannel.put(tokenKey, user.setLastActiveTime(now), -1);
         }
         UserSession session = new UserSession();
         session.setUserId(user.getUserId());
@@ -239,13 +239,13 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         HttpServletRequest request = ServletUtil.getRequest();
         String token = request.getHeader(HttpHeaderConstants.TOKEN);
         String tokenKey = MessageFormat.format(SsoConstant.SSO_TOKEN, token);
-        CacheUser user = redisClient.get(tokenKey, CacheUser.class);
+        CacheUser user = cacheChannel.get(tokenKey, CacheUser.class);
         if (user == null) {
             log.error("redis 缓存 token过期，这里需要优化处理");
             return Result.ok();
         }
         user.setOnlineStatus(CacheUser.LOGOUT);
-        redisClient.putIfExists(tokenKey, user);
+        cacheChannel.put(tokenKey, user, -1);
 
         //  记录注销信息
         Long userId = UserContextHolder.currentUserId();

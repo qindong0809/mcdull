@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.framework.redis.operation;
 
-import io.gitee.dqcer.mcdull.framework.redis.ICache;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import io.gitee.dqcer.mcdull.framework.redis.ICache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -39,6 +39,15 @@ public class CaffeineCache implements ICache {
         cache = caffeine.build();
     }
 
+    public static Cache<Object, Object> tokenCache = Caffeine.newBuilder()
+            // 初始的缓存空间大小
+            .initialCapacity(5000)
+            // 缓存的最大条数
+            .maximumSize(1000)
+            .expireAfterWrite(60 * 60 * 24 * 7, TimeUnit.SECONDS)
+            .recordStats().build();
+            //设置缓存的移除通知;
+
     /**
      * get
      *
@@ -50,6 +59,16 @@ public class CaffeineCache implements ICache {
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> type) {
         Object o = cache.getIfPresent(key);
+        if (null != o) {
+            if (!type.isInstance(o)) {
+                throw new IllegalArgumentException("缓存值的类型不能是" + type.getName());
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("caffeine缓存 key={} 缓存已命中", key);
+            }
+            return (T) o;
+        }
+         o = tokenCache.getIfPresent(key);
         if (null != o) {
             if (!type.isInstance(o)) {
                 throw new IllegalArgumentException("缓存值的类型不能是" + type.getName());
@@ -74,7 +93,11 @@ public class CaffeineCache implements ICache {
         if (log.isDebugEnabled()) {
             log.debug("caffeine缓存 key={} 缓存已存入", key);
         }
-        cache.put(key, value);
+        if (expire == 0) {
+            cache.put(key, value);
+            return;
+        }
+        tokenCache.put(key, value);
     }
 
     /**
@@ -90,5 +113,7 @@ public class CaffeineCache implements ICache {
             }
         }
         cache.invalidateAll(Arrays.asList(keys));
+
+        tokenCache.invalidateAll(Arrays.asList(keys));
     }
 }

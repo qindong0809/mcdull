@@ -35,6 +35,7 @@ public class DictDataRepositoryImpl extends ServiceImpl<DictDataMapper, DictData
         wrapper.eq(DictDataDO::getDictType, dictType);
         wrapper.orderByAsc(DictDataDO::getDictSort);
         List<DictDataDO> list = baseMapper.selectList(wrapper);
+
         if (list.isEmpty()) {
             return Collections.emptyList();
         }

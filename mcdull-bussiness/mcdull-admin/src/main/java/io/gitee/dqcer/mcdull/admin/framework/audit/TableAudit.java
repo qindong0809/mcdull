@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.admin.framework.audit;
 
 import io.gitee.dqcer.mcdull.framework.base.entity.DO;
+import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,8 @@ import java.util.Map;
  * @author dqcer
  * @since 2023/01/29
  */
+@Data
+@ToString
 public class TableAudit implements DO {
 
     private String operation;

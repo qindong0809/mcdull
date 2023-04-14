@@ -39,7 +39,7 @@ public class NoticeController {
      * 分页查询
      *
      * @param dto dto
-     * @return {@link Result< PagedVO >}
+     * @return {@link Result<PagedVO>}
      */
     @Transform
     @Authorized("sys:notice:list")
@@ -88,7 +88,7 @@ public class NoticeController {
     /**
     * 根据主键删除
     *
-    * @param dto dto
+    * @param ids ids
     * @return {@link Result<Long>}
     */
     @Authorized("sys:notice:remove")
