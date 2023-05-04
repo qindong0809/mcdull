@@ -120,7 +120,7 @@ public interface IEnum<T>  extends Serializable {
      * 获取 code集合
      *
      * @param clazz clazz 字典枚举类
-     * @return {@link List}<{@link T}>
+     * @return List&lt;T&gt;
      */
     static <T> List<T> getCodes(Class<? extends IEnum<T>> clazz) {
         List<IEnum<T>> all = getAll(clazz);

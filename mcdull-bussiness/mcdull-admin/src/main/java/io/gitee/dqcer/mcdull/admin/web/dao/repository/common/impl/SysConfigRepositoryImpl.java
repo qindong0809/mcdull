@@ -56,7 +56,7 @@ public class SysConfigRepositoryImpl extends ServiceImpl<SysConfigMapper, SysCon
         }
         String value = dto.getValue();
         if (StrUtil.isNotBlank(value)) {
-            lambda.like(SysConfigDO::getValue, value);
+            lambda.like(SysConfigDO::getConfigValue, value);
         }
         String configKey = dto.getConfigKey();
         if (StrUtil.isNotBlank(configKey)) {

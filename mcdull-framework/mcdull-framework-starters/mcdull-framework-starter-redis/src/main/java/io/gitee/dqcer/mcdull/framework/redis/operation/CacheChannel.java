@@ -19,13 +19,6 @@ public class CacheChannel implements ICache {
     private CaffeineCache caffeineCache;
 
 
-    /**
-     * get
-     *
-     * @param key  关键
-     * @param type 类型
-     * @return {@link T}
-     */
     @Override
     public <T> T get(String key, Class<T> type) {
         T t = caffeineCache.get(key, type);
@@ -45,13 +38,6 @@ public class CacheChannel implements ICache {
         return t;
     }
 
-    /**
-     * set
-     *
-     * @param key    关键
-     * @param value  价值
-     * @param expire 到期
-     */
     @Override
     public <T> void put(String key, T value, long expire) {
         caffeineCache.put(key, value, expire);
@@ -63,11 +49,6 @@ public class CacheChannel implements ICache {
         redisCache.put(key, value, expire);
     }
 
-    /**
-     * 驱逐
-     *
-     * @param keys 关键
-     */
     @Override
     public void evict(String... keys) {
         caffeineCache.evict(keys);

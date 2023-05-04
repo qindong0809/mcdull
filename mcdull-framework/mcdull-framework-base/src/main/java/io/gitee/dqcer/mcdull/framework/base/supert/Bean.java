@@ -13,14 +13,14 @@ public interface Bean<Id, Name> extends Serializable {
     /**
      * key
      *
-     * @return {@link Id}
+     * @return &lt;Id&gt;
      */
     Id getId();
 
     /**
      * value
      *
-     * @return {@link Name}
+     * @return &lt;Name&gt;
      */
     Name getName();
 }

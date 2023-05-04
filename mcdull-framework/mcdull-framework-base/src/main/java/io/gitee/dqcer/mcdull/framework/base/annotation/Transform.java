@@ -20,7 +20,7 @@ public @interface Transform {
     /**
      * 数据源，可用于静态枚举
      *
-     * @return {@link Class}<{@link ?}>
+     * @return Class&lt;?&gt;
      */
     Class<?> dataSource() default Void.class;
 
@@ -49,7 +49,7 @@ public @interface Transform {
     /**
      * 针对从数据库
      *
-     * @return {@link Class}<{@link ?} {@link extends} {@link ITransformer}>
+     * @return Class&lt;? extends ITransformer&gt;
      */
     Class<? extends ITransformer> transformer() default ITransformer.class;
 }

@@ -13,14 +13,14 @@ public interface KeyValue<K, V> extends Serializable {
     /**
      * key
      *
-     * @return {@link K}
+     * @return &lt;K&gt;
      */
     K getKey();
 
     /**
      * value
      *
-     * @return {@link V}
+     * @return &lt;V&gt;
      */
     V getValue();
 }

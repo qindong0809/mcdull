@@ -102,10 +102,10 @@
   <logger name="springfox.bean.validators" level="ERROR"/>
   <logger name="springfox.documentation" level="ERROR" />
   <logger name="com.alibaba.nacos.client.naming" level="warn" />
-  <logger name="io.gitee.dqcer.mcdull.framework" level="debug" />
+  <logger name="io.gitee.dqcer.mcdull.framework" level="INFO" />
   <logger name="io.gitee.dqcer" level="info" />
   <logger name="io.gitee.dqcer.mcdull.framework.redis.operation.CaffeineCache" level="INFO" />
-  <logger name="io.gitee.dqcer.mcdull.admin.web.dao" level="debug" />
+  <logger name="io.gitee.dqcer.mcdull.admin.web.dao" level="info" />
 
   <root level="info">
     <appender-ref ref="CONSOLE" />

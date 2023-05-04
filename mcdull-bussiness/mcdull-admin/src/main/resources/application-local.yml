@@ -22,7 +22,7 @@ spring:
 logging:
   level:
     root: info
-    io.gitee.dqcer.mcdull.framework: debug
+    io.gitee.dqcer.mcdull.framework: info
 mcdull:
   oss:
     url: rqoy1bmgr.hn-bkt.clouddn.com

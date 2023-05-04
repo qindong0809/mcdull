@@ -15,7 +15,7 @@ public interface ICache {
      *
      * @param key    关键
      * @param type 类型
-     * @return {@link T}
+     * @return &lt;T&gt;
      */
     <T> T get(String key,  Class<T> type);
 

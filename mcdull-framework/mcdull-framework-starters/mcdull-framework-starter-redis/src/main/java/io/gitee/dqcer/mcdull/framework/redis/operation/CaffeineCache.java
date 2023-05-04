@@ -48,13 +48,6 @@ public class CaffeineCache implements ICache {
             .recordStats().build();
             //设置缓存的移除通知;
 
-    /**
-     * get
-     *
-     * @param key  关键
-     * @param type 类型
-     * @return {@link T}
-     */
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> type) {
@@ -81,13 +74,6 @@ public class CaffeineCache implements ICache {
         return null;
     }
 
-    /**
-     * set
-     *
-     * @param key    关键
-     * @param value  价值
-     * @param expire 到期
-     */
     @Override
     public <T> void put(String key, T value, long expire) {
         if (log.isDebugEnabled()) {
@@ -100,11 +86,6 @@ public class CaffeineCache implements ICache {
         tokenCache.put(key, value);
     }
 
-    /**
-     * 驱逐
-     *
-     * @param keys 关键
-     */
     @Override
     public void evict(String... keys) {
         if (log.isDebugEnabled()) {

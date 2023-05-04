@@ -16,7 +16,7 @@ public class ConfigConvert {
         configVO.setId(configDO.getId());
         configVO.setName(configDO.getName());
         configVO.setConfigKey(configDO.getConfigKey());
-        configVO.setValue(configDO.getValue());
+        configVO.setValue(configDO.getConfigValue());
         configVO.setConfigType(configDO.getConfigType());
         configVO.setRemark(configDO.getRemark());
         configVO.setCreatedTime(configDO.getCreatedTime());

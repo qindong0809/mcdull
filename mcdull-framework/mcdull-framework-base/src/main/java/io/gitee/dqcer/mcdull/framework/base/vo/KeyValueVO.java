@@ -2,13 +2,15 @@ package io.gitee.dqcer.mcdull.framework.base.vo;
 
 import io.gitee.dqcer.mcdull.framework.base.supert.KeyValue;
 
+import java.util.StringJoiner;
+
 /**
  * key value 视图对象
  *
  * @author dqcer
- * @date 2022/12/07
+ * @since 2022/12/07
  */
-public class KeyValueVO<K, V> implements KeyValue {
+public class KeyValueVO<K, V> implements KeyValue<K, V> {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,7 +24,13 @@ public class KeyValueVO<K, V> implements KeyValue {
      */
     protected V value;
 
-
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", KeyValueVO.class.getSimpleName() + "[", "]")
+                .add("key=" + key)
+                .add("value=" + value)
+                .toString();
+    }
 
     public K getKey() {
         return key;

@@ -8,12 +8,9 @@
         <version>0.0.5-RELEASE</version>
     </parent>
     <artifactId>mcdull-admin</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0-RELEASE</version>
     <name>mcdull-admin</name>
-    <description>Demo project for Spring Boot</description>
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
@@ -64,10 +61,6 @@
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
             <artifactId>hutool-http</artifactId>
         </dependency>
         <dependency>
@@ -95,14 +88,21 @@
 
     <build>
         <plugins>
+            <!--编译阶段：指定编码字符，避免出现编码EUC_CN的不可映射字符-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.0.0</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
                 <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <warName>${project.artifactId}</warName>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
+            </plugin>
+            <!--打包阶段支持 war, jar -Dfile.encoding=GB2312-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

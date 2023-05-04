@@ -69,7 +69,7 @@ public class ExceptionAdvice {
      * 业务异常
      *
      * @param exception 异常
-     * @return {@link Result}<{@link ?}>
+     * @return Result&lt;?&gt;
      */
     @ExceptionHandler(value = BusinessException.class)
     public Result<?> businessException(BusinessException exception) {

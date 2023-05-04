@@ -37,7 +37,7 @@ public class SymbolConstants {
     public static final String PER_CENT = "%";
 
     /**
-     * @
+     * '@'
      */
     public static final String AT = "@";
 

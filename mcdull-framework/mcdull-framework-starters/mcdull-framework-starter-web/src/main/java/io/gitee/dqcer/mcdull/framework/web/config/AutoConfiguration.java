@@ -28,6 +28,11 @@ import javax.servlet.MultipartConfigElement;
 public class AutoConfiguration {
 
     @Bean
+    public BannerApplicationRunner bannerApplicationRunner() {
+        return new BannerApplicationRunner();
+    }
+
+    @Bean
     public SpringContextHolder springContextHolder() {
         return new SpringContextHolder();
     }

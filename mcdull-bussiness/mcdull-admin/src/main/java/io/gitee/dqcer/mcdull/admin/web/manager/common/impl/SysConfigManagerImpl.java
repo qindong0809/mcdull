@@ -34,6 +34,6 @@ public class SysConfigManagerImpl implements ISysConfigManager {
         if (sysConfigDO == null) {
             throw new DatabaseRowException(CodeEnum.DATA_NOT_EXIST);
         }
-        return sysConfigDO.getValue();
+        return sysConfigDO.getConfigValue();
     }
 }
