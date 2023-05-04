@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -74,15 +75,19 @@ public class LogServiceImpl extends BasicServiceImpl<ILogRepository> implements 
     @Override
     public Result<PagedVO<LogVO>> listByPage(LogLiteDTO dto) {
         List<MenuDO> list = menuRepository.list();
-        Map<Long, MenuDO> map = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+        Map<String, MenuDO> map = list.stream().collect(Collectors.toMap(MenuDO::getPerms, Function.identity()));
 
+        Map<Long, MenuDO> parentMenuMap = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
         Page<LogDO> entityPage = baseRepository.selectPage(dto);
         List<LogVO> voList = new ArrayList<>();
         for (LogDO record : entityPage.getRecords()) {
             LogVO logVO = LogConvert.convertToLogVO(record);
-//
-//            logVO.setMenu(map.get(record.getMenu().toString()).getName());
-//            logVO.setModel(map.get(record.getModel().toString()).getName());
+
+            MenuDO menuDO = map.get(record.getButton());
+            logVO.setButton(menuDO.getName());
+            MenuDO menu = parentMenuMap.get(menuDO.getParentId());
+            logVO.setMenu(menu.getName());
+//            logVO.setMethod(parentMenuMap.get(menu.getParentId()).getName());
 
             voList.add(logVO);
         }

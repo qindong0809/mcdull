@@ -109,7 +109,7 @@ CREATE TABLE `sys_operation_log`  (
 `time_taken` bigint(20) NOT NULL COMMENT '耗时',
 `parameter_map` varchar(1024)  DEFAULT NULL COMMENT '参数map',
 `headers` text  NOT NULL COMMENT '请求头',
-`button` varchar(16) NOT NULL COMMENT '所属操作类型',
+`button` varchar(256) NOT NULL COMMENT '所属操作类型',
 PRIMARY KEY (`id`) 
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户操作日志';
 
@@ -175,10 +175,10 @@ BEGIN;
 -- 初始化-菜单信息表数据
 -- ----------------------------
 -- 一级菜单
-insert into sys_menu values('1', '系统管理', '0', '1', 'system',           null, '', 1, 0, 'M', '0', '1', '', 'system',   null, sysdate(), null, null, '系统管理目录');
-insert into sys_menu values('2', '系统监控', '0', '2', 'monitor',          null, '', 1, 0, 'M', '0', '1', '', 'monitor',  null, sysdate(), null, null, '系统监控目录');
-insert into sys_menu values('3', '系统工具', '0', '3', 'tool',             null, '', 1, 0, 'M', '0', '1', '', 'tool',     null, sysdate(), null, null, '系统工具目录');
-insert into sys_menu values('4', '若依官网', '0', '4', 'http://ruoyi.vip', null, '', 0, 0, 'M', '0', '1', '', 'guide',    null, sysdate(), null, null, '若依官网地址');
+insert into sys_menu values('1', '系统管理', '0', '1', 'system',           null, 'system', 1, 0, 'M', '0', '1', '', 'system',   null, sysdate(), null, null, '系统管理目录');
+insert into sys_menu values('2', '系统监控', '0', '2', 'monitor',          null, 'monitor', 1, 0, 'M', '0', '1', '', 'monitor',  null, sysdate(), null, null, '系统监控目录');
+insert into sys_menu values('3', '系统工具', '0', '3', 'tool',             null, 'tool', 1, 0, 'M', '0', '1', '', 'tool',     null, sysdate(), null, null, '系统工具目录');
+insert into sys_menu values('4', '若依官网', '0', '4', 'http://ruoyi.vip', null, 'guide', 0, 0, 'M', '0', '1', '', 'guide',    null, sysdate(), null, null, '若依官网地址');
 -- 二级菜单
 insert into sys_menu values('100',  '用户管理', '1',   '1', 'user',       'system/user/index',        '', 1, 0, 'C', '0', '1', 'system:user:list',        'user',          null, sysdate(), null, null, '用户管理菜单');
 insert into sys_menu values('101',  '角色管理', '1',   '2', 'role',       'system/role/index',        '', 1, 0, 'C', '0', '1', 'system:role:list',        'peoples',       null, sysdate(), null, null, '角色管理菜单');
@@ -194,7 +194,7 @@ insert into sys_menu values('110',  '定时任务', '2',   '2', 'job',        'm
 insert into sys_menu values('111',  '数据监控', '2',   '3', 'druid',      'monitor/druid/index',      '', 1, 0, 'C', '0', '1', 'monitor:druid:list',      'druid',         null, sysdate(), null, null, '数据监控菜单');
 insert into sys_menu values('112',  '服务监控', '2',   '4', 'server',     'monitor/server/index',     '', 1, 0, 'C', '0', '1', 'monitor:server:list',     'server',        null, sysdate(), null, null, '服务监控菜单');
 insert into sys_menu values('113',  '缓存监控', '2',   '5', 'cache',      'monitor/cache/index',      '', 1, 0, 'C', '0', '1', 'monitor:cache:list',      'redis',         null, sysdate(), null, null, '缓存监控菜单');
-insert into sys_menu values('114',  '缓存列表', '2',   '6', 'cacheList',  'monitor/cache/list',       '', 1, 0, 'C', '0', '1', 'monitor:cache:list',      'redis-list',    null, sysdate(), null, null, '缓存列表菜单');
+insert into sys_menu values('114',  '缓存列表', '2',   '6', 'cacheList',  'monitor/cache/list',       '', 1, 0, 'C', '0', '1', 'monitor:cache:redis-list',      'redis-list',    null, sysdate(), null, null, '缓存列表菜单');
 insert into sys_menu values('115',  '表单构建', '3',   '1', 'build',      'tool/build/index',         '', 1, 0, 'C', '0', '1', 'tool:build:list',         'build',         null, sysdate(), null, null, '表单构建菜单');
 insert into sys_menu values('116',  '代码生成', '3',   '2', 'gen',        'tool/gen/index',           '', 1, 0, 'C', '0', '1', 'tool:gen:list',           'code',          null, sysdate(), null, null, '代码生成菜单');
 insert into sys_menu values('117',  '系统接口', '3',   '3', 'swagger',    'tool/swagger/index',       '', 1, 0, 'C', '0', '1', 'tool:swagger:list',       'swagger',       null, sysdate(), null, null, '系统接口菜单');
