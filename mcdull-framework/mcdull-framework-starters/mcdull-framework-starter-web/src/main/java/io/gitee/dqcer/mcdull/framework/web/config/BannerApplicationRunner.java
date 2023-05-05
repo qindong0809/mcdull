@@ -23,8 +23,8 @@ public class BannerApplicationRunner implements ApplicationRunner {
         ThreadUtil.execute( () -> {
             ThreadUtil.sleep(1, TimeUnit.SECONDS); // 延迟 1 秒
             log.info("\n----------------------------------------------------------\n\t" +
-                            "Druid monitor paged：\t{} \n\t" +
-                            "H2 console：\t{} \n\t" +
+                            "Druid monitor paged: \t{} \n\t" +
+                            "H2 console: \t{} \n\t" +
                             "----------------------------------------------------------",
                     "http://localhost:8990/druid","http://localhost:8990/h2"
             );
