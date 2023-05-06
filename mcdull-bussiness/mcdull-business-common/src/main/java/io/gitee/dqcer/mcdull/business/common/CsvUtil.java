@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.business.common;
 
+import cn.hutool.core.io.BOMInputStream;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.csv.CsvReader;
-import org.apache.commons.io.input.BOMInputStream;
 import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletResponse;

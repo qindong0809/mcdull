@@ -55,6 +55,7 @@ public class DataSourceBuilder {
             druidDataSource.setUrl(dataSourceProperty.getUrl());
             druidDataSource.setDriverClassName(dataSourceProperty.getDriverClassName());
             druidDataSource.setName("DS-Pool");
+            druidDataSource.setValidationQuery("SELECT 1");
             try {
                 druidDataSource.setFilters("stat, wall, log4j");
             } catch (SQLException e) {

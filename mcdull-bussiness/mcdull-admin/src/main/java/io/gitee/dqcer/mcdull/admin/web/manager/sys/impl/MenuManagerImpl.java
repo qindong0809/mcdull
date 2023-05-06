@@ -4,7 +4,6 @@ import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
 import io.gitee.dqcer.mcdull.admin.model.enums.MenuTypeEnum;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IMenuManager;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -101,6 +100,6 @@ public class MenuManagerImpl implements IMenuManager {
      */
     @Override
     public String innerLinkReplaceEach(String path) {
-        return StringUtils.replaceEach(path, new String[] { "http", "https", "www", "." }, new String[] { "", "", "", "/" });
+        return path;
     }
 }

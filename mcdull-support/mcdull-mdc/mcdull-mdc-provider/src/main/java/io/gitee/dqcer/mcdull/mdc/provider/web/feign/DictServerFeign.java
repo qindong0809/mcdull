@@ -1,15 +1,13 @@
 package io.gitee.dqcer.mcdull.mdc.provider.web.feign;
 
+import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.mdc.client.api.DictServiceApi;
 import io.gitee.dqcer.mcdull.mdc.client.dto.DictClientDTO;
 import io.gitee.dqcer.mcdull.mdc.client.vo.DictClientVO;
-import io.gitee.dqcer.mcdull.mdc.provider.web.service.DictService;
-import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -21,8 +19,6 @@ import java.util.List;
 @RestController
 public class DictServerFeign implements DictServiceApi {
 
-    @Resource
-    private DictService sysDictService;
 
     /**
      * 列表
@@ -32,7 +28,7 @@ public class DictServerFeign implements DictServiceApi {
      */
     @Override
     public Result<List<DictClientVO>> list(@Validated(ValidGroup.List.class) DictClientDTO dto) {
-        return sysDictService.list(dto);
+        return Result.ok();
     }
 
     /**
@@ -43,6 +39,6 @@ public class DictServerFeign implements DictServiceApi {
      */
     @Override
     public Result<DictClientVO> one(@Validated(ValidGroup.One.class) DictClientDTO dto) {
-        return sysDictService.one(dto);
+        return Result.ok();
     }
 }

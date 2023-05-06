@@ -26,12 +26,12 @@ spring:
       uri: mongodb://admin:123456@mcdull.io:27017/admin?authSource=admin&authMechanism=SCRAM-SHA-1
   sql:
     init:
-      mode: always
+      mode: embedded
       schema-locations: classpath:init.sql
 logging:
   level:
     root: info
-    io.gitee.dqcer.mcdull.framework: debug
+    io.gitee.dqcer.mcdull.framework: info
 mcdull:
   oss:
     url: rqoy1bmgr.hn-bkt.clouddn.com
@@ -39,3 +39,8 @@ mcdull:
     accessSecretKey: QRXPsheK_j_AaXZS8CqXoH5g4ed2WqrFgbcLRhqmF
     type: qiniu
 ignoredTableColumns: sys_log
+
+
+
+
+
