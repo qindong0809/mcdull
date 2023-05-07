@@ -44,6 +44,20 @@
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>
         </dependency>
+        <!--word start-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+        </dependency>
+        <!--word end-->
     </dependencies>
 
     <build>

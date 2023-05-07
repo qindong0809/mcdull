@@ -31,6 +31,7 @@
         <kaptcha.version>2.3.3</kaptcha.version>
         <qiniu.version>[7.7.0, 7.7.99]</qiniu.version>
         <easyexcel.version>3.2.1</easyexcel.version>
+        <poi.version>4.1.2</poi.version>
     </properties>
 
     <dependencyManagement>
@@ -166,6 +167,21 @@
                 <groupId>com.tngtech.archunit</groupId>
                 <artifactId>archunit-junit5</artifactId>
                 <version>${archunit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-scratchpad</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
