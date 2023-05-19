@@ -17,7 +17,7 @@ spring:
     host: mcdull.io5
   sql:
     init:
-      mode: embedded
+      mode: always
       schema-locations: classpath:init.sql
 logging:
   level:

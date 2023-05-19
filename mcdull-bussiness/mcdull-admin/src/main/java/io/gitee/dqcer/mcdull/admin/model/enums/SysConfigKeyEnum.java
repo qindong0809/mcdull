@@ -15,6 +15,11 @@ public enum SysConfigKeyEnum implements IEnum<String> {
      */
     CAPTCHA("sys.account.captchaEnabled", "登录是否开启验证码"),
 
+    /**
+     * 文件目录
+     */
+    FILE_DIRECTORY("sys.upload.file.directory", "上传文件目录"),
+
     ;
 
     SysConfigKeyEnum(String code, String text) {

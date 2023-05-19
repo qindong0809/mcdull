@@ -5,12 +5,17 @@ import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.config.properties.ThreadPoolProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.annotation.Resource;
+import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -48,5 +53,29 @@ public class ThreadPoolConfig {
         executor.initialize();
 
         return executor;
+    }
+
+    /**
+     * 线程池装饰->解决 异步多线程中传递上下文
+     *
+     * @author dqcer
+     * @since  2023/05/19
+     */
+    static class ThreadPoolDecorator implements TaskDecorator {
+        @Override
+        public Runnable decorate(Runnable runnable) {
+            RequestAttributes context = RequestContextHolder.currentRequestAttributes();
+            Map<String,String> previous = MDC.getCopyOfContextMap();
+            return () -> {
+                try {
+                    RequestContextHolder.setRequestAttributes(context);
+                    MDC.setContextMap(previous);
+                    runnable.run();
+                } finally {
+                    RequestContextHolder.resetRequestAttributes();
+                    MDC.clear();
+                }
+            };
+        }
     }
 }

@@ -14,9 +14,9 @@ import java.util.concurrent.TimeUnit;
  * @author dqcer
  * @since 2023/05/04
  */
-public class BannerApplicationRunner implements ApplicationRunner {
+public class BannerConfig implements ApplicationRunner {
 
-    private static final Logger log = LoggerFactory.getLogger(BannerApplicationRunner.class);
+    private static final Logger log = LoggerFactory.getLogger(BannerConfig.class);
 
     @Override
     public void run(ApplicationArguments args) throws Exception {

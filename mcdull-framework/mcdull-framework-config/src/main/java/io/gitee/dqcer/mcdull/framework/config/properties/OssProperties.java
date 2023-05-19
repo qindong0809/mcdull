@@ -8,6 +8,9 @@ package io.gitee.dqcer.mcdull.framework.config.properties;
  */
 public class OssProperties {
 
+    public static final Long DEFAULT_MAX_FILE_SIZE = 5L;
+    public static final Long DEFAULT_MAX_REQUEST_SIZE = 5L;
+
     private OssTypeEnum type = OssTypeEnum.LOCAL;
 
     private String url;
@@ -16,6 +19,25 @@ public class OssProperties {
 
     private String accessSecretKey;
 
+    private Long maxFileSize;
+
+    private Long maxRequestSize;
+
+    public Long getMaxFileSize() {
+        return maxFileSize == null ? DEFAULT_MAX_FILE_SIZE : maxFileSize;
+    }
+
+    public void setMaxFileSize(Long maxFileSize) {
+        this.maxFileSize = maxFileSize;
+    }
+
+    public Long getMaxRequestSize() {
+        return maxRequestSize == null ? DEFAULT_MAX_REQUEST_SIZE : maxRequestSize;
+    }
+
+    public void setMaxRequestSize(Long maxRequestSize) {
+        this.maxRequestSize = maxRequestSize;
+    }
 
     public OssTypeEnum getType() {
         return type;

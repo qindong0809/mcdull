@@ -81,7 +81,7 @@ public abstract class BaseInfoInterceptor implements HandlerInterceptor {
         if (enableAuth()) {
             String authorization = request.getHeader(HttpHeaderConstants.AUTHORIZATION);
             if (authorization == null || authorization.trim().length() == 0) {
-                log.warn("认证失败 头部参数'authorization'缺失 url: {}", requestUrl);
+                log.warn("Authentication failed. url: {} Request header parameter '{}' not exist!", requestUrl, HttpHeaderConstants.AUTHORIZATION);
                 response.getWriter().write(errorJson(CodeEnum.UN_AUTHORIZATION));
                 return false;
             }

@@ -418,7 +418,8 @@ create table `sys_config` (
 primary key (id)
 ) engine=innodb auto_increment=100 comment = '参数配置表';
 
-insert into sys_config values(4, '账号自助-验证码开关','sys.account.captchaEnabled','true', 'Y','是否开启验证码功能（true开启，false关闭）', null,  sysdate(), null, null, 1, null);
+insert into sys_config values(4,  '账号自助-验证码开关','sys.account.captchaEnabled','true',                 'Y','是否开启验证码功能（true开启，false关闭）', null,  sysdate(), null, null, 1, null);
+insert into sys_config values(10, '上传文件目录',      'sys.upload.file.directory', '/opt/mc-dull/upload/', 'Y','设置上传文件的目录',                     null,  sysdate(), null, null, 1, null);
 
 
 drop table if exists sys_dept;
@@ -531,3 +532,24 @@ insert into sys_dict_data values(26, 8,  '生成代码', '8',       'sys_oper_ty
 insert into sys_dict_data values(27, 9,  '清空数据', '9',       'sys_oper_type',       '',   'danger',  'N', '1', null, sysdate(), '', null, '清空操作',    1, null);
 insert into sys_dict_data values(28, 1,  '成功',     '1',       'sys_common_status',   '',   'primary', 'N', '1', null, sysdate(), '', null, '正常状态',   1, null);
 insert into sys_dict_data values(29, 2,  '失败',     '2',       'sys_common_status',   '',   'danger',  'N', '1', null, sysdate(), '', null, '停用状态',   1, null);
+
+
+drop table if exists `sys_file`;
+create table `sys_file` (
+`id` bigint(20) not null comment 'id',
+`created_time` datetime not null comment '创建时间',
+`created_by` bigint(20) not null comment '创建人',
+`updated_time` datetime default null comment '最后修改时间',
+`updated_by` bigint(20) default null comment '最后修改人',
+`del_flag` int(1) not null comment '删除标识（1/正常 2/删除）',
+`del_by` bigint(20) default null comment '删除人',
+`file_type` varchar(255) default null comment '文件类型',
+`bucket` varchar(255) default '' comment '桶',
+`path` varchar(255) default '' comment '文件相对地址',
+`url` varchar(255) default null comment '文件访问地址',
+`unique_file_name` varchar(255) default '' comment '唯一文件名',
+`file_md5` varchar(255) default null comment '文件md5',
+`original_file_name` varchar(255) default '' comment '原始文件名',
+`file_size` bigint(20) default null comment '大小',
+primary key (`id`) using btree
+) engine=innodb comment='文件上传';

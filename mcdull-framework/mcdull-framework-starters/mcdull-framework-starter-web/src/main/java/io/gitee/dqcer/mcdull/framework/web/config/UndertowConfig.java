@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * @since 2023/04/01
  */
 @Component
-public class UndertowWebServer implements WebServerFactoryCustomizer<UndertowServletWebServerFactory> {
+public class UndertowConfig implements WebServerFactoryCustomizer<UndertowServletWebServerFactory> {
     @Override
     public void customize(UndertowServletWebServerFactory factory) {
         factory.addDeploymentInfoCustomizers(deploymentInfo -> {

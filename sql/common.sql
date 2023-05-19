@@ -130,21 +130,21 @@ Result<configId, module, code> getPlaceholder(studyId, module)
 Result<subject, content> getMailContent(configId, module, code, values)
 --
 
-DROP TABLE IF EXISTS `sys_file`;
-CREATE TABLE `sys_file` (
-  `id` bigint(20) NOT NULL COMMENT 'ID',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `created_by` bigint(20) NOT NULL COMMENT '创建人',
-  `update_time` datetime NOT NULL COMMENT '最后修改时间',
-  `updated_by` bigint(20) NOT NULL COMMENT '最后修改人',
-  `biz_id` bigint(20) NOT NULL COMMENT '业务主键',
-  `file_type` varchar(255) DEFAULT NULL COMMENT '文件类型',
-  `bucket` varchar(255) DEFAULT '' COMMENT '桶',
-  `path` varchar(255) DEFAULT '' COMMENT '文件相对地址',
-  `url` varchar(255) DEFAULT NULL COMMENT '文件访问地址',
-  `unique_file_name` varchar(255) DEFAULT '' COMMENT '唯一文件名',
-  `file_md5` varchar(255) DEFAULT NULL COMMENT '文件md5',
-  `original_file_name` varchar(255) DEFAULT '' COMMENT '原始文件名',
-  `file_size` bigint(20) DEFAULT '0' COMMENT '大小',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文件上传';
+drop table if exists `sys_file`;
+create table `sys_file` (
+  `id` bigint(20) not null comment 'id',
+  `create_time` datetime not null comment '创建时间',
+  `created_by` bigint(20) not null comment '创建人',
+  `update_time` datetime not null comment '最后修改时间',
+  `updated_by` bigint(20) not null comment '最后修改人',
+  `biz_id` bigint(20) not null comment '业务主键',
+  `file_type` varchar(255) default null comment '文件类型',
+  `bucket` varchar(255) default '' comment '桶',
+  `path` varchar(255) default '' comment '文件相对地址',
+  `url` varchar(255) default null comment '文件访问地址',
+  `unique_file_name` varchar(255) default '' comment '唯一文件名',
+  `file_md5` varchar(255) default null comment '文件md5',
+  `original_file_name` varchar(255) default '' comment '原始文件名',
+  `file_size` bigint(20) default '0' comment '大小',
+  primary key (`id`) using btree
+) engine=innodb default charset=utf8mb4 comment='文件上传';
