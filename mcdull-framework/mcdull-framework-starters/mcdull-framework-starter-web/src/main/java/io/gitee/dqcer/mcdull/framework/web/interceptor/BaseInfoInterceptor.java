@@ -85,12 +85,12 @@ public abstract class BaseInfoInterceptor implements HandlerInterceptor {
                 response.getWriter().write(errorJson(CodeEnum.UN_AUTHORIZATION));
                 return false;
             }
-            String token = authorization.substring(HttpHeaderConstants.BEARER.length());
-            if (token.trim().length() == 0) {
-                log.warn("认证失败 头部参数缺失缺失'Bearer '");
+            if (!authorization.startsWith(HttpHeaderConstants.BEARER)) {
+                log.error("认证失败 头部参数缺失'{}'关键字", HttpHeaderConstants.BEARER);
                 response.getWriter().write(errorJson(CodeEnum.UN_AUTHORIZATION));
                 return false;
             }
+            String token = authorization.substring(HttpHeaderConstants.BEARER.length());
             // token 校验
             Result<UserSession> result = authCheck(token);
             if (!result.isOk()) {
