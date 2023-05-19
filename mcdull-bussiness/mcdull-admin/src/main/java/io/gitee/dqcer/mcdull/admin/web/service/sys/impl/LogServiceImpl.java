@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -47,20 +46,6 @@ public class LogServiceImpl extends BasicServiceImpl<ILogRepository> implements 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void save(LogDO dto) {
-        List<MenuDO> list = menuRepository.list();
-//        Optional<MenuDO> first = list.stream().filter(i -> i.getPerms().equals(dto.getType())).findFirst();
-//        if (!first.isPresent()) {
-//            throw new IllegalArgumentException();
-//        }
-//
-//        Map<Long, MenuDO> collect = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
-//        MenuDO menuDO = first.get();
-//        MenuDO parentMenu = collect.get(menuDO.getParentId());
-//        dto.setMenu(parentMenu.getId().toString());
-//
-//        MenuDO modelMenuDO = collect.get(parentMenu.getId());
-//        dto.setModel(modelMenuDO.getId().toString());
-
         baseRepository.save(dto);
     }
 
@@ -87,7 +72,6 @@ public class LogServiceImpl extends BasicServiceImpl<ILogRepository> implements 
             logVO.setButton(menuDO.getName());
             MenuDO menu = parentMenuMap.get(menuDO.getParentId());
             logVO.setMenu(menu.getName());
-//            logVO.setMethod(parentMenuMap.get(menu.getParentId()).getName());
 
             voList.add(logVO);
         }

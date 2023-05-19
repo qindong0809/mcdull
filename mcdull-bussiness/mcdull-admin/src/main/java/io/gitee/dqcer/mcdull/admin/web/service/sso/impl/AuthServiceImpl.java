@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sso.impl;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.useragent.Browser;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import io.gitee.dqcer.mcdull.admin.framework.auth.ISecurityService;
@@ -160,7 +161,11 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         UserAgent agent = UserAgentUtil.parse(agentUrl);
         UserLoginDO userLoginDO = new UserLoginDO();
         userLoginDO.setAccount(account);
-        userLoginDO.setBrowser(agent.getBrowser().getName());
+        String browserName = agent.getBrowser().getName();
+        if (Browser.Unknown.getName().equals(browserName)) {
+            browserName = agentUrl;
+        }
+        userLoginDO.setBrowser(browserName);
         userLoginDO.setOs(agent.getOs().getName());
         userLoginDO.setOperationType(operationType.getCode());
         return userLoginDO;

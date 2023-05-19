@@ -32,10 +32,58 @@
         <qiniu.version>[7.7.0, 7.7.99]</qiniu.version>
         <easyexcel.version>3.2.1</easyexcel.version>
         <poi.version>4.1.2</poi.version>
+        <itext7.version>7.2.5</itext7.version>
+        <html2pdf.version>4.0.5</html2pdf.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- mcdull framework 依赖 -->
+            <dependency>
+                <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-framework-base</artifactId>
+                <version>${mcdull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-framework-config</artifactId>
+                <version>${mcdull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-framework-enforcer</artifactId>
+                <version>${mcdull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-framework-starter-feign</artifactId>
+                <version>${mcdull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-framework-starter-mysql</artifactId>
+                <version>${mcdull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-framework-starter-nacos</artifactId>
+                <version>${mcdull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-framework-starter-redis</artifactId>
+                <version>${mcdull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-framework-starter-oss</artifactId>
+                <version>${mcdull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-framework-starter-web</artifactId>
+                <version>${mcdull.version}</version>
+            </dependency>
             <!-- spring boot 依赖 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -60,6 +108,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- orm 依赖-->
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -119,51 +168,6 @@
                 <version>${easyexcel.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.gitee.dqcer</groupId>
-                <artifactId>mcdull-framework-base</artifactId>
-                <version>${mcdull.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.gitee.dqcer</groupId>
-                <artifactId>mcdull-framework-config</artifactId>
-                <version>${mcdull.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.gitee.dqcer</groupId>
-                <artifactId>mcdull-framework-enforcer</artifactId>
-                <version>${mcdull.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.gitee.dqcer</groupId>
-                <artifactId>mcdull-framework-starter-feign</artifactId>
-                <version>${mcdull.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.gitee.dqcer</groupId>
-                <artifactId>mcdull-framework-starter-mysql</artifactId>
-                <version>${mcdull.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.gitee.dqcer</groupId>
-                <artifactId>mcdull-framework-starter-nacos</artifactId>
-                <version>${mcdull.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.gitee.dqcer</groupId>
-                <artifactId>mcdull-framework-starter-redis</artifactId>
-                <version>${mcdull.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.gitee.dqcer</groupId>
-                <artifactId>mcdull-framework-starter-oss</artifactId>
-                <version>${mcdull.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.gitee.dqcer</groupId>
-                <artifactId>mcdull-framework-starter-web</artifactId>
-                <version>${mcdull.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.tngtech.archunit</groupId>
                 <artifactId>archunit-junit5</artifactId>
                 <version>${archunit.version}</version>
@@ -182,6 +186,17 @@
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml</artifactId>
                 <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>itext7-core</artifactId>
+                <version>${itext7.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>html2pdf</artifactId>
+                <version>${html2pdf.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

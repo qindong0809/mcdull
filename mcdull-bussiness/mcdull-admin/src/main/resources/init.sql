@@ -1,25 +1,25 @@
-DROP TABLE IF EXISTS `sys_user`;
-CREATE TABLE `sys_user` (
-    `id` bigint NOT NULL COMMENT '主键',
-    `nick_name` varchar(256) NOT NULL COMMENT '昵称',
-    `account` varchar(128) NOT NULL COMMENT '账号',
-    `password` varchar(128) NOT NULL COMMENT '密码',
-    `salt` varchar(128) NOT NULL COMMENT '密码盐',
-    `email` varchar(128) DEFAULT NULL COMMENT '邮箱',
-    `phone` varchar(128) DEFAULT NULL COMMENT '手机号',
-    `last_login_time` datetime DEFAULT NULL COMMENT '最后一次登录时间',
-    `type` int NOT NULL  COMMENT '类型（1/自定义 2/内置）',
-    `dept_id` bigint NOT NULL COMMENT '部门id',
-    `created_by` bigint NOT NULL COMMENT '创建人',
-    `created_time` datetime NOT NULL COMMENT '创建时间',
-    `updated_by` bigint DEFAULT NULL COMMENT '更新人',
-    `updated_time` datetime DEFAULT NULL COMMENT '更新时间',
+drop table if exists `sys_user`;
+create table `sys_user` (
+    `id` bigint not null comment '主键',
+    `nick_name` varchar(256) not null comment '昵称',
+    `account` varchar(128) not null comment '账号',
+    `password` varchar(128) not null comment '密码',
+    `salt` varchar(128) not null comment '密码盐',
+    `email` varchar(128) default null comment '邮箱',
+    `phone` varchar(128) default null comment '手机号',
+    `last_login_time` datetime default null comment '最后一次登录时间',
+    `type` int not null  comment '类型（1/自定义 2/内置）',
+    `dept_id` bigint not null comment '部门id',
+    `created_by` bigint not null comment '创建人',
+    `created_time` datetime not null comment '创建时间',
+    `updated_by` bigint default null comment '更新人',
+    `updated_time` datetime default null comment '更新时间',
     `status`  char(1)         default null               comment '状态（1正常 2停用）',
-    `del_flag` int NOT NULL COMMENT '删除标识（1/正常 2/删除）',
-    `del_by` bigint DEFAULT NULL COMMENT '删除人',
-    PRIMARY KEY (`id`)
+    `del_flag` int not null comment '删除标识（1/正常 2/删除）',
+    `del_by` bigint default null comment '删除人',
+    primary key (`id`)
     );
-INSERT INTO sys_user VALUES(1589631293412503554, '麦兜', 'admin', '7a69d7186df1a65ed7af2ba00747488e2415bf1a', 'c7e87439-aef3-48e0-be26-678d0ab99345', 'admin@mcdull.com', '18238352145', null, 2, 100,1589631293412503554, '2022-10-31 07:20:54', null, null, '1', 1, null);
+insert into sys_user values(1589631293412503554, '麦兜', 'admin', '7a69d7186df1a65ed7af2ba00747488e2415bf1a', 'c7e87439-aef3-48e0-be26-678d0ab99345', 'admin@mcdull.com', '18238352145', null, 2, 100,1589631293412503554, '2022-10-31 07:20:54', null, null, '1', 1, null);
 
 
 drop table if exists sys_post;
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `sys_menu` (
 insert into sys_menu values('1', '系统管理', '0', '1', 'system',           null, '', 1, 0, 'M', '0', '1', 'system', 'system',   null, CURRENT_TIMESTAMP(), null, null, '系统管理目录');
 insert into sys_menu values('2', '系统监控', '0', '2', 'monitor',          null, '', 1, 0, 'M', '0', '1', 'monitor', 'monitor',  null, CURRENT_TIMESTAMP(), null, null, '系统监控目录');
 insert into sys_menu values('3', '系统工具', '0', '3', 'tool',             null, '', 1, 0, 'M', '0', '1', 'tool', 'tool',     null, CURRENT_TIMESTAMP(), null, null, '系统工具目录');
-insert into sys_menu values('4', '若依官网', '0', '4', 'http://ruoyi.vip', null, '', 0, 0, 'M', '0', '1', 'guide', 'guide',    null, CURRENT_TIMESTAMP(), null, null, '若依官网地址');
+insert into sys_menu values('4', '官网', '0', '4', 'http://ruoyi.vip', null, '', 0, 0, 'M', '0', '1', 'guide', 'guide',    null, CURRENT_TIMESTAMP(), null, null, '若依官网地址');
 -- 二级菜单
 insert into sys_menu values('100',  '用户管理', '1',   '1', 'user',       'system/user/index',        '', 1, 0, 'C', '0', '1', 'system:user:list',        'user',          null, CURRENT_TIMESTAMP(), null, null, '用户管理菜单');
 insert into sys_menu values('101',  '角色管理', '1',   '2', 'role',       'system/role/index',        '', 1, 0, 'C', '0', '1', 'system:role:list',        'peoples',       null, CURRENT_TIMESTAMP(), null, null, '角色管理菜单');
@@ -417,19 +417,19 @@ insert into sys_config values(4, '账号自助-验证码开关','sys.account.cap
 
 drop table if exists sys_dept;
 create table sys_dept (
-  id                bigint      not null                   comment '部门id',
-  parent_id         bigint      default null               comment '父部门id',
-  ancestors         varchar(1024)   default ''                 comment '祖级列表',
-  name              varchar(512)     not null                   comment '部门名称',
-  order_num         int          not null                   comment '显示顺序',
-  leader_id         varchar(20)     default null               comment '负责人',
-  status            char(1)         not null                   comment '状态（1正常 2停用）',
-  created_by        bigint      not null                   comment '创建人',
-  created_time      datetime        not null                   comment '创建时间',
-  updated_by        bigint      default null               comment '更新人',
-  updated_time      datetime        default null               comment '更新时间',
-  del_flag          int          not null                   comment '删除标识（1/正常 2/删除）',
-  del_by            bigint      default null               comment '删除人',
+id                bigint          not null                   comment '部门id',
+parent_id         bigint          default null               comment '父部门id',
+ancestors         varchar(1024)   default ''                 comment '祖级列表',
+name              varchar(512)    not null                   comment '部门名称',
+order_num         int             not null                   comment '显示顺序',
+leader_id         varchar(20)     default null               comment '负责人',
+status            char(1)         not null                   comment '状态（1正常 2停用）',
+created_by        bigint          not null                   comment '创建人',
+created_time      datetime        not null                   comment '创建时间',
+updated_by        bigint          default null               comment '更新人',
+updated_time      datetime        default null               comment '更新时间',
+del_flag          int             not null                   comment '删除标识（1/正常 2/删除）',
+del_by            bigint          default null               comment '删除人',
 primary key (id)
 ) ;
 
@@ -445,22 +445,21 @@ insert into sys_dept values(108,  102, '0,100,102',  '市场部门',   1, null, 
 insert into sys_dept values(109,  102, '0,100,102',  '财务部门',   2, null,  '1', 0, CURRENT_TIMESTAMP(), null, null, 1, null);
 
 drop table if exists sys_dict_type;
-create table sys_dict_type
-(
-    id                bigint      not null auto_increment    comment '字典主键',
-    dict_name         varchar(100)    default ''                 comment '字典名称',
-    dict_type         varchar(100)    default ''                 comment '字典类型',
-    status            char(1)         default '0'                comment '状态（1正常 2停用）',
-    created_by        varchar(64)     default null               comment '创建者',
-    created_time      datetime        not null                   comment '创建时间',
-    updated_by        varchar(64)     default ''                 comment '更新者',
-    updated_time      datetime        default null               comment '更新时间',
-    remark           varchar(500)     default null               comment '备注',
-    del_flag          int          not null                   comment '删除标识（1/正常 2/删除）',
-    del_by            bigint      default null               comment '删除人',
-    primary key (id),
-    unique (dict_type)
-) ;
+create table sys_dict_type(
+id                bigint          not null auto_increment    comment '字典主键',
+dict_name         varchar(100)    default ''                 comment '字典名称',
+dict_type         varchar(100)    default ''                 comment '字典类型',
+status            char(1)         default '0'                comment '状态（1正常 2停用）',
+created_by        varchar(64)     default null               comment '创建者',
+created_time      datetime        not null                   comment '创建时间',
+updated_by        varchar(64)     default ''                 comment '更新者',
+updated_time      datetime        default null               comment '更新时间',
+remark            varchar(500)    default null               comment '备注',
+del_flag          int             not null                   comment '删除标识（1/正常 2/删除）',
+del_by            bigint          default null               comment '删除人',
+primary key (id),
+unique (dict_type)
+);
 
 insert into sys_dict_type values(1,  '用户性别', 'sys_user_sex',        '1', null, CURRENT_TIMESTAMP(), '', null, '用户性别列表', 1, null);
 insert into sys_dict_type values(2,  '菜单状态', 'sys_show_hide',       '1', null, CURRENT_TIMESTAMP(), '', null, '菜单状态列表', 1, null);
@@ -475,26 +474,25 @@ insert into sys_dict_type values(10, '系统状态', 'sys_common_status',   '1',
 
 
 drop table if exists sys_dict_data;
-create table sys_dict_data
-(
-    id        bigint      not null auto_increment    comment '字典编码',
-    dict_sort        int          default 0                  comment '字典排序',
-    dict_label       varchar(100)    default ''                 comment '字典标签',
-    dict_value       varchar(100)    default ''                 comment '字典键值',
-    dict_type        varchar(100)    default ''                 comment '字典类型',
-    css_class        varchar(100)    default null               comment '样式属性（其他样式扩展）',
-    list_class       varchar(100)    default null               comment '表格回显样式',
-    is_default       char(1)         default 'N'                comment '是否默认（Y是 N否）',
-    status           char(1)         default null               comment '状态（1正常 2停用）',
-    created_by        bigint    default null               comment '创建者',
-    created_time      datetime                                  comment '创建时间',
-    updated_by        bigint    default null               comment '更新者',
-    updated_time      datetime                                  comment '更新时间',
-    remark           varchar(500)    default null               comment '备注',
-    del_flag          int          not null                   comment '删除标识（1/正常 2/删除）',
-    del_by            bigint      default null               comment '删除人',
-    primary key (id)
-) ;
+create table sys_dict_data(
+id               bigint          not null auto_increment    comment '字典编码',
+dict_sort        int             default 0                  comment '字典排序',
+dict_label       varchar(100)    default ''                 comment '字典标签',
+dict_value       varchar(100)    default ''                 comment '字典键值',
+dict_type        varchar(100)    default ''                 comment '字典类型',
+css_class        varchar(100)    default null               comment '样式属性（其他样式扩展）',
+list_class       varchar(100)    default null               comment '表格回显样式',
+is_default       char(1)         default 'N'                comment '是否默认（Y是 N否）',
+status           char(1)         default null               comment '状态（1正常 2停用）',
+created_by       bigint          default null               comment '创建者',
+created_time     datetime        not null                   comment '创建时间',
+updated_by       bigint          default null               comment '更新者',
+updated_time     datetime        default null               comment '更新时间',
+remark           varchar(500)    default null               comment '备注',
+del_flag         int             not null                   comment '删除标识（1/正常 2/删除）',
+del_by           bigint          default null               comment '删除人',
+primary key (id)
+);
 
 insert into sys_dict_data values(1,  1,  '男',       '0',       'sys_user_sex',        '',   '',        'Y', '1', null, CURRENT_TIMESTAMP(), null, null, '性别男',    1, null);
 insert into sys_dict_data values(2,  2,  '女',       '1',       'sys_user_sex',        '',   '',        'N', '1', null, CURRENT_TIMESTAMP(), null, null, '性别女',    1, null);

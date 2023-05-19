@@ -4,7 +4,6 @@ package io.gitee.dqcer.mcdull.admin.web.controller.monitor;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.LoginInfoLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.LogVO;
-import io.gitee.dqcer.mcdull.admin.model.vo.sys.LoginInfoVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.ILogService;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.ILoginInfoService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
