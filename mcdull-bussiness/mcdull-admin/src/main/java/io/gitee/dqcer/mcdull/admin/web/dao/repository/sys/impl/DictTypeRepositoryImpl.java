@@ -1,5 +1,16 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
+import cloud.tianai.captcha.common.constant.CaptchaTypeConstant;
+import cloud.tianai.captcha.generator.ImageCaptchaGenerator;
+import cloud.tianai.captcha.generator.ImageTransform;
+import cloud.tianai.captcha.generator.common.model.dto.GenerateParam;
+import cloud.tianai.captcha.generator.common.model.dto.ImageCaptchaInfo;
+import cloud.tianai.captcha.generator.impl.MultiImageCaptchaGenerator;
+import cloud.tianai.captcha.generator.impl.transform.Base64ImageTransform;
+import cloud.tianai.captcha.resource.ImageCaptchaResourceManager;
+import cloud.tianai.captcha.resource.impl.DefaultImageCaptchaResourceManager;
+import cloud.tianai.captcha.validator.ImageCaptchaValidator;
+import cloud.tianai.captcha.validator.impl.BasicCaptchaTrackValidator;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -16,6 +27,7 @@ import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
 * 字典数据 数据库操作封装实现层

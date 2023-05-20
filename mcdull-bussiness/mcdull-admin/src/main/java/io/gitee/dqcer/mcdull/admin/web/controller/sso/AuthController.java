@@ -61,6 +61,7 @@ public class AuthController {
      *
      * @return {@link Result<String>}
      */
+    @UnAuthorize
     @PostMapping("logout")
     public Result<String> logout() {
         return authService.logout();

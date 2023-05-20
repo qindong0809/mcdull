@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.service.common.impl;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.crypto.SecureUtil;
 import io.gitee.dqcer.mcdull.admin.model.entity.common.SysFileDO;
 import io.gitee.dqcer.mcdull.admin.model.enums.SysConfigKeyEnum;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.common.ISysFileRepository;
@@ -43,7 +42,8 @@ public class FileServiceImpl extends BasicServiceImpl<ISysFileRepository> implem
         long size = multipartFile.getSize();
         String originalFilename = multipartFile.getOriginalFilename();
         InputStream inputStream = multipartFile.getInputStream();
-        String md5 = SecureUtil.md5(inputStream);
+//        String md5 = SecureUtil.md5(inputStream);
+        String md5 = "dsfsdf";
         SysFileDO entity = new SysFileDO();
         entity.setFileSize(size);
         entity.setFileMd5(md5);

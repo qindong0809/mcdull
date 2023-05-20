@@ -19,6 +19,7 @@ spring:
     init:
       mode: always
       schema-locations: classpath:init.sql
+      encoding: utf-8
 logging:
   level:
     root: info

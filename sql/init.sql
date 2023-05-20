@@ -460,7 +460,7 @@ create table sys_dict_type
     status            char(1)         default '0'                comment '状态（1正常 2停用）',
     created_by        varchar(64)     default null               comment '创建者',
     created_time      datetime        not null                   comment '创建时间',
-    updated_by        varchar(64)     default ''                 comment '更新者',
+    updated_by        varchar(64)     default null               comment '更新者',
     updated_time      datetime        default null               comment '更新时间',
     remark           varchar(500)     default null               comment '备注',
     del_flag          int(1)          not null                   comment '删除标识（1/正常 2/删除）',
@@ -469,16 +469,16 @@ create table sys_dict_type
     unique (dict_type)
 ) engine=innodb auto_increment=100 comment = '字典类型表';
 
-insert into sys_dict_type values(1,  '用户性别', 'sys_user_sex',        '1', null, sysdate(), '', null, '用户性别列表', 1, null);
-insert into sys_dict_type values(2,  '菜单状态', 'sys_show_hide',       '1', null, sysdate(), '', null, '菜单状态列表', 1, null);
-insert into sys_dict_type values(3,  '系统开关', 'sys_normal_disable',  '1', null, sysdate(), '', null, '系统开关列表', 1, null);
-insert into sys_dict_type values(4,  '任务状态', 'sys_job_status',      '1', null, sysdate(), '', null, '任务状态列表', 1, null);
-insert into sys_dict_type values(5,  '任务分组', 'sys_job_group',       '1', null, sysdate(), '', null, '任务分组列表', 1, null);
-insert into sys_dict_type values(6,  '系统是否', 'sys_yes_no',          '1', null, sysdate(), '', null, '系统是否列表', 1, null);
-insert into sys_dict_type values(7,  '通知类型', 'sys_notice_type',     '1', null, sysdate(), '', null, '通知类型列表', 1, null);
-insert into sys_dict_type values(8,  '通知状态', 'sys_notice_status',   '1', null, sysdate(), '', null, '通知状态列表', 1, null);
-insert into sys_dict_type values(9,  '操作类型', 'sys_oper_type',       '1', null, sysdate(), '', null, '操作类型列表', 1, null);
-insert into sys_dict_type values(10, '系统状态', 'sys_common_status',   '1', null, sysdate(), '', null, '登录状态列表', 1, null);
+insert into sys_dict_type values(1,  '用户性别', 'sys_user_sex',        '1', null, sysdate(), null, null, '用户性别列表', 1, null);
+insert into sys_dict_type values(2,  '菜单状态', 'sys_show_hide',       '1', null, sysdate(), null, null, '菜单状态列表', 1, null);
+insert into sys_dict_type values(3,  '系统开关', 'sys_normal_disable',  '1', null, sysdate(), null, null, '系统开关列表', 1, null);
+insert into sys_dict_type values(4,  '任务状态', 'sys_job_status',      '1', null, sysdate(), null, null, '任务状态列表', 1, null);
+insert into sys_dict_type values(5,  '任务分组', 'sys_job_group',       '1', null, sysdate(), null, null, '任务分组列表', 1, null);
+insert into sys_dict_type values(6,  '系统是否', 'sys_yes_no',          '1', null, sysdate(), null, null, '系统是否列表', 1, null);
+insert into sys_dict_type values(7,  '通知类型', 'sys_notice_type',     '1', null, sysdate(), null, null, '通知类型列表', 1, null);
+insert into sys_dict_type values(8,  '通知状态', 'sys_notice_status',   '1', null, sysdate(), null, null, '通知状态列表', 1, null);
+insert into sys_dict_type values(9,  '操作类型', 'sys_oper_type',       '1', null, sysdate(), null, null, '操作类型列表', 1, null);
+insert into sys_dict_type values(10, '系统状态', 'sys_common_status',   '1', null, sysdate(), null, null, '登录状态列表', 1, null);
 
 
 drop table if exists sys_dict_data;
