@@ -14,6 +14,9 @@ import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
 * 岗位信息 数据库操作封装实现层
 *
@@ -39,5 +42,16 @@ public class PostRepositoryImpl extends ServiceImpl<PostMapper, PostDO>  impleme
         }
         query.eq(PostDO::getPostName, postName);
         return !baseMapper.exists(query);
+    }
+
+    @Override
+    public List<PostDO> getAll() {
+        LambdaQueryWrapper<PostDO> query = Wrappers.lambdaQuery();
+        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
+        List<PostDO> list = baseMapper.selectList(query);
+        if (list.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return list;
     }
 }

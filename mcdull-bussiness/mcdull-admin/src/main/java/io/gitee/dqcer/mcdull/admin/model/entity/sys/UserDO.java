@@ -14,7 +14,7 @@ import java.time.LocalTime;
  * @author dqcer
  * @since 2022/11/07
  */
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @ToString
 @Data
 @TableName("sys_user")

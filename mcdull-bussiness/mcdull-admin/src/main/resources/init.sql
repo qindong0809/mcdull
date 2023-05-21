@@ -43,10 +43,26 @@ create table sys_post
 -- ----------------------------
 -- 初始化-岗位信息表数据
 -- ----------------------------
-insert into sys_post values(1, 'ceo',  '董事长',    1, '1', null, CURRENT_TIMESTAMP(), '', null, '', 1, null);
-insert into sys_post values(2, 'se',   '项目经理',  2, '1', null, CURRENT_TIMESTAMP(), '', null, '', 1, null);
-insert into sys_post values(3, 'hr',   '人力资源',  3, '1', null, CURRENT_TIMESTAMP(), '', null, '', 1, null);
-insert into sys_post values(4, 'user', '普通员工',  4, '1', null, CURRENT_TIMESTAMP(), '', null, '', 1, null);
+insert into sys_post values(1, 'ceo',  '董事长',    1, '1', null, CURRENT_TIMESTAMP(), null, null, '', 1, null);
+insert into sys_post values(2, 'se',   '项目经理',  2, '1', null, CURRENT_TIMESTAMP(), null, null, '', 1, null);
+insert into sys_post values(3, 'hr',   '人力资源',  3, '1', null, CURRENT_TIMESTAMP(), null, null, '', 1, null);
+insert into sys_post values(4, 'user', '普通员工',  4, '1', null, CURRENT_TIMESTAMP(), null, null, '', 1, null);
+
+
+drop table if exists sys_user_post;
+create table sys_user_post(
+user_id   bigint not null comment '用户ID',
+post_id   bigint not null comment '岗位ID'
+);
+
+insert into sys_user_post values ( '1', '1');
+insert into sys_user_post values ( '2', '2');
+
+-- ----------------------------
+-- 初始化-用户与岗位关联表数据
+-- ----------------------------
+insert into sys_user_post values ('1', '1');
+insert into sys_user_post values ('2', '2');
 
 DROP TABLE IF EXISTS `sys_user_login`;
 CREATE TABLE IF NOT EXISTS `sys_user_login` (

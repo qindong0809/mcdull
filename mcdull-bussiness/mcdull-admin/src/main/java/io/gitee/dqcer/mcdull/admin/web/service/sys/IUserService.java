@@ -75,5 +75,5 @@ public interface IUserService {
     Result<Long> resetPassword(UserLiteDTO dto);
 
 
-
+    Result<Boolean> export(UserLiteDTO dto);
 }

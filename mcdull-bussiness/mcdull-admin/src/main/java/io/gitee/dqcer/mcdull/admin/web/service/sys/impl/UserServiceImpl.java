@@ -1,33 +1,45 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys.impl;
 
 import cn.hutool.core.util.ObjUtil;
+import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.framework.transformer.IUserTransformerService;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IPostRepository;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IUserManager;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IUserService;
+import io.gitee.dqcer.mcdull.business.common.FileNameGeneratorUtil;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.Md5Util;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
+import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +57,12 @@ public class UserServiceImpl implements IUserService, IUserTransformerService {
 
     @Resource
     private IUserManager userManager;
+
+    @Resource
+    private IRoleRepository repository;
+
+    @Resource
+    private IPostRepository postRepository;
 
     /**
      * 列表页
@@ -70,9 +88,38 @@ public class UserServiceImpl implements IUserService, IUserTransformerService {
      */
     @Override
     public Result<UserDetailVO> detail(Long userId) {
-        UserDO userDO = userRepository.getById(userId);
-        UserDetailVO detailVO = userManager.entityToDetailVo(userDO);
-        return Result.ok(detailVO);
+        UserDetailVO vo = new UserDetailVO();
+        if (ObjUtil.isNotNull(userId)) {
+            UserDO userDO = userRepository.getById(userId);
+            vo = userManager.entityToDetailVo(userDO);
+            return Result.ok(vo);
+        }
+        List<RoleDO> roleList = repository.getAll();
+
+        List<BaseVO<Long, String>> roleBaseList = new ArrayList<>();
+        for (RoleDO roleDO : roleList) {
+            if (!UserContextHolder.isAdmin()) {
+//                if ("2".equals(roleDO.getType())) {
+//                    continue;
+//                }
+            }
+            BaseVO<Long, String> baseVO = new BaseVO<>();
+            baseVO.setId(roleDO.getId());
+            baseVO.setName(roleDO.getName());
+            roleBaseList.add(baseVO);
+        }
+        vo.setRoles(roleBaseList);
+
+        List<PostDO> postList = postRepository.getAll();
+        List<BaseVO<Long, String>> postBaseList = new ArrayList<>();
+        for (PostDO postDO : postList) {
+            BaseVO<Long, String> baseVO = new BaseVO<>();
+            baseVO.setId(postDO.getId());
+            baseVO.setName(postDO.getPostName());
+            postBaseList.add(baseVO);
+        }
+        vo.setPosts(postBaseList);
+        return Result.ok(vo);
     }
 
 
@@ -149,6 +196,20 @@ public class UserServiceImpl implements IUserService, IUserTransformerService {
     @Override
     public Result<Long> resetPassword(UserLiteDTO dto) {
         return null;
+    }
+
+    @SneakyThrows
+    @Override
+    public Result<Boolean> export(UserLiteDTO dto) {
+        dto.setNotNeedPaged(true);
+        Result<PagedVO<UserVO>> pagedVOResult = this.listByPage(dto);
+        List<UserVO> list = ResultParse.getPageData(pagedVOResult, Result::getData);
+
+        HttpServletResponse response = ServletUtil.getResponse();
+        String fileName = FileNameGeneratorUtil.simple("用户信息");
+        ServletUtil.setDownloadExcelHttpHeader(response, fileName);
+        EasyExcel.write(response.getOutputStream(),  UserVO.class).sheet().doWrite(list);
+        return Result.ok(true);
     }
 
     /**

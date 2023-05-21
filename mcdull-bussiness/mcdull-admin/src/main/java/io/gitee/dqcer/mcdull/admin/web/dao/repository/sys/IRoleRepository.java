@@ -63,4 +63,7 @@ public interface IRoleRepository extends IService<RoleDO> {
      * @return {@link List}<{@link RoleMenuDO}>
      */
     List<RoleMenuDO> getMenuByRole(List<Long> roles);
+
+    List<RoleDO> getAll();
+
 }

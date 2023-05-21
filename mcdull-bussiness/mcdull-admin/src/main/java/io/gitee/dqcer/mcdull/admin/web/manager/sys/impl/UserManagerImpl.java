@@ -1,11 +1,14 @@
 package io.gitee.dqcer.mcdull.admin.web.manager.sys.impl;
 
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IPostRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserPostRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRoleRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IUserManager;
 import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
@@ -31,6 +34,12 @@ public class UserManagerImpl implements IUserManager {
     @Resource
     private IRoleRepository roleRepository;
 
+    @Resource
+    private IUserPostRepository userPostRepository;
+
+    @Resource
+    private IPostRepository postRepository;
+
     /**
      * entity 转 VO
      *
@@ -43,7 +52,7 @@ public class UserManagerImpl implements IUserManager {
         if (vo == null) {
             return null;
         }
-        List<BaseVO> baseRoles = this.getBaseRoles(vo.getId());
+        List<BaseVO<Long, String>> baseRoles = this.getBaseRoles(vo.getId());
         vo.setRoles(baseRoles);
         return vo;
     }
@@ -51,17 +60,32 @@ public class UserManagerImpl implements IUserManager {
     @Override
     public UserDetailVO entityToDetailVo(UserDO userDO) {
         UserDetailVO vo = UserConvert.convertToUserDetailVO(userDO);
-        List<BaseVO> baseRoles = this.getBaseRoles(vo.getId());
+        List<BaseVO<Long, String>> baseRoles = this.getBaseRoles(vo.getId());
         vo.setRoles(baseRoles);
+        vo.setPosts(this.getBasePosts(vo.getId()));
         return vo;
     }
 
-    private List<BaseVO> getBaseRoles(Long vo) {
-        List<BaseVO> baseRoles = new ArrayList<>();
+    private List<BaseVO<Long, String>> getBasePosts(Long id) {
+        List<BaseVO<Long, String>> baseRoles = new ArrayList<>();
+        List<Long> list = userPostRepository.listPostByUserId(id);
+        if (!list.isEmpty()) {
+            for (PostDO postDO : postRepository.listByIds(list)) {
+                BaseVO<Long, String> role = new BaseVO<>();
+                role.setId(postDO.getId());
+                role.setName(postDO.getPostName());
+                baseRoles.add(role);
+            }
+        }
+        return baseRoles;
+    }
+
+    private List<BaseVO<Long, String>> getBaseRoles(Long vo) {
+        List<BaseVO<Long, String>> baseRoles = new ArrayList<>();
         List<Long> list = userRoleRepository.listRoleByUserId(vo);
         if (!list.isEmpty()) {
             for (RoleDO roleDO : roleRepository.listByIds(list)) {
-                BaseVO role = new BaseVO();
+                BaseVO<Long, String> role = new BaseVO<>();
                 role.setId(roleDO.getId());
                 role.setName(roleDO.getName());
                 baseRoles.add(role);

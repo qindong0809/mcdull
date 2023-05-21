@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.mdc.provider.web.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.FeignResultParse;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.mdc.provider.model.convert.LogConvert;
 import io.gitee.dqcer.mcdull.mdc.provider.model.dto.LogLiteDTO;
@@ -52,7 +52,7 @@ public class LogService {
         List<LogVO> voList = new ArrayList<>();
         for (LogDO entity : entityPage.getRecords()) {
             LogVO logVO = LogConvert.entity2Vo(entity);
-            String nickname = FeignResultParse.getInstance(userClientService.getDetail(logVO.getAccountId())).getNickname();
+            String nickname = ResultParse.getInstance(userClientService.getDetail(logVO.getAccountId())).getNickname();
             logVO.setAccountIdStr(nickname);
             voList.add(logVO);
         }

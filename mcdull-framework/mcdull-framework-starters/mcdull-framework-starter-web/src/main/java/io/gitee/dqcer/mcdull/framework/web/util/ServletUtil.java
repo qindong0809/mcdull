@@ -41,7 +41,7 @@ public class ServletUtil {
             log.error(e.getMessage(), e);
             throw new BusinessException();
         }
-        response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+        response.setHeader("Content-disposition", "attachment;filename=" + fileName);
     }
 
     public static HttpServletRequest getRequest() {

@@ -15,12 +15,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.TreeSelectVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -72,7 +67,7 @@ public class UserController {
      * @return {@link Result}<{@link UserVO}>
      */
     @Authorized("system:user:query")
-    @GetMapping("{userId}" )
+    @GetMapping({"/", "{userId}"} )
     public Result<UserDetailVO> detail(@PathVariable(value = "userId", required = false) Long userId) {
         return userService.detail(userId);
     }
@@ -132,5 +127,11 @@ public class UserController {
     @PostMapping("user/reset-password/update")
     public Result<Long> resetPassword(@RequestBody @Validated(value = {ValidGroup.Update.class}) UserLiteDTO dto){
         return userService.resetPassword(dto);
+    }
+
+    @Authorized("system:user:export")
+    @PostMapping("/export")
+    public Result<Boolean> export(@Validated(ValidGroup.Paged.class) UserLiteDTO dto) {
+        return userService.export(dto);
     }
 }

@@ -3,20 +3,22 @@ package io.gitee.dqcer.mcdull.framework.base.wrapper;
 import io.gitee.dqcer.mcdull.framework.base.exception.FeignBizException;
 import io.gitee.dqcer.mcdull.framework.base.exception.FeignServiceErrorException;
 import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.function.Function;
 
 /**
- * feign结果解析
+ * result parse
  *
  * @author dqcer
  * @since 2022/04/22
  */
-public class FeignResultParse {
+public class ResultParse {
 
-    public final static Logger log = LoggerFactory.getLogger(FeignResultParse.class);
+    public final static Logger log = LoggerFactory.getLogger(ResultParse.class);
 
     /**
      * 获得实例，支持函数式但不推荐使用
@@ -31,6 +33,11 @@ public class FeignResultParse {
      */
     public static <T> T getInstance(Result<T> result, Function<Result<T>, T> function) {
         return function.apply(result);
+    }
+
+    public static <T> List<T> getPageData(Result<PagedVO<T>> result, Function<Result<PagedVO<T>>, PagedVO<T>> function) {
+        PagedVO<T> apply = function.apply(result);
+        return apply.getList();
     }
 
 

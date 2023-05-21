@@ -149,4 +149,16 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
         }
         return list;
     }
+
+    @Override
+    public List<RoleDO> getAll() {
+        LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
+        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
+        List<RoleDO> list = baseMapper.selectList(query);
+        if (list.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return list;
+    }
+
 }

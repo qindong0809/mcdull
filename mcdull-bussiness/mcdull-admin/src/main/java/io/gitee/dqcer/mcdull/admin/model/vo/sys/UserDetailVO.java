@@ -57,5 +57,11 @@ public class UserDetailVO implements VO {
     /**
      * 角色集
      */
-    private List<BaseVO> roles;
+    private List<BaseVO<Long, String>> roles;
+
+    private List<BaseVO<Long, String>> posts;
+
+    private List<Long> roleIds;
+
+    private List<Long> postIds;
 }

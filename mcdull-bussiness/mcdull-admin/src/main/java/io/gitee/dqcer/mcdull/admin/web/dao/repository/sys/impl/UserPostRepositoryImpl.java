@@ -3,12 +3,12 @@ package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserPostDO;
+import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.UserPostMapper;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserPostRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserRoleDO;
-import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.UserRoleMapper;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRoleRepository;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @since 2022/12/25
  */
 @Service
-public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRoleDO> implements IUserRoleRepository {
+public class UserPostRepositoryImpl extends ServiceImpl<UserPostMapper, UserPostDO> implements IUserPostRepository {
 
     /**
      * 通过用户id获取角色id列表
@@ -34,41 +34,35 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
      * @return {@link List}<{@link Long}>
      */
     @Override
-    public List<Long> listRoleByUserId(Long userId) {
-        LambdaQueryWrapper<UserRoleDO> query = Wrappers.lambdaQuery();
-        query.eq(UserRoleDO::getUserId, userId);
-        List<UserRoleDO> list = baseMapper.selectList(query);
+    public List<Long> listPostByUserId(Long userId) {
+        LambdaQueryWrapper<UserPostDO> query = Wrappers.lambdaQuery();
+        query.eq(UserPostDO::getUserId, userId);
+        List<UserPostDO> list = baseMapper.selectList(query);
         if (list.isEmpty()) {
             return Collections.emptyList();
         }
-        return list.stream().map(UserRoleDO::getRoleId).collect(Collectors.toList());
+        return list.stream().map(UserPostDO::getPostId).collect(Collectors.toList());
     }
 
-    /**
-     * 更新根据用户id
-     *
-     * @param userId  用户id
-     * @param roleIds 角色id
-     */
+
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void updateByUserId(Long userId, List<Long> roleIds) {
-        LambdaQueryWrapper<UserRoleDO> query = Wrappers.lambdaQuery();
-        query.eq(UserRoleDO::getUserId, userId);
+    public void updateByUserId(Long userId, List<Long> postIds) {
+        LambdaQueryWrapper<UserPostDO> query = Wrappers.lambdaQuery();
+        query.eq(UserPostDO::getUserId, userId);
         int row = baseMapper.delete(query);
         if (row == GlobalConstant.Database.ROW_0) {
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
 
-
-        if (ObjUtil.isNull(roleIds)) {
+        if (ObjUtil.isNull(postIds)) {
             return;
         }
 
-        List<UserRoleDO> entities = new ArrayList<>();
-        for (Long roleId : roleIds) {
-            UserRoleDO entity = new UserRoleDO();
-            entity.setRoleId(roleId);
+        List<UserPostDO> entities = new ArrayList<>();
+        for (Long postId : postIds) {
+            UserPostDO entity = new UserPostDO();
+            entity.setPostId(postId);
             entity.setUserId(userId);
             entities.add(entity);
         }

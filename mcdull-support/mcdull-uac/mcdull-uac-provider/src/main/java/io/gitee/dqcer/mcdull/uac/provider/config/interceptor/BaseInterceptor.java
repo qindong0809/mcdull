@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.StrUtil;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.FeignResultParse;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
@@ -94,7 +94,7 @@ public class BaseInterceptor implements HandlerInterceptor {
                 String userPowerCacheKey = MessageFormat.format("web:interceptor:power:{0}", unifySession.getUserId());
                 List<UserPowerVO> userPower = cacheChannel.get(userPowerCacheKey, List.class);
                 if (ObjUtil.isNull(userPower)) {
-                    userPower = FeignResultParse.getInstance(userService.queryResourceModules(unifySession.getUserId()));
+                    userPower = ResultParse.getInstance(userService.queryResourceModules(unifySession.getUserId()));
                     if (log.isDebugEnabled()) {
                         log.debug("userPower: {}", userPower);
                     }

@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.impl;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RemoteDictVO;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.StrUtil;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.FeignResultParse;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.mdc.client.dto.DictClientDTO;
 import io.gitee.dqcer.mcdull.mdc.client.service.DictClientService;
@@ -61,7 +61,7 @@ public class DictManagerImpl implements IDictManager {
         if (log.isDebugEnabled()) {
             log.debug("查询字典数据请求参数: {}", dto);
         }
-        DictClientVO dictVO = FeignResultParse.getInstance(dictClientService.one(dto));
+        DictClientVO dictVO = ResultParse.getInstance(dictClientService.one(dto));
         RemoteDictVO vo = new RemoteDictVO();
         vo.setCode(dictVO.getCode());
         vo.setName(dictVO.getName());

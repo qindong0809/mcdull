@@ -27,7 +27,7 @@ public class FileController implements BasicController {
 
 
     @PostMapping("/upload")
-    public Result uploadFile(@NotNull MultipartFile file) {
+    public Result<?> uploadFile(@NotNull MultipartFile file) {
         return fileService.save(file);
     }
 

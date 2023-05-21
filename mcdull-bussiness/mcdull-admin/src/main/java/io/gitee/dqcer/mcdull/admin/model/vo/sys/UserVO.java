@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.model.vo.sys;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.VO;
@@ -27,11 +28,13 @@ public class UserVO implements VO {
     /**
      * 创建时间
      */
+    @ExcelProperty("创建时间")
     private Date createdTime;
 
     /**
      * 创建人
      */
+    @ExcelProperty("创建人")
     private Long createdBy;
 
     @Transform(from = "createdBy", transformer = UserTransformer.class)
@@ -108,7 +111,7 @@ public class UserVO implements VO {
     /**
      * 角色集
      */
-    private List<BaseVO> roles;
+    private List<BaseVO<Long, String>> roles;
 
     @Override
     public String toString() {
@@ -135,11 +138,11 @@ public class UserVO implements VO {
                 '}';
     }
 
-    public List<BaseVO> getRoles() {
+    public List<BaseVO<Long, String>> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<BaseVO> roles) {
+    public void setRoles(List<BaseVO<Long, String>> roles) {
         this.roles = roles;
     }
 

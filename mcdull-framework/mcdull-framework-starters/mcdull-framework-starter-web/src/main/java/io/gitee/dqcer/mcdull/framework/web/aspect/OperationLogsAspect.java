@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.web.aspect;
 
+import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -101,6 +102,9 @@ public class OperationLogsAspect {
         Map<String, String> params = new HashMap<>(16);
 
         for (Object arg : args) {
+            if (ObjUtil.isNull(arg)) {
+                continue;
+            }
             if (arg instanceof HttpServletRequest) {
                 continue;
             }

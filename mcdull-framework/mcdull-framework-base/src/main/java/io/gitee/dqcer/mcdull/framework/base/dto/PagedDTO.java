@@ -93,8 +93,7 @@ public class PagedDTO extends KeywordDTO implements IPaged {
         return notNeedPaged;
     }
 
-    public PagedDTO setNotNeedPaged(Boolean notNeedPaged) {
+    public void setNotNeedPaged(Boolean notNeedPaged) {
         this.notNeedPaged = notNeedPaged;
-        return this;
     }
 }

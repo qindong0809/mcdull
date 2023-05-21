@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.PostLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostDO;
 
+import java.util.List;
+
 /**
  * 岗位信息 数据库操作封装接口层
  *
@@ -16,4 +18,7 @@ public interface IPostRepository extends IService<PostDO> {
     Page<PostDO> selectPage(PostLiteDTO dto);
 
     boolean checkBusinessUnique(Long id, String postName);
+
+    List<PostDO> getAll();
+
 }
