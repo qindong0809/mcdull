@@ -10,7 +10,6 @@ import io.gitee.dqcer.mcdull.mdc.provider.model.dto.LogLiteDTO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.dto.SysLogFeignDTO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.entity.LogDO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.vo.LogVO;
-import io.gitee.dqcer.mcdull.mdc.provider.web.dao.repository.ILogRepository;
 import io.gitee.dqcer.mcdull.uac.client.service.UserClientService;
 import com.google.common.collect.Lists;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -29,8 +28,8 @@ import java.util.List;
 @Service
 public class LogService {
 
-    @Resource
-    private ILogRepository logRepository;
+//    @Resource
+//    private ILogRepository logRepository;
 
     @Resource
     private UserClientService userClientService;
@@ -42,13 +41,13 @@ public class LogService {
         threadPoolTaskExecutor.submit(() -> {
             List<LogDO> entities = Lists.newArrayList();
             entities.addAll(dto);
-            logRepository.saveBatch(entities, entities.size());
+//            logRepository.saveBatch(entities, entities.size());
         });
         return Result.ok(dto.size());
     }
 
     public Result<PagedVO<LogVO>> listByPage(LogLiteDTO dto) {
-        Page<LogDO> entityPage = logRepository.selectPage(dto);
+        Page<LogDO> entityPage = null;
         List<LogVO> voList = new ArrayList<>();
         for (LogDO entity : entityPage.getRecords()) {
             LogVO logVO = LogConvert.entity2Vo(entity);

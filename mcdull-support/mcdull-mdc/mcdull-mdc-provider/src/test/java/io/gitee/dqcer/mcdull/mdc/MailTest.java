@@ -27,7 +27,7 @@ public class MailTest {
     @Test
     void testMailTemplateError() {
         Assertions.assertThrows(MailException.class,  () -> {
-            mailTemplate.sendSimpleMail("", "test", "hello word mail");
+            mailTemplate.sendSimpleMail("xxx@sina.com", "test", "hello word mail");
         });
     }
 
