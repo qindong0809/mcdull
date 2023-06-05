@@ -7,10 +7,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.framework.transformer.IUserTransformerService;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IPostRepository;
@@ -22,6 +24,7 @@ import io.gitee.dqcer.mcdull.business.common.FileNameGeneratorUtil;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.Md5Util;
@@ -34,6 +37,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
+import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -50,10 +54,7 @@ import java.util.List;
  * @since 2023/01/15 13:01:30
  */
 @Service
-public class UserServiceImpl implements IUserService, IUserTransformerService {
-
-    @Resource
-    private IUserRepository userRepository;
+public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implements IUserService, IUserTransformerService {
 
     @Resource
     private IUserManager userManager;
@@ -72,7 +73,7 @@ public class UserServiceImpl implements IUserService, IUserTransformerService {
      */
     @Override
     public Result<PagedVO<UserVO>> listByPage(UserLiteDTO dto) {
-        Page<UserDO> entityPage = userRepository.selectPage(dto);
+        Page<UserDO> entityPage = baseRepository.selectPage(dto);
         List<UserVO> voList = new ArrayList<>();
         for (UserDO entity : entityPage.getRecords()) {
             voList.add(userManager.entityToVo(entity));
@@ -90,7 +91,7 @@ public class UserServiceImpl implements IUserService, IUserTransformerService {
     public Result<UserDetailVO> detail(Long userId) {
         UserDetailVO vo = new UserDetailVO();
         if (ObjUtil.isNotNull(userId)) {
-            UserDO userDO = userRepository.getById(userId);
+            UserDO userDO = baseRepository.getById(userId);
             vo = userManager.entityToDetailVo(userDO);
             return Result.ok(vo);
         }
@@ -123,35 +124,37 @@ public class UserServiceImpl implements IUserService, IUserTransformerService {
     }
 
 
-    /**
-     * 插入
-     *
-     * @param dto dto
-     * @return {@link Result<Long>}
-     */
     @Override
-    public Result<Long> insert(UserLiteDTO dto) {
+    public Result<Long> insertOrUpdate(UserInsertDTO dto) {
         LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
         query.eq(UserDO::getAccount, dto.getAccount());
+        query.ne(ObjUtil.isNotNull(dto.getId()), IdDO::getId, dto.getId());
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
-        List<UserDO> list = userRepository.list(query);
+        List<UserDO> list = baseRepository.list(query);
         if (!list.isEmpty()) {
             return Result.error(CodeEnum.DATA_EXIST);
         }
 
-        UserDO entity = UserConvert.dto2Entity(dto);
+        if (ObjUtil.isNull(dto.getId())) {
+            UserDO entity = UserConvert.dtoToEntity(dto);
 
-        String salt = RandomUtil.uuid();
-        String password = Sha1Util.getSha1(Md5Util.getMd5(dto.getAccount() + salt));
-        entity.setSalt(salt);
-        entity.setPassword(password);
-        entity.setType(1);
-        entity.setStatus(StatusEnum.ENABLE.getCode());
-        Long userId = userRepository.insert(entity);
+            String salt = RandomUtil.uuid();
+            String password = Sha1Util.getSha1(Md5Util.getMd5(dto.getAccount() + salt));
+            entity.setSalt(salt);
+            entity.setPassword(password);
+            entity.setType(UserTypeEnum.READ_WRITE.getCode());
+            entity.setStatus(StatusEnum.ENABLE.getCode());
+            Long userId = baseRepository.insert(entity);
 
 //        userRoleRepository.updateByUserId(userId, dto.getRoleIds());
 
-        return Result.ok(userId);
+            return Result.ok(userId);
+        }
+
+        UserDO userDO = baseRepository.getById(dto.getId());
+        userDO.setDeptId(dto.getDeptId());
+        baseRepository.updateById(userDO);
+        return Result.ok(dto.getId());
     }
 
     /**
@@ -176,14 +179,9 @@ public class UserServiceImpl implements IUserService, IUserTransformerService {
         return null;
     }
 
-    /**
-     * 删除
-     *
-     * @param dto dto
-     * @return {@link Result<Long>}
-     */
     @Override
-    public Result<Long> delete(UserLiteDTO dto) {
+    public Result<Long> delete(Long id) {
+        baseRepository.delete(id);
         return null;
     }
 
@@ -220,7 +218,7 @@ public class UserServiceImpl implements IUserService, IUserTransformerService {
      */
     @Override
     public KeyValueBO<String, String> transformer(String code) {
-        UserDO userDO = userRepository.getById(code);
+        UserDO userDO = baseRepository.getById(code);
         if (ObjUtil.isNotNull(userDO)) {
             return new KeyValueBO<String, String>().setKey(userDO.getId().toString()).setValue(userDO.getNickName());
         }

@@ -5,12 +5,10 @@ import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import javax.validation.constraints.NotNull;
 
 /**
- * 查询通过id
- *
  * @author dqcer
  * @since 2023/01/19
  */
-public class QueryByIdDTO implements DTO{
+public class PkDTO implements DTO{
 
     @NotNull(groups = ValidGroup.Id.class)
     private Long id;
@@ -26,7 +24,7 @@ public class QueryByIdDTO implements DTO{
         return id;
     }
 
-    public QueryByIdDTO setId(Long id) {
+    public PkDTO setId(Long id) {
         this.id = id;
         return this;
     }

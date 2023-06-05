@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
@@ -34,13 +35,7 @@ public interface IUserService {
     Result<UserDetailVO> detail(Long userId);
 
 
-    /**
-     * 插入
-     *
-     * @param dto dto
-     * @return {@link Result<Long>}
-     */
-    Result<Long> insert(UserLiteDTO dto);
+    Result<Long> insertOrUpdate(UserInsertDTO dto);
 
     /**
      * 更新
@@ -58,13 +53,8 @@ public interface IUserService {
      */
     Result<Long> updateStatus(StatusDTO dto);
 
-    /**
-     * 删除
-     *
-     * @param dto dto
-     * @return {@link Result<Long>}
-     */
-    Result<Long> delete(UserLiteDTO dto);
+
+    Result<Long> delete(Long id);
 
     /**
      * 重置密码

@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.admin.web.controller.sys;
 
 import io.gitee.dqcer.mcdull.admin.config.OperationLog;
 import io.gitee.dqcer.mcdull.admin.config.OperationTypeEnum;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
@@ -14,6 +15,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.TreeSelectVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +30,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/system/user")
-public class UserController {
+public class UserController implements BasicController {
 
     @Resource
     private IUserService userService;
@@ -79,10 +81,10 @@ public class UserController {
      * @return {@link Result<Long> 返回新增主键}
      */
     @OperationLog(module = "基础系统", menu = "用户管理", type = OperationTypeEnum.INSERT)
-    @RedisLock(key = "'lock:uac:user:' + #dto.nickname + '-' + #dto.account", timeout = 3)
-    @PostMapping("user/base/save")
-    public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Insert.class})UserLiteDTO dto){
-        return userService.insert(dto);
+    @RedisLock(key = "'lock:uac:user:' + #dto.account", timeout = 3)
+    @PostMapping()
+    public Result<Long> insertOrUpdate(@RequestBody UserInsertDTO dto){
+        return userService.insertOrUpdate(dto);
     }
 
     /**
@@ -110,12 +112,12 @@ public class UserController {
     /**
      * 单个删除
      *
-     * @param dto dto
+     * @param id id
      * @return {@link Result<Long>}
      */
-    @PostMapping("user/base/delete")
-    public Result<Long> delete(@RequestBody @Validated(value = {ValidGroup.Delete.class}) UserLiteDTO dto){
-        return userService.delete(dto);
+    @DeleteMapping("{id}")
+    public Result<Long> delete(@PathVariable(value = "id")Long id){
+        return userService.delete(id);
     }
 
     /**

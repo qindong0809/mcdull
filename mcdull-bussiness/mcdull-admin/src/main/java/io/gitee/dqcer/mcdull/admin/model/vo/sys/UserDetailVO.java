@@ -64,4 +64,8 @@ public class UserDetailVO implements VO {
     private List<Long> roleIds;
 
     private List<Long> postIds;
+
+    private Long deptId;
+
+    private String deptName;
 }

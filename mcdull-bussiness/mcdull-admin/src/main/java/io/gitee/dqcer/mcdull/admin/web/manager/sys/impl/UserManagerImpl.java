@@ -1,15 +1,13 @@
 package io.gitee.dqcer.mcdull.admin.web.manager.sys.impl;
 
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IPostRepository;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserPostRepository;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRoleRepository;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.*;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IUserManager;
 import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
 import org.springframework.stereotype.Service;
@@ -40,6 +38,9 @@ public class UserManagerImpl implements IUserManager {
     @Resource
     private IPostRepository postRepository;
 
+    @Resource
+    private IDeptRepository deptRepository;
+
     /**
      * entity 转 VO
      *
@@ -52,6 +53,8 @@ public class UserManagerImpl implements IUserManager {
         if (vo == null) {
             return null;
         }
+        DeptDO deptDO = deptRepository.getById(vo.getDeptId());
+        vo.setDeptName(deptDO.getName());
         List<BaseVO<Long, String>> baseRoles = this.getBaseRoles(vo.getId());
         vo.setRoles(baseRoles);
         return vo;
@@ -60,6 +63,9 @@ public class UserManagerImpl implements IUserManager {
     @Override
     public UserDetailVO entityToDetailVo(UserDO userDO) {
         UserDetailVO vo = UserConvert.convertToUserDetailVO(userDO);
+        DeptDO deptDO = deptRepository.getById(vo.getDeptId());
+        vo.setDeptName(deptDO.getName());
+
         List<BaseVO<Long, String>> baseRoles = this.getBaseRoles(vo.getId());
         vo.setRoles(baseRoles);
         vo.setPosts(this.getBasePosts(vo.getId()));

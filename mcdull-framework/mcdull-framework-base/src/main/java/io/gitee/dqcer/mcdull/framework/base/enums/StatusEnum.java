@@ -23,6 +23,7 @@ public enum StatusEnum implements IEnum<String> {
         init(code, text);
     }
 
+    @SuppressWarnings("unused")
     public static StatusEnum toEnum(String value) {
         switch (value) {
             case "1":

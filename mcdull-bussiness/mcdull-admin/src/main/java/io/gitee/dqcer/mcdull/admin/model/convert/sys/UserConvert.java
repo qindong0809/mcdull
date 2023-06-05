@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
 
-import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
@@ -39,16 +39,20 @@ public class UserConvert {
         userVO.setPhone(entity.getPhone());
         userVO.setLastLoginTime(entity.getLastLoginTime());
         userVO.setType(entity.getType());
+        userVO.setDeptId(entity.getDeptId());
         return userVO;
     }
 
-    public static UserDO dto2Entity(UserLiteDTO dto) {
-        UserDO entity = new UserDO();
-//        entity.setNickName(dto.getNickname());
-//        entity.setAccount(dto.getAccount());
-//        entity.setEmail(dto.getEmail());
-//        entity.setPhone(dto.getPhone());
-        return entity;
+    public static UserDO dtoToEntity(UserInsertDTO dto) {
+        UserDO userDO = new UserDO();
+        userDO.setNickName(dto.getNickName());
+        userDO.setAccount(dto.getAccount());
+        userDO.setPassword(dto.getPassword());
+        userDO.setEmail(dto.getEmail());
+        userDO.setPhone(dto.getPhone());
+        userDO.setDeptId(dto.getDeptId());
+        userDO.setStatus(dto.getStatus());
+        return userDO;
     }
 
     public static UserDetailVO convertToUserDetailVO(UserDO userDO) {
@@ -60,6 +64,7 @@ public class UserConvert {
         userDetailVO.setAccount(userDO.getAccount());
         userDetailVO.setEmail(userDO.getEmail());
         userDetailVO.setPhone(userDO.getPhone());
+        userDetailVO.setDeptId(userDO.getDeptId());
         return userDetailVO;
 
     }

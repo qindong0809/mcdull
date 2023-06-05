@@ -213,4 +213,15 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
         }
         return list.get(0);
     }
+
+    @Override
+    public void delete(Long id) {
+        LambdaUpdateWrapper<UserDO> update = Wrappers.lambdaUpdate();
+        update.set(UserDO::getDelFlag, DelFlayEnum.DELETED.getCode());
+        update.eq(IdDO::getId, id);
+        int rowSize = baseMapper.update(null, update);
+        if (rowSize == GlobalConstant.Database.ROW_0) {
+            throw new DatabaseRowException(CodeEnum.DB_ERROR);
+        }
+    }
 }

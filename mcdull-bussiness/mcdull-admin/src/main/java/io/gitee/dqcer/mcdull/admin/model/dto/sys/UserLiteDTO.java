@@ -5,6 +5,7 @@ import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;
@@ -16,10 +17,12 @@ import javax.validation.constraints.Min;
 * @author dqcer
 * @since 2022-11-16
 */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class UserLiteDTO extends PagedDTO {
 
     private static final long serialVersionUID = 1L;
+
 
     /**
      * 账户
