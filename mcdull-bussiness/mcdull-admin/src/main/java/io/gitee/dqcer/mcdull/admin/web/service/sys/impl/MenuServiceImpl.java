@@ -78,10 +78,15 @@ public class MenuServiceImpl implements IMenuService {
 
     @Override
     public Result<RoleMenuTreeSelectVO> roleMenuTreeSelect(Long roleId) {
-        RoleMenuTreeSelectVO vo = new RoleMenuTreeSelectVO();
         List<Long> roles = new ArrayList<>();
         roles.add(roleId);
         List<MenuDO> menus = roleManager.getMenuByRole(roles);
+        RoleMenuTreeSelectVO vo = getMenuTreeSelectVO(menus);
+        return Result.ok(vo);
+    }
+
+    private RoleMenuTreeSelectVO getMenuTreeSelectVO(List<MenuDO> menus) {
+        RoleMenuTreeSelectVO vo = new RoleMenuTreeSelectVO();
         if (CollUtil.isNotEmpty(menus)) {
             List<Long> menuIds = menus.stream().map(IdDO::getId).collect(Collectors.toList());
             vo.setCheckedKeys(menuIds);
@@ -98,6 +103,13 @@ public class MenuServiceImpl implements IMenuService {
 
             vo.setMenus(treeSelectVOS);
         }
+        return vo;
+    }
+
+    @Override
+    public Result<RoleMenuTreeSelectVO> treeselect() {
+        List<MenuDO> list = menuRepository.list();
+        RoleMenuTreeSelectVO vo = this.getMenuTreeSelectVO(list);
         return Result.ok(vo);
     }
 

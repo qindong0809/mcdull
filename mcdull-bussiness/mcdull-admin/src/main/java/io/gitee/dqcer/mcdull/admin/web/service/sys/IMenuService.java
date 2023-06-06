@@ -20,4 +20,7 @@ public interface IMenuService {
     Result<MenuVO> detail(Long id);
 
     Result<RoleMenuTreeSelectVO> roleMenuTreeSelect(Long roleId);
+
+    Result<RoleMenuTreeSelectVO> treeselect();
+
 }

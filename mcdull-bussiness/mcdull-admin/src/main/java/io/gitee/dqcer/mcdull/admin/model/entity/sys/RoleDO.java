@@ -29,6 +29,7 @@ public class RoleDO extends BaseDO {
 
     /**
      *  类型（1/自定义 2/内置）
+     *  {@link io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum}
      */
     private Integer type;
 

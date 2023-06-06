@@ -60,4 +60,9 @@ public class MenuController {
         return menuService.roleMenuTreeSelect(roleId);
     }
 
+    @GetMapping("/treeselect")
+    public Result<RoleMenuTreeSelectVO> treeselect() {
+        return menuService.treeselect();
+    }
+
 }

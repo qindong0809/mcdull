@@ -90,7 +90,7 @@ public class RoleServiceImpl implements IRoleService {
      */
     private boolean doCheckDataExist(RoleLiteDTO dto) {
         RoleDO tempEntity = new RoleDO();
-        // TODO: 业务唯一性效验, 除非业务场景不需要
+        tempEntity.setName(dto.getName());
         return roleRepository.exist(tempEntity);
     }
 

@@ -65,7 +65,7 @@ public class RoleController {
     * @return {@link Result<Long> 返回新增主键}
     */
     @Authorized("sys:role:insert")
-    @PostMapping("base/insert")
+    @PostMapping("")
     public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Insert.class}) RoleLiteDTO dto){
         return roleService.insert(dto);
     }
