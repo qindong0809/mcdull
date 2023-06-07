@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleUpdateDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
 import io.gitee.dqcer.mcdull.framework.base.dto.IdDTO;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
@@ -26,13 +28,8 @@ public interface IRoleService {
      */
     Result<PagedVO<RoleVO>> listByPage(RoleLiteDTO dto);
 
-    /**
-     * 新增数据
-     *
-     * @param dto dto
-     * @return {@link Result<Long> 返回主键}
-     */
-    Result<Long> insert(RoleLiteDTO dto);
+
+    Result<Long> insert(RoleInsertDTO dto);
 
     /**
      * 通过主键查询单条数据
@@ -48,7 +45,7 @@ public interface IRoleService {
      * @param dto  参数
      * @return {@link Result<Long> }
      */
-    Result<Long> update(RoleLiteDTO dto);
+    Result<Long> update(RoleUpdateDTO dto);
     /**
      * 状态更新
      *
@@ -73,5 +70,5 @@ public interface IRoleService {
      */
     Result<List<RoleVO>> queryByIds(List<Long> ids);
 
-
+    Result<Long> deleteById(Long roleId);
 }

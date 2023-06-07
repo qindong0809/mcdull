@@ -1,9 +1,13 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys.impl;
 
+import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.RoleConvert;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleUpdateDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
+import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
@@ -69,28 +73,23 @@ public class RoleServiceImpl implements IRoleService {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<Long> insert(RoleLiteDTO dto) {
+    public Result<Long> insert(RoleInsertDTO dto) {
 
-        boolean dataExist = this.doCheckDataExist(dto);
+        boolean dataExist = this.doCheckDataExist(dto.getName());
         if (dataExist) {
             log.warn("数据已存在 dto: {}", dto);
             return Result.error(CodeEnum.DATA_EXIST);
         }
 
         RoleDO entity = RoleConvert.convertToRoleDO(dto);
+        entity.setType(UserTypeEnum.READ_WRITE.getCode());
         Long entityId = roleRepository.insert(entity);
         return Result.ok(entityId);
     }
 
-    /**
-     * 检查数据是否存在
-     *
-     * @param dto dto
-     * @return boolean
-     */
-    private boolean doCheckDataExist(RoleLiteDTO dto) {
+    private boolean doCheckDataExist(String name) {
         RoleDO tempEntity = new RoleDO();
-        tempEntity.setName(dto.getName());
+        tempEntity.setName(name);
         return roleRepository.exist(tempEntity);
     }
 
@@ -119,8 +118,8 @@ public class RoleServiceImpl implements IRoleService {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<Long> update(RoleLiteDTO dto) {
-        Long id = null;
+    public Result<Long> update(RoleUpdateDTO dto) {
+        Long id = dto.getRoleId();
 
         RoleDO dbData = roleRepository.getById(id);
         if(null == dbData) {
@@ -128,6 +127,7 @@ public class RoleServiceImpl implements IRoleService {
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
         RoleDO entity = RoleConvert.convertToRoleDO(dto);
+        entity.setId(id);
         entity.setUpdatedBy(UserContextHolder.currentUserId());
         boolean success = roleRepository.updateById(entity);
         if (!success) {
@@ -196,6 +196,13 @@ public class RoleServiceImpl implements IRoleService {
             voList.add(RoleConvert.convertToRoleVO(entity));
          }
          return Result.ok(voList);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Long> deleteById(Long roleId) {
+        roleRepository.deleteBatchByIds(ListUtil.of(roleId));
+        return Result.ok(roleId);
     }
 
 

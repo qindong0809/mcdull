@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,6 +12,7 @@ import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.RoleMenuMapper;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
@@ -87,6 +89,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
         if (ObjUtil.isNotNull(startTime) && ObjUtil.isNotNull(endTime)) {
             query.between(MiddleDO::getCreatedTime, startTime, endTime);
         }
+        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         query.orderByDesc(BaseDO::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
@@ -118,7 +121,9 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
      */
     @Override
     public boolean exist(RoleDO roleDO) {
-        return !baseMapper.selectList(Wrappers.lambdaQuery(roleDO)).isEmpty();
+        LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery(roleDO);
+        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
+        return !baseMapper.selectList(query).isEmpty();
     }
 
     /**
@@ -128,9 +133,13 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
      */
     @Override
     public void deleteBatchByIds(List<Long> ids) {
-        int rowSize = baseMapper.deleteBatchIds(ids);
+        LambdaUpdateWrapper<RoleDO> update = Wrappers.lambdaUpdate();
+        update.in(IdDO::getId, ids);
+        update.set(BaseDO::getDelFlag, DelFlayEnum.DELETED.getCode());
+        update.set(BaseDO::getDelBy, UserContextHolder.currentUserId());
+        int rowSize = baseMapper.update(null, update);
         if (rowSize != ids.size()) {
-            log.error("数据插入失败 actual: {}, plan:{}", rowSize, ids.size());
+            log.error("数据删除失败 actual: {}, plan:{}", rowSize, ids.size());
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
     }

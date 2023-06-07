@@ -1,26 +1,20 @@
 package io.gitee.dqcer.mcdull.admin.web.controller.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleUpdateDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IRoleService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
-import io.gitee.dqcer.mcdull.framework.base.dto.IdDTO;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
-import java.util.List;
 
 /**
 * 角色表 控制器
@@ -30,7 +24,7 @@ import java.util.List;
 */
 @RestController
 @RequestMapping("/system/role")
-public class RoleController {
+public class RoleController implements BasicController {
 
     @Resource
     private IRoleService roleService;
@@ -39,7 +33,7 @@ public class RoleController {
      * 分页查询
      *
      * @param dto dto
-     * @return {@link Result< PagedVO >}
+     * @return {@link Result}
      */
     @Authorized("system:role:list")
     @GetMapping("list")
@@ -66,10 +60,9 @@ public class RoleController {
     */
     @Authorized("sys:role:insert")
     @PostMapping("")
-    public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Insert.class}) RoleLiteDTO dto){
+    public Result<Long> insert(@RequestBody RoleInsertDTO dto){
         return roleService.insert(dto);
     }
-
 
 
     /**
@@ -79,8 +72,8 @@ public class RoleController {
     * @return {@link Result<Long>}
     */
     @Authorized("sys:role:update")
-    @PutMapping("base/update")
-    public Result<Long> update(@RequestBody @Validated(value = {ValidGroup.Update.class}) RoleLiteDTO dto){
+    @PutMapping("")
+    public Result<Long> update(@RequestBody RoleUpdateDTO dto){
         return roleService.update(dto);
     }
     /**
@@ -98,12 +91,12 @@ public class RoleController {
     /**
     * 根据主键删除
     *
-    * @param dto dto
+    * @param roleId roleId
     * @return {@link Result<Long>}
     */
     @Authorized("sys:role:delete")
-    @PostMapping("base/delete")
-    public Result<List<Long>> deleteBatchByIds(@RequestBody @Valid IdDTO<Long> dto){
-        return roleService.deleteBatchByIds(dto);
+    @DeleteMapping("{roleId}")
+    public Result<Long> deleteBatchById(@PathVariable Long roleId){
+        return roleService.deleteById(roleId);
     }
 }

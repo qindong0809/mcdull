@@ -28,7 +28,7 @@ public class PageUtil {
      * @param iPage 我的页面
      * @return {@link PagedVO <T>}
      */
-    public static <T> PagedVO<T> toPage(List<T> list, IPage iPage) {
-        return new PagedVO(list, iPage.getTotal(), iPage.getSize(), iPage.getCurrent());
+    public static <T> PagedVO<T> toPage(List<T> list, IPage<?> iPage) {
+        return new PagedVO<>(list, iPage.getTotal(), iPage.getSize(), iPage.getCurrent());
     }
 }
