@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.framework.base.wrapper;
 
 import io.gitee.dqcer.mcdull.framework.base.exception.FeignBizException;
 import io.gitee.dqcer.mcdull.framework.base.exception.FeignServiceErrorException;
-import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
+import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

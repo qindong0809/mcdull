@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.base.util;
 
+import cn.hutool.core.util.StrUtil;
+
 import java.util.regex.Pattern;
 
 /**

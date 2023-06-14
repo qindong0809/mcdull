@@ -77,6 +77,10 @@
             <artifactId>pdfa</artifactId>
             <version>7.2.5</version>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <resources>

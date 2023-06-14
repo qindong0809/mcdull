@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.flow.load;
 
 import io.gitee.dqcer.mcdull.framework.base.util.JsonUtil;
-import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
+import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.flow.properties.ProcessBean;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
