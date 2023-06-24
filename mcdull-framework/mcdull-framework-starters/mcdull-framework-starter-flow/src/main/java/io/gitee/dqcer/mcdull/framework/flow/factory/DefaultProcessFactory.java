@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.framework.flow.factory;
 
 import io.gitee.dqcer.mcdull.framework.flow.node.ProcessHandler;
 import io.gitee.dqcer.mcdull.framework.flow.properties.ProcessBean;
-import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
+import cn.hutool.core.util.ObjUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

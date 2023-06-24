@@ -1,14 +1,14 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.impl;
 
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.RemoteDictVO;
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.mdc.client.dto.DictClientDTO;
 import io.gitee.dqcer.mcdull.mdc.client.service.DictClientService;
 import io.gitee.dqcer.mcdull.mdc.client.vo.DictClientVO;
 import io.gitee.dqcer.mcdull.uac.provider.config.constants.CacheConstants;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.RemoteDictVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.IDictManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

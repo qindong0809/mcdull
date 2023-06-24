@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.UserPostMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserPostRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
+import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

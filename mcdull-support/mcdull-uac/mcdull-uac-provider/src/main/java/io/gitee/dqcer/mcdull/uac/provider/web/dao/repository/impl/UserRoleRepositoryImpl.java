@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserRoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.UserRoleMapper;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import io.gitee.dqcer.mcdull.framework.base.util.ObjUtil;
+import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
 import org.springframework.stereotype.Service;
 

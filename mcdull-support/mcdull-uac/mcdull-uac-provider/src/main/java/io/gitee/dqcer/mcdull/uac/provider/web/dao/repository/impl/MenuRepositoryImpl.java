@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.MenuMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
-import io.gitee.dqcer.mcdull.framework.base.util.StrUtil;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.stereotype.Service;
 
 /**
