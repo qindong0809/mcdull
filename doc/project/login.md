@@ -7,15 +7,25 @@
 ### 1、登录
 - 接口
 ``` api
-	/uac/login
+	/sso/login
+```
+- 参数
+``` js
+    {
+      "username": "String", // 账号
+      "password": "String", // md5(密码)
+      "code": "String", // 验证码
+      "uuid": "String" // 唯一标识
+    }
+	
 ```
 - 返回
 ``` js
-	{
-		"code": 0,
-		"message": "操作成功",
-		"data": "7088064b1bd44998ab5d4b5d47edd786" // token
-	}
+    {
+        "code": 0,
+        "message": "操作成功",
+        "data": "7088064b1bd44998ab5d4b5d47edd786" // token
+    }
 ```
 - 错误码
 
