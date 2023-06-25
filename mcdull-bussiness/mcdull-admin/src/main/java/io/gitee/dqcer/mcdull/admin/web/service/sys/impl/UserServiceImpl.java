@@ -49,6 +49,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 用户服务 impl
@@ -78,8 +81,12 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     public Result<PagedVO<UserVO>> listByPage(UserLiteDTO dto) {
         Page<UserDO> entityPage = baseRepository.selectPage(dto);
         List<UserVO> voList = new ArrayList<>();
+        List<UserDO> list = baseRepository.list();
+        Map<Long, UserDO> userIdMap = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
         for (UserDO entity : entityPage.getRecords()) {
-            voList.add(userManager.entityToVo(entity));
+            UserVO vo = userManager.entityToVo(entity);
+//            vo.setCreatedByStr(userIdMap.get(vo.getCreatedBy()).getNickName());
+            voList.add(vo);
         }
         return Result.ok(PageUtil.toPage(voList, entityPage));
     }
@@ -157,6 +164,11 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
 
         UserDO userDO = baseRepository.getById(dto.getId());
         userDO.setDeptId(dto.getDeptId());
+        userDO.setPhone(dto.getPhone());
+        userDO.setEmail(dto.getEmail());
+        userDO.setNickName(dto.getNickName());
+        userDO.setAccount(dto.getAccount());
+        userDO.setStatus(dto.getStatus());
         baseRepository.updateById(userDO);
         return Result.ok(dto.getId());
     }

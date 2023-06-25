@@ -8,6 +8,7 @@ import org.springframework.context.EmbeddedValueResolverAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringValueResolver;
 
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.Map;
  * @author dqcer
  * @since 2022/10/05
  */
+@Component
 public class SpringContextHolder implements ApplicationContextAware, EnvironmentAware, EmbeddedValueResolverAware, DisposableBean {
 
     private static ApplicationContext context;

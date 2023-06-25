@@ -9,6 +9,7 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IDeptService;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IUserService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
+import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -56,6 +57,7 @@ public class UserController implements BasicController {
      * @param dto dto
      * @return {@link Result}<{@link List}<{@link UserVO}>>
      */
+    @Transform
     @Authorized("system:user:list")
     @GetMapping("list")
     public Result<PagedVO<UserVO>> listByPage(@Validated(ValidGroup.Paged.class) UserLiteDTO dto) {

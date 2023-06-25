@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsAspect;
 import io.gitee.dqcer.mcdull.framework.web.aspect.TranslatorAspect;
 import io.gitee.dqcer.mcdull.framework.web.filter.HttpTraceLogFilter;
-import io.gitee.dqcer.mcdull.framework.web.transform.SpringContextHolder;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,14 +17,9 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
  * @author dqcer
  * @since  22:21 2021/4/28
  */
-@ConditionalOnWebApplication
+//@ConditionalOnWebApplication
 @Configuration
 public class AutoConfiguration {
-
-    @Bean
-    public SpringContextHolder springContextHolder() {
-        return new SpringContextHolder();
-    }
 
     /**
      * 跟踪日志过滤器bean注册

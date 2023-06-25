@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 /**
  * 系统用户实体
@@ -53,7 +53,7 @@ public class UserDO extends BaseDO {
     /**
      * 最后登录时间
      */
-    private LocalTime lastLoginTime;
+    private LocalDateTime lastLoginTime;
 
     /**
      *  {@link io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum}

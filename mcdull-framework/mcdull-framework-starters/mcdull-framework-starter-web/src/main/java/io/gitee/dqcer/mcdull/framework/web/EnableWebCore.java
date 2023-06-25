@@ -9,6 +9,7 @@ import io.gitee.dqcer.mcdull.framework.web.config.DateTimeConfig;
 import io.gitee.dqcer.mcdull.framework.web.config.MultipartFileConfig;
 import io.gitee.dqcer.mcdull.framework.web.config.ThreadPoolConfig;
 import io.gitee.dqcer.mcdull.framework.web.config.UndertowConfig;
+import io.gitee.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
@@ -32,7 +33,8 @@ import java.lang.annotation.Target;
         DateTimeConfig.class,
         MultipartFileConfig.class,
         ThreadPoolConfig.class,
-        UndertowConfig.class
+        UndertowConfig.class,
+        SpringContextHolder.class
 })
 public @interface EnableWebCore {
 }
