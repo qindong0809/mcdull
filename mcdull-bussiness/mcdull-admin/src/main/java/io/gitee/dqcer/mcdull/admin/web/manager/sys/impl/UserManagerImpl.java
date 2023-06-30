@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.manager.sys.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostDO;
@@ -16,6 +17,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户通用逻辑实现层
@@ -67,8 +69,13 @@ public class UserManagerImpl implements IUserManager {
         vo.setDeptName(deptDO.getName());
 
         List<BaseVO<Long, String>> baseRoles = this.getBaseRoles(vo.getId());
-        vo.setRoles(baseRoles);
-        vo.setPosts(this.getBasePosts(vo.getId()));
+        if (CollUtil.isNotEmpty(baseRoles)) {
+            vo.setRoleIds(baseRoles.stream().map(BaseVO::getId).collect(Collectors.toList()));
+        }
+        List<BaseVO<Long, String>> basePosts = this.getBasePosts(vo.getId());
+        if (CollUtil.isNotEmpty(basePosts)) {
+            vo.setPostIds(basePosts.stream().map(BaseVO::getId).collect(Collectors.toList()));
+        }
         return vo;
     }
 

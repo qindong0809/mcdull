@@ -1,14 +1,13 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserRoleDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.UserRoleMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRoleRepository;
+import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,16 +54,10 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
     public void updateByUserId(Long userId, List<Long> roleIds) {
         LambdaQueryWrapper<UserRoleDO> query = Wrappers.lambdaQuery();
         query.eq(UserRoleDO::getUserId, userId);
-        int row = baseMapper.delete(query);
-        if (row == GlobalConstant.Database.ROW_0) {
-            throw new DatabaseRowException(CodeEnum.DB_ERROR);
-        }
-
-
+        baseMapper.delete(query);
         if (ObjUtil.isNull(roleIds)) {
             return;
         }
-
         List<UserRoleDO> entities = new ArrayList<>();
         for (Long roleId : roleIds) {
             UserRoleDO entity = new UserRoleDO();

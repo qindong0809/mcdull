@@ -86,6 +86,8 @@ public class UserVO implements VO {
      */
     private String nickName;
 
+    private Integer sex;
+
     /**
      * 电子邮件
      */

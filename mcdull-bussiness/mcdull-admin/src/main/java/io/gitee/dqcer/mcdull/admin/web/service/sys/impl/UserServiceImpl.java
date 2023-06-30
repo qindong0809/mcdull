@@ -15,9 +15,7 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
 import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IPostRepository;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.*;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IUserManager;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IUserService;
 import io.gitee.dqcer.mcdull.business.common.FileNameGeneratorUtil;
@@ -44,6 +42,7 @@ import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -71,12 +70,12 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     @Resource
     private IPostRepository postRepository;
 
-    /**
-     * 列表页
-     *
-     * @param dto dto
-     * @return {@link Result < PagedVO < UserVO >>}
-     */
+    @Resource
+    private IUserRoleRepository userRoleRepository;
+
+    @Resource
+    private IUserPostRepository userPostRepository;
+
     @Override
     public Result<PagedVO<UserVO>> listByPage(UserLiteDTO dto) {
         Page<UserDO> entityPage = baseRepository.selectPage(dto);
@@ -103,24 +102,28 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
         if (ObjUtil.isNotNull(userId)) {
             UserDO userDO = baseRepository.getById(userId);
             vo = userManager.entityToDetailVo(userDO);
+            vo.setPosts(this.getPostBaseList());
+            vo.setRoles(this.getRoleBaseList());
             return Result.ok(vo);
         }
-        List<RoleDO> roleList = repository.getAll();
+        vo.setPosts(this.getPostBaseList());
+        vo.setRoles(this.getRoleBaseList());
+        return Result.ok(vo);
+    }
 
+    private List<BaseVO<Long, String>> getRoleBaseList() {
+        List<RoleDO> roleList = repository.getAll();
         List<BaseVO<Long, String>> roleBaseList = new ArrayList<>();
         for (RoleDO roleDO : roleList) {
-            if (!UserContextHolder.isAdmin()) {
-//                if ("2".equals(roleDO.getType())) {
-//                    continue;
-//                }
-            }
             BaseVO<Long, String> baseVO = new BaseVO<>();
             baseVO.setId(roleDO.getId());
             baseVO.setName(roleDO.getName());
             roleBaseList.add(baseVO);
         }
-        vo.setRoles(roleBaseList);
+        return roleBaseList;
+    }
 
+    private List<BaseVO<Long, String>> getPostBaseList() {
         List<PostDO> postList = postRepository.getAll();
         List<BaseVO<Long, String>> postBaseList = new ArrayList<>();
         for (PostDO postDO : postList) {
@@ -129,16 +132,17 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
             baseVO.setName(postDO.getPostName());
             postBaseList.add(baseVO);
         }
-        vo.setPosts(postBaseList);
-        return Result.ok(vo);
+        return postBaseList;
     }
 
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> insertOrUpdate(UserInsertDTO dto) {
+        Long userId = dto.getId();
         LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
         query.eq(UserDO::getAccount, dto.getAccount());
-        query.ne(ObjUtil.isNotNull(dto.getId()), IdDO::getId, dto.getId());
+        query.ne(ObjUtil.isNotNull(userId), IdDO::getId, userId);
         query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
         List<UserDO> list = baseRepository.list(query);
@@ -146,7 +150,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
             return Result.error(CodeEnum.DATA_EXIST);
         }
 
-        if (ObjUtil.isNull(dto.getId())) {
+        if (ObjUtil.isNull(userId)) {
             UserDO entity = UserConvert.dtoToEntity(dto);
 
             String salt = RandomUtil.uuid();
@@ -155,14 +159,14 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
             entity.setPassword(password);
             entity.setType(UserTypeEnum.READ_WRITE.getCode());
             entity.setStatus(StatusEnum.ENABLE.getCode());
-            Long userId = baseRepository.insert(entity);
-
-//        userRoleRepository.updateByUserId(userId, dto.getRoleIds());
+            userId = baseRepository.insert(entity);
+            userRoleRepository.updateByUserId(userId, dto.getRoleIds());
+            userPostRepository.updateByUserId(userId, dto.getPostIds());
 
             return Result.ok(userId);
         }
 
-        UserDO userDO = baseRepository.getById(dto.getId());
+        UserDO userDO = baseRepository.getById(userId);
         userDO.setDeptId(dto.getDeptId());
         userDO.setPhone(dto.getPhone());
         userDO.setEmail(dto.getEmail());
@@ -170,7 +174,9 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
         userDO.setAccount(dto.getAccount());
         userDO.setStatus(dto.getStatus());
         baseRepository.updateById(userDO);
-        return Result.ok(dto.getId());
+        userRoleRepository.updateByUserId(userId, dto.getRoleIds());
+        userPostRepository.updateByUserId(userId, dto.getPostIds());
+        return Result.ok(userId);
     }
 
     /**

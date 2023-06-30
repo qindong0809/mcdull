@@ -9,7 +9,9 @@ import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.List;
 
 /**
 * @author dqcer
@@ -38,8 +40,13 @@ public class UserInsertDTO extends PagedDTO {
     @Pattern(regexp = ValidateUtil.REGEXP_PHONE)
     private String phone;
 
+    @NotNull
     private Long deptId;
 
     @EnumsStrValid(value = StatusEnum.class)
     private String status;
+
+    private List<Long> roleIds;
+
+    private List<Long> postIds;
 }

@@ -1,14 +1,13 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserPostDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.UserPostMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserPostRepository;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,11 +49,7 @@ public class UserPostRepositoryImpl extends ServiceImpl<UserPostMapper, UserPost
     public void updateByUserId(Long userId, List<Long> postIds) {
         LambdaQueryWrapper<UserPostDO> query = Wrappers.lambdaQuery();
         query.eq(UserPostDO::getUserId, userId);
-        int row = baseMapper.delete(query);
-        if (row == GlobalConstant.Database.ROW_0) {
-            throw new DatabaseRowException(CodeEnum.DB_ERROR);
-        }
-
+        baseMapper.delete(query);
         if (ObjUtil.isNull(postIds)) {
             return;
         }
