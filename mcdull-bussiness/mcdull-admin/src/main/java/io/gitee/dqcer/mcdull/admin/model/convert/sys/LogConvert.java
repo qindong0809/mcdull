@@ -58,6 +58,7 @@ public class LogConvert {
         vo.setHeaders(item.getHeaders());
         vo.setButton(item.getButton());
         vo.setCreatedTime(item.getCreatedTime());
+        vo.setLog(item.getLog());
 
         return vo;
     }

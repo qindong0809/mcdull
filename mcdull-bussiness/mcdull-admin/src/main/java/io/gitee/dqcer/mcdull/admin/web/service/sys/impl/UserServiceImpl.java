@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys.impl;
 
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -15,16 +16,19 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
 import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
+import io.gitee.dqcer.mcdull.admin.util.LogHelpUtil;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.*;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IUserManager;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IUserService;
 import io.gitee.dqcer.mcdull.business.common.FileNameGeneratorUtil;
+import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -48,9 +52,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * 用户服务 impl
@@ -76,18 +77,29 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     @Resource
     private IUserPostRepository userPostRepository;
 
+    @Transform
     @Override
-    public Result<PagedVO<UserVO>> listByPage(UserLiteDTO dto) {
+    public Result<PagedVO<UserVO>> paged(UserLiteDTO dto) {
+        Result<PagedVO<UserVO>> result = this.list(dto);
+        this.buildPagedLog(dto);
+        return result;
+    }
+
+    public Result<PagedVO<UserVO>> list(UserLiteDTO dto) {
         Page<UserDO> entityPage = baseRepository.selectPage(dto);
         List<UserVO> voList = new ArrayList<>();
-        List<UserDO> list = baseRepository.list();
-        Map<Long, UserDO> userIdMap = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
         for (UserDO entity : entityPage.getRecords()) {
             UserVO vo = userManager.entityToVo(entity);
-//            vo.setCreatedByStr(userIdMap.get(vo.getCreatedBy()).getNickName());
             voList.add(vo);
         }
         return Result.ok(PageUtil.toPage(voList, entityPage));
+    }
+
+
+
+    private void buildPagedLog(UserLiteDTO dto) {
+        String logDesc = "第{}页,查询条数{}";
+        LogHelpUtil.setLog(StrUtil.format(logDesc, dto.getPageNum(), dto.getPageSize()));
     }
 
     /**
@@ -104,11 +116,21 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
             vo = userManager.entityToDetailVo(userDO);
             vo.setPosts(this.getPostBaseList());
             vo.setRoles(this.getRoleBaseList());
+            this.buildDetailLog(vo);
             return Result.ok(vo);
         }
         vo.setPosts(this.getPostBaseList());
         vo.setRoles(this.getRoleBaseList());
         return Result.ok(vo);
+    }
+
+    private String buildLogIndex() {
+        return "用户:{}";
+    }
+
+    private void buildDetailLog(UserDetailVO vo) {
+        String logDesc = this.buildLogIndex();
+        LogHelpUtil.setLog(StrUtil.format(logDesc, vo.getNickName()));
     }
 
     private List<BaseVO<Long, String>> getRoleBaseList() {
@@ -158,7 +180,6 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
             entity.setSalt(salt);
             entity.setPassword(password);
             entity.setType(UserTypeEnum.READ_WRITE.getCode());
-            entity.setStatus(StatusEnum.ENABLE.getCode());
             userId = baseRepository.insert(entity);
             userRoleRepository.updateByUserId(userId, dto.getRoleIds());
             userPostRepository.updateByUserId(userId, dto.getPostIds());
@@ -180,32 +201,41 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     }
 
     /**
-     * 更新
-     *
-     * @param dto dto
-     * @return {@link Result<Long>}
-     */
-    @Override
-    public Result<Long> update(UserLiteDTO dto) {
-        return null;
-    }
-
-    /**
      * 更新状态
      *
      * @param dto dto
      * @return {@link Result<Long>}
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> updateStatus(StatusDTO dto) {
-        return null;
+        Long id = dto.getId();
+        UserDO userDO = baseRepository.getById(id);
+        if (ObjUtil.isNull(userDO)) {
+            throw new BusinessException(CodeEnum.DATA_NOT_EXIST);
+        }
+        baseRepository.updateStatusById(id, dto.getStatus());
+
+        String logDesc = this.buildLogIndex() + "<状态: {}更新为{}>";
+        logDesc = StrUtil.format(logDesc, userDO.getNickName(),
+                IEnum.getByCode(StatusEnum.class, userDO.getStatus()).getText(), IEnum.getByCode(StatusEnum.class, dto.getStatus()).getText());
+        LogHelpUtil.setLog(logDesc);
+        return Result.ok(id);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> delete(Long id) {
         this.validDeleteParam(id);
         baseRepository.delete(id);
+        this.buildDeleteLog(id);
         return Result.ok(id);
+    }
+
+    private void buildDeleteLog(Long id) {
+        UserDO userDO = baseRepository.getById(id);
+        String logDesc = this.buildLogIndex();
+        LogHelpUtil.setLog(StrUtil.format(logDesc, userDO.getNickName()));
     }
 
     private void validDeleteParam(Long id) {
@@ -228,16 +258,22 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
 
     @SneakyThrows
     @Override
-    public Result<Boolean> export(UserLiteDTO dto) {
+    public void export(UserLiteDTO dto) {
         dto.setNotNeedPaged(true);
-        Result<PagedVO<UserVO>> pagedVOResult = this.listByPage(dto);
+        Result<PagedVO<UserVO>> pagedVOResult = this.list(dto);
         List<UserVO> list = ResultParse.getPageData(pagedVOResult, Result::getData);
 
         HttpServletResponse response = ServletUtil.getResponse();
         String fileName = FileNameGeneratorUtil.simple("用户信息");
         ServletUtil.setDownloadExcelHttpHeader(response, fileName);
         EasyExcel.write(response.getOutputStream(),  UserVO.class).sheet().doWrite(list);
-        return Result.ok(true);
+
+        this.buildExportLog(fileName);
+    }
+
+    private void buildExportLog(String fileName) {
+        String logDesc = "导出文件:{}";
+        LogHelpUtil.setLog(StrUtil.format(logDesc, fileName));
     }
 
     /**

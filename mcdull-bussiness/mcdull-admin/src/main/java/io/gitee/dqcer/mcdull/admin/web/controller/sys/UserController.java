@@ -9,7 +9,6 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IDeptService;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IUserService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
-import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -44,12 +43,10 @@ public class UserController implements BasicController {
      *
      * @return {@link Result}
      */
-    @Authorized("system:user:list")
     @GetMapping("deptTree")
     public Result<List<TreeSelectVO>> selectDeptTreeList() {
         return deptService.selectDeptTreeList();
     }
-
 
     /**
      * 列表
@@ -57,11 +54,10 @@ public class UserController implements BasicController {
      * @param dto dto
      * @return {@link Result}<{@link List}<{@link UserVO}>>
      */
-    @Transform
     @Authorized("system:user:list")
     @GetMapping("list")
-    public Result<PagedVO<UserVO>> listByPage(@Validated(ValidGroup.Paged.class) UserLiteDTO dto) {
-        return userService.listByPage(dto);
+    public Result<PagedVO<UserVO>> paged(@Validated(ValidGroup.Paged.class) UserLiteDTO dto) {
+        return userService.paged(dto);
     }
 
     /**
@@ -90,23 +86,13 @@ public class UserController implements BasicController {
     }
 
     /**
-     * 更新数据
-     *
-     * @param dto dto
-     * @return {@link Result<Long> 返回主键}
-     */
-    @PostMapping("user/base/update")
-    public Result<Long> update(@RequestBody @Validated(value = {ValidGroup.Update.class})UserLiteDTO dto){
-        return userService.update(dto);
-    }
-
-    /**
      * 状态更新
      *
      * @param dto dto
      * @return {@link Result<Long>}
      */
-    @PostMapping("user/base/status")
+    @Authorized("system:user:edit")
+    @PutMapping("changeStatus")
     public Result<Long> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) StatusDTO dto){
         return userService.updateStatus(dto);
     }
@@ -117,6 +103,7 @@ public class UserController implements BasicController {
      * @param id id
      * @return {@link Result<Long>}
      */
+    @Authorized("system:user:remove")
     @DeleteMapping("{id}")
     public Result<Long> delete(@PathVariable(value = "id")Long id){
         return userService.delete(id);
@@ -135,7 +122,7 @@ public class UserController implements BasicController {
 
     @Authorized("system:user:export")
     @PostMapping("/export")
-    public Result<Boolean> export(@Validated(ValidGroup.Paged.class) UserLiteDTO dto) {
-        return userService.export(dto);
+    public void export(@Validated(ValidGroup.Paged.class) UserLiteDTO dto) {
+        userService.export(dto);
     }
 }

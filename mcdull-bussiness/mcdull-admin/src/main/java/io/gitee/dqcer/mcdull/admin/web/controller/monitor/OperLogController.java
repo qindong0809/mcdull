@@ -6,7 +6,6 @@ import io.gitee.dqcer.mcdull.admin.model.dto.sys.LoginInfoLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.LogVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.ILogService;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.ILoginInfoService;
-import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -35,7 +34,7 @@ public class OperLogController {
     private ILoginInfoService loginInfoService;
 
     @Transform
-    @Authorized("monitor:operlog:list")
+//    @Authorized("monitor:operlog:list")
     @GetMapping("list")
     public Result<PagedVO<LogVO>> listByPage(@Validated(value = {ValidGroup.Paged.class}) LogLiteDTO dto){
         return logService.listByPage(dto);

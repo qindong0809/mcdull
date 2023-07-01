@@ -7,6 +7,7 @@ import io.gitee.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.LogVO;
+import io.gitee.dqcer.mcdull.admin.util.LogHelpUtil;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.ILogRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.ILogService;
@@ -46,6 +47,7 @@ public class LogServiceImpl extends BasicServiceImpl<ILogRepository> implements 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void save(LogDO dto) {
+        dto.setLog(LogHelpUtil.getLog());
         baseRepository.save(dto);
     }
 
@@ -67,11 +69,15 @@ public class LogServiceImpl extends BasicServiceImpl<ILogRepository> implements 
         List<LogVO> voList = new ArrayList<>();
         for (LogDO record : entityPage.getRecords()) {
             LogVO logVO = LogConvert.convertToLogVO(record);
-
-            MenuDO menuDO = map.get(record.getButton());
-            logVO.setButton(menuDO.getName());
-            MenuDO menu = parentMenuMap.get(menuDO.getParentId());
-            logVO.setMenu(menu.getName());
+            MenuDO buttonDO = map.get(record.getButton());
+            logVO.setButton(buttonDO.getName());
+            MenuDO menuDO = parentMenuMap.get(buttonDO.getParentId());
+            logVO.setMenu(menuDO.getName());
+            Long parentId = menuDO.getParentId();
+            if (parentId != 0) {
+                MenuDO sysDO = parentMenuMap.get(parentId);
+                logVO.setModel(sysDO.getName());
+            }
 
             voList.add(logVO);
         }

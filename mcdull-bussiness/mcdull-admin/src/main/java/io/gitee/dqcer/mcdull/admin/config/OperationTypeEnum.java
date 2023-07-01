@@ -23,6 +23,8 @@ public enum OperationTypeEnum implements IEnum<String> {
      */
     DELETE("delete", "删除"),
 
+    STATUS("status", "状态"),
+
     ;
 
     OperationTypeEnum(String code, String text) {

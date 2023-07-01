@@ -16,54 +16,18 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
  */
 public interface IUserService {
 
+    Result<PagedVO<UserVO>> paged(UserLiteDTO dto);
 
-    /**
-     * 列表页
-     *
-     * @param dto dto
-     * @return {@link Result<PagedVO< UserVO >>}
-     */
-    Result<PagedVO<UserVO>> listByPage(UserLiteDTO dto);
-
-
-    /**
-     * 单个详情
-     *
-     * @param userId userId
-     * @return {@link Result<UserVO>}
-     */
     Result<UserDetailVO> detail(Long userId);
-
 
     Result<Long> insertOrUpdate(UserInsertDTO dto);
 
-    /**
-     * 更新
-     *
-     * @param dto dto
-     * @return {@link Result<Long>}
-     */
-    Result<Long> update(UserLiteDTO dto);
 
-    /**
-     * 更新状态
-     *
-     * @param dto dto
-     * @return {@link Result<Long>}
-     */
     Result<Long> updateStatus(StatusDTO dto);
-
 
     Result<Long> delete(Long id);
 
-    /**
-     * 重置密码
-     *
-     * @param dto dto
-     * @return {@link Result<Long>}
-     */
     Result<Long> resetPassword(UserLiteDTO dto);
 
-
-    Result<Boolean> export(UserLiteDTO dto);
+    void export(UserLiteDTO dto);
 }

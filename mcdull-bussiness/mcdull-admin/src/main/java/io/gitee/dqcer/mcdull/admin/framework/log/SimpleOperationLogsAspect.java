@@ -51,6 +51,7 @@ public class SimpleOperationLogsAspect implements OperationLogsService {
 //        logDO.setMenu(annotation.menu());
         logDO.setButton(annotation.value());
         asyncEvent.asyncEvent(logDO);
+
     }
 
     private static LogDO of(LogOperationDTO dto) {

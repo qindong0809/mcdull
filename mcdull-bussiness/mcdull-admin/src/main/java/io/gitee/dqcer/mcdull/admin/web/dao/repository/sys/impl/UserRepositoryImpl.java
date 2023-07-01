@@ -224,4 +224,15 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
     }
+
+    @Override
+    public void updateStatusById(Long id, String status) {
+        LambdaUpdateWrapper<UserDO> update = Wrappers.lambdaUpdate();
+        update.set(UserDO::getStatus, status);
+        update.eq(IdDO::getId, id);
+        int rowSize = baseMapper.update(null, update);
+        if (rowSize == GlobalConstant.Database.ROW_0) {
+            throw new DatabaseRowException(CodeEnum.DB_ERROR);
+        }
+    }
 }

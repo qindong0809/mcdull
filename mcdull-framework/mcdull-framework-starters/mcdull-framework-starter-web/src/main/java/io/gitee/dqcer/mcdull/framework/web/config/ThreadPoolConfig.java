@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.framework.web.config;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.config.properties.ThreadPoolProperties;
 import org.slf4j.Logger;
@@ -11,8 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -64,15 +64,18 @@ public class ThreadPoolConfig {
     static class ThreadPoolDecorator implements TaskDecorator {
         @Override
         public Runnable decorate(Runnable runnable) {
-            RequestAttributes context = RequestContextHolder.currentRequestAttributes();
+//            RequestAttributes context = RequestContextHolder.currentRequestAttributes();
+            UnifySession session = UserContextHolder.getSession();
             Map<String,String> previous = MDC.getCopyOfContextMap();
             return () -> {
                 try {
-                    RequestContextHolder.setRequestAttributes(context);
+                    UserContextHolder.setSession(session);
+//                    RequestContextHolder.setRequestAttributes(context);
                     MDC.setContextMap(previous);
                     runnable.run();
                 } finally {
-                    RequestContextHolder.resetRequestAttributes();
+//                    RequestContextHolder.resetRequestAttributes();
+                    UserContextHolder.clearSession();
                     MDC.clear();
                 }
             };

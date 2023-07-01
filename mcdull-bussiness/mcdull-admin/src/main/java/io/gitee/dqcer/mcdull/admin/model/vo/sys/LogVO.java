@@ -1,9 +1,8 @@
 package io.gitee.dqcer.mcdull.admin.model.vo.sys;
 
+import io.gitee.dqcer.mcdull.admin.framework.transformer.UserTransformer;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.vo.VO;
-import io.gitee.dqcer.mcdull.admin.config.OperationTypeEnum;
-import io.gitee.dqcer.mcdull.admin.framework.transformer.UserTransformer;
 import lombok.Data;
 
 import java.util.Date;
@@ -99,4 +98,6 @@ public class LogVO implements VO {
     private String typeStr;
 
     private Date createdTime;
+
+    private String log;
 }

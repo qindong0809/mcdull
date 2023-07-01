@@ -121,7 +121,7 @@ public class UnifySession implements Serializable {
     }
 
     public ConcurrentHashMap<String, Object> getExtension() {
-        return extension;
+        return extension == null ? new ConcurrentHashMap<>(8) : extension;
     }
 
     public void setExtension(ConcurrentHashMap<String, Object> extension) {

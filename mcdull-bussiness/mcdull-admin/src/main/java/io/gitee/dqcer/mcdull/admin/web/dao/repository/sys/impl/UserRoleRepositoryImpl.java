@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
-import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -55,7 +55,7 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
         LambdaQueryWrapper<UserRoleDO> query = Wrappers.lambdaQuery();
         query.eq(UserRoleDO::getUserId, userId);
         baseMapper.delete(query);
-        if (ObjUtil.isNull(roleIds)) {
+        if (CollUtil.isEmpty(roleIds)) {
             return;
         }
         List<UserRoleDO> entities = new ArrayList<>();
