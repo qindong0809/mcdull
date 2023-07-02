@@ -44,6 +44,7 @@ public class RoleServiceImpl implements IRoleService {
     @Resource
     private IRoleRepository roleRepository;
 
+
     @Resource
     private IMenuRepository menuRepository;
 
@@ -84,6 +85,9 @@ public class RoleServiceImpl implements IRoleService {
         RoleDO entity = RoleConvert.convertToRoleDO(dto);
         entity.setType(UserTypeEnum.READ_WRITE.getCode());
         Long entityId = roleRepository.insert(entity);
+
+        roleRepository.batchSaveMenu(entityId, dto.getMenuIds());
+
         return Result.ok(entityId);
     }
 
@@ -134,6 +138,9 @@ public class RoleServiceImpl implements IRoleService {
             log.error("数据更新失败, entity:{}", entity);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
+
+        roleRepository.batchUpdateMenu(id, dto.getMenuIds());
+
         return Result.ok(id);
     }
 

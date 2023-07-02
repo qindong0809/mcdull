@@ -7,6 +7,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 /**
 * 角色 接收客户端参数
@@ -19,8 +20,8 @@ public class RoleInsertDTO implements DTO {
 
     private static final long serialVersionUID = 1L;
 
-     @EnumsStrValid(value = StatusEnum.class)
-     private String status;
+    @EnumsStrValid(value = StatusEnum.class)
+    private String status;
 
     @NotBlank
     @Length(max = 512)
@@ -31,5 +32,7 @@ public class RoleInsertDTO implements DTO {
 
     @Length(max = 512)
     private String description;
+
+    private List<Long> menuIds;
 
 }

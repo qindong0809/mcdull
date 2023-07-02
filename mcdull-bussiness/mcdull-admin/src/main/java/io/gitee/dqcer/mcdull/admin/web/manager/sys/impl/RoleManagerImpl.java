@@ -29,13 +29,6 @@ public class RoleManagerImpl implements IRoleManager {
     private IRoleRepository roleRepository;
 
 
-
-    /**
-     * 获取菜单
-     *
-     * @param roleId 角色id
-     * @return {@link List}<{@link MenuDO}>
-     */
     @Override
     public List<MenuDO> getMenuByRole(List<Long> roles) {
         List<RoleMenuDO> list = roleRepository.getMenuByRole(roles);

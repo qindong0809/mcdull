@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -7,9 +8,13 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleMenuDO;
 import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
+import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.RoleMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.RoleMenuMapper;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
@@ -20,10 +25,6 @@ import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
-import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.RoleMapper;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -170,6 +171,27 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
             return Collections.emptyList();
         }
         return list;
+    }
+
+    @Override
+    public void batchSaveMenu(Long roleId, List<Long> menuIds) {
+        if (CollUtil.isEmpty(menuIds)) {
+            return;
+        }
+        for (Long menuId : menuIds) {
+            RoleMenuDO roleMenu = new RoleMenuDO();
+            roleMenu.setRoleId(roleId);
+            roleMenu.setMenuId(menuId);
+            roleMenuMapper.insert(roleMenu);
+        }
+    }
+
+    @Override
+    public void batchUpdateMenu(Long roleId, List<Long> menuIds) {
+        LambdaQueryWrapper<RoleMenuDO> query = Wrappers.lambdaQuery();
+        query.eq(RoleMenuDO::getRoleId, roleId);
+        roleMenuMapper.delete(query);
+        this.batchSaveMenu(roleId, menuIds);
     }
 
 }

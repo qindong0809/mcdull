@@ -13,11 +13,6 @@ import java.util.List;
  */
 public interface IRoleManager {
 
-    /**
-     * 获取菜单
-     *
-     * @param roleId 角色id
-     * @return {@link List}<{@link MenuDO}>
-     */
+
     List<MenuDO> getMenuByRole(List<Long> roles);
 }

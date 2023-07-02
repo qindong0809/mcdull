@@ -24,4 +24,6 @@ public class RoleVO implements VO {
 
     private String status;
 
+    private Integer type;
+
 }

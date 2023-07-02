@@ -4,10 +4,13 @@ import cn.hutool.core.collection.CollUtil;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.MenuConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
+import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuTreeVo;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleMenuTreeSelectVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRoleRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IRoleManager;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IMenuService;
@@ -40,6 +43,10 @@ public class MenuServiceImpl implements IMenuService {
 
     @Resource
     private IRoleManager roleManager;
+
+
+    @Resource
+    private IRoleRepository repository;
 
     @Override
     public Result<List<MenuVO>> list(MenuLiteDTO dto) {
@@ -80,8 +87,17 @@ public class MenuServiceImpl implements IMenuService {
     public Result<RoleMenuTreeSelectVO> roleMenuTreeSelect(Long roleId) {
         List<Long> roles = new ArrayList<>();
         roles.add(roleId);
-        List<MenuDO> menus = roleManager.getMenuByRole(roles);
-        RoleMenuTreeSelectVO vo = getMenuTreeSelectVO(menus);
+
+        List<MenuDO> allmenuList = menuRepository.list();
+
+        RoleMenuTreeSelectVO vo = getMenuTreeSelectVO(allmenuList);
+
+        RoleDO roleDO = repository.getById(roleId);
+        List<MenuDO> menus;
+        if (UserTypeEnum.READ_WRITE.getCode().equals(roleDO.getType())) {
+            menus = roleManager.getMenuByRole(roles);
+            vo.setCheckedKeys(menus.stream().map(IdDO::getId).collect(Collectors.toList()));
+        }
         return Result.ok(vo);
     }
 

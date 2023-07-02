@@ -17,53 +17,26 @@ import java.util.List;
 public interface IRoleRepository extends IService<RoleDO> {
 
 
-    /**
-     * 根据ID列表批量查询数据
-     *
-     * @param ids id列表
-     * @return {@link List<RoleDO>}
-     */
     List<RoleDO> queryListByIds(List<Long> ids);
 
-    /**
-     * 分页查询
-     *
-     * @param dto dto
-     * @return {@link Page}<{@link RoleDO}>
-     */
+
     Page<RoleDO> selectPage(RoleLiteDTO dto);
 
-    /**
-     * 插入
-     *
-     * @param entity 实体
-     * @return {@link Long}
-     */
+
     Long insert(RoleDO entity);
 
-    /**
-     * 存在
-     *
-     * @param roleDO 角色
-     * @return boolean
-     */
+
     boolean exist(RoleDO roleDO);
 
-    /**
-     * 根据id删除批处理
-     *
-     * @param ids id
-     */
+
     void deleteBatchByIds(List<Long> ids);
 
-    /**
-     * 获取菜单
-     *
-     * @param roleId 角色id
-     * @return {@link List}<{@link RoleMenuDO}>
-     */
+
     List<RoleMenuDO> getMenuByRole(List<Long> roles);
 
     List<RoleDO> getAll();
 
+    void batchSaveMenu(Long roleId, List<Long> menuIds);
+
+    void batchUpdateMenu(Long roleId, List<Long> menuIds);
 }
