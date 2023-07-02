@@ -4,12 +4,9 @@ import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleUpdateDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
-import io.gitee.dqcer.mcdull.framework.base.dto.IdDTO;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-
-import java.util.List;
 
 /**
 * 角色表 业务接口类
@@ -54,21 +51,7 @@ public interface IRoleService {
      */
      Result<Long> updateStatus(StatusDTO dto);
 
-    /**
-     * 根据主键集删除
-     *
-     * @param dto dto
-     * @return {@link Result<List>}
-     */
-    Result<List<Long>> deleteBatchByIds(IdDTO<Long> dto);
 
-    /**
-     * 根据主键集查询
-     *
-     * @param ids id
-     * @return {@link Result<List>}
-     */
-    Result<List<RoleVO>> queryByIds(List<Long> ids);
 
     Result<Long> deleteById(Long roleId);
 }

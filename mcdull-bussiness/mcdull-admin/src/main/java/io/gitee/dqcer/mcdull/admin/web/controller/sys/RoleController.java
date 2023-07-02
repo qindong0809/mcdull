@@ -35,7 +35,7 @@ public class RoleController implements BasicController {
      * @param dto dto
      * @return {@link Result}
      */
-    @Authorized("system:role:list")
+    @Authorized("system:role:query")
     @GetMapping("list")
     public Result<PagedVO<RoleVO>> listByPage(@Validated(value = {ValidGroup.List.class}) RoleLiteDTO dto){
         return roleService.listByPage(dto);
@@ -58,7 +58,7 @@ public class RoleController implements BasicController {
     * @param dto dto
     * @return {@link Result<Long> 返回新增主键}
     */
-    @Authorized("sys:role:insert")
+    @Authorized("system:role:add")
     @PostMapping("")
     public Result<Long> insert(@RequestBody RoleInsertDTO dto){
         return roleService.insert(dto);
@@ -71,7 +71,7 @@ public class RoleController implements BasicController {
     * @param dto dto
     * @return {@link Result<Long>}
     */
-    @Authorized("sys:role:update")
+    @Authorized("system:role:edit")
     @PutMapping("")
     public Result<Long> update(@RequestBody RoleUpdateDTO dto){
         return roleService.update(dto);
@@ -82,8 +82,7 @@ public class RoleController implements BasicController {
     * @param dto dto
     * @return {@link Result<Long>}
     */
-    @Authorized("sys:role:status")
-    @PutMapping("base/status")
+    @PutMapping("changeStatus")
     public Result<Long> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) StatusDTO dto){
         return roleService.updateStatus(dto);
     }
@@ -94,7 +93,7 @@ public class RoleController implements BasicController {
     * @param roleId roleId
     * @return {@link Result<Long>}
     */
-    @Authorized("sys:role:delete")
+    @Authorized("system:role:remove")
     @DeleteMapping("{roleId}")
     public Result<Long> deleteBatchById(@PathVariable Long roleId){
         return roleService.deleteById(roleId);

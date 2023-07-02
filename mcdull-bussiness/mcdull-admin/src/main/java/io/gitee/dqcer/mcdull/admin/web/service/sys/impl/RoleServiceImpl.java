@@ -12,7 +12,6 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IRoleService;
-import io.gitee.dqcer.mcdull.framework.base.dto.IdDTO;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -173,37 +172,7 @@ public class RoleServiceImpl implements IRoleService {
         }
         return Result.ok(id);
     }
-    /**
-     * 根据主键删除
-     *
-     * @param dto 参数
-     * @return {@link Result<Long>}
-     */
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public Result<List<Long>> deleteBatchByIds(IdDTO dto) {
-        List<Long> ids = dto.getIds();
-        roleRepository.deleteBatchByIds(ids);
-        return Result.ok(ids);
-    }
 
-
-    /**
-     * 根据主键集查询
-     *
-     * @param ids id
-     * @return {@link Result<List>}
-     */
-    @Transactional(readOnly = true)
-    @Override
-    public Result<List<RoleVO>> queryByIds(List<Long> ids) {
-         List<RoleDO> listEntity = roleRepository.queryListByIds(ids);
-         List<RoleVO> voList = new ArrayList<>();
-         for (RoleDO entity : listEntity) {
-            voList.add(RoleConvert.convertToRoleVO(entity));
-         }
-         return Result.ok(voList);
-    }
 
     @Transactional(rollbackFor = Exception.class)
     @Override

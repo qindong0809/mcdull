@@ -31,6 +31,7 @@ public class RoleConvert {
         roleVO.setCode(entity.getCode());
         roleVO.setName(entity.getName());
         roleVO.setCreatedTime(entity.getCreatedTime());
+        roleVO.setUpdatedTime(entity.getUpdatedTime());
         roleVO.setStatus(entity.getStatus());
         roleVO.setType(entity.getType());
         return roleVO;

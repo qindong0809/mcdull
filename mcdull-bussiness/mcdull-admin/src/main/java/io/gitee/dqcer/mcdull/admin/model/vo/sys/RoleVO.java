@@ -22,6 +22,8 @@ public class RoleVO implements VO {
 
     private Date createdTime;
 
+    private Date updatedTime;
+
     private String status;
 
     private Integer type;
