@@ -101,4 +101,13 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
         }
         return list;
     }
+
+    @Override
+    public List<MenuDO> getListByName(String name) {
+        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
+        query.eq(MenuDO::getName, name);
+        List<MenuDO> list = baseMapper.selectList(query);
+        return CollUtil.isEmpty(list) ? Collections.emptyList() : list;
+    }
+
 }

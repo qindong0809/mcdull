@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys.impl;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.RoleConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleInsertDTO;
@@ -9,6 +10,7 @@ import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleUpdateDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
+import io.gitee.dqcer.mcdull.admin.util.LogHelpUtil;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IRoleService;
@@ -87,7 +89,14 @@ public class RoleServiceImpl implements IRoleService {
 
         roleRepository.batchSaveMenu(entityId, dto.getMenuIds());
 
+        this.buildAddOrEditLog(dto);
+
         return Result.ok(entityId);
+    }
+
+    private void buildAddOrEditLog(RoleInsertDTO dto) {
+        String logDesc = "角色:{}";
+        LogHelpUtil.setLog(StrUtil.format(logDesc, dto.getName()));
     }
 
     private boolean doCheckDataExist(String name) {
@@ -139,7 +148,7 @@ public class RoleServiceImpl implements IRoleService {
         }
 
         roleRepository.batchUpdateMenu(id, dto.getMenuIds());
-
+        this.buildAddOrEditLog(dto);
         return Result.ok(id);
     }
 

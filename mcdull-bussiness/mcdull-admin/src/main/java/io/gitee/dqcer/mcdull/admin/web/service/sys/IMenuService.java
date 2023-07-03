@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuAddDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleMenuTreeSelectVO;
@@ -23,4 +25,7 @@ public interface IMenuService {
 
     Result<RoleMenuTreeSelectVO> treeselect();
 
+    Result<List<MenuVO>> add(MenuAddDTO dto);
+
+    Result<List<MenuVO>> edit(MenuEditDTO dto);
 }

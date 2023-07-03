@@ -1,11 +1,10 @@
 package io.gitee.dqcer.mcdull.admin.model.dto.sys;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
-import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
+import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.ValidateUtil;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -17,13 +16,10 @@ import java.util.List;
 * @author dqcer
 * @since 2022-11-16
 */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class UserInsertDTO extends PagedDTO {
+public class UserInsertDTO implements DTO {
 
     private static final long serialVersionUID = 1L;
-
-    private Long id;
 
     @NotBlank
     private String nickName;

@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
@@ -20,8 +21,10 @@ public interface IUserService {
 
     Result<UserDetailVO> detail(Long userId);
 
-    Result<Long> insertOrUpdate(UserInsertDTO dto);
+    Result<Long> add(UserInsertDTO dto);
 
+
+    Result<Long> edit(UserEditDTO dto);
 
     Result<Long> updateStatus(StatusDTO dto);
 

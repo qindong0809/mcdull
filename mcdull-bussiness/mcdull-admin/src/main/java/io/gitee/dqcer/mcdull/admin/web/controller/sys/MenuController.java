@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.controller.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuAddDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleMenuTreeSelectVO;
@@ -9,10 +11,7 @@ import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -63,6 +62,18 @@ public class MenuController {
     @GetMapping("/treeselect")
     public Result<RoleMenuTreeSelectVO> treeselect() {
         return menuService.treeselect();
+    }
+
+    @Authorized("system:menu:add")
+    @PostMapping
+    public Result<List<MenuVO>> add( @RequestBody MenuAddDTO dto){
+        return menuService.add(dto);
+    }
+
+    @Authorized("system:menu:edit")
+    @PutMapping
+    public Result<List<MenuVO>> edit(@RequestBody MenuEditDTO dto){
+        return menuService.edit(dto);
     }
 
 }

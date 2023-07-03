@@ -42,7 +42,7 @@ public class NoticeController {
      * @return {@link Result<PagedVO>}
      */
     @Transform
-    @Authorized("sys:notice:list")
+    @Authorized("system:notice:query")
     @GetMapping("list")
     public Result<PagedVO<NoticeVO>> pagedQuery(@Validated(value = {ValidGroup.Paged.class}) NoticeLiteDTO dto){
         return noticeService.pagedQuery(dto);

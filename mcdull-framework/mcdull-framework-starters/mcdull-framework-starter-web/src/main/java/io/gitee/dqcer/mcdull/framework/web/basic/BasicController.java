@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
  * @author dqcer
  * @since 2023/05/18
  */
-@Deprecated
 @Validated
 public interface BasicController {
 

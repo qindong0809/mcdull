@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.framework.transformer.IUserTransformerService;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostDO;
@@ -160,31 +161,48 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<Long> insertOrUpdate(UserInsertDTO dto) {
-        Long userId = dto.getId();
-        LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
-        query.eq(UserDO::getAccount, dto.getAccount());
-        query.ne(ObjUtil.isNotNull(userId), IdDO::getId, userId);
-        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
-        query.last(GlobalConstant.Database.SQL_LIMIT_1);
-        List<UserDO> list = baseRepository.list(query);
+    public Result<Long> add(UserInsertDTO dto) {
+        List<UserDO> list = this.validName(null, dto.getAccount());
+        Long userId;
         if (!list.isEmpty()) {
             return Result.error(CodeEnum.DATA_EXIST);
         }
+        UserDO entity = UserConvert.dtoToEntity(dto);
+        String salt = RandomUtil.uuid();
+        String password = Sha1Util.getSha1(Md5Util.getMd5(dto.getAccount() + salt));
+        entity.setSalt(salt);
+        entity.setPassword(password);
+        entity.setType(UserTypeEnum.READ_WRITE.getCode());
+        userId = baseRepository.insert(entity);
+        userRoleRepository.updateByUserId(userId, dto.getRoleIds());
+        userPostRepository.updateByUserId(userId, dto.getPostIds());
 
-        if (ObjUtil.isNull(userId)) {
-            UserDO entity = UserConvert.dtoToEntity(dto);
+        this.buildAddOrEditLog(dto);
 
-            String salt = RandomUtil.uuid();
-            String password = Sha1Util.getSha1(Md5Util.getMd5(dto.getAccount() + salt));
-            entity.setSalt(salt);
-            entity.setPassword(password);
-            entity.setType(UserTypeEnum.READ_WRITE.getCode());
-            userId = baseRepository.insert(entity);
-            userRoleRepository.updateByUserId(userId, dto.getRoleIds());
-            userPostRepository.updateByUserId(userId, dto.getPostIds());
+        return Result.ok(userId);
+    }
 
-            return Result.ok(userId);
+    private void buildAddOrEditLog(UserInsertDTO dto) {
+        String logDesc = this.buildLogIndex();
+        LogHelpUtil.setLog(StrUtil.format(logDesc, dto.getAccount()));
+    }
+
+    private List<UserDO> validName(Long userId, String account) {
+        LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
+        query.eq(UserDO::getAccount, account);
+        query.ne(ObjUtil.isNotNull(userId), IdDO::getId, userId);
+        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
+        query.last(GlobalConstant.Database.SQL_LIMIT_1);
+        return baseRepository.list(query);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Long> edit(UserEditDTO dto) {
+        Long userId = dto.getId();
+        List<UserDO> list = this.validName(userId, dto.getAccount());
+        if (!list.isEmpty()) {
+            return Result.error(CodeEnum.DATA_EXIST);
         }
 
         UserDO userDO = baseRepository.getById(userId);
@@ -197,6 +215,8 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
         baseRepository.updateById(userDO);
         userRoleRepository.updateByUserId(userId, dto.getRoleIds());
         userPostRepository.updateByUserId(userId, dto.getPostIds());
+
+        this.buildAddOrEditLog(dto);
         return Result.ok(userId);
     }
 

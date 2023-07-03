@@ -1,7 +1,10 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.MenuConvert;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuAddDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
@@ -14,16 +17,21 @@ import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRoleRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IRoleManager;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IMenuService;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.TreeUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.TreeSelectVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -33,10 +41,8 @@ import java.util.stream.Collectors;
  * @since  2022/11/08
  */
 @Service
-public class MenuServiceImpl implements IMenuService {
+public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implements IMenuService {
 
-    @Resource
-    private IMenuRepository menuRepository;
 
     @Resource
     private IUserRoleRepository userRoleRepository;
@@ -54,7 +60,7 @@ public class MenuServiceImpl implements IMenuService {
 
         boolean admin = UserContextHolder.isAdmin();
         if (admin) {
-            List<MenuDO> list = menuRepository.list(dto.getMenuName(), dto.getStatus(), null);
+            List<MenuDO> list = baseRepository.list(dto.getMenuName(), dto.getStatus(), null);
             for (MenuDO menuDO : list) {
                 voList.add(MenuConvert.convertToMenuVO(menuDO));
             }
@@ -70,7 +76,7 @@ public class MenuServiceImpl implements IMenuService {
         if (CollUtil.isEmpty(menuByRole)) {
             return Result.ok(voList);
         }
-        List<MenuDO> list = menuRepository.list(dto.getMenuName(), dto.getStatus(), menuByRole.stream().map(IdDO::getId).collect(Collectors.toList()));
+        List<MenuDO> list = baseRepository.list(dto.getMenuName(), dto.getStatus(), menuByRole.stream().map(IdDO::getId).collect(Collectors.toList()));
         for (MenuDO menuDO : list) {
             voList.add(MenuConvert.convertToMenuVO(menuDO));
         }
@@ -79,7 +85,7 @@ public class MenuServiceImpl implements IMenuService {
 
     @Override
     public Result<MenuVO> detail(Long id) {
-        MenuDO menuDO = menuRepository.getById(id);
+        MenuDO menuDO = baseRepository.getById(id);
         return Result.ok(MenuConvert.convertToMenuVO(menuDO));
     }
 
@@ -88,7 +94,7 @@ public class MenuServiceImpl implements IMenuService {
         List<Long> roles = new ArrayList<>();
         roles.add(roleId);
 
-        List<MenuDO> allmenuList = menuRepository.list();
+        List<MenuDO> allmenuList = baseRepository.list();
 
         RoleMenuTreeSelectVO vo = getMenuTreeSelectVO(allmenuList);
 
@@ -124,9 +130,40 @@ public class MenuServiceImpl implements IMenuService {
 
     @Override
     public Result<RoleMenuTreeSelectVO> treeselect() {
-        List<MenuDO> list = menuRepository.list();
+        List<MenuDO> list = baseRepository.list();
         RoleMenuTreeSelectVO vo = this.getMenuTreeSelectVO(list);
         return Result.ok(vo);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<List<MenuVO>> add(MenuAddDTO dto) {
+        this.validNameExist(null, dto.getMenuName());
+        // TODO: 2023/7/3
+        return null;
+    }
+
+    @Override
+    protected void validNameExist(Serializable id, String name) {
+        List<MenuDO> list = baseRepository.getListByName(name);
+        if (null == id) {
+            if (CollUtil.isNotEmpty(list)) {
+                this.throwDataExistException();
+            }
+            return;
+        }
+        long count = list.stream().filter(i -> !Objects.equals(id, i.getId())).count();
+        if (!GlobalConstant.Number.NUMBER_0.equals(Convert.toInt(count))) {
+            this.throwDataExistException();
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<List<MenuVO>> edit(MenuEditDTO dto) {
+        this.validNameExist(dto.getId(), dto.getMenuName());
+        // TODO: 2023/7/3
+        return null;
     }
 
     private List<TreeSelectVO> getTreeSelectVO(List<MenuTreeVo> treeObjects) {

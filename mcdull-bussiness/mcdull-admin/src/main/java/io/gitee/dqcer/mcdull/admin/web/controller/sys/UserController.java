@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.controller.sys;
 
-import io.gitee.dqcer.mcdull.admin.config.OperationLog;
-import io.gitee.dqcer.mcdull.admin.config.OperationTypeEnum;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
@@ -78,11 +77,17 @@ public class UserController implements BasicController {
      * @param dto dto
      * @return {@link Result<Long> 返回新增主键}
      */
-    @OperationLog(module = "基础系统", menu = "用户管理", type = OperationTypeEnum.INSERT)
+    @Authorized("system:user:add")
     @RedisLock(key = "'lock:uac:user:' + #dto.account", timeout = 3)
     @PostMapping()
-    public Result<Long> insertOrUpdate(@RequestBody UserInsertDTO dto){
-        return userService.insertOrUpdate(dto);
+    public Result<Long> add(@RequestBody UserInsertDTO dto){
+        return userService.add(dto);
+    }
+
+    @Authorized("system:user:edit")
+    @PutMapping()
+    public Result<Long> edit(@RequestBody UserEditDTO dto){
+        return userService.edit(dto);
     }
 
     /**

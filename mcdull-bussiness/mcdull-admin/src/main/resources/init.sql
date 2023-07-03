@@ -216,52 +216,52 @@ insert into sys_menu values('117',  '系统接口', '3',   '3', 'swagger',    't
 insert into sys_menu values('500',  '操作日志', '108', '1', 'operlog',    'monitor/operlog/index',    '', 1, 0, 'C', '0', '1', 'monitor:operlog:list',    'form',          null, CURRENT_TIMESTAMP(), null, null, '操作日志菜单');
 insert into sys_menu values('501',  '登录日志', '108', '2', 'logininfor', 'monitor/logininfor/index', '', 1, 0, 'C', '0', '1', 'monitor:logininfor:list', 'logininfor',    null, CURRENT_TIMESTAMP(), null, null, '登录日志菜单');
 -- 用户管理按钮
-insert into sys_menu values('1000', '用户查询', '100', '1',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:query',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1001', '用户新增', '100', '2',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:add',            '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1002', '用户修改', '100', '3',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:edit',           '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1003', '用户删除', '100', '4',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:remove',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1004', '用户导出', '100', '5',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:export',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1005', '用户导入', '100', '6',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:import',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1000', '查询', '100', '1',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:query',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1001', '新增', '100', '2',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:add',            '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1002', '修改', '100', '3',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:edit',           '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1003', '删除', '100', '4',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:remove',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1004', '导出', '100', '5',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:export',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1005', '导入', '100', '6',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:import',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
 insert into sys_menu values('1006', '重置密码', '100', '7',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:resetPwd',       '#', null, CURRENT_TIMESTAMP(), null, null, '');
 -- 角色管理按钮
-insert into sys_menu values('1007', '角色查询', '101', '1',  '', '', '', 1, 0, 'F', '0', '1', 'system:role:query',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1008', '角色新增', '101', '2',  '', '', '', 1, 0, 'F', '0', '1', 'system:role:add',            '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1009', '角色修改', '101', '3',  '', '', '', 1, 0, 'F', '0', '1', 'system:role:edit',           '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1010', '角色删除', '101', '4',  '', '', '', 1, 0, 'F', '0', '1', 'system:role:remove',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1011', '角色导出', '101', '5',  '', '', '', 1, 0, 'F', '0', '1', 'system:role:export',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1007', '查询', '101', '1',  '', '', '', 1, 0, 'F', '0', '1', 'system:role:query',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1008', '新增', '101', '2',  '', '', '', 1, 0, 'F', '0', '1', 'system:role:add',            '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1009', '修改', '101', '3',  '', '', '', 1, 0, 'F', '0', '1', 'system:role:edit',           '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1010', '删除', '101', '4',  '', '', '', 1, 0, 'F', '0', '1', 'system:role:remove',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1011', '导出', '101', '5',  '', '', '', 1, 0, 'F', '0', '1', 'system:role:export',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
 -- 菜单管理按钮
-insert into sys_menu values('1012', '菜单查询', '102', '1',  '', '', '', 1, 0, 'F', '0', '1', 'system:menu:query',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1013', '菜单新增', '102', '2',  '', '', '', 1, 0, 'F', '0', '1', 'system:menu:add',            '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1014', '菜单修改', '102', '3',  '', '', '', 1, 0, 'F', '0', '1', 'system:menu:edit',           '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1015', '菜单删除', '102', '4',  '', '', '', 1, 0, 'F', '0', '1', 'system:menu:remove',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1012', '查询', '102', '1',  '', '', '', 1, 0, 'F', '0', '1', 'system:menu:query',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1013', '新增', '102', '2',  '', '', '', 1, 0, 'F', '0', '1', 'system:menu:add',            '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1014', '修改', '102', '3',  '', '', '', 1, 0, 'F', '0', '1', 'system:menu:edit',           '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1015', '删除', '102', '4',  '', '', '', 1, 0, 'F', '0', '1', 'system:menu:remove',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
 -- 部门管理按钮
-insert into sys_menu values('1016', '部门查询', '103', '1',  '', '', '', 1, 0, 'F', '0', '1', 'system:dept:query',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1017', '部门新增', '103', '2',  '', '', '', 1, 0, 'F', '0', '1', 'system:dept:add',            '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1018', '部门修改', '103', '3',  '', '', '', 1, 0, 'F', '0', '1', 'system:dept:edit',           '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1019', '部门删除', '103', '4',  '', '', '', 1, 0, 'F', '0', '1', 'system:dept:remove',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1016', '查询', '103', '1',  '', '', '', 1, 0, 'F', '0', '1', 'system:dept:query',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1017', '新增', '103', '2',  '', '', '', 1, 0, 'F', '0', '1', 'system:dept:add',            '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1018', '修改', '103', '3',  '', '', '', 1, 0, 'F', '0', '1', 'system:dept:edit',           '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1019', '删除', '103', '4',  '', '', '', 1, 0, 'F', '0', '1', 'system:dept:remove',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
 -- 岗位管理按钮
-insert into sys_menu values('1020', '岗位查询', '104', '1',  '', '', '', 1, 0, 'F', '0', '1', 'system:post:query',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1021', '岗位新增', '104', '2',  '', '', '', 1, 0, 'F', '0', '1', 'system:post:add',            '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1022', '岗位修改', '104', '3',  '', '', '', 1, 0, 'F', '0', '1', 'system:post:edit',           '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1023', '岗位删除', '104', '4',  '', '', '', 1, 0, 'F', '0', '1', 'system:post:remove',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1024', '岗位导出', '104', '5',  '', '', '', 1, 0, 'F', '0', '1', 'system:post:export',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1020', '查询', '104', '1',  '', '', '', 1, 0, 'F', '0', '1', 'system:post:query',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1021', '新增', '104', '2',  '', '', '', 1, 0, 'F', '0', '1', 'system:post:add',            '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1022', '修改', '104', '3',  '', '', '', 1, 0, 'F', '0', '1', 'system:post:edit',           '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1023', '删除', '104', '4',  '', '', '', 1, 0, 'F', '0', '1', 'system:post:remove',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1024', '导出', '104', '5',  '', '', '', 1, 0, 'F', '0', '1', 'system:post:export',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
 -- 字典管理按钮
-insert into sys_menu values('1025', '字典查询', '105', '1', '#', '', '', 1, 0, 'F', '0', '1', 'system:dict:query',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1026', '字典新增', '105', '2', '#', '', '', 1, 0, 'F', '0', '1', 'system:dict:add',            '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1027', '字典修改', '105', '3', '#', '', '', 1, 0, 'F', '0', '1', 'system:dict:edit',           '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1028', '字典删除', '105', '4', '#', '', '', 1, 0, 'F', '0', '1', 'system:dict:remove',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1029', '字典导出', '105', '5', '#', '', '', 1, 0, 'F', '0', '1', 'system:dict:export',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1025', '查询', '105', '1', '#', '', '', 1, 0, 'F', '0', '1', 'system:dict:query',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1026', '新增', '105', '2', '#', '', '', 1, 0, 'F', '0', '1', 'system:dict:add',            '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1027', '修改', '105', '3', '#', '', '', 1, 0, 'F', '0', '1', 'system:dict:edit',           '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1028', '删除', '105', '4', '#', '', '', 1, 0, 'F', '0', '1', 'system:dict:remove',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1029', '导出', '105', '5', '#', '', '', 1, 0, 'F', '0', '1', 'system:dict:export',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
 -- 参数设置按钮
-insert into sys_menu values('1030', '参数查询', '106', '1', '#', '', '', 1, 0, 'F', '0', '1', 'system:config:query',        '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1031', '参数新增', '106', '2', '#', '', '', 1, 0, 'F', '0', '1', 'system:config:add',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1032', '参数修改', '106', '3', '#', '', '', 1, 0, 'F', '0', '1', 'system:config:edit',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1033', '参数删除', '106', '4', '#', '', '', 1, 0, 'F', '0', '1', 'system:config:remove',       '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1034', '参数导出', '106', '5', '#', '', '', 1, 0, 'F', '0', '1', 'system:config:export',       '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1030', '查询', '106', '1', '#', '', '', 1, 0, 'F', '0', '1', 'system:config:query',        '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1031', '新增', '106', '2', '#', '', '', 1, 0, 'F', '0', '1', 'system:config:add',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1032', '修改', '106', '3', '#', '', '', 1, 0, 'F', '0', '1', 'system:config:edit',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1033', '删除', '106', '4', '#', '', '', 1, 0, 'F', '0', '1', 'system:config:remove',       '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1034', '导出', '106', '5', '#', '', '', 1, 0, 'F', '0', '1', 'system:config:export',       '#', null, CURRENT_TIMESTAMP(), null, null, '');
 -- 通知公告按钮
-insert into sys_menu values('1035', '公告查询', '107', '1', '#', '', '', 1, 0, 'F', '0', '1', 'system:notice:query',        '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1036', '公告新增', '107', '2', '#', '', '', 1, 0, 'F', '0', '1', 'system:notice:add',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1037', '公告修改', '107', '3', '#', '', '', 1, 0, 'F', '0', '1', 'system:notice:edit',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
-insert into sys_menu values('1038', '公告删除', '107', '4', '#', '', '', 1, 0, 'F', '0', '1', 'system:notice:remove',       '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1035', '查询', '107', '1', '#', '', '', 1, 0, 'F', '0', '1', 'system:notice:query',        '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1036', '新增', '107', '2', '#', '', '', 1, 0, 'F', '0', '1', 'system:notice:add',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1037', '修改', '107', '3', '#', '', '', 1, 0, 'F', '0', '1', 'system:notice:edit',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('1038', '删除', '107', '4', '#', '', '', 1, 0, 'F', '0', '1', 'system:notice:remove',       '#', null, CURRENT_TIMESTAMP(), null, null, '');
 -- 操作日志按钮
 insert into sys_menu values('1039', '操作查询', '500', '1', '#', '', '', 1, 0, 'F', '0', '1', 'monitor:operlog:query',      '#', null, CURRENT_TIMESTAMP(), null, null, '');
 insert into sys_menu values('1040', '操作删除', '500', '2', '#', '', '', 1, 0, 'F', '0', '1', 'monitor:operlog:remove',     '#', null, CURRENT_TIMESTAMP(), null, null, '');

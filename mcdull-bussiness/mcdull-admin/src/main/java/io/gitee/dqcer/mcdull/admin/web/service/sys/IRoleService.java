@@ -16,13 +16,6 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 */
 public interface IRoleService {
 
-
-    /**
-     * 分页查询
-     *
-     * @param dto 参数
-     * @return {@link Result< PagedVO >}
-     */
     Result<PagedVO<RoleVO>> listByPage(RoleLiteDTO dto);
 
 
