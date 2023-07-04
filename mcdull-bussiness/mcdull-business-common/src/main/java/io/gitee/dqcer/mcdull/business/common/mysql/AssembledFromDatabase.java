@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.business.common.mysql;
 
+import lombok.Data;
 import lombok.SneakyThrows;
 
 import java.sql.Connection;
@@ -13,10 +14,15 @@ import java.util.stream.Collectors;
 
 public class AssembledFromDatabase implements AssembledDatabaseMetadata {
 
-    private String driver = "com.mysql.cj.jdbc.Driver";
 
     @SneakyThrows
-    public AssembledFromDatabase(String url, String user, String pwd) {
+    public static Com compare(String url, String user, String pwd) {
+
+        List<Table> tables = new ArrayList<>();
+
+        List<Index> indices = new ArrayList<>();
+
+        String driver = "com.mysql.cj.jdbc.Driver";
         Class.forName(driver);
         Properties props = new Properties();
         props.setProperty("user", user);
@@ -68,5 +74,17 @@ public class AssembledFromDatabase implements AssembledDatabaseMetadata {
             }
             tables.add(table);
         }
+        Com com = new Com();
+        com.setIndices(indices);
+        com.setTables(tables);
+        return com;
     }
+
+    @Data
+    public static class Com {
+        private List<Table> tables = new ArrayList<>();
+
+        private List<Index> indices = new ArrayList<>();
+    }
+
 }

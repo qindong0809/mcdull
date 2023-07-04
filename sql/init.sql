@@ -120,7 +120,7 @@ CREATE TABLE `sys_operation_log`  (
 `parameter_map` varchar(1024)  DEFAULT NULL COMMENT '参数map',
 `headers` text  NOT NULL COMMENT '请求头',
 `button` varchar(256) NOT NULL COMMENT '所属操作类型',
-`log` varchar(2048) DEFAULT NULL COMMENT '所属操作类型',
+`log` text DEFAULT NULL COMMENT '所属操作类型',
 PRIMARY KEY (`id`) 
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户操作日志';
 
