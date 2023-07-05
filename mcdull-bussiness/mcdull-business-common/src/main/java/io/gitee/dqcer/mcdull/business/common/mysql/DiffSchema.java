@@ -1,8 +1,10 @@
 package io.gitee.dqcer.mcdull.business.common.mysql;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -13,31 +15,46 @@ public class DiffSchema {
 
     public static void main(String[] args) throws Exception {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        String url = "jdbc:mysql://mcdull.io:3306/mcdull-cloud?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true&serverTimeZone=UTC";
+        String urlTmp = "jdbc:mysql://mcdull.io:3306/mcdull-tmp?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true&serverTimeZone=UTC&allowPublicKeyRetrieval=true";
+        String url = "jdbc:mysql://mcdull.io:3306/mcdull-cloud?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true&serverTimeZone=UTC&allowPublicKeyRetrieval=true";
         String user = "root";
         String password = "123456";
-        AssembledFromDatabase source = new AssembledFromDatabase(url, user, password);
-        AssembledFromDatabase target = new AssembledFromDatabase(url, user, password);
-        System.out.println(compare(source, target));
+        AssembledFromDatabase.Com source = AssembledFromDatabase.compare(urlTmp, user, password);
+        AssembledFromDatabase.Com target = AssembledFromDatabase.compare(url, user, password);
+        Diff compare = compare(source, target);
+        StringBuffer buffer = new StringBuffer();
+        for (Table table : compare.getAdd()) {
+            buffer.append(createTable(table));
+        }
 
+        for (Table table : compare.getNotExist()) {
+            buffer.append(createTable(table));
+        }
+
+        System.out.println(buffer);
 
     }
 
-    public static boolean compare(AssembledFromDatabase source, AssembledFromDatabase target) {
+    public static Diff compare(AssembledFromDatabase.Com source, AssembledFromDatabase.Com target) {
         Map<String, Table> targetMap = target.getTables().stream().collect(Collectors.toMap(Table::getTableName, Function.identity()));
         Map<String, Table> sourceMap = source.getTables().stream().collect(Collectors.toMap(Table::getTableName, Function.identity()));
+        List<Table> addList = new ArrayList<>();
+        List<Table> notExistList = new ArrayList<>();
         for (Map.Entry<String, Table> entry : targetMap.entrySet()) {
             if (!sourceMap.containsKey(entry.getKey())) {
-                return false;
+                addList.add(entry.getValue());
             }
         }
 
         for (Map.Entry<String, Table> entry : sourceMap.entrySet()) {
-            if (targetMap.containsKey(entry.getKey())) {
-                return false;
+            if (!targetMap.containsKey(entry.getKey())) {
+                notExistList.add(entry.getValue());
             }
         }
-        return true;
+        Diff diff = new Diff();
+        diff.setAdd(addList);
+        diff.setNotExist(notExistList);
+        return diff;
     }
 
 
@@ -80,4 +97,14 @@ public class DiffSchema {
         buffer.append(";\n");
         return buffer;
     }
+
+
+
+    @Data
+    public static class Diff {
+        private List<Table> add;
+
+        private List<Table> notExist;
+    }
 }
+

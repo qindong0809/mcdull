@@ -123,7 +123,7 @@ CREATE TABLE `sys_operation_log`  (
 `trace_id` varchar(128)   NOT NULL COMMENT '日志跟踪id',
 `time_taken` bigint NOT NULL COMMENT '耗时',
 `parameter_map` varchar(1024)  DEFAULT NULL COMMENT '参数map',
-`headers` varchar(1024)  NOT NULL COMMENT '请求头',
+`headers` varchar(2048)  NOT NULL COMMENT '请求头',
 `button` varchar(256) NOT NULL COMMENT '所属操作类型',
 `log` varchar(2048) DEFAULT NULL COMMENT '所属操作类型',
 PRIMARY KEY (`id`)
