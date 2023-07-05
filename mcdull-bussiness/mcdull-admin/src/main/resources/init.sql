@@ -163,9 +163,9 @@ INSERT INTO sys_user_role VALUES(2, '2022-10-31 07:20:54', 1589631293412503554, 
 
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE IF NOT EXISTS `sys_menu` (
-    `id` bigint NOT NULL COMMENT '主键',
+    `id` int  AUTO_INCREMENT COMMENT '主键',
     `name` varchar(128) NOT NULL COMMENT '名称',
-    `parent_id` varchar(128) NOT NULL COMMENT '父菜单ID',
+    `parent_id` int NOT NULL COMMENT '父菜单ID',
     `order_num` int NOT NULL COMMENT '显示顺序',
     `path` varchar(128) DEFAULT NULL COMMENT '路由地址',
     `component` varchar(256) DEFAULT NULL COMMENT '组件路径',
@@ -174,8 +174,8 @@ CREATE TABLE IF NOT EXISTS `sys_menu` (
     `is_cache` int NOT NULL COMMENT '是否缓存（0缓存 1不缓存）',
     `menu_type` varchar(8) NOT NULL COMMENT '菜单类型（M目录 C菜单 F按钮）',
     `visible` char(1) NOT NULL COMMENT '菜单状态（0显示 1隐藏）',
-    `status` char(1)         not null               comment '状态（1正常 2停用）',
-    `perms` varchar(128) NOT NULL COMMENT '权限标识',
+    `status` char(1) NOT NULL COMMENT '状态（1正常 2停用）',
+    `perms` varchar(128) DEFAULT NULL COMMENT '权限标识',
     `icon` varchar(128) DEFAULT NULL COMMENT '菜单图标',
     `created_by` bigint NULL COMMENT '创建人',
     `created_time` datetime NULL COMMENT '创建时间',
@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `sys_menu` (
     `updated_time` datetime NULL COMMENT '更新时间',
     `remark` varchar(500) DEFAULT NULL comment '备注',
     PRIMARY KEY (`id`)
-    ) ;
+    );
 
 -- ----------------------------
 -- 初始化-菜单信息表数据

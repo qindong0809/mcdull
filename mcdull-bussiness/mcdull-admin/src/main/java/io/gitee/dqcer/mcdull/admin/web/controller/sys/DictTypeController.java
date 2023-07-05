@@ -1,16 +1,15 @@
 package io.gitee.dqcer.mcdull.admin.web.controller.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeAddDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictTypeVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IDictTypeService;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.List;
  */
 @RequestMapping("system/dict/type")
 @RestController
-public class DictTypeController {
+public class DictTypeController implements BasicController {
 
     @Resource
     private IDictTypeService dictTypeService;
@@ -38,6 +37,11 @@ public class DictTypeController {
     @GetMapping("list")
     public Result<PagedVO<DictTypeVO>> list(@Validated(value = {ValidGroup.List.class}) DictTypeLiteDTO dto) {
         return dictTypeService.list(dto);
+    }
+
+    @PostMapping
+    public Result<Long> add(@RequestBody DictTypeAddDTO dto) {
+        return dictTypeService.add(dto);
     }
 
     /**

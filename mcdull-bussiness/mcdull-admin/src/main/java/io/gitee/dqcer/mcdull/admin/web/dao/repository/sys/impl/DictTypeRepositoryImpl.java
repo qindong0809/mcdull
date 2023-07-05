@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeLiteDTO;
@@ -16,6 +17,7 @@ import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
 * 字典数据 数据库操作封装实现层
@@ -49,5 +51,13 @@ public class DictTypeRepositoryImpl extends ServiceImpl<DictTypeMapper, DictType
         }
         lambda.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
+    }
+
+    @Override
+    public List<DictTypeDO> getListByName(String dictType) {
+        LambdaQueryWrapper<DictTypeDO> query = Wrappers.lambdaQuery();
+        query.eq(DictTypeDO::getDictType, dictType);
+        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
+        return baseMapper.selectList(query);
     }
 }

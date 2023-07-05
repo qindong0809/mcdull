@@ -10,6 +10,7 @@ import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.MenuMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
@@ -58,11 +59,20 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
     public Long insert(MenuDO entity) {
         entity.setCreatedBy(UserContextHolder.currentUserId());
         entity.setCreatedTime(new Date());
+        entity.setId(this.getMaxId());
         int insert = baseMapper.insert(entity);
         if (insert != 1) {
             throw new BusinessException(CodeEnum.DB_ERROR);
         }
         return entity.getId();
+    }
+
+    public synchronized Long getMaxId() {
+        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
+        query.orderByDesc(IdDO::getId);
+        query.last(GlobalConstant.Database.SQL_LIMIT_1);
+        MenuDO menuDO = baseMapper.selectList(query).get(0);
+        return menuDO.getId() + 1;
     }
 
     /**
@@ -108,6 +118,13 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
         query.eq(MenuDO::getName, name);
         List<MenuDO> list = baseMapper.selectList(query);
         return CollUtil.isEmpty(list) ? Collections.emptyList() : list;
+    }
+
+    @Override
+    public List<MenuDO> getSubMenuListByParentId(Long parentId) {
+        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
+        query.eq(MenuDO::getParentId, parentId);
+        return baseMapper.selectList(query);
     }
 
 }

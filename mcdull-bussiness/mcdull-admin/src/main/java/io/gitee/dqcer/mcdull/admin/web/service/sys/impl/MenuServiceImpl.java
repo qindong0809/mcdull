@@ -19,6 +19,7 @@ import io.gitee.dqcer.mcdull.admin.web.manager.sys.IRoleManager;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IMenuService;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.TreeUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.TreeSelectVO;
@@ -137,10 +138,11 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<List<MenuVO>> add(MenuAddDTO dto) {
-        this.validNameExist(null, dto.getMenuName());
-        // TODO: 2023/7/3
-        return null;
+    public Result<Long> add(MenuAddDTO dto) {
+        this.validNameExist(null, dto.getName());
+        MenuDO menuDO = MenuConvert.convertDoByDto(dto);
+        baseRepository.insert(menuDO);
+        return Result.ok(menuDO.getId());
     }
 
     @Override
@@ -160,10 +162,28 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<List<MenuVO>> edit(MenuEditDTO dto) {
-        this.validNameExist(dto.getId(), dto.getMenuName());
-        // TODO: 2023/7/3
-        return null;
+    public Result<Long> edit(MenuEditDTO dto) {
+        Long id = dto.getId();
+        this.validNameExist(id, dto.getName());
+        if (id.equals(dto.getParentId())) {
+            throw new BusinessException("父节点不能是当前本身的节点");
+        }
+        MenuDO menuDO = MenuConvert.convertDoByDto(dto);
+        menuDO.setId(id);
+        menuDO.setUpdatedTime(UserContextHolder.getSession().getNow());
+        baseRepository.updateById(menuDO);
+        return Result.ok(id);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Long> remove(Long id) {
+        List<MenuDO> subMenuList = baseRepository.getSubMenuListByParentId(id);
+        if (CollUtil.isNotEmpty(subMenuList)) {
+            throw new BusinessException("该节点下存在子节点数据");
+        }
+        baseRepository.removeById(id);
+        return Result.ok(id);
     }
 
     private List<TreeSelectVO> getTreeSelectVO(List<MenuTreeVo> treeObjects) {

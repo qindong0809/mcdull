@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuAddDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuTreeVo;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuVO;
@@ -14,8 +15,8 @@ public class MenuConvert {
 
     public static MenuVO convertToMenuVO(MenuDO menuDO) {
         MenuVO menuVO = new MenuVO();
-        menuVO.setMenuId(Math.toIntExact(menuDO.getId()));
-        menuVO.setMenuName(menuDO.getName());
+        menuVO.setId(Math.toIntExact(menuDO.getId()));
+        menuVO.setName(menuDO.getName());
         menuVO.setParentId(Math.toIntExact(menuDO.getParentId()));
         menuVO.setOrderNum(menuDO.getOrderNum());
         menuVO.setPath(menuDO.getPath());
@@ -83,4 +84,22 @@ public class MenuConvert {
         return menuDO;
     }
 
+    public static MenuDO convertDoByDto(MenuAddDTO dto) {
+        MenuDO menuDO = new MenuDO();
+        menuDO.setName(dto.getName());
+        menuDO.setParentId(dto.getParentId());
+        menuDO.setOrderNum(dto.getOrderNum());
+        menuDO.setPath(dto.getPath());
+        menuDO.setComponent(dto.getComponent());
+        menuDO.setQuery(dto.getQuery());
+        menuDO.setIsFrame(dto.getIsFrame());
+        menuDO.setIsCache(dto.getIsCache());
+        menuDO.setMenuType(dto.getMenuType());
+        menuDO.setVisible(dto.getVisible());
+        menuDO.setStatus(dto.getStatus());
+        menuDO.setPerms(dto.getPerms());
+        menuDO.setIcon(dto.getIcon());
+        menuDO.setRemark(dto.getRemark());
+        return menuDO;
+    }
 }

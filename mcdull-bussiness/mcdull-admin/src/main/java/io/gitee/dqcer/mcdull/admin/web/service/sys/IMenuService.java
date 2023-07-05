@@ -25,7 +25,9 @@ public interface IMenuService {
 
     Result<RoleMenuTreeSelectVO> treeselect();
 
-    Result<List<MenuVO>> add(MenuAddDTO dto);
+    Result<Long> add(MenuAddDTO dto);
 
-    Result<List<MenuVO>> edit(MenuEditDTO dto);
+    Result<Long> edit(MenuEditDTO dto);
+
+    Result<Long> remove(Long id);
 }

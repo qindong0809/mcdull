@@ -10,6 +10,7 @@ import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ import java.util.List;
 */
 @RestController
 @RequestMapping("/system/menu")
-public class MenuController {
+public class MenuController implements BasicController {
 
     @Resource
     private IMenuService menuService;
@@ -66,14 +67,21 @@ public class MenuController {
 
     @Authorized("system:menu:add")
     @PostMapping
-    public Result<List<MenuVO>> add( @RequestBody MenuAddDTO dto){
+    public Result<Long> add(@RequestBody MenuAddDTO dto){
         return menuService.add(dto);
     }
 
     @Authorized("system:menu:edit")
     @PutMapping
-    public Result<List<MenuVO>> edit(@RequestBody MenuEditDTO dto){
+    public Result<Long> edit(@RequestBody MenuEditDTO dto){
         return menuService.edit(dto);
+    }
+
+
+    @Authorized("system:menu:remove")
+    @DeleteMapping("{id}")
+    public Result<Long> remove(@PathVariable(value = "id") Long id) {
+        return menuService.remove(id);
     }
 
 }

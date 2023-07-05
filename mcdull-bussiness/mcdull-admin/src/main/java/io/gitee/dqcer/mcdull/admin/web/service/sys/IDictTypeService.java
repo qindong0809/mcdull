@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeAddDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictTypeVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -21,4 +22,5 @@ public interface IDictTypeService {
 
     Result<List<DictTypeVO>> getAll();
 
+    Result<Long> add(DictTypeAddDTO dto);
 }

@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.vo.sys;
 
 import io.gitee.dqcer.mcdull.framework.base.vo.VO;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -10,15 +11,16 @@ import java.util.Date;
  * @author dqcer
  * @since  2022/11/27
  */
+@Data
 public class MenuVO implements VO {
 
-    private Integer menuId;
+    private Integer id;
 
 
     /**
      * 名字
      */
-    private String menuName;
+    private String name;
 
     /**
      * 父id
@@ -107,175 +109,4 @@ public class MenuVO implements VO {
      */
     private String remark;
 
-    public Date getCreatedTime() {
-        return createdTime;
-    }
-
-    public MenuVO setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
-        return this;
-    }
-
-
-    public String getMenuName() {
-        return menuName;
-    }
-
-    public MenuVO setMenuName(String menuName) {
-        this.menuName = menuName;
-        return this;
-    }
-
-    public Integer getMenuId() {
-        return menuId;
-    }
-
-    public MenuVO setMenuId(Integer menuId) {
-        this.menuId = menuId;
-        return this;
-    }
-
-    public Integer getParentId() {
-        return parentId;
-    }
-
-    public MenuVO setParentId(Integer parentId) {
-        this.parentId = parentId;
-        return this;
-    }
-
-    public Integer getOrderNum() {
-        return orderNum;
-    }
-
-    public MenuVO setOrderNum(Integer orderNum) {
-        this.orderNum = orderNum;
-        return this;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public MenuVO setPath(String path) {
-        this.path = path;
-        return this;
-    }
-
-    public String getComponent() {
-        return component;
-    }
-
-    public MenuVO setComponent(String component) {
-        this.component = component;
-        return this;
-    }
-
-    public String getQuery() {
-        return query;
-    }
-
-    public MenuVO setQuery(String query) {
-        this.query = query;
-        return this;
-    }
-
-    public String getIsFrame() {
-        return isFrame;
-    }
-
-    public MenuVO setIsFrame(String isFrame) {
-        this.isFrame = isFrame;
-        return this;
-    }
-
-    public String getIsCache() {
-        return isCache;
-    }
-
-    public MenuVO setIsCache(String isCache) {
-        this.isCache = isCache;
-        return this;
-    }
-
-    public String getMenuType() {
-        return menuType;
-    }
-
-    public MenuVO setMenuType(String menuType) {
-        this.menuType = menuType;
-        return this;
-    }
-
-    public String getVisible() {
-        return visible;
-    }
-
-    public MenuVO setVisible(String visible) {
-        this.visible = visible;
-        return this;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public MenuVO setStatus(String status) {
-        this.status = status;
-        return this;
-    }
-
-    public String getPerms() {
-        return perms;
-    }
-
-    public MenuVO setPerms(String perms) {
-        this.perms = perms;
-        return this;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public MenuVO setIcon(String icon) {
-        this.icon = icon;
-        return this;
-    }
-
-    public Long getCreatedBy() {
-        return createdBy;
-    }
-
-    public MenuVO setCreatedBy(Long createdBy) {
-        this.createdBy = createdBy;
-        return this;
-    }
-
-    public Date getUpdatedTime() {
-        return updatedTime;
-    }
-
-    public MenuVO setUpdatedTime(Date updatedTime) {
-        this.updatedTime = updatedTime;
-        return this;
-    }
-
-    public Long getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public MenuVO setUpdatedBy(Long updatedBy) {
-        this.updatedBy = updatedBy;
-        return this;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public MenuVO setRemark(String remark) {
-        this.remark = remark;
-        return this;
-    }
 }

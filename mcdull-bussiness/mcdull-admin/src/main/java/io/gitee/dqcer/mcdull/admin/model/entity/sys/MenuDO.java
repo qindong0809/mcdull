@@ -96,6 +96,7 @@ public class MenuDO extends MiddleDO {
      */
     private Long updatedBy;
 
+
     /**
      * 备注
      */
