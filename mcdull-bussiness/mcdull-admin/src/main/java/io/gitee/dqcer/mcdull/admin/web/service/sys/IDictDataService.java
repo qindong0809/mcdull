@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictDataAddDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictDataEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictDataLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictDataVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -20,4 +22,10 @@ public interface IDictDataService {
     Result<PagedVO<DictDataVO>> list(DictDataLiteDTO dto);
 
     Result<DictDataVO> detail(Long dictCode);
+
+    Result<Long> add(DictDataAddDTO dto);
+
+    Result<Long> edit(DictDataEditDTO dto);
+
+    Result<Long> remove(Long id);
 }

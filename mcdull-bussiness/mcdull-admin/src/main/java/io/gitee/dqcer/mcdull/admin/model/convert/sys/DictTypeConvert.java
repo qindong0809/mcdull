@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeAddDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.DictTypeDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictTypeVO;
 
@@ -22,4 +23,12 @@ public class DictTypeConvert {
         return dictTypeVO;
     }
 
+    public static DictTypeDO convertToDictTypeDo(DictTypeAddDTO dto) {
+        DictTypeDO dictTypeDO = new DictTypeDO();
+        dictTypeDO.setDictName(dto.getDictName());
+        dictTypeDO.setDictType(dto.getDictType());
+        dictTypeDO.setStatus(dto.getStatus());
+        dictTypeDO.setRemark(dto.getRemark());
+        return dictTypeDO;
+    }
 }

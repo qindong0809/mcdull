@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictDataAddDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.DictDataDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictDataVO;
 
@@ -22,9 +23,22 @@ public class DictDataConvert {
         dictDataVO.setCssClass(dictDataDO.getCssClass());
         dictDataVO.setListClass(dictDataDO.getListClass());
         dictDataVO.setIsDefault(dictDataDO.getIsDefault());
-        dictDataVO.setStatus(String.valueOf(dictDataDO.getStatus()));
+        dictDataVO.setStatus(dictDataDO.getStatus());
         dictDataVO.setRemark(dictDataDO.getRemark());
         return dictDataVO;
     }
 
+    public static DictDataDO convertToDictDataDo(DictDataAddDTO dto) {
+        DictDataDO dictDataDO = new DictDataDO();
+        dictDataDO.setDictSort(dto.getDictSort());
+        dictDataDO.setDictLabel(dto.getDictLabel());
+        dictDataDO.setDictValue(dto.getDictValue());
+        dictDataDO.setDictType(dto.getDictType());
+        dictDataDO.setCssClass(dto.getCssClass());
+        dictDataDO.setListClass(dto.getListClass());
+        dictDataDO.setIsDefault("N");
+        dictDataDO.setStatus(dto.getStatus());
+        dictDataDO.setRemark(dto.getRemark());
+        return dictDataDO;
+    }
 }

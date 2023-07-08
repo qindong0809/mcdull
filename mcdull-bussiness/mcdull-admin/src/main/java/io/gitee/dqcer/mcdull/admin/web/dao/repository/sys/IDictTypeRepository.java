@@ -18,4 +18,6 @@ public interface IDictTypeRepository extends IService<DictTypeDO>  {
     Page<DictTypeDO> selectPage(DictTypeLiteDTO dto);
 
     List<DictTypeDO> getListByName(String name);
+
+    void removeUpdateById(Long id);
 }

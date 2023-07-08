@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.service.sys.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.DictTypeConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeAddDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.DictTypeDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictTypeVO;
@@ -64,8 +65,27 @@ public class DictTypeServiceImpl extends BasicServiceImpl<IDictTypeRepository> i
     public Result<Long> add(DictTypeAddDTO dto) {
         List<DictTypeDO> list = baseRepository.getListByName(dto.getDictType());
         this.validNameExist(null, dto.getDictType(), list);
-        // TODO: 2023/7/5  
-        return null;
+        DictTypeDO entity = DictTypeConvert.convertToDictTypeDo(dto);
+        baseRepository.save(entity);
+        return Result.ok(entity.getId());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Long> edit(DictTypeEditDTO dto) {
+        List<DictTypeDO> list = baseRepository.getListByName(dto.getDictType());
+        this.validNameExist(dto.getDictId(), dto.getDictType(), list);
+        DictTypeDO entity = DictTypeConvert.convertToDictTypeDo(dto);
+        entity.setId(dto.getDictId());
+        baseRepository.updateById(entity);
+        return Result.ok(entity.getId());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Long> remove(Long id) {
+        baseRepository.removeUpdateById(id);
+        return Result.ok(id);
     }
 
 

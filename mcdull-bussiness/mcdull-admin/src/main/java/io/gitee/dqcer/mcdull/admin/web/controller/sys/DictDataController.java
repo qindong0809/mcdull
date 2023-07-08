@@ -1,14 +1,14 @@
 package io.gitee.dqcer.mcdull.admin.web.controller.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictDataAddDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictDataEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictDataLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictDataVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IDictDataService;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -29,6 +29,21 @@ public class DictDataController {
     @GetMapping("list")
     public Result<PagedVO<DictDataVO>> list(DictDataLiteDTO dto) {
         return dictDataService.list(dto);
+    }
+
+    @PostMapping
+    public Result<Long> add(@Validated @RequestBody DictDataAddDTO dto) {
+        return dictDataService.add(dto);
+    }
+
+    @PutMapping
+    public Result<Long> edit(@Validated @RequestBody DictDataEditDTO dto) {
+        return dictDataService.edit(dto);
+    }
+
+    @DeleteMapping("{id}")
+    public Result<Long> remove(@PathVariable(value = "id") Long id) {
+        return dictDataService.remove(id);
     }
 
 

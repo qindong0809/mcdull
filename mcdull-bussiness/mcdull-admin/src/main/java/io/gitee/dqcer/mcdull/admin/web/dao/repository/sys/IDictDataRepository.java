@@ -18,4 +18,8 @@ public interface IDictDataRepository extends IService<DictDataDO>  {
     List<DictDataDO> dictType(String dictType);
 
     Page<DictDataDO> selectPage(DictDataLiteDTO dto);
+
+    List<DictDataDO> getNameList(String dictType, String dictValue);
+
+    void removeUpdate(Long id);
 }

@@ -1,9 +1,11 @@
 package io.gitee.dqcer.mcdull.admin.web.controller.sys;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeAddDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictTypeVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IDictTypeService;
+import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -22,6 +24,7 @@ import java.util.List;
  */
 @RequestMapping("system/dict/type")
 @RestController
+@Validated
 public class DictTypeController implements BasicController {
 
     @Resource
@@ -39,9 +42,22 @@ public class DictTypeController implements BasicController {
         return dictTypeService.list(dto);
     }
 
+    @Authorized("system:dict:add")
     @PostMapping
     public Result<Long> add(@RequestBody DictTypeAddDTO dto) {
         return dictTypeService.add(dto);
+    }
+
+    @Authorized("system:dict:edit")
+    @PutMapping
+    public Result<Long> edit(@Validated @RequestBody DictTypeEditDTO dto) {
+        return dictTypeService.edit(dto);
+    }
+
+    @Authorized("system:dict:remove")
+    @DeleteMapping("{id}")
+    public Result<Long> remove(@PathVariable(value = "id") Long id) {
+        return dictTypeService.remove(id);
     }
 
     /**
