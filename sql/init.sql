@@ -414,7 +414,7 @@ insert into sys_notice values(1, '维护通知：2023-04-05 系统凌晨维护',
 
 drop table if exists `sys_config`;
 create table `sys_config` (
-`id` int(5)  not null auto_increment    comment '参数主键',
+`id` bigint not null  comment '参数主键',
 `name`       varchar(100)    default '' comment '参数名称',
 `config_key`varchar(100)   default '' comment '参数键名',
 `value`  varchar(500)  default '' comment '参数键值',
@@ -427,7 +427,7 @@ create table `sys_config` (
 `del_flag` int(1) NOT NULL COMMENT '删除标识（1/正常 2/删除）',
 `del_by` bigint(20) DEFAULT NULL COMMENT '删除人',
 primary key (id)
-) engine=innodb auto_increment=100 comment = '参数配置表';
+) engine=innodb comment = '参数配置表';
 
 insert into sys_config values(4,  '账号自助-验证码开关','sys.account.captchaEnabled','true',                 'Y','是否开启验证码功能（true开启，false关闭）', null,  sysdate(), null, null, 1, null);
 insert into sys_config values(10, '上传文件目录',      'sys.upload.file.directory', '/opt/mc-dull/upload/', 'Y','设置上传文件的目录',                     null,  sysdate(), null, null, 1, null);

@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.ConfigAddDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.common.SysConfigDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.ConfigVO;
 
@@ -16,11 +17,20 @@ public class ConfigConvert {
         configVO.setId(configDO.getId());
         configVO.setName(configDO.getName());
         configVO.setConfigKey(configDO.getConfigKey());
-        configVO.setValue(configDO.getConfigValue());
+        configVO.setConfigValue(configDO.getConfigValue());
         configVO.setConfigType(configDO.getConfigType());
         configVO.setRemark(configDO.getRemark());
         configVO.setCreatedTime(configDO.getCreatedTime());
         return configVO;
     }
 
+    public static SysConfigDO convertTOConfigDo(ConfigAddDTO dto) {
+        SysConfigDO sysConfigDO = new SysConfigDO();
+        sysConfigDO.setName(dto.getName());
+        sysConfigDO.setConfigKey(dto.getConfigKey());
+        sysConfigDO.setConfigValue(dto.getConfigValue());
+        sysConfigDO.setConfigType(dto.getConfigType());
+        sysConfigDO.setRemark(dto.getRemark());
+        return sysConfigDO;
+    }
 }

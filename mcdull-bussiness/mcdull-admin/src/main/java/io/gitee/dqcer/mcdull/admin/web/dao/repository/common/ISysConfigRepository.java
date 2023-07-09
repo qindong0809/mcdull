@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.ConfigLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.common.SysConfigDO;
 
+import java.util.List;
+
 /**
  * 系统配置 数据库操作封装接口层
  *
@@ -22,4 +24,8 @@ public interface ISysConfigRepository extends IService<SysConfigDO> {
     SysConfigDO findByKey(String key);
 
     Page<SysConfigDO> selectPage(ConfigLiteDTO dto);
+
+    List<SysConfigDO> getListByKey(String configKey);
+
+    void removeUpdate(Long id);
 }

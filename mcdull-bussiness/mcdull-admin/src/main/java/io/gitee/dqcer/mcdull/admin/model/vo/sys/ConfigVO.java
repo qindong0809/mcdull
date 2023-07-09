@@ -29,7 +29,7 @@ public class ConfigVO implements VO {
     /**
      * 参数键值
      */
-    private String value;
+    private String configValue;
 
     /**
      * 系统内置（Y是 N否）

@@ -414,8 +414,8 @@ insert into sys_notice values(1, '维护通知：2023-04-05 系统凌晨维护',
 
 drop table if exists `sys_config`;
 create table `sys_config` (
-`id` int  not null auto_increment    comment '参数主键',
-`name`       varchar(100)    default '' comment '参数名称',
+`id` bigint not null  comment '参数主键',
+`name`      varchar(100)    default '' comment '参数名称',
 `config_key`varchar(100)   default '' comment '参数键名',
 `config_value`  varchar(500)  default '' comment '参数键值',
 `config_type`  char(1) NOT NULL comment '系统内置（Y是 N否）',

@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.admin.model.entity.common;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 系统参数配置配置
@@ -10,6 +11,7 @@ import lombok.Data;
  * @author dqcer
  * @since 2023/03/11
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("sys_config")
 public class SysConfigDO extends BaseDO {
