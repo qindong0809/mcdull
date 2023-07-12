@@ -3,8 +3,12 @@ package io.gitee.dqcer.mcdull.admin.web.manager.sys.impl;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
 import io.gitee.dqcer.mcdull.admin.model.enums.MenuTypeEnum;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IMenuManager;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 菜单通用逻辑实现层
@@ -14,6 +18,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MenuManagerImpl implements IMenuManager {
+
+    @Resource
+    private IMenuRepository menuRepository;
 
 
     /**
@@ -101,5 +108,10 @@ public class MenuManagerImpl implements IMenuManager {
     @Override
     public String innerLinkReplaceEach(String path) {
         return path;
+    }
+
+    @Override
+    public List<MenuDO> getAllMenu() {
+        return menuRepository.getAllMenu();
     }
 }

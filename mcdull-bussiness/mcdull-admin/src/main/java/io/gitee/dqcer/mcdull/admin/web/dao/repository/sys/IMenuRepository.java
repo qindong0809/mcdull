@@ -44,4 +44,6 @@ public interface IMenuRepository extends IService<MenuDO> {
     List<MenuDO> getListByName(String name);
 
     List<MenuDO> getSubMenuListByParentId(Long parentId);
+
+    List<MenuDO> getAllMenu();
 }

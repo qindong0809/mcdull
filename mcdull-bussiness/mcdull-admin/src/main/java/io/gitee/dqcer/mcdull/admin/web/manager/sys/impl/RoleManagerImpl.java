@@ -38,4 +38,5 @@ public class RoleManagerImpl implements IRoleManager {
         }
         return menuRepository.getMenuByIds(menuIds);
     }
+
 }

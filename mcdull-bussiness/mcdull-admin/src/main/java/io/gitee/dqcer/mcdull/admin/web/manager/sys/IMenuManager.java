@@ -3,6 +3,8 @@ package io.gitee.dqcer.mcdull.admin.web.manager.sys;
 
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
 
+import java.util.List;
+
 /**
  * 菜单 通用逻辑定义
  *
@@ -59,4 +61,6 @@ public interface IMenuManager {
      * @return {@link String} 替换后的内链域名
      */
     String innerLinkReplaceEach(String path);
+
+    List<MenuDO> getAllMenu();
 }

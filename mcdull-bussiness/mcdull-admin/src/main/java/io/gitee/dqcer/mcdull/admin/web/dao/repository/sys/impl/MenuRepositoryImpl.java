@@ -127,4 +127,11 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
         return baseMapper.selectList(query);
     }
 
+    @Override
+    public List<MenuDO> getAllMenu() {
+        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
+        query.eq(MenuDO::getStatus, StatusEnum.ENABLE.getCode());
+        return baseMapper.selectList(query);
+    }
+
 }

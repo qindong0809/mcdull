@@ -15,4 +15,5 @@ public interface IRoleManager {
 
 
     List<MenuDO> getMenuByRole(List<Long> roles);
+
 }

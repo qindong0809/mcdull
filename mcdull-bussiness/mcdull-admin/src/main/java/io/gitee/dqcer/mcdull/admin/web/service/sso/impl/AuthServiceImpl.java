@@ -19,6 +19,7 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuTreeVo;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.MetaVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.RouterVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserLoginRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IMenuManager;
@@ -91,6 +92,9 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
 
     @Resource
     private IMenuManager menuManager;
+
+    @Resource
+    private IMenuRepository menuRepository;
 
     @Resource
     private ICaptchaService captchaService;
@@ -303,10 +307,16 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
 
         List<Long> roles = new ArrayList<>();
         roles.add(roleId);
-        List<MenuDO> menus = roleManager.getMenuByRole(roles);
+        List<MenuDO> menuList = new ArrayList<>();
+        if (UserContextHolder.isAdmin()) {
+            menuList = menuManager.getAllMenu();
+        } else {
+            menuList = roleManager.getMenuByRole(roles);
+        }
+
 
         List<MenuTreeVo> treeVoList = new ArrayList<>();
-        for (MenuDO menu : menus) {
+        for (MenuDO menu : menuList) {
             treeVoList.add(MenuConvert.convertMenuTreeVo(menu));
         }
 

@@ -190,7 +190,11 @@ insert into sys_menu values('1', '系统管理', '0', '1', 'system',           n
 insert into sys_menu values('2', '系统监控', '0', '2', 'monitor',          null, 'monitor', 1, 0, 'M', '0', '1', '', 'monitor',  null, sysdate(), null, null, '系统监控目录');
 insert into sys_menu values('3', '系统工具', '0', '3', 'tool',             null, 'tool', 1, 0, 'M', '0', '1', '', 'tool',     null, sysdate(), null, null, '系统工具目录');
 insert into sys_menu values('4', '若依官网', '0', '4', 'http://ruoyi.vip', null, 'guide', 0, 0, 'M', '0', '1', '', 'guide',    null, sysdate(), null, null, '若依官网地址');
+insert into sys_menu values('6', '数据库管理', '0', '6', 'database',        null, '', 1, 0, 'M', '0', '1', 'database', 'database',   null, CURRENT_TIMESTAMP(), null, null, '数据库管理目录');
+
 -- 二级菜单
+insert into sys_menu values('600',  '实例管理', '6',   '6', 'instance',   'database/instance/index',  '', 1, 0, 'C', '0', '1', 'database:instance:list',  'instance',      null, CURRENT_TIMESTAMP(), null, null, '实例管理菜单');
+
 insert into sys_menu values('100',  '用户管理', '1',   '1', 'user',       'system/user/index',        '', 1, 0, 'C', '0', '1', 'system:user:list',        'user',          null, sysdate(), null, null, '用户管理菜单');
 insert into sys_menu values('101',  '角色管理', '1',   '2', 'role',       'system/role/index',        '', 1, 0, 'C', '0', '1', 'system:role:list',        'peoples',       null, sysdate(), null, null, '角色管理菜单');
 insert into sys_menu values('102',  '菜单管理', '1',   '3', 'menu',       'system/menu/index',        '', 1, 0, 'C', '0', '1', 'system:menu:list',        'tree-table',    null, sysdate(), null, null, '菜单管理菜单');

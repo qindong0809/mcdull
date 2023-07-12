@@ -193,7 +193,9 @@ insert into sys_menu values('1', '系统管理', '0', '1', 'system',           n
 insert into sys_menu values('2', '系统监控', '0', '2', 'monitor',          null, '', 1, 0, 'M', '0', '1', 'monitor', 'monitor',  null, CURRENT_TIMESTAMP(), null, null, '系统监控目录');
 insert into sys_menu values('3', '系统工具', '0', '3', 'tool',             null, '', 1, 0, 'M', '0', '1', 'tool', 'tool',     null, CURRENT_TIMESTAMP(), null, null, '系统工具目录');
 insert into sys_menu values('4', '官网', '0', '4', 'http://ruoyi.vip', null, '', 0, 0, 'M', '0', '1', 'guide', 'guide',    null, CURRENT_TIMESTAMP(), null, null, '若依官网地址');
+insert into sys_menu values('6', '数据库管理', '0', '6', 'database',        null, '', 1, 0, 'M', '0', '1', 'database', 'database',   null, CURRENT_TIMESTAMP(), null, null, '数据库管理目录');
 -- 二级菜单
+insert into sys_menu values('600',  '实例管理', '6',   '6', 'instance',   'database/instance/index',  '', 1, 0, 'C', '0', '1', 'database:instance:list',  'instance',      null, CURRENT_TIMESTAMP(), null, null, '实例管理菜单');
 insert into sys_menu values('100',  '用户管理', '1',   '1', 'user',       'system/user/index',        '', 1, 0, 'C', '0', '1', 'system:user:list',        'user',          null, CURRENT_TIMESTAMP(), null, null, '用户管理菜单');
 insert into sys_menu values('101',  '角色管理', '1',   '2', 'role',       'system/role/index',        '', 1, 0, 'C', '0', '1', 'system:role:list',        'peoples',       null, CURRENT_TIMESTAMP(), null, null, '角色管理菜单');
 insert into sys_menu values('102',  '菜单管理', '1',   '3', 'menu',       'system/menu/index',        '', 1, 0, 'C', '0', '1', 'system:menu:list',        'tree-table',    null, CURRENT_TIMESTAMP(), null, null, '菜单管理菜单');
@@ -217,6 +219,7 @@ insert into sys_menu values('500',  '操作日志', '108', '1', 'operlog',    'm
 insert into sys_menu values('501',  '登录日志', '108', '2', 'logininfor', 'monitor/logininfor/index', '', 1, 0, 'C', '0', '1', 'monitor:logininfor:list', 'logininfor',    null, CURRENT_TIMESTAMP(), null, null, '登录日志菜单');
 -- 用户管理按钮
 insert into sys_menu values('1000', '查询', '100', '1',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:query',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
+insert into sys_menu values('6000', '读', '600', '1',  '', '', '', 1, 0, 'F', '0', '1', 'database:instance:read',          '#', null, CURRENT_TIMESTAMP(), null, null, '');
 insert into sys_menu values('1001', '新增', '100', '2',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:add',            '#', null, CURRENT_TIMESTAMP(), null, null, '');
 insert into sys_menu values('1002', '修改', '100', '3',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:edit',           '#', null, CURRENT_TIMESTAMP(), null, null, '');
 insert into sys_menu values('1003', '删除', '100', '4',  '', '', '', 1, 0, 'F', '0', '1', 'system:user:remove',         '#', null, CURRENT_TIMESTAMP(), null, null, '');
@@ -289,6 +292,7 @@ insert into sys_menu values('1057', '生成删除', '116', '3', '#', '', '', 1, 
 insert into sys_menu values('1058', '导入代码', '116', '4', '#', '', '', 1, 0, 'F', '0', '1', 'tool:gen:import',            '#', null, CURRENT_TIMESTAMP(), null, null, '');
 insert into sys_menu values('1059', '预览代码', '116', '5', '#', '', '', 1, 0, 'F', '0', '1', 'tool:gen:preview',           '#', null, CURRENT_TIMESTAMP(), null, null, '');
 insert into sys_menu values('1060', '生成代码', '116', '6', '#', '', '', 1, 0, 'F', '0', '1', 'tool:gen:code',              '#', null, CURRENT_TIMESTAMP(), null, null, '');
+-- database
 
 
 
