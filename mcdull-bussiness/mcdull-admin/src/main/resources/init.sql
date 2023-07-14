@@ -196,6 +196,7 @@ insert into sys_menu values('4', '官网', '0', '4', 'http://ruoyi.vip', null, '
 insert into sys_menu values('6', '数据库管理', '0', '6', 'database',        null, '', 1, 0, 'M', '0', '1', 'database', 'database',   null, CURRENT_TIMESTAMP(), null, null, '数据库管理目录');
 -- 二级菜单
 insert into sys_menu values('600',  '实例管理', '6',   '6', 'instance',   'database/instance/index',  '', 1, 0, 'C', '0', '1', 'database:instance:list',  'instance',      null, CURRENT_TIMESTAMP(), null, null, '实例管理菜单');
+insert into sys_menu values('601',  '组名管理', '6',   '6', 'group',      'database/group/index',     '', 1, 0, 'C', '0', '1', 'database:group:list',     'instance',      null, CURRENT_TIMESTAMP(), null, null, '组名管理菜单');
 insert into sys_menu values('100',  '用户管理', '1',   '1', 'user',       'system/user/index',        '', 1, 0, 'C', '0', '1', 'system:user:list',        'user',          null, CURRENT_TIMESTAMP(), null, null, '用户管理菜单');
 insert into sys_menu values('101',  '角色管理', '1',   '2', 'role',       'system/role/index',        '', 1, 0, 'C', '0', '1', 'system:role:list',        'peoples',       null, CURRENT_TIMESTAMP(), null, null, '角色管理菜单');
 insert into sys_menu values('102',  '菜单管理', '1',   '3', 'menu',       'system/menu/index',        '', 1, 0, 'C', '0', '1', 'system:menu:list',        'tree-table',    null, CURRENT_TIMESTAMP(), null, null, '菜单管理菜单');
@@ -563,5 +564,39 @@ create table `sys_file` (
 `file_md5` varchar(255) default null comment '文件md5',
 `original_file_name` varchar(255) default '' comment '原始文件名',
 `file_size` bigint default null comment '大小',
+primary key (`id`)
+);
+
+drop table if exists `database_instance`;
+create table `database_instance` (
+`id` bigint not null comment '主键',
+`group_id` bigint not null comment '昵称',
+`name` varchar(128) not null comment '名称',
+`host` varchar(128) not null comment 'ip',
+`port` int not null comment '端口',
+`database_name` varchar(128) default null comment '数据库名称',
+`username` varchar(128) not null comment '用户名',
+`password` varchar(128) not null comment '密码',
+`created_by` bigint not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` bigint default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`status`  char(1) default null comment '状态（1正常 2停用）',
+`del_flag` int not null comment '删除标识（1/正常 2/删除）',
+`del_by` bigint default null comment '删除人',
+primary key (`id`)
+);
+
+drop table if exists `database_group`;
+create table `database_group` (
+`id` bigint not null comment '主键',
+`name` varchar(128) not null comment '昵称',
+`created_by` bigint not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` bigint default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`status`  char(1) default null comment '状态（1正常 2停用）',
+`del_flag` int not null comment '删除标识（1/正常 2/删除）',
+`del_by` bigint default null comment '删除人',
 primary key (`id`)
 );
