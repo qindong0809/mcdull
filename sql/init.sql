@@ -195,6 +195,7 @@ insert into sys_menu values('6', '数据库管理', '0', '6', 'database',       
 -- 二级菜单
 insert into sys_menu values('600',  '实例管理', '6',   '6', 'instance',   'database/instance/index',  '', 1, 0, 'C', '0', '1', 'database:instance:list',  'instance',      null, CURRENT_TIMESTAMP(), null, null, '实例管理菜单');
 insert into sys_menu values('601',  '组名管理', '6',   '6', 'group',      'database/group/index',     '', 1, 0, 'C', '0', '1', 'database:group:list',     'instance',      null, CURRENT_TIMESTAMP(), null, null, '组名管理菜单');
+insert into sys_menu values('603',  '版本管理', '6',   '6', 'group',      'database/git/index',     '', 1, 0, 'C', '0', '1', 'database:git:list',     'git',      null, CURRENT_TIMESTAMP(), null, null, '版本管理菜单');
 
 insert into sys_menu values('100',  '用户管理', '1',   '1', 'user',       'system/user/index',        '', 1, 0, 'C', '0', '1', 'system:user:list',        'user',          null, sysdate(), null, null, '用户管理菜单');
 insert into sys_menu values('101',  '角色管理', '1',   '2', 'role',       'system/role/index',        '', 1, 0, 'C', '0', '1', 'system:role:list',        'peoples',       null, sysdate(), null, null, '角色管理菜单');
