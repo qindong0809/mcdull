@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.vo.sys;
 
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import com.alibaba.excel.annotation.ExcelProperty;
 import io.gitee.dqcer.mcdull.admin.framework.transformer.DictTransformer;
 import io.gitee.dqcer.mcdull.admin.framework.transformer.UserTransformer;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
@@ -15,16 +17,19 @@ import java.util.StringJoiner;
  * @author dqcer
  * @since  2022/11/27
  */
+@ExcelIgnoreUnannotated
 public class DeptVO implements VO {
 
     /**
      * 主键
      */
+    @ExcelProperty("主键id")
     private Long deptId;
 
     /**
      * 父部门id
      */
+    @ExcelProperty("父部门id")
     private Long parentId;
 
     /**
@@ -35,11 +40,13 @@ public class DeptVO implements VO {
     /**
      * 部门名称
      */
+    @ExcelProperty("部门名称")
     private String deptName;
 
     /**
      * 显示顺序
      */
+    @ExcelProperty("排序")
     private Integer orderNum;
 
     /**
@@ -50,6 +57,7 @@ public class DeptVO implements VO {
     /**
      * 创建时间
      */
+    @ExcelProperty("创建时间")
     private Date createdTime;
 
     /**
@@ -77,6 +85,7 @@ public class DeptVO implements VO {
      *
      * @see StatusEnum
      */
+    @ExcelProperty("状态")
     private String status;
 
     @Transform(from = "status", param = "sys_normal_disable", transformer = DictTransformer.class)

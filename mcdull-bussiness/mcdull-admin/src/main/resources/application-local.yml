@@ -22,7 +22,7 @@ spring:
       encoding: utf-8
 logging:
   level:
-    root: info
+    root: debug
     io.gitee.dqcer.mcdull.framework: info
 mcdull:
   oss:
