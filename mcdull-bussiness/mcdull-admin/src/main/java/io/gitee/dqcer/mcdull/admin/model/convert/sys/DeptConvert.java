@@ -28,5 +28,24 @@ public class DeptConvert {
         return deptVO;
     }
 
+    public static DeptDO convertToDeptDO(DeptVO deptVO) {
+        DeptDO deptDO = new DeptDO();
+        deptDO.setId(deptVO.getDeptId());
+        deptDO.setParentId(deptVO.getParentId());
+        deptDO.setAncestors(deptVO.getAncestors());
+        deptDO.setName(deptVO.getDeptName());
+        deptDO.setOrderNum(deptVO.getOrderNum());
+        deptDO.setLeaderId(deptVO.getLeaderId());
+        deptDO.setCreatedTime(deptVO.getCreatedTime());
+        deptDO.setCreatedBy(deptVO.getCreatedBy());
+        deptDO.setUpdatedTime(deptVO.getUpdatedTime());
+        deptDO.setUpdatedBy(deptVO.getUpdatedBy());
+        deptDO.setStatus(deptVO.getStatus());
+        deptDO.setDelFlag(deptVO.getDelFlag());
+        return deptDO;
+    }
+
+
+
 
 }

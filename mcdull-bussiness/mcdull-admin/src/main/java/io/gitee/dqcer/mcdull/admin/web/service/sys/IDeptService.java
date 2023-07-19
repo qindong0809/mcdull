@@ -22,4 +22,8 @@ public interface IDeptService {
     Result<DeptVO> detail(Long deptId);
 
     Result<List<TreeSelectVO>> selectDeptTreeList();
+
+    Result<String> add(DeptVO deptVO);
+
+    Result<String> update(DeptVO deptVO);
 }
