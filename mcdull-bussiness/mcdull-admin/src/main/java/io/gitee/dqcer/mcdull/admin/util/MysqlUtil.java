@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.util;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Db;
 import cn.hutool.db.DbUtil;
@@ -8,18 +10,27 @@ import cn.hutool.db.ds.simple.SimpleDataSource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Date;
 
 public class MysqlUtil {
     public static final String JDBC_FORMAT = "jdbc:mysql://{}:{}/{}?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai";
 
 
     public static void main(String[] args) throws SQLException {
-        String host = "mcdull.io";
-        Integer port = 3306;
-        String username = "root";
-        String password = "123456";
-        String databaseName = "";
-        boolean testConnect = testConnect(host, port, username, password, databaseName);
+//        String host = "mcdull.io";
+//        Integer port = 3306;
+//        String username = "root";
+//        String password = "123456";
+//        String databaseName = "";
+//        boolean testConnect = testConnect(host, port, username, password, databaseName);
+
+        DateTime dateTime = DateUtil.offsetDay(new Date(), 0);
+        DateTime dateTime2 = DateUtil.offsetDay(new Date(), 5);
+
+        long l = DateUtil.betweenDay(dateTime, dateTime2, true);
+
+        System.out.println(l / 2);
+
     }
 
     public static boolean testConnect(String host, Integer port, String username, String password, String databaseName) {
