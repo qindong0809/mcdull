@@ -14,7 +14,9 @@ import io.gitee.dqcer.mcdull.admin.web.service.sys.IDeptService;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.vo.TreeSelectVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -75,4 +77,24 @@ public class DeptServiceImpl implements IDeptService {
         List<TreeSelectVO> voList = TreeExtensionUtil.convertTreeSelect(build);
         return Result.ok(voList);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<String> add(DeptVO deptVO) {
+
+        DeptDO deptDO = DeptConvert.convertToDeptDO(deptVO);
+        boolean b = deptRepository.saveOrUpdate(deptDO);
+
+
+        return Result.ok(b+"");
+    }
+
+    @Override
+    public Result<String> update(DeptVO deptVO) {
+
+        DeptDO deptDO = DeptConvert.convertToDeptDO(deptVO);
+        boolean b = deptRepository.saveOrUpdate(deptDO);
+        return Result.ok(b+"");
+    }
+
 }
