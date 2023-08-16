@@ -604,3 +604,33 @@ create table `database_group` (
 `del_by` bigint default null comment '删除人',
 primary key (`id`)
 );
+
+drop table if exists `database_ticket`;
+create table `database_ticket` (
+`id` bigint not null comment '主键',
+`name` varchar(128) not null comment '名称',
+`number` varchar(64) not null comment '工单号',
+`group_id` bigint not null comment '组号',
+`execute_type` int not null comment '执行方式（1/停放执行 2/在线执行）',
+`has_merge` int not null comment '是否合入初始化脚本（1/是 2/否）',
+`remark` varchar(128) not null comment '备注',
+`sql_script` text not null comment 'sql 脚本',
+`follow_status`  char(1) default null comment '流程状态（1可编辑 2已发布 3已通过 4已执行）',
+`cancel_status`  char(1) default null comment '回退状态（1正常 2dev:撤回 3test:不通过 4prod:驳回）',
+`created_by` bigint not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` bigint default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`status`  char(1) default null comment '状态（1正常 2停用）',
+`del_flag` int not null comment '删除标识（1/正常 2/删除）',
+`del_by` bigint default null comment '删除人',
+primary key (`id`)
+);
+
+drop table if exists `database_ticket_instance`;
+create table `database_ticket` (
+`id` bigint not null comment '主键',
+`instance_id` bigint not null comment '组号',
+`created_time` datetime not null comment '创建时间',
+primary key (`id`)
+);
