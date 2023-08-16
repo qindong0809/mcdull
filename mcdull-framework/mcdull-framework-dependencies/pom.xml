@@ -34,6 +34,7 @@
         <poi.version>4.1.2</poi.version>
         <itext7.version>7.2.5</itext7.version>
         <html2pdf.version>4.0.5</html2pdf.version>
+        <jsqlparser.version>4.6</jsqlparser.version>
     </properties>
 
     <dependencyManagement>
@@ -202,6 +203,11 @@
                 <groupId>com.itextpdf</groupId>
                 <artifactId>html2pdf</artifactId>
                 <version>${html2pdf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jsqlparser</groupId>
+                <artifactId>jsqlparser</artifactId>
+                <version>${jsqlparser.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -6,8 +6,12 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Db;
 import cn.hutool.db.DbUtil;
 import cn.hutool.db.ds.simple.SimpleDataSource;
+import lombok.SneakyThrows;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.sql.DataSource;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
@@ -63,5 +67,31 @@ public class MysqlUtil {
         String jdbc = StrUtil.format(JDBC_FORMAT, host, port, databaseName);
         DataSource ds = new SimpleDataSource(jdbc, username, password);
         return DbUtil.use(ds);
+    }
+
+    @SneakyThrows(Exception.class)
+    public static void demo(Db db){
+        Connection connection = db.getConnection();
+        ScriptRunner scriptRunner = new ScriptRunner(connection);
+        Resources.setCharset(StandardCharsets.UTF_8);
+        scriptRunner.setEscapeProcessing(false);
+        scriptRunner.setRemoveCRs(true);
+        scriptRunner.setSendFullScript(false);
+        scriptRunner.setAutoCommit(false);
+        scriptRunner.setStopOnError(true);
+        // 分隔符，还未验证具体功能
+        scriptRunner.setFullLineDelimiter(false);
+        // 每条命令间的分隔符，注意这个不建议用分号分隔
+        // 因为SQL脚本中可以写存储过程，中间存在分号，导致存储过程执行失败
+        scriptRunner.setDelimiter("&&");
+        // 读取SQL文件路径获取SQL文件执行
+//        List<String> files = getFiles("TO_CHANGE_PATH");
+//        for (String file : files) {
+//            InputStream inputStream = new FileInputStream(new File(file));
+//            Reader reader = new InputStreamReader(inputStream, "utf-8");
+//            scriptRunner.runScript(reader);
+//        }
+//        connection.close();
+//        System.out.println("sql脚本执行完毕");
     }
 }
