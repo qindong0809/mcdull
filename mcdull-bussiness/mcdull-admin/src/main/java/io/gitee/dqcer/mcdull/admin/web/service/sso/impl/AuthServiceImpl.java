@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sso.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.Browser;
 import cn.hutool.http.useragent.UserAgent;
@@ -350,7 +351,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
                     .setNoCache("1".equals(menu.getIsCache()))
                     .setLink(null));
             List<MenuTreeVo> cMenus = treeVo.getChildren();
-            if (!cMenus.isEmpty() && MenuTypeEnum.DIRECTORY.getCode().equals(treeVo.getMenuType())) {
+            if (CollUtil.isNotEmpty(cMenus)  && MenuTypeEnum.DIRECTORY.getCode().equals(treeVo.getMenuType())) {
                 router.setAlwaysShow(true);
                 router.setRedirect("noRedirect");
                 router.setChildren(this.buildMenus(cMenus));

@@ -5,6 +5,7 @@ import io.gitee.dqcer.mcdull.framework.redis.config.RedissonAutoConfiguration;
 import io.gitee.dqcer.mcdull.framework.redis.config.SpringContextHolder;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CaffeineCache;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedisClient;
+import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Import;
 
@@ -22,6 +23,6 @@ import java.lang.annotation.Target;
 @EnableCaching(proxyTargetClass = true)
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Import({RedissonAutoConfiguration.class, SpringContextHolder.class ,CaffeineCache.class, RedisClient.class})
+@Import({RedissonAutoConfiguration.class, SpringContextHolder.class ,CaffeineCache.class, RedisClient.class, RedissonCache.class})
 public @interface EnableCache {
 }
