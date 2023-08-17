@@ -98,6 +98,9 @@ public enum CodeEnum implements ICode , IEnum<Integer> {
 	 */
 	DATA_NOT_EXIST(999461, "数据不存在"),
 
+
+	NEED_REFRESH_DATA(999462, "请刷新后重试"),
+
 	/**
 	 * 错误类型
 	 */

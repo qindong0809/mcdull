@@ -645,7 +645,7 @@ primary key (`id`)
 );
 
 drop table if exists `database_ticket_instance`;
-create table `database_ticket` (
+create table `database_ticket_instance` (
 `id` bigint not null comment '主键',
 `instance_id` bigint not null comment '组号',
 `created_time` datetime not null comment '创建时间',

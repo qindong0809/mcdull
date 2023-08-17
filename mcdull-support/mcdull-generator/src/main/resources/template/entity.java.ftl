@@ -2,7 +2,8 @@ package ${cfg.apiEntity};
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import ${cfg.baseEntity};
-
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import java.util.Date;
 
 /**
@@ -11,6 +12,8 @@ import java.util.Date;
  * @author ${author}
  * @since ${date}
  */
+@EqualsAndHashCode(callSuper = true)
+@Data
 @TableName("${table.name}")
 public class ${cfg.entityName} extends BaseDO {
 
@@ -31,64 +34,4 @@ public class ${cfg.entityName} extends BaseDO {
 </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
-
-<#if !entityLombokModel>
-    <#list table.fields as field>
-        <#if "id" != field.name >
-        <#if field.propertyType == "boolean">
-            <#assign getprefix="is"/>
-        <#else>
-            <#assign getprefix="get"/>
-        </#if>
-    public ${field.propertyType} ${getprefix}${field.capitalName}() {
-        return ${field.propertyName};
-    }
-
-    <#if entityBuilderModel>
-    public ${entity} set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
-    <#else>
-    public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
-    </#if>
-        this.${field.propertyName} = ${field.propertyName};
-        <#if entityBuilderModel>
-        return this;
-        </#if>
-    }
-    </#if>
-    </#list>
-</#if>
-
-<#if entityColumnConstant>
-    <#list table.fields as field>
-    public static final String ${field.name?upper_case} = "${field.name}";
-
-    </#list>
-</#if>
-<#if activeRecord>
-    @Override
-    protected Serializable pkVal() {
-    <#if keyPropertyName??>
-        return this.${keyPropertyName};
-    <#else>
-        return null;
-    </#if>
-    }
-
-</#if>
-<#if !entityLombokModel>
-    @Override
-    public String toString() {
-        return "${entity}{" +
-    <#list table.fields as field>
-        <#if "id" != field.name && "status" != field.name>
-        <#if field_index==0>
-            "${field.propertyName}=" + ${field.propertyName} +
-        <#else>
-            ", ${field.propertyName}=" + ${field.propertyName} +
-        </#if>
-        </#if>
-    </#list>
-        "}";
-    }
-</#if>
 }

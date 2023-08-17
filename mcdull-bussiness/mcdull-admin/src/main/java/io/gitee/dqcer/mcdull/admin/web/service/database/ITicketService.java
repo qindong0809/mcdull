@@ -1,20 +1,20 @@
-package ${package.Service};
+package io.gitee.dqcer.mcdull.admin.web.service.database;
 
-import ${cfg.IdDTO};
-import ${cfg.PagedVO};
-import ${cfg.StatusDTO};
-import ${cfg.apiVo}.${cfg.voName};
-import ${cfg.apiDto}.${cfg.dtoName};
-import ${cfg.result};
+import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.vo.database.TicketVO;
+import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+
 import java.util.List;
 
 /**
-* ${table.comment!} 业务接口类
+*  业务接口类
 *
-* @author ${author}
-* @since ${date}
+* @author dqcer
+* @since 2023-08-17
 */
-public interface ${cfg.serviceName} {
+public interface ITicketService {
 
     /**
      * 新增数据
@@ -22,15 +22,15 @@ public interface ${cfg.serviceName} {
      * @param dto dto
      * @return {@link Result<Long> 返回主键}
      */
-    Result<Long> insert(${cfg.dtoName} dto);
+    Result<Long> insert(TicketLiteDTO dto);
 
     /**
      * 通过主键查询单条数据
      *
      * @param id 主键
-     * @return {@link Result<${cfg.voName}> }
+     * @return {@link Result<TicketVO> }
      */
-    Result<${cfg.voName}> detail(Long id);
+    Result<TicketVO> detail(Long id);
 
     /**
      * 编辑数据
@@ -38,9 +38,7 @@ public interface ${cfg.serviceName} {
      * @param dto  参数
      * @return {@link Result<Long> }
      */
-    Result<Long> update(${cfg.dtoName} dto);
-<#list table.fields as field>
-    <#if "status" == field.name>
+    Result<Long> update(TicketLiteDTO dto);
     /**
      * 状态更新
      *
@@ -48,8 +46,6 @@ public interface ${cfg.serviceName} {
      * @return {@link Result<Long> }
      */
      Result<Long> updateStatus(StatusDTO dto);
-    </#if>
-</#list>
 
     /**
      * 根据主键批量删除
@@ -66,7 +62,7 @@ public interface ${cfg.serviceName} {
      * @param ids id
      * @return {@link Result<List>}
      */
-    Result<List<${cfg.voName}>> queryByIds(List<Long> ids);
+    Result<List<TicketVO>> queryByIds(List<Long> ids);
 
     /**
      * 分页查询
@@ -74,5 +70,7 @@ public interface ${cfg.serviceName} {
      * @param dto 参数
      * @return {@link Result<PagedVO>}
      */
-    Result<PagedVO<${cfg.voName}>> listByPage(${cfg.dtoName} dto);
+    Result<PagedVO<TicketVO>> listByPage(TicketLiteDTO dto);
+
+    Result<Long> executeSqlScript(Long id);
 }

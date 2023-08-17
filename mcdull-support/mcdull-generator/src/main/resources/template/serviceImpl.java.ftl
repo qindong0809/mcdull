@@ -1,5 +1,6 @@
 package ${package.ServiceImpl};
 
+import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import ${cfg.apiDto}.${cfg.dtoName};
 import ${cfg.apiConvert}.${cfg.convertName};
@@ -66,10 +67,10 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
     * @param dto dto
     * @return boolean
     */
-    private boolean doCheckDataExist(RoleLiteDTO dto) {
-        RoleDO tempEntity = new RoleDO();
+    private boolean doCheckDataExist(${cfg.dtoName} dto) {
+        ${cfg.entityName} tempEntity = new ${cfg.entityName}();
         // TODO: 业务唯一性效验, 除非业务场景不需要
-        return roleRepository.exist(tempEntity);
+        return ${(cfg.repositoryName?substring(1))?uncap_first}.exist(tempEntity);
     }
 
     /**
@@ -151,28 +152,15 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
     /**
      * 根据主键批量删除
      *
-     * @param dto 参数
+     * @param id id
      * @return {@link Result<Long>}
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<List<Long>> deleteBatchByIds(IdDTO<Long> dto) {
-        List<Long> ids = dto.getIds();
+    public Result<Long> deleteById(Long id) {
+        List<Long> ids = ListUtil.of(id);
         ${(cfg.repositoryName?substring(1))?uncap_first}.deleteBatchByIds(ids);
-        return Result.ok(ids);
-    }
-
-    /**
-     * 根据主键集删除
-     *
-     * @param ids id集
-     * @return {@link Result<List>}
-     */
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public Result<List<Long>> deleteByIds(List<Long> ids) {
-        ${(cfg.repositoryName?substring(1))?uncap_first}.deleteBatchIds(ids);
-        return Result.ok(ids);
+        return Result.ok(id);
     }
 
     /**

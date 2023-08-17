@@ -5,7 +5,7 @@ import ${cfg.IdDTO};
 import ${cfg.PagedVO};
 import ${cfg.ValidGroup};
 import ${cfg.StatusDTO};
-import ${cfg.QueryByIdDTO};
+import ${cfg.PkDTO};
 import ${package.Service}.${cfg.serviceName};
 import ${cfg.apiVo}.${cfg.voName};
 import ${cfg.apiDto}.${cfg.dtoName};
@@ -53,7 +53,7 @@ public class ${cfg.controller} {
     * @return {@link Result<${cfg.voName}>}
     */
     @GetMapping("base/detail")
-    public Result<${cfg.voName}> detail(@Validated(value = {ValidGroup.Id.class}) QueryByIdDTO dto){
+    public Result<${cfg.voName}> detail(@Validated PkDTO dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.detail(dto.getId());
     }
 
@@ -85,15 +85,15 @@ public class ${cfg.controller} {
 </#list>
 
     /**
-    * 根据主键批量删除
+    * 根据主键删除
     *
     * @param dto dto
     * @return {@link Result<Long>}
     */
     @Authorized("${cfg.modelName}:${cfg.moduleCode}:delete")
     @PostMapping("base/delete")
-    public Result<List<Long>> deleteBatchByIds(@RequestBody @Valid DeleteDTO dto){
-        return ${(cfg.serviceName?substring(1))?uncap_first}.deleteBatchByIds(dto);
+    public Result<Long> deleteById(@RequestBody @Valid PkDTO dto){
+        return ${(cfg.serviceName?substring(1))?uncap_first}.deleteById(dto.getId());
     }
 
     /**
@@ -107,5 +107,4 @@ public class ${cfg.controller} {
     public Result<PagedVO<${cfg.voName}>> listByPage(@Validated(value = {ValidGroup.Paged.class}) ${cfg.dtoName} dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.listByPage(dto);
     }
-
 }

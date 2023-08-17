@@ -1,33 +1,17 @@
 spring:
   datasource:
-#    url: jdbc:mysql://mcdull.io:3306/mcdull-cloud?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&allowMultiQueries=true
-#    username: root
-#    password: 123456
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mcdull.io:3306/mcdull-cloud?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
     poolType: Hikari  # 指定对应的数据库连接池内置 Druid、Hikari
     druid-username: admin
     druid-password: admin
-    url: jdbc:h2:file:D:/H2/testDB;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1;NON_KEYWORDS=USER
-    username: root
-    password: 123456
-    driver-class-name: org.h2.Driver
-  h2:
-    console:
-      enabled: true
-      #进行该配置，你就可以通过YOUR_URL/h2访问h2 web consloe。YOUR_URL是你程序的访问URl。默认为/h2-console
-      path: /h2
-      # 进行该配置后，h2 web consloe就可以在远程访问了。否则只能在本机访问。
-      settings:
-        web-allow-others: true
   redis:
     host: mcdull.io
   data:
     mongodb:
       uri: mongodb://admin:123456@mcdull.io:27017/admin?authSource=admin&authMechanism=SCRAM-SHA-1
-  sql:
-    init:
-      mode: embedded
-      schema-locations: classpath:init.sql
 logging:
   level:
     root: info

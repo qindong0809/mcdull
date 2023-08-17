@@ -1,7 +1,5 @@
 package io.gitee.dqcer.mcdull.framework.base.dto;
 
-import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
-
 import javax.validation.constraints.NotNull;
 
 /**
@@ -10,7 +8,7 @@ import javax.validation.constraints.NotNull;
  */
 public class PkDTO implements DTO{
 
-    @NotNull(groups = ValidGroup.Id.class)
+    @NotNull
     private Long id;
 
     @Override

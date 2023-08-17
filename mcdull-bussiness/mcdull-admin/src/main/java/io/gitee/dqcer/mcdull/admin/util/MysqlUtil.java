@@ -11,6 +11,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.sql.DataSource;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -70,7 +71,7 @@ public class MysqlUtil {
     }
 
     @SneakyThrows(Exception.class)
-    public static void demo(Db db){
+    public static void runScript(Db db, Reader reader){
         Connection connection = db.getConnection();
         ScriptRunner scriptRunner = new ScriptRunner(connection);
         Resources.setCharset(StandardCharsets.UTF_8);
@@ -85,13 +86,8 @@ public class MysqlUtil {
         // 因为SQL脚本中可以写存储过程，中间存在分号，导致存储过程执行失败
         scriptRunner.setDelimiter("&&");
         // 读取SQL文件路径获取SQL文件执行
-//        List<String> files = getFiles("TO_CHANGE_PATH");
-//        for (String file : files) {
-//            InputStream inputStream = new FileInputStream(new File(file));
-//            Reader reader = new InputStreamReader(inputStream, "utf-8");
-//            scriptRunner.runScript(reader);
-//        }
-//        connection.close();
-//        System.out.println("sql脚本执行完毕");
+
+        scriptRunner.runScript(reader);
+        connection.close();
     }
 }

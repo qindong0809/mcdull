@@ -1,42 +1,42 @@
-package ${cfg.repository};
+package io.gitee.dqcer.mcdull.admin.web.dao.repository.database;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
-import ${cfg.apiEntity}.${cfg.entityName};
-import ${cfg.apiDto}.${cfg.dtoName};
+import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketDO;
+import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketLiteDTO;
 
 /**
-* ${table.comment!} 数据库操作封装接口层
+*  数据库操作封装接口层
 *
-* @author ${author}
-* @since ${date}
+* @author dqcer
+* @since 2023-08-17
 */
-public interface ${cfg.repositoryName} extends IService<${cfg.entityName}>  {
+public interface ITicketRepository extends IService<TicketDO>  {
 
    /**
     * 根据ID列表批量查询数据
     *
     * @param idList id列表
-    * @return {@link List<${cfg.entityName}>}
+    * @return {@link List<TicketDO>}
     */
-    List<${cfg.entityName}> queryListByIds(List<Long> idList);
+    List<TicketDO> queryListByIds(List<Long> idList);
 
    /**
     * 按条件分页查询
     *
     * @param param 参数
-    * @return {@link Page<${cfg.entityName}>}
+    * @return {@link Page<TicketDO>}
     */
-    Page<${cfg.entityName}> selectPage(${cfg.dtoName} param);
+    Page<TicketDO> selectPage(TicketLiteDTO param);
 
     /**
      * 根据ID获取单条数据
      *
      * @param id 主键
-     * @return {@link ${cfg.entityName}}
+     * @return {@link TicketDO}
      */
-    ${cfg.entityName} getById(Long id);
+    TicketDO getById(Long id);
 
     /**
      * 插入数据
@@ -44,7 +44,7 @@ public interface ${cfg.repositoryName} extends IService<${cfg.entityName}>  {
      * @param entity 实体对象
      * @return Long id
      */
-    Long insert(${cfg.entityName} entity);
+    Long insert(TicketDO entity);
 
     /**
      * 批量删除
@@ -59,5 +59,5 @@ public interface ${cfg.repositoryName} extends IService<${cfg.entityName}>  {
      * @param entity 实体对象
      * @return boolean true/存在 false/不存在
      */
-    boolean exist(${cfg.entityName} entity);
+    boolean exist(TicketDO entity);
 }

@@ -1,5 +1,9 @@
 spring:
   datasource:
+#    url: jdbc:mysql://mcdull.io:3306/mcdull-cloud?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&allowMultiQueries=true
+#    username: root
+#    password: 123456
+#    driver-class-name: com.mysql.cj.jdbc.Driver
     poolType: Druid  # 指定对应的数据库连接池内置 Druid、Hikari
     druid-username: admin
     druid-password: admin
@@ -14,7 +18,7 @@ spring:
       settings:
         web-allow-others: true
   redis:
-    host: mcdull.io5
+    host: mcdull.io
   sql:
     init:
       mode: always

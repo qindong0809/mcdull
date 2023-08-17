@@ -249,7 +249,7 @@ public class CodeGenerator {
                 map.put("PageUtil", BASIC + "util.PageUtil");
                 map.put("Authorized", BASIC + "annotation.Authorized");
                 map.put("ValidGroup", BASIC + "validator.ValidGroup");
-                map.put("QueryByIdDTO", BASIC + "dto.QueryByIdDTO");
+                map.put("PkDTO", BASIC + "dto.PkDTO");
                 map.put("repository",repositoryPackage);
                 map.put("repositoryImpl", repositoryImplPackage);
                 map.put("controller", className + controllerSuffix);

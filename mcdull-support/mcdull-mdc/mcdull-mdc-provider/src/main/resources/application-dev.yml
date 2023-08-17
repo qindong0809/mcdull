@@ -13,8 +13,8 @@ spring:
   #邮件配置样例
   mail:
     host: smtp.sina.com
-    username: xxx@sina.com
-    password: xxxx
+    username: dqcer@sina.com
+    password: 697281600ef0a589
     port: 465
     properties:
       smtp:
