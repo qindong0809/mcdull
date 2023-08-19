@@ -41,7 +41,7 @@ public class ${cfg.controller} {
     * @return {@link Result<Long> 返回新增主键}
     */
     @Authorized("${cfg.modelName}:${cfg.moduleCode}:insert")
-    @PostMapping("base/insert")
+    @PostMapping("insert")
     public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Insert.class}) ${cfg.dtoName} dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.insert(dto);
     }
@@ -52,7 +52,7 @@ public class ${cfg.controller} {
     * @param dto dto
     * @return {@link Result<${cfg.voName}>}
     */
-    @GetMapping("base/detail")
+    @GetMapping("detail")
     public Result<${cfg.voName}> detail(@Validated PkDTO dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.detail(dto.getId());
     }
@@ -64,7 +64,7 @@ public class ${cfg.controller} {
     * @return {@link Result<Long>}
     */
     @Authorized("${cfg.modelName}:${cfg.moduleCode}:update")
-    @PutMapping("base/update")
+    @PutMapping("update")
     public Result<Long> update(@RequestBody @Validated(value = {ValidGroup.Update.class}) ${cfg.dtoName} dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.update(dto);
     }
@@ -77,7 +77,7 @@ public class ${cfg.controller} {
     * @return {@link Result<Long>}
     */
     @Authorized("${cfg.modelName}:${cfg.moduleCode}:status")
-    @PutMapping("base/status")
+    @PutMapping("status")
     public Result<Long> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) StatusDTO dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.updateStatus(dto);
     }
@@ -91,7 +91,7 @@ public class ${cfg.controller} {
     * @return {@link Result<Long>}
     */
     @Authorized("${cfg.modelName}:${cfg.moduleCode}:delete")
-    @PostMapping("base/delete")
+    @PostMapping("delete")
     public Result<Long> deleteById(@RequestBody @Valid PkDTO dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.deleteById(dto.getId());
     }
@@ -103,7 +103,7 @@ public class ${cfg.controller} {
     * @return {@link Result<PagedVO>}
     */
     @Authorized("${cfg.modelName}:${cfg.moduleCode}:view")
-    @GetMapping("base/list")
+    @GetMapping("list")
     public Result<PagedVO<${cfg.voName}>> listByPage(@Validated(value = {ValidGroup.Paged.class}) ${cfg.dtoName} dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.listByPage(dto);
     }
