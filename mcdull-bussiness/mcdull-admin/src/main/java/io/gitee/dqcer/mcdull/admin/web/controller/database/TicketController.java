@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.controller.database;
 
-import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketAddDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.TicketVO;
 import io.gitee.dqcer.mcdull.admin.web.service.database.ITicketService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
@@ -35,8 +36,8 @@ public class TicketController {
     * @return {@link Result<Long> 返回新增主键}
     */
     @Authorized("database:ticket:insert")
-    @PostMapping("base/insert")
-    public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Insert.class}) TicketLiteDTO dto){
+    @PostMapping("insert")
+    public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Insert.class}) TicketAddDTO dto){
         return ticketService.insert(dto);
     }
 
@@ -46,7 +47,7 @@ public class TicketController {
     * @param dto dto
     * @return {@link Result<TicketVO>}
     */
-    @GetMapping("base/detail")
+    @GetMapping("detail")
     public Result<TicketVO> detail(@Validated PkDTO dto){
         return ticketService.detail(dto.getId());
     }
@@ -58,8 +59,8 @@ public class TicketController {
     * @return {@link Result<Long>}
     */
     @Authorized("database:ticket:update")
-    @PutMapping("base/update")
-    public Result<Long> update(@RequestBody @Validated(value = {ValidGroup.Update.class}) TicketLiteDTO dto){
+    @PutMapping("update")
+    public Result<Long> update(@RequestBody @Validated TicketEditDTO dto){
         return ticketService.update(dto);
     }
     /**
@@ -69,7 +70,7 @@ public class TicketController {
     * @return {@link Result<Long>}
     */
     @Authorized("database:ticket:status")
-    @PutMapping("base/status")
+    @PutMapping("status")
     public Result<Long> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) StatusDTO dto){
         return ticketService.updateStatus(dto);
     }
@@ -81,7 +82,7 @@ public class TicketController {
     * @return {@link Result<Long>}
     */
     @Authorized("database:ticket:delete")
-    @PostMapping("base/delete")
+    @PostMapping("delete")
     public Result<Long> deleteById(@RequestBody @Valid PkDTO dto){
         return ticketService.deleteById(dto.getId());
     }
@@ -93,8 +94,8 @@ public class TicketController {
     * @return {@link Result<PagedVO>}
     */
     @Authorized("database:ticket:view")
-    @GetMapping("base/list")
-    public Result<PagedVO<TicketVO>> listByPage(@Validated(value = {ValidGroup.Paged.class}) TicketLiteDTO dto){
+    @GetMapping("list")
+    public Result<PagedVO<TicketVO>> listByPage(@Validated(value = {ValidGroup.Paged.class}) TicketAddDTO dto){
         return ticketService.listByPage(dto);
     }
 

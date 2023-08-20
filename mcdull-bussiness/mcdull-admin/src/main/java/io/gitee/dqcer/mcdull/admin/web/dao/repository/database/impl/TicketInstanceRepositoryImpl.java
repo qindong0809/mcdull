@@ -15,7 +15,9 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -87,13 +89,27 @@ public class TicketInstanceRepositoryImpl extends ServiceImpl<TicketInstanceMapp
 
     @Override
     public List<TicketInstanceDO> getListByTicketId(Long ticketId) {
-        TicketInstanceDO instanceDO = new TicketInstanceDO();
-        instanceDO.setInstanceId(ticketId);
-        List<TicketInstanceDO> list = baseMapper.selectList(Wrappers.lambdaQuery(instanceDO));
+        LambdaQueryWrapper<TicketInstanceDO> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(TicketInstanceDO::getTicketId, ticketId);
+        List<TicketInstanceDO> list = baseMapper.selectList(wrapper);
         if (CollUtil.isNotEmpty(list)) {
             return list;
         }
         return Collections.emptyList();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void save(Long ticketId, Long groupId, List<Long> instanceList) {
+        List<TicketInstanceDO> list = new ArrayList<>(instanceList.size());
+        for (Long instanceId : instanceList) {
+            TicketInstanceDO instanceDO = new TicketInstanceDO();
+            instanceDO.setInstanceId(instanceId);
+            instanceDO.setTicketId(ticketId);
+            instanceDO.setGroupId(groupId);
+            list.add(instanceDO);
+        }
+        this.saveBatch(list);
     }
 
     /**

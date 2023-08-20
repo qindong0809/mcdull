@@ -6,12 +6,14 @@ import io.gitee.dqcer.mcdull.admin.model.dto.database.GroupListDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.GroupVO;
 import io.gitee.dqcer.mcdull.admin.web.service.database.IGroupService;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.SelectOptionVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
 * instance 控制器
@@ -30,6 +32,11 @@ public class GroupController implements BasicController {
     @GetMapping("list")
     public Result<PagedVO<GroupVO>> list(@Validated GroupListDTO dto){
         return groupService.list(dto);
+    }
+
+    @GetMapping("base-info-list")
+    public Result<List<SelectOptionVO<Long>>> baseInfoList(){
+        return groupService.baseInfoList();
     }
 
     @PostMapping

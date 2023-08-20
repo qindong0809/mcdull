@@ -20,4 +20,6 @@ public interface IInstanceRepository extends IService<InstanceDO>  {
     List<InstanceDO> getListByName(String name);
 
     void removeUpdate(Long id);
+
+    List<InstanceDO> getByGroupId(Long groupId);
 }

@@ -14,6 +14,7 @@ import io.gitee.dqcer.mcdull.admin.web.service.database.IInstanceService;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.SelectOptionVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
 import org.springframework.stereotype.Service;
@@ -85,4 +86,15 @@ public class InstanceServiceImpl extends BasicServiceImpl<IInstanceRepository> i
         baseRepository.removeUpdate(id);
         return Result.ok(id);
     }
+
+    @Override
+    public Result<List<SelectOptionVO<Long>>> baseInfoListByGroupId(Long groupId) {
+        List<SelectOptionVO<Long>> voList = new ArrayList<>();
+        List<InstanceDO> list = baseRepository.getByGroupId(groupId);
+        for (InstanceDO instanceDO : list) {
+            voList.add(new SelectOptionVO<>(instanceDO.getName(), instanceDO.getId()));
+        }
+        return Result.ok(voList);
+    }
+
 }

@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.service.database;
 
-import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketAddDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.TicketVO;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -22,7 +23,7 @@ public interface ITicketService {
      * @param dto dto
      * @return {@link Result<Long> 返回主键}
      */
-    Result<Long> insert(TicketLiteDTO dto);
+    Result<Long> insert(TicketAddDTO dto);
 
     /**
      * 通过主键查询单条数据
@@ -38,7 +39,7 @@ public interface ITicketService {
      * @param dto  参数
      * @return {@link Result<Long> }
      */
-    Result<Long> update(TicketLiteDTO dto);
+    Result<Long> update(TicketEditDTO dto);
     /**
      * 状态更新
      *
@@ -70,7 +71,7 @@ public interface ITicketService {
      * @param dto 参数
      * @return {@link Result<PagedVO>}
      */
-    Result<PagedVO<TicketVO>> listByPage(TicketLiteDTO dto);
+    Result<PagedVO<TicketVO>> listByPage(TicketAddDTO dto);
 
     Result<Long> executeSqlScript(Long id);
 }

@@ -41,10 +41,6 @@ public class CacheChannel implements ICache {
     @Override
     public <T> void put(String key, T value, long expire) {
         caffeineCache.put(key, value, expire);
-        boolean local = SpringContextHolder.isLocal();
-        if (local) {
-            return;
-        }
         RedissonCache redisCache = SpringContextHolder.getBean(RedissonCache.class);
         redisCache.put(key, value, expire);
     }
@@ -52,10 +48,6 @@ public class CacheChannel implements ICache {
     @Override
     public void evict(String... keys) {
         caffeineCache.evict(keys);
-        boolean local = SpringContextHolder.isLocal();
-        if (local) {
-            return;
-        }
         RedissonCache redisCache = SpringContextHolder.getBean(RedissonCache.class);
         redisCache.evict(keys);
     }

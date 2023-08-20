@@ -16,6 +16,7 @@ logging:
   level:
     root: info
     io.gitee.dqcer.mcdull.framework: info
+    io.gitee.dqcer.mcdull.admin.web.dao.mapper: debug
 mcdull:
   oss:
     url: rqoy1bmgr.hn-bkt.clouddn.com

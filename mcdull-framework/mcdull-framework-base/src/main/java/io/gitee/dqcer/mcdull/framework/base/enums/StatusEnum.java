@@ -34,4 +34,15 @@ public enum StatusEnum implements IEnum<String> {
                 throw new IllegalArgumentException("invalid value , only ['1', '2'] is allowed");
         }
     }
+
+    public static StatusEnum toEnum(Integer value) {
+        switch (value) {
+            case 1:
+                return StatusEnum.ENABLE;
+            case 2:
+                return StatusEnum.DISABLE;
+            default:
+                throw new IllegalArgumentException("invalid value , only ['1', '2'] is allowed");
+        }
+    }
 }

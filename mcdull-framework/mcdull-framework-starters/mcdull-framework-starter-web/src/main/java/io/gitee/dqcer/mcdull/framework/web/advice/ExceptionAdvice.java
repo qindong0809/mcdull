@@ -183,6 +183,12 @@ public class ExceptionAdvice {
             log.error("参数异常, parameterName: {}, {}", parameterName, String.format("appName=%s, clientIp=%s, requestURI=%s,message:%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), ex.getMessage()));
             return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
+        if (e instanceof ValidationException) {
+            ValidationException validationException = (ValidationException) e;
+            String parameterName = validationException.getMessage();
+            log.error("参数异常, parameterName: {}, {}", parameterName, String.format("appName=%s, clientIp=%s, requestURI=%s,message:%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), validationException.getMessage()));
+            return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
+        }
         errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,message:%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), e.getMessage());
         log.error("参数异常: {}", errorMessage);
         return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));

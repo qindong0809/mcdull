@@ -8,7 +8,9 @@ import io.gitee.dqcer.mcdull.admin.model.vo.database.InstanceVO;
 import io.gitee.dqcer.mcdull.admin.web.service.database.IGroupService;
 import io.gitee.dqcer.mcdull.admin.web.service.database.IInstanceService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
+import io.gitee.dqcer.mcdull.framework.base.dto.PkDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.SelectOptionVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import org.springframework.validation.annotation.Validated;
@@ -38,6 +40,11 @@ public class InstanceController implements BasicController {
     @GetMapping("list")
     public Result<PagedVO<InstanceVO>> list(@Validated InstanceListDTO dto){
         return instanceService.list(dto);
+    }
+
+    @GetMapping("base-info-list")
+    public Result<List<SelectOptionVO<Long>>> baseInfoListByGroupId(@Validated PkDTO dto){
+        return instanceService.baseInfoListByGroupId(dto.getId());
     }
 
     @GetMapping("all-group")

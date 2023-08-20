@@ -5,6 +5,7 @@ import io.gitee.dqcer.mcdull.admin.model.dto.database.GroupEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.GroupListDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.GroupVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.SelectOptionVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 
 import java.util.List;
@@ -28,4 +29,7 @@ public interface IGroupService {
     Result<Long> remove(Long id);
 
     Result<List<GroupVO>> allList();
+
+    Result<List<SelectOptionVO<Long>>> baseInfoList();
+
 }

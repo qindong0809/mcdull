@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.database.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -18,6 +19,7 @@ import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -53,5 +55,17 @@ public class InstanceRepositoryImpl extends ServiceImpl<InstanceMapper, Instance
         update.set(BaseDO::getDelBy, UserContextHolder.currentUserId());
         update.eq(IdDO::getId, id);
         baseMapper.update(null, update);
+    }
+
+    @Override
+    public List<InstanceDO> getByGroupId(Long groupId) {
+        LambdaQueryWrapper<InstanceDO> query = Wrappers.lambdaQuery();
+        query.eq(InstanceDO::getGroupId, groupId);
+        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
+        List<InstanceDO> list = baseMapper.selectList(query);
+        if (CollUtil.isNotEmpty(list)) {
+            return list;
+        }
+        return Collections.emptyList();
     }
 }

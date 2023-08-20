@@ -2,28 +2,38 @@ package io.gitee.dqcer.mcdull.admin.web.service.database.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Db;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.model.convert.database.TicketConvert;
-import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketAddDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketEditDTO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.GroupDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.database.InstanceDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketInstanceDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
 import io.gitee.dqcer.mcdull.admin.model.enums.TicketCancelStatusEnum;
 import io.gitee.dqcer.mcdull.admin.model.enums.TicketFollowStatusEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.TicketVO;
 import io.gitee.dqcer.mcdull.admin.util.MysqlUtil;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IGroupRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IInstanceRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.ITicketInstanceRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.ITicketRepository;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.database.ITicketService;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.SelectOptionVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import lombok.SneakyThrows;
@@ -39,6 +49,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -62,6 +75,12 @@ public class TicketServiceImpl implements ITicketService {
     @Resource
     private IInstanceRepository instanceRepository;
 
+    @Resource
+    private IGroupRepository groupRepository;
+
+    @Resource
+    private IUserRepository userRepository;
+
     /**
      * 新增数据
      *
@@ -70,28 +89,44 @@ public class TicketServiceImpl implements ITicketService {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<Long> insert(TicketLiteDTO dto) {
+    public Result<Long> insert(TicketAddDTO dto) {
 
-        boolean dataExist = this.doCheckDataExist(dto);
+        boolean dataExist = this.doCheckDataExist(dto, null);
         if (dataExist) {
             log.warn("数据已存在 dto: {}", dto);
             return Result.error(CodeEnum.DATA_EXIST);
         }
 
         TicketDO entity = TicketConvert.convertToTicketDO(dto);
+        entity.setFollowStatus(TicketFollowStatusEnum.EDIT.getCode());
+        entity.setCancelStatus(TicketCancelStatusEnum.OK.getCode());
+        String number = buildNumber();
+        entity.setNumber(number);
         Long entityId = ticketRepository.insert(entity);
+
+        ticketInstanceRepository.save(entityId, entity.getGroupId(), dto.getInstanceList());
+
         return Result.ok(entityId);
     }
 
-   /**
+    private synchronized String buildNumber() {
+        List<TicketDO> list = ticketRepository.list();
+        String format = String.format("%04d", list.size() + 1);
+        return StrUtil.format("NO.{}", format);
+    }
+
+    /**
     * 检查数据是否存在
     *
     * @param dto dto
     * @return boolean
     */
-    private boolean doCheckDataExist(TicketLiteDTO dto) {
+    private boolean doCheckDataExist(TicketAddDTO dto, Long id) {
         TicketDO tempEntity = new TicketDO();
-        // TODO: 业务唯一性效验, 除非业务场景不需要
+        tempEntity.setName(dto.getName());
+        if (ObjUtil.isNotNull(id)) {
+            tempEntity.setId(id);
+        }
         return ticketRepository.exist(tempEntity);
     }
 
@@ -109,7 +144,12 @@ public class TicketServiceImpl implements ITicketService {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
-        return Result.ok(TicketConvert.convertToTicketVO(entity));
+
+        Map<Long, GroupDO> groupMap = groupRepository.listByIds(ListUtil.of(entity.getGroupId()))
+                .stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+        Map<Long, UserDO> userMap = userRepository.listByIds(ListUtil.of(entity.getCreatedBy()))
+                .stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+        return Result.ok(this.buildTicketVO(groupMap, userMap, entity));
     }
 
     /**
@@ -120,7 +160,7 @@ public class TicketServiceImpl implements ITicketService {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<Long> update(TicketLiteDTO dto) {
+    public Result<Long> update(TicketEditDTO dto) {
         Long id = dto.getId();
 
         TicketDO dbData = ticketRepository.getById(id);
@@ -128,6 +168,13 @@ public class TicketServiceImpl implements ITicketService {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
+
+        boolean dataExist = this.doCheckDataExist(dto, id);
+        if (dataExist) {
+            log.warn("数据已存在 dto: {}", dto);
+            return Result.error(CodeEnum.DATA_EXIST);
+        }
+
         TicketDO entity = TicketConvert.convertToTicketDO(dto);
         entity.setUpdatedBy(UserContextHolder.currentUserId());
         boolean success = ticketRepository.updateById(entity);
@@ -206,13 +253,42 @@ public class TicketServiceImpl implements ITicketService {
      */
     @Transactional(readOnly = true)
     @Override
-    public Result<PagedVO<TicketVO>> listByPage(TicketLiteDTO dto) {
+    public Result<PagedVO<TicketVO>> listByPage(TicketAddDTO dto) {
         Page<TicketDO> entityPage = ticketRepository.selectPage(dto);
         List<TicketVO> voList = new ArrayList<>();
-        for (TicketDO entity : entityPage.getRecords()) {
-            voList.add(TicketConvert.convertToTicketVO(entity));
+        List<TicketDO> records = entityPage.getRecords();
+        Set<Long> groupIdSet = records.stream().map(TicketDO::getGroupId).collect(Collectors.toSet());
+        Map<Long, GroupDO> groupMap = groupRepository.listByIds(groupIdSet).stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+
+        Set<Long> userIdSet = records.stream().map(BaseDO::getCreatedBy).collect(Collectors.toSet());
+        Map<Long, UserDO> userMap = userRepository.listByIds(userIdSet).stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+
+        for (TicketDO entity : records) {
+            TicketVO ticketVO = this.buildTicketVO(groupMap, userMap, entity);
+            voList.add(ticketVO);
         }
         return Result.ok(PageUtil.toPage(voList, entityPage));
+    }
+
+    private TicketVO buildTicketVO(Map<Long, GroupDO> groupMap, Map<Long, UserDO> userMap, TicketDO entity) {
+        Long groupId = entity.getGroupId();
+        List<TicketInstanceDO> ticketInstanceList = ticketInstanceRepository.getListByTicketId(entity.getId());
+        List<InstanceDO> repository = instanceRepository.getByGroupId(groupId);
+
+        Map<Long, InstanceDO> instanceMap = repository.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+
+        List<SelectOptionVO<Long>> instanceList = new ArrayList<>();
+        ticketInstanceList.forEach(i -> {
+            Long instanceId = i.getInstanceId();
+            InstanceDO instance = instanceMap.get(instanceId);
+            instanceList.add(new SelectOptionVO<>(instance.getName(), instance.getId()));
+        });
+
+        TicketVO ticketVO = TicketConvert.convertToTicketVO(entity);
+        ticketVO.setInstanceSelectOptionVOList(instanceList);
+        ticketVO.setGroupName(groupMap.get(groupId).getName());
+        ticketVO.setCreatedByStr(userMap.get(entity.getCreatedBy()).getNickName());
+        return ticketVO;
     }
 
     @Transactional(rollbackFor = Exception.class)

@@ -5,7 +5,10 @@ import io.gitee.dqcer.mcdull.admin.model.dto.database.InstanceEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.InstanceListDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.InstanceVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.SelectOptionVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+
+import java.util.List;
 
 /**
  * 系统配置 接口定义
@@ -24,4 +27,6 @@ public interface IInstanceService {
     Result<Long> edit(InstanceEditDTO dto);
 
     Result<Long> remove(Long id);
+
+    Result<List<SelectOptionVO<Long>>> baseInfoListByGroupId(Long groupId);
 }

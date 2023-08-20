@@ -18,5 +18,9 @@ public class TicketInstanceDO extends MiddleDO {
 
     private static final long serialVersionUID = 1L;
 
+    private Long ticketId;
+
+    private Long groupId;
+
     private Long instanceId;
 }

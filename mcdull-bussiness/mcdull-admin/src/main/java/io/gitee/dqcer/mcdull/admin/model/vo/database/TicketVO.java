@@ -1,7 +1,11 @@
 package io.gitee.dqcer.mcdull.admin.model.vo.database;
 
+import io.gitee.dqcer.mcdull.framework.base.vo.SelectOptionVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.VO;
 import lombok.Data;
+
+import java.util.Date;
+import java.util.List;
 
 /**
 *  返回客户端值
@@ -32,6 +36,8 @@ public class TicketVO implements VO {
      * 组号
      */
     private Long groupId;
+
+    private String groupName;
 
     /**
      * 执行方式（1/停放执行 2/在线执行）
@@ -67,4 +73,10 @@ public class TicketVO implements VO {
      * 状态（1正常 2停用）
      */
     private String status;
+
+    private List<SelectOptionVO<Long>> instanceSelectOptionVOList;
+
+    private Date createdTime;
+
+    private String createdByStr;
 }

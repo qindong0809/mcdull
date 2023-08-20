@@ -38,7 +38,9 @@ public interface ITicketInstanceRepository extends IService<TicketInstanceDO>  {
      */
     Long insert(TicketInstanceDO entity);
 
-    /**
+    void save(Long ticketId, Long groupId, List<Long> instanceList);
+
+ /**
      * 批量删除
      *
      * @param ids 主键集
@@ -54,4 +56,5 @@ public interface ITicketInstanceRepository extends IService<TicketInstanceDO>  {
     boolean exist(TicketInstanceDO entity);
 
     List<TicketInstanceDO> getListByTicketId(Long ticketId);
+
 }

@@ -6,11 +6,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketAddDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.database.TicketMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.ITicketRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
@@ -57,12 +60,13 @@ public class TicketRepositoryImpl extends ServiceImpl<TicketMapper, TicketDO>  i
      * @return {@link Page<TicketDO>}
      */
     @Override
-    public Page<TicketDO> selectPage(TicketLiteDTO param) {
+    public Page<TicketDO> selectPage(TicketAddDTO param) {
         LambdaQueryWrapper<TicketDO> lambda = new QueryWrapper<TicketDO>().lambda();
         String keyword = param.getKeyword();
         if (ObjUtil.isNotNull(keyword)) {
             // TODO 组装查询条件
         }
+        lambda.orderByDesc(MiddleDO::getCreatedTime);
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 
@@ -101,7 +105,11 @@ public class TicketRepositoryImpl extends ServiceImpl<TicketMapper, TicketDO>  i
      */
     @Override
     public boolean exist(TicketDO entity) {
-        return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
+        LambdaQueryWrapper<TicketDO> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(TicketDO::getName, entity.getName());
+        wrapper.ne(ObjUtil.isNotNull(entity.getId()), IdDO::getId,entity.getId());
+        wrapper.eq(BaseDO::getDelBy, DelFlayEnum.NORMAL.getCode());
+        return !baseMapper.selectList(wrapper).isEmpty();
     }
 
     /**

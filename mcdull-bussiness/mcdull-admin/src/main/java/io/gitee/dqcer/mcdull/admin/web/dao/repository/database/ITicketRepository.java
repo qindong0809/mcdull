@@ -2,9 +2,10 @@ package io.gitee.dqcer.mcdull.admin.web.dao.repository.database;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import java.util.List;
+import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketAddDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketDO;
-import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketLiteDTO;
+
+import java.util.List;
 
 /**
 *  数据库操作封装接口层
@@ -28,7 +29,7 @@ public interface ITicketRepository extends IService<TicketDO>  {
     * @param param 参数
     * @return {@link Page<TicketDO>}
     */
-    Page<TicketDO> selectPage(TicketLiteDTO param);
+    Page<TicketDO> selectPage(TicketAddDTO param);
 
     /**
      * 根据ID获取单条数据

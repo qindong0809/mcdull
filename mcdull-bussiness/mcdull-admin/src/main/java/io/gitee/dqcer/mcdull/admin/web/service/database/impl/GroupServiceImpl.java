@@ -13,6 +13,7 @@ import io.gitee.dqcer.mcdull.admin.web.service.database.IGroupService;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.SelectOptionVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
 import org.springframework.stereotype.Service;
@@ -78,6 +79,11 @@ public class GroupServiceImpl extends BasicServiceImpl<IGroupRepository> impleme
 
     @Override
     public Result<List<GroupVO>> allList() {
+        List<GroupVO> voList = getAllList();
+        return Result.ok(voList);
+    }
+
+    private List<GroupVO> getAllList() {
         List<GroupVO> voList = new ArrayList<>();
         List<GroupDO> list = baseRepository.allList();
         if (CollUtil.isNotEmpty(list)) {
@@ -85,6 +91,17 @@ public class GroupServiceImpl extends BasicServiceImpl<IGroupRepository> impleme
                 GroupVO vo = GroupConvert.convertToGroupVO(groupDO);
                 voList.add(vo);
             }
+        }
+        return voList;
+    }
+
+
+    @Override
+    public Result<List<SelectOptionVO<Long>>> baseInfoList() {
+        List<SelectOptionVO<Long>> voList = new ArrayList<>();
+        List<GroupVO> list = getAllList();
+        for (GroupVO group : list) {
+            voList.add(new SelectOptionVO<>(group.getName(), group.getId()));
         }
         return Result.ok(voList);
     }
