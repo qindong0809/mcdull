@@ -656,3 +656,21 @@ create table `database_ticket_instance` (
 `created_time` datetime not null comment '创建时间',
 primary key (`id`)
 );
+
+drop table if exists `sys_user_email_config`;
+create table `sys_user_email_config` (
+`id` bigint not null comment '主键',
+`user_id` bigint not null comment '创建人',
+`host` varchar(128) not null comment '域名',
+`username` varchar(64) not null comment '用户名',
+`password` varchar(64) not null comment '口令',
+`port` int not null comment '端口',
+`created_by` bigint not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` bigint default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`status`  char(1) default null comment '状态（1正常 2停用）',
+`del_flag` int not null comment '删除标识（1/正常 2/删除）',
+`del_by` bigint default null comment '删除人',
+primary key (`id`)
+);

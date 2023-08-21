@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.util;
 
+import cn.hutool.extra.mail.MailAccount;
+import cn.hutool.extra.mail.MailUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,8 +11,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * 电子邮件
@@ -52,6 +53,16 @@ public class EmailUtil {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    public static void send(String host, String username, String pass, Integer port, List<String> toList,
+                            List<String> ccList, String subject, String context, boolean isHtml) {
+        MailAccount account = new MailAccount();
+        account.setHost(host);
+        account.setUser(username);
+        account.setPass(pass);
+        account.setPort(port);
+        MailUtil.send(account, toList, ccList, null, subject, context, isHtml);
     }
 
 }
