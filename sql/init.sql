@@ -438,6 +438,7 @@ primary key (id)
 
 insert into sys_config values(4,  '账号自助-验证码开关','sys.account.captchaEnabled','true',                 'Y','是否开启验证码功能（true开启，false关闭）', null,  sysdate(), null, null, 1, null);
 insert into sys_config values(10, '上传文件目录',      'sys.upload.file.directory', '/opt/mc-dull/upload/', 'Y','设置上传文件的目录',                     null,  sysdate(), null, null, 1, null);
+insert into sys_config values(11, '添加用户邮件通知',   'sys.user.add.sendEmail',    'true',                 'Y','是否开启验证码功能（true开启，false关闭）',null,  sysdate(), null, null, 1, null);
 
 
 drop table if exists sys_dept;

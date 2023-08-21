@@ -23,6 +23,12 @@ mcdull:
     accessKey: DOpFajq-y9E77CmLz9Qm5GsF7nY_zXJ0R3ngfOYLD
     accessSecretKey: QRXPsheK_j_AaXZS8CqXoH5g4ed2WqrFgbcLRhqmF
     type: qiniu
+  #邮件配置样例
+  mail:
+    host: smtp.sina.com
+    username: dqcer@sina.com
+    password: xxxxxxxxxxxxx
+    port: 465
 ignoredTableColumns: sys_log
 
 

@@ -79,6 +79,11 @@
       "type": "io.gitee.dqcer.mcdull.framework.config.properties.OssTypeEnum",
       "description": "类型",
       "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
+    },
+    {
+      "name": "mcdull.mail",
+      "type": "io.gitee.dqcer.mcdull.framework.config.properties.MailProperties",
+      "sourceType": "io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties"
     }
   ],
   "hints": []

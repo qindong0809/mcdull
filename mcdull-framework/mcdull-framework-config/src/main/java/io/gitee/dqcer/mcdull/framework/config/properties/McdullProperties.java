@@ -27,6 +27,16 @@ public class McdullProperties {
      */
     private OssProperties oss = new OssProperties();
 
+    private MailProperties mail = new MailProperties();
+
+    public MailProperties getMail() {
+        return mail;
+    }
+
+    public void setMail(MailProperties mail) {
+        this.mail = mail;
+    }
+
     public OssProperties getOss() {
         return oss;
     }

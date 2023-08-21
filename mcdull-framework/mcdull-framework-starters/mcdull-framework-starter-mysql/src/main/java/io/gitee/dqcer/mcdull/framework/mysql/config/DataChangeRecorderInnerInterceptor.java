@@ -113,7 +113,6 @@ public class DataChangeRecorderInnerInterceptor implements InnerInterceptor {
 
     @Override
     public void beforePrepare(StatementHandler sh, Connection connection, Integer transactionTimeout) {
-        com.baomidou.mybatisplus.extension.plugins.inner.DataChangeRecorderInnerInterceptor
         PluginUtils.MPStatementHandler mpSh = PluginUtils.mpStatementHandler(sh);
         MappedStatement ms = mpSh.mappedStatement();
         final BoundSql boundSql = mpSh.boundSql();

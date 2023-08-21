@@ -11,7 +11,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * 电子邮件
@@ -58,11 +61,14 @@ public class EmailUtil {
     public static void send(String host, String username, String pass, Integer port, List<String> toList,
                             List<String> ccList, String subject, String context, boolean isHtml) {
         MailAccount account = new MailAccount();
+        account.setFrom(username);
         account.setHost(host);
         account.setUser(username);
         account.setPass(pass);
         account.setPort(port);
-        MailUtil.send(account, toList, ccList, null, subject, context, isHtml);
+        account.setSslEnable(true);
+        account.setAuth(true);
+        MailUtil.send(account, toList, ccList, new HashSet<>(), subject, context, isHtml);
     }
 
 }

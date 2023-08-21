@@ -20,6 +20,8 @@ public enum SysConfigKeyEnum implements IEnum<String> {
      */
     FILE_DIRECTORY("sys.upload.file.directory", "上传文件目录"),
 
+    CREATED_USER_SEND_EMAIL("sys.user.add.sendEmail", "添加用户邮件通知"),
+
     ;
 
     SysConfigKeyEnum(String code, String text) {

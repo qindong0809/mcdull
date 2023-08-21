@@ -1,5 +1,9 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys.impl;
 
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
@@ -14,11 +18,14 @@ import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.enums.SysConfigKeyEnum;
 import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
+import io.gitee.dqcer.mcdull.admin.util.EmailUtil;
 import io.gitee.dqcer.mcdull.admin.util.LogHelpUtil;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.*;
+import io.gitee.dqcer.mcdull.admin.web.manager.common.ISysConfigManager;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IUserManager;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IUserService;
 import io.gitee.dqcer.mcdull.business.common.FileNameGeneratorUtil;
@@ -43,9 +50,12 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
+import io.gitee.dqcer.mcdull.framework.config.properties.MailProperties;
+import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import lombok.SneakyThrows;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,6 +87,15 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
 
     @Resource
     private IUserPostRepository userPostRepository;
+
+    @Resource
+    private ISysConfigManager sysConfigManager;
+
+    @Resource
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+    @Resource
+    private McdullProperties mcdullProperties;
 
     @Transform
     @Override
@@ -177,9 +196,38 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
         userRoleRepository.updateByUserId(userId, dto.getRoleIds());
         userPostRepository.updateByUserId(userId, dto.getPostIds());
 
+        String valueByEnum = sysConfigManager.findValueByEnum(SysConfigKeyEnum.CREATED_USER_SEND_EMAIL);
+        boolean isSendEmail = Convert.toBool(valueByEnum);
+        if (isSendEmail) {
+            this.sendEmail(entity);
+        }
         this.buildAddOrEditLog(dto);
-
         return Result.ok(userId);
+    }
+
+    @SneakyThrows(Exception.class)
+    private void sendEmail(UserDO entity) {
+        Long currentUserId = UserContextHolder.currentUserId();
+        UserDO currentUser = this.baseRepository.getById(currentUserId);
+
+        MailProperties defaultMailProperties = mcdullProperties.getMail();
+        String host = defaultMailProperties.getHost();
+        String username = defaultMailProperties.getUsername();
+        String password = defaultMailProperties.getPassword();
+        Integer port = defaultMailProperties.getPort();
+
+        boolean hasMailConfig = false;
+        if (hasMailConfig) {
+            // TODO: 2023/8/21  
+        }
+
+        ClassPathResource resource = new ClassPathResource("email/Account-Create-Ok-Template.html");
+        String emailTemplate = IoUtil.readUtf8(resource.getStream());
+        String textHtml = StrUtil.format(emailTemplate, entity.getNickName(), entity.getAccount(), entity.getAccount(), currentUser.getNickName());
+        String subject = "Mcdull系统账号开通提示";
+        threadPoolTaskExecutor.submit(() ->
+                EmailUtil.send(host, username, password, port,
+                        ListUtil.of(entity.getEmail()), new ArrayList<>(), subject, textHtml, true));
     }
 
     private void buildAddOrEditLog(UserInsertDTO dto) {
