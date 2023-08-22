@@ -4,6 +4,7 @@ import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserProfileVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IDeptService;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IUserService;
@@ -69,6 +70,11 @@ public class UserController implements BasicController {
     @GetMapping({"/", "{userId}"} )
     public Result<UserDetailVO> detail(@PathVariable(value = "userId", required = false) Long userId) {
         return userService.detail(userId);
+    }
+
+    @GetMapping({"/profile"} )
+    public Result<UserProfileVO> profile() {
+        return userService.profile();
     }
 
     /**

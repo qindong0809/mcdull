@@ -4,6 +4,7 @@ package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserProfileVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 
 /**
@@ -67,5 +68,18 @@ public class UserConvert {
         userDetailVO.setDeptId(userDO.getDeptId());
         return userDetailVO;
 
+    }
+
+    public static UserProfileVO toUserProfileVO(UserDO userInfo) {
+        UserProfileVO userProfileVO = new UserProfileVO();
+        userProfileVO.setId(userInfo.getId());
+        userProfileVO.setStatus(userInfo.getStatus());
+        userProfileVO.setAccount(userInfo.getAccount());
+        userProfileVO.setNickName(userInfo.getNickName());
+        userProfileVO.setEmail(userInfo.getEmail());
+        userProfileVO.setPhone(userInfo.getPhone());
+        userProfileVO.setType(userInfo.getType());
+        userProfileVO.setDeptId(userInfo.getDeptId());
+        return userProfileVO;
     }
 }

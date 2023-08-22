@@ -15,12 +15,14 @@ import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
 import io.gitee.dqcer.mcdull.admin.model.enums.SysConfigKeyEnum;
 import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserProfileVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.util.EmailUtil;
 import io.gitee.dqcer.mcdull.admin.util.LogHelpUtil;
@@ -96,6 +98,9 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
 
     @Resource
     private McdullProperties mcdullProperties;
+
+    @Resource
+    private IDeptRepository deptRepository;
 
     @Transform
     @Override
@@ -218,7 +223,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
 
         boolean hasMailConfig = false;
         if (hasMailConfig) {
-            // TODO: 2023/8/21  
+            // TODO: 2023/8/21
         }
 
         ClassPathResource resource = new ClassPathResource("email/Account-Create-Ok-Template.html");
@@ -337,6 +342,17 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
         EasyExcel.write(response.getOutputStream(),  UserVO.class).sheet().doWrite(list);
 
         this.buildExportLog(fileName);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Result<UserProfileVO> profile() {
+        Long userId = UserContextHolder.currentUserId();
+        UserDO userInfo = baseRepository.getById(userId);
+        UserProfileVO vo = UserConvert.toUserProfileVO(userInfo);
+        DeptDO deptInfo = deptRepository.getById(userInfo.getDeptId());
+        vo.setDeptName(deptInfo.getName());
+        return Result.ok(vo);
     }
 
     private void buildExportLog(String fileName) {

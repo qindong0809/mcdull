@@ -4,6 +4,7 @@ import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserProfileVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -33,4 +34,7 @@ public interface IUserService {
     Result<Long> resetPassword(UserLiteDTO dto);
 
     void export(UserLiteDTO dto);
+
+    Result<UserProfileVO> profile();
+
 }
