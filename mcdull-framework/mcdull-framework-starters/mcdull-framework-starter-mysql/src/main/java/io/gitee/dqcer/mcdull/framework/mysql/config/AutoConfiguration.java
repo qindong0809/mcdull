@@ -93,7 +93,8 @@ public class AutoConfiguration {
         // SQL规范检查
         interceptor.addInnerInterceptor(new SqlReviewInnerInterceptor(context));
         // 数据变更记录（数据审计）
-        interceptor.addInnerInterceptor(new DataChangeRecorderInnerInterceptor(context));
+//        interceptor.addInnerInterceptor(new DataChangeRecorderInnerInterceptor(context));
+        interceptor.addInnerInterceptor(new com.baomidou.mybatisplus.extension.plugins.inner.DataChangeRecorderInnerInterceptor());
         return interceptor;
     }
 
