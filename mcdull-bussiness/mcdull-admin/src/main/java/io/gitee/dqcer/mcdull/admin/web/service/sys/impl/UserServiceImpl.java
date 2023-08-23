@@ -13,15 +13,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.framework.transformer.IUserTransformerService;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEditDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEmailConfigDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.*;
 import io.gitee.dqcer.mcdull.admin.model.enums.SysConfigKeyEnum;
 import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserEmailConfigVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserProfileVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.util.EmailUtil;
@@ -101,6 +100,9 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
 
     @Resource
     private IDeptRepository deptRepository;
+
+    @Resource
+    private IUserEmailConfigRepository userEmailConfigRepository;
 
     @Transform
     @Override
@@ -352,6 +354,32 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
         UserProfileVO vo = UserConvert.toUserProfileVO(userInfo);
         DeptDO deptInfo = deptRepository.getById(userInfo.getDeptId());
         vo.setDeptName(deptInfo.getName());
+        return Result.ok(vo);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Boolean> updateEmailConfig(UserEmailConfigDTO dto) {
+        Long userId = UserContextHolder.currentUserId();
+        UserEmailConfigDO dbUserEmailConfig = userEmailConfigRepository.getOneByUserId(userId);
+        if (ObjUtil.isNull(dbUserEmailConfig)) {
+            UserEmailConfigDO userEmailConfig = UserConvert.toEmailConfigDO(dto);
+            userEmailConfig.setUserId(userId);
+            userEmailConfigRepository.save(userEmailConfig);
+        } else {
+            UserEmailConfigDO userEmailConfig = UserConvert.toEmailConfigDO(dto);
+            userEmailConfig.setId(dbUserEmailConfig.getId());
+            userEmailConfigRepository.updateById(userEmailConfig);
+        }
+        return Result.ok(true);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Result<UserEmailConfigVO> detailEmailConfig() {
+        Long userId = UserContextHolder.currentUserId();
+        UserEmailConfigDO dbUserEmailConfig = userEmailConfigRepository.getOneByUserId(userId);
+        UserEmailConfigVO vo = UserConvert.toEmailConfigVO(dbUserEmailConfig);
         return Result.ok(vo);
     }
 

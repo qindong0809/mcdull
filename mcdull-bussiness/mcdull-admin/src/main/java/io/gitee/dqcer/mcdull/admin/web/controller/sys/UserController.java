@@ -1,9 +1,11 @@
 package io.gitee.dqcer.mcdull.admin.web.controller.sys;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEditDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEmailConfigDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserEmailConfigVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserProfileVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IDeptService;
@@ -75,6 +77,16 @@ public class UserController implements BasicController {
     @GetMapping({"/profile"} )
     public Result<UserProfileVO> profile() {
         return userService.profile();
+    }
+
+    @PostMapping("email-config/update" )
+    public Result<Boolean> updateEmailConfig(@RequestBody @Validated UserEmailConfigDTO dto) {
+        return userService.updateEmailConfig(dto);
+    }
+
+    @GetMapping("email-config/detail" )
+    public Result<UserEmailConfigVO> detailEmailConfig() {
+        return userService.detailEmailConfig();
     }
 
     /**
