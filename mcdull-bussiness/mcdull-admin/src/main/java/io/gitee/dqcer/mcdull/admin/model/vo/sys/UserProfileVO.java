@@ -4,6 +4,8 @@ import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.vo.VO;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * 用户视图对象
  *
@@ -54,4 +56,10 @@ public class UserProfileVO implements VO {
     private Long deptId;
 
     private String deptName;
+
+    private Date createdTime;
+
+    private String roleNameList;
+
+    private Boolean isAdmin;
 }

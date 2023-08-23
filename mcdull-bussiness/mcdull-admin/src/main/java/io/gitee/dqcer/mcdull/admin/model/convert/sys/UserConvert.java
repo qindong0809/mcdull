@@ -74,16 +74,17 @@ public class UserConvert {
     }
 
     public static UserProfileVO toUserProfileVO(UserDO userInfo) {
-        UserProfileVO userProfileVO = new UserProfileVO();
-        userProfileVO.setId(userInfo.getId());
-        userProfileVO.setStatus(userInfo.getStatus());
-        userProfileVO.setAccount(userInfo.getAccount());
-        userProfileVO.setNickName(userInfo.getNickName());
-        userProfileVO.setEmail(userInfo.getEmail());
-        userProfileVO.setPhone(userInfo.getPhone());
-        userProfileVO.setType(userInfo.getType());
-        userProfileVO.setDeptId(userInfo.getDeptId());
-        return userProfileVO;
+        UserProfileVO vo = new UserProfileVO();
+        vo.setId(userInfo.getId());
+        vo.setStatus(userInfo.getStatus());
+        vo.setAccount(userInfo.getAccount());
+        vo.setNickName(userInfo.getNickName());
+        vo.setEmail(userInfo.getEmail());
+        vo.setPhone(userInfo.getPhone());
+        vo.setType(userInfo.getType());
+        vo.setDeptId(userInfo.getDeptId());
+        vo.setCreatedTime(userInfo.getCreatedTime());
+        return vo;
     }
 
     public static UserEmailConfigDO toEmailConfigDO(UserEmailConfigDTO dto) {

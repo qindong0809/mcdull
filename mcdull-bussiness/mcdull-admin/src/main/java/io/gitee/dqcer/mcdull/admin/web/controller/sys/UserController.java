@@ -84,6 +84,11 @@ public class UserController implements BasicController {
         return userService.updateEmailConfig(dto);
     }
 
+    @PostMapping("email-config/test" )
+    public Result<Boolean> testEmailConfig(@RequestBody @Validated UserEmailConfigDTO dto) {
+        return userService.testEmailConfig(dto);
+    }
+
     @GetMapping("email-config/detail" )
     public Result<UserEmailConfigVO> detailEmailConfig() {
         return userService.detailEmailConfig();
@@ -106,6 +111,11 @@ public class UserController implements BasicController {
     @PutMapping()
     public Result<Long> edit(@RequestBody UserEditDTO dto){
         return userService.edit(dto);
+    }
+
+    @PutMapping("update-pwd")
+    public Result<Long> updatePwd(@RequestParam String oldPassword, @RequestParam String newPassword){
+        return userService.updatePwd(oldPassword, newPassword);
     }
 
     /**

@@ -43,4 +43,7 @@ public interface IUserService {
 
     Result<UserEmailConfigVO> detailEmailConfig();
 
+    Result<Boolean> testEmailConfig(UserEmailConfigDTO dto);
+
+    Result<Long> updatePwd(String oldPassword, String newPassword);
 }
