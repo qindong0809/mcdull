@@ -31,4 +31,7 @@ public interface IInstanceService {
     Result<List<SelectOptionVO<Long>>> baseInfoListByGroupId(Long groupId);
 
     Result<Boolean> testConnect(InstanceAddDTO dto);
+
+    Result<List<SelectOptionVO<Long>>> backList();
+
 }

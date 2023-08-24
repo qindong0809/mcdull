@@ -675,3 +675,21 @@ create table `sys_user_email_config` (
 `del_by` bigint default null comment '删除人',
 primary key (`id`)
 );
+
+drop table if exists `database_instance_back`;
+create table `database_instance_back` (
+`id` bigint not null comment '主键',
+`model` int not null comment '所属模块（1/ticket 2/group）',
+`biz_id` bigint not null comment '所属业务主键',
+`instance_id` bigint not null comment 'instance主键',
+`remark` varchar(128) not null comment '备注',
+`hash_value` varchar(128) not null comment '文件hash值',
+`file_name` varchar(128) not null comment '文件名',
+`created_by` bigint not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` bigint default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`del_flag` int not null comment '删除标识（1/正常 2/删除）',
+`del_by` bigint default null comment '删除人',
+primary key (`id`)
+);

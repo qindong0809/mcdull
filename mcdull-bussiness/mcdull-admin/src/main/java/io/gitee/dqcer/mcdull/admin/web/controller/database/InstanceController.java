@@ -47,6 +47,11 @@ public class InstanceController implements BasicController {
         return instanceService.baseInfoListByGroupId(dto.getId());
     }
 
+    @GetMapping("back-list")
+    public Result<List<SelectOptionVO<Long>>> backList(){
+        return instanceService.backList();
+    }
+
     @GetMapping("all-group")
     public Result<List<GroupVO>> allList(){
         return groupService.allList();
