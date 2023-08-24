@@ -1,9 +1,11 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEditDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEmailConfigDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserEmailConfigVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserProfileVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
@@ -37,4 +39,11 @@ public interface IUserService {
 
     Result<UserProfileVO> profile();
 
+    Result<Boolean> updateEmailConfig(UserEmailConfigDTO dto);
+
+    Result<UserEmailConfigVO> detailEmailConfig();
+
+    Result<Boolean> testEmailConfig(UserEmailConfigDTO dto);
+
+    Result<Long> updatePwd(String oldPassword, String newPassword);
 }

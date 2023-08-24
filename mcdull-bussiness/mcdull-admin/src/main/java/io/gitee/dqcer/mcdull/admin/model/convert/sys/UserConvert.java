@@ -1,9 +1,12 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
 
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEmailConfigDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserEmailConfigDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserEmailConfigVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserProfileVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 
@@ -71,15 +74,34 @@ public class UserConvert {
     }
 
     public static UserProfileVO toUserProfileVO(UserDO userInfo) {
-        UserProfileVO userProfileVO = new UserProfileVO();
-        userProfileVO.setId(userInfo.getId());
-        userProfileVO.setStatus(userInfo.getStatus());
-        userProfileVO.setAccount(userInfo.getAccount());
-        userProfileVO.setNickName(userInfo.getNickName());
-        userProfileVO.setEmail(userInfo.getEmail());
-        userProfileVO.setPhone(userInfo.getPhone());
-        userProfileVO.setType(userInfo.getType());
-        userProfileVO.setDeptId(userInfo.getDeptId());
-        return userProfileVO;
+        UserProfileVO vo = new UserProfileVO();
+        vo.setId(userInfo.getId());
+        vo.setStatus(userInfo.getStatus());
+        vo.setAccount(userInfo.getAccount());
+        vo.setNickName(userInfo.getNickName());
+        vo.setEmail(userInfo.getEmail());
+        vo.setPhone(userInfo.getPhone());
+        vo.setType(userInfo.getType());
+        vo.setDeptId(userInfo.getDeptId());
+        vo.setCreatedTime(userInfo.getCreatedTime());
+        return vo;
+    }
+
+    public static UserEmailConfigDO toEmailConfigDO(UserEmailConfigDTO dto) {
+        UserEmailConfigDO userEmailConfigDO = new UserEmailConfigDO();
+        userEmailConfigDO.setHost(dto.getHost());
+        userEmailConfigDO.setUsername(dto.getUsername());
+        userEmailConfigDO.setPassword(dto.getPassword());
+        userEmailConfigDO.setPort(dto.getPort());
+        return userEmailConfigDO;
+    }
+
+    public static UserEmailConfigVO toEmailConfigVO(UserEmailConfigDO dbUserEmailConfig) {
+        UserEmailConfigVO userEmailConfigVO = new UserEmailConfigVO();
+        userEmailConfigVO.setHost(dbUserEmailConfig.getHost());
+        userEmailConfigVO.setPort(dbUserEmailConfig.getPort());
+        userEmailConfigVO.setUsername(dbUserEmailConfig.getUsername());
+        userEmailConfigVO.setPassword(dbUserEmailConfig.getPassword());
+        return userEmailConfigVO;
     }
 }

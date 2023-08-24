@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sys.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
@@ -13,15 +14,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.framework.transformer.IUserTransformerService;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEditDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEmailConfigDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.*;
 import io.gitee.dqcer.mcdull.admin.model.enums.SysConfigKeyEnum;
 import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserEmailConfigVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserProfileVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.util.EmailUtil;
@@ -65,6 +65,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户服务 impl
@@ -101,6 +102,15 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
 
     @Resource
     private IDeptRepository deptRepository;
+
+    @Resource
+    private IUserEmailConfigRepository userEmailConfigRepository;
+
+    @Resource
+    private IUserRepository userRepository;
+
+    @Resource
+    private IRoleRepository roleRepository;
 
     @Transform
     @Override
@@ -352,7 +362,77 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
         UserProfileVO vo = UserConvert.toUserProfileVO(userInfo);
         DeptDO deptInfo = deptRepository.getById(userInfo.getDeptId());
         vo.setDeptName(deptInfo.getName());
+        if (UserTypeEnum.READ_ONLY.getCode().equals(userInfo.getType())) {
+            vo.setIsAdmin(true);
+        }
+
+        List<Long> roleIdList = userRoleRepository.listRoleByUserId(userId);
+        if (CollUtil.isNotEmpty(roleIdList)) {
+            List<RoleDO> roleList = roleRepository.queryListByIds(roleIdList);
+            if (CollUtil.isNotEmpty(roleList)) {
+                String collect = roleList.stream().map(RoleDO::getName).collect(Collectors.joining(","));
+                vo.setRoleNameList(collect);
+            }
+        }
         return Result.ok(vo);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Boolean> updateEmailConfig(UserEmailConfigDTO dto) {
+        Long userId = UserContextHolder.currentUserId();
+        UserEmailConfigDO dbUserEmailConfig = userEmailConfigRepository.getOneByUserId(userId);
+        if (ObjUtil.isNull(dbUserEmailConfig)) {
+            UserEmailConfigDO userEmailConfig = UserConvert.toEmailConfigDO(dto);
+            userEmailConfig.setUserId(userId);
+            userEmailConfigRepository.save(userEmailConfig);
+        } else {
+            UserEmailConfigDO userEmailConfig = UserConvert.toEmailConfigDO(dto);
+            userEmailConfig.setId(dbUserEmailConfig.getId());
+            userEmailConfigRepository.updateById(userEmailConfig);
+        }
+        return Result.ok(true);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Result<UserEmailConfigVO> detailEmailConfig() {
+        Long userId = UserContextHolder.currentUserId();
+        UserEmailConfigDO dbUserEmailConfig = userEmailConfigRepository.getOneByUserId(userId);
+        UserEmailConfigVO vo = UserConvert.toEmailConfigVO(dbUserEmailConfig);
+        return Result.ok(vo);
+    }
+
+    @Override
+    public Result<Boolean> testEmailConfig(UserEmailConfigDTO dto) {
+        Long currentUserId = UserContextHolder.currentUserId();
+        UserDO entity = this.baseRepository.getById(currentUserId);
+        threadPoolTaskExecutor.submit(() -> {
+            try {
+                EmailUtil.send(dto.getHost(), dto.getUsername(), dto.getPassword(), dto.getPort(),
+                        ListUtil.of(entity.getEmail()), new ArrayList<>(), "这是一封测试邮件", "测试Email配置是否正常", false);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        });
+        return Result.ok(true);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Long> updatePwd(String oldPassword, String newPassword) {
+        Long userId = UserContextHolder.currentUserId();
+        UserDO user = userRepository.getById(userId);
+        String password = Sha1Util.getSha1(Md5Util.getMd5(oldPassword + user.getSalt()));
+        if (StrUtil.isNotBlank(password)) {
+            if (!password.equals(oldPassword)) {
+                return Result.error("验证失败");
+            }
+        }
+        newPassword = Sha1Util.getSha1(Md5Util.getMd5(newPassword + user.getSalt()));
+        user.setPassword(newPassword);
+        userRepository.updateById(user);
+        return Result.ok(userId);
     }
 
     private void buildExportLog(String fileName) {

@@ -257,9 +257,12 @@ public class TicketServiceImpl implements ITicketService {
         Page<TicketDO> entityPage = ticketRepository.selectPage(dto);
         List<TicketVO> voList = new ArrayList<>();
         List<TicketDO> records = entityPage.getRecords();
+        if (CollUtil.isEmpty(records)) {
+            return Result.ok(PageUtil.toPage(voList, entityPage));
+        }
+
         Set<Long> groupIdSet = records.stream().map(TicketDO::getGroupId).collect(Collectors.toSet());
         Map<Long, GroupDO> groupMap = groupRepository.listByIds(groupIdSet).stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
-
         Set<Long> userIdSet = records.stream().map(BaseDO::getCreatedBy).collect(Collectors.toSet());
         Map<Long, UserDO> userMap = userRepository.listByIds(userIdSet).stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
 

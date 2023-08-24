@@ -1,9 +1,11 @@
 package io.gitee.dqcer.mcdull.admin.web.controller.sys;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEditDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEmailConfigDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserEmailConfigVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserProfileVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IDeptService;
@@ -77,6 +79,21 @@ public class UserController implements BasicController {
         return userService.profile();
     }
 
+    @PostMapping("email-config/update" )
+    public Result<Boolean> updateEmailConfig(@RequestBody @Validated UserEmailConfigDTO dto) {
+        return userService.updateEmailConfig(dto);
+    }
+
+    @PostMapping("email-config/test" )
+    public Result<Boolean> testEmailConfig(@RequestBody @Validated UserEmailConfigDTO dto) {
+        return userService.testEmailConfig(dto);
+    }
+
+    @GetMapping("email-config/detail" )
+    public Result<UserEmailConfigVO> detailEmailConfig() {
+        return userService.detailEmailConfig();
+    }
+
     /**
      * 新增数据
      *
@@ -94,6 +111,11 @@ public class UserController implements BasicController {
     @PutMapping()
     public Result<Long> edit(@RequestBody UserEditDTO dto){
         return userService.edit(dto);
+    }
+
+    @PutMapping("update-pwd")
+    public Result<Long> updatePwd(@RequestParam String oldPassword, @RequestParam String newPassword){
+        return userService.updatePwd(oldPassword, newPassword);
     }
 
     /**

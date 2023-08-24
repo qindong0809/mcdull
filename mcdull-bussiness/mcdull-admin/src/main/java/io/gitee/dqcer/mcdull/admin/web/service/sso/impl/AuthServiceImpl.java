@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.service.sso.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.Browser;
 import cn.hutool.http.useragent.UserAgent;
@@ -15,11 +16,7 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserLoginDO;
 import io.gitee.dqcer.mcdull.admin.model.enums.LoginOperationTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.enums.MenuTypeEnum;
-import io.gitee.dqcer.mcdull.admin.model.vo.sys.CurrentUserInfVO;
-import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuTreeVo;
-import io.gitee.dqcer.mcdull.admin.model.vo.sys.MetaVO;
-import io.gitee.dqcer.mcdull.admin.model.vo.sys.RouterVO;
-import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.sys.*;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserLoginRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
@@ -35,13 +32,13 @@ import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
 import io.gitee.dqcer.mcdull.framework.base.storage.SsoConstant;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
 import io.gitee.dqcer.mcdull.framework.base.util.TreeUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
+import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserSession;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
@@ -55,11 +52,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -79,8 +72,8 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
     @Resource
     private IUserLoginRepository userLoginRepository;
 
-//    @Resource
-//    private RedissonCache redisClient;
+    @Resource
+    private RedissonCache redisClient;
 
     @Resource
     private CacheChannel cacheChannel;
@@ -219,7 +212,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         // 控制更新频率 lastActiveTime + 2 < now
         int updateFrequency = 2;
         if (lastActiveTime.plusMinutes(updateFrequency).isBefore(now)) {
-            cacheChannel.put(tokenKey, user.setLastActiveTime(now), -1);
+            cacheChannel.put(tokenKey, user.setLastActiveTime(now), SsoConstant.SSO_TOKEN_NAMESPACE_TIMEOUT);
         }
         UserSession session = new UserSession();
         session.setUserId(user.getUserId());
@@ -255,7 +248,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
             return Result.ok();
         }
         user.setOnlineStatus(CacheUser.LOGOUT);
-        cacheChannel.put(tokenKey, user, -1);
+        cacheChannel.put(tokenKey, user, SsoConstant.SSO_TOKEN_NAMESPACE_TIMEOUT);
 
         //  记录注销信息
         Long userId = UserContextHolder.currentUserId();
