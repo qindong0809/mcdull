@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.business.common.mysql;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DiffSchema {
 
+
+
     public static void main(String[] args) throws Exception {
         Class.forName("com.mysql.cj.jdbc.Driver");
         String urlTmp = "jdbc:mysql://mcdull.io:3306/mcdull-tmp?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true&serverTimeZone=UTC&allowPublicKeyRetrieval=true";
@@ -21,21 +24,20 @@ public class DiffSchema {
         String password = "123456";
         AssembledFromDatabase.Com source = AssembledFromDatabase.compare(urlTmp, user, password);
         AssembledFromDatabase.Com target = AssembledFromDatabase.compare(url, user, password);
-        Diff compare = compare(source, target);
+        Diff compare = tableLevelCompare(source, target);
         StringBuffer buffer = new StringBuffer();
-        for (Table table : compare.getAdd()) {
+        for (Table table : compare.getAddList()) {
             buffer.append(createTable(table));
         }
 
-        for (Table table : compare.getNotExist()) {
+        for (Table table : compare.getNotExistList()) {
             buffer.append(createTable(table));
         }
 
         System.out.println(buffer);
-
     }
 
-    public static Diff compare(AssembledFromDatabase.Com source, AssembledFromDatabase.Com target) {
+    public static Diff tableLevelCompare(AssembledFromDatabase.Com source, AssembledFromDatabase.Com target) {
         Map<String, Table> targetMap = target.getTables().stream().collect(Collectors.toMap(Table::getTableName, Function.identity()));
         Map<String, Table> sourceMap = source.getTables().stream().collect(Collectors.toMap(Table::getTableName, Function.identity()));
         List<Table> addList = new ArrayList<>();
@@ -52,13 +54,42 @@ public class DiffSchema {
             }
         }
         Diff diff = new Diff();
-        diff.setAdd(addList);
-        diff.setNotExist(notExistList);
+        diff.setAddList(addList);
+        diff.setNotExistList(notExistList);
+        return diff;
+    }
+
+    public static Diff fieldLevelCompare(AssembledFromDatabase.Com source, AssembledFromDatabase.Com target) {
+        Map<String, Table> targetMap = target.getTables().stream().collect(Collectors.toMap(Table::getTableName, Function.identity()));
+        Map<String, Table> sourceMap = source.getTables().stream().collect(Collectors.toMap(Table::getTableName, Function.identity()));
+        List<Table> addList = new ArrayList<>();
+        List<Table> notExistList = new ArrayList<>();
+        for (Map.Entry<String, Table> entry : targetMap.entrySet()) {
+            String key = entry.getKey();
+            if (sourceMap.containsKey(key)) {
+                Table value = entry.getValue();
+                Table sourceValue = sourceMap.get(key);
+                Table temp = new Table();
+                if (!ObjectUtil.equals(value.getTableComment(), sourceValue.getTableComment())) {
+//                    temp.setTableComment();
+                }
+
+            }
+        }
+
+        for (Map.Entry<String, Table> entry : sourceMap.entrySet()) {
+            if (!targetMap.containsKey(entry.getKey())) {
+                notExistList.add(entry.getValue());
+            }
+        }
+        Diff diff = new Diff();
+        diff.setAddList(addList);
+        diff.setNotExistList(notExistList);
         return diff;
     }
 
 
-    private static StringBuffer createTable(Table table) {
+    public static StringBuffer createTable(Table table) {
         StringBuffer buffer = new StringBuffer();
         buffer.append("create table ").append(table.getTableName()).append("(\n");
         Boolean primary = false;
@@ -102,9 +133,23 @@ public class DiffSchema {
 
     @Data
     public static class Diff {
-        private List<Table> add;
 
-        private List<Table> notExist;
+        private List<Table> addList;
+
+        private List<Table> notExistList;
+
+        private List<Difference> differenceList;
+    }
+
+
+    @Data
+    public static class Difference {
+
+        private Table source;
+
+        private Table target;
+
+
     }
 }
 

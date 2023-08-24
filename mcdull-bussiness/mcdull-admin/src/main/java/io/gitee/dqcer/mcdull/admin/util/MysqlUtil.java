@@ -1,11 +1,12 @@
 package io.gitee.dqcer.mcdull.admin.util;
 
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Db;
 import cn.hutool.db.DbUtil;
 import cn.hutool.db.ds.simple.SimpleDataSource;
+import io.gitee.dqcer.mcdull.business.common.mysql.AssembledFromDatabase;
+import io.gitee.dqcer.mcdull.business.common.mysql.DiffSchema;
+import io.gitee.dqcer.mcdull.business.common.mysql.Table;
 import lombok.SneakyThrows;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -15,13 +16,12 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Date;
 
 public class MysqlUtil {
     public static final String JDBC_FORMAT = "jdbc:mysql://{}:{}/{}?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai";
 
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
 //        String host = "mcdull.io";
 //        Integer port = 3306;
 //        String username = "root";
@@ -29,12 +29,26 @@ public class MysqlUtil {
 //        String databaseName = "";
 //        boolean testConnect = testConnect(host, port, username, password, databaseName);
 
-        DateTime dateTime = DateUtil.offsetDay(new Date(), 0);
-        DateTime dateTime2 = DateUtil.offsetDay(new Date(), 5);
 
-        long l = DateUtil.betweenDay(dateTime, dateTime2, true);
 
-        System.out.println(l / 2);
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        String urlTmp = "jdbc:mysql://dev-03.cluster-c9qe4y0vrvda.rds.cn-northwest-1.amazonaws.com.cn:3306/eclinical_ctms_dev_366?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true&serverTimeZone=UTC&allowPublicKeyRetrieval=true";
+        String url = "jdbc:mysql://dev-03.cluster-c9qe4y0vrvda.rds.cn-northwest-1.amazonaws.com.cn:3306/eclinical_ctms_dev_475?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true&serverTimeZone=UTC&allowPublicKeyRetrieval=true";
+        String user = "root";
+        String password = "8YTJWOuA7XRK17wRQnw4";
+        AssembledFromDatabase.Com source = AssembledFromDatabase.compare(urlTmp, user, password);
+        AssembledFromDatabase.Com target = AssembledFromDatabase.compare(url, user, password);
+        DiffSchema.Diff compare = DiffSchema.tableLevelCompare(source, target);
+        StringBuffer buffer = new StringBuffer();
+        for (Table table : compare.getAddList()) {
+            buffer.append(DiffSchema.createTable(table));
+        }
+
+        for (Table table : compare.getNotExistList()) {
+            buffer.append(DiffSchema.createTable(table));
+        }
+
+        System.out.println(buffer);
 
     }
 
