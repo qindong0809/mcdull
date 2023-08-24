@@ -62,6 +62,11 @@ public class InstanceController implements BasicController {
         return instanceService.edit(dto);
     }
 
+    @PutMapping("test-connect")
+    public Result<Boolean> testConnect(@Validated @RequestBody InstanceAddDTO dto){
+        return instanceService.testConnect(dto);
+    }
+
     @DeleteMapping("{id}")
     public Result<Long> remove(@PathVariable(value = "id") Long id){
         return instanceService.remove(id);

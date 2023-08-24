@@ -37,7 +37,7 @@ public class TicketController {
     */
     @Authorized("database:ticket:insert")
     @PostMapping("insert")
-    public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Insert.class}) TicketAddDTO dto){
+    public Result<Long> insert(@RequestBody @Validated TicketAddDTO dto){
         return ticketService.insert(dto);
     }
 
@@ -86,6 +86,23 @@ public class TicketController {
     public Result<Long> deleteById(@RequestBody @Valid PkDTO dto){
         return ticketService.deleteById(dto.getId());
     }
+
+    @PostMapping("back")
+    public Result<Boolean> backByTicket(@RequestBody @Valid PkDTO dto){
+        return ticketService.backByTicket(dto.getId());
+    }
+
+    @PostMapping("rollback")
+    public Result<Boolean> rollbackByTicket(@RequestBody @Valid PkDTO dto){
+        return ticketService.rollbackByTicket(dto.getId());
+    }
+
+    @PostMapping("run-script")
+    public Result<Boolean> runScript(@RequestBody @Valid PkDTO dto){
+        return ticketService.runScript(dto.getId());
+    }
+
+
 
     /**
     * 分页查询

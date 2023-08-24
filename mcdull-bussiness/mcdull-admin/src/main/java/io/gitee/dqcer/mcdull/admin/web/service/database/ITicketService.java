@@ -74,4 +74,10 @@ public interface ITicketService {
     Result<PagedVO<TicketVO>> listByPage(TicketAddDTO dto);
 
     Result<Long> executeSqlScript(Long id);
+
+    Result<Boolean> backByTicket(Long id);
+
+    Result<Boolean> rollbackByTicket(Long id);
+
+    Result<Boolean> runScript(Long id);
 }

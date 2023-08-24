@@ -8,6 +8,7 @@ import io.gitee.dqcer.mcdull.admin.model.dto.database.InstanceListDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.database.GroupDO;
 import io.gitee.dqcer.mcdull.admin.model.entity.database.InstanceDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.InstanceVO;
+import io.gitee.dqcer.mcdull.admin.util.MysqlUtil;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IGroupRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IInstanceRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.database.IInstanceService;
@@ -17,6 +18,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.SelectOptionVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,6 +97,13 @@ public class InstanceServiceImpl extends BasicServiceImpl<IInstanceRepository> i
             voList.add(new SelectOptionVO<>(instanceDO.getName(), instanceDO.getId()));
         }
         return Result.ok(voList);
+    }
+
+    @SneakyThrows(Exception.class)
+    @Override
+    public Result<Boolean> testConnect(InstanceAddDTO dto) {
+        boolean isOk = MysqlUtil.testConnect(dto.getHost(), dto.getPort(), dto.getUsername(), dto.getPassword(), dto.getDatabaseName());
+        return Result.ok(isOk);
     }
 
 }

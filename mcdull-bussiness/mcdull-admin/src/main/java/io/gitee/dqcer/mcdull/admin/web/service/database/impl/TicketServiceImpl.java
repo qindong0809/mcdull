@@ -313,6 +313,27 @@ public class TicketServiceImpl implements ITicketService {
         return Result.ok(id);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Boolean> backByTicket(Long id) {
+        // TODO: 2023/8/24
+        return Result.ok(true);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Boolean> rollbackByTicket(Long id) {
+        // TODO: 2023/8/24
+        return Result.ok(true);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Boolean> runScript(Long id) {
+        // TODO: 2023/8/24
+        return Result.ok(true);
+    }
+
     @SneakyThrows(Exception.class)
     private void batchExecute(List<InstanceDO> instanceList, String sqlScript){
         for (InstanceDO instanceDO : instanceList) {

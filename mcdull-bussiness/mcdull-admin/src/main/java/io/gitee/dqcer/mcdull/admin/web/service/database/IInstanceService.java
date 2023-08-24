@@ -29,4 +29,6 @@ public interface IInstanceService {
     Result<Long> remove(Long id);
 
     Result<List<SelectOptionVO<Long>>> baseInfoListByGroupId(Long groupId);
+
+    Result<Boolean> testConnect(InstanceAddDTO dto);
 }

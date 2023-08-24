@@ -32,10 +32,10 @@ public class MysqlUtil {
 
 
         Class.forName("com.mysql.cj.jdbc.Driver");
-        String urlTmp = "jdbc:mysql://dev-03.cluster-c9qe4y0vrvda.rds.cn-northwest-1.amazonaws.com.cn:3306/eclinical_ctms_dev_366?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true&serverTimeZone=UTC&allowPublicKeyRetrieval=true";
-        String url = "jdbc:mysql://dev-03.cluster-c9qe4y0vrvda.rds.cn-northwest-1.amazonaws.com.cn:3306/eclinical_ctms_dev_475?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true&serverTimeZone=UTC&allowPublicKeyRetrieval=true";
+        String urlTmp = "jdbc:mysql://:3306/?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true&serverTimeZone=UTC&allowPublicKeyRetrieval=true";
+        String url = "jdbc:mysql://3306/?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true&serverTimeZone=UTC&allowPublicKeyRetrieval=true";
         String user = "root";
-        String password = "8YTJWOuA7XRK17wRQnw4";
+        String password = "123456";
         AssembledFromDatabase.Com source = AssembledFromDatabase.compare(urlTmp, user, password);
         AssembledFromDatabase.Com target = AssembledFromDatabase.compare(url, user, password);
         DiffSchema.Diff compare = DiffSchema.tableLevelCompare(source, target);

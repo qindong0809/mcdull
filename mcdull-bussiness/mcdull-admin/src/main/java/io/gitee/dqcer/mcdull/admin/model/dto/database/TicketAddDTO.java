@@ -62,7 +62,7 @@ public class TicketAddDTO extends PagedDTO {
      * sql 脚本
      */
     @NotBlank()
-    @Length( min = 1, max = 512)
+    @Length( min = 1, max = 102400)
     private String sqlScript;
 
     @NotEmpty
