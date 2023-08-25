@@ -10,9 +10,7 @@ import net.sf.jsqlparser.statement.update.Update;
 public class JsqlparserUtil {
 
     public static void main(String[] args) {
-        String sql = "update  eclinical_ctms_email_send_history \n" +
-                "inner join ( select h.id,e.template_type as email_type from eclinical_ctms_email_send_history h left join eclinical_ctms_email_template e on e.id = h.email_template_id ) v on v.id = eclinical_ctms_email_send_history.id \n" +
-                "set eclinical_ctms_email_send_history.email_type = v.email_type;";
+        String sql = "";
         try {
             Statement statement = CCJSqlParserUtil.parse(sql);
             if (statement instanceof Insert) {

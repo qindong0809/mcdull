@@ -2,27 +2,27 @@ package io.gitee.dqcer.mcdull.admin.web.service.database.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.db.Db;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.model.convert.database.TicketConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketAddDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketEditDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.GroupDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.InstanceDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketInstanceDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.*;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.enums.SysConfigKeyEnum;
 import io.gitee.dqcer.mcdull.admin.model.enums.TicketCancelStatusEnum;
 import io.gitee.dqcer.mcdull.admin.model.enums.TicketFollowStatusEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.TicketVO;
 import io.gitee.dqcer.mcdull.admin.util.MysqlUtil;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IGroupRepository;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IInstanceRepository;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.ITicketInstanceRepository;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.ITicketRepository;
+import io.gitee.dqcer.mcdull.admin.util.dump.SqlDumper;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.*;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
+import io.gitee.dqcer.mcdull.admin.web.manager.common.ISysConfigManager;
 import io.gitee.dqcer.mcdull.admin.web.service.database.ITicketService;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
@@ -45,12 +45,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -80,6 +78,12 @@ public class TicketServiceImpl implements ITicketService {
 
     @Resource
     private IUserRepository userRepository;
+
+    @Resource
+    private ISysConfigManager sysConfigManager;
+
+    @Resource
+    private IInstanceBackRepository instanceBackRepository;
 
     /**
      * 新增数据
@@ -316,21 +320,83 @@ public class TicketServiceImpl implements ITicketService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Boolean> backByTicket(Long id) {
-        // TODO: 2023/8/24
+        TicketDO ticket = ticketRepository.getById(id);
+        Map<Long, InstanceDO> instanceMap = this.getInstanceMap(id);
+
+        String sqlDumpDir = sysConfigManager.findValueByEnum(SysConfigKeyEnum.DATABASE_SQL_DUMP);
+
+        try {
+            List<InstanceBackDO> instanceBackList = new ArrayList<>();
+            for (Map.Entry<Long, InstanceDO> entry : instanceMap.entrySet()) {
+                Long instanceId = entry.getKey();
+                InstanceDO instance = entry.getValue();
+
+                String databaseName = instance.getDatabaseName();
+                Db db = MysqlUtil.getInstance(instance.getHost(), instance.getPort(), instance.getUsername(), instance.getPassword(), databaseName);
+                String fileName = StrUtil.format("{}_{}.sql", ticket.getNumber(), DateUtil.formatDateTime(new Date()));
+                File file = SqlDumper.dumpDatabase(db.getConnection(), new HashSet<>(ListUtil.of(databaseName)), String.join(File.separator, sqlDumpDir, fileName));
+                String md5 = SecureUtil.md5(file);
+
+                InstanceBackDO instanceBack = new InstanceBackDO();
+                instanceBack.setInstanceId(instanceId);
+                instanceBack.setModel(InstanceBackDO.MODEL_TICKET);
+                instanceBack.setBizId(id);
+                instanceBack.setFileName(fileName);
+                instanceBack.setHashValue(md5);
+                instanceBackList.add(instanceBack);
+            }
+
+
+            instanceBackRepository.saveBatch(instanceBackList);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
+        return Result.ok(true);
+    }
+
+    private Map<Long, InstanceDO> getInstanceMap(Long id) {
+        List<TicketInstanceDO> ticketInstanceList = ticketInstanceRepository.getListByTicketId(id);
+        List<InstanceDO> instanceList = instanceRepository.listByIds(ticketInstanceList.stream().map(TicketInstanceDO::getInstanceId).collect(Collectors.toSet()));
+        return instanceList.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Boolean> rollbackByTicket(Long ticketId) {
+        Map<Long, InstanceDO> instanceMap = this.getInstanceMap(ticketId);
+        String sqlDumpDir = sysConfigManager.findValueByEnum(SysConfigKeyEnum.DATABASE_SQL_DUMP);
+        List<InstanceBackDO> instanceBackList = instanceBackRepository.listByTicketId(ticketId);
+        Map<Long, InstanceBackDO> instanceBackMap = instanceBackList.stream().collect(Collectors.toMap(InstanceBackDO::getInstanceId, Function.identity()));
+
+        try {
+            for (Map.Entry<Long, InstanceDO> entry : instanceMap.entrySet()) {
+                Long instanceId = entry.getKey();
+                InstanceDO instance = entry.getValue();
+                String databaseName = instance.getDatabaseName();
+                Db db = MysqlUtil.getInstance(instance.getHost(), instance.getPort(), instance.getUsername(), instance.getPassword(), databaseName);
+                InstanceBackDO instanceBack = instanceBackMap.get(instanceId);
+                MysqlUtil.runScript(db, FileUtil.getUtf8Reader(String.join(File.separator, sqlDumpDir, instanceBack.getFileName())));
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
         return Result.ok(true);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<Boolean> rollbackByTicket(Long id) {
-        // TODO: 2023/8/24
-        return Result.ok(true);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public Result<Boolean> runScript(Long id) {
-        // TODO: 2023/8/24
+    public Result<Boolean> runScript(Long ticketId) {
+        TicketDO ticket = ticketRepository.getById(ticketId);
+        Map<Long, InstanceDO> instanceMap = this.getInstanceMap(ticketId);
+        for (Map.Entry<Long, InstanceDO> entry : instanceMap.entrySet()) {
+            InstanceDO instance = entry.getValue();
+            String databaseName = instance.getDatabaseName();
+            Db db = MysqlUtil.getInstance(instance.getHost(), instance.getPort(), instance.getUsername(), instance.getPassword(), databaseName);
+            // FIXME: 2023/8/25 事务问题
+            MysqlUtil.runSql(db, ticket.getSqlScript());
+        }
         return Result.ok(true);
     }
 

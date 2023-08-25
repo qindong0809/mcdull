@@ -12,6 +12,9 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.sql.DataSource;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
@@ -84,6 +87,11 @@ public class MysqlUtil {
         return DbUtil.use(ds);
     }
 
+    public static Db getInstance(String jdbc, String username, String password) {
+        DataSource ds = new SimpleDataSource(jdbc, username, password);
+        return DbUtil.use(ds);
+    }
+
     @SneakyThrows(Exception.class)
     public static void runScript(Db db, Reader reader){
         Connection connection = db.getConnection();
@@ -103,5 +111,11 @@ public class MysqlUtil {
 
         scriptRunner.runScript(reader);
         connection.close();
+    }
+
+    public static void runSql(Db db, String sql){
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(
+                sql.getBytes(StandardCharsets.UTF_8))));
+        runScript(db, reader);
     }
 }

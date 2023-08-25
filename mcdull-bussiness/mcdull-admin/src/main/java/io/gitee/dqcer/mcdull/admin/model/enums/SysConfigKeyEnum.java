@@ -22,6 +22,9 @@ public enum SysConfigKeyEnum implements IEnum<String> {
 
     CREATED_USER_SEND_EMAIL("sys.user.add.sendEmail", "添加用户邮件通知"),
 
+
+    DATABASE_SQL_DUMP("database.sql.dump.directory", "sql备份文件目录"),
+
     ;
 
     SysConfigKeyEnum(String code, String text) {
