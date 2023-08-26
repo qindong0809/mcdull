@@ -1,7 +1,8 @@
 package io.gitee.dqcer.mcdull.admin.web.service.database;
 
-import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketAddDTO;
-import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketEditDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.database.*;
+import io.gitee.dqcer.mcdull.admin.model.vo.database.BackVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.database.BackListVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.TicketVO;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -75,9 +76,17 @@ public interface ITicketService {
 
     Result<Long> executeSqlScript(Long id);
 
-    Result<Boolean> backByTicket(Long id);
-
     Result<Boolean> rollbackByTicket(Long id);
 
     Result<Boolean> runScript(Long id);
+
+    Result<PagedVO<BackListVO>> backByTicketList(BackListDTO dto);
+
+    Result<Long> insertBack(BackAddDTO dto);
+
+    Result<BackVO> backDetail(Long backId);
+
+    Result<Long> updateBack(BackEditDTO dto);
+
+    Result<Long> deleteByIdBack(Long id);
 }

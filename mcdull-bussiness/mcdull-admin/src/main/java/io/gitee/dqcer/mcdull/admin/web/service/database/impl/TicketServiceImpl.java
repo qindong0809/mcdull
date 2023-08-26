@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.admin.web.service.database.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -9,14 +10,16 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.db.Db;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.admin.model.convert.database.BackConvert;
 import io.gitee.dqcer.mcdull.admin.model.convert.database.TicketConvert;
-import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketAddDTO;
-import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketEditDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.database.*;
 import io.gitee.dqcer.mcdull.admin.model.entity.database.*;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
 import io.gitee.dqcer.mcdull.admin.model.enums.SysConfigKeyEnum;
 import io.gitee.dqcer.mcdull.admin.model.enums.TicketCancelStatusEnum;
 import io.gitee.dqcer.mcdull.admin.model.enums.TicketFollowStatusEnum;
+import io.gitee.dqcer.mcdull.admin.model.vo.database.BackListVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.database.BackVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.TicketVO;
 import io.gitee.dqcer.mcdull.admin.util.MysqlUtil;
 import io.gitee.dqcer.mcdull.admin.util.dump.SqlDumper;
@@ -83,7 +86,10 @@ public class TicketServiceImpl implements ITicketService {
     private ISysConfigManager sysConfigManager;
 
     @Resource
-    private IInstanceBackRepository instanceBackRepository;
+    private IBackInstanceRepository backInstanceRepository;
+
+    @Resource
+    private IBackRepository backRepository;
 
     /**
      * 新增数据
@@ -317,45 +323,6 @@ public class TicketServiceImpl implements ITicketService {
         return Result.ok(id);
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public Result<Boolean> backByTicket(Long id) {
-        TicketDO ticket = ticketRepository.getById(id);
-        Map<Long, InstanceDO> instanceMap = this.getInstanceMap(id);
-
-        String sqlDumpDir = sysConfigManager.findValueByEnum(SysConfigKeyEnum.DATABASE_SQL_DUMP);
-
-        try {
-            List<InstanceBackDO> instanceBackList = new ArrayList<>();
-            for (Map.Entry<Long, InstanceDO> entry : instanceMap.entrySet()) {
-                Long instanceId = entry.getKey();
-                InstanceDO instance = entry.getValue();
-
-                String databaseName = instance.getDatabaseName();
-                Db db = MysqlUtil.getInstance(instance.getHost(), instance.getPort(), instance.getUsername(), instance.getPassword(), databaseName);
-                String fileName = StrUtil.format("{}_{}.sql", ticket.getNumber(), DateUtil.formatDateTime(new Date()));
-                File file = SqlDumper.dumpDatabase(db.getConnection(), new HashSet<>(ListUtil.of(databaseName)), String.join(File.separator, sqlDumpDir, fileName));
-                String md5 = SecureUtil.md5(file);
-
-                InstanceBackDO instanceBack = new InstanceBackDO();
-                instanceBack.setInstanceId(instanceId);
-                instanceBack.setModel(InstanceBackDO.MODEL_TICKET);
-                instanceBack.setBizId(id);
-                instanceBack.setFileName(fileName);
-                instanceBack.setHashValue(md5);
-                instanceBackList.add(instanceBack);
-            }
-
-
-            instanceBackRepository.saveBatch(instanceBackList);
-
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-
-        return Result.ok(true);
-    }
-
     private Map<Long, InstanceDO> getInstanceMap(Long id) {
         List<TicketInstanceDO> ticketInstanceList = ticketInstanceRepository.getListByTicketId(id);
         List<InstanceDO> instanceList = instanceRepository.listByIds(ticketInstanceList.stream().map(TicketInstanceDO::getInstanceId).collect(Collectors.toSet()));
@@ -364,11 +331,13 @@ public class TicketServiceImpl implements ITicketService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<Boolean> rollbackByTicket(Long ticketId) {
+    public Result<Boolean> rollbackByTicket(Long backId) {
+        BackDO back = backRepository.getById(backId);
+        Long ticketId = back.getBizId();
         Map<Long, InstanceDO> instanceMap = this.getInstanceMap(ticketId);
         String sqlDumpDir = sysConfigManager.findValueByEnum(SysConfigKeyEnum.DATABASE_SQL_DUMP);
-        List<InstanceBackDO> instanceBackList = instanceBackRepository.listByTicketId(ticketId);
-        Map<Long, InstanceBackDO> instanceBackMap = instanceBackList.stream().collect(Collectors.toMap(InstanceBackDO::getInstanceId, Function.identity()));
+        List<BackInstanceDO> instanceBackList = backInstanceRepository.listByBackId(backId);
+        Map<Long, BackInstanceDO> instanceBackMap = instanceBackList.stream().collect(Collectors.toMap(BackInstanceDO::getInstanceId, Function.identity()));
 
         try {
             for (Map.Entry<Long, InstanceDO> entry : instanceMap.entrySet()) {
@@ -376,11 +345,12 @@ public class TicketServiceImpl implements ITicketService {
                 InstanceDO instance = entry.getValue();
                 String databaseName = instance.getDatabaseName();
                 Db db = MysqlUtil.getInstance(instance.getHost(), instance.getPort(), instance.getUsername(), instance.getPassword(), databaseName);
-                InstanceBackDO instanceBack = instanceBackMap.get(instanceId);
+                BackInstanceDO instanceBack = instanceBackMap.get(instanceId);
                 MysqlUtil.runScript(db, FileUtil.getUtf8Reader(String.join(File.separator, sqlDumpDir, instanceBack.getFileName())));
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            throw e;
         }
         return Result.ok(true);
     }
@@ -397,7 +367,140 @@ public class TicketServiceImpl implements ITicketService {
             // FIXME: 2023/8/25 事务问题
             MysqlUtil.runSql(db, ticket.getSqlScript());
         }
+
+        ticket.setFollowStatus(TicketFollowStatusEnum.EXECUTED.getCode());
+        ticketRepository.updateById(ticket);
         return Result.ok(true);
+    }
+
+    @Override
+    public Result<PagedVO<BackListVO>> backByTicketList(BackListDTO dto) {
+
+        Page<BackDO> entityPage = backRepository.selectPage(dto);
+        List<BackListVO> voList = new ArrayList<>();
+        List<BackDO> records = entityPage.getRecords();
+        if (CollUtil.isEmpty(records)) {
+            return Result.ok(PageUtil.toPage(voList, entityPage));
+        }
+        Set<Long> userIdSet = records.stream().map(BaseDO::getCreatedBy).collect(Collectors.toSet());
+        Map<Long, UserDO> userMap = userRepository.listByIds(userIdSet).stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+        for (BackDO entity : records) {
+            BackListVO vo = BackConvert.toInstanceBackByTicketVO(entity);
+            vo.setCreatedByStr(userMap.get(entity.getCreatedBy()).getNickName());
+            voList.add(vo);
+        }
+        return Result.ok(PageUtil.toPage(voList, entityPage));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Long> insertBack(BackAddDTO dto) {
+        Long ticketId = dto.getTicketId();
+        List<BackDO> backList = backRepository.listByBizId(ticketId, BackDO.MODEL_TICKET);
+        if (CollUtil.isNotEmpty(backList)) {
+            boolean isExist = backList.stream().anyMatch(i -> i.getName().equals(dto.getName()));
+            if (isExist) {
+                log.warn("数据已存在 dto: {}", dto);
+                return Result.error(CodeEnum.DATA_EXIST);
+            }
+        }
+        BackDO backDO = BackConvert.toDO(dto);
+        backDO.setModel(BackDO.MODEL_TICKET);
+        backDO.setBizId(ticketId);
+        backRepository.save(backDO);
+
+        Long backId = backDO.getId();
+
+        TicketDO ticket = ticketRepository.getById(ticketId);
+        Map<Long, InstanceDO> instanceMap = this.getInstanceMap(ticketId);
+        String sqlDumpDir = sysConfigManager.findValueByEnum(SysConfigKeyEnum.DATABASE_SQL_DUMP);
+
+        try {
+            List<BackInstanceDO> instanceBackList = new ArrayList<>();
+            for (Map.Entry<Long, InstanceDO> entry : instanceMap.entrySet()) {
+                Long instanceId = entry.getKey();
+                InstanceDO instance = entry.getValue();
+
+                String databaseName = instance.getDatabaseName();
+                Db db = MysqlUtil.getInstance(instance.getHost(), instance.getPort(), instance.getUsername(), instance.getPassword(), databaseName);
+                String fileName = StrUtil.format("{}_{}_{}.sql", ticket.getNumber(), instance.getDatabaseName(), DateUtil.format(new Date(), DatePattern.PURE_DATETIME_FORMATTER));
+                File file = SqlDumper.dumpDatabase(db.getConnection(), new HashSet<>(ListUtil.of(databaseName)), String.join(File.separator, sqlDumpDir, fileName));
+                String md5 = SecureUtil.md5(file);
+
+                BackInstanceDO instanceBack = new BackInstanceDO();
+                instanceBack.setInstanceId(instanceId);
+                instanceBack.setFileName(fileName);
+                instanceBack.setHashValue(md5);
+                instanceBack.setBackId(backId);
+                instanceBackList.add(instanceBack);
+            }
+            backInstanceRepository.saveBatch(instanceBackList);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new BusinessException(e.getMessage());
+        }
+
+        return Result.ok(backId);
+    }
+
+    @Override
+    public Result<BackVO> backDetail(Long backId) {
+        BackDO back = backRepository.getById(backId);
+        BackVO vo = BackConvert.toBackVO(back);
+        List<BackInstanceDO> backInstanceList = backInstanceRepository.listByBackId(back.getId());
+        if (CollUtil.isNotEmpty(backInstanceList)) {
+            String collect = backInstanceList.stream().map(BackInstanceDO::getFileName).collect(Collectors.joining(", "));
+            vo.setFileNameList(collect);
+        }
+        return Result.ok(vo);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Long> updateBack(BackEditDTO dto) {
+        Long id = dto.getId();
+        Long ticketId = dto.getTicketId();
+        List<BackDO> backList = backRepository.listByBizId(ticketId, BackDO.MODEL_TICKET);
+        if (CollUtil.isNotEmpty(backList)) {
+            boolean isExist = backList.stream().anyMatch(i -> i.getName().equals(dto.getName()) && (!i.getId().equals(id)));
+            if (isExist) {
+                log.warn("数据已存在 dto: {}", dto);
+                return Result.error(CodeEnum.DATA_EXIST);
+            }
+        }
+        BackDO back = backRepository.getById(id);
+        back.setName(dto.getName());
+        back.setRemark(dto.getRemark());
+        backRepository.updateById(back);
+        return Result.ok(id);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result<Long> deleteByIdBack(Long id) {
+        backRepository.updateToDelete(id);
+
+
+        String sqlDumpDir = sysConfigManager.findValueByEnum(SysConfigKeyEnum.DATABASE_SQL_DUMP);
+
+        Long userId = UserContextHolder.currentUserId();
+        List<BackInstanceDO> backInstanceList = backInstanceRepository.listByBackId(id);
+        if (CollUtil.isNotEmpty(backInstanceList)) {
+            for (BackInstanceDO backInstance : backInstanceList) {
+                String newFileName = StrUtil.format("Removed_{}", backInstance.getFileName());
+                backInstance.setFileName(newFileName);
+                backInstance.setDelFlag(DelFlayEnum.DELETED.getCode());
+                backInstance.setDelBy(userId);
+
+                String filePath = String.join(File.separator, sqlDumpDir, backInstance.getFileName());
+                File file = FileUtil.file(filePath);
+                if (ObjUtil.isNotNull(file)) {
+                    FileUtil.rename(file, newFileName, true);
+                }
+            }
+        }
+        backInstanceRepository.updateBatchById(backInstanceList);
+        return Result.ok(id);
     }
 
     @SneakyThrows(Exception.class)

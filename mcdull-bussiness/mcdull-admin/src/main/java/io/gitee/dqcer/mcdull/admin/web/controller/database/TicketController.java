@@ -1,7 +1,8 @@
 package io.gitee.dqcer.mcdull.admin.web.controller.database;
 
-import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketAddDTO;
-import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketEditDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.database.*;
+import io.gitee.dqcer.mcdull.admin.model.vo.database.BackListVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.database.BackVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.TicketVO;
 import io.gitee.dqcer.mcdull.admin.web.service.database.ITicketService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
@@ -87,12 +88,34 @@ public class TicketController {
         return ticketService.deleteById(dto.getId());
     }
 
-    @PostMapping("back")
-    public Result<Boolean> backByTicket(@RequestBody @Valid PkDTO dto){
-        return ticketService.backByTicket(dto.getId());
+    @GetMapping("instance-back-list")
+    public Result<PagedVO<BackListVO>> backByTicketList(@Validated BackListDTO dto){
+        return ticketService.backByTicketList(dto);
     }
 
-    @PostMapping("rollback")
+    @PostMapping("back/add")
+    public Result<Long> insertBack(@RequestBody @Validated BackAddDTO dto){
+        return ticketService.insertBack(dto);
+    }
+
+    @PutMapping("back/update")
+    public Result<Long> updateBack(@RequestBody @Validated BackEditDTO dto){
+        return ticketService.updateBack(dto);
+    }
+
+    @PostMapping("back/delete")
+    public Result<Long> deleteByIdBack(@RequestBody @Valid PkDTO dto){
+        return ticketService.deleteByIdBack(dto.getId());
+    }
+
+
+
+    @GetMapping("back/detail")
+    public Result<BackVO> backDetail(@Validated PkDTO dto){
+        return ticketService.backDetail(dto.getId());
+    }
+
+    @PostMapping("back/rollback")
     public Result<Boolean> rollbackByTicket(@RequestBody @Valid PkDTO dto){
         return ticketService.rollbackByTicket(dto.getId());
     }
@@ -101,7 +124,6 @@ public class TicketController {
     public Result<Boolean> runScript(@RequestBody @Valid PkDTO dto){
         return ticketService.runScript(dto.getId());
     }
-
 
 
     /**

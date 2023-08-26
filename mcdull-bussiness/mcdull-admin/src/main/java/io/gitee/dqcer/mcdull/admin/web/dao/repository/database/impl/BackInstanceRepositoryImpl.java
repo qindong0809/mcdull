@@ -4,9 +4,9 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.InstanceBackDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.BackInstanceDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.database.InstanceBackMapper;
-import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IInstanceBackRepository;
+import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IBackInstanceRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import org.springframework.stereotype.Service;
@@ -22,17 +22,16 @@ import java.util.List;
 * @since 2023-01-14
 */
 @Service
-public class InstanceBackRepositoryImpl extends ServiceImpl<InstanceBackMapper, InstanceBackDO>  implements IInstanceBackRepository {
+public class BackInstanceRepositoryImpl extends ServiceImpl<InstanceBackMapper, BackInstanceDO>  implements IBackInstanceRepository {
 
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public List<InstanceBackDO> listByTicketId(Long ticketId) {
-        LambdaQueryWrapper<InstanceBackDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(InstanceBackDO::getModel, InstanceBackDO.MODEL_TICKET);
-        wrapper.eq(InstanceBackDO::getBizId, ticketId);
+    public List<BackInstanceDO> listByBackId(Long backId) {
+        LambdaQueryWrapper<BackInstanceDO> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
-        List<InstanceBackDO> list = baseMapper.selectList(wrapper);
+        wrapper.eq(BackInstanceDO::getBackId, backId);
+        List<BackInstanceDO> list = baseMapper.selectList(wrapper);
         if (CollUtil.isNotEmpty(list)) {
             return list;
         }

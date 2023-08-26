@@ -11,23 +11,19 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("database_instance_back")
-public class InstanceBackDO extends BaseDO {
+@TableName("database_back")
+public class BackDO extends BaseDO {
 
     public static final Integer MODEL_TICKET = 1;
     public static final Integer MODEL_GROUP = 2;
 
     private static final long serialVersionUID = 1L;
 
+    private String name;
+
     private Integer model;
 
     private Long bizId;
 
-    private Long instanceId;
-
     private String remark;
-
-    private String hashValue;
-
-    private String fileName;
 }

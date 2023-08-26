@@ -95,22 +95,35 @@ public class MysqlUtil {
     @SneakyThrows(Exception.class)
     public static void runScript(Db db, Reader reader){
         Connection connection = db.getConnection();
-        ScriptRunner scriptRunner = new ScriptRunner(connection);
-        Resources.setCharset(StandardCharsets.UTF_8);
-        scriptRunner.setEscapeProcessing(false);
-        scriptRunner.setRemoveCRs(true);
-        scriptRunner.setSendFullScript(false);
-        scriptRunner.setAutoCommit(false);
-        scriptRunner.setStopOnError(true);
-        // 分隔符，还未验证具体功能
-        scriptRunner.setFullLineDelimiter(false);
-        // 每条命令间的分隔符，注意这个不建议用分号分隔
-        // 因为SQL脚本中可以写存储过程，中间存在分号，导致存储过程执行失败
-        scriptRunner.setDelimiter("&&");
-        // 读取SQL文件路径获取SQL文件执行
 
-        scriptRunner.runScript(reader);
-        connection.close();
+        try {
+            ScriptRunner scriptRunner = new ScriptRunner(connection);
+            Resources.setCharset(StandardCharsets.UTF_8);
+            scriptRunner.setEscapeProcessing(false);
+            scriptRunner.setRemoveCRs(true);
+            scriptRunner.setSendFullScript(false);
+            scriptRunner.setAutoCommit(false);
+            scriptRunner.setStopOnError(true);
+
+            // 分隔符，还未验证具体功能
+            scriptRunner.setFullLineDelimiter(false);
+            // 每条命令间的分隔符，注意这个不建议用分号分隔
+            // 因为SQL脚本中可以写存储过程，中间存在分号，导致存储过程执行失败
+            scriptRunner.setDelimiter(";");
+
+
+            scriptRunner.setLogWriter(null);
+
+            // 读取SQL文件路径获取SQL文件执行
+            scriptRunner.runScript(reader);
+
+            connection.commit();
+        } catch (Exception e) {
+            connection.rollback();
+            throw e;
+        }finally {
+            connection.close();
+        }
     }
 
     public static void runSql(Db db, String sql){

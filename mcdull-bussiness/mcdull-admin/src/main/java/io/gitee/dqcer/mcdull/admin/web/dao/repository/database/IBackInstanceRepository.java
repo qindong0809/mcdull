@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.database;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.InstanceBackDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.BackInstanceDO;
 
 import java.util.List;
 
@@ -11,6 +11,7 @@ import java.util.List;
 * @author dqcer
 * @since 2023-01-14
 */
-public interface IInstanceBackRepository extends IService<InstanceBackDO>  {
-    List<InstanceBackDO> listByTicketId(Long ticketId);
+public interface IBackInstanceRepository extends IService<BackInstanceDO>  {
+    List<BackInstanceDO> listByBackId(Long backId);
+
 }
