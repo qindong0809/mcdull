@@ -7,7 +7,6 @@ import io.gitee.dqcer.mcdull.admin.model.vo.database.TicketVO;
 import io.gitee.dqcer.mcdull.admin.web.service.database.ITicketService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.dto.PkDTO;
-import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -71,8 +70,8 @@ public class TicketController {
     * @return {@link Result<Long>}
     */
     @Authorized("database:ticket:status")
-    @PutMapping("status")
-    public Result<Long> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) StatusDTO dto){
+    @PostMapping("status")
+    public Result<Long> updateStatus(@RequestBody @Validated TicketFollowStatusDTO dto){
         return ticketService.updateStatus(dto);
     }
 

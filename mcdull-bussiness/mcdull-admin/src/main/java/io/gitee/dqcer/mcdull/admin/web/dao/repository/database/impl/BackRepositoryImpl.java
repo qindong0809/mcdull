@@ -49,7 +49,8 @@ public class BackRepositoryImpl extends ServiceImpl<BackMapper, BackDO>  impleme
     @Override
     public Page<BackDO> selectPage(BackListDTO dto) {
         LambdaQueryWrapper<BackDO> lambda = new QueryWrapper<BackDO>().lambda();
-        lambda.eq(BaseDO::getDelBy, DelFlayEnum.NORMAL.getCode());
+        lambda.eq(BackDO::getBizId, dto.getTicketId());
+        lambda.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         lambda.orderByDesc(MiddleDO::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
     }

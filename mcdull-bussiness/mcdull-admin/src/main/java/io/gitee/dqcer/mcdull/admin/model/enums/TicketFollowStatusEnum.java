@@ -20,4 +20,18 @@ public enum TicketFollowStatusEnum implements IEnum<Integer> {
         init(code, text);
     }
 
+    public static TicketFollowStatusEnum toEnum(Integer value) {
+        switch (value) {
+            case 1:
+                return TicketFollowStatusEnum.EDIT;
+            case 2:
+                return TicketFollowStatusEnum.PUBLISHED;
+            case 3:
+                return TicketFollowStatusEnum.PASSED;
+            case 4:
+                return TicketFollowStatusEnum.EXECUTED;
+            default:
+                throw new IllegalArgumentException("invalid value , only ['1', '2', '3', '4'] is allowed");
+        }
+    }
 }

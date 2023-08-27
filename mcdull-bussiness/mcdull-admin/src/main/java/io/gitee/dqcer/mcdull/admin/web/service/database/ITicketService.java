@@ -1,10 +1,9 @@
 package io.gitee.dqcer.mcdull.admin.web.service.database;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.database.*;
-import io.gitee.dqcer.mcdull.admin.model.vo.database.BackVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.BackListVO;
+import io.gitee.dqcer.mcdull.admin.model.vo.database.BackVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.TicketVO;
-import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 
@@ -47,7 +46,7 @@ public interface ITicketService {
      * @param dto   参数
      * @return {@link Result<Long> }
      */
-     Result<Long> updateStatus(StatusDTO dto);
+     Result<Long> updateStatus(TicketFollowStatusDTO dto);
 
     /**
      * 根据主键批量删除

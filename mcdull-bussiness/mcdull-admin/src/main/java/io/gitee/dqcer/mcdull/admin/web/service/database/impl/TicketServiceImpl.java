@@ -27,7 +27,6 @@ import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.*;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.common.ISysConfigManager;
 import io.gitee.dqcer.mcdull.admin.web.service.database.ITicketService;
-import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
@@ -203,7 +202,7 @@ public class TicketServiceImpl implements ITicketService {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result<Long> updateStatus(StatusDTO dto) {
+    public Result<Long> updateStatus(TicketFollowStatusDTO dto) {
         Long id = dto.getId();
 
         TicketDO dbData = ticketRepository.getById(id);
@@ -212,9 +211,18 @@ public class TicketServiceImpl implements ITicketService {
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
 
+        Integer status = dto.getStatus();
+        if (!((TicketFollowStatusEnum.EDIT.getCode().equals(dbData.getFollowStatus()) && TicketFollowStatusEnum.PUBLISHED.getCode().equals(status))
+                || (TicketFollowStatusEnum.PUBLISHED.getCode().equals(dbData.getFollowStatus()) && TicketFollowStatusEnum.PASSED.getCode().equals(status))
+                || (TicketFollowStatusEnum.PASSED.getCode().equals(dbData.getFollowStatus()) && TicketFollowStatusEnum.EXECUTED.getCode().equals(status)))
+        ) {
+            log.error("数据异常 id:{}", id);
+            return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(dbData.getFollowStatus().toString()));
+        }
+
         TicketDO entity = new TicketDO();
         entity.setId(id);
-//        entity.setStatus(dto.getStatus());
+        entity.setFollowStatus(status);
         entity.setUpdatedBy(UserContextHolder.currentUserId());
         boolean success = ticketRepository.updateById(entity);
 
@@ -487,14 +495,16 @@ public class TicketServiceImpl implements ITicketService {
         List<BackInstanceDO> backInstanceList = backInstanceRepository.listByBackId(id);
         if (CollUtil.isNotEmpty(backInstanceList)) {
             for (BackInstanceDO backInstance : backInstanceList) {
-                String newFileName = StrUtil.format("Removed_{}", backInstance.getFileName());
+                String oldFileName = backInstance.getFileName();
+                String newFileName = StrUtil.format("Removed_{}", oldFileName);
                 backInstance.setFileName(newFileName);
                 backInstance.setDelFlag(DelFlayEnum.DELETED.getCode());
                 backInstance.setDelBy(userId);
 
-                String filePath = String.join(File.separator, sqlDumpDir, backInstance.getFileName());
+                String filePath = String.join(File.separator, sqlDumpDir, oldFileName);
                 File file = FileUtil.file(filePath);
-                if (ObjUtil.isNotNull(file)) {
+                boolean exist = FileUtil.exist(filePath);
+                if (exist) {
                     FileUtil.rename(file, newFileName, true);
                 }
             }
