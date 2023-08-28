@@ -44,10 +44,11 @@ create table sys_post
 -- ----------------------------
 -- 初始化-岗位信息表数据
 -- ----------------------------
-insert into sys_post values(1, 'ceo',  '董事长',    1, '1', null, sysdate(), null, null, '', 1, null);
-insert into sys_post values(2, 'se',   '项目经理',  2, '1', null, sysdate(), null, null, '', 1, null);
-insert into sys_post values(3, 'hr',   '人力资源',  3, '1', null, sysdate(), null, null, '', 1, null);
-insert into sys_post values(4, 'user', '普通员工',  4, '1', null, sysdate(), null, null, '', 1, null);
+insert into sys_post values(1, 'DEV',  '研发工程师',    1, '1', null, sysdate(), null, null, '', 1, null);
+insert into sys_post values(2, 'TEST', '测试工程师',  2, '1', null, sysdate(), null, null, '', 1, null);
+insert into sys_post values(3, 'DBA',  '数据库工程师',  3, '1', null, sysdate(), null, null, '', 1, null);
+insert into sys_post values(4, 'PM',   '项目经理',  4, '1', null, sysdate(), null, null, '', 1, null);
+insert into sys_post values(5, 'QA',   '质量经理',  5, '1', null, sysdate(), null, null, '', 1, null);
 
 drop table if exists sys_user_post;
 create table sys_user_post(
@@ -197,6 +198,7 @@ insert into sys_menu values('600',  '实例管理', '6',   '6', 'instance',   'd
 insert into sys_menu values('601',  '组名管理', '6',   '6', 'group',      'database/group/index',     '', 1, 0, 'C', '0', '1', 'database:group:list',     'dashboard',      null, sysdate(), null, null, '组名管理菜单');
 insert into sys_menu values('603',  '版本管理', '6',   '6', 'git',      'database/git/index',     '', 1, 0, 'C', '0', '1', 'database:git:list',           'swagger',           null, sysdate(), null, null, '版本管理菜单');
 insert into sys_menu values('604',  '工单管理', '6',   '6', 'ticket',      'database/ticket/index',     '', 1, 0, 'C', '0', '1', 'database:ticket:list',  'skill',        null, sysdate(), null, null, '工单管理菜单');
+insert into sys_menu values('605',  '环境配置', '6',   '6', 'env',      'database/env/index',     '', 1, 0, 'C', '0', '1', 'database:env:list',  'color',        null, sysdate(), null, null, '环境配置菜单');
 
 insert into sys_menu values('100',  '用户管理', '1',   '1', 'user',       'system/user/index',        '', 1, 0, 'C', '0', '1', 'system:user:list',        'user',          null, sysdate(), null, null, '用户管理菜单');
 insert into sys_menu values('101',  '角色管理', '1',   '2', 'role',       'system/role/index',        '', 1, 0, 'C', '0', '1', 'system:role:list',        'peoples',       null, sysdate(), null, null, '角色管理菜单');
