@@ -74,7 +74,7 @@ public class DemoController {
      * 演示代码生成器
      */
     public static void demoCodeGenerator() {
-        CodeGenerator.run("database", "database_ticket", true);
+        CodeGenerator.run("database", "database_config_env", true);
     }
 
     @UnAuthorize

@@ -710,3 +710,24 @@ create table `database_back` (
 `del_by` bigint default null comment '删除人',
 primary key (`id`)
 );
+
+
+drop table if exists `database_config_env`;
+create table `database_config_env` (
+`id` bigint not null comment '主键',
+`type` int not null comment '标识（1/dev 2/test 3/prod）',
+`dynamic_title` int not null comment '动态标题（1/正常 2/false）',
+`fixed_header` int not null comment '固定header（1/正常 2/false）',
+`side_theme` varchar(32) not null comment '主题风格设置',
+`sidebar_logo` int not null comment '显示logo（1/正常 2/false）',
+`tags_view` int not null comment '开启Tags-Views（1/正常 2/false）',
+`theme` varchar(32) not null comment '主题色',
+`topNav` int not null comment '开启TopNav（1/正常 2/false）',
+`created_by` bigint not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` bigint default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`del_flag` int not null comment '删除标识（1/正常 2/删除）',
+`del_by` bigint default null comment '删除人',
+primary key (`id`)
+);
