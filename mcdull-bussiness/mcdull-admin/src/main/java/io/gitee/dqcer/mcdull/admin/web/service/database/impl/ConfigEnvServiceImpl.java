@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.service.database.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import io.gitee.dqcer.mcdull.admin.model.convert.database.ConfigEnvConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.ConfigEnvLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.database.ConfigEnvDO;
@@ -7,7 +8,6 @@ import io.gitee.dqcer.mcdull.admin.model.vo.database.ConfigEnvVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IConfigEnvRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.database.IConfigEnvService;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.slf4j.Logger;
@@ -61,17 +61,19 @@ public class ConfigEnvServiceImpl implements IConfigEnvService {
     @Override
     public Result<Long> update(ConfigEnvLiteDTO dto) {
         Long id = dto.getId();
-
+        ConfigEnvDO configEnv = ConfigEnvConvert.convertToConfigEnvDO(dto);
+        if (ObjectUtil.isNull(id)) {
+            configEnvRepository.insert(configEnv);
+            return Result.ok(configEnv.getId());
+        }
         ConfigEnvDO dbData = configEnvRepository.getById(id);
         if(null == dbData) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
-        ConfigEnvDO entity = ConfigEnvConvert.convertToConfigEnvDO(dto);
-        entity.setUpdatedBy(UserContextHolder.currentUserId());
-        boolean success = configEnvRepository.updateById(entity);
+        boolean success = configEnvRepository.updateById(configEnv);
         if (!success) {
-            log.error("数据更新失败, entity:{}", entity);
+            log.error("数据更新失败, entity:{}", configEnv);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
         return Result.ok(id);

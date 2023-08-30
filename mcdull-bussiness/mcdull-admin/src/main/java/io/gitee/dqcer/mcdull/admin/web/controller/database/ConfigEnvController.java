@@ -5,7 +5,6 @@ import io.gitee.dqcer.mcdull.admin.model.vo.database.ConfigEnvVO;
 import io.gitee.dqcer.mcdull.admin.web.service.database.IConfigEnvService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.dto.PkDTO;
-import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +44,7 @@ public class ConfigEnvController {
     */
     @Authorized("database:config_env:update")
     @PutMapping("update")
-    public Result<Long> update(@RequestBody @Validated(value = {ValidGroup.Update.class}) ConfigEnvLiteDTO dto){
+    public Result<Long> update(@RequestBody @Validated ConfigEnvLiteDTO dto){
         return configEnvService.update(dto);
     }
 

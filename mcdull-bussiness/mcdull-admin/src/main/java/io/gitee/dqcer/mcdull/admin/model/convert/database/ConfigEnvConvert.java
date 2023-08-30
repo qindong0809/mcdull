@@ -25,13 +25,13 @@ public class ConfigEnvConvert {
         ConfigEnvDO entity = new ConfigEnvDO();
         entity.setId(item.getId());
         entity.setType(item.getType());
-        entity.setDynamicTitle(item.getDynamicTitle());
-        entity.setFixedHeader(item.getFixedHeader());
+        entity.setDynamicTitle(item.getDynamicTitle() ? 1 : 2);
+        entity.setFixedHeader(item.getFixedHeader() ? 1 : 2);
         entity.setSideTheme(item.getSideTheme());
-        entity.setSidebarLogo(item.getSidebarLogo());
-        entity.setTagsView(item.getTagsView());
+        entity.setSidebarLogo(item.getSidebarLogo() ? 1 : 2);
+        entity.setTagsView(item.getTagsView() ? 1 : 2);
         entity.setTheme(item.getTheme());
-        entity.setTopNav(item.getTopNav());
+        entity.setTopNav(item.getTopNav() ? 1 : 2);
 
         return entity;
     }

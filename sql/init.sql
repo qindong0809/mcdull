@@ -722,7 +722,7 @@ create table `database_config_env` (
 `sidebar_logo` int not null comment '显示logo（1/正常 2/false）',
 `tags_view` int not null comment '开启Tags-Views（1/正常 2/false）',
 `theme` varchar(32) not null comment '主题色',
-`topNav` int not null comment '开启TopNav（1/正常 2/false）',
+`top_nav` int not null comment '开启TopNav（1/正常 2/false）',
 `created_by` bigint not null comment '创建人',
 `created_time` datetime not null comment '创建时间',
 `updated_by` bigint default null comment '更新人',

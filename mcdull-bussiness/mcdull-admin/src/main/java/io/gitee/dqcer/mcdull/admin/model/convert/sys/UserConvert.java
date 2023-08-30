@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEmailConfigDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
@@ -97,6 +98,9 @@ public class UserConvert {
     }
 
     public static UserEmailConfigVO toEmailConfigVO(UserEmailConfigDO dbUserEmailConfig) {
+        if (ObjectUtil.isNull(dbUserEmailConfig)) {
+            return null;
+        }
         UserEmailConfigVO userEmailConfigVO = new UserEmailConfigVO();
         userEmailConfigVO.setHost(dbUserEmailConfig.getHost());
         userEmailConfigVO.setPort(dbUserEmailConfig.getPort());
