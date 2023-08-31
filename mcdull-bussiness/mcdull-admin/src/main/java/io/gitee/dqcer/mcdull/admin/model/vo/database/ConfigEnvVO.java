@@ -1,10 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.vo.database;
 
 import io.gitee.dqcer.mcdull.framework.base.vo.VO;
-import java.util.Date;
-
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
 *  返回客户端值
@@ -29,12 +26,12 @@ public class ConfigEnvVO implements VO {
     /**
      * 动态标题（1/正常 2/false）
      */
-    private Integer dynamicTitle;
+    private Boolean dynamicTitle;
 
     /**
      * 固定header（1/正常 2/false）
      */
-    private Integer fixedHeader;
+    private Boolean fixedHeader;
 
     /**
      * 主题风格设置
@@ -44,12 +41,12 @@ public class ConfigEnvVO implements VO {
     /**
      * 显示logo（1/正常 2/false）
      */
-    private Integer sidebarLogo;
+    private Boolean sidebarLogo;
 
     /**
      * 开启Tags-Views（1/正常 2/false）
      */
-    private Integer tagsView;
+    private Boolean tagsView;
 
     /**
      * 主题色
@@ -59,7 +56,7 @@ public class ConfigEnvVO implements VO {
     /**
      * 开启TopNav（1/正常 2/false）
      */
-    private Integer topNav;
+    private Boolean topNav;
 
 
 }

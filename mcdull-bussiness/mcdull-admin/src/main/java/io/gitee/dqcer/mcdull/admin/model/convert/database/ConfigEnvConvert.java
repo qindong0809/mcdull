@@ -50,13 +50,13 @@ public class ConfigEnvConvert {
         ConfigEnvVO vo = new ConfigEnvVO();
         vo.setId(item.getId());
         vo.setType(item.getType());
-        vo.setDynamicTitle(item.getDynamicTitle());
-        vo.setFixedHeader(item.getFixedHeader());
+        vo.setDynamicTitle(item.getDynamicTitle() == 1);
+        vo.setFixedHeader(item.getFixedHeader() == 1);
         vo.setSideTheme(item.getSideTheme());
-        vo.setSidebarLogo(item.getSidebarLogo());
-        vo.setTagsView(item.getTagsView());
+        vo.setSidebarLogo(item.getSidebarLogo() == 1);
+        vo.setTagsView(item.getTagsView() == 1);
         vo.setTheme(item.getTheme());
-        vo.setTopNav(item.getTopNav());
+        vo.setTopNav(item.getTopNav() == 1);
 
         return vo;
     }

@@ -34,19 +34,12 @@ public class ConfigEnvServiceImpl implements IConfigEnvService {
 
 
 
-    /**
-     * 详情
-     *
-     * @param id 主键
-     * @return {@link Result<ConfigEnvVO> }
-     */
     @Transactional(readOnly = true)
     @Override
-    public Result<ConfigEnvVO> detail(Long id) {
-        ConfigEnvDO entity = configEnvRepository.getById(id);
+    public Result<ConfigEnvVO> detail(Integer type) {
+        ConfigEnvDO entity = configEnvRepository.getByType(type);
         if (null == entity) {
-            log.warn("数据不存在 id:{}", id);
-            return Result.error(CodeEnum.DATA_NOT_EXIST);
+            return Result.ok();
         }
         return Result.ok(ConfigEnvConvert.convertToConfigEnvVO(entity));
     }

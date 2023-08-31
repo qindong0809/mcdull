@@ -1,10 +1,10 @@
 package io.gitee.dqcer.mcdull.admin.web.controller.database;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.database.ConfigEnvLiteDTO;
+import io.gitee.dqcer.mcdull.admin.model.dto.database.ConfigEnvTypeDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.ConfigEnvVO;
 import io.gitee.dqcer.mcdull.admin.web.service.database.IConfigEnvService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
-import io.gitee.dqcer.mcdull.framework.base.dto.PkDTO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +32,8 @@ public class ConfigEnvController {
     * @return {@link Result<ConfigEnvVO>}
     */
     @GetMapping("detail")
-    public Result<ConfigEnvVO> detail(@Validated PkDTO dto){
-        return configEnvService.detail(dto.getId());
+    public Result<ConfigEnvVO> detail(@Validated ConfigEnvTypeDTO dto){
+        return configEnvService.detail(dto.getType());
     }
 
     /**

@@ -35,4 +35,6 @@ public interface IConfigEnvRepository extends IService<ConfigEnvDO>  {
      * @return boolean true/存在 false/不存在
      */
     boolean exist(ConfigEnvDO entity);
+
+    ConfigEnvDO getByType(Integer type);
 }

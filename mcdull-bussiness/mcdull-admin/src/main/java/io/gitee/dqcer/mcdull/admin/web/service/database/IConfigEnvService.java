@@ -12,13 +12,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 */
 public interface IConfigEnvService {
 
-    /**
-     * 通过主键查询单条数据
-     *
-     * @param id 主键
-     * @return {@link Result<ConfigEnvVO> }
-     */
-    Result<ConfigEnvVO> detail(Long id);
+    Result<ConfigEnvVO> detail(Integer type);
 
     /**
      * 编辑数据
