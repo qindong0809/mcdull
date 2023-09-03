@@ -731,3 +731,7 @@ create table `database_config_env` (
 `del_by` bigint default null comment '删除人',
 primary key (`id`)
 );
+
+INSERT INTO database_config_env (id,`type`,dynamic_title,fixed_header,side_theme,sidebar_logo,tags_view,theme,top_nav,created_by,created_time,updated_by,updated_time,del_flag,del_by) VALUES (1697259393436880877,3,2,2,'theme-light',2,1,'#FF8C00',1,1589631293412503554,'2023-08-31 22:45:47.0',1589631293412503554,'2023-09-02 10:40:40.0',1,NULL);
+INSERT INTO database_config_env (id,`type`,dynamic_title,fixed_header,side_theme,sidebar_logo,tags_view,theme,top_nav,created_by,created_time,updated_by,updated_time,del_flag,del_by) VALUES (1697259393436880896,1,1,1,'theme-light',1,1,'#0054A6',1,1589631293412503554,'2023-08-31 22:45:47.0',1589631293412503554,'2023-09-02 10:45:01.0',1,NULL);
+INSERT INTO database_config_env (id,`type`,dynamic_title,fixed_header,side_theme,sidebar_logo,tags_view,theme,top_nav,created_by,created_time,updated_by,updated_time,del_flag,del_by) VALUES (1697259393436880899,2,1,2,'theme-light',2,1,'#0054A6',2,1589631293412503554,'2023-08-31 22:45:47.0',1589631293412503554,'2023-09-02 10:45:01.0',1,NULL);
