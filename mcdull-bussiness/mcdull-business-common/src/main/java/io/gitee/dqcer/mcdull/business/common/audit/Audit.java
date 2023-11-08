@@ -22,7 +22,7 @@ public interface Audit {
     /**
      * 标记字符
      *
-     * @return {@link String[]}
+     * @return {@link String}
      */
     default String[] tagCharacter() {
         return new String[]{"[", "]"};

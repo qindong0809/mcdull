@@ -1,17 +1,15 @@
 package io.gitee.dqcer.mcdull.business.common.audit;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.SymbolConstants;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author dqcer
@@ -35,13 +33,13 @@ public class AuditUtil {
                     throw new IllegalArgumentException();
                 }
                 FieldDiff diff = new FieldDiff();
-                diff.setField(field);
                 diff.setDescription(annotation);
                 diff.setBeforeValue(beforeValue);
                 diff.setAfterValue(afterValue);
                 fieldDiffList.add(diff);
             }
         }
+        CollUtil.sort(fieldDiffList, (o1, o2) -> NumberUtil.compare(o1.description.sort(), o2.description.sort()));
         return fieldDiffList;
     }
 
@@ -50,23 +48,32 @@ public class AuditUtil {
         StringBuilder builder = new StringBuilder();
         builder.append(before.prefix());
         builder.append(before.tagCharacter()[0]);
-        boolean hashDiff = false;
+        StringJoiner result = new StringJoiner(SymbolConstants.COMMA + SymbolConstants.SPACE);
+
         for (FieldDiff diff : list) {
             Object afterValue = diff.getAfterValue();
             Object beforeValue = diff.getBeforeValue();
             if (ObjectUtil.notEqual(beforeValue, afterValue)) {
-                if (hashDiff) {
-                    builder.append(SymbolConstants.COMMA).append(SymbolConstants.SPACE);
-                }
+                StringBuilder one = new StringBuilder();
                 AuditDescription description = diff.getDescription();
-                builder.append(description.label());
-                builder.append(before.separate());
-                builder.append(Convert.toStr(beforeValue));
-                builder.append(description.to());
-                builder.append(Convert.toStr(afterValue));
-                hashDiff = true;
+                boolean dateType = beforeValue instanceof Date;
+                one.append(StrUtil.format("{}{}", description.label(), before.separate()));
+                one.append(StrUtil.format("{}{}{}",
+                        description.tagCharacter()[0],
+                        dateType ? DateUtil.format((Date) beforeValue, description.datePattern())
+                                : Convert.toStr(beforeValue, StrUtil.EMPTY),
+                        description.tagCharacter()[1]));
+                one.append(description.to());
+                one.append(StrUtil.format("{}{}{}",
+                        description.tagCharacter()[0],
+                        dateType ? DateUtil.format((Date) afterValue, description.datePattern())
+                                : Convert.toStr(afterValue, StrUtil.EMPTY),
+                        description.tagCharacter()[1]));
+
+                result.add(one);
             }
         }
+        builder.append(result);
         builder.append(before.tagCharacter()[1]);
         return builder.toString();
     }
@@ -74,7 +81,6 @@ public class AuditUtil {
 
     public static class FieldDiff {
 
-        private Field field;
 
         private AuditDescription description;
         private Object beforeValue;
@@ -87,14 +93,6 @@ public class AuditUtil {
 
         public void setDescription(AuditDescription description) {
             this.description = description;
-        }
-
-        public Field getField() {
-            return field;
-        }
-
-        public void setField(Field field) {
-            this.field = field;
         }
 
         public Object getBeforeValue() {
