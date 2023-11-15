@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.gateway.filter;
 
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.gateway.utils.IpUtils;
@@ -20,8 +21,7 @@ import reactor.core.publisher.Mono;
 
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -42,27 +42,23 @@ public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpRequest.Builder mutate = request.mutate();
 
-        /**浏览器传traceId*/
-        // 暂不进行强制限制
+        // 浏览器传traceId,暂不进行强制限制
         String traceId = RandomUtil.uuid();
         addHeader(mutate, HttpHeaderConstants.TRACE_ID_HEADER, traceId);
         MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
 
-        log.info("请求地址:{} {} 来源Ip: {}", exchange.getRequest().getMethodValue(), exchange.getRequest().getURI(), IpUtils.getRealIp(request));
+        if (log.isDebugEnabled()) {
+            log.info("请求地址:{} {} 来源Ip: {}", request.getMethodValue(), request.getURI(), IpUtils.getRealIp(request));
+        }
 
-
-        // 构建成一条长 日志，避免并发下日志错乱
-        StringBuilder beforeReqLog = new StringBuilder(300);
-        // 日志参数
-        List<Object> beforeReqArgs = new ArrayList<>();
         // 打印请求头
         HttpHeaders headers = exchange.getRequest().getHeaders();
+        StringJoiner keyValue = new StringJoiner(StrUtil.COMMA + StrUtil.SPACE);
         headers.forEach((headerName, headerValue) -> {
-            beforeReqLog.append("===Headers===  {}: {}  ");
-            beforeReqArgs.add(headerName);
-            beforeReqArgs.add(headerValue);
+            keyValue.add(headerName + StrUtil.COLON + String.join(",", headerValue));
         });
-        log.info(beforeReqLog.toString(), beforeReqArgs.toArray());
+
+        log.info("===Headers===  {}", keyValue);
 
         exchange.getAttributes().put(START_TIME, System.currentTimeMillis());
         return chain.filter(exchange).then(Mono.fromRunnable(() -> {

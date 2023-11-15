@@ -31,7 +31,7 @@ public class UserConvert {
         userVO.setUpdatedBy(entity.getUpdatedBy());
         userVO.setStatus(entity.getStatus());
         userVO.setDelFlag(entity.getDelFlag());
-        userVO.setNickname(entity.getNickname());
+        userVO.setNickname(entity.getNickName());
         userVO.setAccount(entity.getAccount());
         userVO.setEmail(entity.getEmail());
         userVO.setPhone(entity.getPhone());
@@ -42,7 +42,7 @@ public class UserConvert {
 
     public static UserDO dto2Entity(UserLiteDTO dto) {
         UserDO entity = new UserDO();
-        entity.setNickname(dto.getNickname());
+        entity.setNickName(dto.getNickname());
         entity.setAccount(dto.getAccount());
         entity.setEmail(dto.getEmail());
         entity.setPhone(dto.getPhone());

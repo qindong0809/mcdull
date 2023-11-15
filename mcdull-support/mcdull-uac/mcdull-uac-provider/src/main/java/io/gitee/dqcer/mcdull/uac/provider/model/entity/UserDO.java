@@ -17,7 +17,7 @@ public class UserDO extends BaseDO {
     /**
      * 昵称
      */
-    private String nickname;
+    private String nickName;
 
     /**
      * 账户
@@ -60,7 +60,7 @@ public class UserDO extends BaseDO {
     public String toString() {
         final StringBuilder sb = new StringBuilder("UserDO{");
         sb.append("delFlag=").append(delFlag);
-        sb.append(", nickname='").append(nickname).append('\'');
+        sb.append(", nickname='").append(nickName).append('\'');
         sb.append(", account='").append(account).append('\'');
         sb.append(", password='").append(password).append('\'');
         sb.append(", salt='").append(salt).append('\'');
@@ -86,12 +86,12 @@ public class UserDO extends BaseDO {
         this.type = type;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getAccount() {

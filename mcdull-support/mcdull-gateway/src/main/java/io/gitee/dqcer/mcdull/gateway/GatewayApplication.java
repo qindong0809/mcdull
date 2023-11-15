@@ -1,8 +1,6 @@
 package io.gitee.dqcer.mcdull.gateway;
 
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,9 +26,6 @@ import java.util.stream.Collectors;
 @EnableDiscoveryClient
 @SpringBootApplication
 public class GatewayApplication {
-
-    private static final Logger log = LoggerFactory.getLogger(GatewayApplication.class);
-
 
     public static void main(String[] args) {
         SpringApplication.run(GatewayApplication.class, args);

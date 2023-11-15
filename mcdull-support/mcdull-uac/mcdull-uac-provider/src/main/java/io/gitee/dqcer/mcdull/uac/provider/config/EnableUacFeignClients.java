@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 public @interface EnableUacFeignClients {
 
     @SuppressWarnings("unused")
-    String[] basePackages() default {"io.gitee.dqcer.*.client.service", "io.gitee.dqcer.mcdull.framework.web.feign"};
+    String[] basePackages() default {"io.gitee.dqcer.mcdull.*.client.service", "io.gitee.dqcer.mcdull.framework.web.feign"};
 
 
 }

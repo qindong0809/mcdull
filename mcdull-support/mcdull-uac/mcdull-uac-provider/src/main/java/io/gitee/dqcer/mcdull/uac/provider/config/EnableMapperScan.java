@@ -23,5 +23,5 @@ import java.lang.annotation.Target;
 public @interface EnableMapperScan {
 
     @SuppressWarnings("unused")
-    String[] basePackages() default {"io.gitee.dqcer.uac.provider.web.dao.mapper"};
+    String[] basePackages() default {"io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper"};
 }
