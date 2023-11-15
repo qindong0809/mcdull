@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: mcdull-gateway
   cloud:
     nacos:
       server-addr: mcdull.io:8848

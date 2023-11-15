@@ -47,7 +47,7 @@ public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {
         addHeader(mutate, HttpHeaderConstants.TRACE_ID_HEADER, traceId);
         MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
 
-        if (log.isDebugEnabled()) {
+        if (log.isInfoEnabled()) {
             log.info("请求地址:{} {} 来源Ip: {}", request.getMethodValue(), request.getURI(), IpUtils.getRealIp(request));
         }
 
@@ -58,7 +58,9 @@ public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {
             keyValue.add(headerName + StrUtil.COLON + String.join(",", headerValue));
         });
 
-        log.info("===Headers===  {}", keyValue);
+        if (log.isInfoEnabled()) {
+            log.info("===Headers===  {}", keyValue);
+        }
 
         exchange.getAttributes().put(START_TIME, System.currentTimeMillis());
         return chain.filter(exchange).then(Mono.fromRunnable(() -> {

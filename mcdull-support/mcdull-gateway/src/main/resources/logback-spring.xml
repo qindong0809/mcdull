@@ -4,8 +4,19 @@
   <include resource="org/springframework/boot/logging/logback/defaults.xml" />
   <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
+  <property name="LOG_PATTERN" value="|%d{yyyy-MM-dd HH:mm:ss.SSS} | %-5level | %15t | %X{traceId} | %-42logger{36}:%line | %m | %n"/>
+
+  <!--重新定义console 的log格式和添加trace id-->
+<!--  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">-->
+<!--    <encoder>-->
+<!--      <pattern>${LOG_PATTERN}</pattern>-->
+<!--      <charset>utf8</charset>-->
+<!--    </encoder>-->
+<!--  </appender>-->
+
   <!-- 定义项目名称和日志路径 -->
   <springProperty scope="context" name="application.name" source="spring.application.name" />
+  <!--生产环境应该使用绝对路径-->
   <property name="log.path" value="./logs" />
 
   <!-- 所有级别日志，按日期滚动文件输出 -->
@@ -25,7 +36,7 @@
     </rollingPolicy>
     <!--日志文档输出格式-->
     <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss}  [ %thread ] - [ %-5level ] [%X{trace}]  [%p] [%t] %c - %m%n</pattern>
+      <pattern>${LOG_PATTERN}</pattern>
       <!-- 此处设置字符集 -->
       <charset>UTF-8</charset>
     </encoder>
@@ -43,7 +54,7 @@
       <totalSizeCap>80GB</totalSizeCap>
     </rollingPolicy>
     <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%X{trace}][%p] [%t] %c - %m%n</pattern>
+      <pattern>${LOG_PATTERN}</pattern>
     </encoder>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>INFO</level>
@@ -64,7 +75,7 @@
       <totalSizeCap>80GB</totalSizeCap>
     </rollingPolicy>
     <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%X{trace}][%p] [%t] %c - %m%n</pattern>
+      <pattern>${LOG_PATTERN}</pattern>
     </encoder>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>WARN</level>
@@ -74,7 +85,8 @@
   </appender>
 
   <!-- ERROR 级别日志配置 -->
-  <appender name="error_file" class="config.io.gitee.dqcer.mcdull.framework.web.AlarmRollingFileAppender">
+  <!--io.gitee.dqcer.mcdull.framework.web.config.AlarmRollingFileAppender 后续告警处理可使用该类 -->
+  <appender name="error_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${log.path}/${application.name}/error.log</file>
     <append>true</append>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -85,7 +97,7 @@
       <totalSizeCap>80GB</totalSizeCap>
     </rollingPolicy>
     <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%X{trace}][%p] [%t] %c - %m%n</pattern>
+      <pattern>${LOG_PATTERN}</pattern>
     </encoder>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>ERROR</level>
@@ -100,9 +112,10 @@
   <logger name="springfox.bean.validators" level="ERROR"/>
   <logger name="springfox.documentation" level="ERROR" />
   <logger name="com.alibaba.nacos.client.naming" level="warn" />
+  <logger name="io.gitee.dqcer" level="info" />
+
   <root level="info">
     <appender-ref ref="CONSOLE" />
-<!--    <appender-ref ref="console" />-->
     <appender-ref ref="allLevelFileAppender" />
     <appender-ref ref="info_file" />
     <appender-ref ref="warn_file" />

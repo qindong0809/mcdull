@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 报警滚动文件目的地
+ * 监听错误日志
  *
  * @author dqcer
  * @since 2022/10/26
