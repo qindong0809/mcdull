@@ -12,7 +12,7 @@
     </select>
     <select id="queryModulesByRoleId" resultType="java.lang.String">
         select
-            m.code
+            m.perms
         from
             sys_role_menu t
                 left join sys_menu m on

@@ -19,15 +19,11 @@ public class UserPowerVO implements VO {
      */
     private Long roleId;
 
-    /**
-     * 角色类型
-     */
-    private Integer roleType;
 
     /**
      * 角色名
      */
-    private String roleName;
+    private String code;
 
     /**
      * 模块
@@ -38,28 +34,19 @@ public class UserPowerVO implements VO {
     public String toString() {
         final StringBuffer sb = new StringBuffer("UserPowerVO{");
         sb.append("roleId=").append(roleId);
-        sb.append(", roleType=").append(roleType);
-        sb.append(", roleName='").append(roleName).append('\'');
+        sb.append(", code='").append(code).append('\'');
         sb.append(", modules=").append(modules);
         sb.append('}');
         return sb.toString();
     }
 
-    public Integer getRoleType() {
-        return roleType;
+
+    public String getCode() {
+        return code;
     }
 
-    public UserPowerVO setRoleType(Integer roleType) {
-        this.roleType = roleType;
-        return this;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public UserPowerVO setRoleName(String roleName) {
-        this.roleName = roleName;
+    public UserPowerVO setCode(String code) {
+        this.code = code;
         return this;
     }
 

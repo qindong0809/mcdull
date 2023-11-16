@@ -120,7 +120,7 @@ public class UserService {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
-        Integer status = dto.getStatus();
+        String status = dto.getStatus();
         if (dbData.getStatus().equals(status)) {
             log.warn("数据已存在 id: {} status: {}", id, status);
             return Result.error(CodeEnum.DATA_EXIST);

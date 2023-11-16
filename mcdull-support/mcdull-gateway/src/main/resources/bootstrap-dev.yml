@@ -6,5 +6,10 @@ spring:
       server-addr: mcdull.io:8848
       config:
         file-extension: yaml
+        shared-configs:
+          - data-id: sa-token.yaml
+            group: DEFAULT_GROUP
+          - data-id: redis.yaml
+            group: DEFAULT_GROUP
       discovery:
         heart-beat-interval: 1

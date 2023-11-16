@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 登录控制器
@@ -57,5 +58,15 @@ public class LoginController implements AuthServiceApi {
     @Override
     public Result<Long> tokenValid(String token, String traceId) {
         return loginService.tokenValid(token);
+    }
+
+    @Override
+    public Result<List<String>> getPermissionList(Long userId) {
+        return loginService.getPermissionList(userId);
+    }
+
+    @Override
+    public Result<List<String>> getRoleList(Long userId) {
+        return loginService.getRoleList(userId);
     }
 }

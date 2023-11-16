@@ -16,6 +16,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.util.AntPathMatcher;
@@ -41,6 +42,9 @@ public class OperationLogsAspect {
 
     private static final Logger log = LoggerFactory.getLogger(OperationLogsAspect.class);
 
+    @Value("${log.enable}")
+    private Boolean logEnable;
+
     /**
      * 操作日志拦截 ..* 表示任意包或子包
      */
@@ -51,6 +55,9 @@ public class OperationLogsAspect {
 
     @Around("operationLogsCut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        if (!logEnable) {
+            return joinPoint.proceed();
+        }
         HttpServletRequest request = ServletUtil.getRequest();
         String requestUrl = request.getRequestURI();
         if (log.isDebugEnabled()) {

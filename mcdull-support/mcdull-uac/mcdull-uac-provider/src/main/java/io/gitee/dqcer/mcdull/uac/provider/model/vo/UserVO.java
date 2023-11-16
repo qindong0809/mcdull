@@ -1,9 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
-import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
+import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.VO;
-import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 
 import java.time.LocalTime;
 import java.util.Date;
@@ -50,9 +49,9 @@ public class UserVO implements VO {
      * 状态
      * @see StatusEnum
      */
-    private Integer status;
+    private String status;
 
-    @Transform(from = "status", param = "status_type")
+//    @Transform(from = "status", param = "status_type")
     private String statusStr;
 
 
@@ -64,7 +63,7 @@ public class UserVO implements VO {
     /**
      * 删除str
      */
-    @Transform(from = "delFlag", param = "del_flag_type")
+//    @Transform(from = "delFlag", param = "del_flag_type")
     private String delFlagStr;
 
     /**
@@ -98,7 +97,7 @@ public class UserVO implements VO {
      */
     private Integer type;
 
-    @Transform(from = "type", param = "data_type")
+//    @Transform(from = "type", param = "data_type")
     private String typeStr;
 
     /**
@@ -227,11 +226,11 @@ public class UserVO implements VO {
         this.updatedBy = updatedBy;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

@@ -176,8 +176,8 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
     private UserPowerVO builderPowerVO(RoleDO roleDO) {
         UserPowerVO vo = new UserPowerVO();
         vo.setRoleId(roleDO.getId());
-        vo.setRoleName(roleDO.getName());
-        vo.setRoleType(roleDO.getType());
+        vo.setCode(roleDO.getName());
+//        vo.setRoleType(roleDO.getType());
         return vo;
     }
 

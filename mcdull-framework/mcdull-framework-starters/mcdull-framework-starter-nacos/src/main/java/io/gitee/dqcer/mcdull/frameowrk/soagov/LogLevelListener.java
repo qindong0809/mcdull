@@ -43,7 +43,7 @@ public class LogLevelListener implements InitializingBean {
     private static final Logger log = LoggerFactory.getLogger(LogLevelListener.class);
 
 
-    @Value("${logging.dataId:log}")
+    @Value("${logging.dataId:log-level.properties}")
     private String logDataId;
 
     @Resource

@@ -30,7 +30,7 @@ public class UserLiteDTO extends PagedDTO {
      * 状态（1/正常 2/停用）
      */
      @EnumsIntValid(groups = {ValidGroup.Status.class}, value = StatusEnum.class)
-     private Integer status;
+     private String status;
 
     /**
      * 删除标识（false/正常 true/删除）
@@ -131,11 +131,11 @@ public class UserLiteDTO extends PagedDTO {
     public void setId(Long id) {
         this.id = id;
     }
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

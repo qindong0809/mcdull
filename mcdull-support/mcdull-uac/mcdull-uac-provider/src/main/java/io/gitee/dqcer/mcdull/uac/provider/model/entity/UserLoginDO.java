@@ -27,63 +27,23 @@ public class UserLoginDO extends IdDO {
     /**
      * 菜单id
      */
-    private Long userId;
+    private String account;
 
     /**
      * token
      */
-    private String token;
-
+    private String remark;
 
     /**
      * 类型（1/登录 2/注销）
      */
     private Integer type;
 
-    @Override
-    public String toString() {
-        return "UserLoginDO{" +
-                "createdTime=" + createdTime +
-                ", userId=" + userId +
-                ", token='" + token + '\'' +
-                ", type=" + type +
-                ", id=" + id +
-                "} " + super.toString();
-    }
+    private String browser;
 
-    public Date getCreatedTime() {
-        return createdTime;
-    }
+    private String os;
 
-    public UserLoginDO setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
-        return this;
-    }
+    private String operationType;
 
-    public Long getUserId() {
-        return userId;
-    }
 
-    public UserLoginDO setUserId(Long userId) {
-        this.userId = userId;
-        return this;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public UserLoginDO setToken(String token) {
-        this.token = token;
-        return this;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public UserLoginDO setType(Integer type) {
-        this.type = type;
-        return this;
-    }
 }

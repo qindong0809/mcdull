@@ -1,23 +1,27 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserLoginRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
+import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
+import io.gitee.dqcer.mcdull.framework.base.enums.AuthCodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
 import io.gitee.dqcer.mcdull.framework.base.storage.SsoConstant;
-import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
-import io.gitee.dqcer.mcdull.framework.base.enums.AuthCodeEnum;
+import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserLoginRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -29,6 +33,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 登录服务
@@ -52,6 +61,9 @@ public class LoginService {
 
     @Resource
     private CacheChannel cacheChannel;
+
+    @Resource
+    private UserService userService;
 
     /**
      * 登录
@@ -94,6 +106,8 @@ public class LoginService {
 
         //  记录登录信息
         userLoginRepository.saveLoginInfoByUserIdAndToken(userId, token);
+
+        StpUtil.login(userId);
 
         return Result.ok(token);
     }
@@ -171,5 +185,28 @@ public class LoginService {
         //  记录注销信息
         userLoginRepository.saveLogoutInfoByUserIdAndToken(user.getUserId(), token);
         return Result.ok();
+    }
+
+    public Result<List<String>> getPermissionList(Long userId) {
+        Result<List<UserPowerVO>> listResult = userService.queryResourceModules(userId);
+        List<UserPowerVO> userPowerVOList = ResultParse.getInstance(listResult);
+        Set<String> set = new HashSet<>();
+        if (CollUtil.isNotEmpty(userPowerVOList)) {
+            for (UserPowerVO vo : userPowerVOList) {
+                set.addAll(vo.getModules());
+            }
+        }
+        return Result.ok(new ArrayList<>(set));
+    }
+
+
+    public Result<List<String>> getRoleList(Long userId) {
+        Result<List<UserPowerVO>> listResult = userService.queryResourceModules(userId);
+        List<UserPowerVO> userPowerVOList = ResultParse.getInstance(listResult);
+        Set<String> set = new HashSet<>();
+        if (CollUtil.isNotEmpty(userPowerVOList)) {
+            set = userPowerVOList.stream().map(UserPowerVO::getCode).collect(Collectors.toSet());
+        }
+        return Result.ok(new ArrayList<>(set));
     }
 }

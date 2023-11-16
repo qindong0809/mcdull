@@ -1,13 +1,12 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
-import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.UserService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +37,7 @@ public class UserController {
      */
     @Authorized("sys:user:view")
     @GetMapping("user/base/page")
-    @Transform
+//    @Transform
     public Result<PagedVO<UserVO>> listByPage(@Validated(ValidGroup.Paged.class) UserLiteDTO dto) {
         return userService.listByPage(dto);
     }

@@ -1,12 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserLoginDO;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserLoginRepository;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.UserLoginMapper;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserLoginRepository;
 import org.springframework.stereotype.Service;
 
 /**
@@ -59,12 +56,12 @@ public class UserLoginRepositoryImpl extends ServiceImpl<UserLoginMapper, UserLo
      */
     private void save(Long userId, String token, Integer type) {
         UserLoginDO loginDO = new UserLoginDO();
-        loginDO.setType(type);
-        loginDO.setToken(token);
-        loginDO.setUserId(userId);
-        int rowSize = baseMapper.insert(loginDO);
-        if (rowSize == GlobalConstant.Database.ROW_0) {
-            throw new DatabaseRowException(CodeEnum.DB_ERROR);
-        }
+//        loginDO.setType(type);
+//        loginDO.setToken(token);
+//        loginDO.setUserId(userId);
+//        int rowSize = baseMapper.insert(loginDO);
+//        if (rowSize == GlobalConstant.Database.ROW_0) {
+//            throw new DatabaseRowException(CodeEnum.DB_ERROR);
+//        }
     }
 }
