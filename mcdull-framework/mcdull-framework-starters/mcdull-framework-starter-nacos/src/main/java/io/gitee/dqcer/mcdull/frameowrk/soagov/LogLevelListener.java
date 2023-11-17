@@ -9,7 +9,6 @@ import com.alibaba.nacos.api.exception.NacosException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -42,9 +41,7 @@ public class LogLevelListener implements InitializingBean {
 
     private static final Logger log = LoggerFactory.getLogger(LogLevelListener.class);
 
-
-    @Value("${logging.dataId:log-level.properties}")
-    private String logDataId;
+    private static final String LOG_LEVEL_NAME = "log-level.properties";
 
     @Resource
     private NacosConfigManager nacosConfigManager;
@@ -61,10 +58,10 @@ public class LogLevelListener implements InitializingBean {
 
         new Thread(() -> {
             // 初次加载
-            log.info("logDataId: {}", logDataId);
+            log.info("Loading Log Level File: {}", LOG_LEVEL_NAME);
             String configInfo = null;
             try {
-                configInfo = nacosConfigManager.getConfigService().getConfig(logDataId, nacosConfigProperties.getGroup(), 3000);
+                configInfo = nacosConfigManager.getConfigService().getConfig(LOG_LEVEL_NAME, nacosConfigProperties.getGroup(), 3000);
             } catch (NacosException e) {
                 log.error("nacos exception", e);
             }
@@ -74,7 +71,7 @@ public class LogLevelListener implements InitializingBean {
 
 
         // 二次监听加载
-        nacosConfigManager.getConfigService().addListener(logDataId, nacosConfigProperties.getGroup(), new Listener() {
+        nacosConfigManager.getConfigService().addListener(LOG_LEVEL_NAME, nacosConfigProperties.getGroup(), new Listener() {
             @Override
             public Executor getExecutor() {
                 return new ThreadPoolExecutor(1, 2, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(500), r -> {

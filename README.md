@@ -26,7 +26,6 @@
 ### 快速链接
 
 * 在线文档： [点击前往](https://dqcer.gitee.io/mcdull)
-* 如果满足您的需求，避免下次迷路，期待您右上角点个 star)
 
 
 #### 介绍
@@ -395,3 +394,22 @@ for(int i = 0; i < 10; i++) {
 
 #### 进行权限的拦截时，优先使用``OncePerRequestFilter``而不是``Filter``
 > OncePerRequestFilter 确保其 doFilter() 方法在每个请求中只被调用一次，即使在多个线程并发处理请求的情况下
+
+#### 替换``LoadBalancer``用默认的缓存
+> 生产环境中使用Caffeine 缓存以获得更好的性能和内存管理
+- 1、``pom``添加依赖
+```xml
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+```
+
+- 2、``application.yml``添加配置
+```yml
+spring:
+  cache:
+    type: caffeine
+```
+
+持续更新中... 欢迎点``star``, 避免下次迷路

@@ -1,16 +1,16 @@
 package io.gitee.dqcer.mcdull.gateway.config;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.cloud.nacos.NacosConfigManager;
 import com.alibaba.cloud.nacos.NacosConfigProperties;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.config.listener.Listener;
 import com.alibaba.nacos.api.exception.NacosException;
 import io.gitee.dqcer.mcdull.framework.base.util.JsonUtil;
-import cn.hutool.core.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinitionWriter;
@@ -84,8 +84,7 @@ public class DynamicRouteListener implements InitializingBean, ApplicationEventP
 
     private static final Logger log = LoggerFactory.getLogger(DynamicRouteListener.class);
 
-    @Value("${route.dataId:gateway-routes}")
-    private String routeDataId;
+    private static final String GATEWAY_ROUTES = "gateway-routes.json";
 
     @Resource
     private NacosConfigManager nacosConfigManager;
@@ -114,7 +113,8 @@ public class DynamicRouteListener implements InitializingBean, ApplicationEventP
         new Thread(() -> {
             String config = null;
             try {
-                config = nacosConfigManager.getConfigService().getConfig(routeDataId, nacosConfigProperties.getGroup(), 3000);
+                log.info("Loading Gateway Route File: {}", GATEWAY_ROUTES);
+                config = nacosConfigManager.getConfigService().getConfig(GATEWAY_ROUTES, nacosConfigProperties.getGroup(), 3000);
             } catch (NacosException e) {
                 log.error("nacos exception", e);
             }
@@ -123,7 +123,7 @@ public class DynamicRouteListener implements InitializingBean, ApplicationEventP
 
 
         // 添加监听 指定的nacos的配置文件 事件
-        configService.addListener(routeDataId, nacosConfigProperties.getGroup(), new Listener() {
+        configService.addListener(GATEWAY_ROUTES, nacosConfigProperties.getGroup(), new Listener() {
             @Override
             public Executor getExecutor() {
                 return new ThreadPoolExecutor(1, 2, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(500), r -> {
@@ -145,10 +145,11 @@ public class DynamicRouteListener implements InitializingBean, ApplicationEventP
      * @param configInfo 配置信息
      */
     private void refresh(String configInfo) {
-        log.info("配置信息 \n {}", configInfo);
         if (StrUtil.isBlank(configInfo)) {
+            log.warn("Read File is null");
             return;
         }
+        log.info("配置信息 \n {}", configInfo);
         // 删除之前的路由
         for (String routeId : ROUTE_IDS) {
             routeDefinitionWriter.delete(Mono.just(routeId)).subscribe();
@@ -156,6 +157,9 @@ public class DynamicRouteListener implements InitializingBean, ApplicationEventP
         ROUTE_IDS.clear();
 
         List<RouteDefinition> routeDefinitions = JsonUtil.parseArray(configInfo, RouteDefinition.class);
+        if (CollUtil.isEmpty(routeDefinitions)) {
+            return;
+        }
         for (RouteDefinition routeDefinition : routeDefinitions) {
             routeDefinitionWriter.save(Mono.just(routeDefinition)).subscribe();
             ROUTE_IDS.add(routeDefinition.getId());

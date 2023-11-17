@@ -1,8 +1,8 @@
 server:
   port: 9090
 spring:
-  application:
-    name: mcdull-gateway
+  cache:
+    type: caffeine
   cloud:
     gateway:
       discovery:
@@ -23,13 +23,6 @@ spring:
             - Path=/mdc/**
           filters:
             - StripPrefix=1
-  redis:
-    host: mcdull.io
-    database: 1
-# 指定日志的文件名（nacos）
-logging:
-  dataId: log
-
 mcdull:
   filter:
     noAuth:
