@@ -48,23 +48,26 @@ mcdull
 ├─mcdull-bussiness               业务模块
 │   
 ├─mcdull-framework                              基础框架
-│    ├─mcdull-framework-base                    底层定义
-│    ├─mcdull-framework-config                  配置定义
-│    ├─mcdull-framework-dependencies            依赖管理
-│    ├─mcdull-framework-enforcer                框架规则
-│    └─mcdull-framework-starters                组件starters  
-│       └─mcdull-framework-starter-feign        feign组件
-│       ├─mcdull-framework-starter-mysql        mysql组件
-│       ├─mcdull-framework-starter-nacos        nacos组件
-│       ├─mcdull-framework-starter-redis        redis组件
-│       ├─mcdull-framework-starter-web          web组件
+│    ├─mcdull-framework-agent                     探针模块
+│    ├─mcdull-framework-base                      底层定义
+│    ├─mcdull-framework-config                    配置定义
+│    ├─mcdull-framework-dependencies              依赖管理
+│    ├─mcdull-framework-enforcer                  框架规则
+│    └─mcdull-framework-starters               组件starters  
+│       ├─mcdull-framework-starter-feign          feign组件
+│       ├─mcdull-framework-starter-feign          流程编排
+│       ├─mcdull-framework-starter-mongodb        mongodb组件
+│       ├─mcdull-framework-starter-mysql          mysql组件
+│       ├─mcdull-framework-starter-nacos          nacos组件
+│       ├─mcdull-framework-starter-oss            对象存储
+│       ├─mcdull-framework-starter-redis          redis组件
+│       └─mcdull-framework-starter-web            web组件
 │ 
-├─mcdull-support                                支撑模块（包含技术中台和业务中台）
-│    └─mcdull-geteway                           统一网关
-│    ├─mcdull-generator                         代码生成器  
-│    ├─mcdull-mdc                               元数据中心  
-│    └─mcdull-uac                               用户中心  
-│       
+├─mcdull-support                              支撑模块（包含技术中台和业务中台）
+│    └─mcdull-geteway                             统一网关
+│    ├─mcdull-generator                           代码生成器  
+│    ├─mcdull-mdc                                 元数据中心  
+│    └─mcdull-uac                                 用户中心     
 
 ```
 
@@ -213,8 +216,11 @@ docsify serve .
 ```java
 // 反例
 BeanUtil.copyProperties(source, target)
+// 正例
+get/set
 ```
-> 说明：使用反射效率低，其次增加可维护性成本增高，后面接手的小伙伴不知道程序哪些是需要的字段
+> 说明：使用反射效率低，其次增加可维护性成本增高，后面接手的小伙伴不知道程序哪些是需要的字段. 
+> 使用get/set是最直接，也是最简单的。后续二开/维护排错倍倍香!!!
 
 #### 避免过多冗余、过少的日志
 
