@@ -1,0 +1,12 @@
+server:
+  port: 9000
+spring:
+  boot:
+    admin:
+      ui:
+        view-settings:
+          # remove 'about' title
+          - name: "about"
+            enabled: false
+        title: ${UI_TITLE:Mcdull Monitor}
+        brand: <img src="assets/img/icon-spring-boot-admin.svg"><span>${spring.boot.admin.ui.title}</span>

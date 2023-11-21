@@ -6,6 +6,7 @@
     <modules>
         <module>mcdull-gateway</module>
         <module>mcdull-mdc</module>
+        <module>mcdull-monitor</module>
         <module>mcdull-uac</module>
         <module>mcdull-generator</module>
     </modules>

@@ -17,7 +17,7 @@
   <!-- 定义项目名称和日志路径 -->
   <springProperty scope="context" name="application.name" source="spring.application.name" />
   <!--生产环境应该使用绝对路径-->
-  <property name="log.path" value="./logs" />
+  <property name="log.path" value="${LOG_PATH:-.}" />
 
   <!-- 所有级别日志，按日期滚动文件输出 -->
   <appender name="allLevelFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">

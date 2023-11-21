@@ -11,5 +11,7 @@ spring:
             group: DEFAULT_GROUP
           - data-id: datasource.yaml
             group: DEFAULT_GROUP
+          - data-id: springboot-admin.yaml
+            group: DEFAULT_GROUP
       discovery:
         heart-beat-interval: 1
