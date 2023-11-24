@@ -3,6 +3,44 @@ server:
 spring:
   application:
     name: mcdull-uac-provider
+  dynamic:
+    tp:
+      enabled: true
+      enabledCollect: true          # 是否开启监控指标采集，默认false
+      collectorTypes: logging    # 监控数据采集器类型（logging | micrometer | internal_logging），默认micrometer
+      monitorInterval: 5            # 监控时间间隔（报警判断、指标采集），默认5s
+      logPath: /home/logs                    # 监控日志数据路径，默认 ${user.home}/logs，采集类型非logging不用配置
+      platforms: # 通知报警平台配置
+        - platform: email
+          platformId: 4
+          receivers: qin.dong@snapmail.cc
+      undertowTp:                                  # undertow webserver线程池配置
+        corePoolSize: 100
+        maximumPoolSize: 200
+        keepAliveTime: 60
+        runTimeout: 200
+        queueTimeout: 100
+  # email notify configuration
+  mail:
+    # (optional) email subject, default:ThreadPool Notify
+    title: ThreadPool Notify
+    # mail service address
+    host: smtp.sina.com
+    port: 465
+    # send from
+    username: dqcer@sina.com
+    # authorization code eg: rlpadadtcugh4152e
+    password: a9a5e2a120267b58
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory
+          ssl:
+            enable: true
+        debug: false
+
+
 mcdull:
   feign:
     uac: mcdull-uac-provider
