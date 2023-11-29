@@ -1,10 +1,12 @@
 package io.gitee.dqcer.mcdull.mdc.provider.web.service;
 
+import cn.hutool.extra.mail.MailUtil;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.mdc.client.dto.MailClientDTO;
 import io.gitee.dqcer.mcdull.mdc.provider.config.mail.MailTemplate;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,6 +25,8 @@ public class MailService {
     @Resource
     private MailTemplate mailTemplate;
 
+    @Resource
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     /**
      * 发送
@@ -39,5 +43,19 @@ public class MailService {
             log.error("邮件发送失败： dto： {}", dto);
         }
         return Result.ok(Boolean.FALSE);
+    }
+
+    public boolean sendEmail(String sendTo, String subject, String text) {
+        threadPoolTaskExecutor.submit(() -> {
+            if (log.isInfoEnabled()) {
+                log.info("sendEmail. sendTo: {}, subject: {}", sendTo, subject);
+            }
+            try {
+                MailUtil.send(sendTo, subject, text, false);
+            } catch (Exception e) {
+                log.error("send error.", e);
+            }
+        });
+        return false;
     }
 }

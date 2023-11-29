@@ -10,25 +10,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     host: mcdull.io
-  #邮件配置样例
-  mail:
-    host: smtp.sina.com
-    username: xxxxx@sina.com
-    password: xxxxxxx
-    port: 465
-    properties:
-      smtp:
-        auth: true
-        timeout: 2500
-      mail:
-        smtp:
-          ssl:
-            enable: true
-# 指定日志的文件名（nacos）
-logging:
-  dataId: log
 mcdull:
   feign:
     uac: mcdull-uac-provider
+#请勿使用相对路径
+logging:
+  file:
+    path: /var/log
+    # springboot admin 监控指定log文件
+    name: /var/log/mcdull-mdc/out.log
 
 

@@ -9,12 +9,15 @@ package io.gitee.dqcer.mcdull.framework.base.constants;
 @SuppressWarnings("unused")
 public class GlobalConstant {
 
+    public static final String BASE_PACKAGE = "io.gitee.dqcer.mcdull";
     public static final String ROOT_PREFIX = "mcdull";
 
     /**
      * 内部接口调用 前缀
      */
     public static final String INNER_API = "/interior-api";
+
+    public static final String SERVICE_MDC = "/metadata";
 
     public static final String ALL_PATTERNS = "/**";
 
@@ -36,6 +39,8 @@ public class GlobalConstant {
      * excel导出最大行
      */
     public static final Long EXCEL_EXPORT_MAX_ROW = 1048576L;
+
+
 
     public static class Environment {
 

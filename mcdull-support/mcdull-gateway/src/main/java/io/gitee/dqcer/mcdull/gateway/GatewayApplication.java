@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.gateway;
 
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
  * @author dqcer
  * @since 2022/10/24
  */
-@EnableFeignClients(basePackages = "io.gitee.dqcer.mcdull.uac.client.service")
+@EnableFeignClients(basePackages = GlobalConstant.BASE_PACKAGE + ".uac.client.service")
 @RestController
 @EnableDiscoveryClient
 @SpringBootApplication

@@ -47,6 +47,6 @@ public class FeignConfiguration implements RequestInterceptor {
 
     @Bean
     public feign.Logger.Level loggerLevel() {
-        return feign.Logger.Level.BASIC;
+        return feign.Logger.Level.FULL;
     }
 }

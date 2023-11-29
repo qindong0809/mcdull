@@ -1,6 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc;
 
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RemoteDictVO;
+
+import java.util.Map;
 
 /**
  * 码表通用逻辑接口层
@@ -18,4 +21,14 @@ public interface IDictManager {
      * @return {@link RemoteDictVO}
      */
     RemoteDictVO dictVO(String selectType, String code);
+
+
+    /**
+     * code Name
+     *
+     * @param codeList   codeList
+     * @param selectTypeEnum selectTypeEnum
+     * @return {@link Map}<{@link String}, {@link String}>
+     */
+    Map<String, String> codeNameMap(IEnum<String> selectTypeEnum);
 }

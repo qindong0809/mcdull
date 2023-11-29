@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.mdc.provider;
 
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.mysql.EnableDynamicDataSource;
 import io.gitee.dqcer.mcdull.framework.redis.EnableCache;
 import io.gitee.dqcer.mcdull.framework.web.EnableWebCore;
@@ -16,8 +17,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @since 2022/12/26
  */
 @EnableDynamicDataSource
-@EnableFeignClients(basePackages = {"io.gitee.dqcer.mcdull.framework.web.feign", "io.gitee.dqcer.uac.client.service"})
-@MapperScan("io.gitee.dqcer.mdc.provider.web.dao.mapper")
+@EnableFeignClients(basePackages = {GlobalConstant.BASE_PACKAGE + ".framework.web.feign", GlobalConstant.BASE_PACKAGE + ".uac.client.service"})
+@MapperScan(GlobalConstant.BASE_PACKAGE + ".mdc.provider.web.dao.mapper")
 @EnableWebCore
 @EnableCache
 @EnableDiscoveryClient

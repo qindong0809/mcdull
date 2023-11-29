@@ -1,14 +1,10 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.mcdull.uac.provider.model.convert.UserConvert;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -17,9 +13,18 @@ import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.mcdull.mdc.client.constants.DictEnum;
+import io.gitee.dqcer.mcdull.uac.provider.model.convert.UserConvert;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.IDictManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.IMailManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.uac.IUserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 用户服务
@@ -50,6 +53,12 @@ public class UserService {
 
     @Resource
     private IUserRoleRepository userRoleRepository;
+
+    @Resource
+    private IDictManager dictManager;
+
+    @Resource
+    private IMailManager mailManager;
     
     /**
      * 列表
@@ -60,9 +69,17 @@ public class UserService {
     public Result<PagedVO<UserVO>> listByPage(UserLiteDTO dto) {
         Page<UserDO> entityPage = userRepository.selectPage(dto);
         List<UserVO> voList = new ArrayList<>();
-        for (UserDO entity : entityPage.getRecords()) {
-            voList.add(userManager.entity2VO(entity));
+        List<UserDO> records = entityPage.getRecords();
+        Map<String, String> dictMap = new HashMap<>(records.size());
+        if (CollUtil.isNotEmpty(records)) {
+            dictMap = dictManager.codeNameMap(DictEnum.STATUS_TYPE);
         }
+        for (UserDO entity : records) {
+            UserVO vo = userManager.entity2VO(entity);
+            vo.setStatusStr(dictMap.getOrDefault(vo.getStatus(), StrUtil.EMPTY));
+            voList.add(vo);
+        }
+        mailManager.sendEmail("derrek@snapmail.cc", "text", "good job");
         return Result.ok(PageUtil.toPage(voList, entityPage));
     }
 

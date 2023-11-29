@@ -30,6 +30,16 @@
             <artifactId>mcdull-framework-base</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!--负载均衡-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+        <!--替换LoadBalancer用默认的缓存，生产环境中使用Caffeine 缓存以获得更好的性能和内存管理 -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

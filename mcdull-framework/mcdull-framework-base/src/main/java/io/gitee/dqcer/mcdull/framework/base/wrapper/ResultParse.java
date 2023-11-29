@@ -67,7 +67,7 @@ public class ResultParse {
         if(result == null){
             throw new FeignServiceErrorException("上游服务异常...");
         }
-        if(result.getCode() != 0){
+        if(!result.isOk()){
             log.error("feign调用时，上游系统业务发生异常 code: {}, message: {}", result.getCode(), result.getMessage());
             throw new FeignBizException(result);
         }

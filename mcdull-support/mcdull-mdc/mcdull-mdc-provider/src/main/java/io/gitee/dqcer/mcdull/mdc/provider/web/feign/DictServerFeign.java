@@ -5,9 +5,11 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.mdc.client.api.DictServiceApi;
 import io.gitee.dqcer.mcdull.mdc.client.dto.DictClientDTO;
 import io.gitee.dqcer.mcdull.mdc.client.vo.DictClientVO;
+import io.gitee.dqcer.mcdull.mdc.provider.web.service.DictService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -19,16 +21,12 @@ import java.util.List;
 @RestController
 public class DictServerFeign implements DictServiceApi {
 
+    @Resource
+    private DictService dictService;
 
-    /**
-     * 列表
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link List}<{@link DictClientVO}>>
-     */
     @Override
-    public Result<List<DictClientVO>> list(@Validated(ValidGroup.List.class) DictClientDTO dto) {
-        return Result.ok();
+    public Result<List<DictClientVO>> list(String selectType) {
+        return Result.ok(dictService.list(selectType));
     }
 
     /**

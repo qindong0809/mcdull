@@ -4,5 +4,14 @@ spring:
       server-addr: mcdull.io:8848
       config:
         file-extension: yaml
+        shared-configs:
+          - data-id: sa-token.${spring.cloud.nacos.config.file-extension}
+            group: DEFAULT_GROUP
+          - data-id: redis.yaml
+            group: DEFAULT_GROUP
+          - data-id: datasource.${spring.cloud.nacos.config.file-extension}
+            group: DEFAULT_GROUP
+          - data-id: springboot-admin.${spring.cloud.nacos.config.file-extension}
+            group: DEFAULT_GROUP
       discovery:
         heart-beat-interval: 1

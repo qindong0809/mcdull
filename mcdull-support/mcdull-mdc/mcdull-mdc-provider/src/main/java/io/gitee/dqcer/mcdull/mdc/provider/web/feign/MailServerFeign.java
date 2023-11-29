@@ -31,4 +31,9 @@ public class MailServerFeign implements MailServiceApi {
     public Result<Boolean> send(MailClientDTO dto) {
         return mailService.send(dto);
     }
+
+    @Override
+    public Result<Boolean> sendEmail(String sendTo, String subject, String text) {
+        return Result.ok(mailService.sendEmail(sendTo, subject, text));
+    }
 }

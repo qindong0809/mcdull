@@ -1661,7 +1661,7 @@ public class MailTest {
                 "    </div></td></tr></tbody></table>\n" +
                 "  <img style=\"overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;\" src=\"http://campaignmonitor.createsend1.com/t/y-o-hituxy-tlhdxtjb/o.gif\" width=\"1\" height=\"1\" border=\"0\" alt=\"\">\n" +
                 "</body></html>";
-        mailTemplate.sendHtmlMail("dqcer@sina.com", "subject", s);
+//        mailTemplate.sendHtmlMail("dqcer@sina.com", "subject", s);
     }
 
     @Test

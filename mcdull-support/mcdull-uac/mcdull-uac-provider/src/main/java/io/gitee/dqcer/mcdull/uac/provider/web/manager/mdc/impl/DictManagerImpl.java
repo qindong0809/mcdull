@@ -1,7 +1,11 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.mdc.client.dto.DictClientDTO;
@@ -16,6 +20,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *  码表通用逻辑实现类
@@ -77,5 +85,18 @@ public class DictManagerImpl implements IDictManager {
 
         cacheChannel.put(key, vo, CacheConstants.DICT_EXPIRE);
         return vo;
+    }
+
+    @Override
+    public Map<String, String> codeNameMap(IEnum<String> selectTypeEnum) {
+        if (ObjectUtil.isNull(selectTypeEnum)) {
+            throw new IllegalArgumentException("'codeList' or 'selectType' is null.");
+        }
+        Result<List<DictClientVO>> result = dictClientService.list(selectTypeEnum.getCode());
+        List<DictClientVO> list = ResultParse.getInstance(result);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.stream().collect(Collectors.toMap(DictClientVO::getCode, DictClientVO::getName));
+        }
+        return Collections.emptyMap();
     }
 }

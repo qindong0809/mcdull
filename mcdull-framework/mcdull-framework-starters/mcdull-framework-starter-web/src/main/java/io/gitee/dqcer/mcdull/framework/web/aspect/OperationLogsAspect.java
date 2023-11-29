@@ -42,7 +42,7 @@ public class OperationLogsAspect {
 
     private static final Logger log = LoggerFactory.getLogger(OperationLogsAspect.class);
 
-    @Value("${log.enable}")
+    @Value("${log.enable:false}")
     private Boolean logEnable;
 
     /**

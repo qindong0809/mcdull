@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.config;
 
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import java.lang.annotation.Documented;
@@ -21,7 +22,7 @@ import java.lang.annotation.Target;
 public @interface EnableUacFeignClients {
 
     @SuppressWarnings("unused")
-    String[] basePackages() default {"io.gitee.dqcer.mcdull.*.client.service", "io.gitee.dqcer.mcdull.framework.web.feign"};
+    String[] basePackages() default {GlobalConstant.BASE_PACKAGE + ".*.client.service", GlobalConstant.BASE_PACKAGE +  ".framework.web.feign"};
 
 
 }
