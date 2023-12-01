@@ -6,6 +6,10 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 菜单 数据库操作封装接口层
  *
@@ -21,4 +25,13 @@ public interface IMenuRepository extends IService<MenuDO> {
      * @return {@link Page}<{@link RoleDO}>
      */
     Page<MenuDO> selectPage(MenuLiteDTO dto);
+
+    /**
+     * all
+     *
+     * @return {@link List}<{@link String}>
+     */
+    List<String> allCodeList();
+
+    Map<Long, List<String>> menuCodeListMap(Collection<Long> roleIdCollection);
 }

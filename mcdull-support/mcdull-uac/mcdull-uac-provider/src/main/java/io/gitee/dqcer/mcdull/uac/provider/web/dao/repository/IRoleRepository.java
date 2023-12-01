@@ -5,6 +5,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 角色 数据库操作封装接口层
  *
@@ -29,4 +33,11 @@ public interface IRoleRepository extends IService<RoleDO> {
      */
     Long insert(RoleDO entity);
 
+    /**
+     * 角色列表映射
+     *
+     * @param userCollection 用户集合
+     * @return {@link Map}<{@link Long}, {@link List}<{@link RoleDO}>>
+     */
+    Map<Long, List<RoleDO>> roleListMap(Collection<Long> userCollection);
 }

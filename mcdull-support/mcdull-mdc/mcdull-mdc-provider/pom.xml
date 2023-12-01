@@ -34,6 +34,10 @@
             <artifactId>mcdull-framework-starter-mysql</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.gitee.dqcer</groupId>
+            <artifactId>mcdull-framework-starter-security</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>1.6.2</version>

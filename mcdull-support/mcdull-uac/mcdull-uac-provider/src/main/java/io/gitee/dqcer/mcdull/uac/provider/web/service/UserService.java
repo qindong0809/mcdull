@@ -24,7 +24,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.IDictManager;
-import io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.IMailManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.uac.IUserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,8 +56,6 @@ public class UserService {
     @Resource
     private IDictManager dictManager;
 
-    @Resource
-    private IMailManager mailManager;
     
     /**
      * 列表
@@ -79,7 +76,6 @@ public class UserService {
             vo.setStatusStr(dictMap.getOrDefault(vo.getStatus(), StrUtil.EMPTY));
             voList.add(vo);
         }
-        mailManager.sendEmail("derrek@snapmail.cc", "text", "good job");
         return Result.ok(PageUtil.toPage(voList, entityPage));
     }
 

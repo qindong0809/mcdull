@@ -71,7 +71,9 @@ public class ThreadPoolConfig {
                 try {
                     UserContextHolder.setSession(session);
 //                    RequestContextHolder.setRequestAttributes(context);
-                    MDC.setContextMap(previous);
+                    if (previous != null && !previous.isEmpty()) {
+                        MDC.setContextMap(previous);
+                    }
                     runnable.run();
                 } finally {
 //                    RequestContextHolder.resetRequestAttributes();

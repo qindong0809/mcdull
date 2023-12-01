@@ -1,14 +1,14 @@
 package io.gitee.dqcer.mcdull.gateway.filter;
 
-import io.gitee.dqcer.mcdull.gateway.properties.FilterProperties;
-import io.gitee.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.gateway.properties.FilterProperties;
+import io.gitee.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
 import io.gitee.dqcer.mcdull.gateway.utils.SpringUtils;
 import io.gitee.dqcer.mcdull.uac.client.service.AuthClientService;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -17,7 +17,6 @@ import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.server.ServerWebExchange;
@@ -25,21 +24,17 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 
 /**
- * 认证过滤器
+ * 自定义 认证过滤器
+ * 已弃用
  *
  * @author dqcer
  * @since  2022/10/27
  */
-@Component
+// @Component
 public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered {
 
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();

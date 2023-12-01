@@ -1,11 +1,11 @@
 package io.gitee.dqcer.mcdull.mdc.client.api;
 
-import io.gitee.dqcer.mcdull.mdc.client.dto.MailClientDTO;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 邮件服务api
@@ -16,15 +16,6 @@ import javax.validation.Valid;
 public interface MailServiceApi {
 
     /**
-     * 发送
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link Boolean}>
-     */
-    @PostMapping(GlobalConstant.INNER_API + GlobalConstant.SERVICE_MDC + "/mail/send")
-    Result<Boolean> send(@RequestBody @Valid MailClientDTO dto);
-
-    /**
      * 发送电子邮件
      *
      * @param sendTo  发送到
@@ -33,9 +24,25 @@ public interface MailServiceApi {
      * @return {@link Result}<{@link Boolean}>
      */
     @GetMapping(GlobalConstant.INNER_API + GlobalConstant.SERVICE_MDC + "/mail/send")
-    Result<Boolean> sendEmail(
-            @RequestParam("sendTo") String sendTo,
-            @RequestParam("subject") String subject,
-            @RequestParam("text") String text);
+    Result<Boolean> sendEmail(@RequestParam("sendTo") String sendTo,
+                              @RequestParam("subject") String subject,
+                              @RequestParam("text") String text);
+
+    /**
+     * 用字节发送电子邮件
+     *
+     * @param bytes    bytes
+     * @param fileName fileName
+     * @param sendTo   sendTo
+     * @param subject  subject
+     * @param text     text
+     * @return {@link Result}<{@link Boolean}>
+     */
+    @PostMapping({GlobalConstant.INNER_API + GlobalConstant.SERVICE_MDC +  "/mail/send-with-bytes"})
+    Result<Boolean> sendEmailWithBytes(@RequestBody byte[] bytes,
+                                       @RequestParam("fileName") String fileName,
+                                       @RequestParam("sendTo") String sendTo,
+                                       @RequestParam("subject") String subject,
+                                       @RequestParam("text") String text);
 
 }

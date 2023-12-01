@@ -109,6 +109,8 @@ public class LoginService {
 
         StpUtil.login(userId);
 
+        StpUtil.getSession().getLoginId();
+
         return Result.ok(token);
     }
 

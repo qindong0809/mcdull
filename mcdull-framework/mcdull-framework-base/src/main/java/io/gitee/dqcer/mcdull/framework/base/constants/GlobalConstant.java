@@ -17,11 +17,16 @@ public class GlobalConstant {
      */
     public static final String INNER_API = "/interior-api";
 
+    public static final String FAVICON_ICO = "/favicon.ico";
+    public static final String ACTUATOR_ALL = "/actuator/**";
+
     public static final String SERVICE_MDC = "/metadata";
 
     public static final String ALL_PATTERNS = "/**";
 
     public static final String LOGIN_URL = "/login";
+
+    public static final String SSO_LOGIN = "/sso/login";
 
     /**
      * 服务器临时路径目录
@@ -33,6 +38,11 @@ public class GlobalConstant {
      * 管理人员类型
      */
     public static final Integer SUPER_ADMIN_USER_TYPE = 2;
+
+    /**
+     * 超级管理员角色
+     */
+    public static final String SUPER_ADMIN_ROLE = "admin";
 
 
     /**

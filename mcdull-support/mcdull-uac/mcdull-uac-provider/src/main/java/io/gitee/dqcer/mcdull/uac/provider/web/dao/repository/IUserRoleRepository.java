@@ -3,7 +3,9 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserRoleDO;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户角色 数据库操作封装接口层
@@ -28,4 +30,12 @@ public interface IUserRoleRepository extends IService<UserRoleDO> {
      * @param roleIds 角色id
      */
     void updateByUserId(Long id, List<Long> roleIds);
+
+    /**
+     * 角色map
+     *
+     * @param userCollection 用户集合
+     * @return {@link Map}<{@link Long}, {@link List}<{@link Long}>>
+     */
+    Map<Long, List<Long>> roleIdListMap(Collection<Long> userCollection);
 }

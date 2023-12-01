@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -36,6 +37,7 @@ public class UserController {
      * @return {@link Result}<{@link List}<{@link UserVO}>>
      */
     @Authorized("sys:user:view")
+    @SaCheckPermission("system:user:query")
     @GetMapping("user/base/page")
 //    @Transform
     public Result<PagedVO<UserVO>> listByPage(@Validated(ValidGroup.Paged.class) UserLiteDTO dto) {

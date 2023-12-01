@@ -3,6 +3,8 @@ package io.gitee.dqcer.mcdull.uac.provider.model.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 
+import java.util.StringJoiner;
+
 /**
  * 系统角色实体
  *
@@ -28,33 +30,29 @@ public class RoleDO extends BaseDO {
     private String description;
 
     /**
-     *  类型（1/自定义 2/内置）
+     * 类型（1/自定义 2/内置）
      */
     private Integer type;
 
+
+    private String status;
+
     @Override
     public String toString() {
-        return "RoleDO{" +
-                "name='" + name + '\'' +
-                ", code='" + code + '\'' +
-                ", description='" + description + '\'' +
-                ", type=" + type +
-                ", delBy=" + delBy +
-                ", createdBy=" + createdBy +
-                ", updatedTime=" + updatedTime +
-                ", updatedBy=" + updatedBy +
-                ", createdTime=" + createdTime +
-                ", delFlag=" + delFlag +
-                ", id=" + id +
-                "} " + super.toString();
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
+        return new StringJoiner(", ", RoleDO.class.getSimpleName() + "[", "]")
+                .add("name='" + name + "'")
+                .add("code='" + code + "'")
+                .add("description='" + description + "'")
+                .add("type=" + type)
+                .add("status='" + status + "'")
+                .add("delFlag=" + delFlag)
+                .add("delBy=" + delBy)
+                .add("createdBy=" + createdBy)
+                .add("updatedTime=" + updatedTime)
+                .add("updatedBy=" + updatedBy)
+                .add("createdTime=" + createdTime)
+                .add("id=" + id)
+                .toString();
     }
 
     public String getName() {
@@ -79,5 +77,21 @@ public class RoleDO extends BaseDO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

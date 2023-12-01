@@ -50,7 +50,6 @@ public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {
         if (log.isInfoEnabled()) {
             log.info("请求地址:{} {} 来源Ip: {}", request.getMethodValue(), request.getURI(), IpUtils.getRealIp(request));
         }
-        log.error("请求地址:{} {} 来源Ip: {}", request.getMethodValue(), request.getURI(), IpUtils.getRealIp(request));
 
         // 打印请求头
         HttpHeaders headers = exchange.getRequest().getHeaders();

@@ -1,23 +1,31 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.RoleMapper;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
+import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.RoleMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import javax.annotation.Resource;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 角色 数据库操作封装实现层
@@ -27,6 +35,9 @@ import java.util.Date;
  */
 @Service
 public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implements IRoleRepository {
+
+    @Resource
+    private IUserRoleRepository userRoleRepository;
 
     /**
      * 分页查询
@@ -61,5 +72,33 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
             throw new BusinessException(CodeEnum.DB_ERROR);
         }
         return entity.getId();
+    }
+
+    @Override
+    public Map<Long, List<RoleDO>> roleListMap(Collection<Long> userCollection) {
+        Map<Long, List<RoleDO>> resultMap = new HashMap<>(userCollection.size());
+        if (CollUtil.isEmpty(userCollection)) {
+            throw new IllegalArgumentException("'userCollection' is empty");
+        }
+        Map<Long, List<Long>> userRoleMap = userRoleRepository.roleIdListMap(userCollection);
+        Set<Long> idList = userRoleMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+
+        LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
+        query.eq(RoleDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
+        query.eq(RoleDO::getStatus, StatusEnum.ENABLE.getCode());
+        query.in(RoleDO::getId, idList);
+        List<RoleDO> list = baseMapper.selectList(query);
+        if (CollUtil.isNotEmpty(list)) {
+            Map<Long, RoleDO> map = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+            for (Map.Entry<Long, List<Long>> entry : userRoleMap.entrySet()) {
+                List<Long> roleIdList = entry.getValue();
+                List<RoleDO> roleList = roleIdList.stream().map(map::get).filter(ObjUtil::isNotEmpty).collect(Collectors.toList());
+                if (CollUtil.isNotEmpty(roleList)) {
+                    resultMap.put(entry.getKey(), roleList);
+                }
+            }
+        }
+
+        return resultMap;
     }
 }
