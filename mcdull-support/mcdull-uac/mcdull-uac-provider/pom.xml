@@ -24,6 +24,12 @@
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-framework-starter-nacos</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-io</artifactId>
+                    <groupId>commons-io</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
@@ -60,6 +66,10 @@
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-framework-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.gitee.dqcer</groupId>
+            <artifactId>mcdull-framework-starter-swagger</artifactId>
         </dependency>
 
     </dependencies>

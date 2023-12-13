@@ -1,6 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 
 import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 登录 dto
@@ -8,10 +11,15 @@ import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
  * @author dqcer
  * @since 2022/12/26
  */
+@Schema(name = "Login DTO")
 public class LoginDTO implements DTO {
 
+    @NotBlank
+    @Schema(description = "account info", example = "admin", requiredMode = Schema.RequiredMode.REQUIRED)
     private String account;
 
+    @NotBlank
+    @Schema(description = "password info", example = "sha215(123456)", requiredMode = Schema.RequiredMode.REQUIRED)
     private String pd;
 
     private String code;

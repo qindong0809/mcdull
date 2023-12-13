@@ -24,6 +24,7 @@
         <spring-boot-admin.version>2.7.1</spring-boot-admin.version>
         <mybatis-plus.version>3.5.3</mybatis-plus.version>
         <hibernate-validator.version>6.1.0.Final</hibernate-validator.version>
+        <knife4j.version>4.4.0</knife4j.version>
         <fastjson.version>1.2.83</fastjson.version>
         <redisson.spring.boot.version>3.16.2</redisson.spring.boot.version>
         <hutool.version>5.8.14</hutool.version>
@@ -93,6 +94,11 @@
             </dependency>
             <dependency>
                 <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-framework-starter-swagger</artifactId>
+                <version>${mcdull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.gitee.dqcer</groupId>
                 <artifactId>mcdull-business-common</artifactId>
                 <version>${mcdull.version}</version>
             </dependency>
@@ -124,6 +130,13 @@
                 <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-dependencies</artifactId>
                 <version>${spring-boot-admin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-dependencies</artifactId>
+                <version>${knife4j.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

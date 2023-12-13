@@ -6,6 +6,8 @@ import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.client.api.AuthServiceApi;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.LoginService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,7 @@ import java.util.List;
  * @since 2022/12/26
  */
 @RestController
+@Tag(name = "认证授权")
 @RequestMapping("sso")
 public class LoginController implements AuthServiceApi {
 
@@ -34,6 +37,7 @@ public class LoginController implements AuthServiceApi {
      * @param loginDTO 登录dto
      * @return {@link Result}<{@link LoginVO}>
      */
+    @Operation(summary = "登录", description = "login api")
     @UnAuthorize
     @PostMapping("/login")
     public Result<String> login(@RequestBody @Valid LoginDTO loginDTO) {
@@ -46,6 +50,7 @@ public class LoginController implements AuthServiceApi {
      * @return {@link Result<String>}
      */
     @PostMapping("/logout")
+    @Operation(summary = "注销", description = "logout api")
     public Result<String> logout() {
         return loginService.logout();
     }

@@ -31,8 +31,8 @@ public class FeignConfiguration implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate requestTemplate) {
         String path = requestTemplate.path();
-        if (log.isDebugEnabled()) {
-            log.debug("Feign RequestInterceptor Path: {}", path);
+        if (log.isInfoEnabled()) {
+            log.info("Feign RequestInterceptor Path: {}", path);
         }
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes != null) {

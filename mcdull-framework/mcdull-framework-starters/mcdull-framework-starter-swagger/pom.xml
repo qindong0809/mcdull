@@ -1,35 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <artifactId>mcdull-framework</artifactId>
+        <artifactId>mcdull-framework-starters</artifactId>
         <groupId>io.gitee.dqcer</groupId>
         <version>0.0.5-RELEASE</version>
     </parent>
 
-    <modules>
-        <module>mcdull-framework-starter-web</module>
-        <module>mcdull-framework-starter-nacos</module>
-        <module>mcdull-framework-starter-redis</module>
-        <module>mcdull-framework-starter-mysql</module>
-        <module>mcdull-framework-starter-feign</module>
-        <module>mcdull-framework-starter-flow</module>
-        <module>mcdull-framework-starter-mongodb</module>
-        <module>mcdull-framework-starter-oss</module>
-        <module>mcdull-framework-starter-security</module>
-        <module>mcdull-framework-starter-swagger</module>
-    </modules>
-
-    <artifactId>mcdull-framework-starters</artifactId>
+    <artifactId>mcdull-framework-starter-swagger</artifactId>
     <version>0.0.5-RELEASE</version>
-    <name>mcdull-framework-starters</name>
-    <packaging>pom</packaging>
+    <name>mcdull-framework-starter-swagger</name>
 
-    <description>mcdull-framework-starters</description>
-    <url>https://gitee.com/dqcer/mcdull</url>
+    <dependencies>
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-bean-validators</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -141,4 +133,5 @@
             <timezone>+8</timezone>
         </developer>
     </developers>
+
 </project>
