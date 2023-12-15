@@ -37,13 +37,13 @@ public class ConfigServiceImpl extends BasicServiceImpl<ISysConfigRepository> im
         for (SysConfigDO entity : entityPage.getRecords()) {
             voList.add(ConfigConvert.convertToConfigVO(entity));
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
     @Override
     public Result<ConfigVO> detail(Long id) {
         SysConfigDO sysConfigDO = baseRepository.getById(id);
-        return Result.ok(ConfigConvert.convertToConfigVO(sysConfigDO));
+        return Result.success(ConfigConvert.convertToConfigVO(sysConfigDO));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -54,7 +54,7 @@ public class ConfigServiceImpl extends BasicServiceImpl<ISysConfigRepository> im
         SysConfigDO sysConfigDO = ConfigConvert.convertTOConfigDo(dto);
         sysConfigDO.setDelFlag(DelFlayEnum.NORMAL.getCode());
         baseRepository.save(sysConfigDO);
-        return Result.ok(sysConfigDO.getId());
+        return Result.success(sysConfigDO.getId());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -65,13 +65,13 @@ public class ConfigServiceImpl extends BasicServiceImpl<ISysConfigRepository> im
         SysConfigDO sysConfigDO = ConfigConvert.convertTOConfigDo(dto);
         sysConfigDO.setId(dto.getId());
         baseRepository.updateById(sysConfigDO);
-        return Result.ok(sysConfigDO.getId());
+        return Result.success(sysConfigDO.getId());
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> remove(Long id) {
         baseRepository.removeUpdate(id);
-        return Result.ok(id);
+        return Result.success(id);
     }
 }

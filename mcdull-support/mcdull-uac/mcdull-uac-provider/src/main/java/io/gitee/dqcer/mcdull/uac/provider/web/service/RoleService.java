@@ -58,7 +58,7 @@ public class RoleService {
         for (RoleDO entity : entityPage.getRecords()) {
             voList.add(roleManager.entity2VO(entity));
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
     /**
@@ -68,7 +68,7 @@ public class RoleService {
      * @return {@link Result}<{@link UserVO}>
      */
     public Result<RoleVO> detail(RoleLiteDTO dto) {
-        return Result.ok(roleManager.entity2VO(roleRepository.getById(dto.getId())));
+        return Result.success(roleManager.entity2VO(roleRepository.getById(dto.getId())));
     }
 
     /**
@@ -89,7 +89,7 @@ public class RoleService {
 
         RoleDO entity = RoleConvert.dto2Entity(dto);
 
-        return Result.ok(roleRepository.insert(entity));
+        return Result.success(roleRepository.insert(entity));
     }
 
     /**
@@ -125,7 +125,7 @@ public class RoleService {
             throw new BusinessException(CodeEnum.DB_ERROR);
         }
 
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     /**
@@ -160,6 +160,6 @@ public class RoleService {
             throw new BusinessException(CodeEnum.DB_ERROR);
         }
 
-        return Result.ok(id);
+        return Result.success(id);
     }
 }

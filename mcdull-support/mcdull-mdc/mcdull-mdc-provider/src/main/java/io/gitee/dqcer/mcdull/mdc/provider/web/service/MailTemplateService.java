@@ -36,10 +36,10 @@ public class MailTemplateService {
         for (SysMailTemplateDO entity : entityList) {
             listVo.add(MailTemplateConvert.convertToMailTemplateBaseVO(entity));
         }
-        return Result.ok(listVo);
+        return Result.success(listVo);
     }
     public Result<MailTemplateVO> detail(MailTemplateLiteDTO dto) {
         SysMailTemplateDO entity = mailTemplateDAO.selectById(dto.getId());
-        return Result.ok(MailTemplateConvert.convertToMailTemplateVO(entity));
+        return Result.success(MailTemplateConvert.convertToMailTemplateVO(entity));
     }
 }

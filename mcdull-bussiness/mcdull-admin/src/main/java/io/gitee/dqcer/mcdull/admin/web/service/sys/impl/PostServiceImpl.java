@@ -40,7 +40,7 @@ public class PostServiceImpl implements IPostService {
         for (PostDO entity : entityPage.getRecords()) {
             voList.add(PostConvert.convertToVO(entity));
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
     @Transactional(readOnly = true)
@@ -48,7 +48,7 @@ public class PostServiceImpl implements IPostService {
     public Result<PostVO> detail(Long id) {
         PostDO postDO = postRepository.getById(id);
         PostVO vo = PostConvert.convertToVO(postDO);
-        return Result.ok(vo);
+        return Result.success(vo);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -60,7 +60,7 @@ public class PostServiceImpl implements IPostService {
         }
         PostDO postDO = PostConvert.convertToDO(dto);
         postRepository.save(postDO);
-        return Result.ok(postDO.getId());
+        return Result.success(postDO.getId());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -72,7 +72,7 @@ public class PostServiceImpl implements IPostService {
         }
         PostDO postDO = PostConvert.convertToDO(dto);
         postRepository.updateById(postDO);
-        return Result.ok(postDO.getId());
+        return Result.success(postDO.getId());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -88,6 +88,6 @@ public class PostServiceImpl implements IPostService {
             doList.add(postDO);
         }
         postRepository.updateBatchById(doList);
-        return Result.ok();
+        return Result.success();
     }
 }

@@ -21,12 +21,12 @@ public class MailServerFeign implements MailServiceApi {
 
     @Override
     public Result<Boolean> sendEmail(String sendTo, String subject, String text) {
-        return Result.ok(mailService.sendEmail(sendTo, subject, text));
+        return Result.success(mailService.sendEmail(sendTo, subject, text));
     }
 
     @Override
     public Result<Boolean> sendEmailWithBytes(byte[] bytes, String fileName, String sendTo, String subject,
                                               String text) {
-        return Result.ok(mailService.sendEmailWithBytes(bytes, fileName, sendTo, subject, text));
+        return Result.success(mailService.sendEmailWithBytes(bytes, fileName, sendTo, subject, text));
     }
 }

@@ -28,18 +28,18 @@ public class DemoController {
     @UnAuthorize
     @GetMapping("/")
     public Result<String> helloWord() {
-        return Result.ok("hello word ");
+        return Result.success("hello word ");
     }
 
     @GetMapping("/error")
     public Result<?> unAuth404() {
         Integer.valueOf("dfd");
-        return Result.ok();
+        return Result.success();
     }
 
     @GetMapping("/user")
     public Result<UnifySession> getCurrentUserInfo() {
-        return Result.ok(UserContextHolder.getSession());
+        return Result.success(UserContextHolder.getSession());
     }
 
 //    @Resource

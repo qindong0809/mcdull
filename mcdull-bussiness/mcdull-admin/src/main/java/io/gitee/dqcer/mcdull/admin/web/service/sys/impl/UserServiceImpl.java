@@ -127,7 +127,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
             UserVO vo = userManager.entityToVo(entity);
             voList.add(vo);
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
 
@@ -152,11 +152,11 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
             vo.setPosts(this.getPostBaseList());
             vo.setRoles(this.getRoleBaseList());
             this.buildDetailLog(vo);
-            return Result.ok(vo);
+            return Result.success(vo);
         }
         vo.setPosts(this.getPostBaseList());
         vo.setRoles(this.getRoleBaseList());
-        return Result.ok(vo);
+        return Result.success(vo);
     }
 
     private String buildLogIndex() {
@@ -217,7 +217,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
             this.sendEmail(entity);
         }
         this.buildAddOrEditLog(dto);
-        return Result.ok(userId);
+        return Result.success(userId);
     }
 
     @SneakyThrows(Exception.class)
@@ -280,7 +280,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
         userPostRepository.updateByUserId(userId, dto.getPostIds());
 
         this.buildAddOrEditLog(dto);
-        return Result.ok(userId);
+        return Result.success(userId);
     }
 
     /**
@@ -303,7 +303,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
         logDesc = StrUtil.format(logDesc, userDO.getNickName(),
                 IEnum.getByCode(StatusEnum.class, userDO.getStatus()).getText(), IEnum.getByCode(StatusEnum.class, dto.getStatus()).getText());
         LogHelpUtil.setLog(logDesc);
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -312,7 +312,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
         this.validDeleteParam(id);
         baseRepository.delete(id);
         this.buildDeleteLog(id);
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     private void buildDeleteLog(Long id) {
@@ -374,7 +374,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
                 vo.setRoleNameList(collect);
             }
         }
-        return Result.ok(vo);
+        return Result.success(vo);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -391,7 +391,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
             userEmailConfig.setId(dbUserEmailConfig.getId());
             userEmailConfigRepository.updateById(userEmailConfig);
         }
-        return Result.ok(true);
+        return Result.success(true);
     }
 
     @Transactional(readOnly = true)
@@ -400,7 +400,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
         Long userId = UserContextHolder.currentUserId();
         UserEmailConfigDO dbUserEmailConfig = userEmailConfigRepository.getOneByUserId(userId);
         UserEmailConfigVO vo = UserConvert.toEmailConfigVO(dbUserEmailConfig);
-        return Result.ok(vo);
+        return Result.success(vo);
     }
 
     @Override
@@ -415,7 +415,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
                 log.error(e.getMessage(), e);
             }
         });
-        return Result.ok(true);
+        return Result.success(true);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -432,7 +432,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
         newPassword = Sha1Util.getSha1(Md5Util.getMd5(newPassword + user.getSalt()));
         user.setPassword(newPassword);
         userRepository.updateById(user);
-        return Result.ok(userId);
+        return Result.success(userId);
     }
 
     private void buildExportLog(String fileName) {

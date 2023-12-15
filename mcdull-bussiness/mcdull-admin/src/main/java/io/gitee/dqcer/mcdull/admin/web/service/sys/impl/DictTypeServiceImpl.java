@@ -40,13 +40,13 @@ public class DictTypeServiceImpl extends BasicServiceImpl<IDictTypeRepository> i
         for (DictTypeDO entity : entityPage.getRecords()) {
             voList.add(DictTypeConvert.convertToDictTypeVO(entity));
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
     @Override
     public Result<DictTypeVO> detail(Long dictId) {
         DictTypeDO repository = dictTypeRepository.getById(dictId);
-        return Result.ok(DictTypeConvert.convertToDictTypeVO(repository));
+        return Result.success(DictTypeConvert.convertToDictTypeVO(repository));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class DictTypeServiceImpl extends BasicServiceImpl<IDictTypeRepository> i
         for (DictTypeDO dictTypeDO : list) {
             voList.add(DictTypeConvert.convertToDictTypeVO(dictTypeDO));
         }
-        return Result.ok(voList);
+        return Result.success(voList);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -67,7 +67,7 @@ public class DictTypeServiceImpl extends BasicServiceImpl<IDictTypeRepository> i
         this.validNameExist(null, dto.getDictType(), list);
         DictTypeDO entity = DictTypeConvert.convertToDictTypeDo(dto);
         baseRepository.save(entity);
-        return Result.ok(entity.getId());
+        return Result.success(entity.getId());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -78,14 +78,14 @@ public class DictTypeServiceImpl extends BasicServiceImpl<IDictTypeRepository> i
         DictTypeDO entity = DictTypeConvert.convertToDictTypeDo(dto);
         entity.setId(dto.getDictId());
         baseRepository.updateById(entity);
-        return Result.ok(entity.getId());
+        return Result.success(entity.getId());
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> remove(Long id) {
         baseRepository.removeUpdateById(id);
-        return Result.ok(id);
+        return Result.success(id);
     }
 
 

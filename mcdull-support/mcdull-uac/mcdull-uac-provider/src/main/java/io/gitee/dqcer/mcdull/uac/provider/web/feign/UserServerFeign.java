@@ -43,6 +43,6 @@ public class UserServerFeign implements UserServiceApi {
      */
     @Override
     public Result<RemoteUserVO> getDetail(Long userId) {
-        return Result.ok();
+        return Result.success();
     }
 }

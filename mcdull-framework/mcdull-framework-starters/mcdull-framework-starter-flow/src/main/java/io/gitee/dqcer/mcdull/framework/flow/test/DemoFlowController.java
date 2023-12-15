@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.framework.flow.test;
 
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.flow.ProcessFlow;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +28,6 @@ public class DemoFlowController {
         context.setUserId(1);
         context.setId(BIZ_CODE);
         processFlow.run(context);
-        return Result.ok();
+        return Result.success();
     }
 }

@@ -185,7 +185,7 @@ public abstract class BaseInfoInterceptor implements HandlerInterceptor {
 
     private String errorResult(Result<?> result) {
         return "{\"code\":"+ result.getCode() +
-                ", \"data\":" + result.getData() + ", \"message\":\"" + result.getMessage() + "\"}";
+                ", \"data\":" + result.getData() + ", \"message\":\"" + result.getMsg() + "\"}";
     }
 
     /**
@@ -195,7 +195,7 @@ public abstract class BaseInfoInterceptor implements HandlerInterceptor {
      * @return {@link Result<Long>}
      */
     protected Result<UserSession> authCheck(String token) {
-        return Result.ok();
+        return Result.success();
     }
 
 

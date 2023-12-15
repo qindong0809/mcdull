@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -14,7 +15,7 @@ import java.util.StringJoiner;
  * @author dqcer
  * @since 2022/07/26
  */
-public class Result<T> implements Serializable {
+public class Result<T> extends HashMap<String, Object> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,7 +27,7 @@ public class Result<T> implements Serializable {
     /**
      * message
      */
-    private String message;
+    private String msg;
 
     /**
      * 数据对象
@@ -46,7 +47,7 @@ public class Result<T> implements Serializable {
      *
      * @return 成功消息
      */
-    public static <T> Result<T> ok() {
+    public static <T> Result<T> success() {
         return Result.<T>builder()
                 .withCode(CodeEnum.SUCCESS.code)
                 .withMessage(CodeEnum.SUCCESS.message)
@@ -60,7 +61,7 @@ public class Result<T> implements Serializable {
      * @param data 数据
      * @return 成功消息
      */
-    public static <T> Result<T> ok(T data) {
+    public static <T> Result<T> success(T data) {
         return Result.<T>builder()
                 .withCode(CodeEnum.SUCCESS.code)
                 .withMessage(CodeEnum.SUCCESS.message)
@@ -122,6 +123,12 @@ public class Result<T> implements Serializable {
                 .build();
     }
 
+    @Override
+    public Result<T> put(String key, Object value) {
+        super.put(key, value);
+        return this;
+    }
+
     /**
      * 是否成功
      *
@@ -136,7 +143,7 @@ public class Result<T> implements Serializable {
     public String toString() {
         return new StringJoiner(", ", Result.class.getSimpleName() + "[", "]")
                 .add("code=" + code)
-                .add("message='" + message + "'")
+                .add("message='" + msg + "'")
                 .add("data=" + data)
                 .toString();
     }
@@ -149,12 +156,12 @@ public class Result<T> implements Serializable {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public T getData() {
@@ -203,7 +210,7 @@ public class Result<T> implements Serializable {
         public Result<T> build() {
             Result<T> result = new Result<>();
             result.setCode(code);
-            result.setMessage(message);
+            result.setMsg(message);
             result.setData(data);
             return result;
         }

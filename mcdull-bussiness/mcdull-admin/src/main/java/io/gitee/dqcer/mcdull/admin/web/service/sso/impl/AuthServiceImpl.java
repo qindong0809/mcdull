@@ -146,7 +146,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
 
         this.listener(userLoginDO, UserLoginDO.OK, CodeEnum.SUCCESS.getMessage());
 
-        return Result.ok(token);
+        return Result.success(token);
     }
 
     private void listener(UserLoginDO userLoginDO, String type, String error) {
@@ -217,7 +217,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         UserSession session = new UserSession();
         session.setUserId(user.getUserId());
         session.setType(user.getUserType());
-        return Result.ok(session);
+        return Result.success(session);
     }
 
     /**
@@ -245,7 +245,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         CacheUser user = cacheChannel.get(tokenKey, CacheUser.class);
         if (user == null) {
             log.error("redis 缓存 token过期，这里需要优化处理");
-            return Result.ok();
+            return Result.success();
         }
         user.setOnlineStatus(CacheUser.LOGOUT);
         cacheChannel.put(tokenKey, user, SsoConstant.SSO_TOKEN_NAMESPACE_TIMEOUT);
@@ -255,7 +255,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         UserDO userDO = userRepository.getById(userId);
         UserLoginDO userLoginDO = this.builderLoginOrLogoutInfo(userDO.getAccount(), request.getHeader(HttpHeaders.USER_AGENT), LoginOperationTypeEnum.LOGOUT);
         this.listener(userLoginDO, UserLoginDO.OK, CodeEnum.SUCCESS.getMessage());
-        return Result.ok();
+        return Result.success();
     }
 
     /**
@@ -280,7 +280,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
 
         vo.setPermissions(permissions);
 
-        return Result.ok(vo);
+        return Result.success(vo);
     }
 
     /**
@@ -294,7 +294,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         Long userId = UserContextHolder.currentUserId();
         List<RoleDO> userRoles = userManager.getUserRoles(userId);
         if (userRoles.isEmpty()) {
-            return Result.ok(voList);
+            return Result.success(voList);
         }
         RoleDO roleDO = userRoles.get(1);
         Long roleId = roleDO.getId();
@@ -317,7 +317,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         // tree vo
         List<MenuTreeVo> treeObjects = TreeUtil.getChildTreeObjects(treeVoList, 0L);
 
-        return Result.ok(this.buildMenus(treeObjects));
+        return Result.success(this.buildMenus(treeObjects));
     }
 
     /**

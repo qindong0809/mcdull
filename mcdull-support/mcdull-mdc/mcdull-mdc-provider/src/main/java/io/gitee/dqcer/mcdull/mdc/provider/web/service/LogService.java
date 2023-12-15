@@ -43,7 +43,7 @@ public class LogService {
             entities.addAll(dto);
 //            logRepository.saveBatch(entities, entities.size());
         });
-        return Result.ok(dto.size());
+        return Result.success(dto.size());
     }
 
     public Result<PagedVO<LogVO>> listByPage(LogLiteDTO dto) {
@@ -55,6 +55,6 @@ public class LogService {
             logVO.setAccountIdStr(nickname);
             voList.add(logVO);
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 }

@@ -52,7 +52,7 @@ public class NoticeServiceImpl implements INoticeService {
         for (NoticeDO entity : entityPage.getRecords()) {
             voList.add(NoticeConvert.convertToNoticeVO(entity));
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -69,7 +69,7 @@ public class NoticeServiceImpl implements INoticeService {
 
         NoticeDO entity = NoticeConvert.convertToNoticeDO(dto);
         Long entityId = noticeRepository.insert(entity);
-        return Result.ok(entityId);
+        return Result.success(entityId);
     }
 
     /**
@@ -86,7 +86,7 @@ public class NoticeServiceImpl implements INoticeService {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
-        return Result.ok(NoticeConvert.convertToNoticeVO(entity));
+        return Result.success(NoticeConvert.convertToNoticeVO(entity));
     }
 
     /**
@@ -112,7 +112,7 @@ public class NoticeServiceImpl implements INoticeService {
             log.error("数据更新失败, entity:{}", entity);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     /**
@@ -134,7 +134,7 @@ public class NoticeServiceImpl implements INoticeService {
             doList.add(noticeDO);
         }
         noticeRepository.updateBatchById(doList);
-        return Result.ok(ids);
+        return Result.success(ids);
     }
 
 }

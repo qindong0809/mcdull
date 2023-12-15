@@ -38,10 +38,13 @@ public class LoginController implements AuthServiceApi {
      * @return {@link Result}<{@link LoginVO}>
      */
     @Operation(summary = "登录", description = "login api")
-    @UnAuthorize
     @PostMapping("/login")
     public Result<String> login(@RequestBody @Valid LoginDTO loginDTO) {
-        return loginService.login(loginDTO);
+        Result<String> result = Result.success();
+        String token = loginService.login(loginDTO.getUsername(), loginDTO.getPassword(),
+                loginDTO.getCode(), loginDTO.getUuid());
+        result.put("token", token);
+        return result;
     }
 
     /**

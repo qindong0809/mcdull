@@ -42,7 +42,7 @@ public class DictDataServiceImpl extends BasicServiceImpl<IDictDataRepository> i
         for (DictDataDO dictDataDO : list) {
             voList.add(DictDataConvert.convertToDictDataVO(dictDataDO));
         }
-        return Result.ok(voList);
+        return Result.success(voList);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class DictDataServiceImpl extends BasicServiceImpl<IDictDataRepository> i
         for (DictDataDO entity : entityPage.getRecords()) {
             voList.add(DictDataConvert.convertToDictDataVO(entity));
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
     /**
@@ -80,7 +80,7 @@ public class DictDataServiceImpl extends BasicServiceImpl<IDictDataRepository> i
     @Override
     public Result<DictDataVO> detail(Long dictCode) {
         DictDataDO dataDO = baseRepository.getById(dictCode);
-        return Result.ok(DictDataConvert.convertToDictDataVO(dataDO));
+        return Result.success(DictDataConvert.convertToDictDataVO(dataDO));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -91,7 +91,7 @@ public class DictDataServiceImpl extends BasicServiceImpl<IDictDataRepository> i
         DictDataDO dataDO = DictDataConvert.convertToDictDataDo(dto);
         dataDO.setDelFlag(DelFlayEnum.NORMAL.getCode());
         baseRepository.save(dataDO);
-        return Result.ok(dataDO.getId());
+        return Result.success(dataDO.getId());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -103,13 +103,13 @@ public class DictDataServiceImpl extends BasicServiceImpl<IDictDataRepository> i
         DictDataDO dataDO = DictDataConvert.convertToDictDataDo(dto);
         dataDO.setId(dictCode);
         baseRepository.updateById(dataDO);
-        return Result.ok(dictCode);
+        return Result.success(dictCode);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> remove(Long id) {
         baseRepository.removeUpdate(id);
-        return Result.ok(id);
+        return Result.success(id);
     }
 }

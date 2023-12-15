@@ -76,7 +76,7 @@ public class UserService {
             vo.setStatusStr(dictMap.getOrDefault(vo.getStatus(), StrUtil.EMPTY));
             voList.add(vo);
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
     /**
@@ -86,7 +86,7 @@ public class UserService {
      * @return {@link Result}<{@link UserVO}>
      */
     public Result<UserVO> detail(UserLiteDTO dto) {
-        return Result.ok(userManager.entity2VO(userRepository.getById(dto.getId())));
+        return Result.success(userManager.entity2VO(userRepository.getById(dto.getId())));
     }
 
     /**
@@ -116,7 +116,7 @@ public class UserService {
 
         userRoleRepository.updateByUserId(userId, dto.getRoleIds());
 
-        return Result.ok(userId);
+        return Result.success(userId);
     }
 
     /**
@@ -150,7 +150,7 @@ public class UserService {
             throw new BusinessException(CodeEnum.DB_ERROR);
         }
 
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     /**
@@ -185,7 +185,7 @@ public class UserService {
             throw new BusinessException(CodeEnum.DB_ERROR);
         }
 
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     /**
@@ -211,7 +211,7 @@ public class UserService {
             log.error("重置密码失败，entity:{}", user);
             throw new BusinessException(CodeEnum.DB_ERROR);
         }
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -237,7 +237,7 @@ public class UserService {
 
         userRoleRepository.updateByUserId(id, dto.getRoleIds());
 
-        return Result.ok(updateDO.getId());
+        return Result.success(updateDO.getId());
     }
 
     /**
@@ -247,6 +247,6 @@ public class UserService {
      * @return {@link Result}<{@link List}<{@link UserPowerVO}>>
      */
     public Result<List<UserPowerVO>> queryResourceModules(Long userId) {
-        return Result.ok(userRepository.queryResourceModules(userId));
+        return Result.success(userRepository.queryResourceModules(userId));
     }
 }

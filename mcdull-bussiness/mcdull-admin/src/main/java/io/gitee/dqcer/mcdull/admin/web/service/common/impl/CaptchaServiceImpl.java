@@ -40,13 +40,13 @@ public class CaptchaServiceImpl implements ICaptchaService {
         vo.setCaptchaEnabled(enable);
         if (!enable) {
             log.info("未开启登录验证码功能");
-            return Result.ok(vo);
+            return Result.success(vo);
         }
 
         KeyValueBO<String, String> bo = captchaManager.builderCaptcha();
         vo.setImg(bo.getValue());
         vo.setUuid(bo.getKey());
 
-        return Result.ok(vo);
+        return Result.success(vo);
     }
 }

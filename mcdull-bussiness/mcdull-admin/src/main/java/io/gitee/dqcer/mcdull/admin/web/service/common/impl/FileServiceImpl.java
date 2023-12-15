@@ -35,7 +35,7 @@ public class FileServiceImpl extends BasicServiceImpl<ISysFileRepository> implem
     public Result<Boolean> save(MultipartFile multipartFile) {
         String valueByEnum = sysConfigManager.findValueByEnum(SysConfigKeyEnum.FILE_DIRECTORY);
         FileUtil.writeBytes(multipartFile.getBytes(), valueByEnum  +  multipartFile.getOriginalFilename());
-        return Result.ok(baseRepository.save(this.buildEntity(multipartFile)));
+        return Result.success(baseRepository.save(this.buildEntity(multipartFile)));
     }
 
     private SysFileDO buildEntity(MultipartFile multipartFile) throws IOException {

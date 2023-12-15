@@ -14,7 +14,6 @@ import io.gitee.dqcer.mcdull.admin.web.service.sys.IDeptService;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.vo.TreeSelectVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +42,7 @@ public class DeptServiceImpl implements IDeptService {
             DeptVO deptVO = DeptConvert.convertToDeptVO(deptDO);
             voList.add(deptVO);
         }
-        return Result.ok(voList);
+        return Result.success(voList);
     }
 
     @Override
@@ -55,13 +54,13 @@ public class DeptServiceImpl implements IDeptService {
             voList.add(deptVO);
         }
         voList.removeIf( d -> d.getDeptId().equals(deptId) || ArrayUtil.contains(StrUtil.splitToArray(d.getAncestors(), ","), deptId));
-        return Result.ok(voList);
+        return Result.success(voList);
     }
 
     @Override
     public Result<DeptVO> detail(Long deptId) {
         DeptDO dept = deptRepository.getById(deptId);
-        return Result.ok(DeptConvert.convertToDeptVO(dept));
+        return Result.success(DeptConvert.convertToDeptVO(dept));
     }
 
     @Override
@@ -75,7 +74,7 @@ public class DeptServiceImpl implements IDeptService {
         });
 
         List<TreeSelectVO> voList = TreeExtensionUtil.convertTreeSelect(build);
-        return Result.ok(voList);
+        return Result.success(voList);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -86,7 +85,7 @@ public class DeptServiceImpl implements IDeptService {
         boolean b = deptRepository.saveOrUpdate(deptDO);
 
 
-        return Result.ok(b+"");
+        return Result.success(b+"");
     }
 
     @Override
@@ -94,7 +93,7 @@ public class DeptServiceImpl implements IDeptService {
 
         DeptDO deptDO = DeptConvert.convertToDeptDO(deptVO);
         boolean b = deptRepository.saveOrUpdate(deptDO);
-        return Result.ok(b+"");
+        return Result.success(b+"");
     }
 
 }

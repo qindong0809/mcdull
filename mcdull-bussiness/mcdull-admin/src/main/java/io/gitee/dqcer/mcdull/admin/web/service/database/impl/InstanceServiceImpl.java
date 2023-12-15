@@ -51,13 +51,13 @@ public class InstanceServiceImpl extends BasicServiceImpl<IInstanceRepository> i
             first.ifPresent(groupDO -> vo.setGroupName(groupDO.getName()));
             voList.add(vo);
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
     @Override
     public Result<InstanceVO> detail(Long id) {
         InstanceDO entity = baseRepository.getById(id);
-        return Result.ok(InstanceConvert.convertToInstanceVO(entity));
+        return Result.success(InstanceConvert.convertToInstanceVO(entity));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -68,7 +68,7 @@ public class InstanceServiceImpl extends BasicServiceImpl<IInstanceRepository> i
         InstanceDO sysConfigDO = InstanceConvert.convertToInstanceDo(dto);
         sysConfigDO.setDelFlag(DelFlayEnum.NORMAL.getCode());
         baseRepository.save(sysConfigDO);
-        return Result.ok(sysConfigDO.getId());
+        return Result.success(sysConfigDO.getId());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -79,14 +79,14 @@ public class InstanceServiceImpl extends BasicServiceImpl<IInstanceRepository> i
         InstanceDO sysConfigDO = InstanceConvert.convertToInstanceDo(dto);
         sysConfigDO.setId(dto.getId());
         baseRepository.updateById(sysConfigDO);
-        return Result.ok(sysConfigDO.getId());
+        return Result.success(sysConfigDO.getId());
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> remove(Long id) {
         baseRepository.removeUpdate(id);
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     @Override
@@ -96,14 +96,14 @@ public class InstanceServiceImpl extends BasicServiceImpl<IInstanceRepository> i
         for (InstanceDO instanceDO : list) {
             voList.add(new SelectOptionVO<>(instanceDO.getName(), instanceDO.getId()));
         }
-        return Result.ok(voList);
+        return Result.success(voList);
     }
 
     @SneakyThrows(Exception.class)
     @Override
     public Result<Boolean> testConnect(InstanceAddDTO dto) {
         boolean isOk = MysqlUtil.testConnect(dto.getHost(), dto.getPort(), dto.getUsername(), dto.getPassword(), dto.getDatabaseName());
-        return Result.ok(isOk);
+        return Result.success(isOk);
     }
 
     @Override

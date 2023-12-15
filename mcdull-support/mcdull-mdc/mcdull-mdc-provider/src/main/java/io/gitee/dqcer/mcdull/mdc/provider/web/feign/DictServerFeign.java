@@ -26,7 +26,7 @@ public class DictServerFeign implements DictServiceApi {
 
     @Override
     public Result<List<DictClientVO>> list(String selectType) {
-        return Result.ok(dictService.list(selectType));
+        return Result.success(dictService.list(selectType));
     }
 
     /**
@@ -37,6 +37,6 @@ public class DictServerFeign implements DictServiceApi {
      */
     @Override
     public Result<DictClientVO> one(@Validated(ValidGroup.One.class) DictClientDTO dto) {
-        return Result.ok();
+        return Result.success();
     }
 }

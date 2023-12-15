@@ -81,7 +81,7 @@ public class LogServiceImpl extends BasicServiceImpl<ILogRepository> implements 
 
             voList.add(logVO);
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
 

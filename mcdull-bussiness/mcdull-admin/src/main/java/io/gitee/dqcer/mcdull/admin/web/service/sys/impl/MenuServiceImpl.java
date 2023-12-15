@@ -65,29 +65,29 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
             for (MenuDO menuDO : list) {
                 voList.add(MenuConvert.convertToMenuVO(menuDO));
             }
-            return Result.ok(voList);
+            return Result.success(voList);
         }
 
         // 只显示当前用户所拥有的菜单
         List<Long> roleByUserId = userRoleRepository.listRoleByUserId(UserContextHolder.currentUserId());
         if (CollUtil.isEmpty(roleByUserId)) {
-            return Result.ok(voList);
+            return Result.success(voList);
         }
         List<MenuDO> menuByRole = roleManager.getMenuByRole(roleByUserId);
         if (CollUtil.isEmpty(menuByRole)) {
-            return Result.ok(voList);
+            return Result.success(voList);
         }
         List<MenuDO> list = baseRepository.list(dto.getMenuName(), dto.getStatus(), menuByRole.stream().map(IdDO::getId).collect(Collectors.toList()));
         for (MenuDO menuDO : list) {
             voList.add(MenuConvert.convertToMenuVO(menuDO));
         }
-        return Result.ok(voList);
+        return Result.success(voList);
     }
 
     @Override
     public Result<MenuVO> detail(Long id) {
         MenuDO menuDO = baseRepository.getById(id);
-        return Result.ok(MenuConvert.convertToMenuVO(menuDO));
+        return Result.success(MenuConvert.convertToMenuVO(menuDO));
     }
 
     @Override
@@ -105,7 +105,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
             menus = roleManager.getMenuByRole(roles);
             vo.setCheckedKeys(menus.stream().map(IdDO::getId).collect(Collectors.toList()));
         }
-        return Result.ok(vo);
+        return Result.success(vo);
     }
 
     private RoleMenuTreeSelectVO getMenuTreeSelectVO(List<MenuDO> menus) {
@@ -133,7 +133,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
     public Result<RoleMenuTreeSelectVO> treeselect() {
         List<MenuDO> list = baseRepository.list();
         RoleMenuTreeSelectVO vo = this.getMenuTreeSelectVO(list);
-        return Result.ok(vo);
+        return Result.success(vo);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -142,7 +142,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
         this.validNameExist(null, dto.getName());
         MenuDO menuDO = MenuConvert.convertDoByDto(dto);
         baseRepository.insert(menuDO);
-        return Result.ok(menuDO.getId());
+        return Result.success(menuDO.getId());
     }
 
     @Override
@@ -172,7 +172,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
         menuDO.setId(id);
         menuDO.setUpdatedTime(UserContextHolder.getSession().getNow());
         baseRepository.updateById(menuDO);
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -183,7 +183,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
             throw new BusinessException("该节点下存在子节点数据");
         }
         baseRepository.removeById(id);
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     private List<TreeSelectVO> getTreeSelectVO(List<MenuTreeVo> treeObjects) {

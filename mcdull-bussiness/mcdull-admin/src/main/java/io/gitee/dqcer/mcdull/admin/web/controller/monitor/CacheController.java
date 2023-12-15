@@ -19,6 +19,6 @@ public class CacheController {
 
     @GetMapping("list")
     public Result demo() {
-        return Result.ok();
+        return Result.success();
     }
 }

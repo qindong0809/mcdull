@@ -40,7 +40,7 @@ public class GatewayApplication {
 
     @GetMapping
     public Result<String> demo() {
-        return Result.ok("good job");
+        return Result.success("good job");
     }
 
     private String s  ="1";
@@ -56,6 +56,6 @@ public class GatewayApplication {
         for (int i = 0; i < max; i++) {
             s += new String("dfd");
         }
-        return Result.ok("testLog");
+        return Result.success("testLog");
     }
 }

@@ -63,7 +63,7 @@ public class RoleServiceImpl implements IRoleService {
         for (RoleDO entity : entityPage.getRecords()) {
             voList.add(RoleConvert.convertToRoleVO(entity));
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
 
@@ -91,7 +91,7 @@ public class RoleServiceImpl implements IRoleService {
 
         this.buildAddOrEditLog(dto);
 
-        return Result.ok(entityId);
+        return Result.success(entityId);
     }
 
     private void buildAddOrEditLog(RoleInsertDTO dto) {
@@ -119,7 +119,7 @@ public class RoleServiceImpl implements IRoleService {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
-        return Result.ok(RoleConvert.convertToRoleVO(entity));
+        return Result.success(RoleConvert.convertToRoleVO(entity));
     }
 
     /**
@@ -149,7 +149,7 @@ public class RoleServiceImpl implements IRoleService {
 
         roleRepository.batchUpdateMenu(id, dto.getMenuIds());
         this.buildAddOrEditLog(dto);
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     /**
@@ -179,7 +179,7 @@ public class RoleServiceImpl implements IRoleService {
             log.error("数据更新失败，entity:{}", entity);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
-        return Result.ok(id);
+        return Result.success(id);
     }
 
 
@@ -187,7 +187,7 @@ public class RoleServiceImpl implements IRoleService {
     @Override
     public Result<Long> deleteById(Long roleId) {
         roleRepository.deleteBatchByIds(ListUtil.of(roleId));
-        return Result.ok(roleId);
+        return Result.success(roleId);
     }
 
 

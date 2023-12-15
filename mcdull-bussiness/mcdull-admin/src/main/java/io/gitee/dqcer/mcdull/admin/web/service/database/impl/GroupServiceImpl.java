@@ -39,13 +39,13 @@ public class GroupServiceImpl extends BasicServiceImpl<IGroupRepository> impleme
         for (GroupDO entity : entityPage.getRecords()) {
             voList.add(GroupConvert.convertToGroupVO(entity));
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
     @Override
     public Result<GroupVO> detail(Long id) {
         GroupDO entity = baseRepository.getById(id);
-        return Result.ok(GroupConvert.convertToGroupVO(entity));
+        return Result.success(GroupConvert.convertToGroupVO(entity));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -56,7 +56,7 @@ public class GroupServiceImpl extends BasicServiceImpl<IGroupRepository> impleme
         GroupDO sysConfigDO = GroupConvert.convertToGroupDo(dto);
         sysConfigDO.setDelFlag(DelFlayEnum.NORMAL.getCode());
         baseRepository.save(sysConfigDO);
-        return Result.ok(sysConfigDO.getId());
+        return Result.success(sysConfigDO.getId());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -67,20 +67,20 @@ public class GroupServiceImpl extends BasicServiceImpl<IGroupRepository> impleme
         GroupDO entity = GroupConvert.convertToGroupDo(dto);
         entity.setId(dto.getId());
         baseRepository.updateById(entity);
-        return Result.ok(entity.getId());
+        return Result.success(entity.getId());
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> remove(Long id) {
         baseRepository.removeUpdate(id);
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     @Override
     public Result<List<GroupVO>> allList() {
         List<GroupVO> voList = getAllList();
-        return Result.ok(voList);
+        return Result.success(voList);
     }
 
     private List<GroupVO> getAllList() {
@@ -103,6 +103,6 @@ public class GroupServiceImpl extends BasicServiceImpl<IGroupRepository> impleme
         for (GroupVO group : list) {
             voList.add(new SelectOptionVO<>(group.getName(), group.getId()));
         }
-        return Result.ok(voList);
+        return Result.success(voList);
     }
 }

@@ -39,9 +39,9 @@ public class ConfigEnvServiceImpl implements IConfigEnvService {
     public Result<ConfigEnvVO> detail(Integer type) {
         ConfigEnvDO entity = configEnvRepository.getByType(type);
         if (null == entity) {
-            return Result.ok();
+            return Result.success();
         }
-        return Result.ok(ConfigEnvConvert.convertToConfigEnvVO(entity));
+        return Result.success(ConfigEnvConvert.convertToConfigEnvVO(entity));
     }
 
     /**
@@ -57,7 +57,7 @@ public class ConfigEnvServiceImpl implements IConfigEnvService {
         ConfigEnvDO configEnv = ConfigEnvConvert.convertToConfigEnvDO(dto);
         if (ObjectUtil.isNull(id)) {
             configEnvRepository.insert(configEnv);
-            return Result.ok(configEnv.getId());
+            return Result.success(configEnv.getId());
         }
         ConfigEnvDO dbData = configEnvRepository.getById(id);
         if(null == dbData) {
@@ -69,6 +69,6 @@ public class ConfigEnvServiceImpl implements IConfigEnvService {
             log.error("数据更新失败, entity:{}", configEnv);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
-        return Result.ok(id);
+        return Result.success(id);
     }
 }

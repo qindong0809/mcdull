@@ -43,7 +43,7 @@ public class LoginInfoServiceImpl implements ILoginInfoService {
         for (UserLoginDO entity : entityPage.getRecords()) {
             voList.add(LoginInfoConvert.convertToLoginInfoVO(entity));
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
     @SneakyThrows(IOException.class)

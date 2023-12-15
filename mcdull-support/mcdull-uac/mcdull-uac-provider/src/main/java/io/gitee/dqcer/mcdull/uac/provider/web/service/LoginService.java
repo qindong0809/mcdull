@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.enums.AuthCodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
@@ -18,6 +19,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.mcdull.uac.provider.config.constants.CacheConstants;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserLoginRepository;
@@ -65,6 +67,30 @@ public class LoginService {
     @Resource
     private UserService userService;
 
+
+    /**
+     * 验证码 redis key
+     */
+    private static final String CAPTCHA_CODE_KEY = "captcha_codes:";
+
+
+
+    public String login(String username, String password, String code, String uuid) {
+        // 验证码校验
+        this.validateCaptcha(username, code, uuid);
+        // 登录前置校验
+        this.loginPreCheck(username, password);
+        return "";
+    }
+
+    private void loginPreCheck(String username, String password) {
+
+    }
+
+    public void validateCaptcha(String username, String code, String uuid) {
+
+    }
+
     /**
      * 登录
      *
@@ -73,7 +99,7 @@ public class LoginService {
      */
     @Transactional(rollbackFor = Exception.class)
     public Result<String> login(LoginDTO loginDTO) {
-        String account = loginDTO.getAccount();
+        String account = loginDTO.getUsername();
         UserDO userEntity = userRepository.queryUserByAccount(account);
         if (null == userEntity) {
             log.warn("账号不存在 account: {}", account);
@@ -81,7 +107,7 @@ public class LoginService {
         }
         String password = userEntity.getPassword();
 
-        if (!password.equals(Sha1Util.getSha1(loginDTO.getPd() + userEntity.getSalt()))) {
+        if (!password.equals(Sha1Util.getSha1(loginDTO.getPassword() + userEntity.getSalt()))) {
             log.warn("用户密码错误");
             return Result.error(AuthCodeEnum.NOT_EXIST);
         }
@@ -111,7 +137,7 @@ public class LoginService {
 
         StpUtil.getSession().getLoginId();
 
-        return Result.ok(token);
+        return Result.success(token);
     }
 
     /**
@@ -159,7 +185,7 @@ public class LoginService {
             redisClient.putIfExists(tokenKey, user.setLastActiveTime(now));
         }
 
-        return Result.ok(user.getUserId());
+        return Result.success(user.getUserId());
     }
 
     /**
@@ -179,14 +205,14 @@ public class LoginService {
         CacheUser user = redisClient.get(tokenKey, CacheUser.class);
         if (user == null) {
             log.error("redis 缓存 token过期，这里需要优化处理");
-            return Result.ok();
+            return Result.success();
         }
         user.setOnlineStatus(CacheUser.LOGOUT);
         redisClient.putIfExists(tokenKey, user);
 
         //  记录注销信息
         userLoginRepository.saveLogoutInfoByUserIdAndToken(user.getUserId(), token);
-        return Result.ok();
+        return Result.success();
     }
 
     public Result<List<String>> getPermissionList(Long userId) {
@@ -198,7 +224,7 @@ public class LoginService {
                 set.addAll(vo.getModules());
             }
         }
-        return Result.ok(new ArrayList<>(set));
+        return Result.success(new ArrayList<>(set));
     }
 
 
@@ -209,6 +235,6 @@ public class LoginService {
         if (CollUtil.isNotEmpty(userPowerVOList)) {
             set = userPowerVOList.stream().map(UserPowerVO::getCode).collect(Collectors.toSet());
         }
-        return Result.ok(new ArrayList<>(set));
+        return Result.success(new ArrayList<>(set));
     }
 }

@@ -4,6 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotBlank;
+import java.util.StringJoiner;
 
 /**
  * 登录 dto
@@ -11,42 +12,47 @@ import javax.validation.constraints.NotBlank;
  * @author dqcer
  * @since 2022/12/26
  */
-@Schema(name = "Login DTO")
+@Schema(name = "用户登录对象")
 public class LoginDTO implements DTO {
 
     @NotBlank
-    @Schema(description = "account info", example = "admin", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String account;
+    @Schema(description = "账号", example = "admin", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String username;
 
     @NotBlank
-    @Schema(description = "password info", example = "sha215(123456)", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String pd;
+    @Schema(description = "密码", example = "sha215(123456)", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String password;
 
+    @Schema(description = "验证码")
     private String code;
+
+    @Schema(description = "唯一标识")
+    private String uuid;
 
     @Override
     public String toString() {
-        return "LoginDTO{" +
-                "account='" + account + '\'' +
-                ", pd='" + pd + '\'' +
-                ", code='" + code + '\'' +
-                '}';
+        return new StringJoiner(", ", LoginDTO.class.getSimpleName() + "[", "]")
+                .add("username='" + username + "'")
+                .add("password='" + password + "'")
+                .add("code='" + code + "'")
+                .add("uuid='" + uuid + "'")
+                .toString();
     }
 
-    public String getAccount() {
-        return account;
+    public String getUsername() {
+        return username;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getPd() {
-        return pd;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPd(String pd) {
-        this.pd = pd;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getCode() {
@@ -55,5 +61,13 @@ public class LoginDTO implements DTO {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

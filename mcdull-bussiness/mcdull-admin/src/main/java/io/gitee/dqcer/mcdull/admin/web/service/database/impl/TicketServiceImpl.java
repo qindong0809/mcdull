@@ -115,7 +115,7 @@ public class TicketServiceImpl implements ITicketService {
 
         ticketInstanceRepository.save(entityId, entity.getGroupId(), dto.getInstanceList());
 
-        return Result.ok(entityId);
+        return Result.success(entityId);
     }
 
     private synchronized String buildNumber() {
@@ -158,7 +158,7 @@ public class TicketServiceImpl implements ITicketService {
                 .stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
         Map<Long, UserDO> userMap = userRepository.listByIds(ListUtil.of(entity.getCreatedBy()))
                 .stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
-        return Result.ok(this.buildTicketVO(groupMap, userMap, entity));
+        return Result.success(this.buildTicketVO(groupMap, userMap, entity));
     }
 
     /**
@@ -191,7 +191,7 @@ public class TicketServiceImpl implements ITicketService {
             log.error("数据更新失败, entity:{}", entity);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     /**
@@ -230,7 +230,7 @@ public class TicketServiceImpl implements ITicketService {
             log.error("数据更新失败，entity:{}", entity);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
-        return Result.ok(id);
+        return Result.success(id);
     }
     /**
      * 根据主键批量删除
@@ -243,7 +243,7 @@ public class TicketServiceImpl implements ITicketService {
     public Result<Long> deleteById(Long id) {
         List<Long> ids = ListUtil.of(id);
         ticketRepository.deleteBatchByIds(ids);
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     /**
@@ -260,7 +260,7 @@ public class TicketServiceImpl implements ITicketService {
          for (TicketDO entity : listEntity) {
             voList.add(TicketConvert.convertToTicketVO(entity));
          }
-         return Result.ok(voList);
+         return Result.success(voList);
     }
 
     /**
@@ -276,7 +276,7 @@ public class TicketServiceImpl implements ITicketService {
         List<TicketVO> voList = new ArrayList<>();
         List<TicketDO> records = entityPage.getRecords();
         if (CollUtil.isEmpty(records)) {
-            return Result.ok(PageUtil.toPage(voList, entityPage));
+            return Result.success(PageUtil.toPage(voList, entityPage));
         }
 
         Set<Long> groupIdSet = records.stream().map(TicketDO::getGroupId).collect(Collectors.toSet());
@@ -288,7 +288,7 @@ public class TicketServiceImpl implements ITicketService {
             TicketVO ticketVO = this.buildTicketVO(groupMap, userMap, entity);
             voList.add(ticketVO);
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
     private TicketVO buildTicketVO(Map<Long, GroupDO> groupMap, Map<Long, UserDO> userMap, TicketDO entity) {
@@ -321,14 +321,14 @@ public class TicketServiceImpl implements ITicketService {
         List<InstanceDO> instanceList = instanceRepository.listByIds(instanceIdList);
         instanceList = instanceList.stream().filter(i -> DelFlayEnum.NORMAL.getCode().equals(i.getDelFlag())).collect(Collectors.toList());
         if (CollUtil.isEmpty(instanceList)) {
-            return Result.ok();
+            return Result.success();
         }
         this.batchExecute(instanceList, ticketDO.getSqlScript());
 
         ticketDO.setFollowStatus(TicketFollowStatusEnum.EXECUTED.getCode());
         ticketRepository.updateById(ticketDO);
 
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     private Map<Long, InstanceDO> getInstanceMap(Long id) {
@@ -360,7 +360,7 @@ public class TicketServiceImpl implements ITicketService {
             log.error(e.getMessage(), e);
             throw e;
         }
-        return Result.ok(true);
+        return Result.success(true);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -378,7 +378,7 @@ public class TicketServiceImpl implements ITicketService {
 
         ticket.setFollowStatus(TicketFollowStatusEnum.EXECUTED.getCode());
         ticketRepository.updateById(ticket);
-        return Result.ok(true);
+        return Result.success(true);
     }
 
     @Override
@@ -388,7 +388,7 @@ public class TicketServiceImpl implements ITicketService {
         List<BackListVO> voList = new ArrayList<>();
         List<BackDO> records = entityPage.getRecords();
         if (CollUtil.isEmpty(records)) {
-            return Result.ok(PageUtil.toPage(voList, entityPage));
+            return Result.success(PageUtil.toPage(voList, entityPage));
         }
         Set<Long> userIdSet = records.stream().map(BaseDO::getCreatedBy).collect(Collectors.toSet());
         Map<Long, UserDO> userMap = userRepository.listByIds(userIdSet).stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
@@ -397,7 +397,7 @@ public class TicketServiceImpl implements ITicketService {
             vo.setCreatedByStr(userMap.get(entity.getCreatedBy()).getNickName());
             voList.add(vo);
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -448,7 +448,7 @@ public class TicketServiceImpl implements ITicketService {
             throw new BusinessException(e.getMessage());
         }
 
-        return Result.ok(backId);
+        return Result.success(backId);
     }
 
     @Override
@@ -460,7 +460,7 @@ public class TicketServiceImpl implements ITicketService {
             String collect = backInstanceList.stream().map(BackInstanceDO::getFileName).collect(Collectors.joining(", "));
             vo.setFileNameList(collect);
         }
-        return Result.ok(vo);
+        return Result.success(vo);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -480,7 +480,7 @@ public class TicketServiceImpl implements ITicketService {
         back.setName(dto.getName());
         back.setRemark(dto.getRemark());
         backRepository.updateById(back);
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -510,7 +510,7 @@ public class TicketServiceImpl implements ITicketService {
             }
         }
         backInstanceRepository.updateBatchById(backInstanceList);
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     @SneakyThrows(Exception.class)

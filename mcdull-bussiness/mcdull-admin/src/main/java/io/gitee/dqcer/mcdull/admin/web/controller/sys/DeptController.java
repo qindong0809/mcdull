@@ -2,10 +2,7 @@ package io.gitee.dqcer.mcdull.admin.web.controller.sys;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
-import com.alibaba.excel.write.builder.ExcelWriterBuilder;
-import com.alibaba.excel.write.builder.ExcelWriterSheetBuilder;
 import com.alibaba.excel.write.metadata.WriteSheet;
-import io.gitee.dqcer.mcdull.admin.config.LocalDateTimeConverter;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DeptLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.CurrentUserInfVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DeptVO;
@@ -14,19 +11,14 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.util.ExportUtil;
 import io.gitee.dqcer.mcdull.admin.web.service.sso.IAuthService;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IDeptService;
-import io.gitee.dqcer.mcdull.admin.web.service.sys.IUserService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.TreeSelectVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,13 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -254,7 +240,7 @@ public class DeptController {
             deptTreeVO.add(deptVO);
         }
 
-        return Result.ok(deptTreeVO);
+        return Result.success(deptTreeVO);
     }
 
 

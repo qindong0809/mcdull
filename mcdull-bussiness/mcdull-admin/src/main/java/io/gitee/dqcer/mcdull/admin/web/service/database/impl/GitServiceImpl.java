@@ -38,13 +38,13 @@ public class GitServiceImpl extends BasicServiceImpl<IGitRepository> implements 
         for (GitDO entity : entityPage.getRecords()) {
             voList.add(GitConvert.convertToGitVO(entity));
         }
-        return Result.ok(PageUtil.toPage(voList, entityPage));
+        return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
     @Override
     public Result<GitVO> detail(Long id) {
         GitDO entity = baseRepository.getById(id);
-        return Result.ok(GitConvert.convertToGitVO(entity));
+        return Result.success(GitConvert.convertToGitVO(entity));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -55,7 +55,7 @@ public class GitServiceImpl extends BasicServiceImpl<IGitRepository> implements 
         GitDO sysConfigDO = GitConvert.convertToGitDo(dto);
         sysConfigDO.setDelFlag(DelFlayEnum.NORMAL.getCode());
         baseRepository.save(sysConfigDO);
-        return Result.ok(sysConfigDO.getId());
+        return Result.success(sysConfigDO.getId());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -66,14 +66,14 @@ public class GitServiceImpl extends BasicServiceImpl<IGitRepository> implements 
         GitDO entity = GitConvert.convertToGitDo(dto);
         entity.setId(dto.getId());
         baseRepository.updateById(entity);
-        return Result.ok(entity.getId());
+        return Result.success(entity.getId());
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> remove(Long id) {
         baseRepository.removeUpdate(id);
-        return Result.ok(id);
+        return Result.success(id);
     }
 
     @Override
@@ -86,6 +86,6 @@ public class GitServiceImpl extends BasicServiceImpl<IGitRepository> implements 
                 voList.add(vo);
             }
         }
-        return Result.ok(voList);
+        return Result.success(voList);
     }
 }
