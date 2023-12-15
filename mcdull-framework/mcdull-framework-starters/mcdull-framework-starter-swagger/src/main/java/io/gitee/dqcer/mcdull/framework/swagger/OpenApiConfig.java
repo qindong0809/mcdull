@@ -19,13 +19,11 @@ import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration
  */
 @Configuration
 @Import(BeanValidatorPluginsConfiguration.class)
-public class OpenApiConfig  {
+public class OpenApiConfig {
     @Bean
     public OpenAPI springShopOpenApi() {
         return new OpenAPI()
-                // 接口文档标题
                 .info(new Info().title("McDul Doc")
-                        // 接口文档版本
                         .version("v1.0")
                         .contact(new Contact().name("dqcer").url("dqcer@sina.com")))
                 .externalDocs(new ExternalDocumentation());
