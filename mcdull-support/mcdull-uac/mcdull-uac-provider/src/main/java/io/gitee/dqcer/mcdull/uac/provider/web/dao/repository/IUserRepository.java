@@ -62,4 +62,6 @@ public interface IUserRepository extends IService<UserDO> {
      * @return {@link UserDO}
      */
     UserDO queryUserByAccount(String account);
+
+    UserDO get(String username);
 }

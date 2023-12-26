@@ -41,9 +41,8 @@ public class LoginController implements AuthServiceApi {
     @PostMapping("/login")
     public Result<String> login(@RequestBody @Valid LoginDTO loginDTO) {
         Result<String> result = Result.success();
-        String token = loginService.login(loginDTO.getUsername(), loginDTO.getPassword(),
+        loginService.login(loginDTO.getUsername(), loginDTO.getPassword(),
                 loginDTO.getCode(), loginDTO.getUuid());
-        result.put("token", token);
         return result;
     }
 

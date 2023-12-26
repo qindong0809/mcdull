@@ -84,7 +84,12 @@ public class LoginService {
     }
 
     private void loginPreCheck(String username, String password) {
-
+        UserDO userEntity = userRepository.get(username);
+        if (ObjUtil.isNotNull(userEntity)) {
+            StpUtil.login(userEntity.getId());
+            return;
+        }
+        throw new BusinessException(CodeEnum.UN_AUTHORIZATION);
     }
 
     public void validateCaptcha(String username, String code, String uuid) {
