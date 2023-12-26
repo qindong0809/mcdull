@@ -29,9 +29,8 @@ public class UserConvert {
         userVO.setCreatedBy(entity.getCreatedBy());
         userVO.setUpdatedTime(entity.getUpdatedTime());
         userVO.setUpdatedBy(entity.getUpdatedBy());
-        userVO.setStatus(entity.getStatus());
         userVO.setNickname(entity.getNickName());
-        userVO.setAccount(entity.getAccount());
+        userVO.setAccount(entity.getUsername());
         userVO.setEmail(entity.getEmail());
         userVO.setPhone(entity.getPhone());
         userVO.setLastLoginTime(entity.getLastLoginTime());
@@ -42,7 +41,7 @@ public class UserConvert {
     public static UserDO dto2Entity(UserLiteDTO dto) {
         UserDO entity = new UserDO();
         entity.setNickName(dto.getNickname());
-        entity.setAccount(dto.getAccount());
+        entity.setUsername(dto.getAccount());
         entity.setEmail(dto.getEmail());
         entity.setPhone(dto.getPhone());
         return entity;

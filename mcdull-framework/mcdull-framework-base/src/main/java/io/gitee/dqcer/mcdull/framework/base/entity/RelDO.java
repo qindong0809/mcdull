@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.framework.base.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 
 import java.util.Date;
 import java.util.StringJoiner;
@@ -31,6 +32,7 @@ public class RelDO extends IdDO {
     /**
      * 已删除标识
      */
+    @TableLogic
     @TableField(fill = FieldFill.INSERT)
     protected Boolean delFlag;
 

@@ -86,7 +86,7 @@ public class UserController {
      * @return {@link Result<Long>}
      */
     @PostMapping("user/base/status")
-    public Result<Long> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) UserLiteDTO dto){
+    public Result<Long> toggleActive(@RequestBody @Validated(value = {ValidGroup.Status.class}) UserLiteDTO dto){
         return userService.updateStatus(dto);
     }
 

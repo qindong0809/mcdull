@@ -78,7 +78,7 @@ public class ${cfg.controller} {
     */
     @Authorized("${cfg.modelName}:${cfg.moduleCode}:status")
     @PutMapping("status")
-    public Result<Long> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) StatusDTO dto){
+    public Result<Long> toggleActive(@RequestBody @Validated(value = {ValidGroup.Status.class}) StatusDTO dto){
         return ${(cfg.serviceName?substring(1))?uncap_first}.updateStatus(dto);
     }
 </#if>

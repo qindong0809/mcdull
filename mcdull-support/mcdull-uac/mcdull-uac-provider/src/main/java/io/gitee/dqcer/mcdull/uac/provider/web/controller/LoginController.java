@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.client.api.AuthServiceApi;
@@ -38,12 +39,11 @@ public class LoginController implements AuthServiceApi {
      * @return {@link Result}<{@link LoginVO}>
      */
     @Operation(summary = "登录", description = "login api")
-    @PostMapping("/login")
+    @PostMapping("login")
     public Result<String> login(@RequestBody @Valid LoginDTO loginDTO) {
-        Result<String> result = Result.success();
-        loginService.login(loginDTO.getUsername(), loginDTO.getPassword(),
-                loginDTO.getCode(), loginDTO.getUuid());
-        return result;
+        loginService.login(loginDTO.getUsername(), loginDTO.getPassword(), loginDTO.getCode(),
+                loginDTO.getUuid());
+        return Result.success();
     }
 
     /**
@@ -51,10 +51,11 @@ public class LoginController implements AuthServiceApi {
      *
      * @return {@link Result<String>}
      */
-    @PostMapping("/logout")
+    @PostMapping("logout")
     @Operation(summary = "注销", description = "logout api")
     public Result<String> logout() {
-        return loginService.logout();
+        loginService.logout();
+        return Result.success();
     }
 
     /**
@@ -66,7 +67,8 @@ public class LoginController implements AuthServiceApi {
     @UnAuthorize
     @Override
     public Result<Long> tokenValid(String token, String traceId) {
-        return loginService.tokenValid(token);
+        StpUtil.checkLogin();
+        return Result.success(StpUtil.getLoginIdAsLong());
     }
 
     @Override

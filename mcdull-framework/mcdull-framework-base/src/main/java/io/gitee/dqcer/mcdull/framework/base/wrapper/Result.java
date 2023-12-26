@@ -2,10 +2,10 @@ package io.gitee.dqcer.mcdull.framework.base.wrapper;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -15,7 +15,7 @@ import java.util.StringJoiner;
  * @author dqcer
  * @since 2022/07/26
  */
-public class Result<T> extends HashMap<String, Object> implements Serializable {
+public class Result<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,12 +27,14 @@ public class Result<T> extends HashMap<String, Object> implements Serializable {
     /**
      * message
      */
-    private String msg;
+    private String message;
 
     /**
      * 数据对象
      */
     private T data;
+
+    private String traceId;
 
 
     /**
@@ -123,11 +125,6 @@ public class Result<T> extends HashMap<String, Object> implements Serializable {
                 .build();
     }
 
-    @Override
-    public Result<T> put(String key, Object value) {
-        super.put(key, value);
-        return this;
-    }
 
     /**
      * 是否成功
@@ -143,7 +140,7 @@ public class Result<T> extends HashMap<String, Object> implements Serializable {
     public String toString() {
         return new StringJoiner(", ", Result.class.getSimpleName() + "[", "]")
                 .add("code=" + code)
-                .add("message='" + msg + "'")
+                .add("message='" + message + "'")
                 .add("data=" + data)
                 .toString();
     }
@@ -156,12 +153,12 @@ public class Result<T> extends HashMap<String, Object> implements Serializable {
         this.code = code;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public T getData() {
@@ -170,6 +167,14 @@ public class Result<T> extends HashMap<String, Object> implements Serializable {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public String getTraceId() {
+        return UserContextHolder.getSession().getTraceId();
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
     }
 
     public static <T> ResultBuilder<T> builder() {
@@ -210,7 +215,7 @@ public class Result<T> extends HashMap<String, Object> implements Serializable {
         public Result<T> build() {
             Result<T> result = new Result<>();
             result.setCode(code);
-            result.setMsg(message);
+            result.setMessage(message);
             result.setData(data);
             return result;
         }

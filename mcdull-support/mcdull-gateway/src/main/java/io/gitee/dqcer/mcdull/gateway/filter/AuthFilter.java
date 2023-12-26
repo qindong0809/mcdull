@@ -113,7 +113,7 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
 
         log.info("token valid result: {}", result);
         if (!result.isOk()) {
-            return errorResponse(response, result.getCode(), result.getMsg());
+            return errorResponse(response, result.getCode(), result.getMessage());
         }
         addHeader(mutate, HttpHeaderConstants.U_ID, result.getData());
         // 暂定退出登录使用

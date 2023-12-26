@@ -61,7 +61,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
         LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
         String keyword = dto.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
-            query.and(i-> i.like(UserDO::getAccount, keyword)
+            query.and(i-> i.like(UserDO::getUsername, keyword)
                     .or().like(UserDO::getPhone, keyword)
                     .or().like(UserDO::getEmail, keyword));
         }
@@ -93,7 +93,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
     @Override
     public UserDO oneByAccount(String account) {
         LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
-        query.eq(UserDO::getAccount, account);
+        query.eq(UserDO::getUsername, account);
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
         List<UserDO> list = list(query);
         if (list.isEmpty()) {
@@ -167,7 +167,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
     @Override
     public UserDO queryUserByAccount(String account) {
         LambdaQueryWrapper<UserDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(UserDO::getAccount, account);
+        wrapper.eq(UserDO::getUsername, account);
         List<UserDO> list = baseMapper.selectList(wrapper);
         if (ObjUtil.isNull(list)) {
             return null;
@@ -178,9 +178,9 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
     @Override
     public UserDO get(String username) {
         LambdaQueryWrapper<UserDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(UserDO::getAccount, username);
+        wrapper.eq(UserDO::getUsername, username);
         List<UserDO> list = baseMapper.selectList(wrapper);
-        if (ObjUtil.isNull(list)) {
+        if (CollUtil.isEmpty(list)) {
             return null;
         }
         return list.get(0);

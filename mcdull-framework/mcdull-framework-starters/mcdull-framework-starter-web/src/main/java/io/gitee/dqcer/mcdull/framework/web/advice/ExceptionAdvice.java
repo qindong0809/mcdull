@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.framework.web.advice;
 
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.ICode;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -54,7 +55,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(value = Exception.class)
     public Result<?> exception(Exception exception) {
-        log.error("系统异常: ", exception);
+        log.error("{}. Exception: ", UserContextHolder.print(), exception);
         StringWriter stringWriter = new StringWriter();
         PrintWriter pw = new PrintWriter(stringWriter);
         exception.printStackTrace(pw);
@@ -73,19 +74,19 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(value = BusinessException.class)
     public Result<?> businessException(BusinessException exception) {
-        log.error("业务系统异常: ", exception);
-        return Result.error(exception.getMessage());
+        log.error("{}. Business Exception. ", UserContextHolder.print(), exception);
+        return Result.error(exception.getCode());
     }
 
     /**
      * 数据库异常
      *
      * @param exception 异常
-     * @return {@link Result}<{@link ?}>
+     * @return {@link Result}
      */
     @ExceptionHandler(value = DatabaseRowException.class)
     public Result<?> databaseRowException(DatabaseRowException exception) {
-        log.error("数据库实际预期执行不同: ", exception);
+        log.error("{}. 数据库实际预期执行不同: ", UserContextHolder.print(), exception);
         ICode exceptionCode = exception.getCode();
         if (exceptionCode != null) {
             return Result.error(exceptionCode);
@@ -101,7 +102,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)
     public Result<?> httpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException exception) {
-        log.error("请求头Content-Type异常: ", exception);
+        log.error("{}. 请求头Content-Type异常: ", UserContextHolder.print(), exception);
         return Result.error(CodeEnum.ERROR_CONTENT_TYPE);
     }
 

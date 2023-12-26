@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.Md5Util;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
@@ -98,7 +97,7 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class)
     public Result<Long> insert(UserLiteDTO dto) {
         LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
-        query.eq(UserDO::getAccount, dto.getAccount());
+        query.eq(UserDO::getUsername, dto.getAccount());
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
         List<UserDO> list = userRepository.list(query);
         if (!list.isEmpty()) {
@@ -128,26 +127,26 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class)
     public Result<Long> updateStatus(UserLiteDTO dto) {
         Long id = dto.getId();
-        UserDO dbData = userRepository.getById(id);
-        if (null == dbData) {
-            log.warn("数据不存在 id:{}", id);
-            return Result.error(CodeEnum.DATA_NOT_EXIST);
-        }
-        String status = dto.getStatus();
-        if (dbData.getStatus().equals(status)) {
-            log.warn("数据已存在 id: {} status: {}", id, status);
-            return Result.error(CodeEnum.DATA_EXIST);
-        }
-
-        UserDO entity = new UserDO();
-        entity.setId(id);
-        entity.setStatus(status);
-
-        boolean success = userRepository.updateById(entity);
-        if (!success) {
-            log.error("数据更新失败，entity:{}", entity);
-            throw new BusinessException(CodeEnum.DB_ERROR);
-        }
+//        UserDO dbData = userRepository.getById(id);
+//        if (null == dbData) {
+//            log.warn("数据不存在 id:{}", id);
+//            return Result.error(CodeEnum.DATA_NOT_EXIST);
+//        }
+//        String status = dto.getStatus();
+//        if (dbData.getStatus().equals(status)) {
+//            log.warn("数据已存在 id: {} status: {}", id, status);
+//            return Result.error(CodeEnum.DATA_EXIST);
+//        }
+//
+//        UserDO entity = new UserDO();
+//        entity.setId(id);
+//        entity.setStatus(status);
+//
+//        boolean success = userRepository.updateById(entity);
+//        if (!success) {
+//            log.error("数据更新失败，entity:{}", entity);
+//            throw new BusinessException(CodeEnum.DB_ERROR);
+//        }
 
         return Result.success(id);
     }
@@ -195,7 +194,7 @@ public class UserService {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
-        String password = Sha1Util.getSha1(Md5Util.getMd5(entity.getAccount() + entity.getSalt()));
+        String password = Sha1Util.getSha1(Md5Util.getMd5(entity.getUsername() + entity.getSalt()));
         UserDO user = new UserDO();
         user.setId(id);
         user.setPassword(password);

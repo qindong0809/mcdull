@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 
 import java.time.LocalTime;
+import java.util.StringJoiner;
 
 /**
  * 系统用户实体
@@ -20,9 +21,9 @@ public class UserDO extends BaseDO {
     private String nickName;
 
     /**
-     * 账户
+     * 用户名
      */
-    private String account;
+    private String username;
 
     /**
      * 密码
@@ -54,28 +55,26 @@ public class UserDO extends BaseDO {
      */
     private Integer type;
 
-    private String status;
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("UserDO{");
-        sb.append("delFlag=").append(delFlag);
-        sb.append(", nickname='").append(nickName).append('\'');
-        sb.append(", account='").append(account).append('\'');
-        sb.append(", password='").append(password).append('\'');
-        sb.append(", salt='").append(salt).append('\'');
-        sb.append(", email='").append(email).append('\'');
-        sb.append(", phone='").append(phone).append('\'');
-        sb.append(", lastLoginTime=").append(lastLoginTime);
-        sb.append(", type=").append(type);
-        sb.append(", createdTime=").append(createdTime);
-        sb.append(", createdBy=").append(createdBy);
-        sb.append(", updatedTime=").append(updatedTime);
-        sb.append(", updatedBy=").append(updatedBy);
-        sb.append(", status=").append(status);
-        sb.append(", id=").append(id);
-        sb.append('}');
-        return sb.toString();
+        return new StringJoiner(", ", UserDO.class.getSimpleName() + "[", "]")
+                .add("nickName='" + nickName + "'")
+                .add("username='" + username + "'")
+                .add("password='" + password + "'")
+                .add("salt='" + salt + "'")
+                .add("email='" + email + "'")
+                .add("phone='" + phone + "'")
+                .add("lastLoginTime=" + lastLoginTime)
+                .add("type=" + type)
+                .add("createdBy=" + createdBy)
+                .add("updatedBy=" + updatedBy)
+                .add("inactive=" + inactive)
+                .add("createdTime=" + createdTime)
+                .add("updatedTime=" + updatedTime)
+                .add("delFlag=" + delFlag)
+                .add("id=" + id)
+                .toString();
     }
 
     public Integer getType() {
@@ -94,12 +93,12 @@ public class UserDO extends BaseDO {
         this.nickName = nickName;
     }
 
-    public String getAccount() {
-        return account;
+    public String getUsername() {
+        return username;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -142,11 +141,4 @@ public class UserDO extends BaseDO {
         this.lastLoginTime = lastLoginTime;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }

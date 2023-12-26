@@ -25,7 +25,7 @@ public interface AuthServiceApi {
      * @param traceId 跟踪id
      * @return {@link Result}<{@link Long}>
      */
-    @PostMapping("feign/token/valid")
+    @PostMapping(GlobalConstant.INNER_API + "/token/valid")
     Result<Long> tokenValid(@RequestParam(value = "token")String token, @RequestHeader(name = HttpHeaderConstants.TRACE_ID_HEADER) String traceId);
 
     @PostMapping(GlobalConstant.INNER_API + "/permission")

@@ -185,7 +185,7 @@ public abstract class BaseInfoInterceptor implements HandlerInterceptor {
 
     private String errorResult(Result<?> result) {
         return "{\"code\":"+ result.getCode() +
-                ", \"data\":" + result.getData() + ", \"message\":\"" + result.getMsg() + "\"}";
+                ", \"data\":" + result.getData() + ", \"message\":\"" + result.getMessage() + "\"}";
     }
 
     /**

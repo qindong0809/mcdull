@@ -1,6 +1,9 @@
 package io.gitee.dqcer.mcdull.framework.base.storage;
 
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+
+import java.util.StringJoiner;
 
 /**
  * 用户上下文
@@ -57,5 +60,9 @@ public class UserContextHolder {
      */
     public static Long currentUserId() {
         return UNIFY_SESSION.get().getUserId();
+    }
+
+    public static String print() {
+        return StrUtil.format("url: {}. userId: {}", getSession().getRequestUrl(), getSession().getUserId());
     }
 }

@@ -44,7 +44,7 @@ public enum CodeEnum implements ICode , IEnum<Integer> {
 	/**
 	 * 无权限
 	 */
-	UN_AUTHORIZATION(401, "无权限"),
+	UN_AUTHORIZATION(401, "认证失败"),
 
 	/**
 	 * 异地登录
