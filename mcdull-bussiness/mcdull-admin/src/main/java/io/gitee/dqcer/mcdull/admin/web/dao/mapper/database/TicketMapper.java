@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.mapper.database;
 
-import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketDO;
 
 /**
  *  Mapper 接口

@@ -10,7 +10,6 @@ import io.gitee.dqcer.mcdull.admin.model.entity.database.GroupDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.GroupVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IGroupRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.database.IGroupService;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.SelectOptionVO;
@@ -54,7 +53,6 @@ public class GroupServiceImpl extends BasicServiceImpl<IGroupRepository> impleme
         List<GroupDO> list = baseRepository.getListByName(dto.getName());
         this.validNameExist(null, dto.getName(), list);
         GroupDO sysConfigDO = GroupConvert.convertToGroupDo(dto);
-        sysConfigDO.setDelFlag(DelFlayEnum.NORMAL.getCode());
         baseRepository.save(sysConfigDO);
         return Result.success(sysConfigDO.getId());
     }

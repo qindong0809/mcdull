@@ -13,7 +13,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
@@ -67,7 +66,6 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
                     .or().like(UserDO::getEmail, keyword));
         }
         query.orderByDesc(BaseDO::getCreatedTime);
-        query.eq(UserDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 

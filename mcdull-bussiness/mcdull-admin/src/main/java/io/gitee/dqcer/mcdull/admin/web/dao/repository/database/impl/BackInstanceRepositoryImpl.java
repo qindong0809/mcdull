@@ -7,8 +7,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.admin.model.entity.database.BackInstanceDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.database.InstanceBackMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IBackInstanceRepository;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +27,6 @@ public class BackInstanceRepositoryImpl extends ServiceImpl<InstanceBackMapper, 
     @Override
     public List<BackInstanceDO> listByBackId(Long backId) {
         LambdaQueryWrapper<BackInstanceDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         wrapper.eq(BackInstanceDO::getBackId, backId);
         List<BackInstanceDO> list = baseMapper.selectList(wrapper);
         if (CollUtil.isNotEmpty(list)) {

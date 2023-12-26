@@ -498,8 +498,6 @@ public class TicketServiceImpl implements ITicketService {
                 String oldFileName = backInstance.getFileName();
                 String newFileName = StrUtil.format("Removed_{}", oldFileName);
                 backInstance.setFileName(newFileName);
-                backInstance.setDelFlag(DelFlayEnum.DELETED.getCode());
-                backInstance.setDelBy(userId);
 
                 String filePath = String.join(File.separator, sqlDumpDir, oldFileName);
                 File file = FileUtil.file(filePath);

@@ -30,7 +30,6 @@ public class UserConvert {
         userVO.setUpdatedTime(entity.getUpdatedTime());
         userVO.setUpdatedBy(entity.getUpdatedBy());
         userVO.setStatus(entity.getStatus());
-        userVO.setDelFlag(entity.getDelFlag());
         userVO.setNickname(entity.getNickName());
         userVO.setAccount(entity.getAccount());
         userVO.setEmail(entity.getEmail());

@@ -42,7 +42,6 @@ public class RoleDO extends BaseDO {
                 ", code='" + code + '\'' +
                 ", description='" + description + '\'' +
                 ", type=" + type +
-                ", delBy=" + delBy +
                 ", createdBy=" + createdBy +
                 ", updatedTime=" + updatedTime +
                 ", updatedBy=" + updatedBy +

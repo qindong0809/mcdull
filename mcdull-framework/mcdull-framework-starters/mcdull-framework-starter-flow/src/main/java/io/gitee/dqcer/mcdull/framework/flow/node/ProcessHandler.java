@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.flow.node;
 
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.core.annotation.AnnotationUtils;
 
 /**

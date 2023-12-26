@@ -1,10 +1,8 @@
 package io.gitee.dqcer.mcdull.admin.model.dto.sys;
 
-import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
 import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
 import io.gitee.dqcer.mcdull.framework.base.dto.KeywordDTO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import org.hibernate.validator.constraints.Length;
@@ -33,11 +31,6 @@ public class DeptLiteDTO extends KeywordDTO implements DTO {
      @EnumsStrValid(groups = {ValidGroup.List.class}, value = StatusEnum.class)
      private String status;
 
-    /**
-     * 删除标识（1/正常 2/删除）
-     */
-    @EnumsIntValid(groups = {ValidGroup.Delete.class}, value = DelFlayEnum.class)
-    private Integer delFlag;
 
     /**
      * 昵称

@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.mysql.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import org.apache.ibatis.reflection.MetaObject;
 import org.slf4j.Logger;
@@ -27,11 +26,12 @@ public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         if (log.isDebugEnabled()) {
-            log.debug("Field [createdTime、createdBy、delFlag] start insert fill ....");
+            log.debug("Field [createdTime、createdBy、delFlag、inactive] start insert fill ....");
         }
         this.strictInsertFill(metaObject, "createdTime", () -> UserContextHolder.getSession().getNow(), Date.class);
         this.strictInsertFill(metaObject, "createdBy", UserContextHolder::currentUserId, Long.class);
-        this.strictInsertFill(metaObject, "delFlag", DelFlayEnum.NORMAL::getCode, Integer.class);
+        this.strictInsertFill(metaObject, "delFlag", () -> Boolean.FALSE, Boolean.class);
+        this.strictInsertFill(metaObject, "inactive", () -> Boolean.FALSE, Boolean.class);
     }
 
     @Override

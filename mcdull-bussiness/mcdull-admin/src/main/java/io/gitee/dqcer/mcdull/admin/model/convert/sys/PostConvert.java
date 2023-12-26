@@ -27,7 +27,6 @@ public class PostConvert {
         postVO.setCreatedBy(entity.getCreatedBy());
         postVO.setUpdatedTime(entity.getUpdatedTime());
         postVO.setUpdatedBy(entity.getUpdatedBy());
-        postVO.setDelFlag(entity.getDelFlag());
         return postVO;
     }
 

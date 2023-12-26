@@ -46,7 +46,6 @@ public class RoleDO extends BaseDO {
                 .add("type=" + type)
                 .add("status='" + status + "'")
                 .add("delFlag=" + delFlag)
-                .add("delBy=" + delBy)
                 .add("createdBy=" + createdBy)
                 .add("updatedTime=" + updatedTime)
                 .add("updatedBy=" + updatedBy)

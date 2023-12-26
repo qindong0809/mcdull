@@ -10,7 +10,6 @@ import cn.dev33.satoken.util.SaResult;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**

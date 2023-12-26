@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,9 +16,7 @@ import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.RoleMenuMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
@@ -60,7 +57,6 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
     public List<RoleDO> queryListByIds(List<Long> ids) {
         LambdaQueryWrapper<RoleDO> wrapper = Wrappers.lambdaQuery();
         wrapper.in(RoleDO::getId, ids);
-        wrapper.eq(RoleDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         List<RoleDO> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;
@@ -88,9 +84,8 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
         Date startTime = dto.getStartTime();
         Date endTime = dto.getEndTime();
         if (ObjUtil.isNotNull(startTime) && ObjUtil.isNotNull(endTime)) {
-            query.between(MiddleDO::getCreatedTime, startTime, endTime);
+            query.between(RelDO::getCreatedTime, startTime, endTime);
         }
-        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         query.orderByDesc(BaseDO::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
@@ -123,7 +118,6 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
     @Override
     public boolean exist(RoleDO roleDO) {
         LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery(roleDO);
-        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         return !baseMapper.selectList(query).isEmpty();
     }
 
@@ -134,11 +128,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
      */
     @Override
     public void deleteBatchByIds(List<Long> ids) {
-        LambdaUpdateWrapper<RoleDO> update = Wrappers.lambdaUpdate();
-        update.in(IdDO::getId, ids);
-        update.set(BaseDO::getDelFlag, DelFlayEnum.DELETED.getCode());
-        update.set(BaseDO::getDelBy, UserContextHolder.currentUserId());
-        int rowSize = baseMapper.update(null, update);
+        int rowSize = baseMapper.deleteBatchIds(ids);
         if (rowSize != ids.size()) {
             log.error("数据删除失败 actual: {}, plan:{}", rowSize, ids.size());
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
@@ -165,7 +155,6 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
     @Override
     public List<RoleDO> getAll() {
         LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
-        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         List<RoleDO> list = baseMapper.selectList(query);
         if (list.isEmpty()) {
             return Collections.emptyList();

@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.client.api;
 
-import io.gitee.dqcer.mcdull.uac.client.vo.RemoteUserVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.uac.client.vo.RemoteUserVO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 

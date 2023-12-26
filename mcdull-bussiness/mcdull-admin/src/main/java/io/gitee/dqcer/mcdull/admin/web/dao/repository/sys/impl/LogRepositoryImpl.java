@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -12,10 +14,8 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.LogVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.LogMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.ILogRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +65,7 @@ public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO>  implements
         if (StrUtil.isNotBlank(keyword)) {
             //TODO 组装查询条件
         }
-        lambda.orderByDesc(MiddleDO::getCreatedTime);
+        lambda.orderByDesc(RelDO::getCreatedTime);
         IPage<LogVO> voiPage =  baseMapper.pagedQuery(new Page<>(param.getPageNum(), param.getPageSize()), param);
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }

@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.admin.util.pdf;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.itextpdf.text.Document;

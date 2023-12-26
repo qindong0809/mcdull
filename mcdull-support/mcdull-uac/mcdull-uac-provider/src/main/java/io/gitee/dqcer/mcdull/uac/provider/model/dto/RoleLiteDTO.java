@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import org.hibernate.validator.constraints.Length;
@@ -32,11 +31,6 @@ public class RoleLiteDTO extends PagedDTO {
      @EnumsIntValid(groups = {ValidGroup.Status.class}, value = StatusEnum.class)
      private Integer status;
 
-    /**
-     * 删除标识（1/正常 2/删除）
-     */
-    @EnumsIntValid(groups = {ValidGroup.Delete.class}, value = DelFlayEnum.class)
-    private Integer delFlag;
 
     /**
      * 昵称
@@ -56,7 +50,6 @@ public class RoleLiteDTO extends PagedDTO {
         return new StringJoiner(", ", RoleLiteDTO.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
                 .add("status=" + status)
-                .add("delFlag=" + delFlag)
                 .add("name='" + name + "'")
                 .add("description='" + description + "'")
                 .add("pageSize=" + pageSize)
@@ -90,14 +83,6 @@ public class RoleLiteDTO extends PagedDTO {
         this.status = status;
     }
 
-    public Integer getDelFlag() {
-        return delFlag;
-    }
-
-    public RoleLiteDTO setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
-        return this;
-    }
 
     public String getName() {
         return name;

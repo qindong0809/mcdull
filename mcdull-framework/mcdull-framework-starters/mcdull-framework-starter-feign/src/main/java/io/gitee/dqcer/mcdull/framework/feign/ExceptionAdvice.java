@@ -1,9 +1,9 @@
 package io.gitee.dqcer.mcdull.framework.feign;
 
+import feign.FeignException;
 import io.gitee.dqcer.mcdull.framework.base.exception.FeignBizException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;

@@ -55,7 +55,6 @@ public class DeptDO extends BaseDO {
                 .add("leaderId=" + leaderId)
                 .add("status=" + status)
                 .add("delFlag=" + delFlag)
-                .add("delBy=" + delBy)
                 .add("createdBy=" + createdBy)
                 .add("updatedTime=" + updatedTime)
                 .add("updatedBy=" + updatedBy)

@@ -11,10 +11,8 @@ import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.database.TicketMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.ITicketRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.slf4j.Logger;
@@ -45,7 +43,6 @@ public class TicketRepositoryImpl extends ServiceImpl<TicketMapper, TicketDO>  i
     public List<TicketDO> queryListByIds(List<Long> idList) {
         LambdaQueryWrapper<TicketDO> wrapper = Wrappers.lambdaQuery();
         wrapper.in(TicketDO::getId, idList);
-        wrapper.eq(TicketDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         List<TicketDO> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;
@@ -66,7 +63,7 @@ public class TicketRepositoryImpl extends ServiceImpl<TicketMapper, TicketDO>  i
         if (ObjUtil.isNotNull(keyword)) {
             // TODO 组装查询条件
         }
-        lambda.orderByDesc(MiddleDO::getCreatedTime);
+        lambda.orderByDesc(RelDO::getCreatedTime);
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 
@@ -108,7 +105,6 @@ public class TicketRepositoryImpl extends ServiceImpl<TicketMapper, TicketDO>  i
         LambdaQueryWrapper<TicketDO> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(TicketDO::getName, entity.getName());
         wrapper.ne(ObjUtil.isNotNull(entity.getId()), IdDO::getId,entity.getId());
-        wrapper.eq(BaseDO::getDelBy, DelFlayEnum.NORMAL.getCode());
         return !baseMapper.selectList(wrapper).isEmpty();
     }
 

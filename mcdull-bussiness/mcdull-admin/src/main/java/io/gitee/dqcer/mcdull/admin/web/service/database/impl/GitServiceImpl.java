@@ -10,7 +10,6 @@ import io.gitee.dqcer.mcdull.admin.model.entity.database.GitDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.GitVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IGitRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.database.IGitService;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -53,7 +52,6 @@ public class GitServiceImpl extends BasicServiceImpl<IGitRepository> implements 
         List<GitDO> list = baseRepository.getListByName(dto.getName());
         this.validNameExist(null, dto.getName(), list);
         GitDO sysConfigDO = GitConvert.convertToGitDo(dto);
-        sysConfigDO.setDelFlag(DelFlayEnum.NORMAL.getCode());
         baseRepository.save(sysConfigDO);
         return Result.success(sysConfigDO.getId());
     }

@@ -13,7 +13,6 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictDataVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IDictDataRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IDictDataService;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -89,7 +88,6 @@ public class DictDataServiceImpl extends BasicServiceImpl<IDictDataRepository> i
         List<DictDataDO> list = baseRepository.getNameList(dto.getDictType(), dto.getDictValue());
         this.validNameExist(null, dto.getDictValue(), list);
         DictDataDO dataDO = DictDataConvert.convertToDictDataDo(dto);
-        dataDO.setDelFlag(DelFlayEnum.NORMAL.getCode());
         baseRepository.save(dataDO);
         return Result.success(dataDO.getId());
     }

@@ -1,21 +1,16 @@
 package io.gitee.dqcer.mcdull.framework.flow.load;
 
-import io.gitee.dqcer.mcdull.framework.base.util.JsonUtil;
 import cn.hutool.core.util.ObjUtil;
-import io.gitee.dqcer.mcdull.framework.flow.properties.ProcessBean;
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.gitee.dqcer.mcdull.framework.base.util.JsonUtil;
+import io.gitee.dqcer.mcdull.framework.flow.properties.ProcessBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * json 文件 读取配置

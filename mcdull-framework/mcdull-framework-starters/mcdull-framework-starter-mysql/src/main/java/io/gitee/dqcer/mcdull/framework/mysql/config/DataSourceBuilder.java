@@ -1,9 +1,9 @@
 package io.gitee.dqcer.mcdull.framework.mysql.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import io.gitee.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import io.gitee.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

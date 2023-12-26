@@ -9,7 +9,6 @@ import io.gitee.dqcer.mcdull.admin.model.entity.common.SysConfigDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.ConfigVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.common.ISysConfigRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IConfigService;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -52,7 +51,6 @@ public class ConfigServiceImpl extends BasicServiceImpl<ISysConfigRepository> im
         List<SysConfigDO> list = baseRepository.getListByKey(dto.getConfigKey());
         this.validNameExist(null, dto.getConfigKey(), list);
         SysConfigDO sysConfigDO = ConfigConvert.convertTOConfigDo(dto);
-        sysConfigDO.setDelFlag(DelFlayEnum.NORMAL.getCode());
         baseRepository.save(sysConfigDO);
         return Result.success(sysConfigDO.getId());
     }

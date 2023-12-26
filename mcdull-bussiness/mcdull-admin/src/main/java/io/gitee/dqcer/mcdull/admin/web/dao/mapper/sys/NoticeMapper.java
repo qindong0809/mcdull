@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys;
 
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeDO;
 
 /**
  * 通知公告表 Mapper 接口

@@ -7,8 +7,6 @@ import io.gitee.dqcer.mcdull.admin.model.entity.database.ConfigEnvDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.database.ConfigEnvMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IConfigEnvRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.slf4j.Logger;
@@ -68,7 +66,6 @@ public class ConfigEnvRepositoryImpl extends ServiceImpl<ConfigEnvMapper, Config
     public ConfigEnvDO getByType(Integer type) {
         LambdaQueryWrapper<ConfigEnvDO> query = Wrappers.lambdaQuery();
         query.eq(ConfigEnvDO::getType, type);
-        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
         return baseMapper.selectOne(query);
     }

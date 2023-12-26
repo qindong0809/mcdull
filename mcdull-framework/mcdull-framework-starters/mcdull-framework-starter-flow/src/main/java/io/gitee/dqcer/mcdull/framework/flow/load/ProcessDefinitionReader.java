@@ -1,7 +1,8 @@
 package io.gitee.dqcer.mcdull.framework.flow.load;
 
-import java.util.Collection;
 import io.gitee.dqcer.mcdull.framework.flow.properties.ProcessBean;
+
+import java.util.Collection;
 
 /**
  * 流程定义

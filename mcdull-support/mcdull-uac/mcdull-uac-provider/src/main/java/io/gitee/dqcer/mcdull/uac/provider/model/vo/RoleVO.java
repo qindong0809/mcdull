@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
-import io.gitee.dqcer.mcdull.framework.base.vo.VO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
+import io.gitee.dqcer.mcdull.framework.base.vo.VO;
 
 import java.util.Date;
 import java.util.StringJoiner;

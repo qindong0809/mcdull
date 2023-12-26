@@ -24,7 +24,6 @@ public class DeptConvert {
         deptVO.setUpdatedTime(deptDO.getUpdatedTime());
         deptVO.setUpdatedBy(deptDO.getUpdatedBy());
         deptVO.setStatus(deptDO.getStatus());
-        deptVO.setDelFlag(deptDO.getDelFlag());
         return deptVO;
     }
 
@@ -41,7 +40,6 @@ public class DeptConvert {
         deptDO.setUpdatedTime(deptVO.getUpdatedTime());
         deptDO.setUpdatedBy(deptVO.getUpdatedBy());
         deptDO.setStatus(deptVO.getStatus());
-        deptDO.setDelFlag(deptVO.getDelFlag());
         return deptDO;
     }
 

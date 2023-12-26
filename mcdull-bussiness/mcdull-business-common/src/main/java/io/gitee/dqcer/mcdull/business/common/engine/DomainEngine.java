@@ -4,12 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 对象领域常用方法封装

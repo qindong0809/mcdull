@@ -8,8 +8,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class HtmlConvertPdfTest {
 
     @Test

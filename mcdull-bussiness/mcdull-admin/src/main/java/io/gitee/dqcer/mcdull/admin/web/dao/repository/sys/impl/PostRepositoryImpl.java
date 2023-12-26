@@ -11,7 +11,6 @@ import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.PostMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IPostRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -29,7 +28,6 @@ public class PostRepositoryImpl extends ServiceImpl<PostMapper, PostDO>  impleme
     @Override
     public Page<PostDO> selectPage(PostLiteDTO dto) {
         LambdaQueryWrapper<PostDO> query = Wrappers.lambdaQuery();
-        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         query.orderByDesc(BaseDO::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
@@ -47,7 +45,6 @@ public class PostRepositoryImpl extends ServiceImpl<PostMapper, PostDO>  impleme
     @Override
     public List<PostDO> getAll() {
         LambdaQueryWrapper<PostDO> query = Wrappers.lambdaQuery();
-        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         List<PostDO> list = baseMapper.selectList(query);
         if (list.isEmpty()) {
             return Collections.emptyList();

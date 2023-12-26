@@ -7,7 +7,6 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeDO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.NoticeVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.INoticeRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.INoticeService;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -129,8 +128,6 @@ public class NoticeServiceImpl implements INoticeService {
         for (Long id : ids) {
             NoticeDO noticeDO = new NoticeDO();
             noticeDO.setId(id);
-            noticeDO.setDelFlag(DelFlayEnum.DELETED.getCode());
-            noticeDO.setDelBy(userId);
             doList.add(noticeDO);
         }
         noticeRepository.updateBatchById(doList);

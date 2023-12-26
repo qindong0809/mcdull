@@ -6,11 +6,7 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.RouterVO;
 import io.gitee.dqcer.mcdull.admin.web.service.sso.IAuthService;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;

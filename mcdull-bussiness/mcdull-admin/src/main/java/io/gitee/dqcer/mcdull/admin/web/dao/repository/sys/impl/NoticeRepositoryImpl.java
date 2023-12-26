@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -11,12 +12,9 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.NoticeMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.INoticeRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +55,6 @@ public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeDO>  i
     public List<NoticeDO> queryListByIds(List<Long> idList) {
         LambdaQueryWrapper<NoticeDO> wrapper = Wrappers.lambdaQuery();
         wrapper.in(NoticeDO::getId, idList);
-        wrapper.eq(NoticeDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         List<NoticeDO> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;
@@ -76,8 +73,7 @@ public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeDO>  i
         if (StrUtil.isNotBlank(noticeType)) {
             lambda.eq(NoticeDO::getNoticeType, noticeType);
         }
-        lambda.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
-        lambda.orderByDesc(MiddleDO::getCreatedTime);
+        lambda.orderByDesc(RelDO::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
     }
 

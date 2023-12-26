@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.entity.database;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("database_ticket_instance")
-public class TicketInstanceDO extends MiddleDO {
+public class TicketInstanceDO extends RelDO {
 
     private static final long serialVersionUID = 1L;
 

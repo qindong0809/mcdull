@@ -35,9 +35,7 @@ import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
@@ -254,7 +252,6 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
         LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
         query.eq(UserDO::getAccount, account);
         query.ne(ObjUtil.isNotNull(userId), IdDO::getId, userId);
-        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
         return baseRepository.list(query);
     }

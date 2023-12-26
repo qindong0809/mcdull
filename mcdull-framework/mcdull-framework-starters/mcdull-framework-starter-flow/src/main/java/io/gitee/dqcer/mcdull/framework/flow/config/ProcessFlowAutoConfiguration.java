@@ -1,10 +1,10 @@
 package io.gitee.dqcer.mcdull.framework.flow.config;
 
 
-import io.gitee.dqcer.mcdull.framework.flow.load.JsonFileProcessDefinitionReader;
-import io.gitee.dqcer.mcdull.framework.flow.registry.NodeRegistry;
-import io.gitee.dqcer.mcdull.framework.flow.load.ProcessDefinitionReader;
 import io.gitee.dqcer.mcdull.framework.flow.factory.ProcessDefinitionRegistry;
+import io.gitee.dqcer.mcdull.framework.flow.load.JsonFileProcessDefinitionReader;
+import io.gitee.dqcer.mcdull.framework.flow.load.ProcessDefinitionReader;
+import io.gitee.dqcer.mcdull.framework.flow.registry.NodeRegistry;
 import io.gitee.dqcer.mcdull.framework.flow.registry.ProcessFlowRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

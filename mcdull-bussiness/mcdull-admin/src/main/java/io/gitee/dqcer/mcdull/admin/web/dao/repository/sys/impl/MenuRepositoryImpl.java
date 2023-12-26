@@ -12,7 +12,7 @@ import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.MenuMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -45,7 +45,7 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
         if (StrUtil.isNotBlank(keyword)) {
             query.and(i-> i.like(MenuDO::getName, keyword));
         }
-        query.orderByDesc(MiddleDO::getCreatedTime);
+        query.orderByDesc(RelDO::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 

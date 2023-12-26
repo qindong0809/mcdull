@@ -3,10 +3,7 @@ package io.gitee.dqcer.mcdull.admin.model.vo.sys;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 /**

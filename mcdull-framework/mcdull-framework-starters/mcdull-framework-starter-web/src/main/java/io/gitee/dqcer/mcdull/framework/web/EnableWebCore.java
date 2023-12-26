@@ -3,12 +3,7 @@ package io.gitee.dqcer.mcdull.framework.web;
 
 import io.gitee.dqcer.mcdull.framework.web.advice.BaseExceptionAdvice;
 import io.gitee.dqcer.mcdull.framework.web.advice.ExceptionAdvice;
-import io.gitee.dqcer.mcdull.framework.web.config.AutoConfiguration;
-import io.gitee.dqcer.mcdull.framework.web.config.BannerConfig;
-import io.gitee.dqcer.mcdull.framework.web.config.DateTimeConfig;
-import io.gitee.dqcer.mcdull.framework.web.config.MultipartFileConfig;
-import io.gitee.dqcer.mcdull.framework.web.config.ThreadPoolConfig;
-import io.gitee.dqcer.mcdull.framework.web.config.UndertowConfig;
+import io.gitee.dqcer.mcdull.framework.web.config.*;
 import io.gitee.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import org.springframework.context.annotation.Import;
 

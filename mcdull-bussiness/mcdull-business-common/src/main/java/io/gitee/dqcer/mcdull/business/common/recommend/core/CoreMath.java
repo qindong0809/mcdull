@@ -2,12 +2,7 @@ package io.gitee.dqcer.mcdull.business.common.recommend.core;
 
 import io.gitee.dqcer.mcdull.business.common.recommend.dto.RelateDTO;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.IntStream;
 
 /**

@@ -2,13 +2,9 @@ package io.gitee.dqcer.mcdull.framework.mongodb;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

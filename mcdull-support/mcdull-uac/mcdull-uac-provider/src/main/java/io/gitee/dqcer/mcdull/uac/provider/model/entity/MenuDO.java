@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
 
 import java.util.Date;
 import java.util.StringJoiner;
@@ -13,7 +13,7 @@ import java.util.StringJoiner;
  * @since 2022/11/07
  */
 @TableName("sys_menu")
-public class MenuDO extends MiddleDO {
+public class MenuDO extends RelDO {
 
 
     /**

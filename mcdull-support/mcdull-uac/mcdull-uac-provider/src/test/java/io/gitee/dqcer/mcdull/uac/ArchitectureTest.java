@@ -4,9 +4,9 @@ import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
-import io.gitee.dqcer.mcdull.framework.enforcer.ArchitectureEnforcer;
 import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.VO;
+import io.gitee.dqcer.mcdull.framework.enforcer.ArchitectureEnforcer;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 

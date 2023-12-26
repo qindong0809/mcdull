@@ -3,8 +3,8 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
 
 import java.util.List;
 

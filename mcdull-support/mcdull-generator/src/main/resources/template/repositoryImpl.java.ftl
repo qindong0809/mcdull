@@ -42,7 +42,6 @@ public class ${cfg.repositoryImplName} extends ServiceImpl<${cfg.mapperName}, ${
     public List<${cfg.entityName}> queryListByIds(List<Long> idList) {
         LambdaQueryWrapper<${cfg.entityName}> wrapper = Wrappers.lambdaQuery();
         wrapper.in(${cfg.entityName}::getId, idList);
-        wrapper.eq(${cfg.entityName}::getDelFlag, DelFlayEnum.NORMAL.getCode());
         List<${cfg.entityName}> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;

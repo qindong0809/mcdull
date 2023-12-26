@@ -7,8 +7,6 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserEmailConfigDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.UserEmailConfigMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserEmailConfigRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,7 +20,6 @@ public class UserEmailConfigRepositoryImpl extends ServiceImpl<UserEmailConfigMa
     public UserEmailConfigDO getOneByUserId(Long userId) {
         LambdaQueryWrapper<UserEmailConfigDO> lambda = Wrappers.lambdaQuery();
         lambda.eq(UserEmailConfigDO::getUserId, userId);
-        lambda.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         lambda.last(GlobalConstant.Database.SQL_LIMIT_1);
         return baseMapper.selectOne(lambda);
     }

@@ -10,10 +10,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
@@ -64,9 +62,6 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
      */
     @Override
     public Long insert(RoleDO entity) {
-        entity.setDelFlag(DelFlayEnum.NORMAL.getCode());
-        entity.setCreatedBy(UserContextHolder.currentUserId());
-        entity.setCreatedTime(new Date());
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {
             throw new BusinessException(CodeEnum.DB_ERROR);
@@ -84,7 +79,6 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
         Set<Long> idList = userRoleMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
 
         LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
-        query.eq(RoleDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         query.eq(RoleDO::getStatus, StatusEnum.ENABLE.getCode());
         query.in(RoleDO::getId, idList);
         List<RoleDO> list = baseMapper.selectList(query);

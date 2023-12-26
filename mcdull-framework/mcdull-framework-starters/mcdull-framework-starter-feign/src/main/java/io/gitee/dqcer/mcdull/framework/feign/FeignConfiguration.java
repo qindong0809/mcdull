@@ -1,9 +1,9 @@
 package io.gitee.dqcer.mcdull.framework.feign;
 
 
-import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;

@@ -1,10 +1,10 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.LoginVO;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.client.api.AuthServiceApi;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.LoginVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

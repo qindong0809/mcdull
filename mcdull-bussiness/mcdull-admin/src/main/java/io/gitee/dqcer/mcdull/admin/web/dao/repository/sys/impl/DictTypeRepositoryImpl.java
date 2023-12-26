@@ -4,7 +4,6 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -12,11 +11,7 @@ import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.sys.DictTypeDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.DictTypeMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IDictTypeRepository;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -50,10 +45,9 @@ public class DictTypeRepositoryImpl extends ServiceImpl<DictTypeMapper, DictType
         Date startTime = dto.getStartTime();
         Date endTime = dto.getEndTime();
         if (ObjUtil.isNotNull(startTime) && ObjUtil.isNotNull(endTime)) {
-            lambda.between(MiddleDO::getCreatedTime, startTime, endTime);
+            lambda.between(RelDO::getCreatedTime, startTime, endTime);
         }
-        lambda.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
-        lambda.orderByDesc(MiddleDO::getCreatedTime);
+        lambda.orderByDesc(RelDO::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
     }
 
@@ -61,17 +55,11 @@ public class DictTypeRepositoryImpl extends ServiceImpl<DictTypeMapper, DictType
     public List<DictTypeDO> getListByName(String dictType) {
         LambdaQueryWrapper<DictTypeDO> query = Wrappers.lambdaQuery();
         query.eq(DictTypeDO::getDictType, dictType);
-        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         return baseMapper.selectList(query);
     }
 
     @Override
     public void removeUpdateById(Long id) {
-        Long userId = UserContextHolder.currentUserId();
-        LambdaUpdateWrapper<DictTypeDO> update = Wrappers.lambdaUpdate();
-        update.set(BaseDO::getDelFlag, DelFlayEnum.DELETED.getCode());
-        update.set(BaseDO::getDelBy, userId);
-        update.eq(IdDO::getId, id);
-        baseMapper.update(null, update);
+        baseMapper.deleteById(id);
     }
 }

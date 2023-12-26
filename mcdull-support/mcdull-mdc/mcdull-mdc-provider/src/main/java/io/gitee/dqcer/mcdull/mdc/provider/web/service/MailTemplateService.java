@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.mdc.provider.web.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.mdc.provider.model.convert.MailTemplateConvert;
 import io.gitee.dqcer.mcdull.mdc.provider.model.dto.MailTemplateLiteDTO;
@@ -31,7 +30,6 @@ public class MailTemplateService {
     public Result<List<MailTemplateBaseVO>> listAll() {
         List<MailTemplateBaseVO> listVo = new ArrayList<>();
         LambdaQueryWrapper<SysMailTemplateDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.ge(SysMailTemplateDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         List<SysMailTemplateDO> entityList = mailTemplateDAO.selectList(wrapper);
         for (SysMailTemplateDO entity : entityList) {
             listVo.add(MailTemplateConvert.convertToMailTemplateBaseVO(entity));

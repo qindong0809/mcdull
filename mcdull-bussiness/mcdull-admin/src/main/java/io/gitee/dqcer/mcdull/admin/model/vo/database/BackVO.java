@@ -3,8 +3,6 @@ package io.gitee.dqcer.mcdull.admin.model.vo.database;
 import io.gitee.dqcer.mcdull.framework.base.vo.VO;
 import lombok.Data;
 
-import java.util.List;
-
 /**
 *  返回客户端值
 *

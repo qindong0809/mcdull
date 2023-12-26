@@ -13,7 +13,7 @@ import io.gitee.dqcer.mcdull.admin.web.dao.mapper.database.BackMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IBackRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.MiddleDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +37,6 @@ public class BackRepositoryImpl extends ServiceImpl<BackMapper, BackDO>  impleme
         LambdaQueryWrapper<BackDO> query = Wrappers.lambdaQuery();
         query.eq(BackDO::getBizId, ticketId);
         query.eq(BackDO::getModel, modelTicket);
-        query.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         List<BackDO> list = baseMapper.selectList(query);
         if (CollUtil.isNotEmpty(list)) {
             return list;
@@ -50,8 +49,7 @@ public class BackRepositoryImpl extends ServiceImpl<BackMapper, BackDO>  impleme
     public Page<BackDO> selectPage(BackListDTO dto) {
         LambdaQueryWrapper<BackDO> lambda = new QueryWrapper<BackDO>().lambda();
         lambda.eq(BackDO::getBizId, dto.getTicketId());
-        lambda.eq(BaseDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
-        lambda.orderByDesc(MiddleDO::getCreatedTime);
+        lambda.orderByDesc(RelDO::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
     }
 

@@ -9,16 +9,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleMenuDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserRoleDO;
-import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.MenuMapper;
-import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.RoleMapper;
-import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.RoleMenuMapper;
-import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.UserMapper;
-import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.UserRoleMapper;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.*;
+import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.*;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
@@ -88,7 +80,6 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
             query.eq(UserDO::getDeptId, deptId);
         }
         query.orderByDesc(BaseDO::getCreatedTime);
-        query.eq(UserDO::getDelFlag, DelFlayEnum.NORMAL.getCode());
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 

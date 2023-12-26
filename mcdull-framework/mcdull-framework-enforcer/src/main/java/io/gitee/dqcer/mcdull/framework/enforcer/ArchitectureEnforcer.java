@@ -1,10 +1,10 @@
 package io.gitee.dqcer.mcdull.framework.enforcer;
 
+import com.tngtech.archunit.lang.ArchRule;
+import com.tngtech.archunit.library.GeneralCodingRules;
 import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.DO;
 import io.gitee.dqcer.mcdull.framework.base.vo.VO;
-import com.tngtech.archunit.lang.ArchRule;
-import com.tngtech.archunit.library.GeneralCodingRules;
 
 import java.util.LinkedList;
 import java.util.List;

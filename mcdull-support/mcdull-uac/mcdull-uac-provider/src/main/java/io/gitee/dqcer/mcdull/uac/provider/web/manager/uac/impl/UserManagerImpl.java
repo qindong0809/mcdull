@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager.uac.impl;
 
+import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.UserConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
@@ -8,7 +9,6 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.uac.IUserManager;
-import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
