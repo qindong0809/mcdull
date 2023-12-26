@@ -1,15 +1,26 @@
-DROP TABLE IF EXISTS `demo`;
-CREATE TABLE IF NOT EXISTS `demo` (
-  `id` bigint(20) NOT NULL COMMENT '主键',
-  `created_by` bigint(20) NOT NULL COMMENT '创建人',
-  `created_time` datetime NOT NULL COMMENT '创建时间',
-  `updated_by` bigint(20) DEFAULT NULL COMMENT '更新人',
-  `updated_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `status` int(1) NOT NULL COMMENT '状态（1/正常 2/停用）',
-  `del_flag` int(1) NOT NULL DEFAULT 1 COMMENT '删除标识（1/正常 2/删除）',
-    `sort_number`         int(4)          not null         comment '排序编号',
-     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='这是demo表';
+
+-- 主表基础字段
+drop table if exists `xxx_xxx`;
+create table if not exists `xxx_xxx` (
+    `id` bigint(20) not null comment '主键',
+    `created_by` bigint(20) not null comment '创建人',
+    `created_time` datetime not null comment '创建时间',
+    `updated_by` bigint(20) default null comment '更新人',
+    `updated_time` datetime default null comment '更新时间',
+    `inactive` int(1) not null default b'0' comment '状态（true/已失活 false/未失活）',
+    `del_flag` bit(1) not null default b'0' comment '删除标识（true/已删除 false/未删除）',
+    primary key (`id`)
+)  comment='xxxxx';
+
+-- 中间表基础字段, rel 是"relational"（关系型）的缩写
+drop table if exists `xxx_xxx_rel`;
+create table if not exists `xxx_xxx_rel` (
+    `id` bigint(20) not null comment '主键',
+    `created_time` datetime not null comment '创建时间',
+    `updated_time` datetime default null comment '更新时间',
+    `del_flag` bit(1) not null default b'0' comment '删除标识（true/已删除 false/未删除）',
+    primary key (`id`)
+)  comment='xxxxx';
 
 
 CREATE TABLE IF NOT EXISTS `sys_menu` (
