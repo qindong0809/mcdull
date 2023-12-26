@@ -7,7 +7,7 @@
 ### 1、表结构 
 - 主表基础字段
 ``` sql
--- (系统名_模块名 或者 业务名称_表的作用)
+-- xxx_xxx: 表示系统名_模块名/业务名称_表的作用
 drop table if exists `xxx_xxx`; 
 create table if not exists `xxx_xxx` (
     `id` bigint(20) not null comment '主键',
@@ -21,8 +21,9 @@ create table if not exists `xxx_xxx` (
 )  comment='xxxxx';
 ```
 
-- 中间表基础字段, rel 是"relational"（关系型）的缩写
+- 中间表基础字段
 ``` sql
+-- rel 是"relational"（关系型）的缩写
 drop table if exists `xxx_xxx_rel`;
 create table if not exists `xxx_xxx_rel` (
     `id` bigint(20) not null comment '主键',
@@ -34,7 +35,7 @@ create table if not exists `xxx_xxx_rel` (
 ```
 - 存储字符串长度固定使用```char```
 - `varchar`长度不超过5000， 超过使用`text`, 有必要时独立出来一张表，避免影响其它字段索引效率
-- 若表中存在表示类型的字段，必须在字段后注释在说明所有类型
+- 若表中存在表示类型的字段，必须在字段后注释说明所有类型
 ``` sql
 -- 反例
 status char(1) not null comment '状态',   
