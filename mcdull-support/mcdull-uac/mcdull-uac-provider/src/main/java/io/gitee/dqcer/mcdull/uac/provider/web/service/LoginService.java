@@ -5,7 +5,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.enums.AuthCodeEnum;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
@@ -118,10 +117,10 @@ public class LoginService {
             log.warn("账号已停用 account: {}", account);
             return Result.error(AuthCodeEnum.DISABLE);
         }
-        if (!userEntity.getDelFlag().equals(DelFlayEnum.NORMAL.getCode())) {
-            log.warn("账号已被删除 account: {}", account);
-            return Result.error(AuthCodeEnum.NOT_EXIST);
-        }
+//        if (!userEntity.getDelFlag().equals(DelFlayEnum.NORMAL.getCode())) {
+//            log.warn("账号已被删除 account: {}", account);
+//            return Result.error(AuthCodeEnum.NOT_EXIST);
+//        }
 
         Long userId = userEntity.getId();
 

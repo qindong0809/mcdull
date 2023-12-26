@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import org.hibernate.validator.constraints.Length;
@@ -30,12 +29,6 @@ public class MenuLiteDTO extends PagedDTO {
      */
      @EnumsIntValid(groups = {ValidGroup.Status.class}, value = StatusEnum.class)
      private Integer status;
-
-    /**
-     * 删除标识（1/正常 2/删除）
-     */
-    @EnumsIntValid(groups = {ValidGroup.Delete.class}, value = DelFlayEnum.class)
-    private Integer delFlag;
 
     /**
      * 昵称
@@ -84,7 +77,6 @@ public class MenuLiteDTO extends PagedDTO {
         final StringBuilder sb = new StringBuilder("MenuLiteDTO{");
         sb.append("id=").append(id);
         sb.append(", status=").append(status);
-        sb.append(", delFlag=").append(delFlag);
         sb.append(", name='").append(name).append('\'');
         sb.append(", parentId=").append(parentId);
         sb.append(", icon='").append(icon).append('\'');
@@ -167,14 +159,6 @@ public class MenuLiteDTO extends PagedDTO {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public Integer getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
     }
 
     public String getName() {

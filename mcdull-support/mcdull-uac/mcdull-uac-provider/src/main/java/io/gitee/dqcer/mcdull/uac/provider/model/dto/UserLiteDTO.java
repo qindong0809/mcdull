@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import org.hibernate.validator.constraints.Length;
@@ -31,12 +30,6 @@ public class UserLiteDTO extends PagedDTO {
      */
      @EnumsIntValid(groups = {ValidGroup.Status.class}, value = StatusEnum.class)
      private String status;
-
-    /**
-     * 删除标识（false/正常 true/删除）
-     */
-    @EnumsIntValid(groups = {ValidGroup.Delete.class}, value = DelFlayEnum.class)
-    private Boolean delFlag;
 
 
     /**
@@ -75,7 +68,6 @@ public class UserLiteDTO extends PagedDTO {
         return "UserLiteDTO{" +
                 "id=" + id +
                 ", status=" + status +
-                ", delFlag=" + delFlag +
                 ", nickname='" + nickname + '\'' +
                 ", account='" + account + '\'' +
                 ", email='" + email + '\'' +
@@ -139,12 +131,4 @@ public class UserLiteDTO extends PagedDTO {
         this.status = status;
     }
 
-    public Boolean getDelFlag() {
-        return delFlag;
-    }
-
-    public UserLiteDTO setDelFlag(Boolean delFlag) {
-        this.delFlag = delFlag;
-        return this;
-    }
 }

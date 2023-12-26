@@ -142,8 +142,7 @@ public class UserService {
         UserDO entity = new UserDO();
         entity.setId(id);
         entity.setStatus(status);
-        entity.setUpdatedBy(UserContextHolder.currentUserId());
-        entity.setUpdatedTime(new Date());
+
         boolean success = userRepository.updateById(entity);
         if (!success) {
             log.error("数据更新失败，entity:{}", entity);
@@ -169,16 +168,10 @@ public class UserService {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
-        Boolean delFlag = dto.getDelFlag();
-        if (dbData.getDelFlag().equals(delFlag)) {
-            log.warn("数据已存在 id: {} status: {}", id, delFlag);
-            return Result.error(CodeEnum.DATA_EXIST);
-        }
 
         UserDO entity = new UserDO();
         entity.setId(id);
-        entity.setUpdatedBy(UserContextHolder.currentUserId());
-        entity.setUpdatedTime(new Date());
+
         boolean success = userRepository.updateById(entity);
         if (!success) {
             log.error("数据删除失败，entity:{}", entity);

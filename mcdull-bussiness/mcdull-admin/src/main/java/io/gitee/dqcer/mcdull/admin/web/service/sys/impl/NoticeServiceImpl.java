@@ -105,7 +105,7 @@ public class NoticeServiceImpl implements INoticeService {
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
         NoticeDO entity = NoticeConvert.convertToNoticeDO(dto);
-        entity.setUpdatedBy(UserContextHolder.currentUserId());
+
         boolean success = noticeRepository.updateById(entity);
         if (!success) {
             log.error("数据更新失败, entity:{}", entity);

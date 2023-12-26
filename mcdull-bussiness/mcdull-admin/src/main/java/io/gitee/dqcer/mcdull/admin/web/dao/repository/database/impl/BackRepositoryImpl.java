@@ -11,10 +11,8 @@ import io.gitee.dqcer.mcdull.admin.model.dto.database.BackListDTO;
 import io.gitee.dqcer.mcdull.admin.model.entity.database.BackDO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.database.BackMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IBackRepository;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +55,6 @@ public class BackRepositoryImpl extends ServiceImpl<BackMapper, BackDO>  impleme
     @Override
     public void updateToDelete(Long id) {
         LambdaUpdateWrapper<BackDO> update = Wrappers.lambdaUpdate();
-        update.set(BaseDO::getDelFlag, DelFlayEnum.DELETED.getCode());
         update.eq(IdDO::getId, id);
         baseMapper.update(null, update);
     }

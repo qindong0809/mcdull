@@ -140,7 +140,7 @@ public class RoleServiceImpl implements IRoleService {
         }
         RoleDO entity = RoleConvert.convertToRoleDO(dto);
         entity.setId(id);
-        entity.setUpdatedBy(UserContextHolder.currentUserId());
+;
         boolean success = roleRepository.updateById(entity);
         if (!success) {
             log.error("数据更新失败, entity:{}", entity);
@@ -172,7 +172,7 @@ public class RoleServiceImpl implements IRoleService {
         RoleDO entity = new RoleDO();
         entity.setId(id);
         entity.setStatus(dto.getStatus());
-        entity.setUpdatedBy(UserContextHolder.currentUserId());
+
         boolean success = roleRepository.updateById(entity);
 
         if (!success) {

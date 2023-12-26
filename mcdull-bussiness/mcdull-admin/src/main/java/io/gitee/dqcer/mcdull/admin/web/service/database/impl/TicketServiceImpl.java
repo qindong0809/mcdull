@@ -29,7 +29,6 @@ import io.gitee.dqcer.mcdull.admin.web.manager.common.ISysConfigManager;
 import io.gitee.dqcer.mcdull.admin.web.service.database.ITicketService;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -185,7 +184,7 @@ public class TicketServiceImpl implements ITicketService {
         }
 
         TicketDO entity = TicketConvert.convertToTicketDO(dto);
-        entity.setUpdatedBy(UserContextHolder.currentUserId());
+
         boolean success = ticketRepository.updateById(entity);
         if (!success) {
             log.error("数据更新失败, entity:{}", entity);
@@ -223,7 +222,7 @@ public class TicketServiceImpl implements ITicketService {
         TicketDO entity = new TicketDO();
         entity.setId(id);
         entity.setFollowStatus(status);
-        entity.setUpdatedBy(UserContextHolder.currentUserId());
+
         boolean success = ticketRepository.updateById(entity);
 
         if (!success) {
@@ -319,7 +318,6 @@ public class TicketServiceImpl implements ITicketService {
         List<TicketInstanceDO> ticketInstanceDOList = ticketInstanceRepository.getListByTicketId(id);
         List<Long> instanceIdList = ticketInstanceDOList.stream().map(TicketInstanceDO::getInstanceId).collect(Collectors.toList());
         List<InstanceDO> instanceList = instanceRepository.listByIds(instanceIdList);
-        instanceList = instanceList.stream().filter(i -> DelFlayEnum.NORMAL.getCode().equals(i.getDelFlag())).collect(Collectors.toList());
         if (CollUtil.isEmpty(instanceList)) {
             return Result.success();
         }

@@ -15,7 +15,6 @@ import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
@@ -137,9 +136,6 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
         for (UserRoleDO userRoleDO : userRoleDOList) {
             Long roleId = userRoleDO.getRoleId();
             RoleDO roleDO = roleMapper.selectById(roleId);
-            if (DelFlayEnum.DELETED.getCode().equals(roleDO.getDelFlag())) {
-                continue;
-            }
 
             UserPowerVO vo = this.builderPowerVO(roleDO);
             vos.add(vo);
@@ -208,7 +204,6 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
     @Override
     public void delete(Long id) {
         LambdaUpdateWrapper<UserDO> update = Wrappers.lambdaUpdate();
-        update.set(UserDO::getDelFlag, DelFlayEnum.DELETED.getCode());
         update.eq(IdDO::getId, id);
         int rowSize = baseMapper.update(null, update);
         if (rowSize == GlobalConstant.Database.ROW_0) {

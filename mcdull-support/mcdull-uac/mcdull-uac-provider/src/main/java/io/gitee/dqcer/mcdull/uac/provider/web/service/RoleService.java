@@ -117,8 +117,7 @@ public class RoleService {
         RoleDO entity = new RoleDO();
         entity.setId(id);
 //        entity.setStatus(status);
-        entity.setUpdatedBy(UserContextHolder.currentUserId());
-        entity.setUpdatedTime(new Date());
+
         boolean success = roleRepository.updateById(entity);
         if (!success) {
             log.error("数据更新失败，entity:{}", entity);
@@ -144,16 +143,10 @@ public class RoleService {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
-        Boolean delFlag = dto.getDelFlag();
-        if (dbData.getDelFlag().equals(delFlag)) {
-            log.warn("数据已存在 id: {} status: {}", id, delFlag);
-            return Result.error(CodeEnum.DATA_EXIST);
-        }
 
         RoleDO entity = new RoleDO();
         entity.setId(id);
-        entity.setUpdatedBy(UserContextHolder.currentUserId());
-        entity.setUpdatedTime(new Date());
+
         boolean success = roleRepository.updateById(entity);
         if (!success) {
             log.error("数据删除失败，entity:{}", entity);

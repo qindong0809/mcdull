@@ -107,7 +107,7 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
         ${cfg.entityName} entity = ${cfg.convertName}.convertTo${cfg.entityName}(dto);
-        entity.setUpdatedBy(UserContextHolder.currentUserId());
+
         boolean success = ${(cfg.repositoryName?substring(1))?uncap_first}.updateById(entity);
         if (!success) {
             log.error("数据更新失败, entity:{}", entity);
@@ -138,7 +138,6 @@ public class ${cfg.serviceImplName} implements ${cfg.serviceName} {
         ${cfg.entityName} entity = new ${cfg.entityName}();
         entity.setId(id);
         entity.setStatus(dto.getStatus());
-        entity.setUpdatedBy(UserContextHolder.currentUserId());
         boolean success = ${(cfg.repositoryName?substring(1))?uncap_first}.updateById(entity);
 
         if (!success) {

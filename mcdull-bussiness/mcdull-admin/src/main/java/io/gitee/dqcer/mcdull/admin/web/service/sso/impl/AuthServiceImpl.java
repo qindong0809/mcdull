@@ -27,7 +27,6 @@ import io.gitee.dqcer.mcdull.admin.web.service.common.ICaptchaService;
 import io.gitee.dqcer.mcdull.admin.web.service.sso.IAuthService;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.enums.AuthCodeEnum;
-import io.gitee.dqcer.mcdull.framework.base.enums.DelFlayEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
 import io.gitee.dqcer.mcdull.framework.base.storage.SsoConstant;
@@ -128,11 +127,11 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
             this.listener(userLoginDO, UserLoginDO.FAIL, AuthCodeEnum.DISABLE.getMessage());
             return Result.error(AuthCodeEnum.DISABLE);
         }
-        if (!userEntity.getDelFlag().equals(DelFlayEnum.NORMAL.getCode())) {
-            log.warn("账号已被删除 account: {}", account);
-            this.listener(userLoginDO, UserLoginDO.FAIL, AuthCodeEnum.NOT_EXIST.getMessage());
-            return Result.error(AuthCodeEnum.NOT_EXIST);
-        }
+//        if (!userEntity.getDelFlag().equals(DelFlayEnum.NORMAL.getCode())) {
+//            log.warn("账号已被删除 account: {}", account);
+//            this.listener(userLoginDO, UserLoginDO.FAIL, AuthCodeEnum.NOT_EXIST.getMessage());
+//            return Result.error(AuthCodeEnum.NOT_EXIST);
+//        }
 
         Long userId = userEntity.getId();
 

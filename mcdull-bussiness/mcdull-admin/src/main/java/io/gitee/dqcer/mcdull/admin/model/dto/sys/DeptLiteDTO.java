@@ -71,14 +71,6 @@ public class DeptLiteDTO extends KeywordDTO implements DTO {
         this.status = status;
     }
 
-    public Integer getDelFlag() {
-        return delFlag;
-    }
-
-    public DeptLiteDTO setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
-        return this;
-    }
 
     public String getDeptName() {
         return deptName;
