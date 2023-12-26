@@ -43,6 +43,7 @@ status char(1) not null comment '状态',
 status char(1) not null comment '状态（1/已提交 2/已完成 3/已关闭）'
 ```
 - 字段设计在符合业务的情况下，建议都设计为 `not null`
+- 适当冗余主线业务的`id`字段，便于查找和统计
 
 
 ### 2、当前用户修改资料
