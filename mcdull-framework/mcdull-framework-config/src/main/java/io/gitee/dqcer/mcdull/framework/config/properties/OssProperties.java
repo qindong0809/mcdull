@@ -13,6 +13,8 @@ public class OssProperties {
 
     private OssTypeEnum type = OssTypeEnum.LOCAL;
 
+    private static String localPath;
+
     private String url;
 
     private String accessKey;
@@ -22,6 +24,14 @@ public class OssProperties {
     private Long maxFileSize;
 
     private Long maxRequestSize;
+
+    public static String getLocalPath() {
+        return localPath;
+    }
+
+    public void setLocalPath(String localPath) {
+        OssProperties.localPath = localPath;
+    }
 
     public Long getMaxFileSize() {
         return maxFileSize == null ? DEFAULT_MAX_FILE_SIZE : maxFileSize;

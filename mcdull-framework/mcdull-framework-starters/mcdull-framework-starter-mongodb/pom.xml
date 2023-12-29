@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mcdul-framework-starter-mongodb</artifactId>
+    <artifactId>mcdull-framework-starter-mongodb</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

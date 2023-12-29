@@ -49,6 +49,7 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
 //            SaRouter.match("/comment/**", r -> StpUtil.checkPermission("comment"));
         })).addPathPatterns(GlobalConstant.ALL_PATTERNS);
 
+
     }
 
     /**

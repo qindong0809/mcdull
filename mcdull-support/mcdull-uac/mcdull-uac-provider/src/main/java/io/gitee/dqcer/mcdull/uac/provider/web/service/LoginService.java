@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
@@ -25,6 +26,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static io.gitee.dqcer.mcdull.uac.provider.web.controller.CaptchaController.CAPTCHA;
+
 /**
  * 登录服务
  *
@@ -40,28 +43,15 @@ public class LoginService {
     private IUserRepository userRepository;
 
     @Resource
-    private IUserLoginRepository userLoginRepository;
-
-    @Resource
-    private RedissonCache redisClient;
-
-    @Resource
-    private CacheChannel cacheChannel;
+    private RedissonCache redissonCache;
 
     @Resource
     private UserService userService;
 
 
-    /**
-     * 验证码 redis key
-     */
-    private static final String CAPTCHA_CODE_KEY = "captcha_codes:";
-
-
-
     public void login(String username, String password, String code, String uuid) {
-        // 验证码校验
-        this.validateCaptcha(username, code, uuid);
+        // todo 验证码校验
+//        this.validateCaptcha(username, code, uuid);
         // 登录前置校验
         Long loginId = this.loginPreCheck(username, password);
         StpUtil.login(loginId);
@@ -82,7 +72,14 @@ public class LoginService {
     }
 
     public void validateCaptcha(String username, String code, String uuid) {
-
+        String verifyKey = CAPTCHA + uuid;
+        String captcha = redissonCache.get(verifyKey, String.class);
+        if (StrUtil.isEmpty(captcha)) {
+            throw new BusinessException("user.captcha.expire");
+        }
+        if (!StrUtil.equals(captcha, code)) {
+            throw new BusinessException("user.captcha.error");
+        }
     }
 
     /**

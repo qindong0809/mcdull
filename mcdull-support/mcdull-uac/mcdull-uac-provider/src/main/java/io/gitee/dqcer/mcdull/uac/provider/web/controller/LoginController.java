@@ -35,14 +35,13 @@ public class LoginController implements AuthServiceApi {
     /**
      * 登录 21232F297A57A5A743894A0E4A801FC3
      *
-     * @param loginDTO 登录dto
+     * @param dto 登录dto
      * @return {@link Result}<{@link LoginVO}>
      */
     @Operation(summary = "登录", description = "login api")
     @PostMapping("login")
-    public Result<String> login(@RequestBody @Valid LoginDTO loginDTO) {
-        loginService.login(loginDTO.getUsername(), loginDTO.getPassword(), loginDTO.getCode(),
-                loginDTO.getUuid());
+    public Result<String> login(@RequestBody @Valid LoginDTO dto) {
+        loginService.login(dto.getUsername(), dto.getPassword(), dto.getCode(), dto.getUuid());
         return Result.success();
     }
 
@@ -52,7 +51,7 @@ public class LoginController implements AuthServiceApi {
      * @return {@link Result<String>}
      */
     @PostMapping("logout")
-    @Operation(summary = "注销", description = "logout api")
+    @Operation(summary = "注销当前token", description = "logout api")
     public Result<String> logout() {
         loginService.logout();
         return Result.success();

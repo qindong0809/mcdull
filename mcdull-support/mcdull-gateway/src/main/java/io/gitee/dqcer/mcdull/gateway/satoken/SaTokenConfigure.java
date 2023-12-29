@@ -31,8 +31,9 @@ public class SaTokenConfigure {
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
                     // 登录校验 -- 拦截所有路由，并排除/user/doLogin 用于开放登录
-                    SaRouter.match(GlobalConstant.ALL_PATTERNS, "/uac" + GlobalConstant.SSO_LOGIN,
-                            r -> StpUtil.checkLogin());
+                    SaRouter.match(GlobalConstant.ALL_PATTERNS)
+                            .notMatch("/uac" + GlobalConstant.SSO_LOGIN, "/uac/captchaImage")
+                            .check(r -> StpUtil.checkLogin());
                     // 权限认证 -- 不同模块, 校验不同权限
 //                    SaRouter.match("/admin/**", r -> StpUtil.checkPermission("admin"));
                 })
