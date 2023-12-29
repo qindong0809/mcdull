@@ -1,7 +1,10 @@
 package io.gitee.dqcer.mcdull.framework.base.wrapper;
 
 
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 
 import java.io.Serializable;
@@ -170,7 +173,11 @@ public class Result<T> implements Serializable {
     }
 
     public String getTraceId() {
-        return UserContextHolder.getSession().getTraceId();
+        UnifySession session = UserContextHolder.getSession();
+        if (ObjUtil.isNotNull(session)) {
+            return session.getTraceId();
+        }
+        return StrUtil.EMPTY;
     }
 
     public void setTraceId(String traceId) {

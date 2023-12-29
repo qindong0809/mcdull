@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Locale;
@@ -16,7 +15,6 @@ import java.util.Locale;
  * @author dqcer
  * @since 2023/12/27
  */
-@Component
 public class DynamicLocaleMessageSourceImpl implements DynamicLocaleMessageSource {
 
     private static final Logger log = LoggerFactory.getLogger(DynamicLocaleMessageSourceImpl.class);
@@ -37,12 +35,6 @@ public class DynamicLocaleMessageSourceImpl implements DynamicLocaleMessageSourc
 
     @Override
     public String getMessage(String code) {
-        Locale locale = LocaleContextHolder.getLocale();
-        try {
-            return messageSource.getMessage(code, null, locale);
-        } catch (NoSuchMessageException e) {
-            log.error(e.getMessage(), e);
-        }
-        return StrUtil.EMPTY;
+        return this.getMessage(code, null);
     }
 }

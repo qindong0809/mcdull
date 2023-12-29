@@ -15,7 +15,7 @@ import java.util.StringJoiner;
 @Schema(name = "用户登录对象")
 public class LoginDTO implements DTO {
 
-    @NotBlank
+    @NotBlank(message = "{username.notBlank}")
     @Schema(description = "账号", example = "admin", requiredMode = Schema.RequiredMode.REQUIRED)
     private String username;
 

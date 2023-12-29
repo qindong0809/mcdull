@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.ICode;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
+import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.annotation.Resource;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
@@ -46,6 +46,9 @@ public class ExceptionAdvice {
 
     @Value("${spring.application.name}")
     private String applicationName;
+
+    @Resource
+    private DynamicLocaleMessageSource dynamicLocaleMessageSource;
 
     /**
      * 异常
@@ -74,8 +77,9 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(value = BusinessException.class)
     public Result<?> businessException(BusinessException exception) {
-        log.error("{}. Business Exception. ", UserContextHolder.print(), exception);
-        return Result.error(exception.getCode());
+        String i18nMessage = dynamicLocaleMessageSource.getMessage(exception.getMessageCode(), exception.getArgs());
+        log.error("{}. Business Exception. {}", UserContextHolder.print(), i18nMessage, exception);
+        return Result.error(i18nMessage);
     }
 
     /**
@@ -137,8 +141,9 @@ public class ExceptionAdvice {
      * @param e e
      * @return {@link Result}
      */
-    @ExceptionHandler(value = {BindException.class, ValidationException.class, MethodArgumentNotValidException.class, MissingServletRequestParameterException.class})
-    public Result<String> handleValidatedException(Exception e, HttpServletRequest request) {
+    @ExceptionHandler(value = {BindException.class, ValidationException.class, MethodArgumentNotValidException.class,
+            MissingServletRequestParameterException.class})
+    public Result<String> handleValidatedException(Exception e) {
         String errorMessage = "";
         if (e instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException ex = (MethodArgumentNotValidException) e;
@@ -146,19 +151,19 @@ public class ExceptionAdvice {
             ObjectError objectError = allErrors.get(0);
             Object[] arguments = objectError.getArguments();
             if (arguments == null) {
-                errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,，错误提示：%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), objectError.getDefaultMessage());
-                log.error("参数异常: {}", errorMessage);
+                errorMessage = String.format("appName: %s, %s", applicationName,  objectError.getDefaultMessage());
+                log.error("parameter exception: {}", errorMessage);
                 return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
             }
             DefaultMessageSourceResolvable a = (DefaultMessageSourceResolvable) arguments[0];
-            errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,字段名称：%s，错误提示：%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), a.getDefaultMessage(), objectError.getDefaultMessage());
-            log.error("参数异常: {}", errorMessage);
+            errorMessage = String.format("appName: %s, %s: %s", applicationName, a.getDefaultMessage(), objectError.getDefaultMessage());
+            log.error("parameter exception: {}", errorMessage);
             return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
         if (e instanceof ConstraintViolationException) {
             ConstraintViolationException ex = (ConstraintViolationException) e;
             errorMessage = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining("; "));
-            log.error("参数异常: {}", errorMessage);
+            log.error("parameter exception: {}", errorMessage);
             return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
 
@@ -170,10 +175,10 @@ public class ExceptionAdvice {
             if (arguments != null) {
                 DefaultMessageSourceResolvable a = (DefaultMessageSourceResolvable) arguments[0];
                 String fieldName = a.getDefaultMessage();
-                errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,字段名称：%s，错误提示：%s",
-                        applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), fieldName, objectError.getDefaultMessage());
+                errorMessage = String.format("appName: %s, %s: %s",
+                        applicationName, fieldName, objectError.getDefaultMessage());
             }
-            log.error("参数异常: {}", errorMessage);
+            log.error("parameter exception: {}", errorMessage);
             return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
 
@@ -181,17 +186,19 @@ public class ExceptionAdvice {
             MissingServletRequestParameterException ex = (MissingServletRequestParameterException) e;
             String parameterName = ex.getParameterName();
 
-            log.error("参数异常, parameterName: {}, {}", parameterName, String.format("appName=%s, clientIp=%s, requestURI=%s,message:%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), ex.getMessage()));
+            log.error("parameter exception, parameterName: {}, {}", parameterName,
+                    String.format("appName: %s, %s", applicationName, ex.getMessage()));
             return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
         if (e instanceof ValidationException) {
             ValidationException validationException = (ValidationException) e;
             String parameterName = validationException.getMessage();
-            log.error("参数异常, parameterName: {}, {}", parameterName, String.format("appName=%s, clientIp=%s, requestURI=%s,message:%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), validationException.getMessage()));
+            log.error("参数异常, parameterName: {}, {}", parameterName,
+                    String.format("appName: %s, message:%s", applicationName, validationException.getMessage()));
             return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
-        errorMessage = String.format("appName=%s, clientIp=%s, requestURI=%s,message:%s", applicationName, IpUtil.getIpAddr(request), request.getRequestURI(), e.getMessage());
-        log.error("参数异常: {}", errorMessage);
+        errorMessage = String.format("appName: %s, message:%s", applicationName, e.getMessage());
+        log.error("parameter exception: {}", errorMessage);
         return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
     }
 }

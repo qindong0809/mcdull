@@ -29,7 +29,8 @@ import java.lang.annotation.Target;
         MultipartFileConfig.class,
         ThreadPoolConfig.class,
         UndertowConfig.class,
-        SpringContextHolder.class
+        SpringContextHolder.class,
+        I18nConfig.class
 })
 public @interface EnableWebCore {
 }

@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.base.storage;
 
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 
@@ -61,6 +62,10 @@ public class UserContextHolder {
     }
 
     public static String print() {
-        return StrUtil.format("url: {}. userId: {}", getSession().getRequestUrl(), getSession().getUserId());
+        UnifySession session = getSession();
+        if (ObjUtil.isNotNull(session)) {
+            return StrUtil.format("url: {}. userId: {}", session.getRequestUrl(), session.getUserId());
+        }
+        return StrUtil.EMPTY;
     }
 }

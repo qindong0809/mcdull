@@ -15,6 +15,26 @@ public class BusinessException extends RuntimeException {
 
 	protected ICode code;
 
+	private String messageCode;
+
+	private Object[] args;
+
+	public String getMessageCode() {
+		return messageCode;
+	}
+
+	public void setMessageCode(String messageCode) {
+		this.messageCode = messageCode;
+	}
+
+	public Object[] getArgs() {
+		return args;
+	}
+
+	public void setArgs(Object[] args) {
+		this.args = args;
+	}
+
 	public void setCode(ICode code) {
 		this.code = code;
 	}
@@ -33,8 +53,14 @@ public class BusinessException extends RuntimeException {
 	}
 
 
-	public BusinessException(String message) {
-		super(message);
+	public BusinessException(String messageCode) {
+		super(messageCode);
+		this.messageCode = messageCode;
+	}
+
+	public BusinessException(String messageCode, Object[] args) {
+		super(messageCode);
+		this.args = args;
 	}
 
 

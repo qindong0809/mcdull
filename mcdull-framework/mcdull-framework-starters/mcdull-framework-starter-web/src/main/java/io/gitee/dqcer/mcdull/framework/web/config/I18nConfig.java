@@ -27,7 +27,8 @@ public class I18nConfig {
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name());
-        messageSource.setBasenames("i18n/framework", "i18n/message");
+        messageSource.setBasenames("classpath:i18n/framework", "classpath:i18n/message");
+        messageSource.setCacheSeconds(-1);
         // TODO: 2023/12/27 修改路径可读取外部文件
         return messageSource;
     }

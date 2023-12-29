@@ -19,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 /**
@@ -47,46 +48,25 @@ public class ExceptionHandler implements WebExceptionHandler, Ordered {
         }
 
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-
+        response.setStatusCode(HttpStatus.OK);
 
         return response.writeWith(Mono.fromSupplier(() -> {
             DataBufferFactory bufferFactory = response.bufferFactory();
             try {
-                Result<?> error = null;
+                Result<?> error;
                 if (ex instanceof ResponseStatusException) {
                     HttpStatus status = ((ResponseStatusException) ex).getStatus();
-                    switch (status) {
-                        case NOT_FOUND:
-                            // 404
-                            error = Result.error(CodeEnum.NOT_FOUND);
-                            break;
-                        case METHOD_NOT_ALLOWED:
-                            // 405
-                            error = Result.error(CodeEnum.METHOD_NOT_ALLOWED);
-                            break;
-                        case BAD_REQUEST:
-                            // 参数异常
-                            log.warn("网关异常处理", ex);
-                            error = Result.error(CodeEnum.ERROR_PARAMETERS);
-                            break;
-                        case SERVICE_UNAVAILABLE:
-                            // 服务不可用
-                            error = Result.error(CodeEnum.SERVICE_UNAVAILABLE, Collections.singletonList(ex.getMessage()));
-                            break;
-                        default:
-                            // 其他异常默认为500
-                            log.warn("网关异常处理", ex);
-                            error = Result.error(CodeEnum.INTERNAL_SERVER_ERROR, Collections.singletonList(ex.getMessage()));
-                            break;
-                    }
+                    error = Result.error(status.value(), status.getReasonPhrase());
                 } else {
                     log.warn("网关异常处理: {}", ex.getMessage());
                     error = Result.error(CodeEnum.INTERNAL_SERVER_ERROR, Collections.singletonList(ex.getMessage()));
                 }
                 return bufferFactory.wrap(objectMapper.writeValueAsBytes(error));
             } catch (JsonProcessingException e) {
-                log.error("json 处理异常", ex);
-                return bufferFactory.wrap(new byte[0]);
+                log.error("json 处理异常", e);
+                String m = "{\"code\":" + CodeEnum.INTERNAL_SERVER_ERROR + ", \"data\":null, \"message\":\""
+                        + CodeEnum.INTERNAL_SERVER_ERROR.getMessage() + "\"}";
+                return bufferFactory.wrap(m.getBytes(StandardCharsets.UTF_8));
             }
         }));
     }

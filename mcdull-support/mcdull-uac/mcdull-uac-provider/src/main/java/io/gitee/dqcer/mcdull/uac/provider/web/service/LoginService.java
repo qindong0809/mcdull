@@ -3,31 +3,22 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
-import io.gitee.dqcer.mcdull.framework.base.enums.AuthCodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
-import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
-import io.gitee.dqcer.mcdull.framework.base.storage.SsoConstant;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserLoginRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.text.MessageFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -72,21 +63,22 @@ public class LoginService {
         // 验证码校验
         this.validateCaptcha(username, code, uuid);
         // 登录前置校验
-        this.loginPreCheck(username, password);
+        Long loginId = this.loginPreCheck(username, password);
+        StpUtil.login(loginId);
     }
 
-    private void loginPreCheck(String username, String passwordDTO) {
+    private Long loginPreCheck(String username, String passwordDTO) {
         UserDO userEntity = userRepository.get(username);
         if (ObjUtil.isNotNull(userEntity)) {
             String password = userEntity.getPassword();
             if (password.equals(Sha1Util.getSha1(passwordDTO + userEntity.getSalt()))) {
                 if (Boolean.FALSE.equals(userEntity.getInactive())) {
-                    StpUtil.login(userEntity.getId());
-                    return;
+                    return userEntity.getId();
                 }
+                throw new BusinessException("user.account.not.active");
             }
         }
-        throw new BusinessException(CodeEnum.UN_AUTHORIZATION);
+        throw new BusinessException("incorrect.username.or.password");
     }
 
     public void validateCaptcha(String username, String code, String uuid) {
