@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import io.gitee.dqcer.mcdull.framework.oss.component.OssFactory;
 import io.gitee.dqcer.mcdull.framework.oss.factory.OssClient;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,6 +45,7 @@ public class CommonController {
 
     @Operation(summary = "通用上传请求", description = "单个文件")
     @PostMapping("/upload")
+    @SaIgnore
     public R uploadFile(MultipartFile file) throws Exception {
         OssClient ossClient = ossFactory.getInstance();
         // TODO: 2023/12/29
