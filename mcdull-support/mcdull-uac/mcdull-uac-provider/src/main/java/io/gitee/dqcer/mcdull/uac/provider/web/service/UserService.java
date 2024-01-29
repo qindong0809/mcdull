@@ -1,29 +1,27 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.Md5Util;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
+import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import io.gitee.dqcer.mcdull.mdc.client.constants.DictEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.UserConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.IDictManager;
-import io.gitee.dqcer.mcdull.uac.provider.web.manager.uac.IUserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 用户服务
@@ -47,137 +47,110 @@ public class UserService {
     private IUserRepository userRepository;
 
     @Resource
-    private IUserManager userManager;
+    private UserRoleService userRoleService;
 
     @Resource
-    private IUserRoleRepository userRoleRepository;
+    private RoleService roleService;
 
-    @Resource
-    private IDictManager dictManager;
 
-    
-    /**
-     * 列表
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link List}<{@link UserVO}>>
-     */
-    public Result<PagedVO<UserVO>> listByPage(UserLiteDTO dto) {
+    @Transactional(readOnly = true)
+    public PagedVO<UserVO> listByPage(UserLiteDTO dto) {
         Page<UserDO> entityPage = userRepository.selectPage(dto);
         List<UserVO> voList = new ArrayList<>();
-        List<UserDO> records = entityPage.getRecords();
-        Map<String, String> dictMap = new HashMap<>(records.size());
-        if (CollUtil.isNotEmpty(records)) {
-            dictMap = dictManager.codeNameMap(DictEnum.STATUS_TYPE);
+        List<UserDO> userList = entityPage.getRecords();
+        if (entityPage.getTotal() == 0) {
+            return PageUtil.toPage(voList, entityPage);
         }
-        for (UserDO entity : records) {
-            UserVO vo = userManager.entity2VO(entity);
-            vo.setStatusStr(dictMap.getOrDefault(vo.getStatus(), StrUtil.EMPTY));
+        Set<Long> createdBySet = userList.stream().map(BaseDO::getCreatedBy).collect(Collectors.toSet());
+        Set<Long> updatedBySet = userList.stream().map(BaseDO::getUpdatedBy)
+                .filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+        createdBySet.addAll(updatedBySet);
+        List<UserDO> list = userRepository.listByIds(createdBySet);
+        Map<Long, UserDO> userMap = new HashMap<>(list.size());
+        if (CollUtil.isNotEmpty(list)) {
+            userMap = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+        }
+
+        List<Long> userIdList = userList.stream().map(IdDO::getId).collect(Collectors.toList());
+        Map<Long, List<RoleDO>> roleListMap = roleService.getRoleMap(userIdList);
+
+        for (UserDO entity : userList) {
+            UserVO vo = UserConvert.entity2VO(entity);
+            this.setUserFieldValue(userMap, vo);
+            this.setRoleListFieldValue(roleListMap, vo);
             voList.add(vo);
         }
-        return Result.success(PageUtil.toPage(voList, entityPage));
+        return PageUtil.toPage(voList, entityPage);
     }
 
-    /**
-     * 详情
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link UserVO}>
-     */
-    public Result<UserVO> detail(UserLiteDTO dto) {
-        return Result.success(userManager.entity2VO(userRepository.getById(dto.getId())));
-    }
-
-    /**
-     * 新增数据
-     *
-     * @param dto dto
-     * @return {@link Result<Long> 返回新增主键}
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public Result<Long> insert(UserLiteDTO dto) {
-        LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
-        query.eq(UserDO::getUsername, dto.getAccount());
-        query.last(GlobalConstant.Database.SQL_LIMIT_1);
-        List<UserDO> list = userRepository.list(query);
-        if (!list.isEmpty()) {
-            return Result.error(CodeEnum.DATA_EXIST);
+    private void setRoleListFieldValue(Map<Long, List<RoleDO>> roleListMap, UserVO vo) {
+        Long id = vo.getId();
+        List<RoleDO> list = roleListMap.getOrDefault(id, ListUtil.empty());
+        if (CollUtil.isNotEmpty(list)) {
+            List<BaseVO<Long, String>> roleList = list.stream()
+                    .map(i -> new BaseVO<>(i.getId(), i.getName())).collect(Collectors.toList());
+            vo.setRoles(roleList);
         }
+    }
 
-        UserDO entity = UserConvert.dto2Entity(dto);
+    private void setUserFieldValue(Map<Long, UserDO> userMap, UserVO vo) {
+        Long createdBy = vo.getCreatedBy();
+        if (ObjUtil.isNotNull(createdBy)) {
+            vo.setCreatedByStr(userMap.getOrDefault(createdBy, new UserDO()).getUsername());
+        }
+        Long updatedBy = vo.getUpdatedBy();
+        if (ObjUtil.isNotNull(updatedBy)) {
+            vo.setUpdatedByStr(userMap.getOrDefault(updatedBy, new UserDO()).getUsername());
+        }
+    }
 
+    @Transactional(rollbackFor = Exception.class)
+    public Long insert(UserLiteDTO dto) {
+        UserDO user = userRepository.get(dto.getAccount());
+        if (ObjUtil.isNotNull(user)) {
+            throw new BusinessException("data.exists");
+        }
+        UserDO entity = UserConvert.dtoToEntity(dto);
         String salt = RandomUtil.uuid();
         String password = Sha1Util.getSha1(Md5Util.getMd5(dto.getAccount() + salt));
         entity.setSalt(salt);
         entity.setPassword(password);
         entity.setType(1);
-        Long userId = userRepository.insert(entity);
-
-        userRoleRepository.updateByUserId(userId, dto.getRoleIds());
-
-        return Result.success(userId);
+        Long id = userRepository.insert(entity);
+        userRoleService.deleteAndInsert(id, dto.getRoleIds());
+        return id;
     }
 
-    /**
-     * 更新状态
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link Long}>
-     */
     @Transactional(rollbackFor = Exception.class)
-    public Result<Long> updateStatus(UserLiteDTO dto) {
-        Long id = dto.getId();
-//        UserDO dbData = userRepository.getById(id);
-//        if (null == dbData) {
-//            log.warn("数据不存在 id:{}", id);
-//            return Result.error(CodeEnum.DATA_NOT_EXIST);
-//        }
-//        String status = dto.getStatus();
-//        if (dbData.getStatus().equals(status)) {
-//            log.warn("数据已存在 id: {} status: {}", id, status);
-//            return Result.error(CodeEnum.DATA_EXIST);
-//        }
-//
-//        UserDO entity = new UserDO();
-//        entity.setId(id);
-//        entity.setStatus(status);
-//
-//        boolean success = userRepository.updateById(entity);
-//        if (!success) {
-//            log.error("数据更新失败，entity:{}", entity);
-//            throw new BusinessException(CodeEnum.DB_ERROR);
-//        }
-
-        return Result.success(id);
-    }
-
-    /**
-     * 删除
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link Long}>
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public Result<Long> delete(UserLiteDTO dto) {
-        Long id = dto.getId();
-
-
+    public Long toggleActive(Long id) {
         UserDO dbData = userRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
-            return Result.error(CodeEnum.DATA_NOT_EXIST);
+            throw new BusinessException("data.need.refresh");
         }
+        boolean success = userRepository.update(id, !dbData.getInactive());
+        if (!success) {
+            log.error("数据更新失败，id:{}", id);
+            throw new BusinessException("db.operation.failed");
+        }
+        return id;
+    }
 
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean delete(Long id) {
+        UserDO dbData = userRepository.getById(id);
+        if (null == dbData) {
+            log.warn("数据不存在 id:{}", id);
+            throw new BusinessException("data.need.refresh");
+        }
         UserDO entity = new UserDO();
         entity.setId(id);
-
-        boolean success = userRepository.updateById(entity);
+        boolean success = userRepository.removeById(id);
         if (!success) {
             log.error("数据删除失败，entity:{}", entity);
-            throw new BusinessException(CodeEnum.DB_ERROR);
+            throw new BusinessException("db.operation.failed");
         }
-
-        return Result.success(id);
+        return true;
     }
 
     /**
@@ -207,29 +180,25 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Result<Long> update(UserLiteDTO dto) {
+    public Long update(UserLiteDTO dto) {
         Long id = dto.getId();
         UserDO entity = userRepository.getById(id);
         if (entity == null) {
             log.warn("数据不存在 id:{}", id);
-            return Result.error(CodeEnum.DATA_NOT_EXIST);
+            throw new BusinessException("data.not.exist");
         }
-
-        UserDO userDO = userRepository.oneByAccount(dto.getAccount());
+        UserDO userDO = userRepository.get(dto.getAccount());
         if (userDO != null) {
             if (!userDO.getId().equals(id)) {
                 log.warn("账号名称已存在 account: {}", dto.getAccount());
-                return Result.error(CodeEnum.DATA_EXIST);
+                throw new BusinessException("data.exists");
             }
         }
-
-        UserDO updateDO = UserConvert.dto2Entity(dto);
+        UserDO updateDO = UserConvert.dtoToEntity(dto);
         updateDO.setId(id);
         userRepository.updateById(updateDO);
-
-        userRoleRepository.updateByUserId(id, dto.getRoleIds());
-
-        return Result.success(updateDO.getId());
+        userRoleService.deleteAndInsert(id, dto.getRoleIds());
+        return updateDO.getId();
     }
 
     /**

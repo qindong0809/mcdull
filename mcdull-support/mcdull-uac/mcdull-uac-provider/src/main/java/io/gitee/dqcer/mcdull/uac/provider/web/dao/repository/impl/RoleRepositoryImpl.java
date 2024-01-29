@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
+import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
@@ -79,14 +79,15 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
         Set<Long> idList = userRoleMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
 
         LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
-        query.eq(RoleDO::getStatus, StatusEnum.ENABLE.getCode());
+        query.eq(RoleDO::getInactive, InactiveEnum.FALSE.getCode());
         query.in(RoleDO::getId, idList);
         List<RoleDO> list = baseMapper.selectList(query);
         if (CollUtil.isNotEmpty(list)) {
             Map<Long, RoleDO> map = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
             for (Map.Entry<Long, List<Long>> entry : userRoleMap.entrySet()) {
                 List<Long> roleIdList = entry.getValue();
-                List<RoleDO> roleList = roleIdList.stream().map(map::get).filter(ObjUtil::isNotEmpty).collect(Collectors.toList());
+                List<RoleDO> roleList = roleIdList.stream().map(map::get)
+                        .filter(ObjUtil::isNotEmpty).collect(Collectors.toList());
                 if (CollUtil.isNotEmpty(roleList)) {
                     resultMap.put(entry.getKey(), roleList);
                 }

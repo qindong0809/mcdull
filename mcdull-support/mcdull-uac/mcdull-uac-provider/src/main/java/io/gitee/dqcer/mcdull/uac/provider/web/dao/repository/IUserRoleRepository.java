@@ -16,20 +16,12 @@ import java.util.Map;
 public interface IUserRoleRepository extends IService<UserRoleDO> {
 
     /**
-     * 通过用户id获取角色id列表
-     *
-     * @param userId 用户id
-     * @return {@link List}<{@link UserRoleDO}>
-     */
-    List<Long> listRoleByUserId(Long userId);
-
-    /**
      * 更新根据用户id
      *
      * @param id      id
      * @param roleIds 角色id
      */
-    void updateByUserId(Long id, List<Long> roleIds);
+    void deleteAndInsert(Long id, List<Long> roleIds);
 
     /**
      * 角色map

@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
 
 import java.util.Date;
@@ -13,7 +14,7 @@ import java.util.StringJoiner;
  * @since 2022/11/07
  */
 @TableName("sys_menu")
-public class MenuDO extends RelDO {
+public class MenuDO extends BaseDO {
 
 
     /**
@@ -82,22 +83,6 @@ public class MenuDO extends RelDO {
      * 图标
      */
     private String icon;
-
-    /**
-     * 创建人
-     */
-    private Long createdBy;
-
-    /**
-     * 更新时间
-     */
-    private Date updatedTime;
-
-    /**
-     * 更新人
-     */
-    private Long updatedBy;
-
 
     /**
      * 备注
@@ -231,30 +216,6 @@ public class MenuDO extends RelDO {
 
     public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    public Long getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Long createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Date getUpdatedTime() {
-        return updatedTime;
-    }
-
-    public void setUpdatedTime(Date updatedTime) {
-        this.updatedTime = updatedTime;
-    }
-
-    public Long getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(Long updatedBy) {
-        this.updatedBy = updatedBy;
     }
 
     public String getRemark() {

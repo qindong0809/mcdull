@@ -38,7 +38,7 @@ public interface IUserRepository extends IService<UserDO> {
      * @param account 账户
      * @return {@link UserDO}
      */
-    UserDO oneByAccount(String account);
+    UserDO get(String account);
 
     /**
      * 查询资源模块
@@ -56,12 +56,11 @@ public interface IUserRepository extends IService<UserDO> {
     void updateLoginTimeById(Long userId);
 
     /**
-     * 查询用户帐户
+     * update
      *
-     * @param account 账户
-     * @return {@link UserDO}
+     * @param id       身份证件
+     * @param inactive 不活跃
+     * @return boolean
      */
-    UserDO queryUserByAccount(String account);
-
-    UserDO get(String username);
+    boolean update(Long id, boolean inactive);
 }

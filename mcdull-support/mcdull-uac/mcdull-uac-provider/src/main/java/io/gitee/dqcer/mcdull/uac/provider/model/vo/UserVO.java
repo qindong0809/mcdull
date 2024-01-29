@@ -103,7 +103,7 @@ public class UserVO implements VO {
     /**
      * 角色集
      */
-    private List<BaseVO> roles;
+    private List<BaseVO<Long, String>> roles;
 
     @Override
     public String toString() {
@@ -130,11 +130,11 @@ public class UserVO implements VO {
                 '}';
     }
 
-    public List<BaseVO> getRoles() {
+    public List<BaseVO<Long, String>> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<BaseVO> roles) {
+    public void setRoles(List<BaseVO<Long, String>> roles) {
         this.roles = roles;
     }
 

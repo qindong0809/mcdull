@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -91,7 +90,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
      * @return {@link UserDO}
      */
     @Override
-    public UserDO oneByAccount(String account) {
+    public UserDO get(String account) {
         LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
         query.eq(UserDO::getUsername, account);
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
@@ -158,31 +157,13 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
         }
     }
 
-    /**
-     * 查询用户帐户
-     *
-     * @param account 账户
-     * @return {@link UserDO}
-     */
-    @Override
-    public UserDO queryUserByAccount(String account) {
-        LambdaQueryWrapper<UserDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(UserDO::getUsername, account);
-        List<UserDO> list = baseMapper.selectList(wrapper);
-        if (ObjUtil.isNull(list)) {
-            return null;
-        }
-        return list.get(0);
-    }
 
     @Override
-    public UserDO get(String username) {
-        LambdaQueryWrapper<UserDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(UserDO::getUsername, username);
-        List<UserDO> list = baseMapper.selectList(wrapper);
-        if (CollUtil.isEmpty(list)) {
-            return null;
-        }
-        return list.get(0);
+    public boolean update(Long id, boolean inactive) {
+        LambdaUpdateWrapper<UserDO> update = Wrappers.lambdaUpdate();
+        update.set(BaseDO::getInactive, inactive);
+        update.eq(IdDO::getId, id);
+        update.last(GlobalConstant.Database.SQL_LIMIT_1);
+        return baseMapper.update(null, update) > 0;
     }
 }

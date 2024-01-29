@@ -38,7 +38,7 @@ public class UserConvert {
         return userVO;
     }
 
-    public static UserDO dto2Entity(UserLiteDTO dto) {
+    public static UserDO dtoToEntity(UserLiteDTO dto) {
         UserDO entity = new UserDO();
         entity.setNickName(dto.getNickname());
         entity.setUsername(dto.getAccount());

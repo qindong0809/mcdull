@@ -9,11 +9,11 @@ import io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,6 +24,7 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/25
  */
+@Tag(name = "系统用户")
 @RestController
 public class UserController {
 
@@ -37,76 +38,45 @@ public class UserController {
      * @return {@link Result}<{@link List}<{@link UserVO}>>
      */
     @Authorized("sys:user:view")
+    @Operation(summary = "分页列表", description = "")
     @SaCheckPermission("system:user:query")
     @GetMapping("user/base/page")
 //    @Transform
     public Result<PagedVO<UserVO>> listByPage(@Validated(ValidGroup.Paged.class) UserLiteDTO dto) {
-        return userService.listByPage(dto);
+        return Result.success(userService.listByPage(dto));
     }
 
-    /**
-     * 单个
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link UserVO}>
-     */
-//    @GetMapping("user/base/detail")
-//    @Transform
-//    public Result<UserVO> detail(@Validated(ValidGroup.One.class) UserLiteDTO dto) {
-//        return userService.detail(dto);
-//    }
 
-    /**
-     * 新增数据
-     *
-     * @param dto dto
-     * @return {@link Result<Long> 返回新增主键}
-     */
+    @Operation(summary = "新增数据", description = "重复控制")
     @RedisLock(key = "'lock:uac:user:' + #dto.nickname + '-' + #dto.account", timeout = 3)
     @PostMapping("user/base/save")
     public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Insert.class})UserLiteDTO dto){
-        return userService.insert(dto);
+        return Result.success(userService.insert(dto));
     }
 
-    /**
-     * 更新数据
-     *
-     * @param dto dto
-     * @return {@link Result<Long> 返回主键}
-     */
+
+    @Operation(summary = "更新数据", description = "")
     @PostMapping("user/base/update")
     public Result<Long> update(@RequestBody @Validated(value = {ValidGroup.Update.class})UserLiteDTO dto){
-        return userService.update(dto);
+        return Result.success(userService.update(dto));
     }
 
-    /**
-     * 状态更新
-     *
-     * @param dto dto
-     * @return {@link Result<Long>}
-     */
-    @PostMapping("user/base/status")
-    public Result<Long> toggleActive(@RequestBody @Validated(value = {ValidGroup.Status.class}) UserLiteDTO dto){
-        return userService.updateStatus(dto);
+
+    @Operation(summary = "切换状态", description = "")
+    @Parameter(name = "id", required = true, description = "主键")
+    @PostMapping("user/{id}/status")
+    public Result<Long> toggleActive(@PathVariable("id") Long id) {
+        return Result.success(userService.toggleActive(id));
     }
 
-    /**
-     * 单个删除
-     *
-     * @param dto dto
-     * @return {@link Result<Long>}
-     */
-    @PostMapping("user/base/delete")
-    public Result<Long> delete(@RequestBody @Validated(value = {ValidGroup.Delete.class}) UserLiteDTO dto){
-        return userService.delete(dto);
+    @Operation(summary = "单个删除", description = "")
+    @DeleteMapping("user/{id}/delete")
+    public Result<Boolean> delete(@PathVariable("id") Long id){
+        return Result.success(userService.delete(id));
     }
 
-    /**
-     * 重置密码
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link Long}>
-     */
+
+    @Operation(summary = "重置密码", description = "")
     @PostMapping("user/reset-password/update")
     public Result<Long> resetPassword(@RequestBody @Validated(value = {ValidGroup.Update.class}) UserLiteDTO dto){
         return userService.resetPassword(dto);

@@ -8,7 +8,7 @@ import java.util.StringJoiner;
  * base 视图对象
  *
  * @author dqcer
- * @date 2022/12/08
+ * @since 2022/12/08
  */
 public class BaseVO<ID, Name> implements Bean<ID, Name> {
 
@@ -23,6 +23,14 @@ public class BaseVO<ID, Name> implements Bean<ID, Name> {
      * name
      */
     protected Name name;
+
+    public BaseVO() {
+    }
+
+    public BaseVO(ID id, Name name) {
+        this.id = id;
+        this.name = name;
+    }
 
     @Override
     public String toString() {

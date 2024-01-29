@@ -25,8 +25,9 @@ public class BannerConfig implements ApplicationRunner {
             log.info("\n----------------------------------------------------------\n\t" +
                             "Druid monitor paged: \t{} \n\t" +
                             "H2 console: \t{} \n\t" +
+                            "Swagger: \t{} \n\t" +
                             "----------------------------------------------------------",
-                    "http://localhost:8990/druid","http://localhost:8990/h2"
+                    "http://localhost:8090/druid","http://localhost:8090/h2", "http://localhost:8090/doc.html"
             );
         });
     }

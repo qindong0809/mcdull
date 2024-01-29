@@ -45,6 +45,7 @@ public class BusinessException extends RuntimeException {
 
 	public BusinessException() {
 		super();
+		this.messageCode = "system.error";
 	}
 
 	public BusinessException(ICode codeEnum) {

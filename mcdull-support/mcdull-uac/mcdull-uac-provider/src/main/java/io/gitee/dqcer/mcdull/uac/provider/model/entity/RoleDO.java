@@ -35,8 +35,6 @@ public class RoleDO extends BaseDO {
     private Integer type;
 
 
-    private String status;
-
     @Override
     public String toString() {
         return new StringJoiner(", ", RoleDO.class.getSimpleName() + "[", "]")
@@ -44,7 +42,6 @@ public class RoleDO extends BaseDO {
                 .add("code='" + code + "'")
                 .add("description='" + description + "'")
                 .add("type=" + type)
-                .add("status='" + status + "'")
                 .add("delFlag=" + delFlag)
                 .add("createdBy=" + createdBy)
                 .add("updatedTime=" + updatedTime)
@@ -86,11 +83,4 @@ public class RoleDO extends BaseDO {
         this.type = type;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }

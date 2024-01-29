@@ -11,11 +11,4 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
  */
 public interface IUserManager {
 
-    /**
-     * entity 转 VO
-     *
-     * @param entity 实体
-     * @return {@link UserVO}
-     */
-    UserVO entity2VO(UserDO entity);
 }
