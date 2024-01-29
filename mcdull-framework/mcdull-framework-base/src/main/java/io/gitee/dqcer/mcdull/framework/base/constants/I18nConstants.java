@@ -26,4 +26,7 @@ public class I18nConstants {
 
     public static final String SYSTEM_ERROR = "system.error";
 
+    public static final String DB_OPERATION_FAILED = "db.operation.failed";
+
+
 }

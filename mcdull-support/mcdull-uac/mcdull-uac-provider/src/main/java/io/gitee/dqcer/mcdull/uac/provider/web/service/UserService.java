@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
@@ -108,7 +109,7 @@ public class UserService {
     public Long insert(UserLiteDTO dto) {
         UserDO user = userRepository.get(dto.getAccount());
         if (ObjUtil.isNotNull(user)) {
-            throw new BusinessException("data.exists");
+            throw new BusinessException(I18nConstants.DATA_EXISTS);
         }
         UserDO entity = UserConvert.dtoToEntity(dto);
         String salt = RandomUtil.uuid();
@@ -126,12 +127,12 @@ public class UserService {
         UserDO dbData = userRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
-            throw new BusinessException("data.need.refresh");
+            throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
         }
         boolean success = userRepository.update(id, !dbData.getInactive());
         if (!success) {
             log.error("数据更新失败，id:{}", id);
-            throw new BusinessException("db.operation.failed");
+            throw new BusinessException(I18nConstants.DB_OPERATION_FAILED);
         }
         return id;
     }
@@ -141,14 +142,14 @@ public class UserService {
         UserDO dbData = userRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
-            throw new BusinessException("data.need.refresh");
+            throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
         }
         UserDO entity = new UserDO();
         entity.setId(id);
         boolean success = userRepository.removeById(id);
         if (!success) {
             log.error("数据删除失败，entity:{}", entity);
-            throw new BusinessException("db.operation.failed");
+            throw new BusinessException(I18nConstants.DB_OPERATION_FAILED);
         }
         return true;
     }
@@ -185,13 +186,13 @@ public class UserService {
         UserDO entity = userRepository.getById(id);
         if (entity == null) {
             log.warn("数据不存在 id:{}", id);
-            throw new BusinessException("data.not.exist");
+            throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
         }
         UserDO userDO = userRepository.get(dto.getAccount());
         if (userDO != null) {
             if (!userDO.getId().equals(id)) {
                 log.warn("账号名称已存在 account: {}", dto.getAccount());
-                throw new BusinessException("data.exists");
+                throw new BusinessException(I18nConstants.DATA_EXISTS);
             }
         }
         UserDO updateDO = UserConvert.dtoToEntity(dto);
