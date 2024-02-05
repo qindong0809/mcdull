@@ -14,11 +14,13 @@ import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
 import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.UserConvert;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdatePasswordDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
@@ -106,20 +108,24 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Long insert(UserLiteDTO dto) {
+    public Long insert(UserInsertDTO dto) {
         UserDO user = userRepository.get(dto.getAccount());
         if (ObjUtil.isNotNull(user)) {
             throw new BusinessException(I18nConstants.DATA_EXISTS);
         }
-        UserDO entity = UserConvert.dtoToEntity(dto);
+        Long id = this.buildEntityAndInsert(dto);
+        userRoleService.deleteAndInsert(id, dto.getRoleIds());
+        return id;
+    }
+
+    private Long buildEntityAndInsert(UserInsertDTO dto) {
+        UserDO entity = UserConvert.insertDtoToEntity(dto);
         String salt = RandomUtil.uuid();
         String password = Sha1Util.getSha1(Md5Util.getMd5(dto.getAccount() + salt));
         entity.setSalt(salt);
         entity.setPassword(password);
         entity.setType(1);
-        Long id = userRepository.insert(entity);
-        userRoleService.deleteAndInsert(id, dto.getRoleIds());
-        return id;
+        return userRepository.insert(entity);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -153,36 +159,30 @@ public class UserService {
         }
         return true;
     }
+    
 
-    /**
-     * 重置密码
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link Long}>
-     */
     @Transactional(rollbackFor = Exception.class)
-    public Result<Long> resetPassword(UserLiteDTO dto) {
-        Long id = dto.getId();
+    public Long updatePassword(Long id, UserUpdatePasswordDTO dto) {
         UserDO entity = userRepository.getById(id);
         if (entity == null) {
             log.warn("数据不存在 id:{}", id);
-            return Result.error(CodeEnum.DATA_NOT_EXIST);
+            throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
         }
-        String password = Sha1Util.getSha1(Md5Util.getMd5(entity.getUsername() + entity.getSalt()));
-        UserDO user = new UserDO();
-        user.setId(id);
-        user.setPassword(password);
-        boolean success = userRepository.updateById(user);
-        if (!success) {
-            log.error("重置密码失败，entity:{}", user);
-            throw new BusinessException(CodeEnum.DB_ERROR);
-        }
-        return Result.success(id);
+        // TODO: 2024/2/5
+        return null;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Long update(UserLiteDTO dto) {
-        Long id = dto.getId();
+    public Long update(Long id, UserUpdateDTO dto) {
+        this.checkParamThrowException(id, dto);
+        UserDO updateDO = UserConvert.updateDtoToEntity(dto);
+        updateDO.setId(id);
+        userRepository.updateById(updateDO);
+        userRoleService.deleteAndInsert(id, dto.getRoleIds());
+        return updateDO.getId();
+    }
+
+    private void checkParamThrowException(Long id, UserUpdateDTO dto) {
         UserDO entity = userRepository.getById(id);
         if (entity == null) {
             log.warn("数据不存在 id:{}", id);
@@ -195,11 +195,6 @@ public class UserService {
                 throw new BusinessException(I18nConstants.DATA_EXISTS);
             }
         }
-        UserDO updateDO = UserConvert.dtoToEntity(dto);
-        updateDO.setId(id);
-        userRepository.updateById(updateDO);
-        userRoleService.deleteAndInsert(id, dto.getRoleIds());
-        return updateDO.getId();
     }
 
     /**
@@ -211,4 +206,7 @@ public class UserService {
     public Result<List<UserPowerVO>> queryResourceModules(Long userId) {
         return Result.success(userRepository.queryResourceModules(userId));
     }
+
+
+
 }

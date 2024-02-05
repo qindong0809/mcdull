@@ -1,7 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -56,13 +57,18 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
 
     @Override
     public Map<Long, List<Long>> roleIdListMap(Collection<Long> userCollection) {
-        if (ObjectUtil.isNull(userCollection)) {
-            throw new IllegalArgumentException("'userCollection' is null");
-        }
-        LambdaQueryWrapper<UserRoleDO> query = Wrappers.lambdaQuery();
-        query.in(UserRoleDO::getUserId, userCollection);
-        List<UserRoleDO> list = baseMapper.selectList(query);
+        List<UserRoleDO> list = this.list(ListUtil.toList(userCollection));
         return list.stream().collect(Collectors.groupingBy(UserRoleDO::getUserId,
                 Collectors.mapping(UserRoleDO::getRoleId, Collectors.toList())));
+    }
+
+    @Override
+    public List<UserRoleDO> list(List<Long> userIdList) {
+        if (CollUtil.isEmpty(userIdList)) {
+            throw new IllegalArgumentException("'userIdList' is null");
+        }
+        LambdaQueryWrapper<UserRoleDO> query = Wrappers.lambdaQuery();
+        query.in(UserRoleDO::getUserId, userIdList);
+        return baseMapper.selectList(query);
     }
 }

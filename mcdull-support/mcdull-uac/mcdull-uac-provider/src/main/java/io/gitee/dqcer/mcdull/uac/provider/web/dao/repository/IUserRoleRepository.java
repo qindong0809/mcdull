@@ -30,4 +30,12 @@ public interface IUserRoleRepository extends IService<UserRoleDO> {
      * @return {@link Map}<{@link Long}, {@link List}<{@link Long}>>
      */
     Map<Long, List<Long>> roleIdListMap(Collection<Long> userCollection);
+
+    /**
+     * 列表
+     *
+     * @param userIdList 用户id列表
+     * @return {@link List}<{@link UserRoleDO}>
+     */
+    List<UserRoleDO> list(List<Long> userIdList);
 }
