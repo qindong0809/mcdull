@@ -11,7 +11,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdatePasswordDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.UserService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +32,7 @@ import java.util.List;
 public class UserController {
 
     @Resource
-    private UserService userService;
+    private IUserService userService;
 
     /**
      * 列表

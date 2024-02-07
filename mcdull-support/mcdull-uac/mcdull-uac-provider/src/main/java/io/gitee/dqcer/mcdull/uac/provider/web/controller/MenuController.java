@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.RoleService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +26,7 @@ import java.util.List;
 public class MenuController {
 
     @Resource
-    private RoleService roleService;
+    private IRoleService roleService;
 
     /**
      * 列表
@@ -37,7 +37,7 @@ public class MenuController {
     @GetMapping("base/list")
     @Transform
     public Result<PagedVO<RoleVO>> listByPage(@Validated(ValidGroup.Paged.class) RoleLiteDTO dto) {
-        return roleService.listByPage(dto);
+        return Result.success(roleService.listByPage(dto));
     }
 
     /**

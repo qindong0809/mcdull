@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -13,10 +14,8 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.MenuMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleMenuRepository;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -29,9 +28,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implements IMenuRepository {
-
-    @Resource
-    private IRoleMenuRepository roleMenuRepository;
 
     /**
      * 分页查询
@@ -61,24 +57,22 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
     }
 
     @Override
-    public Map<Long, List<String>> menuCodeListMap(Collection<Long> roleIdCollection) {
-        Map<Long, List<String>> resultMap = new HashMap<>(roleIdCollection.size());
-        if (CollUtil.isEmpty(roleIdCollection)) {
-            throw new IllegalArgumentException("'roleIDCollection' is empty");
-        }
-        Map<Long, List<Long>> roleIdValueMenuIdMap = roleMenuRepository.menuIdListMap(roleIdCollection);
-        Set<Long> idList = roleIdValueMenuIdMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
-
-        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
-        query.eq(MenuDO::getStatus, StatusEnum.ENABLE.getCode());
-        query.in(MenuDO::getPerms, idList);
-        List<MenuDO> list = baseMapper.selectList(query);
-        if (CollUtil.isNotEmpty(list)) {
-            Map<Long, MenuDO> map = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
-            for (Map.Entry<Long, List<Long>> entry : roleIdValueMenuIdMap.entrySet()) {
-                List<Long> menuIdList = entry.getValue();
-                List<String> menuCodeList = menuIdList.stream().map(i -> map.get(i).getPerms()).collect(Collectors.toList());
-                resultMap.put(entry.getKey(), menuCodeList);
+    public Map<Long, List<String>> menuCodeListMap(Map<Long, List<Long>> menuListMap) {
+        Map<Long, List<String>> resultMap = new HashMap<>(menuListMap.size());
+        if (MapUtil.isNotEmpty(menuListMap)) {
+            Set<Long> idList = menuListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+            LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
+            query.eq(MenuDO::getStatus, StatusEnum.ENABLE.getCode());
+            query.in(MenuDO::getPerms, idList);
+            List<MenuDO> list = baseMapper.selectList(query);
+            if (CollUtil.isNotEmpty(list)) {
+                Map<Long, MenuDO> map = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+                for (Map.Entry<Long, List<Long>> entry : menuListMap.entrySet()) {
+                    List<Long> menuIdList = entry.getValue();
+                    List<String> menuCodeList = menuIdList.stream()
+                            .map(i -> map.get(i).getPerms()).collect(Collectors.toList());
+                    resultMap.put(entry.getKey(), menuCodeList);
+                }
             }
         }
         return resultMap;

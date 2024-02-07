@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -17,10 +18,8 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.RoleMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -34,15 +33,6 @@ import java.util.stream.Collectors;
 @Service
 public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implements IRoleRepository {
 
-    @Resource
-    private IUserRoleRepository userRoleRepository;
-
-    /**
-     * 分页查询
-     *
-     * @param dto dto
-     * @return {@link Page}<{@link RoleDO}>
-     */
     @Override
     public Page<RoleDO> selectPage(RoleLiteDTO dto) {
         LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
@@ -54,12 +44,6 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 
-    /**
-     * 插入
-     *
-     * @param entity 实体
-     * @return {@link Long}
-     */
     @Override
     public Long insert(RoleDO entity) {
         int row = baseMapper.insert(entity);
@@ -70,30 +54,29 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
     }
 
     @Override
-    public Map<Long, List<RoleDO>> roleListMap(Collection<Long> userCollection) {
-        Map<Long, List<RoleDO>> resultMap = new HashMap<>(userCollection.size());
-        if (CollUtil.isEmpty(userCollection)) {
-            throw new IllegalArgumentException("'userCollection' is empty");
-        }
-        Map<Long, List<Long>> userRoleMap = userRoleRepository.roleIdListMap(userCollection);
-        Set<Long> idList = userRoleMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+    public Map<Long, List<RoleDO>> roleListMap(Map<Long, List<Long>> userRoleMap) {
+        Map<Long, List<RoleDO>> resultMap = new HashMap<>(userRoleMap.size());
+        if (MapUtil.isNotEmpty(userRoleMap)) {
+            Set<Long> idList = userRoleMap.values().stream()
+                    .flatMap(Collection::stream).collect(Collectors.toSet());
 
-        LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
-        query.eq(RoleDO::getInactive, InactiveEnum.FALSE.getCode());
-        query.in(RoleDO::getId, idList);
-        List<RoleDO> list = baseMapper.selectList(query);
-        if (CollUtil.isNotEmpty(list)) {
-            Map<Long, RoleDO> map = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
-            for (Map.Entry<Long, List<Long>> entry : userRoleMap.entrySet()) {
-                List<Long> roleIdList = entry.getValue();
-                List<RoleDO> roleList = roleIdList.stream().map(map::get)
-                        .filter(ObjUtil::isNotEmpty).collect(Collectors.toList());
-                if (CollUtil.isNotEmpty(roleList)) {
-                    resultMap.put(entry.getKey(), roleList);
+            LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
+            query.eq(RoleDO::getInactive, InactiveEnum.FALSE.getCode());
+            query.in(RoleDO::getId, idList);
+            List<RoleDO> list = baseMapper.selectList(query);
+            if (CollUtil.isNotEmpty(list)) {
+                Map<Long, RoleDO> map = list.stream()
+                        .collect(Collectors.toMap(IdDO::getId, Function.identity()));
+                for (Map.Entry<Long, List<Long>> entry : userRoleMap.entrySet()) {
+                    List<Long> roleIdList = entry.getValue();
+                    List<RoleDO> roleList = roleIdList.stream().map(map::get)
+                            .filter(ObjUtil::isNotEmpty).collect(Collectors.toList());
+                    if (CollUtil.isNotEmpty(roleList)) {
+                        resultMap.put(entry.getKey(), roleList);
+                    }
                 }
             }
         }
-
         return resultMap;
     }
 }

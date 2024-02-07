@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.client.api.AuthServiceApi;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LoginVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.LoginService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +30,7 @@ import java.util.List;
 public class LoginController implements AuthServiceApi {
 
     @Resource
-    private LoginService loginService;
+    private ILoginService loginService;
 
     /**
      * 登录 21232F297A57A5A743894A0E4A801FC3
@@ -72,11 +72,11 @@ public class LoginController implements AuthServiceApi {
 
     @Override
     public Result<List<String>> getPermissionList(Long userId) {
-        return loginService.getPermissionList(userId);
+        return Result.success(loginService.getPermissionList(userId));
     }
 
     @Override
     public Result<List<String>> getRoleList(Long userId) {
-        return loginService.getRoleList(userId);
+        return Result.success(loginService.getRoleList(userId));
     }
 }

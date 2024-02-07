@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.client.api.UserServiceApi;
 import io.gitee.dqcer.mcdull.uac.client.vo.RemoteUserVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.UserService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +23,7 @@ import java.util.List;
 public class UserServerFeign implements UserServiceApi {
 
     @Resource
-    private UserService userService;
+    private IUserService userService;
 
     /**
      * 查询资源模块
@@ -32,7 +32,7 @@ public class UserServerFeign implements UserServiceApi {
      */
     @PostMapping(GlobalConstant.INNER_API + "/user/res-module/list")
     public Result<List<UserPowerVO>> queryResourceModules() {
-        return userService.queryResourceModules(UserContextHolder.currentUserId());
+        return Result.success(userService.getResourceModuleList(UserContextHolder.currentUserId()));
     }
 
     /**

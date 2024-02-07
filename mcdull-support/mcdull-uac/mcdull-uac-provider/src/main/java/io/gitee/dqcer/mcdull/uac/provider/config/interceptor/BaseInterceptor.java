@@ -10,10 +10,9 @@ import io.gitee.dqcer.mcdull.framework.base.enums.LanguageEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.UserService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -41,7 +40,7 @@ public class BaseInterceptor implements HandlerInterceptor {
     private CacheChannel cacheChannel;
 
     @Resource
-    private UserService userService;
+    private IUserService userService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
@@ -94,7 +93,7 @@ public class BaseInterceptor implements HandlerInterceptor {
                 String userPowerCacheKey = MessageFormat.format("web:interceptor:power:{0}", unifySession.getUserId());
                 List<UserPowerVO> userPower = cacheChannel.get(userPowerCacheKey, List.class);
                 if (ObjUtil.isNull(userPower)) {
-                    userPower = ResultParse.getInstance(userService.queryResourceModules(unifySession.getUserId()));
+                    userPower = userService.getResourceModuleList(unifySession.getUserId());
                     if (log.isDebugEnabled()) {
                         log.debug("userPower: {}", userPower);
                     }

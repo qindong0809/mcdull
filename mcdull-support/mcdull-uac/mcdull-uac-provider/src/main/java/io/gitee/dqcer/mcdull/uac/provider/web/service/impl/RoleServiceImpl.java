@@ -1,30 +1,33 @@
-package io.gitee.dqcer.mcdull.uac.provider.web.service;
+package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.RoleConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.uac.IRoleManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserRoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户服务
@@ -33,75 +36,53 @@ import java.util.*;
  * @since  2022/11/27
  */
 @Service
-public class RoleService {
-
-    private static final Logger log = LoggerFactory.getLogger(RoleService.class);
-
-
-    @Resource
-    private IRoleRepository roleRepository;
+public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implements IRoleService {
 
     @Resource
     private IRoleManager roleManager;
+
+    @Resource
+    private IUserRoleService userRoleService;
     
-    /**
-     * 列表
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link List}<{@link UserVO}>>
-     */
-    public Result<PagedVO<RoleVO>> listByPage(RoleLiteDTO dto) {
-        Page<RoleDO> entityPage = roleRepository.selectPage(dto);
+
+    @Override
+    public PagedVO<RoleVO> listByPage(RoleLiteDTO dto) {
+        Page<RoleDO> entityPage = baseRepository.selectPage(dto);
         List<RoleVO> voList = new ArrayList<>();
         for (RoleDO entity : entityPage.getRecords()) {
             voList.add(roleManager.entity2VO(entity));
         }
-        return Result.success(PageUtil.toPage(voList, entityPage));
+        return PageUtil.toPage(voList, entityPage);
     }
 
-    /**
-     * 详情
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link UserVO}>
-     */
+    @Override
     public Result<RoleVO> detail(RoleLiteDTO dto) {
-        return Result.success(roleManager.entity2VO(roleRepository.getById(dto.getId())));
+        return Result.success(roleManager.entity2VO(baseRepository.getById(dto.getId())));
     }
 
-    /**
-     * 新增数据
-     *
-     * @param dto dto
-     * @return {@link Result<Long> 返回新增主键}
-     */
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Result<Long> insert(RoleLiteDTO dto) {
         LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
         query.eq(RoleDO::getName, dto.getName());
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
-        List<RoleDO> list = roleRepository.list(query);
+        List<RoleDO> list = baseRepository.list(query);
         if (!list.isEmpty()) {
             return Result.error(CodeEnum.DATA_EXIST);
         }
 
         RoleDO entity = RoleConvert.dto2Entity(dto);
 
-        return Result.success(roleRepository.insert(entity));
+        return Result.success(baseRepository.insert(entity));
     }
 
-    /**
-     * 更新状态
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link Long}>
-     */
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Result<Long> updateStatus(RoleLiteDTO dto) {
         Long id = dto.getId();
 
 
-        RoleDO dbData = roleRepository.getById(id);
+        RoleDO dbData = baseRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
@@ -116,7 +97,7 @@ public class RoleService {
         entity.setId(id);
 //        entity.setStatus(status);
 
-        boolean success = roleRepository.updateById(entity);
+        boolean success = baseRepository.updateById(entity);
         if (!success) {
             log.error("数据更新失败，entity:{}", entity);
             throw new BusinessException(CodeEnum.DB_ERROR);
@@ -125,18 +106,13 @@ public class RoleService {
         return Result.success(id);
     }
 
-    /**
-     * 删除
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link Long}>
-     */
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Result<Long> delete(UserLiteDTO dto) {
         Long id = dto.getId();
 
 
-        RoleDO dbData = roleRepository.getById(id);
+        RoleDO dbData = baseRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
@@ -145,7 +121,7 @@ public class RoleService {
         RoleDO entity = new RoleDO();
         entity.setId(id);
 
-        boolean success = roleRepository.updateById(entity);
+        boolean success = baseRepository.updateById(entity);
         if (!success) {
             log.error("数据删除失败，entity:{}", entity);
             throw new BusinessException(CodeEnum.DB_ERROR);
@@ -154,7 +130,13 @@ public class RoleService {
         return Result.success(id);
     }
 
-    public Map<Long, List<RoleDO>> getRoleMap(Collection<Long> userCollection) {
-        return roleRepository.roleListMap(userCollection);
+    @Override
+    public Map<Long, List<RoleDO>> getRoleMap(List<Long> userIdList) {
+        Map<Long, List<Long>> userRoleMap = userRoleService.getRoleIdListMap(userIdList);
+        if (CollUtil.isNotEmpty(userRoleMap)) {
+            return baseRepository.roleListMap(userRoleMap);
+        }
+        return MapUtil.empty();
     }
+
 }

@@ -16,7 +16,7 @@ import java.util.List;
 * @author dqcer
 * @since 2022-11-16
 */
-@Schema(name = "User Insert DTO")
+@Schema
 public class UserInsertDTO implements DTO {
 
     private static final long serialVersionUID = 1L;
@@ -26,29 +26,23 @@ public class UserInsertDTO implements DTO {
     @Length(min = 1, max = 512)
     private String nickname;
 
-    /**
-     * 账户
-     */
+    @Schema(description = "昵称", minLength = 1, maxLength = 512)
     @NotBlank
     @Length(min = 5, max = 64)
     private String account;
 
-    /**
-     * 电子邮件
-     */
+    @NotBlank
+    @Schema(description = "电子邮件", minLength = 1, maxLength = 512)
     @Email
     private String email;
 
-    /**
-     * 电话
-     */
+    @NotBlank
+    @Schema(description = "电话", minLength = 8, maxLength = 11)
     @Length(min = 8, max = 11)
     private String phone;
 
-    /**
-     * 角色id集
-     */
     @NotEmpty
+    @Schema(description = "角色id集", minProperties = 1)
     @Size(min = 1)
     private List<Long> roleIds;
 

@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.uac.provider.web.service;
+package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -6,15 +6,13 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
-import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserLoginRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,9 +33,9 @@ import static io.gitee.dqcer.mcdull.uac.provider.web.controller.CaptchaControlle
  * @since 2022/11/07
  */
 @Service
-public class LoginService {
+public class LoginServiceImpl implements ILoginService {
 
-    private static final Logger log = LoggerFactory.getLogger(LoginService.class);
+    private static final Logger log = LoggerFactory.getLogger(LoginServiceImpl.class);
 
     @Resource
     private IUserRepository userRepository;
@@ -46,8 +44,9 @@ public class LoginService {
     private RedissonCache redissonCache;
 
     @Resource
-    private UserService userService;
+    private IUserService userService;
 
+    @Override
 
     public void login(String username, String password, String code, String uuid) {
         // todo 验证码校验
@@ -60,12 +59,12 @@ public class LoginService {
     private Long loginPreCheck(String username, String passwordDTO) {
         UserDO userEntity = userRepository.get(username);
         if (ObjUtil.isNotNull(userEntity)) {
-            String password = userEntity.getPassword();
-            if (password.equals(Sha1Util.getSha1(passwordDTO + userEntity.getSalt()))) {
-                if (Boolean.FALSE.equals(userEntity.getInactive())) {
-                    return userEntity.getId();
+            boolean isOk = userService.passwordCheck(userEntity, passwordDTO);
+            if (isOk) {
+                if (Boolean.TRUE.equals(userEntity.getInactive())) {
+                    throw new BusinessException("user.account.not.active");
                 }
-                throw new BusinessException("user.account.not.active");
+                return userEntity.getId();
             }
         }
         throw new BusinessException("incorrect.username.or.password");
@@ -87,32 +86,33 @@ public class LoginService {
      *
      * @return {@link Result<String>}
      */
+    @Override
     public void logout() {
         Long userId = UserContextHolder.currentUserId();
         StpUtil.logout(userId);
         log.info("logout. userId : {}", userId);
     }
 
-    public Result<List<String>> getPermissionList(Long userId) {
-        Result<List<UserPowerVO>> listResult = userService.queryResourceModules(userId);
-        List<UserPowerVO> userPowerVOList = ResultParse.getInstance(listResult);
+    @Override
+    public List<String> getPermissionList(Long userId) {
+        List<UserPowerVO> userPowerVOList = userService.getResourceModuleList(userId);
         Set<String> set = new HashSet<>();
         if (CollUtil.isNotEmpty(userPowerVOList)) {
             for (UserPowerVO vo : userPowerVOList) {
                 set.addAll(vo.getModules());
             }
         }
-        return Result.success(new ArrayList<>(set));
+        return new ArrayList<>(set);
     }
 
 
-    public Result<List<String>> getRoleList(Long userId) {
-        Result<List<UserPowerVO>> listResult = userService.queryResourceModules(userId);
-        List<UserPowerVO> userPowerVOList = ResultParse.getInstance(listResult);
+    @Override
+    public List<String> getRoleList(Long userId) {
+        List<UserPowerVO> userPowerVOList = userService.getResourceModuleList(userId);
         Set<String> set = new HashSet<>();
         if (CollUtil.isNotEmpty(userPowerVOList)) {
             set = userPowerVOList.stream().map(UserPowerVO::getCode).collect(Collectors.toSet());
         }
-        return Result.success(new ArrayList<>(set));
+        return new ArrayList<>(set);
     }
 }

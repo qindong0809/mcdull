@@ -2,11 +2,8 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
-
-import java.util.List;
 
 /**
  * 用户 数据库操作封装接口层
@@ -41,14 +38,6 @@ public interface IUserRepository extends IService<UserDO> {
     UserDO get(String account);
 
     /**
-     * 查询资源模块
-     *
-     * @param userId 用户id
-     * @return {@link List}<{@link UserPowerVO}>
-     */
-    List<UserPowerVO> queryResourceModules(Long userId);
-
-    /**
      * 更新登录时间通过id
      *
      * @param userId 用户id
@@ -63,4 +52,6 @@ public interface IUserRepository extends IService<UserDO> {
      * @return boolean
      */
     boolean update(Long id, boolean inactive);
+
+    boolean update(Long id, String password);
 }

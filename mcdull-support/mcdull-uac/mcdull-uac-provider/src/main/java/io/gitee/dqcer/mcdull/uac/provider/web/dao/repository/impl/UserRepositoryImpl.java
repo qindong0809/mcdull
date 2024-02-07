@@ -1,8 +1,5 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -15,21 +12,14 @@ import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 用户 数据库操作实现层
@@ -39,14 +29,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implements IUserRepository {
-
-    private static final Logger log = LoggerFactory.getLogger(UserRepositoryImpl.class);
-
-    @Resource
-    private IMenuRepository menuRepository;
-
-    @Resource
-    private IRoleRepository roleRepository;
 
     /**
      * 分页查询
@@ -102,46 +84,6 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
     }
 
     /**
-     * 查询资源模块
-     *
-     * @param userId 用户id
-     * @return {@link List}<{@link UserPowerVO}>
-     */
-    @Override
-    public List<UserPowerVO> queryResourceModules(Long userId) {
-        Map<Long, List<RoleDO>> roleListMap = roleRepository.roleListMap(ListUtil.of(userId));
-        List<RoleDO> roleDOList = roleListMap.get(userId);
-        if (CollUtil.isEmpty(roleDOList)) {
-            log.warn("userId: {} 查无角色权限", userId);
-            return Collections.emptyList();
-        }
-        List<UserPowerVO> vos = roleDOList.stream().map(i-> {
-            UserPowerVO vo = new UserPowerVO();
-            vo.setRoleId(i.getId());
-            vo.setCode(i.getCode());
-            return vo;
-        }).collect(Collectors.toList());
-
-        Set<Long> roleSet = vos.stream().map(UserPowerVO::getRoleId).collect(Collectors.toSet());
-        Map<Long, List<String>> keyRoleIdValueMenuCode = menuRepository.menuCodeListMap(roleSet);
-        for (UserPowerVO vo : vos) {
-            String code = vo.getCode();
-            if (ObjectUtil.equals(GlobalConstant.SUPER_ADMIN_ROLE, code)) {
-                List<String> allCodeList = menuRepository.allCodeList();
-                vo.setModules(allCodeList);
-                continue;
-            }
-            List<String> menuCodeList = keyRoleIdValueMenuCode.get(vo.getRoleId());
-            if (CollUtil.isEmpty(menuCodeList)) {
-                log.warn("userId: {} roleId: {} 查无模块权限", userId, vo.getRoleId());
-                menuCodeList = Collections.emptyList();
-            }
-            vo.setModules(menuCodeList);
-        }
-        return vos;
-    }
-
-    /**
      * 更新登录时间通过id
      *
      * @param userId 用户id
@@ -160,10 +102,21 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
 
     @Override
     public boolean update(Long id, boolean inactive) {
-        LambdaUpdateWrapper<UserDO> update = Wrappers.lambdaUpdate();
-        update.set(BaseDO::getInactive, inactive);
-        update.eq(IdDO::getId, id);
-        update.last(GlobalConstant.Database.SQL_LIMIT_1);
-        return baseMapper.update(null, update) > 0;
+        UserDO entity = new UserDO();
+        entity.setId(id);
+        entity.setInactive(inactive);
+        return this.update(entity);
+    }
+
+    @Override
+    public boolean update(Long id, String password) {
+        UserDO entity = new UserDO();
+        entity.setId(id);
+        entity.setPassword(password);
+        return this.update(entity);
+    }
+
+    public boolean update(UserDO entity) {
+        return this.updateById(entity);
     }
 }
