@@ -39,8 +39,8 @@ public class CaptchaController {
     @SaIgnore
     @Operation(summary = "获取验证码", description = "不需要登录， 验证时需要传回UUID。默认有效期为2分钟")
     @GetMapping("/captchaImage")
-    public R getCode() {
-        R ajax = R.success();
+    public ResultWrapper getCode() {
+        ResultWrapper resultWrapper = ResultWrapper.success();
         // 保存验证码信息
         String uuid = RandomUtil.randomString(32);
         String verifyKey = CAPTCHA + uuid;
@@ -57,10 +57,10 @@ public class CaptchaController {
         try {
             ImageIO.write(image, "jpg", os);
         } catch (IOException e) {
-            return R.error(e.getMessage());
+            return ResultWrapper.error(e.getMessage());
         }
-        ajax.put("uuid", uuid);
-        ajax.put("img", Base64.encode(os.toByteArray()));
-        return ajax;
+        resultWrapper.put("uuid", uuid);
+        resultWrapper.put("img", Base64.encode(os.toByteArray()));
+        return resultWrapper;
     }
 }

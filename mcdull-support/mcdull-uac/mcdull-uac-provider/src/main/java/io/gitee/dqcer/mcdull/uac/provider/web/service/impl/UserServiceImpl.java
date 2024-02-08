@@ -58,6 +58,8 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     @Resource
     private IMenuService menuService;
 
+
+
     @Override
     public boolean passwordCheck(UserDO entity, String passwordParam) {
         if (ObjUtil.isNotNull(entity) && StrUtil.isNotBlank(passwordParam)) {
@@ -126,13 +128,17 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long insert(UserInsertDTO dto) {
+        this.checkParam(dto);
+        Long id = this.buildEntityAndInsert(dto);
+        userRoleService.deleteAndInsert(id, dto.getRoleIds());
+        return id;
+    }
+
+    private void checkParam(UserInsertDTO dto) {
         UserDO user = baseRepository.get(dto.getAccount());
         if (ObjUtil.isNotNull(user)) {
             throw new BusinessException(I18nConstants.DATA_EXISTS);
         }
-        Long id = this.buildEntityAndInsert(dto);
-        userRoleService.deleteAndInsert(id, dto.getRoleIds());
-        return id;
     }
 
     private Long buildEntityAndInsert(UserInsertDTO dto) {

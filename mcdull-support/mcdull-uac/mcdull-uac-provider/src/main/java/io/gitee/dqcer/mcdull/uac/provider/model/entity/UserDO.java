@@ -55,6 +55,8 @@ public class UserDO extends BaseDO {
      */
     private Integer type;
 
+    private Long deptId;
+
 
     @Override
     public String toString() {
@@ -67,6 +69,7 @@ public class UserDO extends BaseDO {
                 .add("phone='" + phone + "'")
                 .add("lastLoginTime=" + lastLoginTime)
                 .add("type=" + type)
+                .add("deptId=" + deptId)
                 .add("createdBy=" + createdBy)
                 .add("updatedBy=" + updatedBy)
                 .add("inactive=" + inactive)
@@ -141,4 +144,11 @@ public class UserDO extends BaseDO {
         this.lastLoginTime = lastLoginTime;
     }
 
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
+    }
 }

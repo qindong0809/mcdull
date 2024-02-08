@@ -53,7 +53,7 @@ public class UserController {
 
     @Operation(summary = "新增数据", description = "重复控制")
     @RedisLock(key = "'lock:uac:user:' + #dto.nickname + '-' + #dto.account", timeout = 3)
-    @PostMapping("user/save")
+    @PostMapping("user/insert")
     public Result<Long> insert(@RequestBody @Validated UserInsertDTO dto){
         return Result.success(userService.insert(dto));
     }

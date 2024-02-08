@@ -46,19 +46,19 @@ public class CommonController {
     @Operation(summary = "通用上传请求", description = "单个文件")
     @PostMapping("/upload")
     @SaIgnore
-    public R uploadFile(MultipartFile file) throws Exception {
+    public ResultWrapper uploadFile(MultipartFile file) throws Exception {
         OssClient ossClient = ossFactory.getInstance();
         // TODO: 2023/12/29
         ossClient.upload(file.getBytes(), file.getName(), "demo");
-        return R.success();
+        return ResultWrapper.success();
     }
 
     /**
      * 通用上传请求（多个）
      */
     @PostMapping("/uploads")
-    public R uploadFiles(List<MultipartFile> files) {
-        return R.success();
+    public ResultWrapper uploadFiles(List<MultipartFile> files) {
+        return ResultWrapper.success();
     }
 
     /**

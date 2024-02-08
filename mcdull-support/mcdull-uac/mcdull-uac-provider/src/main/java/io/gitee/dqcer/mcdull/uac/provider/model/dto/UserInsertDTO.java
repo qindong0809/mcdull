@@ -4,11 +4,9 @@ import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
 * 用户 接收客户端参数
@@ -46,15 +44,28 @@ public class UserInsertDTO implements DTO {
     @Size(min = 1)
     private List<Long> roleIds;
 
+    @NotNull
+    @Schema(description = "部门id")
+    private Long deptId;
+
     @Override
     public String toString() {
-        return "UserLiteDTO{" +
-                ", nickname='" + nickname + '\'' +
-                ", account='" + account + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", roleIds=" + roleIds +
-                "} " + super.toString();
+        return new StringJoiner(", ", UserInsertDTO.class.getSimpleName() + "[", "]")
+                .add("nickname='" + nickname + "'")
+                .add("account='" + account + "'")
+                .add("email='" + email + "'")
+                .add("phone='" + phone + "'")
+                .add("roleIds=" + roleIds)
+                .add("deptId=" + deptId)
+                .toString();
+    }
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
     }
 
     public List<Long> getRoleIds() {
