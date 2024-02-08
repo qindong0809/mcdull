@@ -89,7 +89,7 @@ public class UserVO implements VO {
     /**
      * 最后登录时间
      */
-    private LocalTime lastLoginTime;
+    private Date lastLoginTime;
 
 
     /**
@@ -275,11 +275,11 @@ public class UserVO implements VO {
         this.phone = phone;
     }
 
-    public LocalTime getLastLoginTime() {
+    public Date getLastLoginTime() {
         return lastLoginTime;
     }
 
-    public void setLastLoginTime(LocalTime lastLoginTime) {
+    public void setLastLoginTime(Date lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
     }
 }

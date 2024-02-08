@@ -275,6 +275,15 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         return list.stream().collect(Collectors.toMap(IdDO::getId, UserDO::getNickName));
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateLoginTime(Long userId, Date nowTime) {
+        if (ObjUtil.isNull(userId) || ObjUtil.isNull(nowTime)) {
+            throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
+        }
+        baseRepository.updateLoginTime(userId, nowTime);
+    }
+
     private List<UserDO> list(List<Long> userIdList) {
         if (CollUtil.isNotEmpty(userIdList)) {
             List<UserDO> userList = baseRepository.listByIds(userIdList);

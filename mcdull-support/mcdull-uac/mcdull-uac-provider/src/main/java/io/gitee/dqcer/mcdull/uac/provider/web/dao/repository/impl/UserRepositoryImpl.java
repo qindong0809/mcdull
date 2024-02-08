@@ -2,13 +2,12 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
@@ -89,13 +88,14 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
      * @param userId 用户id
      */
     @Override
-    public void updateLoginTimeById(Long userId) {
-        LambdaUpdateWrapper<UserDO> update = Wrappers.lambdaUpdate();
-        update.set(UserDO::getLastLoginTime, new Date());
-        update.eq(IdDO::getId, userId);
-        int rowSize = baseMapper.update(null, update);
+    public void updateLoginTime(Long userId, Date nowTime) {
+        UserDO entity = new UserDO();
+        entity.setId(userId);
+        entity.setLastLoginTime(nowTime);
+        entity.setUpdatedBy(userId);
+        int rowSize = baseMapper.updateById(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
-            throw new DatabaseRowException(CodeEnum.DB_ERROR);
+            throw new DatabaseRowException(I18nConstants.DB_OPERATION_FAILED);
         }
     }
 

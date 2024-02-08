@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.StringJoiner;
 
 /**
@@ -48,7 +49,7 @@ public class UserDO extends BaseDO {
     /**
      * 最后登录时间
      */
-    private LocalTime lastLoginTime;
+    private Date lastLoginTime;
 
     /**
      *  类型（1/自定义 2/内置）
@@ -136,11 +137,11 @@ public class UserDO extends BaseDO {
         this.phone = phone;
     }
 
-    public LocalTime getLastLoginTime() {
+    public Date getLastLoginTime() {
         return lastLoginTime;
     }
 
-    public void setLastLoginTime(LocalTime lastLoginTime) {
+    public void setLastLoginTime(Date lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
     }
 

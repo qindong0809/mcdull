@@ -16,6 +16,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -47,13 +48,14 @@ public class LoginServiceImpl implements ILoginService {
     private IUserService userService;
 
     @Override
-
+    @Transactional(rollbackFor = Exception.class)
     public void login(String username, String password, String code, String uuid) {
         // todo 验证码校验
 //        this.validateCaptcha(username, code, uuid);
         // 登录前置校验
         Long loginId = this.loginPreCheck(username, password);
         StpUtil.login(loginId);
+        userService.updateLoginTime(loginId, UserContextHolder.getSession().getNow());
     }
 
     private Long loginPreCheck(String username, String passwordDTO) {

@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
 
+import java.time.LocalTime;
+import java.util.Date;
+
 /**
  * 用户 数据库操作封装接口层
  *
@@ -38,13 +41,6 @@ public interface IUserRepository extends IService<UserDO> {
     UserDO get(String account);
 
     /**
-     * 更新登录时间通过id
-     *
-     * @param userId 用户id
-     */
-    void updateLoginTimeById(Long userId);
-
-    /**
      * update
      *
      * @param id       身份证件
@@ -54,4 +50,6 @@ public interface IUserRepository extends IService<UserDO> {
     boolean update(Long id, boolean inactive);
 
     boolean update(Long id, String password);
+
+    void updateLoginTime(Long userId, Date nowTime);
 }

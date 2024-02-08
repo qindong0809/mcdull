@@ -9,6 +9,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdatePasswordDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,27 @@ public interface IUserService {
 
     List<UserPowerVO> getResourceModuleList(Long userId);
 
+    /**
+     * userid、entity
+     *
+     * @param userIdList 用户id列表
+     * @return {@link Map}<{@link Long}, {@link UserDO}>
+     */
     Map<Long, UserDO> getEntityMap(List<Long> userIdList);
 
+    /**
+     * userid、username
+     *
+     * @param userIdList 用户id列表
+     * @return {@link Map}<{@link Long}, {@link String}>
+     */
     Map<Long, String> getNameMap(List<Long> userIdList);
+
+    /**
+     * update登录时间
+     *
+     * @param userId  用户id
+     * @param nowTime 现在时间
+     */
+    void updateLoginTime(Long userId, Date nowTime);
 }
