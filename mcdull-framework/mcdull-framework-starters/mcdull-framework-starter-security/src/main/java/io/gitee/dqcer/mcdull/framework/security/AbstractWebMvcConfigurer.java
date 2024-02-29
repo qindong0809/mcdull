@@ -24,6 +24,7 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
             GlobalConstant.SSO_LOGIN,
             GlobalConstant.INNER_API + GlobalConstant.ALL_PATTERNS,
             GlobalConstant.FAVICON_ICO,
+            GlobalConstant.ACTUATOR_ALL,
             "/doc.html/**",
             "/swagger-ui.html/**",
             "/swagger-resources/**",
