@@ -38,7 +38,7 @@ public class LoginController implements AuthServiceApi {
      * @param dto 登录dto
      * @return {@link Result}<{@link LoginVO}>
      */
-    @Operation(summary = "登录", description = "login api")
+    @Operation(summary = "登录", description = "Default username=admin  password=21232F297A57A5A743894A0E4A801FC3")
     @PostMapping("login")
     public Result<String> login(@RequestBody @Valid LoginDTO dto) {
         loginService.login(dto.getUsername(), dto.getPassword(), dto.getCode(), dto.getUuid());
