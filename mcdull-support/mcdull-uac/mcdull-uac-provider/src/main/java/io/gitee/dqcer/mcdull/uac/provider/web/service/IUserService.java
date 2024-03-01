@@ -23,6 +23,8 @@ public interface IUserService {
 
     Long insert(UserInsertDTO dto);
 
+    UserDO get(String username);
+
     Long toggleActive(Long id);
 
     boolean delete(Long id);
@@ -56,4 +58,12 @@ public interface IUserService {
      * @param nowTime 现在时间
      */
     void updateLoginTime(Long userId, Date nowTime);
+
+    /**
+     * get
+     *
+     * @param userId 用户id
+     * @return {@link UserVO}
+     */
+    UserVO get(Long userId);
 }

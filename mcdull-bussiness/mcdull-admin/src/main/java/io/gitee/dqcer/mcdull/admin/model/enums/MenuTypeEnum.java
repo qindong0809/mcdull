@@ -24,7 +24,7 @@ public enum MenuTypeEnum implements IEnum<String> {
     /**
      * 按钮
      */
-    BUTTON("C", "菜单")
+    BUTTON("F", "按钮")
     ;
 
     MenuTypeEnum(String code, String text) {

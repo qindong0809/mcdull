@@ -20,7 +20,7 @@ public class UserConvert {
      * @param entity 实体
      * @return {@link UserVO}
      */
-    public static UserVO entity2VO(UserDO entity) {
+    public static UserVO entityToVO(UserDO entity) {
         if (entity == null) {
             return null;
         }

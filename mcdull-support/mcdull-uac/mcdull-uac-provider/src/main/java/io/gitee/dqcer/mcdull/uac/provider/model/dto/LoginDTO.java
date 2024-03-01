@@ -15,11 +15,11 @@ import java.util.StringJoiner;
 @Schema(name = "用户登录对象")
 public class LoginDTO implements DTO {
 
-    @NotBlank(message = "{username.notBlank}")
+    @NotBlank(message = "{login.username.not-blank}")
     @Schema(description = "账号", example = "admin", requiredMode = Schema.RequiredMode.REQUIRED)
     private String username;
 
-    @NotBlank
+    @NotBlank(message = "{login.password.not-blank}")
     @Schema(description = "密码", example = "sha215(123456)", requiredMode = Schema.RequiredMode.REQUIRED)
     private String password;
 

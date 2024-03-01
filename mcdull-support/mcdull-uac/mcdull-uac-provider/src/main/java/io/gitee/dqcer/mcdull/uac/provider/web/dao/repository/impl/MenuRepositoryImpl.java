@@ -1,17 +1,21 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
+import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.MenuTypeEnum;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.MenuMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
 import org.springframework.stereotype.Service;
@@ -49,6 +53,7 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
     public List<String> allCodeList() {
         LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
         query.eq(MenuDO::getStatus, StatusEnum.ENABLE.getCode());
+        query.eq(BaseDO::getInactive, InactiveEnum.FALSE.getCode());
         List<MenuDO> list = baseMapper.selectList(query);
         if (CollUtil.isEmpty(list)) {
             return Collections.emptyList();
@@ -63,6 +68,7 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
             Set<Long> idList = menuListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
             LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
             query.eq(MenuDO::getStatus, StatusEnum.ENABLE.getCode());
+            query.eq(BaseDO::getInactive, InactiveEnum.FALSE.getCode());
             query.in(MenuDO::getPerms, idList);
             List<MenuDO> list = baseMapper.selectList(query);
             if (CollUtil.isNotEmpty(list)) {
@@ -76,5 +82,19 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
             }
         }
         return resultMap;
+    }
+
+    @Override
+    public List<MenuDO> list(Collection<Long> collection) {
+        if (CollUtil.isNotEmpty(collection)) {
+            return Collections.emptyList();
+        }
+        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
+        query.eq(BaseDO::getInactive, InactiveEnum.FALSE.getCode());
+        query.eq(MenuDO::getStatus, true);
+        query.in(MenuDO::getMenuType, ListUtil.of(MenuTypeEnum.DIRECTORY.getCode(), MenuTypeEnum.MENU.getCode()));
+        query.in(IdDO::getId, collection);
+        query.orderByAsc(ListUtil.of(MenuDO::getParentId, MenuDO::getOrderNum));
+        return baseMapper.selectList(query);
     }
 }

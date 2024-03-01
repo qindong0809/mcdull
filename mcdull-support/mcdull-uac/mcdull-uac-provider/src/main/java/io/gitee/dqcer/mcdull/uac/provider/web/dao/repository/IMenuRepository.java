@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuDO;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -21,4 +22,6 @@ public interface IMenuRepository extends IService<MenuDO> {
     List<String> allCodeList();
 
     Map<Long, List<String>> menuCodeListMap(Map<Long, List<Long>> menuListMap);
+
+    List<MenuDO> list(Collection<Long> collection);
 }

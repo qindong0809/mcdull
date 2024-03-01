@@ -2,15 +2,17 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.slf4j.Logger;
@@ -19,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.gitee.dqcer.mcdull.uac.provider.web.controller.CaptchaController.CAPTCHA;
@@ -39,9 +38,6 @@ public class LoginServiceImpl implements ILoginService {
     private static final Logger log = LoggerFactory.getLogger(LoginServiceImpl.class);
 
     @Resource
-    private IUserRepository userRepository;
-
-    @Resource
     private RedissonCache redissonCache;
 
     @Resource
@@ -56,10 +52,11 @@ public class LoginServiceImpl implements ILoginService {
         Long loginId = this.loginPreCheck(username, password);
         StpUtil.login(loginId);
         userService.updateLoginTime(loginId, UserContextHolder.getSession().getNow());
+
     }
 
     private Long loginPreCheck(String username, String passwordDTO) {
-        UserDO userEntity = userRepository.get(username);
+        UserDO userEntity = userService.get(username);
         if (ObjUtil.isNotNull(userEntity)) {
             boolean isOk = userService.passwordCheck(userEntity, passwordDTO);
             if (isOk) {
@@ -97,6 +94,16 @@ public class LoginServiceImpl implements ILoginService {
 
     @Override
     public List<String> getPermissionList(Long userId) {
+        Map<Long, UserDO> entityMap = userService.getEntityMap(ListUtil.of(userId));
+        if (MapUtil.isNotEmpty(entityMap)) {
+            UserDO userDO = entityMap.get(userId);
+            if (ObjUtil.isNotNull(userDO)) {
+                if (GlobalConstant.SUPER_ADMIN_USER_TYPE.equals(userDO.getType())) {
+                    return ListUtil.of("*:*:*");
+                }
+            }
+        }
+
         List<UserPowerVO> userPowerVOList = userService.getResourceModuleList(userId);
         Set<String> set = new HashSet<>();
         if (CollUtil.isNotEmpty(userPowerVOList)) {

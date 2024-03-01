@@ -19,9 +19,11 @@ import java.util.Objects;
 /**
  * json 工具类
  *
+ * hutool jsonutils
  * @author dqcer
  * @since 2022/12/19
  */
+@Deprecated
 public class JsonUtil {
 
     private static final Logger log = LoggerFactory.getLogger(JsonUtil.class);

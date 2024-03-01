@@ -7,15 +7,10 @@ package io.gitee.dqcer.mcdull.framework.base.enums;
  * @since 2022/07/26
  */
 public enum DelFlayEnum implements IEnum<Integer> {
-    /**
-     * 1 = 正常
-     */
-    NORMAL(1, "正常"),
 
-    /**
-     * 2 = 已删除
-     */
-    DELETED(2, "已删除")
+    NORMAL(0, "正常"),
+
+    DELETED(1, "已删除")
     ;
 
     DelFlayEnum(Integer code, String text) {

@@ -96,7 +96,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         Map<Long, List<RoleDO>> roleListMap = roleService.getRoleMap(userIdList);
 
         for (UserDO entity : userList) {
-            UserVO vo = UserConvert.entity2VO(entity);
+            UserVO vo = UserConvert.entityToVO(entity);
             this.setUserFieldValue(userMap, vo);
             this.setRoleListFieldValue(roleListMap, vo);
             voList.add(vo);
@@ -132,6 +132,14 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         Long id = this.buildEntityAndInsert(dto);
         userRoleService.deleteAndInsert(id, dto.getRoleIds());
         return id;
+    }
+
+    @Override
+    public UserDO get(String username) {
+        if (StrUtil.isNotBlank(username)) {
+            return baseRepository.get(username);
+        }
+        return null;
     }
 
     private void checkParam(UserInsertDTO dto) {
@@ -282,6 +290,18 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
             throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
         }
         baseRepository.updateLoginTime(userId, nowTime);
+    }
+
+    @Override
+    public UserVO get(Long userId) {
+        if (ObjUtil.isNotNull(userId)) {
+            List<UserDO> list = this.list(ListUtil.of(userId));
+            if (CollUtil.isNotEmpty(list)) {
+                UserDO user = list.get(0);
+                return UserConvert.entityToVO(user);
+            }
+        }
+        return null;
     }
 
     private List<UserDO> list(List<Long> userIdList) {
