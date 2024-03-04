@@ -86,7 +86,7 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
 
     @Override
     public List<MenuDO> list(Collection<Long> collection) {
-        if (CollUtil.isNotEmpty(collection)) {
+        if (CollUtil.isEmpty(collection)) {
             return Collections.emptyList();
         }
         LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();

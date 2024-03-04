@@ -64,9 +64,9 @@ public class LoginController implements AuthServiceApi {
     }
 
     @GetMapping("getRouters")
-    public Result<RouterVO> getRouters() {
+    public Result<List<RouterVO>> getRouters() {
         Long userId = UserContextHolder.currentUserId();
-        RouterVO routerVO = menuService.tree(userId);
+        List<RouterVO> routerVO = menuService.tree(userId);
         return Result.success(routerVO);
     }
 

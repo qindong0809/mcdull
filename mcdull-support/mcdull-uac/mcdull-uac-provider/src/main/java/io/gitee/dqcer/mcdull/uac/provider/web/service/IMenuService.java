@@ -13,5 +13,5 @@ public interface IMenuService {
 
     List<String> getAllCodeList();
 
-    RouterVO tree(Long userId);
+    List<RouterVO> tree(Long userId);
 }
