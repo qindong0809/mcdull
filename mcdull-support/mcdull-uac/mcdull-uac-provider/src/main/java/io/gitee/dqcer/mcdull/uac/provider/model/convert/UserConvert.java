@@ -25,7 +25,7 @@ public class UserConvert {
             return null;
         }
         UserVO userVO = new UserVO();
-        userVO.setId(entity.getId());
+        userVO.setUserId(entity.getId());
         userVO.setCreatedTime(entity.getCreatedTime());
         userVO.setCreatedBy(entity.getCreatedBy());
         userVO.setUpdatedTime(entity.getUpdatedTime());

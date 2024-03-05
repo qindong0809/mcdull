@@ -1,13 +1,15 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.client.api.AuthServiceApi;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.LoginUserVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RouterVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
@@ -27,7 +29,6 @@ import java.util.List;
  */
 @RestController
 @Tag(name = "认证授权")
-@RequestMapping("sso")
 public class LoginController implements AuthServiceApi {
 
     @Resource
@@ -43,7 +44,7 @@ public class LoginController implements AuthServiceApi {
      * 登录 21232F297A57A5A743894A0E4A801FC3
      *
      * @param dto 登录dto
-     * @return {@link Result}<{@link LoginUserVO}>
+     * @return {@link Result}
      */
     @Operation(summary = "登录", description = "Default username=admin  password=21232F297A57A5A743894A0E4A801FC3")
     @PostMapping("login")
@@ -54,13 +55,14 @@ public class LoginController implements AuthServiceApi {
 
     @Operation(summary = "当前登录人信息", description = "角色、权限、个人信息")
     @GetMapping("getInfo")
-    public Result<LoginUserVO> getInfo() {
-        LoginUserVO vo = new LoginUserVO();
+    public JSONObject getInfo() {
         Long currentUserId = UserContextHolder.currentUserId();
-        vo.setUser(userService.get(currentUserId));
-        vo.setRoleCodeList(loginService.getRoleList(currentUserId));
-        vo.setPermissionCodeList(loginService.getPermissionList(currentUserId));
-        return Result.success(vo);
+        Result<UserVO> success = Result.success();
+        JSONObject jsonObject = JSONUtil.parseObj(success);
+        jsonObject.set("permissions", loginService.getPermissionList(currentUserId));
+        jsonObject.set("roles", loginService.getRoleList(currentUserId));
+        jsonObject.set("user", userService.get(currentUserId));
+        return jsonObject;
     }
 
     @GetMapping("getRouters")

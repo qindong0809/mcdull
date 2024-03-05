@@ -26,7 +26,7 @@ public class GlobalConstant {
 
     public static final String LOGIN_URL = "/login";
 
-    public static final String SSO_LOGIN = "/sso/login";
+    public static final String LOGIN_CAPTCHA_IMAGE = "/captchaImage";
 
     /**
      * 服务器临时路径目录
