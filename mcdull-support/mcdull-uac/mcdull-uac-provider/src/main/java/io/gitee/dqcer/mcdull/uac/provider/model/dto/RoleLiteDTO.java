@@ -24,7 +24,7 @@ public class RoleLiteDTO extends PagedDTO {
       * 主键
       */
      @NotNull(groups = {ValidGroup.Update.class, ValidGroup.One.class, ValidGroup.Status.class, ValidGroup.Delete.class})
-     private Long id;
+     private Integer id;
     /**
      * 状态（1/正常 2/停用）
      */
@@ -67,11 +67,11 @@ public class RoleLiteDTO extends PagedDTO {
         this.description = description;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

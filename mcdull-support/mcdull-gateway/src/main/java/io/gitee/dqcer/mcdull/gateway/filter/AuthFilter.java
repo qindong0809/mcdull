@@ -108,7 +108,7 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
 
         String traceId = headers.getFirst(HttpHeaderConstants.TRACE_ID_HEADER);
 //        RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
-        Result<Long> result = remoteValid(token, traceId);
+        Result<Integer> result = remoteValid(token, traceId);
 
 
         log.info("token valid result: {}", result);
@@ -128,14 +128,14 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
      * @param token 令牌
      * @return {@link Result}<{@link Long}>
      */
-    private static Result<Long> remoteValid(String token, String traceId) {
+    private static Result<Integer> remoteValid(String token, String traceId) {
         // 身份验证服务,因网关加载顺序需要进行懒加载
         AuthClientService authClientService = SpringUtils.getBean(AuthClientService.class);
 
         RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
         // WebFlux异步调用，同步会报错
-        Future<Result<Long>> future = executorService.submit(() -> authClientService.tokenValid(token, traceId));
-        Result<Long> result;
+        Future<Result<Integer>> future = executorService.submit(() -> authClientService.tokenValid(token, traceId));
+        Result<Integer> result;
         try {
             result = future.get();
         } catch (InterruptedException | ExecutionException e) {

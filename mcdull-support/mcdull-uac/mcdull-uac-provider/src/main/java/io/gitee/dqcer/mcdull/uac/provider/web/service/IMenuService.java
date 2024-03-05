@@ -9,9 +9,9 @@ import java.util.Map;
  * @author dqcer
  */
 public interface IMenuService {
-    Map<Long, List<String>> getMenuCodeListMap(List<Long> roleIdList);
+    Map<Integer, List<String>> getMenuCodeListMap(List<Integer> roleIdList);
 
     List<String> getAllCodeList();
 
-    List<RouterVO> tree(Long userId);
+    List<RouterVO> tree(Integer userId);
 }

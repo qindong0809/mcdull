@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.client.api;
 
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.client.vo.RemoteUserVO;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public interface UserServiceApi {
      * @param userId 用户id
      * @return {@link Result< RemoteUserVO >}
      */
-    @PostMapping("feign/user/base/detail")
-    Result<RemoteUserVO> getDetail(@RequestParam(value = "userId")Long userId);
+    @PostMapping(GlobalConstant.INNER_API + "feign/user/base/detail")
+    Result<RemoteUserVO> getDetail(@RequestParam(value = "userId")Integer userId);
 
 }

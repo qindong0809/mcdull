@@ -127,10 +127,10 @@ public class BaseInterceptor implements HandlerInterceptor {
             language = language.substring(0, language.indexOf(','));
         }
         unifySession.setLanguage(language);
-        unifySession.setUserId(Long.valueOf(request.getHeader(HttpHeaderConstants.U_ID)));
+        unifySession.setUserId(Integer.valueOf(request.getHeader(HttpHeaderConstants.U_ID)));
         String tenantId = request.getHeader(HttpHeaderConstants.T_ID);
         if (StrUtil.isNotBlank(tenantId)) {
-            unifySession.setTenantId(Long.valueOf(tenantId));
+            unifySession.setTenantId(Integer.valueOf(tenantId));
         }
         unifySession.setTraceId(request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER));
         UserContextHolder.setSession(unifySession);

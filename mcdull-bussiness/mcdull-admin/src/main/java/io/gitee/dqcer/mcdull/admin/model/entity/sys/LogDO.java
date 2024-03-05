@@ -21,12 +21,12 @@ public class LogDO extends RelDO {
    /**
     * 操作人的账号主键
     */
-    private Long accountId;
+    private Integer accountId;
 
    /**
     * 租户主键
     */
-    private Long tenantId;
+    private Integer tenantId;
 
    /**
     * 客户端ip

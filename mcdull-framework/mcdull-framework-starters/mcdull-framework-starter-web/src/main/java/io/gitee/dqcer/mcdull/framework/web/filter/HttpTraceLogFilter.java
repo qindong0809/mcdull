@@ -44,7 +44,7 @@ public class HttpTraceLogFilter implements Filter {
             unifySession.setTraceId(traceId);
             unifySession.setRequestUrl(requestUrl);
             unifySession.setNow(new Date());
-            unifySession.setUserId(StpUtil.isLogin() ? StpUtil.getLoginIdAsLong() : null);
+            unifySession.setUserId(StpUtil.isLogin() ? StpUtil.getLoginIdAsInt() : null);
             UserContextHolder.setSession(unifySession);
 
             if (log.isDebugEnabled()) {

@@ -32,7 +32,7 @@ public class CacheUser implements Serializable {
     /**
      *
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 租户id
@@ -82,11 +82,11 @@ public class CacheUser implements Serializable {
         return this;
     }
 
-    public Long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public CacheUser setUserId(Long userId) {
+    public CacheUser setUserId(Integer userId) {
         this.userId = userId;
         return this;
     }

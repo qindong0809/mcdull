@@ -62,7 +62,7 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Result<Long> insert(RoleLiteDTO dto) {
+    public Result<Integer> insert(RoleLiteDTO dto) {
         LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
         query.eq(RoleDO::getName, dto.getName());
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
@@ -78,8 +78,8 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Result<Long> updateStatus(RoleLiteDTO dto) {
-        Long id = dto.getId();
+    public Result<Integer> updateStatus(RoleLiteDTO dto) {
+        Integer id = dto.getId();
 
 
         RoleDO dbData = baseRepository.getById(id);
@@ -108,8 +108,8 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Result<Long> delete(UserLiteDTO dto) {
-        Long id = dto.getId();
+    public Result<Integer> delete(UserLiteDTO dto) {
+        Integer id = dto.getId();
 
 
         RoleDO dbData = baseRepository.getById(id);
@@ -131,8 +131,8 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
     }
 
     @Override
-    public Map<Long, List<RoleDO>> getRoleMap(List<Long> userIdList) {
-        Map<Long, List<Long>> userRoleMap = userRoleService.getRoleIdListMap(userIdList);
+    public Map<Integer, List<RoleDO>> getRoleMap(List<Integer> userIdList) {
+        Map<Integer, List<Integer>> userRoleMap = userRoleService.getRoleIdListMap(userIdList);
         if (CollUtil.isNotEmpty(userRoleMap)) {
             return baseRepository.roleListMap(userRoleMap);
         }

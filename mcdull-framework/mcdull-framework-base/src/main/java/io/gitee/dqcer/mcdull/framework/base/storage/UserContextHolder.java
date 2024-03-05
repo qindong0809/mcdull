@@ -57,7 +57,7 @@ public class UserContextHolder {
      *
      * @return {@link Long}
      */
-    public static Long currentUserId() {
+    public static Integer currentUserId() {
         return UNIFY_SESSION.get().getUserId();
     }
 

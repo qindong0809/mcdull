@@ -25,7 +25,7 @@ public class RoleMenuRepositoryImpl extends ServiceImpl<RoleMenuMapper, RoleMenu
 
 
     @Override
-    public Map<Long, List<Long>> menuIdListMap(Collection<Long> roleIdCollection) {
+    public Map<Integer, List<Integer>> menuIdListMap(Collection<Integer> roleIdCollection) {
         if (ObjectUtil.isNull(roleIdCollection)) {
             throw new IllegalArgumentException("'roleIdCollection' is null");
         }

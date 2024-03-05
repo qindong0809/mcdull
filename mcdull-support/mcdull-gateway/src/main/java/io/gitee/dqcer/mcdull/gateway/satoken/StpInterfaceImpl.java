@@ -24,16 +24,16 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
         // 返回此 loginId 拥有的权限列表
-        return permissionList(Convert.toLong(loginId));
+        return permissionList(Convert.toInt(loginId));
     }
 
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         // 返回此 loginId 拥有的角色列表
-        return this.roleList(Convert.toLong(loginId));
+        return this.roleList(Convert.toInt(loginId));
     }
 
-    private List<String> permissionList(Long userId) {
+    private List<String> permissionList(Integer userId) {
         AuthClientService authClientService = SpringUtils.getBean(AuthClientService.class);
 
         RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
@@ -49,7 +49,7 @@ public class StpInterfaceImpl implements StpInterface {
         return result.getData();
     }
 
-    private List<String> roleList(Long userId) {
+    private List<String> roleList(Integer userId) {
         AuthClientService authClientService = SpringUtils.getBean(AuthClientService.class);
 
         RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);

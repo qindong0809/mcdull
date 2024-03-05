@@ -27,12 +27,12 @@ public class RoleMenuDO extends IdDO {
     /**
      * 菜单id
      */
-    private Long menuId;
+    private Integer menuId;
 
     /**
      * 角色id
      */
-    private Long roleId;
+    private Integer roleId;
 
     @Override
     public String toString() {
@@ -53,20 +53,20 @@ public class RoleMenuDO extends IdDO {
         this.createdTime = createdTime;
     }
 
-    public Long getMenuId() {
+    public Integer getMenuId() {
         return menuId;
     }
 
-    public RoleMenuDO setMenuId(Long menuId) {
+    public RoleMenuDO setMenuId(Integer menuId) {
         this.menuId = menuId;
         return this;
     }
 
-    public Long getRoleId() {
+    public Integer getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Long roleId) {
+    public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
 }

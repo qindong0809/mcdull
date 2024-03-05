@@ -19,13 +19,13 @@ public class BaseDO extends RelDO {
      * 创建人
      */
     @TableField(fill = FieldFill.INSERT)
-    protected Long createdBy;
+    protected Integer createdBy;
 
     /**
      * 更新人
      */
     @TableField(fill = FieldFill.UPDATE)
-    protected Long updatedBy;
+    protected Integer updatedBy;
 
     /**
      * 已失活标识
@@ -45,19 +45,19 @@ public class BaseDO extends RelDO {
                 .toString();
     }
 
-    public Long getCreatedBy() {
+    public Integer getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Long createdBy) {
+    public void setCreatedBy(Integer createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Long getUpdatedBy() {
+    public Integer getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(Long updatedBy) {
+    public void setUpdatedBy(Integer updatedBy) {
         this.updatedBy = updatedBy;
     }
 

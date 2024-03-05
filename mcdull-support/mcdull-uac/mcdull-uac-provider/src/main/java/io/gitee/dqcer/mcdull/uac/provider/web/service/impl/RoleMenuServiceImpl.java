@@ -17,7 +17,7 @@ import java.util.Map;
 public class RoleMenuServiceImpl extends BasicServiceImpl<IRoleMenuRepository> implements IRoleMenuService {
 
     @Override
-    public Map<Long, List<Long>> getMenuIdListMap(List<Long> roleIdList) {
+    public Map<Integer, List<Integer>> getMenuIdListMap(List<Integer> roleIdList) {
         if (CollUtil.isNotEmpty(roleIdList)) {
             return baseRepository.menuIdListMap(roleIdList);
         }

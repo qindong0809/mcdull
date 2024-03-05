@@ -42,11 +42,11 @@ public class UserInsertDTO implements DTO {
     @NotEmpty
     @Schema(description = "角色id集", minProperties = 1)
     @Size(min = 1)
-    private List<Long> roleIds;
+    private List<Integer> roleIds;
 
     @NotNull
     @Schema(description = "部门id")
-    private Long deptId;
+    private Integer deptId;
 
     @Override
     public String toString() {
@@ -60,19 +60,19 @@ public class UserInsertDTO implements DTO {
                 .toString();
     }
 
-    public Long getDeptId() {
+    public Integer getDeptId() {
         return deptId;
     }
 
-    public void setDeptId(Long deptId) {
+    public void setDeptId(Integer deptId) {
         this.deptId = deptId;
     }
 
-    public List<Long> getRoleIds() {
+    public List<Integer> getRoleIds() {
         return roleIds;
     }
 
-    public void setRoleIds(List<Long> roleIds) {
+    public void setRoleIds(List<Integer> roleIds) {
         this.roleIds = roleIds;
     }
 

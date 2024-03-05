@@ -54,13 +54,13 @@ public class UserController {
     @Operation(summary = "新增数据", description = "重复控制")
     @RedisLock(key = "'lock:uac:user:' + #dto.nickname + '-' + #dto.account", timeout = 3)
     @PostMapping("user/insert")
-    public Result<Long> insert(@RequestBody @Validated UserInsertDTO dto){
+    public Result<Integer> insert(@RequestBody @Validated UserInsertDTO dto){
         return Result.success(userService.insert(dto));
     }
 
     @Operation(summary = "更新数据", description = "")
     @PutMapping("user/{id}/update")
-    public Result<Long> update(@PathVariable("id") Long id,
+    public Result<Integer> update(@PathVariable("id") Integer id,
                                @RequestBody @Validated UserUpdateDTO dto){
         return Result.success(userService.update(id, dto));
     }
@@ -68,19 +68,19 @@ public class UserController {
     @Operation(summary = "切换状态", description = "")
     @Parameter(name = "id", required = true, description = "主键")
     @PutMapping("user/{id}/status")
-    public Result<Long> toggleActive(@PathVariable("id") Long id) {
+    public Result<Integer> toggleActive(@PathVariable("id") Integer id) {
         return Result.success(userService.toggleActive(id));
     }
 
     @Operation(summary = "单个删除", description = "")
     @DeleteMapping("user/{id}/delete")
-    public Result<Boolean> delete(@PathVariable("id") Long id){
+    public Result<Boolean> delete(@PathVariable("id") Integer id){
         return Result.success(userService.delete(id));
     }
 
     @Operation(summary = "修改密码", description = "")
     @PostMapping("user/{id}/update-password")
-    public Result<Long> updatePassword(@PathVariable("id") Long id,
+    public Result<Integer> updatePassword(@PathVariable("id") Integer id,
                                        @RequestBody UserUpdatePasswordDTO dto){
         return Result.success(userService.updatePassword(id, dto));
     }

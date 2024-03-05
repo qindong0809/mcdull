@@ -26,11 +26,11 @@ public interface AuthServiceApi {
      * @return {@link Result}<{@link Long}>
      */
     @PostMapping(GlobalConstant.INNER_API + "/token/valid")
-    Result<Long> tokenValid(@RequestParam(value = "token")String token, @RequestHeader(name = HttpHeaderConstants.TRACE_ID_HEADER) String traceId);
+    Result<Integer> tokenValid(@RequestParam(value = "token")String token, @RequestHeader(name = HttpHeaderConstants.TRACE_ID_HEADER) String traceId);
 
     @PostMapping(GlobalConstant.INNER_API + "/permission")
-    Result<List<String>> getPermissionList(@RequestParam(value = "userId")Long userId);
+    Result<List<String>> getPermissionList(@RequestParam(value = "userId")Integer userId);
 
     @PostMapping(GlobalConstant.INNER_API + "/role")
-    Result<List<String>> getRoleList(@RequestParam(value = "userId")Long userId);
+    Result<List<String>> getRoleList(@RequestParam(value = "userId")Integer userId);
 }

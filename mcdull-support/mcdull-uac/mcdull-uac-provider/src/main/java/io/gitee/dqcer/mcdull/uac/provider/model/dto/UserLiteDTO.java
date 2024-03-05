@@ -24,7 +24,7 @@ public class UserLiteDTO extends PagedDTO {
       * 主键
       */
      @NotNull(groups = {ValidGroup.Update.class, ValidGroup.One.class, ValidGroup.Status.class, ValidGroup.Delete.class})
-     private Long id;
+     private Integer id;
     /**
      * 状态（1/正常 2/停用）
      */
@@ -61,7 +61,7 @@ public class UserLiteDTO extends PagedDTO {
     /**
      * 角色id集
      */
-    private List<Long> roleIds;
+    private List<Integer> roleIds;
 
     @Override
     public String toString() {
@@ -76,11 +76,11 @@ public class UserLiteDTO extends PagedDTO {
                 "} " + super.toString();
     }
 
-    public List<Long> getRoleIds() {
+    public List<Integer> getRoleIds() {
         return roleIds;
     }
 
-    public void setRoleIds(List<Long> roleIds) {
+    public void setRoleIds(List<Integer> roleIds) {
         this.roleIds = roleIds;
     }
 
@@ -116,11 +116,11 @@ public class UserLiteDTO extends PagedDTO {
         this.phone = phone;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     public String getStatus() {

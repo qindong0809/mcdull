@@ -7,7 +7,7 @@ import java.util.Map;
  * @author dqcer
  */
 public interface IUserRoleService {
-    void deleteAndInsert(Long userId, List<Long> roleList);
+    void deleteAndInsert(Integer userId, List<Integer> roleList);
 
-    Map<Long, List<Long>> getRoleIdListMap(List<Long> userIdList);
+    Map<Integer, List<Integer>> getRoleIdListMap(List<Integer> userIdList);
 }

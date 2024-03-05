@@ -7,5 +7,5 @@ import java.util.Map;
  * @author dqcer
  */
 public interface IRoleMenuService {
-    Map<Long, List<Long>> getMenuIdListMap(List<Long> roleIdList);
+    Map<Integer, List<Integer>> getMenuIdListMap(List<Integer> roleIdList);
 }

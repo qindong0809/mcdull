@@ -16,8 +16,8 @@ public class IdDO implements DO {
     /**
      * 主键 只有当插入对象ID 为空，才自动填充
      */
-    @TableId(type= IdType.ASSIGN_ID)
-    protected Long id;
+    @TableId(type= IdType.AUTO)
+    protected Integer id;
 
     @Override
     public String toString() {
@@ -25,11 +25,11 @@ public class IdDO implements DO {
                 '}';
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 }

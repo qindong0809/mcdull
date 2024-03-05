@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import lombok.Data;
+import lombok.ToString;
 
 import java.util.Date;
 
@@ -14,6 +16,8 @@ import java.util.Date;
  * @author dqcer
  * @since 2022/11/07
  */
+@Data
+@ToString
 @TableName("sys_user_role")
 public class UserRoleDO extends IdDO {
 
@@ -27,44 +31,11 @@ public class UserRoleDO extends IdDO {
     /**
      * 用户id
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 角色id
      */
-    private Long roleId;
+    private Integer roleId;
 
-    @Override
-    public String toString() {
-        return "UserRoleDO{" +
-                "createdTime=" + createdTime +
-                ", userId=" + userId +
-                ", roleId=" + roleId +
-                ", id=" + id +
-                "} " + super.toString();
-    }
-
-    public Date getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
-    }
 }

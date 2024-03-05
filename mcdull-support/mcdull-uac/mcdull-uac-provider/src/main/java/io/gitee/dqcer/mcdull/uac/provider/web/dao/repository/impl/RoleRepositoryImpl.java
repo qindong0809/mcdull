@@ -45,7 +45,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
     }
 
     @Override
-    public Long insert(RoleDO entity) {
+    public Integer insert(RoleDO entity) {
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {
             throw new BusinessException(CodeEnum.DB_ERROR);
@@ -54,10 +54,10 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
     }
 
     @Override
-    public Map<Long, List<RoleDO>> roleListMap(Map<Long, List<Long>> userRoleMap) {
-        Map<Long, List<RoleDO>> resultMap = new HashMap<>(userRoleMap.size());
+    public Map<Integer, List<RoleDO>> roleListMap(Map<Integer, List<Integer>> userRoleMap) {
+        Map<Integer, List<RoleDO>> resultMap = new HashMap<>(userRoleMap.size());
         if (MapUtil.isNotEmpty(userRoleMap)) {
-            Set<Long> idList = userRoleMap.values().stream()
+            Set<Integer> idList = userRoleMap.values().stream()
                     .flatMap(Collection::stream).collect(Collectors.toSet());
 
             LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
@@ -65,10 +65,10 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
             query.in(RoleDO::getId, idList);
             List<RoleDO> list = baseMapper.selectList(query);
             if (CollUtil.isNotEmpty(list)) {
-                Map<Long, RoleDO> map = list.stream()
+                Map<Integer, RoleDO> map = list.stream()
                         .collect(Collectors.toMap(IdDO::getId, Function.identity()));
-                for (Map.Entry<Long, List<Long>> entry : userRoleMap.entrySet()) {
-                    List<Long> roleIdList = entry.getValue();
+                for (Map.Entry<Integer, List<Integer>> entry : userRoleMap.entrySet()) {
+                    List<Integer> roleIdList = entry.getValue();
                     List<RoleDO> roleList = roleIdList.stream().map(map::get)
                             .filter(ObjUtil::isNotEmpty).collect(Collectors.toList());
                     if (CollUtil.isNotEmpty(roleList)) {

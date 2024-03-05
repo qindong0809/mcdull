@@ -35,7 +35,7 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
      * @param roleIds 角色id
      */
     @Override
-    public void deleteAndInsert(Long userId, List<Long> roleIds) {
+    public void deleteAndInsert(Integer userId, List<Integer> roleIds) {
         LambdaQueryWrapper<UserRoleDO> query = Wrappers.lambdaQuery();
         query.eq(UserRoleDO::getUserId, userId);
         baseMapper.delete(query);
@@ -43,7 +43,7 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
             return;
         }
         List<UserRoleDO> entities = new ArrayList<>();
-        for (Long roleId : roleIds) {
+        for (Integer roleId : roleIds) {
             UserRoleDO entity = new UserRoleDO();
             entity.setRoleId(roleId);
             entity.setUserId(userId);
@@ -56,14 +56,14 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
     }
 
     @Override
-    public Map<Long, List<Long>> roleIdListMap(Collection<Long> userCollection) {
+    public Map<Integer, List<Integer>> roleIdListMap(Collection<Integer> userCollection) {
         List<UserRoleDO> list = this.list(ListUtil.toList(userCollection));
         return list.stream().collect(Collectors.groupingBy(UserRoleDO::getUserId,
                 Collectors.mapping(UserRoleDO::getRoleId, Collectors.toList())));
     }
 
     @Override
-    public List<UserRoleDO> list(List<Long> userIdList) {
+    public List<UserRoleDO> list(List<Integer> userIdList) {
         if (CollUtil.isEmpty(userIdList)) {
             throw new IllegalArgumentException("'userIdList' is null");
         }

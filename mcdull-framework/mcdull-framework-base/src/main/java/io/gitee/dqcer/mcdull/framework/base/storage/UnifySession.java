@@ -17,7 +17,7 @@ public class UnifySession implements Serializable {
     /**
      * 账号主键
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 用户类型
@@ -27,12 +27,12 @@ public class UnifySession implements Serializable {
     /**
      * 所属客户
      */
-    private Long tenantId;
+    private Integer tenantId;
 
     /**
      * 角色id
      */
-    private Long roleId;
+    private Integer roleId;
 
     /**
      * 语言
@@ -80,27 +80,27 @@ public class UnifySession implements Serializable {
         return this;
     }
 
-    public Long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public Long getTenantId() {
+    public Integer getTenantId() {
         return tenantId;
     }
 
-    public void setTenantId(Long tenantId) {
+    public void setTenantId(Integer tenantId) {
         this.tenantId = tenantId;
     }
 
-    public Long getRoleId() {
+    public Integer getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Long roleId) {
+    public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
 

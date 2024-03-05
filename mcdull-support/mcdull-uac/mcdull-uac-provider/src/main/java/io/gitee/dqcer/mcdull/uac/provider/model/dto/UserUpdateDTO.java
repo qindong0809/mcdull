@@ -50,7 +50,7 @@ public class UserUpdateDTO implements DTO {
      */
     @NotEmpty
     @Size(min = 1)
-    private List<Long> roleIds;
+    private List<Integer> roleIds;
 
     @Override
     public String toString() {
@@ -63,11 +63,11 @@ public class UserUpdateDTO implements DTO {
                 "} " + super.toString();
     }
 
-    public List<Long> getRoleIds() {
+    public List<Integer> getRoleIds() {
         return roleIds;
     }
 
-    public void setRoleIds(List<Long> roleIds) {
+    public void setRoleIds(List<Integer> roleIds) {
         this.roleIds = roleIds;
     }
 

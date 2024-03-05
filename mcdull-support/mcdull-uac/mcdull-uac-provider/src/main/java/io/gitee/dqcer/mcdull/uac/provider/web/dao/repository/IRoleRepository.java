@@ -30,7 +30,7 @@ public interface IRoleRepository extends IService<RoleDO> {
      * @param entity 实体
      * @return {@link Long}
      */
-    Long insert(RoleDO entity);
+    Integer insert(RoleDO entity);
 
-    Map<Long, List<RoleDO>> roleListMap(Map<Long, List<Long>> userRoleMap);
+    Map<Integer, List<RoleDO>> roleListMap(Map<Integer, List<Integer>> userRoleMap);
 }

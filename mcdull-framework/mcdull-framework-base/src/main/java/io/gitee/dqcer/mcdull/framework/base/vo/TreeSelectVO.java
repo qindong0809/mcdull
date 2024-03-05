@@ -16,7 +16,7 @@ public class TreeSelectVO implements VO{
     private static final long serialVersionUID = 1L;
 
     /** 节点ID */
-    private Long id;
+    private Integer id;
 
     /** 节点名称 */
     private String label;
@@ -34,11 +34,11 @@ public class TreeSelectVO implements VO{
                 .toString();
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public TreeSelectVO setId(Long id) {
+    public TreeSelectVO setId(Integer id) {
         this.id = id;
         return this;
     }

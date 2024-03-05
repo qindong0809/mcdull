@@ -56,7 +56,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
      * @return {@link Long}
      */
     @Override
-    public Long insert(UserDO entity) {
+    public Integer insert(UserDO entity) {
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {
             throw new BusinessException(CodeEnum.DB_ERROR);
@@ -88,7 +88,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
      * @param userId 用户id
      */
     @Override
-    public void updateLoginTime(Long userId, Date nowTime) {
+    public void updateLoginTime(Integer userId, Date nowTime) {
         UserDO entity = new UserDO();
         entity.setId(userId);
         entity.setLastLoginTime(nowTime);
@@ -101,7 +101,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
 
 
     @Override
-    public boolean update(Long id, boolean inactive) {
+    public boolean update(Integer id, boolean inactive) {
         UserDO entity = new UserDO();
         entity.setId(id);
         entity.setInactive(inactive);
@@ -109,7 +109,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
     }
 
     @Override
-    public boolean update(Long id, String password) {
+    public boolean update(Integer id, String password) {
         UserDO entity = new UserDO();
         entity.setId(id);
         entity.setPassword(password);

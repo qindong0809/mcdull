@@ -33,7 +33,7 @@ public class LogVO implements VO {
     /**
      * 租户主键
      */
-    private Long tenantId;
+    private Integer tenantId;
 
     /**
      * 客户端ip

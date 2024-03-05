@@ -15,7 +15,7 @@ import java.util.StringJoiner;
 public class ReasonDTO implements DTO{
 
     @NotNull
-    private Long id;
+    private Integer id;
 
     @NotBlank
     @Length(min = 512)
@@ -29,11 +29,11 @@ public class ReasonDTO implements DTO{
                 .toString();
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

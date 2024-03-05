@@ -56,10 +56,10 @@ public class MenuController {
      * 新增数据
      *
      * @param dto dto
-     * @return {@link Result<Long> 返回新增主键}
+     * @return {@link Result<Integer> 返回新增主键}
      */
     @PostMapping("base/save")
-    public Result<Long> insert(@RequestBody @Validated(value = {ValidGroup.Insert.class})RoleLiteDTO dto){
+    public Result<Integer> insert(@RequestBody @Validated(value = {ValidGroup.Insert.class})RoleLiteDTO dto){
         return roleService.insert(dto);
     }
 
@@ -67,10 +67,10 @@ public class MenuController {
      * 状态更新
      *
      * @param dto dto
-     * @return {@link Result<Long>}
+     * @return {@link Result<Integer>}
      */
     @PostMapping("base/status")
-    public Result<Long> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) RoleLiteDTO dto){
+    public Result<Integer> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) RoleLiteDTO dto){
         return roleService.updateStatus(dto);
     }
 
@@ -78,10 +78,10 @@ public class MenuController {
      * 单个删除
      *
      * @param dto dto
-     * @return {@link Result<Long>}
+     * @return {@link Result<Integer>}
      */
     @PostMapping("base/delete")
-    public Result<Long> delete(@RequestBody @Validated(value = {ValidGroup.Delete.class}) UserLiteDTO dto){
+    public Result<Integer> delete(@RequestBody @Validated(value = {ValidGroup.Delete.class}) UserLiteDTO dto){
         return roleService.delete(dto);
     }
 

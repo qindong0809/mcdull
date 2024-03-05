@@ -34,26 +34,26 @@ public class DomainEngine {
             return bean;
         }
 
-        Map<Long, T> oldMap = getMap(dbQueryEntityList);
-        List<Long> oldIdList = new ArrayList<>();
-        for (Map.Entry<Long, T> entry : oldMap.entrySet()) {
+        Map<Integer, T> oldMap = getMap(dbQueryEntityList);
+        List<Integer> oldIdList = new ArrayList<>();
+        for (Map.Entry<Integer, T> entry : oldMap.entrySet()) {
             oldIdList.add(entry.getKey());
         }
 
-        Map<Long, T> newMap = getMap(frontEndParamConvertEntityList);
-        List<Long> newIdList = new ArrayList<>();
-        for (Map.Entry<Long, T> entry : newMap.entrySet()) {
+        Map<Integer, T> newMap = getMap(frontEndParamConvertEntityList);
+        List<Integer> newIdList = new ArrayList<>();
+        for (Map.Entry<Integer, T> entry : newMap.entrySet()) {
             newIdList.add(entry.getKey());
         }
 
-        Set<Long> allList = new HashSet<>();
+        Set<Integer> allList = new HashSet<>();
         allList.addAll(oldIdList);
         allList.addAll(newIdList);
 
-        List<Long> removeIdList = CollUtil.subtractToList(allList, newIdList);
+        List<Integer> removeIdList = CollUtil.subtractToList(allList, newIdList);
 
         List<T> removeList = new ArrayList<>();
-        for (Long id : removeIdList) {
+        for (Integer id : removeIdList) {
             removeList.add(oldMap.get(id));
         }
         bean.setRemoveList(removeList);
@@ -61,7 +61,7 @@ public class DomainEngine {
         List<T> insertList = new ArrayList<>();
         List<T> updateList = new ArrayList<>();
         for (T t : frontEndParamConvertEntityList) {
-            Long id = t.getId();
+            Integer id = t.getId();
             if (id != null) {
                 updateList.add(t);
             } else {
@@ -73,10 +73,10 @@ public class DomainEngine {
         return bean;
     }
 
-    private static <T extends IdDO> Map<Long, T> getMap(List<T> list) {
-        Map<Long, T> map = new HashMap<>(16);
+    private static <T extends IdDO> Map<Integer, T> getMap(List<T> list) {
+        Map<Integer, T> map = new HashMap<>(16);
         for (T t : list) {
-            Long id = t.getId();
+            Integer id = t.getId();
             if (id != null) {
                 map.put(id, t);
             }

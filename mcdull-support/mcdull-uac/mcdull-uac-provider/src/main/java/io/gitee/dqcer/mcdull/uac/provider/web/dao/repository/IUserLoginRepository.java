@@ -17,7 +17,7 @@ public interface IUserLoginRepository extends IService<UserLoginDO> {
      * @param userId 用户id
      * @param token  令牌
      */
-    void saveLoginInfoByUserIdAndToken(Long userId, String token);
+    void saveLoginInfoByUserIdAndToken(Integer userId, String token);
 
     /**
      * 保存注销信息根据用户id和令牌
@@ -25,5 +25,5 @@ public interface IUserLoginRepository extends IService<UserLoginDO> {
      * @param userId 用户id
      * @param token  令牌
      */
-    void saveLogoutInfoByUserIdAndToken(Long userId, String token);
+    void saveLogoutInfoByUserIdAndToken(Integer userId, String token);
 }

@@ -11,7 +11,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.VO;
  */
 public class MailTemplateBaseVO implements VO {
 
-    private Long id;
+    private Integer id;
 
     /**
      * 状态（1/正常 2/停用）
@@ -51,11 +51,11 @@ public class MailTemplateBaseVO implements VO {
         return sb.toString();
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

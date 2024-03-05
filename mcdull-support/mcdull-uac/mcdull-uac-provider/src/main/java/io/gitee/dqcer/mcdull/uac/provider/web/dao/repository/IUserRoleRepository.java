@@ -21,7 +21,7 @@ public interface IUserRoleRepository extends IService<UserRoleDO> {
      * @param id      id
      * @param roleIds 角色id
      */
-    void deleteAndInsert(Long id, List<Long> roleIds);
+    void deleteAndInsert(Integer id, List<Integer> roleIds);
 
     /**
      * 角色map
@@ -29,7 +29,7 @@ public interface IUserRoleRepository extends IService<UserRoleDO> {
      * @param userCollection 用户集合
      * @return {@link Map}<{@link Long}, {@link List}<{@link Long}>>
      */
-    Map<Long, List<Long>> roleIdListMap(Collection<Long> userCollection);
+    Map<Integer, List<Integer>> roleIdListMap(Collection<Integer> userCollection);
 
     /**
      * 列表
@@ -37,5 +37,5 @@ public interface IUserRoleRepository extends IService<UserRoleDO> {
      * @param userIdList 用户id列表
      * @return {@link List}<{@link UserRoleDO}>
      */
-    List<UserRoleDO> list(List<Long> userIdList);
+    List<UserRoleDO> list(List<Integer> userIdList);
 }

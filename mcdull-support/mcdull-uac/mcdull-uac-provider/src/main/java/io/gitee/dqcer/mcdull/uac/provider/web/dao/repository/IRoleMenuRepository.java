@@ -20,5 +20,5 @@ public interface IRoleMenuRepository extends IService<RoleMenuDO> {
      * @param roleIdCollection 角色id集合
      * @return {@link Map}<{@link Long}, {@link List}<{@link Long}>>
      */
-    Map<Long, List<Long>> menuIdListMap(Collection<Long> roleIdCollection);
+    Map<Integer, List<Integer>> menuIdListMap(Collection<Integer> roleIdCollection);
 }

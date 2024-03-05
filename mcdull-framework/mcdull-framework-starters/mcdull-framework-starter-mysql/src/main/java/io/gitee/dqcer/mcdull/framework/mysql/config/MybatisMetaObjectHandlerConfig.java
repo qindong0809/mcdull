@@ -29,7 +29,7 @@ public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
             log.debug("Field [createdTime、createdBy、delFlag、inactive] start insert fill ....");
         }
         this.strictInsertFill(metaObject, "createdTime", () -> UserContextHolder.getSession().getNow(), Date.class);
-        this.strictInsertFill(metaObject, "createdBy", UserContextHolder::currentUserId, Long.class);
+        this.strictInsertFill(metaObject, "createdBy", UserContextHolder::currentUserId, Integer.class);
         this.strictInsertFill(metaObject, "delFlag", () -> Boolean.FALSE, Boolean.class);
         this.strictInsertFill(metaObject, "inactive", () -> Boolean.FALSE, Boolean.class);
     }
@@ -40,6 +40,6 @@ public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
             log.debug("Field [updatedTime、updatedBy] start update fill ....");
         }
         this.strictUpdateFill(metaObject, "updatedTime", () -> UserContextHolder.getSession().getNow(), Date.class);
-        this.strictUpdateFill(metaObject, "updatedBy", UserContextHolder::currentUserId, Long.class);
+        this.strictUpdateFill(metaObject, "updatedBy", UserContextHolder::currentUserId, Integer.class);
     }
 }

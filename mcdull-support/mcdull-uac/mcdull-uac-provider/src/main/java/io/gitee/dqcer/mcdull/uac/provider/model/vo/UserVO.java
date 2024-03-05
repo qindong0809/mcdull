@@ -24,7 +24,7 @@ public class UserVO implements VO {
     /**
      * 主键 只有当插入对象ID 为空，才自动填充
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 创建时间
@@ -34,7 +34,7 @@ public class UserVO implements VO {
     /**
      * 创建人
      */
-    private Long createdBy;
+    private Integer createdBy;
 
     private String createdByStr;
 
@@ -46,7 +46,7 @@ public class UserVO implements VO {
     /**
      * 更新人
      */
-    private Long updatedBy;
+    private Integer updatedBy;
 
     private String updatedByStr;
 
@@ -108,6 +108,6 @@ public class UserVO implements VO {
     /**
      * 角色集
      */
-    private List<BaseVO<Long, String>> roles;
+    private List<BaseVO<Integer, String>> roles;
 
 }

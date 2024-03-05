@@ -32,7 +32,7 @@ public class UserLoginRepositoryImpl extends ServiceImpl<UserLoginMapper, UserLo
      * @param token  令牌
      */
     @Override
-    public void saveLoginInfoByUserIdAndToken(Long userId, String token) {
+    public void saveLoginInfoByUserIdAndToken(Integer userId, String token) {
         save(userId, token, LOGIN);
     }
 
@@ -43,7 +43,7 @@ public class UserLoginRepositoryImpl extends ServiceImpl<UserLoginMapper, UserLo
      * @param token  令牌
      */
     @Override
-    public void saveLogoutInfoByUserIdAndToken(Long userId, String token) {
+    public void saveLogoutInfoByUserIdAndToken(Integer userId, String token) {
         save(userId, token, LOGOUT);
     }
 
@@ -54,7 +54,7 @@ public class UserLoginRepositoryImpl extends ServiceImpl<UserLoginMapper, UserLo
      * @param token  令牌
      * @param type   类型 1/登录 2/注销
      */
-    private void save(Long userId, String token, Integer type) {
+    private void save(Integer userId, String token, Integer type) {
         UserLoginDO loginDO = new UserLoginDO();
 //        loginDO.setType(type);
 //        loginDO.setToken(token);

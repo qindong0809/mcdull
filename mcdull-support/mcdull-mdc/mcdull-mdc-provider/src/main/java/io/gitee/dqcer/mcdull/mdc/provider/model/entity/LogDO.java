@@ -17,12 +17,12 @@ public class LogDO extends IdDO {
     /**
      * 操作人的账号主键
      */
-    private Long accountId;
+    private Integer accountId;
 
     /**
      * 租户主键
      */
-    private Long tenantId;
+    private Integer tenantId;
 
     /**
      * 创建时间
@@ -88,19 +88,19 @@ public class LogDO extends IdDO {
                 "} " + super.toString();
     }
 
-    public Long getAccountId() {
+    public Integer getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(Long accountId) {
+    public void setAccountId(Integer accountId) {
         this.accountId = accountId;
     }
 
-    public Long getTenantId() {
+    public Integer getTenantId() {
         return tenantId;
     }
 
-    public void setTenantId(Long tenantId) {
+    public void setTenantId(Integer tenantId) {
         this.tenantId = tenantId;
     }
 

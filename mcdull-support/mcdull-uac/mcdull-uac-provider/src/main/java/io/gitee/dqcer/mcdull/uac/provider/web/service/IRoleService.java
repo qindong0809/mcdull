@@ -18,12 +18,12 @@ public interface IRoleService {
 
     Result<RoleVO> detail(RoleLiteDTO dto);
 
-    Result<Long> insert(RoleLiteDTO dto);
+    Result<Integer> insert(RoleLiteDTO dto);
 
-    Result<Long> updateStatus(RoleLiteDTO dto);
+    Result<Integer> updateStatus(RoleLiteDTO dto);
 
-    Result<Long> delete(UserLiteDTO dto);
+    Result<Integer> delete(UserLiteDTO dto);
 
-    Map<Long, List<RoleDO>> getRoleMap(List<Long> userIdList);
+    Map<Integer, List<RoleDO>> getRoleMap(List<Integer> userIdList);
 
 }

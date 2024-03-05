@@ -35,7 +35,7 @@ public class RoleManagerImpl implements IRoleManager {
             return null;
         }
         vo.setCreatedByStr(userRepository.getById(entity.getCreatedBy()).getNickName());
-        Long updatedBy = entity.getUpdatedBy();
+        Integer updatedBy = entity.getUpdatedBy();
         if (updatedBy != null) {
             vo.setUpdatedByStr(userRepository.getById(updatedBy).getNickName());
         }

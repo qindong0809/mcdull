@@ -56,7 +56,7 @@ public class LoginController implements AuthServiceApi {
     @Operation(summary = "当前登录人信息", description = "角色、权限、个人信息")
     @GetMapping("getInfo")
     public JSONObject getInfo() {
-        Long currentUserId = UserContextHolder.currentUserId();
+        Integer currentUserId = UserContextHolder.currentUserId();
         Result<UserVO> success = Result.success();
         JSONObject jsonObject = JSONUtil.parseObj(success);
         jsonObject.set("permissions", loginService.getPermissionList(currentUserId));
@@ -67,8 +67,7 @@ public class LoginController implements AuthServiceApi {
 
     @GetMapping("getRouters")
     public Result<List<RouterVO>> getRouters() {
-        Long userId = UserContextHolder.currentUserId();
-        List<RouterVO> routerVO = menuService.tree(userId);
+        List<RouterVO> routerVO = menuService.tree(UserContextHolder.currentUserId());
         return Result.success(routerVO);
     }
 
@@ -92,18 +91,18 @@ public class LoginController implements AuthServiceApi {
      */
     @UnAuthorize
     @Override
-    public Result<Long> tokenValid(String token, String traceId) {
+    public Result<Integer> tokenValid(String token, String traceId) {
         StpUtil.checkLogin();
-        return Result.success(StpUtil.getLoginIdAsLong());
+        return Result.success(StpUtil.getLoginIdAsInt());
     }
 
     @Override
-    public Result<List<String>> getPermissionList(Long userId) {
+    public Result<List<String>> getPermissionList(Integer userId) {
         return Result.success(loginService.getPermissionList(userId));
     }
 
     @Override
-    public Result<List<String>> getRoleList(Long userId) {
+    public Result<List<String>> getRoleList(Integer userId) {
         return Result.success(loginService.getRoleList(userId));
     }
 }

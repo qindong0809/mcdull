@@ -99,7 +99,7 @@ public abstract class BaseInfoInterceptor implements HandlerInterceptor {
                 return false;
             }
             UserSession userSession = result.getData();
-            Long userId = userSession.getUserId();
+            Integer userId = userSession.getUserId();
             unifySession.setUserType(userSession.getType());
             unifySession.setUserId(userId);
         }

@@ -49,13 +49,13 @@ public class LoginServiceImpl implements ILoginService {
         // todo 验证码校验
 //        this.validateCaptcha(username, code, uuid);
         // 登录前置校验
-        Long loginId = this.loginPreCheck(username, password);
+        Integer loginId = this.loginPreCheck(username, password);
         StpUtil.login(loginId);
         userService.updateLoginTime(loginId, UserContextHolder.getSession().getNow());
 
     }
 
-    private Long loginPreCheck(String username, String passwordDTO) {
+    private Integer loginPreCheck(String username, String passwordDTO) {
         UserDO userEntity = userService.get(username);
         if (ObjUtil.isNotNull(userEntity)) {
             boolean isOk = userService.passwordCheck(userEntity, passwordDTO);
@@ -87,14 +87,12 @@ public class LoginServiceImpl implements ILoginService {
      */
     @Override
     public void logout() {
-        Long userId = UserContextHolder.currentUserId();
-        StpUtil.logout(userId);
-        log.info("logout. userId : {}", userId);
+        StpUtil.logout(UserContextHolder.currentUserId());
     }
 
     @Override
-    public List<String> getPermissionList(Long userId) {
-        Map<Long, UserDO> entityMap = userService.getEntityMap(ListUtil.of(userId));
+    public List<String> getPermissionList(Integer userId) {
+        Map<Integer, UserDO> entityMap = userService.getEntityMap(ListUtil.of(userId));
         if (MapUtil.isNotEmpty(entityMap)) {
             UserDO userDO = entityMap.get(userId);
             if (ObjUtil.isNotNull(userDO)) {
@@ -116,7 +114,7 @@ public class LoginServiceImpl implements ILoginService {
 
 
     @Override
-    public List<String> getRoleList(Long userId) {
+    public List<String> getRoleList(Integer userId) {
         List<UserPowerVO> userPowerVOList = userService.getResourceModuleList(userId);
         Set<String> set = new HashSet<>();
         if (CollUtil.isNotEmpty(userPowerVOList)) {

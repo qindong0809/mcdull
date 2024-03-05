@@ -21,19 +21,19 @@ public interface IUserService {
 
     PagedVO<UserVO> listByPage(UserLiteDTO dto);
 
-    Long insert(UserInsertDTO dto);
+    Integer insert(UserInsertDTO dto);
 
     UserDO get(String username);
 
-    Long toggleActive(Long id);
+    Integer toggleActive(Integer id);
 
-    boolean delete(Long id);
+    boolean delete(Integer id);
 
-    Long updatePassword(Long id, UserUpdatePasswordDTO dto);
+    Integer updatePassword(Integer id, UserUpdatePasswordDTO dto);
 
-    Long update(Long id, UserUpdateDTO dto);
+    Integer update(Integer id, UserUpdateDTO dto);
 
-    List<UserPowerVO> getResourceModuleList(Long userId);
+    List<UserPowerVO> getResourceModuleList(Integer userId);
 
     /**
      * userid、entity
@@ -41,7 +41,7 @@ public interface IUserService {
      * @param userIdList 用户id列表
      * @return {@link Map}<{@link Long}, {@link UserDO}>
      */
-    Map<Long, UserDO> getEntityMap(List<Long> userIdList);
+    Map<Integer, UserDO> getEntityMap(List<Integer> userIdList);
 
     /**
      * userid、username
@@ -49,7 +49,7 @@ public interface IUserService {
      * @param userIdList 用户id列表
      * @return {@link Map}<{@link Long}, {@link String}>
      */
-    Map<Long, String> getNameMap(List<Long> userIdList);
+    Map<Integer, String> getNameMap(List<Integer> userIdList);
 
     /**
      * update登录时间
@@ -57,7 +57,7 @@ public interface IUserService {
      * @param userId  用户id
      * @param nowTime 现在时间
      */
-    void updateLoginTime(Long userId, Date nowTime);
+    void updateLoginTime(Integer userId, Date nowTime);
 
     /**
      * get
@@ -65,5 +65,5 @@ public interface IUserService {
      * @param userId 用户id
      * @return {@link UserVO}
      */
-    UserVO get(Long userId);
+    UserVO get(Integer userId);
 }

@@ -18,12 +18,12 @@ public class LogOperationDTO implements DTO {
     /**
      * 操作人的账号主键
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 租户主键
      */
-    private Long tenantId;
+    private Integer tenantId;
 
     /**
      * 创建时间
@@ -90,19 +90,19 @@ public class LogOperationDTO implements DTO {
         this.userAgent = userAgent;
     }
 
-    public Long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public Long getTenantId() {
+    public Integer getTenantId() {
         return tenantId;
     }
 
-    public void setTenantId(Long tenantId) {
+    public void setTenantId(Integer tenantId) {
         this.tenantId = tenantId;
     }
 

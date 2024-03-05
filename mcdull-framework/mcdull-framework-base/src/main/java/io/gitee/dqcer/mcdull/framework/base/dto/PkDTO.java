@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 public class PkDTO implements DTO{
 
     @NotNull
-    private Long id;
+    private Integer id;
 
     @Override
     public String toString() {
@@ -18,11 +18,11 @@ public class PkDTO implements DTO{
                 '}';
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public PkDTO setId(Long id) {
+    public PkDTO setId(Integer id) {
         this.id = id;
         return this;
     }

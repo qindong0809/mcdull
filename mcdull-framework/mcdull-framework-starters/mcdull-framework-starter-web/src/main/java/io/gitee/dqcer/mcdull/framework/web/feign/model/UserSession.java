@@ -12,15 +12,15 @@ public class UserSession implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long userId;
+    private Integer userId;
 
     private Integer type;
 
-    public Long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

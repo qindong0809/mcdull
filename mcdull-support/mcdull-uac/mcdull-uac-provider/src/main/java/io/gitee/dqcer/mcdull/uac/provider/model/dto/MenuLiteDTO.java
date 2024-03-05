@@ -23,7 +23,7 @@ public class MenuLiteDTO extends PagedDTO {
       * 主键
       */
      @NotNull(groups = {ValidGroup.Update.class, ValidGroup.One.class, ValidGroup.Status.class, ValidGroup.Delete.class})
-     private Long id;
+     private Integer id;
     /**
      * 状态（1/正常 2/停用）
      */
@@ -40,7 +40,7 @@ public class MenuLiteDTO extends PagedDTO {
     /**
      * 父id
      */
-    private Long parentId;
+    private Integer parentId;
 
     /**
      * 图标
@@ -89,11 +89,11 @@ public class MenuLiteDTO extends PagedDTO {
         return sb.toString();
     }
 
-    public Long getParentId() {
+    public Integer getParentId() {
         return parentId;
     }
 
-    public void setParentId(Long parentId) {
+    public void setParentId(Integer parentId) {
         this.parentId = parentId;
     }
 
@@ -145,11 +145,11 @@ public class MenuLiteDTO extends PagedDTO {
         this.type = type;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

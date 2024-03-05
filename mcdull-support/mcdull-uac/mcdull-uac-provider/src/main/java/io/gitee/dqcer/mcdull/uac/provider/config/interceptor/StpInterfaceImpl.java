@@ -21,7 +21,7 @@ public class StpInterfaceImpl extends AbstractUserDetailsService {
     private IUserService userService;
 
     @Override
-    protected List<String> permissionList(Long userId) {
+    protected List<String> permissionList(Integer userId) {
         List<UserPowerVO> list = userService.getResourceModuleList(userId);
         if (CollUtil.isNotEmpty(list)) {
             return list.stream().flatMap(i -> i.getModules().stream()).distinct().collect(Collectors.toList());
@@ -30,7 +30,7 @@ public class StpInterfaceImpl extends AbstractUserDetailsService {
     }
 
     @Override
-    protected List<String> roleList(Long userId) {
+    protected List<String> roleList(Integer userId) {
         List<UserPowerVO> list = userService.getResourceModuleList(userId);
         if (CollUtil.isNotEmpty(list)) {
             return list.stream().map(UserPowerVO::getCode).collect(Collectors.toList());

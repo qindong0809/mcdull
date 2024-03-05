@@ -20,7 +20,7 @@ public class RemoteUserVO implements VO {
     /**
      * 主键 只有当插入对象ID 为空，才自动填充
      */
-    private Long id;
+    private Integer id;
 
     /**
      * 创建时间
@@ -30,7 +30,7 @@ public class RemoteUserVO implements VO {
     /**
      * 创建人
      */
-    private Long createdBy;
+    private Integer createdBy;
 
     private String createdByStr;
 
@@ -42,7 +42,7 @@ public class RemoteUserVO implements VO {
     /**
      * 更新人
      */
-    private Long updatedBy;
+    private Integer updatedBy;
 
     private String updatedByStr;
 
@@ -188,11 +188,11 @@ public class RemoteUserVO implements VO {
         this.delFlagStr = delFlagStr;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -204,11 +204,11 @@ public class RemoteUserVO implements VO {
         this.createdTime = createdTime;
     }
 
-    public Long getCreatedBy() {
+    public Integer getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Long createdBy) {
+    public void setCreatedBy(Integer createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -220,11 +220,11 @@ public class RemoteUserVO implements VO {
         this.updatedTime = updatedTime;
     }
 
-    public Long getUpdatedBy() {
+    public Integer getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(Long updatedBy) {
+    public void setUpdatedBy(Integer updatedBy) {
         this.updatedBy = updatedBy;
     }
 

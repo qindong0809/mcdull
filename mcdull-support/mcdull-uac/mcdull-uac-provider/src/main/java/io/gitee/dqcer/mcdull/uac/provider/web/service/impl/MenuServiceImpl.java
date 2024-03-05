@@ -36,9 +36,9 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     private IUserRoleService userRoleService;
 
     @Override
-    public Map<Long, List<String>> getMenuCodeListMap(List<Long> roleIdList) {
+    public Map<Integer, List<String>> getMenuCodeListMap(List<Integer> roleIdList) {
         if (CollUtil.isNotEmpty(roleIdList)) {
-            Map<Long, List<Long>> menuListMap = roleMenuService.getMenuIdListMap(roleIdList);
+            Map<Integer, List<Integer>> menuListMap = roleMenuService.getMenuIdListMap(roleIdList);
             return baseRepository.menuCodeListMap(menuListMap);
         }
         return MapUtil.empty();
@@ -50,19 +50,19 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     }
 
     @Override
-    public List<RouterVO> tree(Long userId) {
+    public List<RouterVO> tree(Integer userId) {
 
-        Map<Long, List<Long>> roleIdListMap = userRoleService.getRoleIdListMap(ListUtil.of(userId));
+        Map<Integer, List<Integer>> roleIdListMap = userRoleService.getRoleIdListMap(ListUtil.of(userId));
         if (MapUtil.isNotEmpty(roleIdListMap)) {
-            List<Long> roleIdList = roleIdListMap.get(userId);
+            List<Integer> roleIdList = roleIdListMap.get(userId);
             if (CollUtil.isNotEmpty(roleIdList)) {
-                Map<Long, List<Long>> menuIdListMap = roleMenuService.getMenuIdListMap(roleIdList);
+                Map<Integer, List<Integer>> menuIdListMap = roleMenuService.getMenuIdListMap(roleIdList);
                 if (MapUtil.isNotEmpty(menuIdListMap)) {
-                    Set<Long> idSet = menuIdListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+                    Set<Integer> idSet = menuIdListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
                     if (CollUtil.isNotEmpty(idSet)) {
                         List<MenuDO> menuList = baseRepository.list(idSet);
 
-                        List<Tree<Long>> integerTree = TreeUtil.build(menuList, 0L,
+                        List<Tree<Integer>> integerTree = TreeUtil.build(menuList, 0,
                                 (menu, treeNode) -> {
                             treeNode.setName(StrUtil.upperFirst(menu.getPath()));
                             treeNode.put("path", this.getRouterPath(menu));
@@ -124,12 +124,12 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     }
 
 
-    public List<RouterVO> convert(List<Tree<Long>> treeList) {
+    public List<RouterVO> convert(List<Tree<Integer>> treeList) {
         if (CollUtil.isEmpty(treeList)) {
             return Collections.emptyList();
         }
         List<RouterVO> list = new ArrayList<>();
-        for (Tree<Long> tree : treeList) {
+        for (Tree<Integer> tree : treeList) {
             RouterVO vo = this.convert(tree);
             if (ObjUtil.isNotNull(vo)) {
                 list.add(vo);
@@ -138,7 +138,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         return list;
     }
 
-    private RouterVO convert(Tree<Long> tree) {
+    private RouterVO convert(Tree<Integer> tree) {
         if (ObjUtil.isNull(tree)) {
             return null;
         }
@@ -153,10 +153,10 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
             MetaVO metaVO = JSONUtil.toBean(meta, MetaVO.class);
             routerVO.setMeta(metaVO);
         }
-        List<Tree<Long>> children = tree.getChildren();
+        List<Tree<Integer>> children = tree.getChildren();
         if (CollUtil.isNotEmpty(children)) {
             List<RouterVO> childVOList = new ArrayList<>();
-            for (Tree<Long> childTree : children) {
+            for (Tree<Integer> childTree : children) {
                 RouterVO childVO = this.convert(childTree);
                 if (ObjUtil.isNotNull(childVO)) {
                     childVOList.add(childVO);

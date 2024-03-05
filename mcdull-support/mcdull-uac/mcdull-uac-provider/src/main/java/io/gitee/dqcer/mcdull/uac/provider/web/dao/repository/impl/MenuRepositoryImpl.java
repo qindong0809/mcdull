@@ -62,19 +62,19 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
     }
 
     @Override
-    public Map<Long, List<String>> menuCodeListMap(Map<Long, List<Long>> menuListMap) {
-        Map<Long, List<String>> resultMap = new HashMap<>(menuListMap.size());
+    public Map<Integer, List<String>> menuCodeListMap(Map<Integer, List<Integer>> menuListMap) {
+        Map<Integer, List<String>> resultMap = new HashMap<>(menuListMap.size());
         if (MapUtil.isNotEmpty(menuListMap)) {
-            Set<Long> idList = menuListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+            Set<Integer> idList = menuListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
             LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
             query.eq(MenuDO::getStatus, StatusEnum.ENABLE.getCode());
             query.eq(BaseDO::getInactive, InactiveEnum.FALSE.getCode());
             query.in(MenuDO::getPerms, idList);
             List<MenuDO> list = baseMapper.selectList(query);
             if (CollUtil.isNotEmpty(list)) {
-                Map<Long, MenuDO> map = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
-                for (Map.Entry<Long, List<Long>> entry : menuListMap.entrySet()) {
-                    List<Long> menuIdList = entry.getValue();
+                Map<Integer, MenuDO> map = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+                for (Map.Entry<Integer, List<Integer>> entry : menuListMap.entrySet()) {
+                    List<Integer> menuIdList = entry.getValue();
                     List<String> menuCodeList = menuIdList.stream()
                             .map(i -> map.get(i).getPerms()).collect(Collectors.toList());
                     resultMap.put(entry.getKey(), menuCodeList);
@@ -85,7 +85,7 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
     }
 
     @Override
-    public List<MenuDO> list(Collection<Long> collection) {
+    public List<MenuDO> list(Collection<Integer> collection) {
         if (CollUtil.isEmpty(collection)) {
             return Collections.emptyList();
         }

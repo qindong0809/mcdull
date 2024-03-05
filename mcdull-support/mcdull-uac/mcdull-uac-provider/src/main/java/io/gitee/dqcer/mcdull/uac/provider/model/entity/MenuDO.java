@@ -25,7 +25,7 @@ public class MenuDO extends BaseDO {
     /**
      * 父id
      */
-    private Long parentId;
+    private Integer parentId;
 
     /**
      * 显示顺序
@@ -122,11 +122,11 @@ public class MenuDO extends BaseDO {
         this.name = name;
     }
 
-    public Long getParentId() {
+    public Integer getParentId() {
         return parentId;
     }
 
-    public void setParentId(Long parentId) {
+    public void setParentId(Integer parentId) {
         this.parentId = parentId;
     }
 
