@@ -105,7 +105,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     }
 
     private void setRoleListFieldValue(Map<Long, List<RoleDO>> roleListMap, UserVO vo) {
-        Long id = vo.getId();
+        Long id = vo.getUserId();
         List<RoleDO> list = roleListMap.getOrDefault(id, ListUtil.empty());
         if (CollUtil.isNotEmpty(list)) {
             List<BaseVO<Long, String>> roleList = list.stream()
