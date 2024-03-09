@@ -89,11 +89,22 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
         if (CollUtil.isEmpty(collection)) {
             return Collections.emptyList();
         }
+        return this.list(collection, false);
+    }
+
+    @Override
+    public List<MenuDO> all() {
+        return this.list(Collections.emptyList(), true);
+    }
+
+    private List<MenuDO> list(Collection<Integer> idList, boolean isAll) {
         LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
         query.eq(BaseDO::getInactive, InactiveEnum.FALSE.getCode());
-        query.eq(MenuDO::getStatus, true);
+        query.eq(MenuDO::getStatus, false);
         query.in(MenuDO::getMenuType, ListUtil.of(MenuTypeEnum.DIRECTORY.getCode(), MenuTypeEnum.MENU.getCode()));
-        query.in(IdDO::getId, collection);
+        if (!isAll) {
+            query.in(IdDO::getId, idList);
+        }
         query.orderByAsc(ListUtil.of(MenuDO::getParentId, MenuDO::getOrderNum));
         return baseMapper.selectList(query);
     }

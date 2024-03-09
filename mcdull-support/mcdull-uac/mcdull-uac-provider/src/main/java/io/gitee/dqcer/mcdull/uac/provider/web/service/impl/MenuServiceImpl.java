@@ -50,8 +50,14 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     }
 
     @Override
-    public List<RouterVO> tree(Integer userId) {
+    public List<RouterVO> allTree() {
+        List<MenuDO> menuList = baseRepository.all();
+        List<Tree<Integer>> integerTree = this.getTrees(menuList);
+        return this.convert(integerTree);
+    }
 
+    @Override
+    public List<RouterVO> tree(Integer userId) {
         Map<Integer, List<Integer>> roleIdListMap = userRoleService.getRoleIdListMap(ListUtil.of(userId));
         if (MapUtil.isNotEmpty(roleIdListMap)) {
             List<Integer> roleIdList = roleIdListMap.get(userId);
@@ -61,27 +67,31 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
                     Set<Integer> idSet = menuIdListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
                     if (CollUtil.isNotEmpty(idSet)) {
                         List<MenuDO> menuList = baseRepository.list(idSet);
-
-                        List<Tree<Integer>> integerTree = TreeUtil.build(menuList, 0,
-                                (menu, treeNode) -> {
-                            treeNode.setName(StrUtil.upperFirst(menu.getPath()));
-                            treeNode.put("path", this.getRouterPath(menu));
-                            treeNode.setId(menu.getId());
-                            treeNode.setParentId(menu.getParentId());
-                            treeNode.setWeight(menu.getOrderNum());
-                            MetaVO metaVO = new MetaVO(menu.getName(), menu.getIcon(),
-                                    StrUtil.equals("1", menu.getIsCache()), menu.getPath());
-                            treeNode.put("meta", JSONUtil.parseObj(metaVO).toString());
-                            treeNode.put("component", this.getComponent(menu));
-                            treeNode.put("query", menu.getQuery());
-                            treeNode.put("hidden", "1".equals(menu.getVisible()));
-                        });
+                        List<Tree<Integer>> integerTree = this.getTrees(menuList);
                         return this.convert(integerTree);
                     }
                 }
             }
         }
         return Collections.emptyList();
+    }
+
+    private List<Tree<Integer>> getTrees(List<MenuDO> menuList) {
+        List<Tree<Integer>> integerTree = TreeUtil.build(menuList, 0,
+                (menu, treeNode) -> {
+            treeNode.setName(StrUtil.upperFirst(menu.getPath()));
+            treeNode.put("path", this.getRouterPath(menu));
+            treeNode.setId(menu.getId());
+            treeNode.setParentId(menu.getParentId());
+            treeNode.setWeight(menu.getOrderNum());
+            MetaVO metaVO = new MetaVO(menu.getName(), menu.getIcon(),
+                    StrUtil.equals("1", menu.getIsCache()), menu.getPath());
+            treeNode.put("meta", JSONUtil.parseObj(metaVO).toString());
+            treeNode.put("component", this.getComponent(menu));
+            treeNode.put("query", menu.getQuery());
+            treeNode.put("hidden", "1".equals(menu.getVisible()));
+        });
+        return integerTree;
     }
 
     public String getComponent(MenuDO menu) {

@@ -6,7 +6,6 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.gateway.utils.SpringUtils;
 import io.gitee.dqcer.mcdull.uac.client.service.AuthClientService;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.concurrent.*;
 /**
  * @author dqcer
  */
-@Component
+//@Component
 public class StpInterfaceImpl implements StpInterface {
 
     private static final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3000, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1000), new ThreadFactoryBuilder()

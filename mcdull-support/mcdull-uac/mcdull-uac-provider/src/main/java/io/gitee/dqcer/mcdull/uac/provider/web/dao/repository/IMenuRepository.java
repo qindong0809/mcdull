@@ -24,4 +24,6 @@ public interface IMenuRepository extends IService<MenuDO> {
     Map<Integer, List<String>> menuCodeListMap(Map<Integer, List<Integer>> menuListMap);
 
     List<MenuDO> list(Collection<Integer> collection);
+
+    List<MenuDO> all();
 }

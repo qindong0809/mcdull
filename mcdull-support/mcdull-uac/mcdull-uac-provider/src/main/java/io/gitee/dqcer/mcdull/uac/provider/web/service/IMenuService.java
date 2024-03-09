@@ -13,5 +13,7 @@ public interface IMenuService {
 
     List<String> getAllCodeList();
 
+    List<RouterVO> allTree();
+
     List<RouterVO> tree(Integer userId);
 }
