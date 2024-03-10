@@ -17,7 +17,7 @@ public class PagedVO<T> implements IPaged, VO {
     /**
      * 总记录数
      */
-    private Long totalCount;
+    private Long total;
     /**
      * 每页记录数
      */
@@ -29,7 +29,7 @@ public class PagedVO<T> implements IPaged, VO {
     /**
      * 当前页数
      */
-    private Long page;
+    private Long currentPage;
     /**
      * 列表数据
      */
@@ -39,24 +39,24 @@ public class PagedVO<T> implements IPaged, VO {
      * 分页
      *
      * @param list       列表数据
-     * @param totalCount 总记录数
+     * @param total 总记录数
      * @param pageSize   每页记录数
-     * @param page   当前页数
+     * @param currentPage   当前页数
      */
-    public PagedVO(List<T> list, Long totalCount, Long pageSize, Long page) {
+    public PagedVO(List<T> list, Long total, Long pageSize, Long currentPage) {
         this.list = list;
-        this.totalCount = totalCount;
+        this.total = total;
         this.pageSize = pageSize;
-        this.page = page;
-        this.totalPage = (long) (int) Math.ceil((double) totalCount / pageSize);
+        this.currentPage = currentPage;
+        this.totalPage = (long) (int) Math.ceil((double) total / pageSize);
     }
 
-    public long getTotalCount() {
-        return totalCount;
+    public long getTotal() {
+        return total;
     }
 
-    public void setTotalCount(Long totalCount) {
-        this.totalCount = totalCount;
+    public void setTotal(Long total) {
+        this.total = total;
     }
 
     @Override
@@ -84,11 +84,11 @@ public class PagedVO<T> implements IPaged, VO {
      */
     @Override
     public Long getPageNum() {
-        return page;
+        return currentPage;
     }
 
-    public void setPage(Long page) {
-        this.page = page;
+    public void setCurrentPage(Long currentPage) {
+        this.currentPage = currentPage;
     }
 
     public List<T> getList() {
@@ -102,10 +102,10 @@ public class PagedVO<T> implements IPaged, VO {
     @Override
     public String toString() {
         return "Page{" +
-                "totalCount=" + totalCount +
+                "totalCount=" + total +
                 ", pageSize=" + pageSize +
                 ", totalPage=" + totalPage +
-                ", page=" + page +
+                ", page=" + currentPage +
                 ", list=" + list +
                 '}';
     }
