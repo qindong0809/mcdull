@@ -62,15 +62,25 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         if (MapUtil.isNotEmpty(roleIdListMap)) {
             List<Integer> roleIdList = roleIdListMap.get(userId);
             if (CollUtil.isNotEmpty(roleIdList)) {
-                Map<Integer, List<Integer>> menuIdListMap = roleMenuService.getMenuIdListMap(roleIdList);
-                if (MapUtil.isNotEmpty(menuIdListMap)) {
-                    Set<Integer> idSet = menuIdListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
-                    if (CollUtil.isNotEmpty(idSet)) {
-                        List<MenuDO> menuList = baseRepository.list(idSet);
-                        List<Tree<Integer>> integerTree = this.getTrees(menuList);
-                        return this.convert(integerTree);
-                    }
-                }
+               return this.getRouter(roleIdList);
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<RouterVO> treeByRoleId(Integer roleId) {
+        return this.getRouter(ListUtil.of(roleId));
+    }
+
+    private List<RouterVO> getRouter(List<Integer> roleIdList) {
+        Map<Integer, List<Integer>> menuIdListMap = roleMenuService.getMenuIdListMap(roleIdList);
+        if (MapUtil.isNotEmpty(menuIdListMap)) {
+            Set<Integer> idSet = menuIdListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+            if (CollUtil.isNotEmpty(idSet)) {
+                List<MenuDO> menuList = baseRepository.list(idSet);
+                List<Tree<Integer>> integerTree = this.getTrees(menuList);
+                return this.convert(integerTree);
             }
         }
         return Collections.emptyList();

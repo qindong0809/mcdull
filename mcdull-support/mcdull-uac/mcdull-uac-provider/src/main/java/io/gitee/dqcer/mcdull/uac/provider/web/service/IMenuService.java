@@ -16,4 +16,6 @@ public interface IMenuService {
     List<RouterVO> allTree();
 
     List<RouterVO> tree(Integer userId);
+
+    List<RouterVO> treeByRoleId(Integer roleId);
 }

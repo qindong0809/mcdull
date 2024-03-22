@@ -24,6 +24,11 @@ public class KeyValueVO<K, V> implements KeyValue<K, V> {
      */
     protected V value;
 
+    public KeyValueVO(K key, V value) {
+        this.key = key;
+        this.value = value;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", KeyValueVO.class.getSimpleName() + "[", "]")

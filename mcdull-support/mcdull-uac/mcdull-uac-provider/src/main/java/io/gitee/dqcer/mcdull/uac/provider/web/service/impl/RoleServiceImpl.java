@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -8,6 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -137,6 +139,20 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
             return baseRepository.roleListMap(userRoleMap);
         }
         return MapUtil.empty();
+    }
+
+    @Override
+    public List<LabelValueVO<Integer, String>> getSimple(Integer userId) {
+        List<LabelValueVO<Integer, String>> list = new ArrayList<>();
+        Map<Integer, List<RoleDO>> roleMap = this.getRoleMap(ListUtil.of(userId));
+        if (MapUtil.isNotEmpty(roleMap)) {
+            for (Map.Entry<Integer, List<RoleDO>> entry : roleMap.entrySet()) {
+                for (RoleDO role : entry.getValue()) {
+                    list.add(new LabelValueVO<>(role.getId(), role.getName()));
+                }
+            }
+        }
+        return list;
     }
 
 }

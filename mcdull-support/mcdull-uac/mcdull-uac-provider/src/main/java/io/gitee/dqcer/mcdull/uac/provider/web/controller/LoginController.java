@@ -8,6 +8,7 @@ import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.client.api.AuthServiceApi;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
@@ -16,13 +17,11 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.RouterVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -48,6 +47,9 @@ public class LoginController implements AuthServiceApi {
     @Resource
     private IMenuService menuService;
 
+    @Resource
+    private IRoleService roleService;
+
     /**
      * 登录 21232F297A57A5A743894A0E4A801FC3
      *
@@ -58,11 +60,16 @@ public class LoginController implements AuthServiceApi {
     @PostMapping("login")
     public Result<LogonVO> login(@RequestBody @Valid LoginDTO dto) {
         loginService.login(dto.getUsername(), dto.getPassword(), dto.getCode(), dto.getUuid());
+        Integer userId = StpUtil.getLoginId(0);
         LogonVO vo = new LogonVO();
         vo.setAccessToken(StpUtil.getTokenValue());
         vo.setRefreshToken(StpUtil.getTokenValue());
         vo.setExpires(DateUtil.offsetDay(new Date(), 1));
-        vo.setRoles(loginService.getRoleList(StpUtil.getLoginId(0)));
+        UserVO user = userService.get(userId);
+        if (ObjUtil.isNotNull(user)) {
+            vo.setUsername(user.getNickname());
+        }
+        vo.setRoles(loginService.getRoleList(userId));
         return Result.success(vo);
     }
 
@@ -78,8 +85,15 @@ public class LoginController implements AuthServiceApi {
         return jsonObject;
     }
 
-    @GetMapping("getRouters")
-    public Result<List<RouterVO>> getRouters() {
+    @Operation(summary = "当前登录人角色信息", description = "角色")
+    @GetMapping("role-list")
+    public Result<List<LabelValueVO<Integer, String>>> getRoleList() {
+        Integer currentUserId = UserContextHolder.currentUserId();
+        return Result.success(roleService.getSimple(currentUserId));
+    }
+
+    @GetMapping("getRouters/{id}")
+    public Result<List<RouterVO>> getRouters(@PathVariable("id") Integer id) {
         Integer userId = UserContextHolder.currentUserId();
         UserVO userVO = userService.get(userId);
         if (ObjUtil.isNull(userVO)) {
@@ -88,10 +102,11 @@ public class LoginController implements AuthServiceApi {
         if (GlobalConstant.SUPER_ADMIN_USER_TYPE.equals(userVO.getType())) {
             return Result.success(menuService.allTree());
         }
-
-        List<RouterVO> routerVO = menuService.tree(userId);
+        List<RouterVO> routerVO = menuService.treeByRoleId(id);
         return Result.success(routerVO);
     }
+
+
 
     /**
      * 注销
