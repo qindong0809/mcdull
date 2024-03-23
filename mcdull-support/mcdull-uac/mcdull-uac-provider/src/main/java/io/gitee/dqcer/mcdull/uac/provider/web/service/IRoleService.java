@@ -1,10 +1,10 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
+import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 
@@ -15,17 +15,23 @@ import java.util.Map;
  * @author dqcer
  */
 public interface IRoleService {
-    PagedVO<RoleVO> listByPage(RoleLiteDTO dto);
+    PagedVO<RoleVO> listByPage(RolePageDTO dto);
 
     Result<RoleVO> detail(RoleLiteDTO dto);
 
-    Result<Integer> insert(RoleLiteDTO dto);
+    Integer insert(RoleInsertDTO dto);
 
-    Result<Integer> updateStatus(RoleLiteDTO dto);
+    Result<Integer> toggleStatus(RoleLiteDTO dto);
 
     Result<Integer> delete(UserLiteDTO dto);
 
     Map<Integer, List<RoleDO>> getRoleMap(List<Integer> userIdList);
 
     List<LabelValueVO<Integer, String>> getSimple(Integer userId);
+
+    boolean update(Integer id, RoleUpdateDTO dto);
+
+    boolean delete(Integer id, ReasonDTO dto);
+
+    boolean toggleStatus(Integer id, ReasonDTO dto);
 }

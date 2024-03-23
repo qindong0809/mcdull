@@ -21,6 +21,7 @@ public class I18nConstants {
     public static final String DATA_NEED_REFRESH = "data.need.refresh";
     public static final String DATA_NOT_EXIST = "data.not.exist";
     public static final String DATA_EXISTS = "data.exists";
+    public static final String NAME_DUPLICATED = "name.duplicated";
 
     public static final String PERMISSION_DENIED = "permission.denied";
 

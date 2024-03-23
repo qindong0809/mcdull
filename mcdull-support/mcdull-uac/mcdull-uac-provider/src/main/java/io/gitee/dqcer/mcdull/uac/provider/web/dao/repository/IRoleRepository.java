@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.RolePageDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public interface IRoleRepository extends IService<RoleDO> {
      * @param dto dto
      * @return {@link Page}<{@link RoleDO}>
      */
-    Page<RoleDO> selectPage(RoleLiteDTO dto);
+    Page<RoleDO> selectPage(RolePageDTO dto);
 
     /**
      * 插入
@@ -33,4 +33,8 @@ public interface IRoleRepository extends IService<RoleDO> {
     Integer insert(RoleDO entity);
 
     Map<Integer, List<RoleDO>> roleListMap(Map<Integer, List<Integer>> userRoleMap);
+
+    boolean delete(Integer id, String reason);
+
+    boolean toggleStatus(Integer id, boolean inactive);
 }

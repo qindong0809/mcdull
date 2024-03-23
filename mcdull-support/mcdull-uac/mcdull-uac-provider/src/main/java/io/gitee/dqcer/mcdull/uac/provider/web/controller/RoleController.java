@@ -1,11 +1,14 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
+import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.RolePageDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
@@ -34,9 +37,9 @@ public class RoleController {
      * @param dto dto
      * @return {@link Result}<{@link List}<{@link UserVO}>>
      */
-    @GetMapping("base/page")
-    @Transform
-    public Result<PagedVO<RoleVO>> listByPage(@Validated(ValidGroup.Paged.class) RoleLiteDTO dto) {
+    @GetMapping("list")
+//    @Transform
+    public Result<PagedVO<RoleVO>> listByPage(@Validated RolePageDTO dto) {
         return Result.success(roleService.listByPage(dto));
     }
 
@@ -58,9 +61,14 @@ public class RoleController {
      * @param dto dto
      * @return {@link Result<Integer> 返回新增主键}
      */
-    @PostMapping("base/save")
-    public Result<Integer> insert(@RequestBody @Validated(value = {ValidGroup.Insert.class})RoleLiteDTO dto){
-        return roleService.insert(dto);
+    @PostMapping("insert")
+    public Result<Integer> insert(@RequestBody @Validated RoleInsertDTO dto){
+        return Result.success(roleService.insert(dto));
+    }
+
+    @PutMapping("{id}/update")
+    public Result<Boolean> update(@PathVariable("id") Integer id, @RequestBody @Validated RoleUpdateDTO dto){
+        return Result.success(roleService.update(id, dto));
     }
 
     /**
@@ -69,9 +77,9 @@ public class RoleController {
      * @param dto dto
      * @return {@link Result<Integer>}
      */
-    @PostMapping("base/status")
-    public Result<Integer> updateStatus(@RequestBody @Validated(value = {ValidGroup.Status.class}) RoleLiteDTO dto){
-        return roleService.updateStatus(dto);
+    @PutMapping("{id}/status")
+    public Result<Boolean> toggleStatus(@PathVariable("id") Integer id, @RequestBody ReasonDTO dto){
+        return Result.success(roleService.toggleStatus(id, dto));
     }
 
     /**
@@ -80,9 +88,9 @@ public class RoleController {
      * @param dto dto
      * @return {@link Result<Integer>}
      */
-    @PostMapping("base/delete")
-    public Result<Integer> delete(@RequestBody @Validated(value = {ValidGroup.Delete.class}) UserLiteDTO dto){
-        return roleService.delete(dto);
+    @DeleteMapping("{id}")
+    public Result<Boolean> delete(@PathVariable("id") Integer id, @Validated ReasonDTO dto){
+        return Result.success(roleService.delete(id, dto));
     }
 
 }

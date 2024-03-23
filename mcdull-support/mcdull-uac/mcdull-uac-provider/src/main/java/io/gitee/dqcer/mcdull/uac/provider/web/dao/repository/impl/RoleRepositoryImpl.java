@@ -14,7 +14,7 @@ import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.RolePageDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.RoleMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
@@ -34,11 +34,15 @@ import java.util.stream.Collectors;
 public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implements IRoleRepository {
 
     @Override
-    public Page<RoleDO> selectPage(RoleLiteDTO dto) {
+    public Page<RoleDO> selectPage(RolePageDTO dto) {
         LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
-        String keyword = dto.getKeyword();
-        if (StrUtil.isNotBlank(keyword)) {
-            query.and(i-> i.like(RoleDO::getName, keyword));
+        String name = dto.getName();
+        if (StrUtil.isNotBlank(name)) {
+            query.like(RoleDO::getName, name);
+        }
+        Boolean inactive = dto.getInactive();
+        if (ObjUtil.isNotNull(inactive)) {
+            query.eq(BaseDO::getInactive, inactive);
         }
         query.orderByDesc(BaseDO::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
@@ -78,5 +82,22 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
             }
         }
         return resultMap;
+    }
+
+    @Override
+    public boolean delete(Integer id, String reason) {
+        return removeById(id);
+    }
+
+    @Override
+    public boolean toggleStatus(Integer id, boolean inactive) {
+        RoleDO role = new RoleDO();
+        role.setId(id);
+        role.setInactive(inactive);
+//        LambdaUpdateWrapper<RoleDO> update = Wrappers.lambdaUpdate();
+//        update.set(BaseDO::getInactive, inactive);
+//        update.eq(IdDO::getId, id);
+//        update.last(GlobalConstant.Database.SQL_LIMIT_1);
+        return baseMapper.updateById(role) > 0;
     }
 }

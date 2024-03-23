@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.convert;
 
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
@@ -28,6 +29,27 @@ public class RoleConvert {
         roleVO.setName(entity.getName());
         roleVO.setDescription(entity.getDescription());
         roleVO.setType(entity.getType());
+        return roleVO;
+    }
+
+    public static RoleDO insertToEntity(RoleInsertDTO dto) {
+        RoleDO roleDO = new RoleDO();
+        roleDO.setName(dto.getName());
+        roleDO.setDescription(dto.getDescription());
+        return roleDO;
+    }
+
+    public static RoleVO entityToVO(RoleDO entity) {
+        RoleVO roleVO = new RoleVO();
+        roleVO.setType(entity.getType());
+        roleVO.setId(entity.getId());
+        roleVO.setCreatedTime(entity.getCreatedTime());
+        roleVO.setCreatedBy(entity.getCreatedBy());
+        roleVO.setUpdatedTime(entity.getUpdatedTime());
+        roleVO.setUpdatedBy(entity.getUpdatedBy());
+        roleVO.setName(entity.getName());
+        roleVO.setDescription(entity.getDescription());
+        roleVO.setInactive(entity.getInactive());
         return roleVO;
     }
 }

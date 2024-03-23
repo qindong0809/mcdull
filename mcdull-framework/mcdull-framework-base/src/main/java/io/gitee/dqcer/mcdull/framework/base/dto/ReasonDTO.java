@@ -3,8 +3,6 @@ package io.gitee.dqcer.mcdull.framework.base.dto;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.StringJoiner;
 
 /**
  * 常用于失活、删除等操作
@@ -14,28 +12,9 @@ import java.util.StringJoiner;
  */
 public class ReasonDTO implements DTO{
 
-    @NotNull
-    private Integer id;
-
     @NotBlank
     @Length(min = 512)
     private String reason;
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", ReasonDTO.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
-                .add("reason='" + reason + "'")
-                .toString();
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getReason() {
         return reason;
