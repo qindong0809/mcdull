@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 public class ReasonDTO implements DTO{
 
     @NotBlank
-    @Length(min = 512)
+    @Length(max = 512)
     private String reason;
 
     public String getReason() {
