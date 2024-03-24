@@ -34,4 +34,6 @@ public interface IRoleService {
     boolean delete(Integer id, ReasonDTO dto);
 
     boolean toggleStatus(Integer id, ReasonDTO dto);
+
+    boolean insertPermission(Integer id, RolePermissionInsertDTO dto);
 }

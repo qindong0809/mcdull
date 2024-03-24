@@ -21,4 +21,8 @@ public interface IRoleMenuRepository extends IService<RoleMenuDO> {
      * @return {@link Map}<{@link Long}, {@link List}<{@link Long}>>
      */
     Map<Integer, List<Integer>> menuIdListMap(Collection<Integer> roleIdCollection);
+
+    List<RoleMenuDO> listByRoleId(Integer roleId);
+
+    void insert(Integer roleId, List<Integer> menuIdList);
 }

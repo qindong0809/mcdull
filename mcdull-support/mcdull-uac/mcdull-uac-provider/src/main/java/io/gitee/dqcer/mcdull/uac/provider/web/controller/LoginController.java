@@ -13,7 +13,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.client.api.AuthServiceApi;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.RouterVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.PermissionRouterVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
@@ -92,20 +92,19 @@ public class LoginController implements AuthServiceApi {
         return Result.success(roleService.getSimple(currentUserId));
     }
 
-    @GetMapping("getRouters/{id}")
-    public Result<List<RouterVO>> getRouters(@PathVariable("id") Integer id) {
+    @GetMapping("getRouters/{roleId}")
+    public Result<List<PermissionRouterVO>> getPermissionRouter(@PathVariable("roleId") Integer roleId) {
         Integer userId = UserContextHolder.currentUserId();
         UserVO userVO = userService.get(userId);
         if (ObjUtil.isNull(userVO)) {
             return Result.success();
         }
         if (GlobalConstant.SUPER_ADMIN_USER_TYPE.equals(userVO.getType())) {
-            return Result.success(menuService.allTree());
+            return Result.success(menuService.getPermissionRouter());
         }
-        List<RouterVO> routerVO = menuService.treeByRoleId(id);
+        List<PermissionRouterVO> routerVO = menuService.getPermissionRouterByRole(roleId);
         return Result.success(routerVO);
     }
-
 
 
     /**

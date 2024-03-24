@@ -1,13 +1,11 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
-import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
-import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleInsertDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RolePageDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.RolePermissionInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
@@ -38,22 +36,10 @@ public class RoleController {
      * @return {@link Result}<{@link List}<{@link UserVO}>>
      */
     @GetMapping("list")
-//    @Transform
     public Result<PagedVO<RoleVO>> listByPage(@Validated RolePageDTO dto) {
         return Result.success(roleService.listByPage(dto));
     }
 
-    /**
-     * 单个
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link UserVO}>
-     */
-    @GetMapping("base/detail")
-    @Transform
-    public Result<RoleVO> detail(@Validated(ValidGroup.One.class) RoleLiteDTO dto) {
-        return roleService.detail(dto);
-    }
 
     /**
      * 新增数据
@@ -91,6 +77,11 @@ public class RoleController {
     @DeleteMapping("{id}")
     public Result<Boolean> delete(@PathVariable("id") Integer id, @Validated ReasonDTO dto){
         return Result.success(roleService.delete(id, dto));
+    }
+
+    @PutMapping("{id}/permission")
+    public Result<Boolean> insertPermission(@PathVariable("id") Integer id, @RequestBody RolePermissionInsertDTO dto){
+        return Result.success(roleService.insertPermission(id, dto));
     }
 
 }

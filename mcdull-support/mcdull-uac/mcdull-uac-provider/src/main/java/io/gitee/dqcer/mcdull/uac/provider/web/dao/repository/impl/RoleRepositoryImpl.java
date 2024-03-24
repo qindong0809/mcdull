@@ -94,10 +94,6 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
         RoleDO role = new RoleDO();
         role.setId(id);
         role.setInactive(inactive);
-//        LambdaUpdateWrapper<RoleDO> update = Wrappers.lambdaUpdate();
-//        update.set(BaseDO::getInactive, inactive);
-//        update.eq(IdDO::getId, id);
-//        update.last(GlobalConstant.Database.SQL_LIMIT_1);
         return baseMapper.updateById(role) > 0;
     }
 }

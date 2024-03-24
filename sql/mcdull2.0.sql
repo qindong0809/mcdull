@@ -187,10 +187,33 @@ create table if not exists `sys_menu` (
 `del_flag` bit(1) not null default b'0' comment '删除标识（true/已删除 false/未删除）',
 primary key (`id`)
 )comment='菜单表';
-insert into sys_menu values(1,    0, 0,  '系统管理', '系统管理',  '/system', null,                1, null,  'ri:admin-line', '', '',  '', '', '', '', b'0',  b'0', b'0', b'0', b'0',  null, sysdate(), null, null, b'0', b'0');
-insert into sys_menu values(1001, 0, 1,  '角色管理', '角色管理',  '/role',   'system/role/index', 1, null,  'ri:admin-line', '', '',  '', '', '', '', b'0',  b'0', b'0', b'0', b'0',  null, sysdate(), null, null, b'0', b'0');
-insert into sys_menu values(1002, 0, 1,  '菜单管理', '菜单管理',  '/menu',   'system/menu/index', 1, null,  'ri:admin-line', '', '',  '', '', '', '', b'0',  b'0', b'0', b'0', b'0',  null, sysdate(), null, null, b'0', b'0');
+insert into sys_menu values(1,    0, 0,  'menus.hssysManagement', 'System',       '/system',             null, 1, null,  'ri:settings-3-line', '', '',  '', '', '', '', b'0',  b'0', b'0', b'0', b'0',  null, sysdate(), null, null, b'0', b'0');
+insert into sys_menu values(1004, 0, 1,  'menus.hsDept',          'SystemDept',  '/system/dept/index',   null, 2, null,  'ri:git-branch-line', '', '',  '', '', '', '', b'0',  b'0', b'0', b'0', b'0',  null, sysdate(), null, null, b'0', b'0');
+insert into sys_menu values(1001, 0, 1,  'menus.hsRole',          'SystemRole',  '/system/role/index',   null, 1, null,  'ri:admin-fill',      '', '',  '', '', '', '', b'0',  b'0', b'0', b'0', b'0',  null, sysdate(), null, null, b'0', b'0');
+insert into sys_menu values(1003, 0, 1,  'menus.hsUser',          'SystemUser',  '/system/user/index',   null, 3, null,  'ri:admin-line',      '', '',  '', '', '', '', b'0',  b'0', b'0', b'0', b'0',  null, sysdate(), null, null, b'0', b'0');
+insert into sys_menu values(1002, 0, 1,  'menus.hsSystemMenu',    'SystemMenu',  '/system/menu/index',   null, 4, null,  'ep:menu',            '', '',  '', '', '', '', b'0',  b'0', b'0', b'0', b'0',  null, sysdate(), null, null, b'0', b'0');
 
+
+
+drop table if exists `sys_dept`;
+create table if not exists `sys_dept` (
+`id` int not null auto_increment comment '主键',
+`parent_id` int not null comment '父菜单id',
+`name` varchar(128) not null comment '路由名称',
+`sort` int not null comment '排序',
+`phone` varchar(128) default null comment 'phone',
+`principal` varchar(128) default null comment '负责人',
+`email` varchar(128) default null comment 'email',
+`type` int not null comment '1/公司 2 分公司 3 部门',
+`remark` text default null comment '备注',
+`created_by` int null comment '创建人',
+`created_time` datetime null comment '创建时间',
+`updated_by` int null comment '更新人',
+`updated_time` datetime null comment '更新时间',
+`inactive` int(1) not null default b'0' comment '状态（true/已失活 false/未失活）',
+`del_flag` bit(1) not null default b'0' comment '删除标识（true/已删除 false/未删除）',
+primary key (`id`)
+    )comment='部门表';
 
 --
 -- drop table if exists `sys_menu`;

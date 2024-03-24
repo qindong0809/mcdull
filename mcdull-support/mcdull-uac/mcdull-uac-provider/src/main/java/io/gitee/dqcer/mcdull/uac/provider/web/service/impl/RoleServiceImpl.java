@@ -23,6 +23,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.uac.IRoleManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserRoleService;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,9 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
 
     @Resource
     private IUserRoleService userRoleService;
+
+    @Resource
+    private IRoleMenuService roleMenuService;
     
 
     @Override
@@ -191,6 +195,12 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
             throw new BusinessException(I18nConstants.DATA_NEED_REFRESH);
         }
         return baseRepository.toggleStatus(id, !role.getInactive());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean insertPermission(Integer id, RolePermissionInsertDTO dto) {
+        return roleMenuService.deleteAndInsert(id, dto.getMenuIdList());
     }
 
 }

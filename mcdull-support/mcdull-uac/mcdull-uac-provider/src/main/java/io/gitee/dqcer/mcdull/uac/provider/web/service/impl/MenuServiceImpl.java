@@ -11,15 +11,14 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuDO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.MenuVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.MetaVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.RouterVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleMenuService;
@@ -55,30 +54,6 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     @Override
     public List<String> getAllCodeList() {
         return baseRepository.allCodeList();
-    }
-
-    @Override
-    public List<RouterVO> allTree() {
-        List<MenuDO> menuList = baseRepository.all();
-        List<Tree<Integer>> integerTree = this.getTrees(menuList);
-        return this.convert(integerTree);
-    }
-
-    @Override
-    public List<RouterVO> tree(Integer userId) {
-        Map<Integer, List<Integer>> roleIdListMap = userRoleService.getRoleIdListMap(ListUtil.of(userId));
-        if (MapUtil.isNotEmpty(roleIdListMap)) {
-            List<Integer> roleIdList = roleIdListMap.get(userId);
-            if (CollUtil.isNotEmpty(roleIdList)) {
-               return this.getRouter(roleIdList);
-            }
-        }
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<RouterVO> treeByRoleId(Integer roleId) {
-        return this.getRouter(ListUtil.of(roleId));
     }
 
     @Override
@@ -131,6 +106,55 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     @Override
     public boolean delete(Integer id, ReasonDTO dto) {
         return baseRepository.delete(id, dto.getReason());
+    }
+
+    @Override
+    public List<RoleMenuVO> roleMenuList() {
+        List<RoleMenuVO> voList = new ArrayList<>();
+        List<MenuDO> menuList = baseRepository.allAndButton();
+        if (CollUtil.isNotEmpty(menuList)) {
+            for (MenuDO menu : menuList) {
+                RoleMenuVO vo = this.convertToRoleMenuVO(menu);
+                voList.add(vo);
+            }
+        }
+        return voList;
+    }
+
+    @Override
+    public List<Integer> roleMenuIdList(Integer roleId) {
+        Map<Integer, List<Integer>> menuIdListMap = roleMenuService.getMenuIdListMap(ListUtil.of(roleId));
+        if (MapUtil.isNotEmpty(menuIdListMap)) {
+            List<Integer> list = menuIdListMap.get(roleId);
+            if (CollUtil.isNotEmpty(list)) {
+                List<MenuDO> menuList = baseRepository.listByIds(list);
+                if (CollUtil.isNotEmpty(menuList)) {
+                    return menuList.stream().map(IdDO::getId).collect(Collectors.toList());
+                }
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<PermissionRouterVO> getPermissionRouter() {
+        List<MenuDO> menuList = baseRepository.all();
+        List<Tree<Integer>> integerTree = this.getTrees(menuList);
+        return this.convertPermissionRouter(integerTree);
+    }
+
+    @Override
+    public List<PermissionRouterVO> getPermissionRouterByRole(Integer roleId) {
+        return this.getRouter(ListUtil.of(roleId));
+    }
+
+    private RoleMenuVO convertToRoleMenuVO(MenuDO menu) {
+        RoleMenuVO roleMenuVO = new RoleMenuVO();
+        roleMenuVO.setId(menu.getId());
+        roleMenuVO.setMenuType(menu.getMenuType());
+        roleMenuVO.setParentId(menu.getParentId());
+        roleMenuVO.setTitle(menu.getTitle());
+        return roleMenuVO;
     }
 
     private MenuDO convertToEntity(MenuUpdateDTO dto) {
@@ -210,48 +234,86 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
 
     }
 
-    private List<RouterVO> getRouter(List<Integer> roleIdList) {
+
+    private List<PermissionRouterVO> getRouter(List<Integer> roleIdList) {
         Map<Integer, List<Integer>> menuIdListMap = roleMenuService.getMenuIdListMap(roleIdList);
         if (MapUtil.isNotEmpty(menuIdListMap)) {
             Set<Integer> idSet = menuIdListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
             if (CollUtil.isNotEmpty(idSet)) {
                 List<MenuDO> menuList = baseRepository.list(idSet);
                 List<Tree<Integer>> integerTree = this.getTrees(menuList);
-                return this.convert(integerTree);
+                return this.convertPermissionRouter(integerTree);
             }
         }
         return Collections.emptyList();
     }
 
     private List<Tree<Integer>> getTrees(List<MenuDO> menuList) {
-        List<Tree<Integer>> integerTree = TreeUtil.build(menuList, 0,
+        return TreeUtil.build(menuList, 0,
                 (menu, treeNode) -> {
             treeNode.setName(StrUtil.upperFirst(menu.getPath()));
-            treeNode.put("path", this.getRouterPath(menu));
             treeNode.setId(menu.getId());
             treeNode.setParentId(menu.getParentId());
+            treeNode.put("path", menu.getPath());
+            treeNode.put("component", menu.getComponent());
+            treeNode.setName(menu.getName());
             treeNode.setWeight(menu.getRankOrder());
-            MetaVO metaVO = new MetaVO(menu.getName(), menu.getIcon(),
-                    menu.getKeepAlive(), menu.getPath());
-            treeNode.put("meta", JSONUtil.parseObj(metaVO).toString());
-            treeNode.put("component", this.getComponent(menu));
-//            treeNode.put("query", menu.getQuery());
-            treeNode.put("hidden", menu.getHiddenTag());
+            PermissionRouterVO.MetaVO meta = new PermissionRouterVO.MetaVO();
+            meta.setTitle(menu.getTitle());
+            meta.setIcon(menu.getIcon());
+            meta.setRank(menu.getRankOrder());
+            meta.setFrameSrc(menu.getFrameSrc());
+            meta.setKeepAlive(menu.getKeepAlive());
+            meta.setAuths(ListUtil.of(menu.getAuths()));
+            // FIXME: 2024/3/24
+            meta.setRoles(ListUtil.of("admin"));
+            treeNode.put("meta", JSONUtil.parseObj(meta).toString());
         });
-        return integerTree;
-    }
-
-    public String getComponent(MenuDO menu) {
-        return menu.getComponent();
-    }
-
-    public boolean isParentView(MenuDO menu) {
-        return menu.getParentId().intValue() != 0 && "M".equals(menu.getMenuType());
     }
 
 
-    public String getRouterPath(MenuDO menu) {
-        return menu.getPath();
+    public List<PermissionRouterVO> convertPermissionRouter(List<Tree<Integer>> treeList) {
+        if (CollUtil.isEmpty(treeList)) {
+            return Collections.emptyList();
+        }
+        List<PermissionRouterVO> list = new ArrayList<>();
+        for (Tree<Integer> tree : treeList) {
+            PermissionRouterVO vo = this.convertPermission(tree);
+            if (ObjUtil.isNotNull(vo)) {
+                list.add(vo);
+            }
+        }
+        return list;
+    }
+
+    private PermissionRouterVO convertPermission(Tree<Integer> tree) {
+        if (ObjUtil.isNull(tree)) {
+            return null;
+        }
+        PermissionRouterVO routerVO = new PermissionRouterVO();
+        routerVO.setName(String.valueOf(tree.getName()));
+        routerVO.setPath(Convert.toStr(tree.get("path")));
+        routerVO.setComponent(Convert.toStr(tree.get("component")));
+        String meta = Convert.toStr(tree.get("meta"));
+        if (StrUtil.isNotBlank(meta)) {
+            PermissionRouterVO.MetaVO metaVO = JSONUtil.toBean(meta, PermissionRouterVO.MetaVO.class);
+            routerVO.setMeta(metaVO);
+        }
+        List<Tree<Integer>> children = tree.getChildren();
+        if (CollUtil.isNotEmpty(children)) {
+            List<PermissionRouterVO> childVOList = new ArrayList<>();
+
+            for (Tree<Integer> childTree : children) {
+                PermissionRouterVO childVO = this.convertPermission(childTree);
+                if (ObjUtil.isNotNull(childVO)) {
+                    childVOList.add(childVO);
+                }
+            }
+            if (CollUtil.isNotEmpty(childVOList)) {
+                routerVO.setChildren(childVOList);
+            }
+        }
+        return routerVO;
     }
 
 
