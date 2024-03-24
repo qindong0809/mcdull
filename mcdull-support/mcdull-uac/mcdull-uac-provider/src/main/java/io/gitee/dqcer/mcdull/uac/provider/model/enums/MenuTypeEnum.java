@@ -9,25 +9,16 @@ import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
  * @since 2022/07/26
  */
 @SuppressWarnings("unused")
-public enum MenuTypeEnum implements IEnum<String> {
+public enum MenuTypeEnum implements IEnum<Integer> {
 
-    /**
-     * 目录
-     */
-    DIRECTORY("M", "目录"),
 
-    /**
-     * 菜单
-     */
-    MENU("C", "菜单"),
-
-    /**
-     * 按钮
-     */
-    BUTTON("F", "按钮")
+    MENU(0, "菜单"),
+    IFRAME(1, "iframe"),
+    LINK(2, "外链"),
+    BUTTON(3, "按钮")
     ;
 
-    MenuTypeEnum(String code, String text) {
+    MenuTypeEnum(Integer code, String text) {
         init(code, text);
     }
 

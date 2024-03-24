@@ -9,8 +9,15 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
+import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
+import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuInsertDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuListDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.MenuVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.MetaVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RouterVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
@@ -18,6 +25,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserRoleService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -73,6 +81,135 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         return this.getRouter(ListUtil.of(roleId));
     }
 
+    @Override
+    public List<MenuVO> list(MenuListDTO dto) {
+        List<MenuVO> list = new ArrayList<>();
+        List<MenuDO> menuList = baseRepository.allAndButton();
+        if (CollUtil.isNotEmpty(menuList)) {
+            for (MenuDO menu : menuList) {
+                MenuVO vo = this.convertToVO(menu);
+                list.add(vo);
+            }
+        }
+        return list;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean insert(MenuInsertDTO dto) {
+        Integer parentId = dto.getParentId();
+
+        List<MenuDO> childList = baseRepository.listByParentId(parentId);
+        if (CollUtil.isNotEmpty(childList)) {
+            boolean anyMatch = childList.stream().anyMatch(i -> i.getName().equals(dto.getName()));
+            if (anyMatch) {
+                throw new BusinessException(I18nConstants.NAME_DUPLICATED);
+            }
+        }
+        MenuDO menu = this.convertToEntity(dto);
+        return baseRepository.save(menu);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean update(Integer id, MenuUpdateDTO dto) {
+        Integer parentId = dto.getParentId();
+        List<MenuDO> childList = baseRepository.listByParentId(parentId);
+        if (CollUtil.isNotEmpty(childList)) {
+            boolean anyMatch = childList.stream()
+                    .anyMatch(i -> (!i.getId().equals(id)) && i.getName().equals(dto.getName()));
+            if (anyMatch) {
+                throw new BusinessException(I18nConstants.NAME_DUPLICATED);
+            }
+        }
+        MenuDO menu = this.convertToEntity(dto);
+        menu.setId(id);
+        return baseRepository.updateById(menu);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean delete(Integer id, ReasonDTO dto) {
+        return baseRepository.delete(id, dto.getReason());
+    }
+
+    private MenuDO convertToEntity(MenuUpdateDTO dto) {
+        MenuDO menuDO = new MenuDO();
+        menuDO.setMenuType(dto.getMenuType());
+        menuDO.setParentId(dto.getParentId());
+        menuDO.setTitle(dto.getTitle());
+        menuDO.setName(dto.getName());
+        menuDO.setPath(dto.getPath());
+        menuDO.setComponent(dto.getComponent());
+        menuDO.setRankOrder(dto.getRank());
+        menuDO.setRedirect(dto.getRedirect());
+        menuDO.setIcon(dto.getIcon());
+        menuDO.setExtraIcon(dto.getExtraIcon());
+        menuDO.setEnterTransition(dto.getEnterTransition());
+        menuDO.setLeaveTransition(dto.getLeaveTransition());
+        menuDO.setActivePath(dto.getActivePath());
+        menuDO.setAuths(dto.getAuths());
+        menuDO.setFrameSrc(dto.getFrameSrc());
+        menuDO.setFrameLoading(dto.getFrameLoading());
+        menuDO.setKeepAlive(dto.getKeepAlive());
+        menuDO.setHiddenTag(dto.getHiddenTag());
+        menuDO.setShowLink(dto.getShowLink());
+        menuDO.setShowParent(dto.getShowParent());
+        return menuDO;
+    }
+
+    private MenuDO convertToEntity(MenuInsertDTO dto) {
+        MenuDO menuDO = new MenuDO();
+        menuDO.setMenuType(dto.getMenuType());
+        menuDO.setParentId(dto.getParentId());
+        menuDO.setTitle(dto.getTitle());
+        menuDO.setName(dto.getName());
+        menuDO.setPath(dto.getPath());
+        menuDO.setComponent(dto.getComponent());
+        menuDO.setRankOrder(dto.getRank());
+        menuDO.setRedirect(dto.getRedirect());
+        menuDO.setIcon(dto.getIcon());
+        menuDO.setExtraIcon(dto.getExtraIcon());
+        menuDO.setEnterTransition(dto.getEnterTransition());
+        menuDO.setLeaveTransition(dto.getLeaveTransition());
+        menuDO.setActivePath(dto.getActivePath());
+        menuDO.setAuths(dto.getAuths());
+        menuDO.setFrameSrc(dto.getFrameSrc());
+        menuDO.setFrameLoading(dto.getFrameLoading());
+        menuDO.setKeepAlive(dto.getKeepAlive());
+        menuDO.setHiddenTag(dto.getHiddenTag());
+        menuDO.setShowLink(dto.getShowLink());
+        menuDO.setShowParent(dto.getShowParent());
+        return menuDO;
+    }
+
+    private MenuVO convertToVO(MenuDO menu) {
+        MenuVO menuVO = new MenuVO();
+        menuVO.setId(menu.getId());
+        menuVO.setMenuType(menu.getMenuType());
+        menuVO.setParentId(menu.getParentId());
+        menuVO.setTitle(menu.getTitle());
+        menuVO.setName(menu.getName());
+        menuVO.setPath(menu.getPath());
+        menuVO.setComponent(menu.getComponent());
+        menuVO.setRank(menu.getRankOrder());
+        menuVO.setRedirect(menu.getRedirect());
+        menuVO.setIcon(menu.getIcon());
+        menuVO.setExtraIcon(menu.getExtraIcon());
+        menuVO.setEnterTransition(menu.getEnterTransition());
+        menuVO.setLeaveTransition(menu.getLeaveTransition());
+        menuVO.setActivePath(menu.getActivePath());
+        menuVO.setAuths(menu.getAuths());
+        menuVO.setFrameSrc(menu.getFrameSrc());
+        menuVO.setFrameLoading(menu.getFrameLoading());
+        menuVO.setKeepAlive(menu.getKeepAlive());
+        menuVO.setHiddenTag(menu.getHiddenTag());
+        menuVO.setShowLink(menu.getShowLink());
+        menuVO.setShowParent(menu.getShowParent());
+        return menuVO;
+
+    }
+
     private List<RouterVO> getRouter(List<Integer> roleIdList) {
         Map<Integer, List<Integer>> menuIdListMap = roleMenuService.getMenuIdListMap(roleIdList);
         if (MapUtil.isNotEmpty(menuIdListMap)) {
@@ -93,54 +230,28 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
             treeNode.put("path", this.getRouterPath(menu));
             treeNode.setId(menu.getId());
             treeNode.setParentId(menu.getParentId());
-            treeNode.setWeight(menu.getOrderNum());
+            treeNode.setWeight(menu.getRankOrder());
             MetaVO metaVO = new MetaVO(menu.getName(), menu.getIcon(),
-                    StrUtil.equals("1", menu.getIsCache()), menu.getPath());
+                    menu.getKeepAlive(), menu.getPath());
             treeNode.put("meta", JSONUtil.parseObj(metaVO).toString());
             treeNode.put("component", this.getComponent(menu));
-            treeNode.put("query", menu.getQuery());
-            treeNode.put("hidden", "1".equals(menu.getVisible()));
+//            treeNode.put("query", menu.getQuery());
+            treeNode.put("hidden", menu.getHiddenTag());
         });
         return integerTree;
     }
 
     public String getComponent(MenuDO menu) {
-        String component = "Layout";
-        if (StrUtil.isNotEmpty(menu.getComponent()) && !isMenuFrame(menu)) {
-            component = menu.getComponent();
-        } else if (StrUtil.isEmpty(menu.getComponent()) && menu.getParentId().intValue() != 0 && isInnerLink(menu)) {
-            component = "InnerLink";
-        } else if (StrUtil.isEmpty(menu.getComponent()) && isParentView(menu)) {
-            component = "ParentView";
-        }
-        return component;
+        return menu.getComponent();
     }
 
     public boolean isParentView(MenuDO menu) {
         return menu.getParentId().intValue() != 0 && "M".equals(menu.getMenuType());
     }
 
-    public boolean isInnerLink(MenuDO menu) {
-        return menu.getIsFrame().equals("1");
-    }
 
     public String getRouterPath(MenuDO menu) {
-        String routerPath = menu.getPath();
-        // 非外链并且是一级目录（类型为目录）
-        if (0 == menu.getParentId().intValue() && "M".equals(menu.getMenuType())
-                && "1".equals(menu.getIsFrame())) {
-            routerPath = "/" + menu.getPath();
-        }
-        // 非外链并且是一级目录（类型为菜单）
-        else if (isMenuFrame(menu)) {
-            routerPath = "/";
-        }
-        return routerPath;
-    }
-
-    public boolean isMenuFrame(MenuDO menu) {
-        return menu.getParentId().intValue() == 0 && "M".equals(menu.getMenuType())
-                && menu.getIsFrame().equals("1");
+        return menu.getPath();
     }
 
 

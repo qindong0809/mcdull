@@ -1,27 +1,31 @@
-package io.gitee.dqcer.mcdull.uac.provider.model.entity;
+package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
+import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 /**
- * 系统菜单实体
- *
- * @author dqcer
- * @since 2022/11/07
- */
+* 角色 接收客户端参数
+*
+* @author dqcer
+* @since 2022-11-16
+*/
 @Data
-@TableName("sys_menu")
-public class MenuDO extends BaseDO {
+public class MenuInsertDTO implements DTO {
+
+    private static final long serialVersionUID = 1L;
 
 
     private Integer menuType;
+    @NotNull
     private Integer parentId;
     private String title;
     private String name;
     private String path;
     private String component;
-    private Integer rankOrder;
+    @NotNull
+    private Integer rank;
     private String redirect;
     private String icon;
     private String extraIcon;
@@ -35,4 +39,6 @@ public class MenuDO extends BaseDO {
     private Boolean hiddenTag;
     private Boolean showLink;
     private Boolean showParent;
+
+   
 }

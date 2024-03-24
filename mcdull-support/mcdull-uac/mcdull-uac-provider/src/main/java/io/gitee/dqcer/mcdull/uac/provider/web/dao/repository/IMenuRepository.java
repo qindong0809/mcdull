@@ -26,4 +26,10 @@ public interface IMenuRepository extends IService<MenuDO> {
     List<MenuDO> list(Collection<Integer> collection);
 
     List<MenuDO> all();
+
+    List<MenuDO> allAndButton();
+
+    List<MenuDO> listByParentId(Integer parentId);
+
+    boolean delete(Integer id, String reason);
 }

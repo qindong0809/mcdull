@@ -1,27 +1,34 @@
-package io.gitee.dqcer.mcdull.uac.provider.model.entity;
+package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
+import io.gitee.dqcer.mcdull.framework.base.vo.VO;
 import lombok.Data;
 
 /**
- * 系统菜单实体
+ * 角色视图对象
  *
  * @author dqcer
- * @since 2022/11/07
+ * @since  2022/11/27
  */
 @Data
-@TableName("sys_menu")
-public class MenuDO extends BaseDO {
+public class MenuVO implements VO {
 
 
+
+    /**
+     * 主键
+     */
+    private Integer id;
+
+    /**
+     * 0代表菜单、1代表iframe、2代表外链、3代表按钮
+     */
     private Integer menuType;
     private Integer parentId;
     private String title;
     private String name;
     private String path;
     private String component;
-    private Integer rankOrder;
+    private Integer rank;
     private String redirect;
     private String icon;
     private String extraIcon;
@@ -35,4 +42,5 @@ public class MenuDO extends BaseDO {
     private Boolean hiddenTag;
     private Boolean showLink;
     private Boolean showParent;
+
 }

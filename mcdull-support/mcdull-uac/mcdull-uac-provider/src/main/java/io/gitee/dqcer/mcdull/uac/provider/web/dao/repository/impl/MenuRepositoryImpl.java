@@ -15,7 +15,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.MenuTypeEnum;
-import io.gitee.dqcer.mcdull.uac.provider.model.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.MenuMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
 import org.springframework.stereotype.Service;
@@ -52,13 +51,12 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
     @Override
     public List<String> allCodeList() {
         LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
-        query.eq(MenuDO::getStatus, StatusEnum.ENABLE.getCode());
         query.eq(BaseDO::getInactive, InactiveEnum.FALSE.getCode());
         List<MenuDO> list = baseMapper.selectList(query);
         if (CollUtil.isEmpty(list)) {
             return Collections.emptyList();
         }
-        return list.stream().map(MenuDO::getPerms).collect(Collectors.toList());
+        return list.stream().map(MenuDO::getAuths).collect(Collectors.toList());
     }
 
     @Override
@@ -67,16 +65,15 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
         if (MapUtil.isNotEmpty(menuListMap)) {
             Set<Integer> idList = menuListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
             LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
-            query.eq(MenuDO::getStatus, StatusEnum.ENABLE.getCode());
             query.eq(BaseDO::getInactive, InactiveEnum.FALSE.getCode());
-            query.in(MenuDO::getPerms, idList);
+            query.in(MenuDO::getId, idList);
             List<MenuDO> list = baseMapper.selectList(query);
             if (CollUtil.isNotEmpty(list)) {
                 Map<Integer, MenuDO> map = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
                 for (Map.Entry<Integer, List<Integer>> entry : menuListMap.entrySet()) {
                     List<Integer> menuIdList = entry.getValue();
                     List<String> menuCodeList = menuIdList.stream()
-                            .map(i -> map.get(i).getPerms()).collect(Collectors.toList());
+                            .map(i -> map.get(i).getAuths()).collect(Collectors.toList());
                     resultMap.put(entry.getKey(), menuCodeList);
                 }
             }
@@ -100,12 +97,32 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
     private List<MenuDO> list(Collection<Integer> idList, boolean isAll) {
         LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
         query.eq(BaseDO::getInactive, InactiveEnum.FALSE.getCode());
-        query.eq(MenuDO::getStatus, false);
-        query.in(MenuDO::getMenuType, ListUtil.of(MenuTypeEnum.DIRECTORY.getCode(), MenuTypeEnum.MENU.getCode()));
+        query.in(MenuDO::getMenuType, ListUtil.of(MenuTypeEnum.MENU.getCode(), MenuTypeEnum.IFRAME.getCode(), MenuTypeEnum.LINK.getCode()));
         if (!isAll) {
             query.in(IdDO::getId, idList);
         }
-        query.orderByAsc(ListUtil.of(MenuDO::getParentId, MenuDO::getOrderNum));
+        query.orderByAsc(ListUtil.of(MenuDO::getParentId, MenuDO::getRankOrder));
         return baseMapper.selectList(query);
     }
+
+    @Override
+    public List<MenuDO> allAndButton() {
+        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
+        query.eq(BaseDO::getInactive, InactiveEnum.FALSE.getCode());
+        query.orderByAsc(ListUtil.of(MenuDO::getParentId, MenuDO::getRankOrder));
+        return baseMapper.selectList(query);
+    }
+
+    @Override
+    public List<MenuDO> listByParentId(Integer parentId) {
+        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
+        query.eq(MenuDO::getParentId, parentId);
+        return baseMapper.selectList(query);
+    }
+
+    @Override
+    public boolean delete(Integer id, String reason) {
+        return this.removeById(id);
+    }
+
 }
