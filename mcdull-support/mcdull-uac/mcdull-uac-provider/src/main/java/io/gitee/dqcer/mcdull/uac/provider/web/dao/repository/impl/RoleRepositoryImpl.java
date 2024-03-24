@@ -45,7 +45,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
             query.eq(BaseDO::getInactive, inactive);
         }
         query.orderByDesc(BaseDO::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
+        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
     }
 
     @Override

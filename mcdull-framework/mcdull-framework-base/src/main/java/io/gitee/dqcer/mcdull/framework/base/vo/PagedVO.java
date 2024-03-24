@@ -17,19 +17,19 @@ public class PagedVO<T> implements IPaged, VO {
     /**
      * 总记录数
      */
-    private Long total;
+    private Integer total;
     /**
      * 每页记录数
      */
-    private Long pageSize;
+    private Integer pageSize;
     /**
      * 总页数
      */
-    private Long totalPage;
+    private Integer totalPage;
     /**
      * 当前页数
      */
-    private Long currentPage;
+    private Integer currentPage;
     /**
      * 列表数据
      */
@@ -43,28 +43,28 @@ public class PagedVO<T> implements IPaged, VO {
      * @param pageSize   每页记录数
      * @param currentPage   当前页数
      */
-    public PagedVO(List<T> list, Long total, Long pageSize, Long currentPage) {
+    public PagedVO(List<T> list, Integer total, Integer pageSize, Integer currentPage) {
         this.list = list;
         this.total = total;
         this.pageSize = pageSize;
         this.currentPage = currentPage;
-        this.totalPage = (long) (int) Math.ceil((double) total / pageSize);
+        this.totalPage =  (int) Math.ceil((double) total / pageSize);
     }
 
-    public long getTotal() {
+    public Integer getTotal() {
         return total;
     }
 
-    public void setTotal(Long total) {
+    public void setTotal(Integer total) {
         this.total = total;
     }
 
     @Override
-    public Long getPageSize() {
+    public Integer getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(Long pageSize) {
+    public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
 
@@ -72,7 +72,7 @@ public class PagedVO<T> implements IPaged, VO {
         return totalPage;
     }
 
-    public void setTotalPage(Long totalPage) {
+    public void setTotalPage(Integer totalPage) {
         this.totalPage = totalPage;
     }
 
@@ -83,11 +83,11 @@ public class PagedVO<T> implements IPaged, VO {
      * @return {@link Long}
      */
     @Override
-    public Long getPageNum() {
+    public Integer getCurrentPage() {
         return currentPage;
     }
 
-    public void setCurrentPage(Long currentPage) {
+    public void setCurrentPage(Integer currentPage) {
         this.currentPage = currentPage;
     }
 

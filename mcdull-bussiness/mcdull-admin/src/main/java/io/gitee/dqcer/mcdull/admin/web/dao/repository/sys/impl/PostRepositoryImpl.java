@@ -29,7 +29,7 @@ public class PostRepositoryImpl extends ServiceImpl<PostMapper, PostDO>  impleme
     public Page<PostDO> selectPage(PostLiteDTO dto) {
         LambdaQueryWrapper<PostDO> query = Wrappers.lambdaQuery();
         query.orderByDesc(BaseDO::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
+        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
     }
 
     @Override

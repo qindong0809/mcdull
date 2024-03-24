@@ -46,7 +46,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
                     .or().like(UserDO::getEmail, keyword));
         }
         query.orderByDesc(BaseDO::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
+        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
     }
 
     /**

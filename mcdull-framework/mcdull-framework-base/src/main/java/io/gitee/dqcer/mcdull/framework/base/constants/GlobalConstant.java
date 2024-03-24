@@ -48,7 +48,7 @@ public class GlobalConstant {
     /**
      * excel导出最大行
      */
-    public static final Long EXCEL_EXPORT_MAX_ROW = 1048576L;
+    public static final Integer EXCEL_EXPORT_MAX_ROW = 1048576;
 
 
 
@@ -120,6 +120,7 @@ public class GlobalConstant {
         public static final Integer NUMBER_7 = 7;
         public static final Integer NUMBER_8 = 8;
         public static final Integer NUMBER_9 = 9;
+        public static final Integer NUMBER_20 = 20;
     }
 
 }

@@ -66,8 +66,8 @@ public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO>  implements
             //TODO 组装查询条件
         }
         lambda.orderByDesc(RelDO::getCreatedTime);
-        IPage<LogVO> voiPage =  baseMapper.pagedQuery(new Page<>(param.getPageNum(), param.getPageSize()), param);
-        return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
+        IPage<LogVO> voiPage =  baseMapper.pagedQuery(new Page<>(param.getCurrentPage(), param.getPageSize()), param);
+        return baseMapper.selectPage(new Page<>(param.getCurrentPage(), param.getPageSize()), lambda);
     }
 
     /**

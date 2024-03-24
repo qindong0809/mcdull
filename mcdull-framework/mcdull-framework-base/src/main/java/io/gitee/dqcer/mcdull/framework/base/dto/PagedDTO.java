@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.base.dto;
 
+import cn.hutool.core.convert.Convert;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.supert.IPaged;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
@@ -25,14 +26,14 @@ public class PagedDTO extends KeywordDTO implements IPaged {
     @NotNull(groups = ValidGroup.Paged.class)
     @Max(groups = ValidGroup.Paged.class, value = 1000)
     @Min(groups = ValidGroup.Paged.class, value = 1)
-    protected Long pageSize;
+    protected Integer pageSize;
 
     /**
      * 当前页数
      */
     @NotNull(groups = ValidGroup.Paged.class)
     @Min(groups = ValidGroup.Paged.class, value = 1)
-    protected Long pageNum;
+    protected Integer currentPage;
 
     /**
      * 排序字段信息
@@ -48,7 +49,7 @@ public class PagedDTO extends KeywordDTO implements IPaged {
     public String toString() {
         return new StringJoiner(", ", PagedDTO.class.getSimpleName() + "[", "]")
                 .add("pageSize=" + pageSize)
-                .add("pageNum=" + pageNum)
+                .add("pageNum=" + currentPage)
                 .add("orders=" + orders)
                 .add("notNeedPaged=" + notNeedPaged)
                 .add("keyword='" + keyword + "'")
@@ -56,27 +57,27 @@ public class PagedDTO extends KeywordDTO implements IPaged {
     }
 
     @Override
-    public Long getPageSize() {
+    public Integer getPageSize() {
         if (this.notNeedPaged != null) {
             if (notNeedPaged) {
                 return GlobalConstant.EXCEL_EXPORT_MAX_ROW;
             }
         }
-        return pageSize;
+        return Convert.toInt(pageSize, GlobalConstant.Number.NUMBER_20);
     }
 
-    public PagedDTO setPageSize(Long pageSize) {
+    public PagedDTO setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
         return this;
     }
 
     @Override
-    public Long getPageNum() {
-        return pageNum;
+    public Integer getCurrentPage() {
+        return Convert.toInt(currentPage, GlobalConstant.Number.NUMBER_1);
     }
 
-    public PagedDTO setPageNum(Long pageNum) {
-        this.pageNum = pageNum;
+    public PagedDTO setCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
         return this;
     }
 

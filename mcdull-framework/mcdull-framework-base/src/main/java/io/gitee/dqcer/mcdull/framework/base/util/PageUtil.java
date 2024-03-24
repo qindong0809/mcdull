@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.base.util;
 
+import cn.hutool.core.convert.Convert;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 
@@ -29,6 +30,7 @@ public class PageUtil {
      * @return {@link PagedVO <T>}
      */
     public static <T> PagedVO<T> toPage(List<T> list, IPage<?> iPage) {
-        return new PagedVO<>(list, iPage.getTotal(), iPage.getSize(), iPage.getCurrent());
+        return new PagedVO<>(list, Convert.toInt(iPage.getTotal()),
+                Convert.toInt(iPage.getSize()), Convert.toInt(iPage.getCurrent()));
     }
 }

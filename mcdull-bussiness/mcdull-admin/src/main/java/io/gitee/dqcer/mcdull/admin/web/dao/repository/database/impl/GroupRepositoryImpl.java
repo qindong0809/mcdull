@@ -27,7 +27,7 @@ public class GroupRepositoryImpl extends ServiceImpl<GroupMapper, GroupDO>  impl
     public Page<GroupDO> selectPage(GroupListDTO dto) {
         LambdaQueryWrapper<GroupDO> lambda = new QueryWrapper<GroupDO>().lambda();
         lambda.orderByDesc(RelDO::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
     }
 
     @Override

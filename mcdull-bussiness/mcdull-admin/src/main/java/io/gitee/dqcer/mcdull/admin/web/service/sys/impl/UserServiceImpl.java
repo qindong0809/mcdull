@@ -132,7 +132,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
 
     private void buildPagedLog(UserLiteDTO dto) {
         String logDesc = "第{}页,查询条数{}";
-        LogHelpUtil.setLog(StrUtil.format(logDesc, dto.getPageNum(), dto.getPageSize()));
+        LogHelpUtil.setLog(StrUtil.format(logDesc, dto.getCurrentPage(), dto.getPageSize()));
     }
 
     /**

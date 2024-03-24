@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -45,7 +46,7 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
         if (StrUtil.isNotBlank(keyword)) {
             query.and(i-> i.like(MenuDO::getName, keyword));
         }
-        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
+        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
     }
 
     @Override
@@ -69,12 +70,25 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
             query.in(MenuDO::getId, idList);
             List<MenuDO> list = baseMapper.selectList(query);
             if (CollUtil.isNotEmpty(list)) {
-                Map<Integer, MenuDO> map = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+                Map<Integer, MenuDO> map = list.stream()
+                        .filter(i-> StrUtil.isNotBlank(i.getAuths()))
+                        .collect(Collectors.toMap(IdDO::getId, Function.identity()));
                 for (Map.Entry<Integer, List<Integer>> entry : menuListMap.entrySet()) {
                     List<Integer> menuIdList = entry.getValue();
-                    List<String> menuCodeList = menuIdList.stream()
-                            .map(i -> map.get(i).getAuths()).collect(Collectors.toList());
-                    resultMap.put(entry.getKey(), menuCodeList);
+                    List<String> codeList = new ArrayList<>();
+                    if (CollUtil.isNotEmpty(menuIdList)) {
+                        for (Integer menuId : menuIdList) {
+                            MenuDO menu = map.get(menuId);
+                            if (ObjUtil.isNotNull(menu)) {
+                                String auths = menu.getAuths();
+                                if (StrUtil.isNotBlank(auths)) {
+                                    codeList.add(auths);
+                                }
+                            }
+                        }
+                    }
+
+                    resultMap.put(entry.getKey(), codeList);
                 }
             }
         }

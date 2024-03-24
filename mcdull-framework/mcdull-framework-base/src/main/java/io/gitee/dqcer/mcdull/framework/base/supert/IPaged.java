@@ -13,7 +13,7 @@ public interface IPaged {
      *
      * @return {@link Long}
      */
-    Long getPageNum();
+    Integer getCurrentPage();
 
 
     /**
@@ -21,6 +21,6 @@ public interface IPaged {
      *
      * @return {@link Long}
      */
-    Long getPageSize();
+    Integer getPageSize();
 
 }

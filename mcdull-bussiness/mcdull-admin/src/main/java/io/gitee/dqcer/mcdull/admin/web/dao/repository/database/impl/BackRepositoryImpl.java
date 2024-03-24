@@ -48,7 +48,7 @@ public class BackRepositoryImpl extends ServiceImpl<BackMapper, BackDO>  impleme
         LambdaQueryWrapper<BackDO> lambda = new QueryWrapper<BackDO>().lambda();
         lambda.eq(BackDO::getBizId, dto.getTicketId());
         lambda.orderByDesc(RelDO::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
     }
 
     @Transactional(rollbackFor = Exception.class)

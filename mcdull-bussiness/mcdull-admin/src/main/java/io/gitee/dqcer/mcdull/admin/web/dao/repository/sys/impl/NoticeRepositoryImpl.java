@@ -74,7 +74,7 @@ public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeDO>  i
             lambda.eq(NoticeDO::getNoticeType, noticeType);
         }
         lambda.orderByDesc(RelDO::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
     }
 
     /**

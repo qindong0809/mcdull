@@ -64,7 +64,7 @@ public class TicketRepositoryImpl extends ServiceImpl<TicketMapper, TicketDO>  i
             // TODO 组装查询条件
         }
         lambda.orderByDesc(RelDO::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(param.getCurrentPage(), param.getPageSize()), lambda);
     }
 
     /**

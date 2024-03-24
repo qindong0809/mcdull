@@ -31,7 +31,7 @@ public class InstanceRepositoryImpl extends ServiceImpl<InstanceMapper, Instance
         LambdaQueryWrapper<InstanceDO> lambda = new QueryWrapper<InstanceDO>().lambda();
         lambda.eq(ObjUtil.isNotNull(dto.getGroupId()), InstanceDO::getGroupId, dto.getGroupId());
         lambda.orderByDesc(RelDO::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
     }
 
     @Override

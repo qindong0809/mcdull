@@ -48,7 +48,7 @@ public class DictTypeRepositoryImpl extends ServiceImpl<DictTypeMapper, DictType
             lambda.between(RelDO::getCreatedTime, startTime, endTime);
         }
         lambda.orderByDesc(RelDO::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
     }
 
     @Override

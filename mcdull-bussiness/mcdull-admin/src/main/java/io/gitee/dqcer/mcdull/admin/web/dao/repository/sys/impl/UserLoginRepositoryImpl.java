@@ -24,6 +24,6 @@ public class UserLoginRepositoryImpl extends ServiceImpl<UserLoginMapper, UserLo
     public Page<UserLoginDO> paged(LoginInfoLiteDTO dto) {
         LambdaQueryWrapper<UserLoginDO> lambda = new QueryWrapper<UserLoginDO>().lambda();
         lambda.orderByDesc(UserLoginDO::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
     }
 }

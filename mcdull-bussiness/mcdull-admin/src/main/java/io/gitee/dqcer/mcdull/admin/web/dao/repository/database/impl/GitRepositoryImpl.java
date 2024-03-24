@@ -27,7 +27,7 @@ public class GitRepositoryImpl extends ServiceImpl<GitMapper, GitDO>  implements
     public Page<GitDO> selectPage(GitListDTO dto) {
         LambdaQueryWrapper<GitDO> lambda = new QueryWrapper<GitDO>().lambda();
         lambda.orderByDesc(RelDO::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
     }
 
     @Override
