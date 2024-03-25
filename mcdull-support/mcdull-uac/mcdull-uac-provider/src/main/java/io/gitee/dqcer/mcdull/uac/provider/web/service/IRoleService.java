@@ -36,4 +36,6 @@ public interface IRoleService {
     boolean toggleStatus(Integer id, ReasonDTO dto);
 
     boolean insertPermission(Integer id, RolePermissionInsertDTO dto);
+
+    Map<Integer, List<RoleDO>> getRoleMapByMenuId(List<Integer> menuIdList);
 }

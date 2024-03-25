@@ -7,6 +7,8 @@ create table if not exists `sys_user` (
     `salt` varchar(128) not null comment '密码盐',
     `email` varchar(128) default null comment '邮箱',
     `phone` varchar(128) default null comment '手机号',
+    `sex` int(1) not null  comment '性别（0/男 1/女）',
+    `remark` varchar(512) default null comment '备注',
     `last_login_time` datetime default null comment '最后一次登录时间',
     `type` int(1) not null  comment '类型（1/自定义 2/内置）',
     `dept_id` int not null comment '部门id',
@@ -19,7 +21,7 @@ create table if not exists `sys_user` (
     primary key (`id`),
     key `idx_username` (`username`)
     ) comment='用户表';
-insert into sys_user values(1, '麦兜', 'admin', '7a69d7186df1a65ed7af2ba00747488e2415bf1a', 'c7e87439-aef3-48e0-be26-678d0ab99345', 'admin@mcdull.com', '18238352145', null, 2, 100, 0, '2022-10-31 07:20:54', null, null, b'0', b'0');
+insert into sys_user values(1, '麦兜', 'admin', '7a69d7186df1a65ed7af2ba00747488e2415bf1a', 'c7e87439-aef3-48e0-be26-678d0ab99345', 'admin@mcdull.com', '18238352145', 0,  '备注',  null, 2, 100, 0, '2022-10-31 07:20:54', null, null, b'0', b'0');
 
 drop table if exists `sys_role`;
 create table if not exists `sys_role` (

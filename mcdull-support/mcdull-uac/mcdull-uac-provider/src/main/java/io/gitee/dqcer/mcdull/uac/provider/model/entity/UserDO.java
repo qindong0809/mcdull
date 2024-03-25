@@ -2,10 +2,9 @@ package io.gitee.dqcer.mcdull.uac.provider.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
+import lombok.Data;
 
-import java.time.LocalTime;
 import java.util.Date;
-import java.util.StringJoiner;
 
 /**
  * 系统用户实体
@@ -14,6 +13,7 @@ import java.util.StringJoiner;
  * @since 2022/11/07
  */
 @TableName("sys_user")
+@Data
 public class UserDO extends BaseDO {
 
     /**
@@ -41,10 +41,14 @@ public class UserDO extends BaseDO {
      */
     private String email;
 
+    private Integer sex;
+
     /**
      * 电话
      */
     private String phone;
+
+    private String remark;
 
     /**
      * 最后登录时间
@@ -57,99 +61,4 @@ public class UserDO extends BaseDO {
     private Integer type;
 
     private Integer deptId;
-
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", UserDO.class.getSimpleName() + "[", "]")
-                .add("nickName='" + nickName + "'")
-                .add("username='" + username + "'")
-                .add("password='" + password + "'")
-                .add("salt='" + salt + "'")
-                .add("email='" + email + "'")
-                .add("phone='" + phone + "'")
-                .add("lastLoginTime=" + lastLoginTime)
-                .add("type=" + type)
-                .add("deptId=" + deptId)
-                .add("createdBy=" + createdBy)
-                .add("updatedBy=" + updatedBy)
-                .add("inactive=" + inactive)
-                .add("createdTime=" + createdTime)
-                .add("updatedTime=" + updatedTime)
-                .add("delFlag=" + delFlag)
-                .add("id=" + id)
-                .toString();
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Date getLastLoginTime() {
-        return lastLoginTime;
-    }
-
-    public void setLastLoginTime(Date lastLoginTime) {
-        this.lastLoginTime = lastLoginTime;
-    }
-
-    public Integer getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(Integer deptId) {
-        this.deptId = deptId;
-    }
 }

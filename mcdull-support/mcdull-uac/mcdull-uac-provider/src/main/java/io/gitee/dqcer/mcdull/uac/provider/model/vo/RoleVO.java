@@ -49,6 +49,8 @@ public class RoleVO implements VO {
      */
     private String name;
 
+    private String code;
+
     /**
      * 描述
      */

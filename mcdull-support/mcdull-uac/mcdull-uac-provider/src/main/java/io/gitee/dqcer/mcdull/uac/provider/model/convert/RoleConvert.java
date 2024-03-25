@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.convert;
 
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleInsertDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 
@@ -12,13 +11,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
  * @since 2022/12/26
  */
 public class RoleConvert {
-
-    public static RoleDO dto2Entity(RoleLiteDTO dto) {
-        RoleDO entity = new RoleDO();
-        entity.setName(dto.getName());
-        entity.setDescription(dto.getDescription());
-        return entity;
-    }
 
     public static RoleVO entity2VO(RoleDO entity) {
         if (entity == null) {
@@ -48,6 +40,7 @@ public class RoleConvert {
         roleVO.setUpdatedTime(entity.getUpdatedTime());
         roleVO.setUpdatedBy(entity.getUpdatedBy());
         roleVO.setName(entity.getName());
+        roleVO.setCode(entity.getCode());
         roleVO.setDescription(entity.getDescription());
         roleVO.setInactive(entity.getInactive());
         return roleVO;

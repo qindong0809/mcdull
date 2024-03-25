@@ -58,4 +58,16 @@ public class RoleMenuRepositoryImpl extends ServiceImpl<RoleMenuMapper, RoleMenu
             roleMenuMapper.insert(roleMenuDO);
         });
     }
+
+    @Override
+    public Map<Integer, List<Integer>> listByMenuIdList(List<Integer> menuIdList) {
+        if (ObjectUtil.isNull(menuIdList)) {
+            throw new IllegalArgumentException("'menuIdList' is null");
+        }
+        LambdaQueryWrapper<RoleMenuDO> query = Wrappers.lambdaQuery();
+        query.in(RoleMenuDO::getMenuId, menuIdList);
+        List<RoleMenuDO> list = baseMapper.selectList(query);
+        return list.stream().collect(Collectors.groupingBy(RoleMenuDO::getMenuId,
+                Collectors.mapping(RoleMenuDO::getRoleId, Collectors.toList())));
+    }
 }

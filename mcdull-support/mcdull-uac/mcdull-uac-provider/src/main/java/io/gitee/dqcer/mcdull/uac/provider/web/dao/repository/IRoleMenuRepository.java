@@ -25,4 +25,6 @@ public interface IRoleMenuRepository extends IService<RoleMenuDO> {
     List<RoleMenuDO> listByRoleId(Integer roleId);
 
     void insert(Integer roleId, List<Integer> menuIdList);
+
+    Map<Integer, List<Integer>> listByMenuIdList(List<Integer> menuIdList);
 }

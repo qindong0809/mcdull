@@ -18,11 +18,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleMenuService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserRoleService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +41,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     private IRoleMenuService roleMenuService;
 
     @Resource
-    private IUserRoleService userRoleService;
+    private IRoleService roleService;
 
     @Override
     public Map<Integer, List<String>> getMenuCodeListMap(List<Integer> roleIdList) {
@@ -249,25 +250,36 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     }
 
     private List<Tree<Integer>> getTrees(List<MenuDO> menuList) {
+        Map<Integer, List<RoleDO>> roleMap = MapUtil.newHashMap();
+        if (CollUtil.isNotEmpty(menuList)) {
+            List<Integer> menuIdList = menuList.stream().map(IdDO::getId).collect(Collectors.toList());
+            roleMap = roleService.getRoleMapByMenuId(menuIdList);
+        }
+        Map<Integer, List<RoleDO>> finalRoleMap = roleMap;
         return TreeUtil.build(menuList, 0,
                 (menu, treeNode) -> {
-            treeNode.setName(StrUtil.upperFirst(menu.getPath()));
-            treeNode.setId(menu.getId());
-            treeNode.setParentId(menu.getParentId());
-            treeNode.put("path", menu.getPath());
-            treeNode.put("component", menu.getComponent());
-            treeNode.setName(menu.getName());
-            treeNode.setWeight(menu.getRankOrder());
-            PermissionRouterVO.MetaVO meta = new PermissionRouterVO.MetaVO();
-            meta.setTitle(menu.getTitle());
-            meta.setIcon(menu.getIcon());
-            meta.setRank(menu.getRankOrder());
-            meta.setFrameSrc(menu.getFrameSrc());
-            meta.setKeepAlive(menu.getKeepAlive());
-            meta.setAuths(ListUtil.of(menu.getAuths()));
-            // FIXME: 2024/3/24
-            meta.setRoles(ListUtil.of("admin"));
-            treeNode.put("meta", JSONUtil.parseObj(meta).toString());
+                    treeNode.setName(StrUtil.upperFirst(menu.getPath()));
+                    treeNode.setId(menu.getId());
+                    treeNode.setParentId(menu.getParentId());
+                    treeNode.put("path", menu.getPath());
+                    treeNode.put("component", menu.getComponent());
+                    treeNode.setName(menu.getName());
+                    treeNode.setWeight(menu.getRankOrder());
+                    PermissionRouterVO.MetaVO meta = new PermissionRouterVO.MetaVO();
+                    meta.setTitle(menu.getTitle());
+                    meta.setIcon(menu.getIcon());
+                    meta.setRank(menu.getRankOrder());
+                    meta.setFrameSrc(menu.getFrameSrc());
+                    meta.setKeepAlive(menu.getKeepAlive());
+                    String auths = menu.getAuths();
+                    if (StrUtil.isNotBlank(auths)) {
+                        meta.setAuths(ListUtil.of(auths));
+                    }
+                    List<RoleDO> roleList = finalRoleMap.get(menu.getId());
+                    if (CollUtil.isNotEmpty(roleList)) {
+                        meta.setRoles(roleList.stream().map(RoleDO::getCode).collect(Collectors.toList()));
+                    }
+                    treeNode.put("meta", JSONUtil.parseObj(meta).toString());
         });
     }
 

@@ -8,6 +8,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleMenuRepository
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleMenuService;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,14 @@ public class RoleMenuServiceImpl extends BasicServiceImpl<IRoleMenuRepository> i
             baseRepository.insert(roleId, menuIdList);
         }
         return true;
+    }
+
+    @Override
+    public Map<Integer, List<Integer>> getRoleIdMap(List<Integer> menuIdList) {
+        if (CollUtil.isNotEmpty(menuIdList)) {
+            return baseRepository.listByMenuIdList(menuIdList);
+        }
+        return Collections.emptyMap();
     }
 
 }

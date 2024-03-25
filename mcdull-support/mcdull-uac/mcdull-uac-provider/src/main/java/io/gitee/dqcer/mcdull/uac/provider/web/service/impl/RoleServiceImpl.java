@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
@@ -30,9 +31,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 用户服务
@@ -201,6 +202,36 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
     @Override
     public boolean insertPermission(Integer id, RolePermissionInsertDTO dto) {
         return roleMenuService.deleteAndInsert(id, dto.getMenuIdList());
+    }
+
+    @Override
+    public Map<Integer, List<RoleDO>> getRoleMapByMenuId(List<Integer> menuIdList) {
+        Map<Integer, List<RoleDO>> map = MapUtil.newHashMap();
+        Map<Integer, List<Integer>> roleIdMap = roleMenuService.getRoleIdMap(menuIdList);
+        if (MapUtil.isNotEmpty(roleIdMap)) {
+            Set<Integer> roleIdSet = roleIdMap.values().stream().flatMap(Collection::stream)
+                    .collect(Collectors.toSet());
+            List<RoleDO> listByIds = baseRepository.listByIds(new ArrayList<>(roleIdSet));
+            if (CollUtil.isNotEmpty(listByIds)) {
+                Map<Integer, RoleDO> roleMap = listByIds.stream()
+                        .collect(Collectors.toMap(IdDO::getId, Function.identity()));
+                for (Map.Entry<Integer, List<Integer>> entry : roleIdMap.entrySet()) {
+                    Integer menuId = entry.getKey();
+                    List<Integer> value = entry.getValue();
+                    List<RoleDO> roleList = new ArrayList<>();
+                    for (Integer roleId : value) {
+                        RoleDO role = roleMap.get(roleId);
+                        if (ObjUtil.isNotNull(role)) {
+                            roleList.add(role);
+                        }
+                    }
+                    if (CollUtil.isNotEmpty(roleList)) {
+                        map.put(menuId, roleList);
+                    }
+                }
+            }
+        }
+        return map;
     }
 
 }
