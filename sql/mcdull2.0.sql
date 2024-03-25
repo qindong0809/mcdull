@@ -217,6 +217,39 @@ create table if not exists `sys_dept` (
 primary key (`id`)
     )comment='部门表';
 
+
+drop table if exists `sys_email_template`;
+create table if not exists `sys_email_template` (
+`id` int not null auto_increment comment '主键',
+`code` varchar(128) not null comment '编码',
+`name` varchar(128) not null comment '名称',
+`title` varchar(128) not null comment '标题',
+`content` varchar(4096) not null comment '内容',
+`remark` text default null comment '备注',
+`created_by` int null comment '创建人',
+`created_time` datetime null comment '创建时间',
+`updated_by` int null comment '更新人',
+`updated_time` datetime null comment '更新时间',
+`inactive` int(1) not null default b'0' comment '状态（true/已失活 false/未失活）',
+`del_flag` bit(1) not null default b'0' comment '删除标识（true/已删除 false/未删除）',
+primary key (`id`)
+)comment='邮件模版';
+
+INSERT INTO sys_email_template VALUES('CREATE_USER_EMAIL','创建用户email通知','欢迎使用','访问地址： http://localhost:8848',NULL,0,NULL,NULL,NULL,0,0);
+
+
+drop table if exists `sys_email_send_history`;
+create table if not exists `sys_email_send_history` (
+`id` int not null auto_increment comment '主键',
+`sent_to` varchar(128) not null comment '收件地址',
+`cc` varchar(128) not null comment '抄送地址',
+`content` varchar(4096) not null comment '内容',
+`file_id_array` varchar(128) default null comment '附件集',
+`created_time` datetime null comment '创建时间',
+`updated_time` datetime null comment '更新时间',
+`del_flag` bit(1) not null default b'0' comment '删除标识（true/已删除 false/未删除）',
+primary key (`id`)
+)comment='邮件发送历史';
 --
 -- drop table if exists `sys_menu`;
 -- create table if not exists `sys_menu` (
