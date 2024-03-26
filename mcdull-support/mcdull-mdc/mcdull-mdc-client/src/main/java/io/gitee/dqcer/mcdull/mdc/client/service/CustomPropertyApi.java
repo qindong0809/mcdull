@@ -11,7 +11,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  */
 @FeignClient(
         value = "${api:mdcName}",
-        contextId = "customPropertyClientService",
+        contextId = "customPropertyApi",
         fallback = CustomPropertyApiHystrix.class)
 public interface CustomPropertyApi extends CustomPropertyApiDef {
 

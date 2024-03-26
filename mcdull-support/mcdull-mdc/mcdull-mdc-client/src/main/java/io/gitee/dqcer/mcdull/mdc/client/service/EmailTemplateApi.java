@@ -12,7 +12,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  */
 @FeignClient(
         value = "${api:mdcName}",
-        contextId = "emailTemplateClientService",
+        contextId = "emailTemplateApi",
         fallback = EmailTemplateApiHystrix.class)
 public interface EmailTemplateApi extends EmailTemplateApiDef {
 

@@ -12,7 +12,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  */
 @FeignClient(
         value = "${api:mdcName}",
-        contextId = "dictClientService",
+        contextId = "dictApi",
         fallback = DictClientApiHystrix.class)
 public interface DictApi extends DictApiDef {
 
