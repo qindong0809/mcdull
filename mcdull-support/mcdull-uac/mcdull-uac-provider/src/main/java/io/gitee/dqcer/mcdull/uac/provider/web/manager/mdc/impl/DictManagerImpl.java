@@ -5,11 +5,11 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
+import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
+import io.gitee.dqcer.mcdull.framework.feign.ResultApiParse;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.mdc.client.dto.DictClientDTO;
-import io.gitee.dqcer.mcdull.mdc.client.service.DictClientService;
+import io.gitee.dqcer.mcdull.mdc.client.service.DictApi;
 import io.gitee.dqcer.mcdull.mdc.client.vo.DictClientVO;
 import io.gitee.dqcer.mcdull.uac.provider.config.constants.CacheConstants;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RemoteDictVO;
@@ -37,7 +37,7 @@ public class DictManagerImpl implements IDictManager {
     private static final Logger log = LoggerFactory.getLogger(DictManagerImpl.class);
 
     @Resource
-    private DictClientService dictClientService;
+    private DictApi dictClientService;
 
     @Resource
     private CacheChannel cacheChannel;
@@ -69,7 +69,7 @@ public class DictManagerImpl implements IDictManager {
         if (log.isDebugEnabled()) {
             log.debug("查询字典数据请求参数: {}", dto);
         }
-        DictClientVO dictVO = ResultParse.getInstance(dictClientService.one(dto));
+        DictClientVO dictVO = ResultApiParse.getInstance(dictClientService.one(dto));
         RemoteDictVO vo = new RemoteDictVO();
         vo.setCode(dictVO.getCode());
         vo.setName(dictVO.getName());
@@ -92,8 +92,8 @@ public class DictManagerImpl implements IDictManager {
         if (ObjectUtil.isNull(selectTypeEnum)) {
             throw new IllegalArgumentException("'codeList' or 'selectType' is null.");
         }
-        Result<List<DictClientVO>> result = dictClientService.list(selectTypeEnum.getCode());
-        List<DictClientVO> list = ResultParse.getInstance(result);
+        ResultApi<List<DictClientVO>> result = dictClientService.list(selectTypeEnum.getCode());
+        List<DictClientVO> list = ResultApiParse.getInstance(result);
         if (CollUtil.isNotEmpty(list)) {
             return list.stream().collect(Collectors.toMap(DictClientVO::getCode, DictClientVO::getName));
         }

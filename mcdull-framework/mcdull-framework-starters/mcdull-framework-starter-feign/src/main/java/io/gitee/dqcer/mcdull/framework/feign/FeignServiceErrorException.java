@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.framework.base.exception;
+package io.gitee.dqcer.mcdull.framework.feign;
 
 /**
  * 服务错误异常

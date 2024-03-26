@@ -1,8 +1,9 @@
-package io.gitee.dqcer.mcdull.mdc.client.api;
+package io.gitee.dqcer.mcdull.mdc.client.service.def;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
 import io.gitee.dqcer.mcdull.mdc.client.dto.DictClientDTO;
 import io.gitee.dqcer.mcdull.mdc.client.vo.DictClientVO;
 import org.springframework.validation.annotation.Validated;
@@ -17,7 +18,7 @@ import java.util.List;
  * @author dqcer
  * @since 2022/10/28
  */
-public interface DictServiceApi {
+public interface DictApiDef {
 
     /**
      * 单个
@@ -26,7 +27,7 @@ public interface DictServiceApi {
      * @return {@link Result< DictClientVO >}
      */
     @GetMapping(GlobalConstant.INNER_API + GlobalConstant.SERVICE_MDC + "/dict/detail")
-    Result<DictClientVO> one(@Validated(value = ValidGroup.One.class) DictClientDTO dto);
+    ResultApi<DictClientVO> one(@Validated(value = ValidGroup.One.class) DictClientDTO dto);
 
     /**
      * 列表
@@ -35,6 +36,6 @@ public interface DictServiceApi {
      * @return {@link Result}<{@link List}<{@link DictClientVO}>>
      */
     @GetMapping( GlobalConstant.INNER_API + GlobalConstant.SERVICE_MDC + "/dict/{selectType}/list")
-    Result<List<DictClientVO>> list(@PathVariable(name = "selectType") String selectType);
+    ResultApi<List<DictClientVO>> list(@PathVariable(name = "selectType") String selectType);
 
 }

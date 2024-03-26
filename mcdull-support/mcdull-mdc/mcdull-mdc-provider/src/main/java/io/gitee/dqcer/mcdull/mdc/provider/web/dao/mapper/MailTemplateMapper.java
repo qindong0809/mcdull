@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.mdc.provider.web.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.gitee.dqcer.mcdull.mdc.provider.model.entity.SysEmailTemplateDO;
+import io.gitee.dqcer.mcdull.mdc.provider.model.entity.MailTemplateDO;
 
 /**
  * 邮件模板
@@ -9,5 +9,5 @@ import io.gitee.dqcer.mcdull.mdc.provider.model.entity.SysEmailTemplateDO;
  * @author dqcer
  * @since 2022/12/26 21:12:24
  */
-public interface SysEmailTemplateDAO extends BaseMapper<SysEmailTemplateDO> {
+public interface MailTemplateMapper extends BaseMapper<MailTemplateDO> {
 }

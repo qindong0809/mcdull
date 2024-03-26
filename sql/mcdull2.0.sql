@@ -251,6 +251,23 @@ create table if not exists `sys_email_send_history` (
 `del_flag` bit(1) not null default b'0' comment '删除标识（true/已删除 false/未删除）',
 primary key (`id`)
 )comment='邮件发送历史';
+
+
+drop table if exists `sys_custom_property`;
+create table if not exists `sys_custom_property` (
+`id` int not null auto_increment comment '主键',
+`code` varchar(128) not null comment '编码key',
+`name` varchar(128) not null comment '名称',
+`property_value` varchar(4096) not null comment '值',
+`remark` text default null comment '备注',
+`created_by` int null comment '创建人',
+`created_time` datetime null comment '创建时间',
+`updated_by` int null comment '更新人',
+`updated_time` datetime null comment '更新时间',
+`inactive` int(1) not null default b'0' comment '状态（true/已失活 false/未失活）',
+`del_flag` bit(1) not null default b'0' comment '删除标识（true/已删除 false/未删除）',
+primary key (`id`)
+)comment='自定义属性';
 --
 -- drop table if exists `sys_menu`;
 -- create table if not exists `sys_menu` (

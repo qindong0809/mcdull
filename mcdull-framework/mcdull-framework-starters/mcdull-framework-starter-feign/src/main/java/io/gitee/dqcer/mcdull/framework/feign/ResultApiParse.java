@@ -1,9 +1,8 @@
-package io.gitee.dqcer.mcdull.framework.base.wrapper;
+package io.gitee.dqcer.mcdull.framework.feign;
 
 import cn.hutool.core.util.ObjUtil;
-import io.gitee.dqcer.mcdull.framework.base.exception.FeignBizException;
-import io.gitee.dqcer.mcdull.framework.base.exception.FeignServiceErrorException;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +15,9 @@ import java.util.function.Function;
  * @author dqcer
  * @since 2022/04/22
  */
-public class ResultParse {
+public class ResultApiParse {
 
-    public final static Logger log = LoggerFactory.getLogger(ResultParse.class);
+    public final static Logger log = LoggerFactory.getLogger(ResultApiParse.class);
 
     /**
      * 获得实例，支持函数式但不推荐使用
@@ -48,7 +47,7 @@ public class ResultParse {
      * @return {@link T}
      * @throws FeignServiceErrorException,FeignBizException 上游系统业务异常，亦可自定义捕获，默认全局拦截
      */
-    public static <T> T getInstance(Result<T> result) {
+    public static <T> T getInstance(ResultApi<T> result) {
         return getInstance(result, false);
     }
 
@@ -60,7 +59,7 @@ public class ResultParse {
      * @return {@link T}
      * @throws FeignServiceErrorException,FeignBizException 上游系统业务异常，亦可自定义捕获，默认全局拦截
      */
-    public static <T> T getInstance(Result<T> result, boolean ignoreNull) {
+    public static <T> T getInstance(ResultApi<T> result, boolean ignoreNull) {
         if (log.isDebugEnabled()) {
             log.debug("feign result: result:{}", result);
         }

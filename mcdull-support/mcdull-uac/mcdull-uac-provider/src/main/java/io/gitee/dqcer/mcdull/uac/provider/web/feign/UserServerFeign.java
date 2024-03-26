@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.feign;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.client.api.UserServiceApi;
 import io.gitee.dqcer.mcdull.uac.client.vo.RemoteUserVO;
@@ -31,8 +32,8 @@ public class UserServerFeign implements UserServiceApi {
      * @return {@link Result}<{@link List}<{@link UserPowerVO}>>
      */
     @PostMapping(GlobalConstant.INNER_API + "/user/res-module/list")
-    public Result<List<UserPowerVO>> queryResourceModules() {
-        return Result.success(userService.getResourceModuleList(UserContextHolder.currentUserId()));
+    public ResultApi<List<UserPowerVO>> queryResourceModules() {
+        return ResultApi.success(userService.getResourceModuleList(UserContextHolder.currentUserId()));
     }
 
     /**
@@ -42,7 +43,7 @@ public class UserServerFeign implements UserServiceApi {
      * @return {@link Result}<{@link RemoteUserVO}>
      */
     @Override
-    public Result<RemoteUserVO> getDetail(Integer userId) {
-        return Result.success();
+    public ResultApi<RemoteUserVO> getDetail(Integer userId) {
+        return ResultApi.success();
     }
 }

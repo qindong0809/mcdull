@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.impl;
 
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.mdc.client.service.EmailClientService;
+import io.gitee.dqcer.mcdull.mdc.client.service.EmailApi;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.IMailManager;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 public class MailManager implements IMailManager {
 
     @Resource
-    private EmailClientService mailClientService;
+    private EmailApi mailClientService;
 
     @Override
     public boolean sendEmail(String sendTo, String subject, String text) {

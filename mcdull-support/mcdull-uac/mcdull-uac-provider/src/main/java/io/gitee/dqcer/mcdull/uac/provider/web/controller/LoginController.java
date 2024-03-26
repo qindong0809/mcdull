@@ -113,7 +113,7 @@ public class LoginController implements AuthServiceApi {
      * @return {@link Result<String>}
      */
     @PostMapping("logout")
-    @Operation(summary = "注销当前token", description = "logout api")
+    @Operation(summary = "注销当前token", description = "logout def")
     public Result<String> logout() {
         loginService.logout();
         return Result.success();

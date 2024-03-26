@@ -1,7 +1,5 @@
-package io.gitee.dqcer.mcdull.framework.base.exception;
+package io.gitee.dqcer.mcdull.framework.feign;
 
-
-import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 
 /**
  * feign业务异常
@@ -12,13 +10,13 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 public class FeignBizException extends RuntimeException{
 
     private static final long serialVersionUID = 1L;
-    private Result<?> result;
+    private ResultApi<?> result;
 
     public FeignBizException() {
         super();
     }
 
-    public FeignBizException(Result<?> result) {
+    public FeignBizException(ResultApi<?> result) {
         this.result = result;
     }
 
@@ -38,11 +36,11 @@ public class FeignBizException extends RuntimeException{
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
-    public Result<?> getResult() {
+    public ResultApi<?> getResult() {
         return result;
     }
 
-    public void setResult(Result<?> result) {
+    public void setResult(ResultApi<?> result) {
         this.result = result;
     }
 }

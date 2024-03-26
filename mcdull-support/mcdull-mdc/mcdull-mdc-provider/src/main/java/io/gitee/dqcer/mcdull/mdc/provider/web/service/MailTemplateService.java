@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.mdc.provider.model.convert.MailTemplateConvert;
 import io.gitee.dqcer.mcdull.mdc.provider.model.dto.MailTemplateLiteDTO;
-import io.gitee.dqcer.mcdull.mdc.provider.model.entity.SysMailTemplateDO;
+import io.gitee.dqcer.mcdull.mdc.provider.model.entity.MailTemplateDO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.vo.MailTemplateBaseVO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.vo.MailTemplateVO;
-import io.gitee.dqcer.mcdull.mdc.provider.web.dao.mapper.MailTemplateDAO;
+import io.gitee.dqcer.mcdull.mdc.provider.web.dao.mapper.MailTemplateMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,19 +25,19 @@ import java.util.List;
 public class MailTemplateService {
 
     @Resource
-    private MailTemplateDAO mailTemplateDAO;
+    private MailTemplateMapper mailTemplateMapper;
 
     public Result<List<MailTemplateBaseVO>> listAll() {
         List<MailTemplateBaseVO> listVo = new ArrayList<>();
-        LambdaQueryWrapper<SysMailTemplateDO> wrapper = Wrappers.lambdaQuery();
-        List<SysMailTemplateDO> entityList = mailTemplateDAO.selectList(wrapper);
-        for (SysMailTemplateDO entity : entityList) {
+        LambdaQueryWrapper<MailTemplateDO> wrapper = Wrappers.lambdaQuery();
+        List<MailTemplateDO> entityList = mailTemplateMapper.selectList(wrapper);
+        for (MailTemplateDO entity : entityList) {
             listVo.add(MailTemplateConvert.convertToMailTemplateBaseVO(entity));
         }
         return Result.success(listVo);
     }
     public Result<MailTemplateVO> detail(MailTemplateLiteDTO dto) {
-        SysMailTemplateDO entity = mailTemplateDAO.selectById(dto.getId());
+        MailTemplateDO entity = mailTemplateMapper.selectById(dto.getId());
         return Result.success(MailTemplateConvert.convertToMailTemplateVO(entity));
     }
 }

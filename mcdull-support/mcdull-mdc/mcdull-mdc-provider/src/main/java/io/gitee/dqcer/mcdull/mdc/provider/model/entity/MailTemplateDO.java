@@ -12,7 +12,7 @@ import java.util.Date;
  * @since  2022/11/16
  */
 @TableName("sys_mail_template")
-public class SysMailTemplateDO extends IdDO {
+public class MailTemplateDO extends IdDO {
 
     /**
      * 创建人
@@ -76,7 +76,7 @@ public class SysMailTemplateDO extends IdDO {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("SysMailTemplateDO{");
+        final StringBuilder sb = new StringBuilder("MailTemplateDO{");
         sb.append("createdBy=").append(createdBy);
         sb.append(", createdTime=").append(createdTime);
         sb.append(", updatedBy=").append(updatedBy);

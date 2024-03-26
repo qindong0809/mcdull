@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
+import io.gitee.dqcer.mcdull.framework.feign.ResultApiParse;
 import io.gitee.dqcer.mcdull.mdc.provider.model.convert.LogConvert;
 import io.gitee.dqcer.mcdull.mdc.provider.model.dto.LogLiteDTO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.dto.SysLogFeignDTO;
@@ -51,7 +51,7 @@ public class LogService {
         List<LogVO> voList = new ArrayList<>();
         for (LogDO entity : entityPage.getRecords()) {
             LogVO logVO = LogConvert.entity2Vo(entity);
-            String nickname = ResultParse.getInstance(userClientService.getDetail(logVO.getAccountId())).getNickname();
+            String nickname = ResultApiParse.getInstance(userClientService.getDetail(logVO.getAccountId())).getNickname();
             logVO.setAccountIdStr(nickname);
             voList.add(logVO);
         }

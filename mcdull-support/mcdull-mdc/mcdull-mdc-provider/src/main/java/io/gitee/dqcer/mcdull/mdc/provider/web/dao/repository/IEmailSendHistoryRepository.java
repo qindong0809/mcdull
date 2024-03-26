@@ -1,14 +1,14 @@
 package io.gitee.dqcer.mcdull.mdc.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.mdc.provider.model.entity.SysEmailSendHistoryDO;
+import io.gitee.dqcer.mcdull.mdc.provider.model.entity.EmailSendHistoryDO;
 
 import java.util.List;
 
 /**
  * @author dqcer
  */
-public interface ISysEmailSendHistoryRepository extends IService<SysEmailSendHistoryDO> {
+public interface IEmailSendHistoryRepository extends IService<EmailSendHistoryDO> {
 
 
     /**
@@ -17,5 +17,5 @@ public interface ISysEmailSendHistoryRepository extends IService<SysEmailSendHis
      * @param list 列表
      * @return boolean
      */
-    boolean batchInsert(List<SysEmailSendHistoryDO> list);
+    boolean batchInsert(List<EmailSendHistoryDO> list);
 }

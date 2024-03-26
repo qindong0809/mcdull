@@ -7,5 +7,5 @@ import io.gitee.dqcer.mcdull.mdc.provider.model.entity.DictDO;
  * @author dqcer
  * @since 2023/11/29
  */
-public interface DictDAO extends BaseMapper<DictDO> {
+public interface DictMapper extends BaseMapper<DictDO> {
 }

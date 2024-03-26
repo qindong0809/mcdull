@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.mdc.provider.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
 import lombok.Data;
 
 /**
@@ -12,15 +12,15 @@ import lombok.Data;
  */
 @TableName("sys_email_template")
 @Data
-public class SysEmailTemplateDO extends BaseDO {
+public class EmailSendHistoryDO extends RelDO {
 
-    private String code;
+    private String sentTo;
 
-    private String name;
+    private String cc;
 
     private String title;
 
     private String content;
 
-    private String remark;
+    private String fileIdArray;
 }
