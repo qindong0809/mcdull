@@ -243,6 +243,7 @@ create table if not exists `sys_email_send_history` (
 `id` int not null auto_increment comment '主键',
 `sent_to` varchar(128) not null comment '收件地址',
 `cc` varchar(128) not null comment '抄送地址',
+`title` varchar(1024) not null comment '标题',
 `content` varchar(4096) not null comment '内容',
 `file_id_array` varchar(128) default null comment '附件集',
 `created_time` datetime null comment '创建时间',

@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.mdc;
 import cn.hutool.core.io.FileUtil;
 import io.gitee.dqcer.mcdull.framework.web.config.ThreadPoolConfig;
 import io.gitee.dqcer.mcdull.mdc.provider.MetaDataContentApplication;
-import io.gitee.dqcer.mcdull.mdc.provider.web.service.MailService;
+import io.gitee.dqcer.mcdull.mdc.provider.web.service.impl.EmailServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,17 +19,17 @@ public class MailTest {
 
 
     @Resource
-    private MailService mailService;
+    private EmailServiceImpl emailServiceImpl;
 
     @Test
     void testMailTemplateError() {
-        Assertions.assertTrue(mailService.sendEmail("xxx@sina.com", "test", "hello word mail"));
+        Assertions.assertTrue(emailServiceImpl.sendEmail("xxx@sina.com", "test", "hello word mail"));
     }
 
     @Test
     void testSendMailService() {
         byte[] bytes = FileUtil.readBytes("D:\\var\\log\\mcdull-mdc-provider\\2023-11-29\\info\\info-0.log");
-        boolean isOk = mailService.sendEmailWithBytes(bytes, "info.log", "derrek@snapmail.cc", "subject", "content");
+        boolean isOk = emailServiceImpl.sendEmailWithBytes(bytes, "info.log", "derrek@snapmail.cc", "subject", "content");
         Assertions.assertTrue(isOk);
     }
 }

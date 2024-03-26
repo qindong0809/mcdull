@@ -18,6 +18,8 @@ public class SysEmailSendHistoryDO extends RelDO {
 
     private String cc;
 
+    private String title;
+
     private String content;
 
     private String fileIdArray;

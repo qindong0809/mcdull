@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author dqcer
  * @since 2022/10/28
  */
-public interface MailServiceApi {
+public interface EmailServiceApi {
 
     /**
      * 发送电子邮件

@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.mdc.provider.web.feign;
 
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.mdc.client.api.MailServiceApi;
-import io.gitee.dqcer.mcdull.mdc.provider.web.service.MailService;
+import io.gitee.dqcer.mcdull.mdc.client.api.EmailServiceApi;
+import io.gitee.dqcer.mcdull.mdc.provider.web.service.IEmailService;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -14,19 +14,19 @@ import javax.annotation.Resource;
  * @since 2022/12/26
  */
 @RestController
-public class MailServerFeign implements MailServiceApi {
+public class EmailServerFeign implements EmailServiceApi {
 
     @Resource
-    private MailService mailService;
+    private IEmailService emailService;
 
     @Override
     public Result<Boolean> sendEmail(String sendTo, String subject, String text) {
-        return Result.success(mailService.sendEmail(sendTo, subject, text));
+        return Result.success(emailService.sendEmail(sendTo, subject, text));
     }
 
     @Override
     public Result<Boolean> sendEmailWithBytes(byte[] bytes, String fileName, String sendTo, String subject,
                                               String text) {
-        return Result.success(mailService.sendEmailWithBytes(bytes, fileName, sendTo, subject, text));
+        return Result.success(emailService.sendEmailWithBytes(bytes, fileName, sendTo, subject, text));
     }
 }

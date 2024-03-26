@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.mdc.client.service;
 
-import io.gitee.dqcer.mcdull.mdc.client.api.MailServiceApi;
+import io.gitee.dqcer.mcdull.mdc.client.api.EmailServiceApi;
 import org.springframework.cloud.openfeign.FeignClient;
 
 /**
@@ -10,6 +10,6 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @since 2022/11/01 22:11:00
  */
 @FeignClient(value = "mcdull-mdc-provider", contextId = "mail")
-public interface MailClientService extends MailServiceApi {
+public interface EmailClientService extends EmailServiceApi {
 
 }
