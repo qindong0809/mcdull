@@ -12,7 +12,7 @@ import io.gitee.dqcer.mcdull.admin.web.service.sys.IConfigService;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

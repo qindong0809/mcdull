@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.mdc.provider.model.convert;
 
-import io.gitee.dqcer.mcdull.mdc.client.vo.DictClientVO;
-import io.gitee.dqcer.mcdull.mdc.provider.model.entity.DictDO;
+import io.gitee.dqcer.mcdull.mdc.client.vo.DictTypeClientVO;
+import io.gitee.dqcer.mcdull.mdc.provider.model.entity.DictTypeDO;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,39 +20,31 @@ public class DictConvert {
      * 实体转换来视图对象
      *
      * @param item 项
-     * @return {@link DictClientVO}
+     * @return {@link DictTypeClientVO}
      */
-    public static DictClientVO entityConvertToVo(DictDO item) {
-        if (item == null) {
-            return null;
-        }
-        DictClientVO result = new DictClientVO();
-        result.setCode(item.getCode());
-        result.setParentCode(item.getParentCode());
-        result.setName(item.getName());
-        result.setNameShort(item.getNameShort());
-        result.setSelectType(item.getSelectType());
-        result.setSort(item.getSort());
-        result.setDefaulted(item.getDefaulted());
-        result.setStatus(item.getStatus());
-        result.setRemark(item.getRemark());
-        result.setLanguage(item.getLanguage());
-        result.setDelFlag(item.getDelFlag());
-        return result;
+    public static DictTypeClientVO entityConvertToVo(DictTypeDO item) {
+        DictTypeClientVO dictTypeClientVO = new DictTypeClientVO();
+        dictTypeClientVO.setId(item.getId());
+        dictTypeClientVO.setDictName(item.getDictName());
+        dictTypeClientVO.setDictType(item.getDictType());
+        dictTypeClientVO.setRemark(item.getRemark());
+        dictTypeClientVO.setInactive(item.getInactive());
+        return dictTypeClientVO;
+
     }
 
     /**
      * 实体转换为列表
      *
      * @param item 项
-     * @return {@link List}<{@link DictClientVO}>
+     * @return {@link List}<{@link DictTypeClientVO}>
      */
-    public static List<DictClientVO> entitiesConvertToList(List<DictDO> item) {
+    public static List<DictTypeClientVO> entitiesConvertToList(List<DictTypeDO> item) {
         if (item == null) {
             return Collections.EMPTY_LIST;
         }
-        List<DictClientVO> result = new ArrayList<>();
-        for (DictDO entity : item) {
+        List<DictTypeClientVO> result = new ArrayList<>();
+        for (DictTypeDO entity : item) {
             result.add(entityConvertToVo(entity));
         }
         return result;

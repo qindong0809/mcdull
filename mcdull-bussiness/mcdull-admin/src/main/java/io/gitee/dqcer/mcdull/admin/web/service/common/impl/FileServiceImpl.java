@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.admin.web.dao.repository.common.ISysFileRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.common.ISysConfigManager;
 import io.gitee.dqcer.mcdull.admin.web.service.common.IFileService;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

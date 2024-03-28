@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
-import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleMenuDO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleMenuRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleMenuService;

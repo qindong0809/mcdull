@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.mdc.provider.web.controller;
 
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.mdc.client.vo.DictClientVO;
+import io.gitee.dqcer.mcdull.mdc.client.vo.DictTypeClientVO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.dto.MailTemplateLiteDTO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.vo.MailTemplateBaseVO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.vo.MailTemplateVO;
@@ -40,7 +40,7 @@ public class MailTemplateController {
      * 单个
      *
      * @param dto dto
-     * @return {@link Result}<{@link DictClientVO}>
+     * @return {@link Result}<{@link DictTypeClientVO}>
      */
     @GetMapping("mail/template/detail")
     public Result<MailTemplateVO> one(@Validated(ValidGroup.One.class) MailTemplateLiteDTO dto) {

@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.mdc.client.service;
 
-import io.gitee.dqcer.mcdull.mdc.client.service.def.DictApiDef;
-import io.gitee.dqcer.mcdull.mdc.client.service.hystrix.DictClientApiHystrix;
+import io.gitee.dqcer.mcdull.mdc.client.service.def.DictTypeApiDef;
+import io.gitee.dqcer.mcdull.mdc.client.service.hystrix.DictClientTypeApiHystrix;
 import org.springframework.cloud.openfeign.FeignClient;
 
 /**
@@ -13,7 +13,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 @FeignClient(
         value = "${api:mdcName}",
         contextId = "dictApi",
-        fallback = DictClientApiHystrix.class)
-public interface DictApi extends DictApiDef {
+        fallback = DictClientTypeApiHystrix.class)
+public interface DictTypeApi extends DictTypeApiDef {
 
 }

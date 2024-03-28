@@ -52,7 +52,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.ResultParse;
 import io.gitee.dqcer.mcdull.framework.config.properties.MailProperties;
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
-import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import lombok.SneakyThrows;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;

@@ -18,7 +18,7 @@ import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
 import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import io.gitee.dqcer.mcdull.framework.web.service.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.UserConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;

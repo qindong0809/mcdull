@@ -9,11 +9,11 @@ import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
 import io.gitee.dqcer.mcdull.framework.feign.ResultApiParse;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.mdc.client.dto.DictClientDTO;
-import io.gitee.dqcer.mcdull.mdc.client.service.DictApi;
-import io.gitee.dqcer.mcdull.mdc.client.vo.DictClientVO;
+import io.gitee.dqcer.mcdull.mdc.client.service.DictTypeApi;
+import io.gitee.dqcer.mcdull.mdc.client.vo.DictTypeClientVO;
 import io.gitee.dqcer.mcdull.uac.provider.config.constants.CacheConstants;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.RemoteDictVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.IDictManager;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.RemoteDictTypeVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.IDictTypeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,6 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  *  码表通用逻辑实现类
@@ -32,12 +31,12 @@ import java.util.stream.Collectors;
  * @since 2022/12/24
  */
 @Service
-public class DictManagerImpl implements IDictManager {
+public class DictTypeManagerImpl implements IDictTypeManager {
 
-    private static final Logger log = LoggerFactory.getLogger(DictManagerImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(DictTypeManagerImpl.class);
 
     @Resource
-    private DictApi dictClientService;
+    private DictTypeApi dictClientService;
 
     @Resource
     private CacheChannel cacheChannel;
@@ -48,19 +47,19 @@ public class DictManagerImpl implements IDictManager {
      *
      * @param selectType 选择类型
      * @param code       代码
-     * @return {@link RemoteDictVO}
+     * @return {@link RemoteDictTypeVO}
      */
     @Override
-    public RemoteDictVO dictVO(String selectType, String code){
+    public RemoteDictTypeVO dictVO(String selectType, String code){
         if (StrUtil.isBlank(selectType) || StrUtil.isBlank(code)) {
             log.error("select: {} code: {}", selectType, code);
             throw new IllegalArgumentException("参数异常");
         }
         String language = UserContextHolder.getSession().getLanguage();
         String key = MessageFormat.format(CacheConstants.DICT_ONE, language, selectType, code);
-        RemoteDictVO remoteDictVO = cacheChannel.get(key, RemoteDictVO.class);
-        if (remoteDictVO != null) {
-            return remoteDictVO;
+        RemoteDictTypeVO remoteDictTypeVO = cacheChannel.get(key, RemoteDictTypeVO.class);
+        if (remoteDictTypeVO != null) {
+            return remoteDictTypeVO;
         }
         DictClientDTO dto = new DictClientDTO();
         dto.setCode(code);
@@ -69,22 +68,20 @@ public class DictManagerImpl implements IDictManager {
         if (log.isDebugEnabled()) {
             log.debug("查询字典数据请求参数: {}", dto);
         }
-        DictClientVO dictVO = ResultApiParse.getInstance(dictClientService.one(dto));
-        RemoteDictVO vo = new RemoteDictVO();
-        vo.setCode(dictVO.getCode());
-        vo.setName(dictVO.getName());
-        vo.setNameShort(dictVO.getNameShort());
-        vo.setParentCode(dictVO.getParentCode());
-        vo.setSort(dictVO.getSort());
-        vo.setDefaulted(dictVO.getDefaulted());
-        vo.setStatus(dictVO.getStatus());
-        vo.setRemark(dictVO.getRemark());
-        vo.setSelectType(dictVO.getSelectType());
-        vo.setLanguage(dictVO.getLanguage());
-        vo.setDelFlag(dictVO.getDelFlag());
-
+        DictTypeClientVO dictVO = ResultApiParse.getInstance(dictClientService.one(dto));
+        RemoteDictTypeVO vo = this.convertRemoteDictTypeVO(dictVO);
         cacheChannel.put(key, vo, CacheConstants.DICT_EXPIRE);
         return vo;
+    }
+
+    private RemoteDictTypeVO convertRemoteDictTypeVO(DictTypeClientVO dictVO) {
+        RemoteDictTypeVO remoteDictTypeVO = new RemoteDictTypeVO();
+        remoteDictTypeVO.setId(dictVO.getId());
+        remoteDictTypeVO.setDictName(dictVO.getDictName());
+        remoteDictTypeVO.setDictType(dictVO.getDictType());
+        remoteDictTypeVO.setRemark(dictVO.getRemark());
+        remoteDictTypeVO.setInactive(dictVO.getInactive());
+        return remoteDictTypeVO;
     }
 
     @Override
@@ -92,10 +89,10 @@ public class DictManagerImpl implements IDictManager {
         if (ObjectUtil.isNull(selectTypeEnum)) {
             throw new IllegalArgumentException("'codeList' or 'selectType' is null.");
         }
-        ResultApi<List<DictClientVO>> result = dictClientService.list(selectTypeEnum.getCode());
-        List<DictClientVO> list = ResultApiParse.getInstance(result);
+        ResultApi<List<DictTypeClientVO>> result = dictClientService.list(selectTypeEnum.getCode());
+        List<DictTypeClientVO> list = ResultApiParse.getInstance(result);
         if (CollUtil.isNotEmpty(list)) {
-            return list.stream().collect(Collectors.toMap(DictClientVO::getCode, DictClientVO::getName));
+//            return list.stream().collect(Collectors.toMap(DictTypeClientVO::getCode, DictTypeClientVO::getName));
         }
         return Collections.emptyMap();
     }

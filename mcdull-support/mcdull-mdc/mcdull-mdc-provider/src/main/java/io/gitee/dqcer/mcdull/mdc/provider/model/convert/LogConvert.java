@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.mdc.provider.model.convert;
 
-import io.gitee.dqcer.mcdull.mdc.client.vo.DictClientVO;
+import io.gitee.dqcer.mcdull.mdc.client.vo.DictTypeClientVO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.entity.LogDO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.vo.LogVO;
 
@@ -17,7 +17,7 @@ public class LogConvert {
      * 实体转换来视图对象
      *
      * @param item 项
-     * @return {@link DictClientVO}
+     * @return {@link DictTypeClientVO}
      */
     public static LogVO entity2Vo(LogDO item) {
         LogVO logVO = new LogVO();
