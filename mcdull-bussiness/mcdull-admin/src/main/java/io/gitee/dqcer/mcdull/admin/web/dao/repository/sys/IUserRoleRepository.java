@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserRoleDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserRoleEntity;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/26
  */
-public interface IUserRoleRepository extends IService<UserRoleDO> {
+public interface IUserRoleRepository extends IService<UserRoleEntity> {
 
     /**
      * 通过用户id获取角色id列表

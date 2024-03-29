@@ -35,7 +35,7 @@ import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
@@ -119,9 +119,9 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     }
 
     public Result<PagedVO<UserVO>> list(UserLiteDTO dto) {
-        Page<UserDO> entityPage = baseRepository.selectPage(dto);
+        Page<UserEntity> entityPage = baseRepository.selectPage(dto);
         List<UserVO> voList = new ArrayList<>();
-        for (UserDO entity : entityPage.getRecords()) {
+        for (UserEntity entity : entityPage.getRecords()) {
             UserVO vo = userManager.entityToVo(entity);
             voList.add(vo);
         }
@@ -145,7 +145,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     public Result<UserDetailVO> detail(Long userId) {
         UserDetailVO vo = new UserDetailVO();
         if (ObjUtil.isNotNull(userId)) {
-            UserDO userDO = baseRepository.getById(userId);
+            UserEntity userDO = baseRepository.getById(userId);
             vo = userManager.entityToDetailVo(userDO);
             vo.setPosts(this.getPostBaseList());
             vo.setRoles(this.getRoleBaseList());
@@ -167,9 +167,9 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     }
 
     private List<BaseVO<Long, String>> getRoleBaseList() {
-        List<RoleDO> roleList = repository.getAll();
+        List<RoleEntity> roleList = repository.getAll();
         List<BaseVO<Long, String>> roleBaseList = new ArrayList<>();
-        for (RoleDO roleDO : roleList) {
+        for (RoleEntity roleDO : roleList) {
             BaseVO<Long, String> baseVO = new BaseVO<>();
             baseVO.setId(roleDO.getId());
             baseVO.setName(roleDO.getName());
@@ -179,9 +179,9 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     }
 
     private List<BaseVO<Long, String>> getPostBaseList() {
-        List<PostDO> postList = postRepository.getAll();
+        List<PostEntity> postList = postRepository.getAll();
         List<BaseVO<Long, String>> postBaseList = new ArrayList<>();
-        for (PostDO postDO : postList) {
+        for (PostEntity postDO : postList) {
             BaseVO<Long, String> baseVO = new BaseVO<>();
             baseVO.setId(postDO.getId());
             baseVO.setName(postDO.getPostName());
@@ -194,12 +194,12 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> add(UserInsertDTO dto) {
-        List<UserDO> list = this.validName(null, dto.getAccount());
+        List<UserEntity> list = this.validName(null, dto.getAccount());
         Long userId;
         if (!list.isEmpty()) {
             return Result.error(CodeEnum.DATA_EXIST);
         }
-        UserDO entity = UserConvert.dtoToEntity(dto);
+        UserEntity entity = UserConvert.dtoToEntity(dto);
         String salt = RandomUtil.uuid();
         String password = Sha1Util.getSha1(Md5Util.getMd5(dto.getAccount() + salt));
         entity.setSalt(salt);
@@ -219,9 +219,9 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     }
 
     @SneakyThrows(Exception.class)
-    private void sendEmail(UserDO entity) {
+    private void sendEmail(UserEntity entity) {
         Long currentUserId = UserContextHolder.currentUserId();
-        UserDO currentUser = this.baseRepository.getById(currentUserId);
+        UserEntity currentUser = this.baseRepository.getById(currentUserId);
 
         MailProperties defaultMailProperties = mcdullProperties.getMail();
         String host = defaultMailProperties.getHost();
@@ -248,10 +248,10 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
         LogHelpUtil.setLog(StrUtil.format(logDesc, dto.getAccount()));
     }
 
-    private List<UserDO> validName(Long userId, String account) {
-        LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
-        query.eq(UserDO::getAccount, account);
-        query.ne(ObjUtil.isNotNull(userId), IdDO::getId, userId);
+    private List<UserEntity> validName(Long userId, String account) {
+        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+        query.eq(UserEntity::getAccount, account);
+        query.ne(ObjUtil.isNotNull(userId), IdEntity::getId, userId);
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
         return baseRepository.list(query);
     }
@@ -260,12 +260,12 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     @Override
     public Result<Long> edit(UserEditDTO dto) {
         Long userId = dto.getId();
-        List<UserDO> list = this.validName(userId, dto.getAccount());
+        List<UserEntity> list = this.validName(userId, dto.getAccount());
         if (!list.isEmpty()) {
             return Result.error(CodeEnum.DATA_EXIST);
         }
 
-        UserDO userDO = baseRepository.getById(userId);
+        UserEntity userDO = baseRepository.getById(userId);
         userDO.setDeptId(dto.getDeptId());
         userDO.setPhone(dto.getPhone());
         userDO.setEmail(dto.getEmail());
@@ -290,7 +290,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     @Override
     public Result<Long> updateStatus(StatusDTO dto) {
         Long id = dto.getId();
-        UserDO userDO = baseRepository.getById(id);
+        UserEntity userDO = baseRepository.getById(id);
         if (ObjUtil.isNull(userDO)) {
             throw new BusinessException(CodeEnum.DATA_NOT_EXIST);
         }
@@ -313,7 +313,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     }
 
     private void buildDeleteLog(Long id) {
-        UserDO userDO = baseRepository.getById(id);
+        UserEntity userDO = baseRepository.getById(id);
         String logDesc = this.buildLogIndex();
         LogHelpUtil.setLog(StrUtil.format(logDesc, userDO.getNickName()));
     }
@@ -355,9 +355,9 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     @Override
     public Result<UserProfileVO> profile() {
         Long userId = UserContextHolder.currentUserId();
-        UserDO userInfo = baseRepository.getById(userId);
+        UserEntity userInfo = baseRepository.getById(userId);
         UserProfileVO vo = UserConvert.toUserProfileVO(userInfo);
-        DeptDO deptInfo = deptRepository.getById(userInfo.getDeptId());
+        DeptEntity deptInfo = deptRepository.getById(userInfo.getDeptId());
         vo.setDeptName(deptInfo.getName());
         if (UserTypeEnum.READ_ONLY.getCode().equals(userInfo.getType())) {
             vo.setIsAdmin(true);
@@ -365,9 +365,9 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
 
         List<Long> roleIdList = userRoleRepository.listRoleByUserId(userId);
         if (CollUtil.isNotEmpty(roleIdList)) {
-            List<RoleDO> roleList = roleRepository.queryListByIds(roleIdList);
+            List<RoleEntity> roleList = roleRepository.queryListByIds(roleIdList);
             if (CollUtil.isNotEmpty(roleList)) {
-                String collect = roleList.stream().map(RoleDO::getName).collect(Collectors.joining(","));
+                String collect = roleList.stream().map(RoleEntity::getName).collect(Collectors.joining(","));
                 vo.setRoleNameList(collect);
             }
         }
@@ -378,13 +378,13 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     @Override
     public Result<Boolean> updateEmailConfig(UserEmailConfigDTO dto) {
         Long userId = UserContextHolder.currentUserId();
-        UserEmailConfigDO dbUserEmailConfig = userEmailConfigRepository.getOneByUserId(userId);
+        UserEmailConfigEntity dbUserEmailConfig = userEmailConfigRepository.getOneByUserId(userId);
         if (ObjUtil.isNull(dbUserEmailConfig)) {
-            UserEmailConfigDO userEmailConfig = UserConvert.toEmailConfigDO(dto);
+            UserEmailConfigEntity userEmailConfig = UserConvert.toEmailConfigDO(dto);
             userEmailConfig.setUserId(userId);
             userEmailConfigRepository.save(userEmailConfig);
         } else {
-            UserEmailConfigDO userEmailConfig = UserConvert.toEmailConfigDO(dto);
+            UserEmailConfigEntity userEmailConfig = UserConvert.toEmailConfigDO(dto);
             userEmailConfig.setId(dbUserEmailConfig.getId());
             userEmailConfigRepository.updateById(userEmailConfig);
         }
@@ -395,7 +395,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     @Override
     public Result<UserEmailConfigVO> detailEmailConfig() {
         Long userId = UserContextHolder.currentUserId();
-        UserEmailConfigDO dbUserEmailConfig = userEmailConfigRepository.getOneByUserId(userId);
+        UserEmailConfigEntity dbUserEmailConfig = userEmailConfigRepository.getOneByUserId(userId);
         UserEmailConfigVO vo = UserConvert.toEmailConfigVO(dbUserEmailConfig);
         return Result.success(vo);
     }
@@ -403,7 +403,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     @Override
     public Result<Boolean> testEmailConfig(UserEmailConfigDTO dto) {
         Long currentUserId = UserContextHolder.currentUserId();
-        UserDO entity = this.baseRepository.getById(currentUserId);
+        UserEntity entity = this.baseRepository.getById(currentUserId);
         threadPoolTaskExecutor.submit(() -> {
             try {
                 EmailUtil.send(dto.getHost(), dto.getUsername(), dto.getPassword(), dto.getPort(),
@@ -419,7 +419,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
     @Override
     public Result<Long> updatePwd(String oldPassword, String newPassword) {
         Long userId = UserContextHolder.currentUserId();
-        UserDO user = userRepository.getById(userId);
+        UserEntity user = userRepository.getById(userId);
         String password = Sha1Util.getSha1(Md5Util.getMd5(oldPassword + user.getSalt()));
         if (StrUtil.isNotBlank(password)) {
             if (!password.equals(oldPassword)) {
@@ -445,7 +445,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository> implement
      */
     @Override
     public KeyValueBO<String, String> transformer(String code) {
-        UserDO userDO = baseRepository.getById(code);
+        UserEntity userDO = baseRepository.getById(code);
         if (ObjUtil.isNotNull(userDO)) {
             return new KeyValueBO<String, String>().setKey(userDO.getId().toString()).setValue(userDO.getNickName());
         }

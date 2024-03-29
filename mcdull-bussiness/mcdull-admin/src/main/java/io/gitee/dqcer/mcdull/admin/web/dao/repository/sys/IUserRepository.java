@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserEntity;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 
 import java.util.List;
@@ -14,20 +14,20 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/26
  */
-public interface IUserRepository extends IService<UserDO> {
+public interface IUserRepository extends IService<UserEntity> {
 
-    Page<UserDO> selectPage(UserLiteDTO dto);
+    Page<UserEntity> selectPage(UserLiteDTO dto);
 
-    Long insert(UserDO entity);
+    Long insert(UserEntity entity);
 
-    UserDO oneByAccount(String account);
+    UserEntity oneByAccount(String account);
 
     List<UserPowerVO> queryResourceModules(Long userId);
 
 
     void updateLoginTimeById(Long userId);
 
-    UserDO queryUserByAccount(String account);
+    UserEntity queryUserByAccount(String account);
 
     void delete(Long id);
 

@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.manager.sys;
 
 
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuEntity;
 
 import java.util.List;
 
@@ -14,6 +14,6 @@ import java.util.List;
 public interface IRoleManager {
 
 
-    List<MenuDO> getMenuByRole(List<Long> roles);
+    List<MenuEntity> getMenuByRole(List<Long> roles);
 
 }

@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.dto.database;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
-import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
+import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

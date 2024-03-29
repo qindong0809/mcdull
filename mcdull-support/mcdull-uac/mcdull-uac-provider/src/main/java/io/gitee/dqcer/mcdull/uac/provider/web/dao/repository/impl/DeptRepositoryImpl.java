@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.DeptDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.DeptEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.DeptMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDeptRepository;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,12 @@ import java.util.List;
  * @since 2023/12/01
  */
 @Service
-public class DeptRepositoryImpl extends ServiceImpl<DeptMapper, DeptDO> implements IDeptRepository {
+public class DeptRepositoryImpl extends ServiceImpl<DeptMapper, DeptEntity> implements IDeptRepository {
 
 
 
     @Override
-    public Integer insert(DeptDO entity) {
+    public Integer insert(DeptEntity entity) {
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {
             throw new BusinessException(CodeEnum.DB_ERROR);
@@ -40,9 +40,9 @@ public class DeptRepositoryImpl extends ServiceImpl<DeptMapper, DeptDO> implemen
     }
 
     @Override
-    public List<DeptDO> listByParentId(Integer parentId) {
-        LambdaQueryWrapper<DeptDO> query = Wrappers.lambdaQuery();
-        query.eq(DeptDO::getParentId, parentId);
+    public List<DeptEntity> listByParentId(Integer parentId) {
+        LambdaQueryWrapper<DeptEntity> query = Wrappers.lambdaQuery();
+        query.eq(DeptEntity::getParentId, parentId);
         return baseMapper.selectList(query);
     }
 }

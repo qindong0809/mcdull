@@ -1,9 +1,11 @@
 package io.gitee.dqcer.mcdull.framework.base.vo;
 
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
+
 /**
  * @author dqcer
  */
-public class LabelValueVO<V, L> {
+public class LabelValueVO<V, L> implements VO {
 
     /**
      * key

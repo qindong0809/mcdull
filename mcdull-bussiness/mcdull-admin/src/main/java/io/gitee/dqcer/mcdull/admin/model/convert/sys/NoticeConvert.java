@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.NoticeLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.NoticeVO;
 
 /**
@@ -16,10 +16,10 @@ public class NoticeConvert {
     * NoticeLiteDTO转换为NoticeDO
     *
     * @param item NoticeLiteDTO
-    * @return {@link NoticeDO}
+    * @return {@link NoticeEntity}
     */
-    public static NoticeDO convertToNoticeDO(NoticeLiteDTO item){
-       NoticeDO noticeDO = new NoticeDO();
+    public static NoticeEntity convertToNoticeDO(NoticeLiteDTO item){
+       NoticeEntity noticeDO = new NoticeEntity();
        noticeDO.setNoticeTitle(item.getNoticeTitle());
        noticeDO.setNoticeContent(item.getNoticeContent());
        noticeDO.setNoticeType(item.getNoticeType());
@@ -36,7 +36,7 @@ public class NoticeConvert {
     * @param item NoticeDO
     * @return {@link NoticeVO}
     */
-    public static NoticeVO convertToNoticeVO(NoticeDO item){
+    public static NoticeVO convertToNoticeVO(NoticeEntity item){
         NoticeVO noticeVO = new NoticeVO();
         noticeVO.setId(item.getId());
         noticeVO.setNoticeTitle(item.getNoticeTitle());

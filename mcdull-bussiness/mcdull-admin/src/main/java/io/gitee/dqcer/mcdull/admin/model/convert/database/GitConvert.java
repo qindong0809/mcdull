@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.database;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.database.GitAddDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.GitDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.GitEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.GitVO;
 
 /**
@@ -10,7 +10,7 @@ import io.gitee.dqcer.mcdull.admin.model.vo.database.GitVO;
  */
 public class GitConvert {
 
-    public static GitVO convertToGitVO(GitDO entity) {
+    public static GitVO convertToGitVO(GitEntity entity) {
         GitVO gitVO = new GitVO();
         gitVO.setId(entity.getId());
         gitVO.setName(entity.getName());
@@ -24,8 +24,8 @@ public class GitConvert {
         return gitVO;
     }
 
-    public static GitDO convertToGitDo(GitAddDTO dto) {
-        GitDO gitDO = new GitDO();
+    public static GitEntity convertToGitDo(GitAddDTO dto) {
+        GitEntity gitDO = new GitEntity();
         gitDO.setName(dto.getName());
         gitDO.setUrl(dto.getUrl());
         gitDO.setUsername(dto.getUsername());

@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuAddDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuTreeVo;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuVO;
 
@@ -13,7 +13,7 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuVO;
  */
 public class MenuConvert {
 
-    public static MenuVO convertToMenuVO(MenuDO menuDO) {
+    public static MenuVO convertToMenuVO(MenuEntity menuDO) {
         MenuVO menuVO = new MenuVO();
         menuVO.setId(Math.toIntExact(menuDO.getId()));
         menuVO.setName(menuDO.getName());
@@ -38,7 +38,7 @@ public class MenuConvert {
 
     }
 
-    public static MenuTreeVo convertMenuTreeVo(MenuDO menu) {
+    public static MenuTreeVo convertMenuTreeVo(MenuEntity menu) {
         MenuTreeVo menuTreeVo = new MenuTreeVo();
         menuTreeVo.setName(menu.getName());
         menuTreeVo.setOrderNum(menu.getOrderNum());
@@ -61,8 +61,8 @@ public class MenuConvert {
         return menuTreeVo;
     }
 
-    public static MenuDO convertDO(MenuTreeVo treeVo) {
-        MenuDO menuDO = new MenuDO();
+    public static MenuEntity convertDO(MenuTreeVo treeVo) {
+        MenuEntity menuDO = new MenuEntity();
         menuDO.setName(treeVo.getName());
         menuDO.setParentId(treeVo.getParentId());
         menuDO.setOrderNum(treeVo.getOrderNum());
@@ -84,8 +84,8 @@ public class MenuConvert {
         return menuDO;
     }
 
-    public static MenuDO convertDoByDto(MenuAddDTO dto) {
-        MenuDO menuDO = new MenuDO();
+    public static MenuEntity convertDoByDto(MenuAddDTO dto) {
+        MenuEntity menuDO = new MenuEntity();
         menuDO.setName(dto.getName());
         menuDO.setParentId(dto.getParentId());
         menuDO.setOrderNum(dto.getOrderNum());

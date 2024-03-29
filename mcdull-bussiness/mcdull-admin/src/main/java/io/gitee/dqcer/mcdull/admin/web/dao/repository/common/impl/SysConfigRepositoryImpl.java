@@ -8,10 +8,10 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.ConfigLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.common.SysConfigDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.common.SysConfigEntity;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.common.SysConfigMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.common.ISysConfigRepository;
-import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -24,7 +24,7 @@ import java.util.List;
  * @since  2022/12/25
  */
 @Service
-public class SysConfigRepositoryImpl extends ServiceImpl<SysConfigMapper, SysConfigDO> implements ISysConfigRepository {
+public class SysConfigRepositoryImpl extends ServiceImpl<SysConfigMapper, SysConfigEntity> implements ISysConfigRepository {
 
     /**
      * 查询值键
@@ -33,10 +33,10 @@ public class SysConfigRepositoryImpl extends ServiceImpl<SysConfigMapper, SysCon
      * @return {@link String}
      */
     @Override
-    public SysConfigDO findByKey(String key) {
-        LambdaQueryWrapper<SysConfigDO> query = Wrappers.lambdaQuery();
-        query.eq(SysConfigDO::getConfigKey, key);
-        List<SysConfigDO> list = baseMapper.selectList(query);
+    public SysConfigEntity findByKey(String key) {
+        LambdaQueryWrapper<SysConfigEntity> query = Wrappers.lambdaQuery();
+        query.eq(SysConfigEntity::getConfigKey, key);
+        List<SysConfigEntity> list = baseMapper.selectList(query);
         if (ObjUtil.isNotNull(list)) {
             return list.get(0);
         }
@@ -44,37 +44,37 @@ public class SysConfigRepositoryImpl extends ServiceImpl<SysConfigMapper, SysCon
     }
 
     @Override
-    public Page<SysConfigDO> selectPage(ConfigLiteDTO dto) {
-        LambdaQueryWrapper<SysConfigDO> lambda = new QueryWrapper<SysConfigDO>().lambda();
+    public Page<SysConfigEntity> selectPage(ConfigLiteDTO dto) {
+        LambdaQueryWrapper<SysConfigEntity> lambda = new QueryWrapper<SysConfigEntity>().lambda();
         String name = dto.getName();
         if (StrUtil.isNotBlank(name)) {
-            lambda.like(SysConfigDO::getName, name);
+            lambda.like(SysConfigEntity::getName, name);
         }
         String value = dto.getValue();
         if (StrUtil.isNotBlank(value)) {
-            lambda.like(SysConfigDO::getConfigValue, value);
+            lambda.like(SysConfigEntity::getConfigValue, value);
         }
         String configKey = dto.getConfigKey();
         if (StrUtil.isNotBlank(configKey)) {
-            lambda.like(SysConfigDO::getConfigKey, configKey);
+            lambda.like(SysConfigEntity::getConfigKey, configKey);
         }
         String configType = dto.getConfigType();
         if (StrUtil.isNotBlank(configType)) {
-            lambda.eq(SysConfigDO::getConfigType, configType);
+            lambda.eq(SysConfigEntity::getConfigType, configType);
         }
         Date startTime = dto.getStartTime();
         Date endTime = dto.getEndTime();
         if (ObjUtil.isNotNull(startTime) && ObjUtil.isNotNull(endTime)) {
-            lambda.between(RelDO::getCreatedTime, startTime, endTime);
+            lambda.between(RelEntity::getCreatedTime, startTime, endTime);
         }
-        lambda.orderByDesc(RelDO::getCreatedTime);
+        lambda.orderByDesc(RelEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
     }
 
     @Override
-    public List<SysConfigDO> getListByKey(String configKey) {
-        LambdaQueryWrapper<SysConfigDO> query = Wrappers.lambdaQuery();
-        query.eq(SysConfigDO::getConfigKey, configKey);
+    public List<SysConfigEntity> getListByKey(String configKey) {
+        LambdaQueryWrapper<SysConfigEntity> query = Wrappers.lambdaQuery();
+        query.eq(SysConfigEntity::getConfigKey, configKey);
         return baseMapper.selectList(query);
     }
 

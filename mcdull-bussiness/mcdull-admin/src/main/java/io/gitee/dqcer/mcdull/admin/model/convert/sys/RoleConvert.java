@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
 
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleInsertDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
 
 /**
@@ -13,8 +13,8 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
  */
 public class RoleConvert {
 
-    public static RoleDO convertToRoleDO(RoleInsertDTO dto) {
-        RoleDO roleDO = new RoleDO();
+    public static RoleEntity convertToRoleDO(RoleInsertDTO dto) {
+        RoleEntity roleDO = new RoleEntity();
         roleDO.setName(dto.getName());
         roleDO.setCode(dto.getCode());
         roleDO.setDescription(dto.getDescription());
@@ -22,7 +22,7 @@ public class RoleConvert {
         return roleDO;
     }
 
-    public static RoleVO convertToRoleVO(RoleDO entity) {
+    public static RoleVO convertToRoleVO(RoleEntity entity) {
         if (entity == null) {
             return null;
         }

@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager.uac;
 
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 
 /**
@@ -17,5 +17,5 @@ public interface IRoleManager {
      * @param entity 实体
      * @return {@link RoleVO}
      */
-    RoleVO entity2VO(RoleDO entity);
+    RoleVO entity2VO(RoleEntity entity);
 }

@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.admin.framework.transformer.DictTransformer;
 import io.gitee.dqcer.mcdull.admin.framework.transformer.UserTransformer;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
-import io.gitee.dqcer.mcdull.framework.base.vo.VO;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 
 import java.util.Date;
 import java.util.StringJoiner;

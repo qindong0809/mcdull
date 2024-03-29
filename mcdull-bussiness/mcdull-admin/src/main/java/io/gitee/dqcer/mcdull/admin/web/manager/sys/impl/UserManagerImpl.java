@@ -2,10 +2,9 @@ package io.gitee.dqcer.mcdull.admin.web.manager.sys.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.*;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptEntity;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.*;
@@ -50,12 +49,12 @@ public class UserManagerImpl implements IUserManager {
      * @return {@link UserVO}
      */
     @Override
-    public UserVO entityToVo(UserDO entity) {
+    public UserVO entityToVo(UserEntity entity) {
         UserVO vo = UserConvert.entityToVO(entity);
         if (vo == null) {
             return null;
         }
-        DeptDO deptDO = deptRepository.getById(vo.getDeptId());
+        DeptEntity deptDO = deptRepository.getById(vo.getDeptId());
         vo.setDeptName(deptDO.getName());
         List<BaseVO<Long, String>> baseRoles = this.getBaseRoles(vo.getId());
         vo.setRoles(baseRoles);
@@ -63,9 +62,9 @@ public class UserManagerImpl implements IUserManager {
     }
 
     @Override
-    public UserDetailVO entityToDetailVo(UserDO userDO) {
+    public UserDetailVO entityToDetailVo(UserEntity userDO) {
         UserDetailVO vo = UserConvert.convertToUserDetailVO(userDO);
-        DeptDO deptDO = deptRepository.getById(vo.getDeptId());
+        DeptEntity deptDO = deptRepository.getById(vo.getDeptId());
         vo.setDeptName(deptDO.getName());
 
         List<BaseVO<Long, String>> baseRoles = this.getBaseRoles(vo.getId());
@@ -83,7 +82,7 @@ public class UserManagerImpl implements IUserManager {
         List<BaseVO<Long, String>> baseRoles = new ArrayList<>();
         List<Long> list = userPostRepository.listPostByUserId(id);
         if (!list.isEmpty()) {
-            for (PostDO postDO : postRepository.listByIds(list)) {
+            for (PostEntity postDO : postRepository.listByIds(list)) {
                 BaseVO<Long, String> role = new BaseVO<>();
                 role.setId(postDO.getId());
                 role.setName(postDO.getPostName());
@@ -97,7 +96,7 @@ public class UserManagerImpl implements IUserManager {
         List<BaseVO<Long, String>> baseRoles = new ArrayList<>();
         List<Long> list = userRoleRepository.listRoleByUserId(vo);
         if (!list.isEmpty()) {
-            for (RoleDO roleDO : roleRepository.listByIds(list)) {
+            for (RoleEntity roleDO : roleRepository.listByIds(list)) {
                 BaseVO<Long, String> role = new BaseVO<>();
                 role.setId(roleDO.getId());
                 role.setName(roleDO.getName());
@@ -111,13 +110,13 @@ public class UserManagerImpl implements IUserManager {
      * 得到用户角色
      *
      * @param userId 用户id
-     * @return {@link List}<{@link RoleDO}>
+     * @return {@link List}<{@link RoleEntity}>
      */
     @Override
-    public List<RoleDO> getUserRoles(Long userId) {
+    public List<RoleEntity> getUserRoles(Long userId) {
         List<Long> roleIds = userRoleRepository.listRoleByUserId(userId);
         if (!roleIds.isEmpty()) {
-            List<RoleDO> roleDOList = roleRepository.listByIds(roleIds);
+            List<RoleEntity> roleDOList = roleRepository.listByIds(roleIds);
             if (!roleDOList.isEmpty()) {
                 return roleDOList;
             }

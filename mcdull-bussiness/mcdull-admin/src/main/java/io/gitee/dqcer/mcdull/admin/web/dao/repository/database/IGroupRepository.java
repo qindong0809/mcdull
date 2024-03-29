@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.dao.repository.database;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.GroupListDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.GroupDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.GroupEntity;
 
 import java.util.List;
 
@@ -13,14 +13,14 @@ import java.util.List;
 * @author dqcer
 * @since 2023-01-14
 */
-public interface IGroupRepository extends IService<GroupDO>  {
+public interface IGroupRepository extends IService<GroupEntity>  {
 
-    Page<GroupDO> selectPage(GroupListDTO dto);
+    Page<GroupEntity> selectPage(GroupListDTO dto);
 
-    List<GroupDO> getListByName(String name);
+    List<GroupEntity> getListByName(String name);
 
     void removeUpdate(Long id);
 
-    List<GroupDO> allList();
+    List<GroupEntity> allList();
 
 }

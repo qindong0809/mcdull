@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.mdc.provider.model.convert;
 
 import io.gitee.dqcer.mcdull.mdc.client.vo.DictTypeClientVO;
-import io.gitee.dqcer.mcdull.mdc.provider.model.entity.LogDO;
+import io.gitee.dqcer.mcdull.mdc.provider.model.entity.LogEntity;
 import io.gitee.dqcer.mcdull.mdc.provider.model.vo.LogVO;
 
 /**
@@ -19,7 +19,7 @@ public class LogConvert {
      * @param item 项
      * @return {@link DictTypeClientVO}
      */
-    public static LogVO entity2Vo(LogDO item) {
+    public static LogVO entity2Vo(LogEntity item) {
         LogVO logVO = new LogVO();
         logVO.setAccountId(item.getAccountId());
         logVO.setTenantId(item.getTenantId());

@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.base.annotation;
 
 
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.validator.EnumsStrValidator;
 
 import javax.validation.Constraint;
@@ -25,7 +26,10 @@ public @interface EnumsStrValid {
 
     Class<?>[] groups() default {};
 
-    Class<? extends Enum> value();
+    /**
+     * {@link IEnum}
+     */
+    Class<? > value();
 
     Class<? extends Payload>[] payload() default {};
 }

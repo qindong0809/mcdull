@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.dao.repository.database;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.InstanceListDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.InstanceDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.InstanceEntity;
 
 import java.util.List;
 
@@ -13,13 +13,13 @@ import java.util.List;
 * @author dqcer
 * @since 2023-01-14
 */
-public interface IInstanceRepository extends IService<InstanceDO>  {
+public interface IInstanceRepository extends IService<InstanceEntity>  {
 
-    Page<InstanceDO> selectPage(InstanceListDTO dto);
+    Page<InstanceEntity> selectPage(InstanceListDTO dto);
 
-    List<InstanceDO> getListByName(String name);
+    List<InstanceEntity> getListByName(String name);
 
     void removeUpdate(Long id);
 
-    List<InstanceDO> getByGroupId(Long groupId);
+    List<InstanceEntity> getByGroupId(Long groupId);
 }

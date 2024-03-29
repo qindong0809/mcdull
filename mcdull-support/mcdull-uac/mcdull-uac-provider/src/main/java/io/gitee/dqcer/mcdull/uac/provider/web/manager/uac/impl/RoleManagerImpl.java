@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager.uac.impl;
 
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.RoleConvert;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
@@ -29,7 +29,7 @@ public class RoleManagerImpl implements IRoleManager {
      * @return {@link UserVO}
      */
     @Override
-    public RoleVO entity2VO(RoleDO entity) {
+    public RoleVO entity2VO(RoleEntity entity) {
         RoleVO vo = RoleConvert.entity2VO(entity);
         if (vo == null) {
             return null;

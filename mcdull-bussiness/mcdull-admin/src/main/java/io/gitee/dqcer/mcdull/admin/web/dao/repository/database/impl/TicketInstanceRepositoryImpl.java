@@ -5,8 +5,8 @@ import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketInstanceDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketEntity;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketInstanceEntity;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.database.TicketInstanceMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.ITicketInstanceRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
@@ -28,7 +28,7 @@ import java.util.List;
 * @since 2023-08-17
 */
 @Service
-public class TicketInstanceRepositoryImpl extends ServiceImpl<TicketInstanceMapper, TicketInstanceDO>  implements ITicketInstanceRepository {
+public class TicketInstanceRepositoryImpl extends ServiceImpl<TicketInstanceMapper, TicketInstanceEntity>  implements ITicketInstanceRepository {
 
     private static final Logger log = LoggerFactory.getLogger(TicketInstanceRepositoryImpl.class);
 
@@ -36,13 +36,13 @@ public class TicketInstanceRepositoryImpl extends ServiceImpl<TicketInstanceMapp
      * 根据ID列表批量查询数据
      *
      * @param idList id列表
-     * @return {@link List<TicketDO>}
+     * @return {@link List< TicketEntity >}
      */
     @Override
-    public List<TicketInstanceDO> queryListByIds(List<Long> idList) {
-        LambdaQueryWrapper<TicketInstanceDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.in(TicketInstanceDO::getId, idList);
-        List<TicketInstanceDO> list =  baseMapper.selectList(wrapper);
+    public List<TicketInstanceEntity> queryListByIds(List<Long> idList) {
+        LambdaQueryWrapper<TicketInstanceEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(TicketInstanceEntity::getId, idList);
+        List<TicketInstanceEntity> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;
         }
@@ -53,10 +53,10 @@ public class TicketInstanceRepositoryImpl extends ServiceImpl<TicketInstanceMapp
      * 根据ID获取单条数据
      *
      * @param id 主键
-     * @return {@link TicketDO}
+     * @return {@link TicketEntity}
      */
     @Override
-    public TicketInstanceDO getById(Long id) {
+    public TicketInstanceEntity getById(Long id) {
         return baseMapper.selectById(id);
     }
 
@@ -67,7 +67,7 @@ public class TicketInstanceRepositoryImpl extends ServiceImpl<TicketInstanceMapp
      * @return Long id
      */
     @Override
-    public Long insert(TicketInstanceDO entity) {
+    public Long insert(TicketInstanceEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
@@ -83,15 +83,15 @@ public class TicketInstanceRepositoryImpl extends ServiceImpl<TicketInstanceMapp
      * @return boolean true/存在 false/不存在
      */
     @Override
-    public boolean exist(TicketInstanceDO entity) {
+    public boolean exist(TicketInstanceEntity entity) {
         return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
     }
 
     @Override
-    public List<TicketInstanceDO> getListByTicketId(Long ticketId) {
-        LambdaQueryWrapper<TicketInstanceDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(TicketInstanceDO::getTicketId, ticketId);
-        List<TicketInstanceDO> list = baseMapper.selectList(wrapper);
+    public List<TicketInstanceEntity> getListByTicketId(Long ticketId) {
+        LambdaQueryWrapper<TicketInstanceEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(TicketInstanceEntity::getTicketId, ticketId);
+        List<TicketInstanceEntity> list = baseMapper.selectList(wrapper);
         if (CollUtil.isNotEmpty(list)) {
             return list;
         }
@@ -101,9 +101,9 @@ public class TicketInstanceRepositoryImpl extends ServiceImpl<TicketInstanceMapp
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void save(Long ticketId, Long groupId, List<Long> instanceList) {
-        List<TicketInstanceDO> list = new ArrayList<>(instanceList.size());
+        List<TicketInstanceEntity> list = new ArrayList<>(instanceList.size());
         for (Long instanceId : instanceList) {
-            TicketInstanceDO instanceDO = new TicketInstanceDO();
+            TicketInstanceEntity instanceDO = new TicketInstanceEntity();
             instanceDO.setInstanceId(instanceId);
             instanceDO.setTicketId(ticketId);
             instanceDO.setGroupId(groupId);

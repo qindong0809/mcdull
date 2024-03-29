@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserRoleDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserRoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.UserRoleMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @since 2022/12/25
  */
 @Service
-public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRoleDO> implements IUserRoleRepository {
+public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRoleEntity> implements IUserRoleRepository {
 
     /**
      * 更新根据用户id
@@ -36,15 +36,15 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
      */
     @Override
     public void deleteAndInsert(Integer userId, List<Integer> roleIds) {
-        LambdaQueryWrapper<UserRoleDO> query = Wrappers.lambdaQuery();
-        query.eq(UserRoleDO::getUserId, userId);
+        LambdaQueryWrapper<UserRoleEntity> query = Wrappers.lambdaQuery();
+        query.eq(UserRoleEntity::getUserId, userId);
         baseMapper.delete(query);
         if (ObjUtil.isNull(roleIds)) {
             return;
         }
-        List<UserRoleDO> entities = new ArrayList<>();
+        List<UserRoleEntity> entities = new ArrayList<>();
         for (Integer roleId : roleIds) {
-            UserRoleDO entity = new UserRoleDO();
+            UserRoleEntity entity = new UserRoleEntity();
             entity.setRoleId(roleId);
             entity.setUserId(userId);
             entities.add(entity);
@@ -57,18 +57,18 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
 
     @Override
     public Map<Integer, List<Integer>> roleIdListMap(Collection<Integer> userCollection) {
-        List<UserRoleDO> list = this.list(ListUtil.toList(userCollection));
-        return list.stream().collect(Collectors.groupingBy(UserRoleDO::getUserId,
-                Collectors.mapping(UserRoleDO::getRoleId, Collectors.toList())));
+        List<UserRoleEntity> list = this.list(ListUtil.toList(userCollection));
+        return list.stream().collect(Collectors.groupingBy(UserRoleEntity::getUserId,
+                Collectors.mapping(UserRoleEntity::getRoleId, Collectors.toList())));
     }
 
     @Override
-    public List<UserRoleDO> list(List<Integer> userIdList) {
+    public List<UserRoleEntity> list(List<Integer> userIdList) {
         if (CollUtil.isEmpty(userIdList)) {
             throw new IllegalArgumentException("'userIdList' is null");
         }
-        LambdaQueryWrapper<UserRoleDO> query = Wrappers.lambdaQuery();
-        query.in(UserRoleDO::getUserId, userIdList);
+        LambdaQueryWrapper<UserRoleEntity> query = Wrappers.lambdaQuery();
+        query.in(UserRoleEntity::getUserId, userIdList);
         return baseMapper.selectList(query);
     }
 }

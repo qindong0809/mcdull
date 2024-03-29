@@ -14,7 +14,7 @@ import io.gitee.dqcer.mcdull.admin.model.convert.database.BackConvert;
 import io.gitee.dqcer.mcdull.admin.model.convert.database.TicketConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.*;
 import io.gitee.dqcer.mcdull.admin.model.entity.database.*;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserEntity;
 import io.gitee.dqcer.mcdull.admin.model.enums.SysConfigKeyEnum;
 import io.gitee.dqcer.mcdull.admin.model.enums.TicketCancelStatusEnum;
 import io.gitee.dqcer.mcdull.admin.model.enums.TicketFollowStatusEnum;
@@ -27,8 +27,8 @@ import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.*;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.common.ISysConfigManager;
 import io.gitee.dqcer.mcdull.admin.web.service.database.ITicketService;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -105,7 +105,7 @@ public class TicketServiceImpl implements ITicketService {
             return Result.error(CodeEnum.DATA_EXIST);
         }
 
-        TicketDO entity = TicketConvert.convertToTicketDO(dto);
+        TicketEntity entity = TicketConvert.convertToTicketDO(dto);
         entity.setFollowStatus(TicketFollowStatusEnum.EDIT.getCode());
         entity.setCancelStatus(TicketCancelStatusEnum.OK.getCode());
         String number = buildNumber();
@@ -118,7 +118,7 @@ public class TicketServiceImpl implements ITicketService {
     }
 
     private synchronized String buildNumber() {
-        List<TicketDO> list = ticketRepository.list();
+        List<TicketEntity> list = ticketRepository.list();
         String format = String.format("%04d", list.size() + 1);
         return StrUtil.format("NO.{}", format);
     }
@@ -130,7 +130,7 @@ public class TicketServiceImpl implements ITicketService {
     * @return boolean
     */
     private boolean doCheckDataExist(TicketAddDTO dto, Long id) {
-        TicketDO tempEntity = new TicketDO();
+        TicketEntity tempEntity = new TicketEntity();
         tempEntity.setName(dto.getName());
         if (ObjUtil.isNotNull(id)) {
             tempEntity.setId(id);
@@ -147,16 +147,16 @@ public class TicketServiceImpl implements ITicketService {
     @Transactional(readOnly = true)
     @Override
     public Result<TicketVO> detail(Long id) {
-        TicketDO entity = ticketRepository.getById(id);
+        TicketEntity entity = ticketRepository.getById(id);
         if (null == entity) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
 
-        Map<Long, GroupDO> groupMap = groupRepository.listByIds(ListUtil.of(entity.getGroupId()))
-                .stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
-        Map<Long, UserDO> userMap = userRepository.listByIds(ListUtil.of(entity.getCreatedBy()))
-                .stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+        Map<Long, GroupEntity> groupMap = groupRepository.listByIds(ListUtil.of(entity.getGroupId()))
+                .stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+        Map<Long, UserEntity> userMap = userRepository.listByIds(ListUtil.of(entity.getCreatedBy()))
+                .stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
         return Result.success(this.buildTicketVO(groupMap, userMap, entity));
     }
 
@@ -171,7 +171,7 @@ public class TicketServiceImpl implements ITicketService {
     public Result<Long> update(TicketEditDTO dto) {
         Long id = dto.getId();
 
-        TicketDO dbData = ticketRepository.getById(id);
+        TicketEntity dbData = ticketRepository.getById(id);
         if(null == dbData) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
@@ -183,7 +183,7 @@ public class TicketServiceImpl implements ITicketService {
             return Result.error(CodeEnum.DATA_EXIST);
         }
 
-        TicketDO entity = TicketConvert.convertToTicketDO(dto);
+        TicketEntity entity = TicketConvert.convertToTicketDO(dto);
 
         boolean success = ticketRepository.updateById(entity);
         if (!success) {
@@ -204,7 +204,7 @@ public class TicketServiceImpl implements ITicketService {
     public Result<Long> updateStatus(TicketFollowStatusDTO dto) {
         Long id = dto.getId();
 
-        TicketDO dbData = ticketRepository.getById(id);
+        TicketEntity dbData = ticketRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
@@ -219,7 +219,7 @@ public class TicketServiceImpl implements ITicketService {
             return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(dbData.getFollowStatus().toString()));
         }
 
-        TicketDO entity = new TicketDO();
+        TicketEntity entity = new TicketEntity();
         entity.setId(id);
         entity.setFollowStatus(status);
 
@@ -254,9 +254,9 @@ public class TicketServiceImpl implements ITicketService {
     @Transactional(readOnly = true)
     @Override
     public Result<List<TicketVO>> queryByIds(List<Long> ids) {
-         List<TicketDO> listEntity = ticketRepository.queryListByIds(ids);
+         List<TicketEntity> listEntity = ticketRepository.queryListByIds(ids);
          List<TicketVO> voList = new ArrayList<>();
-         for (TicketDO entity : listEntity) {
+         for (TicketEntity entity : listEntity) {
             voList.add(TicketConvert.convertToTicketVO(entity));
          }
          return Result.success(voList);
@@ -271,36 +271,36 @@ public class TicketServiceImpl implements ITicketService {
     @Transactional(readOnly = true)
     @Override
     public Result<PagedVO<TicketVO>> listByPage(TicketAddDTO dto) {
-        Page<TicketDO> entityPage = ticketRepository.selectPage(dto);
+        Page<TicketEntity> entityPage = ticketRepository.selectPage(dto);
         List<TicketVO> voList = new ArrayList<>();
-        List<TicketDO> records = entityPage.getRecords();
+        List<TicketEntity> records = entityPage.getRecords();
         if (CollUtil.isEmpty(records)) {
             return Result.success(PageUtil.toPage(voList, entityPage));
         }
 
-        Set<Long> groupIdSet = records.stream().map(TicketDO::getGroupId).collect(Collectors.toSet());
-        Map<Long, GroupDO> groupMap = groupRepository.listByIds(groupIdSet).stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
-        Set<Long> userIdSet = records.stream().map(BaseDO::getCreatedBy).collect(Collectors.toSet());
-        Map<Long, UserDO> userMap = userRepository.listByIds(userIdSet).stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+        Set<Long> groupIdSet = records.stream().map(TicketEntity::getGroupId).collect(Collectors.toSet());
+        Map<Long, GroupEntity> groupMap = groupRepository.listByIds(groupIdSet).stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+        Set<Long> userIdSet = records.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
+        Map<Long, UserEntity> userMap = userRepository.listByIds(userIdSet).stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
 
-        for (TicketDO entity : records) {
+        for (TicketEntity entity : records) {
             TicketVO ticketVO = this.buildTicketVO(groupMap, userMap, entity);
             voList.add(ticketVO);
         }
         return Result.success(PageUtil.toPage(voList, entityPage));
     }
 
-    private TicketVO buildTicketVO(Map<Long, GroupDO> groupMap, Map<Long, UserDO> userMap, TicketDO entity) {
+    private TicketVO buildTicketVO(Map<Long, GroupEntity> groupMap, Map<Long, UserEntity> userMap, TicketEntity entity) {
         Long groupId = entity.getGroupId();
-        List<TicketInstanceDO> ticketInstanceList = ticketInstanceRepository.getListByTicketId(entity.getId());
-        List<InstanceDO> repository = instanceRepository.getByGroupId(groupId);
+        List<TicketInstanceEntity> ticketInstanceList = ticketInstanceRepository.getListByTicketId(entity.getId());
+        List<InstanceEntity> repository = instanceRepository.getByGroupId(groupId);
 
-        Map<Long, InstanceDO> instanceMap = repository.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+        Map<Long, InstanceEntity> instanceMap = repository.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
 
         List<SelectOptionVO<Long>> instanceList = new ArrayList<>();
         ticketInstanceList.forEach(i -> {
             Long instanceId = i.getInstanceId();
-            InstanceDO instance = instanceMap.get(instanceId);
+            InstanceEntity instance = instanceMap.get(instanceId);
             instanceList.add(new SelectOptionVO<>(instance.getName(), instance.getId()));
         });
 
@@ -314,10 +314,10 @@ public class TicketServiceImpl implements ITicketService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> executeSqlScript(Long id) {
-        TicketDO ticketDO = this.beforeCheck(id);
-        List<TicketInstanceDO> ticketInstanceDOList = ticketInstanceRepository.getListByTicketId(id);
-        List<Long> instanceIdList = ticketInstanceDOList.stream().map(TicketInstanceDO::getInstanceId).collect(Collectors.toList());
-        List<InstanceDO> instanceList = instanceRepository.listByIds(instanceIdList);
+        TicketEntity ticketDO = this.beforeCheck(id);
+        List<TicketInstanceEntity> ticketInstanceDOList = ticketInstanceRepository.getListByTicketId(id);
+        List<Long> instanceIdList = ticketInstanceDOList.stream().map(TicketInstanceEntity::getInstanceId).collect(Collectors.toList());
+        List<InstanceEntity> instanceList = instanceRepository.listByIds(instanceIdList);
         if (CollUtil.isEmpty(instanceList)) {
             return Result.success();
         }
@@ -329,29 +329,29 @@ public class TicketServiceImpl implements ITicketService {
         return Result.success(id);
     }
 
-    private Map<Long, InstanceDO> getInstanceMap(Long id) {
-        List<TicketInstanceDO> ticketInstanceList = ticketInstanceRepository.getListByTicketId(id);
-        List<InstanceDO> instanceList = instanceRepository.listByIds(ticketInstanceList.stream().map(TicketInstanceDO::getInstanceId).collect(Collectors.toSet()));
-        return instanceList.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
+    private Map<Long, InstanceEntity> getInstanceMap(Long id) {
+        List<TicketInstanceEntity> ticketInstanceList = ticketInstanceRepository.getListByTicketId(id);
+        List<InstanceEntity> instanceList = instanceRepository.listByIds(ticketInstanceList.stream().map(TicketInstanceEntity::getInstanceId).collect(Collectors.toSet()));
+        return instanceList.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Boolean> rollbackByTicket(Long backId) {
-        BackDO back = backRepository.getById(backId);
+        BackEntity back = backRepository.getById(backId);
         Long ticketId = back.getBizId();
-        Map<Long, InstanceDO> instanceMap = this.getInstanceMap(ticketId);
+        Map<Long, InstanceEntity> instanceMap = this.getInstanceMap(ticketId);
         String sqlDumpDir = sysConfigManager.findValueByEnum(SysConfigKeyEnum.DATABASE_SQL_DUMP);
-        List<BackInstanceDO> instanceBackList = backInstanceRepository.listByBackId(backId);
-        Map<Long, BackInstanceDO> instanceBackMap = instanceBackList.stream().collect(Collectors.toMap(BackInstanceDO::getInstanceId, Function.identity()));
+        List<BackInstanceEntity> instanceBackList = backInstanceRepository.listByBackId(backId);
+        Map<Long, BackInstanceEntity> instanceBackMap = instanceBackList.stream().collect(Collectors.toMap(BackInstanceEntity::getInstanceId, Function.identity()));
 
         try {
-            for (Map.Entry<Long, InstanceDO> entry : instanceMap.entrySet()) {
+            for (Map.Entry<Long, InstanceEntity> entry : instanceMap.entrySet()) {
                 Long instanceId = entry.getKey();
-                InstanceDO instance = entry.getValue();
+                InstanceEntity instance = entry.getValue();
                 String databaseName = instance.getDatabaseName();
                 Db db = MysqlUtil.getInstance(instance.getHost(), instance.getPort(), instance.getUsername(), instance.getPassword(), databaseName);
-                BackInstanceDO instanceBack = instanceBackMap.get(instanceId);
+                BackInstanceEntity instanceBack = instanceBackMap.get(instanceId);
                 MysqlUtil.runScript(db, FileUtil.getUtf8Reader(String.join(File.separator, sqlDumpDir, instanceBack.getFileName())));
             }
         } catch (Exception e) {
@@ -364,10 +364,10 @@ public class TicketServiceImpl implements ITicketService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Boolean> runScript(Long ticketId) {
-        TicketDO ticket = ticketRepository.getById(ticketId);
-        Map<Long, InstanceDO> instanceMap = this.getInstanceMap(ticketId);
-        for (Map.Entry<Long, InstanceDO> entry : instanceMap.entrySet()) {
-            InstanceDO instance = entry.getValue();
+        TicketEntity ticket = ticketRepository.getById(ticketId);
+        Map<Long, InstanceEntity> instanceMap = this.getInstanceMap(ticketId);
+        for (Map.Entry<Long, InstanceEntity> entry : instanceMap.entrySet()) {
+            InstanceEntity instance = entry.getValue();
             String databaseName = instance.getDatabaseName();
             Db db = MysqlUtil.getInstance(instance.getHost(), instance.getPort(), instance.getUsername(), instance.getPassword(), databaseName);
             // FIXME: 2023/8/25 事务问题
@@ -382,15 +382,15 @@ public class TicketServiceImpl implements ITicketService {
     @Override
     public Result<PagedVO<BackListVO>> backByTicketList(BackListDTO dto) {
 
-        Page<BackDO> entityPage = backRepository.selectPage(dto);
+        Page<BackEntity> entityPage = backRepository.selectPage(dto);
         List<BackListVO> voList = new ArrayList<>();
-        List<BackDO> records = entityPage.getRecords();
+        List<BackEntity> records = entityPage.getRecords();
         if (CollUtil.isEmpty(records)) {
             return Result.success(PageUtil.toPage(voList, entityPage));
         }
-        Set<Long> userIdSet = records.stream().map(BaseDO::getCreatedBy).collect(Collectors.toSet());
-        Map<Long, UserDO> userMap = userRepository.listByIds(userIdSet).stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
-        for (BackDO entity : records) {
+        Set<Long> userIdSet = records.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
+        Map<Long, UserEntity> userMap = userRepository.listByIds(userIdSet).stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+        for (BackEntity entity : records) {
             BackListVO vo = BackConvert.toInstanceBackByTicketVO(entity);
             vo.setCreatedByStr(userMap.get(entity.getCreatedBy()).getNickName());
             voList.add(vo);
@@ -402,7 +402,7 @@ public class TicketServiceImpl implements ITicketService {
     @Override
     public Result<Long> insertBack(BackAddDTO dto) {
         Long ticketId = dto.getTicketId();
-        List<BackDO> backList = backRepository.listByBizId(ticketId, BackDO.MODEL_TICKET);
+        List<BackEntity> backList = backRepository.listByBizId(ticketId, BackEntity.MODEL_TICKET);
         if (CollUtil.isNotEmpty(backList)) {
             boolean isExist = backList.stream().anyMatch(i -> i.getName().equals(dto.getName()));
             if (isExist) {
@@ -410,22 +410,22 @@ public class TicketServiceImpl implements ITicketService {
                 return Result.error(CodeEnum.DATA_EXIST);
             }
         }
-        BackDO backDO = BackConvert.toDO(dto);
-        backDO.setModel(BackDO.MODEL_TICKET);
+        BackEntity backDO = BackConvert.toDO(dto);
+        backDO.setModel(BackEntity.MODEL_TICKET);
         backDO.setBizId(ticketId);
         backRepository.save(backDO);
 
         Long backId = backDO.getId();
 
-        TicketDO ticket = ticketRepository.getById(ticketId);
-        Map<Long, InstanceDO> instanceMap = this.getInstanceMap(ticketId);
+        TicketEntity ticket = ticketRepository.getById(ticketId);
+        Map<Long, InstanceEntity> instanceMap = this.getInstanceMap(ticketId);
         String sqlDumpDir = sysConfigManager.findValueByEnum(SysConfigKeyEnum.DATABASE_SQL_DUMP);
 
         try {
-            List<BackInstanceDO> instanceBackList = new ArrayList<>();
-            for (Map.Entry<Long, InstanceDO> entry : instanceMap.entrySet()) {
+            List<BackInstanceEntity> instanceBackList = new ArrayList<>();
+            for (Map.Entry<Long, InstanceEntity> entry : instanceMap.entrySet()) {
                 Long instanceId = entry.getKey();
-                InstanceDO instance = entry.getValue();
+                InstanceEntity instance = entry.getValue();
 
                 String databaseName = instance.getDatabaseName();
                 Db db = MysqlUtil.getInstance(instance.getHost(), instance.getPort(), instance.getUsername(), instance.getPassword(), databaseName);
@@ -433,7 +433,7 @@ public class TicketServiceImpl implements ITicketService {
                 File file = SqlDumper.dumpDatabase(db.getConnection(), new HashSet<>(ListUtil.of(databaseName)), String.join(File.separator, sqlDumpDir, fileName));
                 String md5 = SecureUtil.md5(file);
 
-                BackInstanceDO instanceBack = new BackInstanceDO();
+                BackInstanceEntity instanceBack = new BackInstanceEntity();
                 instanceBack.setInstanceId(instanceId);
                 instanceBack.setFileName(fileName);
                 instanceBack.setHashValue(md5);
@@ -451,11 +451,11 @@ public class TicketServiceImpl implements ITicketService {
 
     @Override
     public Result<BackVO> backDetail(Long backId) {
-        BackDO back = backRepository.getById(backId);
+        BackEntity back = backRepository.getById(backId);
         BackVO vo = BackConvert.toBackVO(back);
-        List<BackInstanceDO> backInstanceList = backInstanceRepository.listByBackId(back.getId());
+        List<BackInstanceEntity> backInstanceList = backInstanceRepository.listByBackId(back.getId());
         if (CollUtil.isNotEmpty(backInstanceList)) {
-            String collect = backInstanceList.stream().map(BackInstanceDO::getFileName).collect(Collectors.joining(", "));
+            String collect = backInstanceList.stream().map(BackInstanceEntity::getFileName).collect(Collectors.joining(", "));
             vo.setFileNameList(collect);
         }
         return Result.success(vo);
@@ -466,7 +466,7 @@ public class TicketServiceImpl implements ITicketService {
     public Result<Long> updateBack(BackEditDTO dto) {
         Long id = dto.getId();
         Long ticketId = dto.getTicketId();
-        List<BackDO> backList = backRepository.listByBizId(ticketId, BackDO.MODEL_TICKET);
+        List<BackEntity> backList = backRepository.listByBizId(ticketId, BackEntity.MODEL_TICKET);
         if (CollUtil.isNotEmpty(backList)) {
             boolean isExist = backList.stream().anyMatch(i -> i.getName().equals(dto.getName()) && (!i.getId().equals(id)));
             if (isExist) {
@@ -474,7 +474,7 @@ public class TicketServiceImpl implements ITicketService {
                 return Result.error(CodeEnum.DATA_EXIST);
             }
         }
-        BackDO back = backRepository.getById(id);
+        BackEntity back = backRepository.getById(id);
         back.setName(dto.getName());
         back.setRemark(dto.getRemark());
         backRepository.updateById(back);
@@ -490,9 +490,9 @@ public class TicketServiceImpl implements ITicketService {
         String sqlDumpDir = sysConfigManager.findValueByEnum(SysConfigKeyEnum.DATABASE_SQL_DUMP);
 
         Long userId = UserContextHolder.currentUserId();
-        List<BackInstanceDO> backInstanceList = backInstanceRepository.listByBackId(id);
+        List<BackInstanceEntity> backInstanceList = backInstanceRepository.listByBackId(id);
         if (CollUtil.isNotEmpty(backInstanceList)) {
-            for (BackInstanceDO backInstance : backInstanceList) {
+            for (BackInstanceEntity backInstance : backInstanceList) {
                 String oldFileName = backInstance.getFileName();
                 String newFileName = StrUtil.format("Removed_{}", oldFileName);
                 backInstance.setFileName(newFileName);
@@ -510,8 +510,8 @@ public class TicketServiceImpl implements ITicketService {
     }
 
     @SneakyThrows(Exception.class)
-    private void batchExecute(List<InstanceDO> instanceList, String sqlScript){
-        for (InstanceDO instanceDO : instanceList) {
+    private void batchExecute(List<InstanceEntity> instanceList, String sqlScript){
+        for (InstanceEntity instanceDO : instanceList) {
             Db db = MysqlUtil.getInstance(instanceDO.getHost(), instanceDO.getPort(), instanceDO.getUsername(),
                     instanceDO.getPassword(), instanceDO.getDatabaseName());
             BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(
@@ -520,8 +520,8 @@ public class TicketServiceImpl implements ITicketService {
         }
     }
 
-    private TicketDO beforeCheck(Long id) {
-        TicketDO ticketDO = ticketRepository.getById(id);
+    private TicketEntity beforeCheck(Long id) {
+        TicketEntity ticketDO = ticketRepository.getById(id);
         Integer followStatus = ticketDO.getFollowStatus();
         if (TicketFollowStatusEnum.PASSED.getCode().equals(followStatus)) {
             Integer cancelStatus = ticketDO.getCancelStatus();

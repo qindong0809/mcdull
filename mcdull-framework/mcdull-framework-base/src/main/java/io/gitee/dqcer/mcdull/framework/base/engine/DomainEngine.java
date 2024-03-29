@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.base.engine;
 
 import cn.hutool.core.collection.CollUtil;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 
 import java.util.*;
 
@@ -22,8 +22,8 @@ public class DomainEngine {
      * @param frontEndParamConvertEntityList 前端参数转换实体列表
      * @return {@link CompareBean}<{@link T}>
      */
-    public static <T extends IdDO> CompareBean<T> compare(List<T> dbQueryEntityList,
-                                                          List<T> frontEndParamConvertEntityList) {
+    public static <T extends IdEntity> CompareBean<T> compare(List<T> dbQueryEntityList,
+                                                              List<T> frontEndParamConvertEntityList) {
         CompareBean<T> bean = new CompareBean<>();
         if (CollUtil.isEmpty(frontEndParamConvertEntityList)) {
             bean.setRemoveList(dbQueryEntityList);
@@ -73,7 +73,7 @@ public class DomainEngine {
         return bean;
     }
 
-    private static <T extends IdDO> Map<Integer, T> getMap(List<T> list) {
+    private static <T extends IdEntity> Map<Integer, T> getMap(List<T> list) {
         Map<Integer, T> map = new HashMap<>(16);
         for (T t : list) {
             Integer id = t.getId();

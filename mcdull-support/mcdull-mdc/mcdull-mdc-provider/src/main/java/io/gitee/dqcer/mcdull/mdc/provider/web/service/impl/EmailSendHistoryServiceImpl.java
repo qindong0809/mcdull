@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
-import io.gitee.dqcer.mcdull.mdc.provider.model.entity.EmailSendHistoryDO;
+import io.gitee.dqcer.mcdull.mdc.provider.model.entity.EmailSendHistoryEntity;
 import io.gitee.dqcer.mcdull.mdc.provider.web.dao.repository.IEmailSendHistoryRepository;
 import io.gitee.dqcer.mcdull.mdc.provider.web.service.IEmailSendHistoryService;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class EmailSendHistoryServiceImpl extends BasicServiceImpl<IEmailSendHist
         if (CollUtil.isEmpty(sendToList) || StrUtil.isBlank(title) || StrUtil.isBlank(content)) {
             throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
         }
-        EmailSendHistoryDO sendHistory = new EmailSendHistoryDO();
+        EmailSendHistoryEntity sendHistory = new EmailSendHistoryEntity();
         sendHistory.setSentTo(String.join(StrUtil.COMMA, sendToList));
         if (CollUtil.isNotEmpty(ccList)) {
             sendHistory.setCc(String.join(StrUtil.COMMA, ccList));

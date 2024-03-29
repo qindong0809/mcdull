@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.service.common.impl;
 
 import cn.hutool.core.io.FileUtil;
-import io.gitee.dqcer.mcdull.admin.model.entity.common.SysFileDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.common.SysFileEntity;
 import io.gitee.dqcer.mcdull.admin.model.enums.SysConfigKeyEnum;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.common.ISysFileRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.common.ISysConfigManager;
@@ -38,13 +38,13 @@ public class FileServiceImpl extends BasicServiceImpl<ISysFileRepository> implem
         return Result.success(baseRepository.save(this.buildEntity(multipartFile)));
     }
 
-    private SysFileDO buildEntity(MultipartFile multipartFile) throws IOException {
+    private SysFileEntity buildEntity(MultipartFile multipartFile) throws IOException {
         long size = multipartFile.getSize();
         String originalFilename = multipartFile.getOriginalFilename();
         InputStream inputStream = multipartFile.getInputStream();
 //        String md5 = SecureUtil.md5(inputStream);
         String md5 = "dsfsdf";
-        SysFileDO entity = new SysFileDO();
+        SysFileEntity entity = new SysFileEntity();
         entity.setFileSize(size);
         entity.setFileMd5(md5);
         entity.setOriginalFileName(originalFilename);

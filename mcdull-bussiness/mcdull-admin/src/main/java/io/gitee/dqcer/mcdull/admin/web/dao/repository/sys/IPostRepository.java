@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.PostLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostEntity;
 
 import java.util.List;
 
@@ -13,12 +13,12 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/26
  */
-public interface IPostRepository extends IService<PostDO> {
+public interface IPostRepository extends IService<PostEntity> {
 
-    Page<PostDO> selectPage(PostLiteDTO dto);
+    Page<PostEntity> selectPage(PostLiteDTO dto);
 
     boolean checkBusinessUnique(Long id, String postName);
 
-    List<PostDO> getAll();
+    List<PostEntity> getAll();
 
 }

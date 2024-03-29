@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.framework.feign.ResultApiParse;
 import io.gitee.dqcer.mcdull.mdc.provider.model.convert.LogConvert;
 import io.gitee.dqcer.mcdull.mdc.provider.model.dto.LogLiteDTO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.dto.SysLogFeignDTO;
-import io.gitee.dqcer.mcdull.mdc.provider.model.entity.LogDO;
+import io.gitee.dqcer.mcdull.mdc.provider.model.entity.LogEntity;
 import io.gitee.dqcer.mcdull.mdc.provider.model.vo.LogVO;
 import io.gitee.dqcer.mcdull.uac.client.service.UserClientService;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -39,7 +39,7 @@ public class LogService {
 
     public Result<Integer> batchSave(List<SysLogFeignDTO> dto) {
         threadPoolTaskExecutor.submit(() -> {
-            List<LogDO> entities = Lists.newArrayList();
+            List<LogEntity> entities = Lists.newArrayList();
             entities.addAll(dto);
 //            logRepository.saveBatch(entities, entities.size());
         });
@@ -47,9 +47,9 @@ public class LogService {
     }
 
     public Result<PagedVO<LogVO>> listByPage(LogLiteDTO dto) {
-        Page<LogDO> entityPage = null;
+        Page<LogEntity> entityPage = null;
         List<LogVO> voList = new ArrayList<>();
-        for (LogDO entity : entityPage.getRecords()) {
+        for (LogEntity entity : entityPage.getRecords()) {
             LogVO logVO = LogConvert.entity2Vo(entity);
             String nickname = ResultApiParse.getInstance(userClientService.getDetail(logVO.getAccountId())).getNickname();
             logVO.setAccountIdStr(nickname);

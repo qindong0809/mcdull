@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.web.util;
 
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestAttributes;
@@ -38,7 +39,7 @@ public class ServletUtil {
         try {
             fileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
         } catch (UnsupportedEncodingException e) {
-            log.error(e.getMessage(), e);
+            LogHelp.error(log, e.getMessage(), e);
             throw new BusinessException();
         }
         response.setHeader("Content-disposition", "attachment;filename=" + fileName);

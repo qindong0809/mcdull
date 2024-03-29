@@ -12,7 +12,7 @@ import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.slf4j.Logger;
@@ -56,7 +56,7 @@ public class LoginServiceImpl implements ILoginService {
     }
 
     private Integer loginPreCheck(String username, String passwordDTO) {
-        UserDO userEntity = userService.get(username);
+        UserEntity userEntity = userService.get(username);
         if (ObjUtil.isNotNull(userEntity)) {
             boolean isOk = userService.passwordCheck(userEntity, passwordDTO);
             if (isOk) {
@@ -92,9 +92,9 @@ public class LoginServiceImpl implements ILoginService {
 
     @Override
     public List<String> getPermissionList(Integer userId) {
-        Map<Integer, UserDO> entityMap = userService.getEntityMap(ListUtil.of(userId));
+        Map<Integer, UserEntity> entityMap = userService.getEntityMap(ListUtil.of(userId));
         if (MapUtil.isNotEmpty(entityMap)) {
-            UserDO userDO = entityMap.get(userId);
+            UserEntity userDO = entityMap.get(userId);
             if (ObjUtil.isNotNull(userDO)) {
                 if (GlobalConstant.SUPER_ADMIN_USER_TYPE.equals(userDO.getType())) {
                     return ListUtil.of("*:*:*");

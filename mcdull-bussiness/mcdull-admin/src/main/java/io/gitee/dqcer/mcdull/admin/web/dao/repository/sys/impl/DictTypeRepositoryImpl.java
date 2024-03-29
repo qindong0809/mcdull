@@ -8,10 +8,10 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.DictTypeDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.DictTypeEntity;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.DictTypeMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IDictTypeRepository;
-import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -24,37 +24,37 @@ import java.util.List;
 * @since 2023-01-14
 */
 @Service
-public class DictTypeRepositoryImpl extends ServiceImpl<DictTypeMapper, DictTypeDO>  implements IDictTypeRepository {
+public class DictTypeRepositoryImpl extends ServiceImpl<DictTypeMapper, DictTypeEntity>  implements IDictTypeRepository {
 
 
     @Override
-    public Page<DictTypeDO> selectPage(DictTypeLiteDTO dto) {
-        LambdaQueryWrapper<DictTypeDO> lambda = new QueryWrapper<DictTypeDO>().lambda();
+    public Page<DictTypeEntity> selectPage(DictTypeLiteDTO dto) {
+        LambdaQueryWrapper<DictTypeEntity> lambda = new QueryWrapper<DictTypeEntity>().lambda();
         String dictType = dto.getDictType();
         if (StrUtil.isNotBlank(dictType)) {
-            lambda.like(DictTypeDO::getDictType, dictType);
+            lambda.like(DictTypeEntity::getDictType, dictType);
         }
         String dictName = dto.getDictName();
         if (StrUtil.isNotBlank(dictName)) {
-            lambda.like(DictTypeDO::getDictName, dictName);
+            lambda.like(DictTypeEntity::getDictName, dictName);
         }
         String status = dto.getStatus();
         if (ObjUtil.isNotNull(status)) {
-            lambda.eq(DictTypeDO::getStatus, status);
+            lambda.eq(DictTypeEntity::getStatus, status);
         }
         Date startTime = dto.getStartTime();
         Date endTime = dto.getEndTime();
         if (ObjUtil.isNotNull(startTime) && ObjUtil.isNotNull(endTime)) {
-            lambda.between(RelDO::getCreatedTime, startTime, endTime);
+            lambda.between(RelEntity::getCreatedTime, startTime, endTime);
         }
-        lambda.orderByDesc(RelDO::getCreatedTime);
+        lambda.orderByDesc(RelEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
     }
 
     @Override
-    public List<DictTypeDO> getListByName(String dictType) {
-        LambdaQueryWrapper<DictTypeDO> query = Wrappers.lambdaQuery();
-        query.eq(DictTypeDO::getDictType, dictType);
+    public List<DictTypeEntity> getListByName(String dictType) {
+        LambdaQueryWrapper<DictTypeEntity> query = Wrappers.lambdaQuery();
+        query.eq(DictTypeEntity::getDictType, dictType);
         return baseMapper.selectList(query);
     }
 

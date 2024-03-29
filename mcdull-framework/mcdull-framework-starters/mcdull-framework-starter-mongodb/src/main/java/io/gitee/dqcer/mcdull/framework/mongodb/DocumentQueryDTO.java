@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.mongodb;
 
 
-import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
+import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import org.bson.conversions.Bson;
 
 public class DocumentQueryDTO implements DTO {

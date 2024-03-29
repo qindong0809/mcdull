@@ -5,7 +5,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public interface IRoleService {
 
     Result<Integer> delete(UserLiteDTO dto);
 
-    Map<Integer, List<RoleDO>> getRoleMap(List<Integer> userIdList);
+    Map<Integer, List<RoleEntity>> getRoleMap(List<Integer> userIdList);
 
     List<LabelValueVO<Integer, String>> getSimple(Integer userId);
 
@@ -37,5 +37,5 @@ public interface IRoleService {
 
     boolean insertPermission(Integer id, RolePermissionInsertDTO dto);
 
-    Map<Integer, List<RoleDO>> getRoleMapByMenuId(List<Integer> menuIdList);
+    Map<Integer, List<RoleEntity>> getRoleMapByMenuId(List<Integer> menuIdList);
 }

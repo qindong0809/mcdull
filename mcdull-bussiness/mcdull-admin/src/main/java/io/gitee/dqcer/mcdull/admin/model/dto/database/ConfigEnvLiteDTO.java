@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.admin.model.dto.database;
 
 import io.gitee.dqcer.mcdull.admin.model.enums.EnvTypeEnum;
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
-import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
+import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;

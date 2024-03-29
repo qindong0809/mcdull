@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.base.vo;
 
-import io.gitee.dqcer.mcdull.framework.base.supert.Bean;
+import io.gitee.dqcer.mcdull.framework.base.support.IdName;
 
 import java.util.StringJoiner;
 
@@ -10,7 +10,7 @@ import java.util.StringJoiner;
  * @author dqcer
  * @since 2022/12/08
  */
-public class BaseVO<ID, Name> implements Bean<ID, Name> {
+public class BaseVO<ID, Name> implements IdName<ID, Name> {
 
     private static final long serialVersionUID = 1L;
 

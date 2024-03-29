@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.admin.web.manager.sys;
 
 
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleEntity;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserVO;
 
@@ -22,16 +22,16 @@ public interface IUserManager {
      * @param entity 实体
      * @return {@link UserVO}
      */
-    UserVO entityToVo(UserDO entity);
+    UserVO entityToVo(UserEntity entity);
 
 
     /**
      * 得到用户角色
      *
      * @param userId 用户id
-     * @return {@link List}<{@link RoleDO}>
+     * @return {@link List}<{@link RoleEntity}>
      */
-    List<RoleDO> getUserRoles(Long userId);
+    List<RoleEntity> getUserRoles(Long userId);
 
-    UserDetailVO entityToDetailVo(UserDO userDO);
+    UserDetailVO entityToDetailVo(UserEntity userDO);
 }

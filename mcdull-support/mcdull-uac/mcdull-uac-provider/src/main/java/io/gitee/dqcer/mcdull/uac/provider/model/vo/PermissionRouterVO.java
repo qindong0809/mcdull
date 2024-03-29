@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.gitee.dqcer.mcdull.framework.base.vo.VO;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import lombok.Data;
 
 import java.util.List;

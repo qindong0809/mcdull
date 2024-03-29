@@ -7,12 +7,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuEntity;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.MenuMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -30,22 +30,22 @@ import java.util.List;
  * @since 2022/12/26
  */
 @Service
-public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implements IMenuRepository {
+public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuEntity> implements IMenuRepository {
 
     /**
      * 分页查询
      *
      * @param dto dto
-     * @return {@link Page}<{@link MenuDO}>
+     * @return {@link Page}<{@link MenuEntity}>
      */
     @Override
-    public Page<MenuDO> selectPage(MenuLiteDTO dto) {
-        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
+    public Page<MenuEntity> selectPage(MenuLiteDTO dto) {
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
         String keyword = dto.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
-            query.and(i-> i.like(MenuDO::getName, keyword));
+            query.and(i-> i.like(MenuEntity::getName, keyword));
         }
-        query.orderByDesc(RelDO::getCreatedTime);
+        query.orderByDesc(RelEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
     }
 
@@ -56,7 +56,7 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
      * @return {@link Long}
      */
     @Override
-    public Long insert(MenuDO entity) {
+    public Long insert(MenuEntity entity) {
         entity.setCreatedBy(UserContextHolder.currentUserId());
         entity.setCreatedTime(new Date());
         entity.setId(this.getMaxId());
@@ -68,10 +68,10 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
     }
 
     public synchronized Long getMaxId() {
-        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
-        query.orderByDesc(IdDO::getId);
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        query.orderByDesc(IdEntity::getId);
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
-        MenuDO menuDO = baseMapper.selectList(query).get(0);
+        MenuEntity menuDO = baseMapper.selectList(query).get(0);
         return menuDO.getId() + 1;
     }
 
@@ -79,14 +79,14 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
      * 获取菜单
      *
      * @param menuIds 菜单id
-     * @return {@link List}<{@link MenuDO}>
+     * @return {@link List}<{@link MenuEntity}>
      */
     @Override
-    public List<MenuDO> getMenuByIds(List<Long> menuIds) {
-        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
-        query.eq(MenuDO::getStatus, StatusEnum.ENABLE.getCode());
-        query.in(IdDO::getId, menuIds);
-        List<MenuDO> list = baseMapper.selectList(query);
+    public List<MenuEntity> getMenuByIds(List<Long> menuIds) {
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(MenuEntity::getStatus, StatusEnum.ENABLE.getCode());
+        query.in(IdEntity::getId, menuIds);
+        List<MenuEntity> list = baseMapper.selectList(query);
         if (list.isEmpty()) {
             return Collections.emptyList();
         }
@@ -94,18 +94,18 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
     }
 
     @Override
-    public List<MenuDO> list(String menuName, String status, List<Long> menuIds) {
-        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
+    public List<MenuEntity> list(String menuName, String status, List<Long> menuIds) {
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
         if (StrUtil.isNotBlank(menuName)) {
-            query.like(MenuDO::getName, menuName);
+            query.like(MenuEntity::getName, menuName);
         }
         if (StrUtil.isNotBlank(status)) {
-            query.like(MenuDO::getStatus, status);
+            query.like(MenuEntity::getStatus, status);
         }
         if (CollUtil.isNotEmpty(menuIds)) {
-            query.in(IdDO::getId, menuIds);
+            query.in(IdEntity::getId, menuIds);
         }
-        List<MenuDO> list = baseMapper.selectList(query);
+        List<MenuEntity> list = baseMapper.selectList(query);
         if (CollUtil.isEmpty(list)) {
             return Collections.emptyList();
         }
@@ -113,24 +113,24 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuDO> implemen
     }
 
     @Override
-    public List<MenuDO> getListByName(String name) {
-        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
-        query.eq(MenuDO::getName, name);
-        List<MenuDO> list = baseMapper.selectList(query);
+    public List<MenuEntity> getListByName(String name) {
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(MenuEntity::getName, name);
+        List<MenuEntity> list = baseMapper.selectList(query);
         return CollUtil.isEmpty(list) ? Collections.emptyList() : list;
     }
 
     @Override
-    public List<MenuDO> getSubMenuListByParentId(Long parentId) {
-        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
-        query.eq(MenuDO::getParentId, parentId);
+    public List<MenuEntity> getSubMenuListByParentId(Long parentId) {
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(MenuEntity::getParentId, parentId);
         return baseMapper.selectList(query);
     }
 
     @Override
-    public List<MenuDO> getAllMenu() {
-        LambdaQueryWrapper<MenuDO> query = Wrappers.lambdaQuery();
-        query.eq(MenuDO::getStatus, StatusEnum.ENABLE.getCode());
+    public List<MenuEntity> getAllMenu() {
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(MenuEntity::getStatus, StatusEnum.ENABLE.getCode());
         return baseMapper.selectList(query);
     }
 

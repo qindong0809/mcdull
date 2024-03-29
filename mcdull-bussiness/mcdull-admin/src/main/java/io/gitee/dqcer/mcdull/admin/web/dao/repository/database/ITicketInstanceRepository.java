@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.database;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketInstanceDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketEntity;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketInstanceEntity;
 
 import java.util.List;
 
@@ -12,23 +12,23 @@ import java.util.List;
 * @author dqcer
 * @since 2023-08-17
 */
-public interface ITicketInstanceRepository extends IService<TicketInstanceDO>  {
+public interface ITicketInstanceRepository extends IService<TicketInstanceEntity>  {
 
    /**
     * 根据ID列表批量查询数据
     *
     * @param idList id列表
-    * @return {@link List<TicketDO>}
+    * @return {@link List< TicketEntity >}
     */
-    List<TicketInstanceDO> queryListByIds(List<Long> idList);
+    List<TicketInstanceEntity> queryListByIds(List<Long> idList);
 
     /**
      * 根据ID获取单条数据
      *
      * @param id 主键
-     * @return {@link TicketDO}
+     * @return {@link TicketEntity}
      */
-    TicketInstanceDO getById(Long id);
+    TicketInstanceEntity getById(Long id);
 
     /**
      * 插入数据
@@ -36,7 +36,7 @@ public interface ITicketInstanceRepository extends IService<TicketInstanceDO>  {
      * @param entity 实体对象
      * @return Long id
      */
-    Long insert(TicketInstanceDO entity);
+    Long insert(TicketInstanceEntity entity);
 
     void save(Long ticketId, Long groupId, List<Long> instanceList);
 
@@ -53,8 +53,8 @@ public interface ITicketInstanceRepository extends IService<TicketInstanceDO>  {
      * @param entity 实体对象
      * @return boolean true/存在 false/不存在
      */
-    boolean exist(TicketInstanceDO entity);
+    boolean exist(TicketInstanceEntity entity);
 
-    List<TicketInstanceDO> getListByTicketId(Long ticketId);
+    List<TicketInstanceEntity> getListByTicketId(Long ticketId);
 
 }

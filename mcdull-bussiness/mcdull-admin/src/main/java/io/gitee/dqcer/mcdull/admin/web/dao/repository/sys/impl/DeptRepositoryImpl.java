@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptEntity;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.DeptMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IDeptRepository;
 import org.springframework.stereotype.Service;
@@ -21,19 +21,19 @@ import java.util.List;
 * @since 2023-01-14
 */
 @Service
-public class DeptRepositoryImpl extends ServiceImpl<DeptMapper, DeptDO>  implements IDeptRepository {
+public class DeptRepositoryImpl extends ServiceImpl<DeptMapper, DeptEntity>  implements IDeptRepository {
 
 
     @Override
-    public List<DeptDO> list(String name, String status) {
-        LambdaQueryWrapper<DeptDO> wrapper = Wrappers.lambdaQuery();
+    public List<DeptEntity> list(String name, String status) {
+        LambdaQueryWrapper<DeptEntity> wrapper = Wrappers.lambdaQuery();
         if (ObjUtil.isNotEmpty(status)) {
-            wrapper.eq(DeptDO::getStatus, status);
+            wrapper.eq(DeptEntity::getStatus, status);
         }
         if (StrUtil.isNotBlank(name)) {
-            wrapper.like(DeptDO::getName, name);
+            wrapper.like(DeptEntity::getName, name);
         }
-        List<DeptDO> list = baseMapper.selectList(wrapper);
+        List<DeptEntity> list = baseMapper.selectList(wrapper);
         if (CollUtil.isEmpty(list)) {
             return Collections.emptyList();
         }

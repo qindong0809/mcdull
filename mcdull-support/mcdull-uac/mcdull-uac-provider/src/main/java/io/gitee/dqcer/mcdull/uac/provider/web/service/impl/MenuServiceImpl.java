@@ -11,14 +11,14 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuDO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
@@ -60,9 +60,9 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     @Override
     public List<MenuVO> list(MenuListDTO dto) {
         List<MenuVO> list = new ArrayList<>();
-        List<MenuDO> menuList = baseRepository.allAndButton();
+        List<MenuEntity> menuList = baseRepository.allAndButton();
         if (CollUtil.isNotEmpty(menuList)) {
-            for (MenuDO menu : menuList) {
+            for (MenuEntity menu : menuList) {
                 MenuVO vo = this.convertToVO(menu);
                 list.add(vo);
             }
@@ -75,14 +75,14 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     public boolean insert(MenuInsertDTO dto) {
         Integer parentId = dto.getParentId();
 
-        List<MenuDO> childList = baseRepository.listByParentId(parentId);
+        List<MenuEntity> childList = baseRepository.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
             boolean anyMatch = childList.stream().anyMatch(i -> i.getName().equals(dto.getName()));
             if (anyMatch) {
                 throw new BusinessException(I18nConstants.NAME_DUPLICATED);
             }
         }
-        MenuDO menu = this.convertToEntity(dto);
+        MenuEntity menu = this.convertToEntity(dto);
         return baseRepository.save(menu);
     }
 
@@ -90,7 +90,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     @Override
     public boolean update(Integer id, MenuUpdateDTO dto) {
         Integer parentId = dto.getParentId();
-        List<MenuDO> childList = baseRepository.listByParentId(parentId);
+        List<MenuEntity> childList = baseRepository.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
             boolean anyMatch = childList.stream()
                     .anyMatch(i -> (!i.getId().equals(id)) && i.getName().equals(dto.getName()));
@@ -98,7 +98,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
                 throw new BusinessException(I18nConstants.NAME_DUPLICATED);
             }
         }
-        MenuDO menu = this.convertToEntity(dto);
+        MenuEntity menu = this.convertToEntity(dto);
         menu.setId(id);
         return baseRepository.updateById(menu);
     }
@@ -112,9 +112,9 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     @Override
     public List<RoleMenuVO> roleMenuList() {
         List<RoleMenuVO> voList = new ArrayList<>();
-        List<MenuDO> menuList = baseRepository.allAndButton();
+        List<MenuEntity> menuList = baseRepository.allAndButton();
         if (CollUtil.isNotEmpty(menuList)) {
-            for (MenuDO menu : menuList) {
+            for (MenuEntity menu : menuList) {
                 RoleMenuVO vo = this.convertToRoleMenuVO(menu);
                 voList.add(vo);
             }
@@ -128,9 +128,9 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         if (MapUtil.isNotEmpty(menuIdListMap)) {
             List<Integer> list = menuIdListMap.get(roleId);
             if (CollUtil.isNotEmpty(list)) {
-                List<MenuDO> menuList = baseRepository.listByIds(list);
+                List<MenuEntity> menuList = baseRepository.listByIds(list);
                 if (CollUtil.isNotEmpty(menuList)) {
-                    return menuList.stream().map(IdDO::getId).collect(Collectors.toList());
+                    return menuList.stream().map(IdEntity::getId).collect(Collectors.toList());
                 }
             }
         }
@@ -139,7 +139,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
 
     @Override
     public List<PermissionRouterVO> getPermissionRouter() {
-        List<MenuDO> menuList = baseRepository.all();
+        List<MenuEntity> menuList = baseRepository.all();
         List<Tree<Integer>> integerTree = this.getTrees(menuList);
         return this.convertPermissionRouter(integerTree);
     }
@@ -149,7 +149,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         return this.getRouter(ListUtil.of(roleId));
     }
 
-    private RoleMenuVO convertToRoleMenuVO(MenuDO menu) {
+    private RoleMenuVO convertToRoleMenuVO(MenuEntity menu) {
         RoleMenuVO roleMenuVO = new RoleMenuVO();
         roleMenuVO.setId(menu.getId());
         roleMenuVO.setMenuType(menu.getMenuType());
@@ -158,8 +158,8 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         return roleMenuVO;
     }
 
-    private MenuDO convertToEntity(MenuUpdateDTO dto) {
-        MenuDO menuDO = new MenuDO();
+    private MenuEntity convertToEntity(MenuUpdateDTO dto) {
+        MenuEntity menuDO = new MenuEntity();
         menuDO.setMenuType(dto.getMenuType());
         menuDO.setParentId(dto.getParentId());
         menuDO.setTitle(dto.getTitle());
@@ -183,8 +183,8 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         return menuDO;
     }
 
-    private MenuDO convertToEntity(MenuInsertDTO dto) {
-        MenuDO menuDO = new MenuDO();
+    private MenuEntity convertToEntity(MenuInsertDTO dto) {
+        MenuEntity menuDO = new MenuEntity();
         menuDO.setMenuType(dto.getMenuType());
         menuDO.setParentId(dto.getParentId());
         menuDO.setTitle(dto.getTitle());
@@ -208,7 +208,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         return menuDO;
     }
 
-    private MenuVO convertToVO(MenuDO menu) {
+    private MenuVO convertToVO(MenuEntity menu) {
         MenuVO menuVO = new MenuVO();
         menuVO.setId(menu.getId());
         menuVO.setMenuType(menu.getMenuType());
@@ -241,7 +241,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         if (MapUtil.isNotEmpty(menuIdListMap)) {
             Set<Integer> idSet = menuIdListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
             if (CollUtil.isNotEmpty(idSet)) {
-                List<MenuDO> menuList = baseRepository.list(idSet);
+                List<MenuEntity> menuList = baseRepository.list(idSet);
                 List<Tree<Integer>> integerTree = this.getTrees(menuList);
                 return this.convertPermissionRouter(integerTree);
             }
@@ -249,13 +249,13 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         return Collections.emptyList();
     }
 
-    private List<Tree<Integer>> getTrees(List<MenuDO> menuList) {
-        Map<Integer, List<RoleDO>> roleMap = MapUtil.newHashMap();
+    private List<Tree<Integer>> getTrees(List<MenuEntity> menuList) {
+        Map<Integer, List<RoleEntity>> roleMap = MapUtil.newHashMap();
         if (CollUtil.isNotEmpty(menuList)) {
-            List<Integer> menuIdList = menuList.stream().map(IdDO::getId).collect(Collectors.toList());
+            List<Integer> menuIdList = menuList.stream().map(IdEntity::getId).collect(Collectors.toList());
             roleMap = roleService.getRoleMapByMenuId(menuIdList);
         }
-        Map<Integer, List<RoleDO>> finalRoleMap = roleMap;
+        Map<Integer, List<RoleEntity>> finalRoleMap = roleMap;
         return TreeUtil.build(menuList, 0,
                 (menu, treeNode) -> {
                     treeNode.setName(StrUtil.upperFirst(menu.getPath()));
@@ -275,9 +275,9 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
                     if (StrUtil.isNotBlank(auths)) {
                         meta.setAuths(ListUtil.of(auths));
                     }
-                    List<RoleDO> roleList = finalRoleMap.get(menu.getId());
+                    List<RoleEntity> roleList = finalRoleMap.get(menu.getId());
                     if (CollUtil.isNotEmpty(roleList)) {
-                        meta.setRoles(roleList.stream().map(RoleDO::getCode).collect(Collectors.toList()));
+                        meta.setRoles(roleList.stream().map(RoleEntity::getCode).collect(Collectors.toList()));
                     }
                     treeNode.put("meta", JSONUtil.parseObj(meta).toString());
         });

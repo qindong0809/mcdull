@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.framework.base.dto;
 
 import cn.hutool.core.convert.Convert;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.supert.IPaged;
+import io.gitee.dqcer.mcdull.framework.base.support.Paged;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 
 import javax.validation.constraints.Max;
@@ -18,7 +18,7 @@ import java.util.StringJoiner;
  * @author dqcer
  * @since 2022/07/26
  */
-public class PagedDTO extends KeywordDTO implements IPaged {
+public class PagedDTO extends KeywordDTO implements Paged {
 
     /**
      * 每页记录数

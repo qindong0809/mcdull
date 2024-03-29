@@ -8,12 +8,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.NoticeLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeEntity;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.NoticeMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.INoticeRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.slf4j.Logger;
@@ -30,18 +30,18 @@ import java.util.List;
 * @since 2023-01-19
 */
 @Service
-public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeDO>  implements INoticeRepository {
+public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeEntity>  implements INoticeRepository {
 
     private static final Logger log = LoggerFactory.getLogger(NoticeRepositoryImpl.class);
 
     @Override
-    public boolean checkBusinessUnique(NoticeDO entity) {
-        LambdaQueryWrapper<NoticeDO> query = Wrappers.lambdaQuery();
+    public boolean checkBusinessUnique(NoticeEntity entity) {
+        LambdaQueryWrapper<NoticeEntity> query = Wrappers.lambdaQuery();
         Long entityId = entity.getId();
         if (cn.hutool.core.util.ObjUtil.isNotNull(entityId)) {
-            query.ne(IdDO::getId, entityId);
+            query.ne(IdEntity::getId, entityId);
         }
-        query.eq(NoticeDO::getNoticeTitle, entity.getNoticeTitle());
+        query.eq(NoticeEntity::getNoticeTitle, entity.getNoticeTitle());
         return !baseMapper.exists(query);
     }
 
@@ -49,13 +49,13 @@ public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeDO>  i
      * 根据ID列表批量查询数据
      *
      * @param idList id列表
-     * @return {@link List<NoticeDO>}
+     * @return {@link List< NoticeEntity >}
      */
     @Override
-    public List<NoticeDO> queryListByIds(List<Long> idList) {
-        LambdaQueryWrapper<NoticeDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.in(NoticeDO::getId, idList);
-        List<NoticeDO> list =  baseMapper.selectList(wrapper);
+    public List<NoticeEntity> queryListByIds(List<Long> idList) {
+        LambdaQueryWrapper<NoticeEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(NoticeEntity::getId, idList);
+        List<NoticeEntity> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;
         }
@@ -63,17 +63,17 @@ public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeDO>  i
     }
 
     @Override
-    public Page<NoticeDO> selectPage(NoticeLiteDTO dto) {
-        LambdaQueryWrapper<NoticeDO> lambda = new QueryWrapper<NoticeDO>().lambda();
+    public Page<NoticeEntity> selectPage(NoticeLiteDTO dto) {
+        LambdaQueryWrapper<NoticeEntity> lambda = new QueryWrapper<NoticeEntity>().lambda();
         String noticeTitle = dto.getNoticeTitle();
         if (StrUtil.isNotBlank(noticeTitle)) {
-            lambda.like(NoticeDO::getNoticeTitle, noticeTitle);
+            lambda.like(NoticeEntity::getNoticeTitle, noticeTitle);
         }
         String noticeType = dto.getNoticeType();
         if (StrUtil.isNotBlank(noticeType)) {
-            lambda.eq(NoticeDO::getNoticeType, noticeType);
+            lambda.eq(NoticeEntity::getNoticeType, noticeType);
         }
-        lambda.orderByDesc(RelDO::getCreatedTime);
+        lambda.orderByDesc(RelEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
     }
 
@@ -81,10 +81,10 @@ public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeDO>  i
      * 根据ID获取单条数据
      *
      * @param id 主键
-     * @return {@link NoticeDO}
+     * @return {@link NoticeEntity}
      */
     @Override
-    public NoticeDO getById(Long id) {
+    public NoticeEntity getById(Long id) {
         return baseMapper.selectById(id);
     }
 
@@ -95,7 +95,7 @@ public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeDO>  i
      * @return Long id
      */
     @Override
-    public Long insert(NoticeDO entity) {
+    public Long insert(NoticeEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);

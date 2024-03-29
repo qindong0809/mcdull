@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.mdc.provider.model.convert;
 
 import io.gitee.dqcer.mcdull.mdc.client.vo.DictTypeClientVO;
-import io.gitee.dqcer.mcdull.mdc.provider.model.entity.DictTypeDO;
+import io.gitee.dqcer.mcdull.mdc.provider.model.entity.DictTypeEntity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +22,7 @@ public class DictConvert {
      * @param item 项
      * @return {@link DictTypeClientVO}
      */
-    public static DictTypeClientVO entityConvertToVo(DictTypeDO item) {
+    public static DictTypeClientVO entityConvertToVo(DictTypeEntity item) {
         DictTypeClientVO dictTypeClientVO = new DictTypeClientVO();
         dictTypeClientVO.setId(item.getId());
         dictTypeClientVO.setDictName(item.getDictName());
@@ -39,12 +39,12 @@ public class DictConvert {
      * @param item 项
      * @return {@link List}<{@link DictTypeClientVO}>
      */
-    public static List<DictTypeClientVO> entitiesConvertToList(List<DictTypeDO> item) {
+    public static List<DictTypeClientVO> entitiesConvertToList(List<DictTypeEntity> item) {
         if (item == null) {
             return Collections.EMPTY_LIST;
         }
         List<DictTypeClientVO> result = new ArrayList<>();
-        for (DictTypeDO entity : item) {
+        for (DictTypeEntity entity : item) {
             result.add(entityConvertToVo(entity));
         }
         return result;

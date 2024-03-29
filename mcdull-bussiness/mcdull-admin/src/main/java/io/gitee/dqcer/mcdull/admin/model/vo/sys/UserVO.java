@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.admin.framework.transformer.UserTransformer;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
-import io.gitee.dqcer.mcdull.framework.base.vo.VO;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import lombok.Data;
 
 import java.time.LocalDateTime;

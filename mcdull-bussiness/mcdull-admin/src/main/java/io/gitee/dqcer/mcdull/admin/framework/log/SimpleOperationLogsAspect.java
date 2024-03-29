@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.framework.log;
 
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogEntity;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsService;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
@@ -46,7 +46,7 @@ public class SimpleOperationLogsAspect implements OperationLogsService {
 //        logDO.setType(annotation.type().getCode());
 //        asyncEvent.asyncEvent(logDO);
         Authorized annotation = method.getAnnotation(Authorized.class);
-        LogDO logDO = of(dto);
+        LogEntity logDO = of(dto);
 //        logDO.setModel(annotation.value());
 //        logDO.setMenu(annotation.menu());
         logDO.setButton(annotation.value());
@@ -54,8 +54,8 @@ public class SimpleOperationLogsAspect implements OperationLogsService {
 
     }
 
-    private static LogDO of(LogOperationDTO dto) {
-        LogDO logDO = new LogDO();
+    private static LogEntity of(LogOperationDTO dto) {
+        LogEntity logDO = new LogEntity();
         logDO.setAccountId(dto.getUserId());
         logDO.setTenantId(dto.getTenantId());
         logDO.setClientIp(dto.getClientIp());

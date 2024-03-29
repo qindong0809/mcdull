@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserRoleDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserRoleEntity;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Map;
  * @author dqcer
  * @since 2022/12/26
  */
-public interface IUserRoleRepository extends IService<UserRoleDO> {
+public interface IUserRoleRepository extends IService<UserRoleEntity> {
 
     /**
      * 更新根据用户id
@@ -35,7 +35,7 @@ public interface IUserRoleRepository extends IService<UserRoleDO> {
      * 列表
      *
      * @param userIdList 用户id列表
-     * @return {@link List}<{@link UserRoleDO}>
+     * @return {@link List}<{@link UserRoleEntity}>
      */
-    List<UserRoleDO> list(List<Integer> userIdList);
+    List<UserRoleEntity> list(List<Integer> userIdList);
 }

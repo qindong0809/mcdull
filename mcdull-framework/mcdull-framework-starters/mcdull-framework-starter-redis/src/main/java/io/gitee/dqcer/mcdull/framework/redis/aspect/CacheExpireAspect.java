@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.framework.redis.aspect;
 
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.redis.annotation.CacheExpire;
 import io.gitee.dqcer.mcdull.framework.redis.annotation.CacheExpireHolder;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -44,9 +45,12 @@ public class CacheExpireAspect {
         long floatRangeMilliseconds = (long) (1 + Math.random() * (cacheExpire.floatRange() * 1000 - 1 + 1));
         //  设置失效时间，加上随机浮动值防止缓存穿透
         CacheExpireHolder.set(cacheExpiredMilliseconds + floatRangeMilliseconds);
-        log.info("缓存切面，设置过期时间{} ms", cacheExpiredMilliseconds + floatRangeMilliseconds);
+        LogHelp.info(log, "缓存切面，设置过期时间{} ms", cacheExpiredMilliseconds + floatRangeMilliseconds);
         try {
             return joinPoint.proceed();
+        }catch (Exception e){
+            LogHelp.error(log, e.getMessage(), e);
+            throw e;
         } finally {
             //清除对象
             CacheExpireHolder.remove();

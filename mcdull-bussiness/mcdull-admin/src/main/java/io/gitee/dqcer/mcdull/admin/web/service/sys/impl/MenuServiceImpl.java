@@ -6,8 +6,8 @@ import io.gitee.dqcer.mcdull.admin.model.convert.sys.MenuConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuAddDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuEntity;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleEntity;
 import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuTreeVo;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.MenuVO;
@@ -18,7 +18,7 @@ import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRoleRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IRoleManager;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IMenuService;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.TreeUtil;
@@ -61,8 +61,8 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
 
         boolean admin = UserContextHolder.isAdmin();
         if (admin) {
-            List<MenuDO> list = baseRepository.list(dto.getMenuName(), dto.getStatus(), null);
-            for (MenuDO menuDO : list) {
+            List<MenuEntity> list = baseRepository.list(dto.getMenuName(), dto.getStatus(), null);
+            for (MenuEntity menuDO : list) {
                 voList.add(MenuConvert.convertToMenuVO(menuDO));
             }
             return Result.success(voList);
@@ -73,12 +73,12 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
         if (CollUtil.isEmpty(roleByUserId)) {
             return Result.success(voList);
         }
-        List<MenuDO> menuByRole = roleManager.getMenuByRole(roleByUserId);
+        List<MenuEntity> menuByRole = roleManager.getMenuByRole(roleByUserId);
         if (CollUtil.isEmpty(menuByRole)) {
             return Result.success(voList);
         }
-        List<MenuDO> list = baseRepository.list(dto.getMenuName(), dto.getStatus(), menuByRole.stream().map(IdDO::getId).collect(Collectors.toList()));
-        for (MenuDO menuDO : list) {
+        List<MenuEntity> list = baseRepository.list(dto.getMenuName(), dto.getStatus(), menuByRole.stream().map(IdEntity::getId).collect(Collectors.toList()));
+        for (MenuEntity menuDO : list) {
             voList.add(MenuConvert.convertToMenuVO(menuDO));
         }
         return Result.success(voList);
@@ -86,7 +86,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
 
     @Override
     public Result<MenuVO> detail(Long id) {
-        MenuDO menuDO = baseRepository.getById(id);
+        MenuEntity menuDO = baseRepository.getById(id);
         return Result.success(MenuConvert.convertToMenuVO(menuDO));
     }
 
@@ -95,27 +95,27 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
         List<Long> roles = new ArrayList<>();
         roles.add(roleId);
 
-        List<MenuDO> allmenuList = baseRepository.list();
+        List<MenuEntity> allmenuList = baseRepository.list();
 
         RoleMenuTreeSelectVO vo = getMenuTreeSelectVO(allmenuList);
 
-        RoleDO roleDO = repository.getById(roleId);
-        List<MenuDO> menus;
+        RoleEntity roleDO = repository.getById(roleId);
+        List<MenuEntity> menus;
         if (UserTypeEnum.READ_WRITE.getCode().equals(roleDO.getType())) {
             menus = roleManager.getMenuByRole(roles);
-            vo.setCheckedKeys(menus.stream().map(IdDO::getId).collect(Collectors.toList()));
+            vo.setCheckedKeys(menus.stream().map(IdEntity::getId).collect(Collectors.toList()));
         }
         return Result.success(vo);
     }
 
-    private RoleMenuTreeSelectVO getMenuTreeSelectVO(List<MenuDO> menus) {
+    private RoleMenuTreeSelectVO getMenuTreeSelectVO(List<MenuEntity> menus) {
         RoleMenuTreeSelectVO vo = new RoleMenuTreeSelectVO();
         if (CollUtil.isNotEmpty(menus)) {
-            List<Long> menuIds = menus.stream().map(IdDO::getId).collect(Collectors.toList());
+            List<Long> menuIds = menus.stream().map(IdEntity::getId).collect(Collectors.toList());
             vo.setCheckedKeys(menuIds);
 
             List<MenuTreeVo> treeVoList = new ArrayList<>();
-            for (MenuDO menu : menus) {
+            for (MenuEntity menu : menus) {
                 treeVoList.add(MenuConvert.convertMenuTreeVo(menu));
             }
 
@@ -131,7 +131,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
 
     @Override
     public Result<RoleMenuTreeSelectVO> treeselect() {
-        List<MenuDO> list = baseRepository.list();
+        List<MenuEntity> list = baseRepository.list();
         RoleMenuTreeSelectVO vo = this.getMenuTreeSelectVO(list);
         return Result.success(vo);
     }
@@ -140,14 +140,14 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
     @Override
     public Result<Long> add(MenuAddDTO dto) {
         this.validNameExist(null, dto.getName());
-        MenuDO menuDO = MenuConvert.convertDoByDto(dto);
+        MenuEntity menuDO = MenuConvert.convertDoByDto(dto);
         baseRepository.insert(menuDO);
         return Result.success(menuDO.getId());
     }
 
     @Override
     protected void validNameExist(Serializable id, String name) {
-        List<MenuDO> list = baseRepository.getListByName(name);
+        List<MenuEntity> list = baseRepository.getListByName(name);
         if (null == id) {
             if (CollUtil.isNotEmpty(list)) {
                 this.throwDataExistException();
@@ -168,7 +168,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
         if (id.equals(dto.getParentId())) {
             throw new BusinessException("父节点不能是当前本身的节点");
         }
-        MenuDO menuDO = MenuConvert.convertDoByDto(dto);
+        MenuEntity menuDO = MenuConvert.convertDoByDto(dto);
         menuDO.setId(id);
         menuDO.setUpdatedTime(UserContextHolder.getSession().getNow());
         baseRepository.updateById(menuDO);
@@ -178,7 +178,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository> implement
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> remove(Long id) {
-        List<MenuDO> subMenuList = baseRepository.getSubMenuListByParentId(id);
+        List<MenuEntity> subMenuList = baseRepository.getSubMenuListByParentId(id);
         if (CollUtil.isNotEmpty(subMenuList)) {
             throw new BusinessException("该节点下存在子节点数据");
         }

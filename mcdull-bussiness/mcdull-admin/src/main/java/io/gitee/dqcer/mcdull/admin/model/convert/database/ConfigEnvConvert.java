@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.database;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.database.ConfigEnvLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.ConfigEnvDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.ConfigEnvEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.ConfigEnvVO;
 
 /**
@@ -16,13 +16,13 @@ public class ConfigEnvConvert {
     * ConfigEnvLiteDTO转换为ConfigEnvDO
     *
     * @param item ConfigEnvLiteDTO
-    * @return {@link ConfigEnvDO}
+    * @return {@link ConfigEnvEntity}
     */
-    public static ConfigEnvDO convertToConfigEnvDO(ConfigEnvLiteDTO item){
+    public static ConfigEnvEntity convertToConfigEnvDO(ConfigEnvLiteDTO item){
         if (item == null){
             return null;
         }
-        ConfigEnvDO entity = new ConfigEnvDO();
+        ConfigEnvEntity entity = new ConfigEnvEntity();
         entity.setId(item.getId());
         entity.setType(item.getType());
         entity.setDynamicTitle(item.getDynamicTitle() ? 1 : 2);
@@ -43,7 +43,7 @@ public class ConfigEnvConvert {
     * @param item ConfigEnvDO
     * @return {@link ConfigEnvVO}
     */
-    public static ConfigEnvVO convertToConfigEnvVO(ConfigEnvDO item){
+    public static ConfigEnvVO convertToConfigEnvVO(ConfigEnvEntity item){
         if (item == null){
             return null;
         }

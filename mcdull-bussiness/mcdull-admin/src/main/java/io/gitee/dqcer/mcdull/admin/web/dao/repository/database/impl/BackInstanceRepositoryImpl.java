@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.BackInstanceDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.BackInstanceEntity;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.database.InstanceBackMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IBackInstanceRepository;
 import org.springframework.stereotype.Service;
@@ -20,15 +20,15 @@ import java.util.List;
 * @since 2023-01-14
 */
 @Service
-public class BackInstanceRepositoryImpl extends ServiceImpl<InstanceBackMapper, BackInstanceDO>  implements IBackInstanceRepository {
+public class BackInstanceRepositoryImpl extends ServiceImpl<InstanceBackMapper, BackInstanceEntity>  implements IBackInstanceRepository {
 
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public List<BackInstanceDO> listByBackId(Long backId) {
-        LambdaQueryWrapper<BackInstanceDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(BackInstanceDO::getBackId, backId);
-        List<BackInstanceDO> list = baseMapper.selectList(wrapper);
+    public List<BackInstanceEntity> listByBackId(Long backId) {
+        LambdaQueryWrapper<BackInstanceEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(BackInstanceEntity::getBackId, backId);
+        List<BackInstanceEntity> list = baseMapper.selectList(wrapper);
         if (CollUtil.isNotEmpty(list)) {
             return list;
         }

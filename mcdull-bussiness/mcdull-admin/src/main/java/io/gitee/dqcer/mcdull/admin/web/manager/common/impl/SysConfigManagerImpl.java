@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.web.manager.common.impl;
 
-import io.gitee.dqcer.mcdull.admin.model.entity.common.SysConfigDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.common.SysConfigEntity;
 import io.gitee.dqcer.mcdull.admin.model.enums.SysConfigKeyEnum;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.common.ISysConfigRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.common.ISysConfigManager;
@@ -30,7 +30,7 @@ public class SysConfigManagerImpl implements ISysConfigManager {
      */
     @Override
     public String findValueByEnum(SysConfigKeyEnum keyEnum) {
-        SysConfigDO sysConfigDO = sysConfigRepository.findByKey(keyEnum.getCode());
+        SysConfigEntity sysConfigDO = sysConfigRepository.findByKey(keyEnum.getCode());
         if (sysConfigDO == null) {
             throw new DatabaseRowException(CodeEnum.DATA_NOT_EXIST);
         }

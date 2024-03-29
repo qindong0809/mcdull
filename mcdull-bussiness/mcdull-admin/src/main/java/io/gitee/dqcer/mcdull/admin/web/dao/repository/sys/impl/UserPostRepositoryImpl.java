@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserPostDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserPostEntity;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.UserPostMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserPostRepository;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @since 2022/12/25
  */
 @Service
-public class UserPostRepositoryImpl extends ServiceImpl<UserPostMapper, UserPostDO> implements IUserPostRepository {
+public class UserPostRepositoryImpl extends ServiceImpl<UserPostMapper, UserPostEntity> implements IUserPostRepository {
 
     /**
      * 通过用户id获取角色id列表
@@ -34,29 +34,29 @@ public class UserPostRepositoryImpl extends ServiceImpl<UserPostMapper, UserPost
      */
     @Override
     public List<Long> listPostByUserId(Long userId) {
-        LambdaQueryWrapper<UserPostDO> query = Wrappers.lambdaQuery();
-        query.eq(UserPostDO::getUserId, userId);
-        List<UserPostDO> list = baseMapper.selectList(query);
+        LambdaQueryWrapper<UserPostEntity> query = Wrappers.lambdaQuery();
+        query.eq(UserPostEntity::getUserId, userId);
+        List<UserPostEntity> list = baseMapper.selectList(query);
         if (list.isEmpty()) {
             return Collections.emptyList();
         }
-        return list.stream().map(UserPostDO::getPostId).collect(Collectors.toList());
+        return list.stream().map(UserPostEntity::getPostId).collect(Collectors.toList());
     }
 
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateByUserId(Long userId, List<Long> postIds) {
-        LambdaQueryWrapper<UserPostDO> query = Wrappers.lambdaQuery();
-        query.eq(UserPostDO::getUserId, userId);
+        LambdaQueryWrapper<UserPostEntity> query = Wrappers.lambdaQuery();
+        query.eq(UserPostEntity::getUserId, userId);
         baseMapper.delete(query);
         if (CollUtil.isEmpty(postIds)) {
             return;
         }
 
-        List<UserPostDO> entities = new ArrayList<>();
+        List<UserPostEntity> entities = new ArrayList<>();
         for (Long postId : postIds) {
-            UserPostDO entity = new UserPostDO();
+            UserPostEntity entity = new UserPostEntity();
             entity.setPostId(postId);
             entity.setUserId(userId);
             entities.add(entity);

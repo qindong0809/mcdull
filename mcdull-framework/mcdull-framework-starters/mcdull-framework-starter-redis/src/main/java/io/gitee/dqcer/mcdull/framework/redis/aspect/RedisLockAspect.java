@@ -5,6 +5,7 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.constants.SymbolConstants;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -80,21 +81,19 @@ public class RedisLockAspect {
         RLock lock = redissonClient.getLock(key);
         try {
             if (lock.tryLock(timeout, TimeUnit.SECONDS)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("分布式锁成功加锁");
-                }
+                LogHelp.debug(log, "分布式锁成功加锁. key: {}", key);
                 try {
                     return proceedingJoinPoint.proceed();
+                }catch (Exception e){
+                    LogHelp.error(log, e.getMessage(), e);
                 } finally {
                     lock.unlock();
-                    if (log.isDebugEnabled()) {
-                        log.debug("分布式锁成功释放锁");
-                    }
+                    LogHelp.debug(log, "分布式锁成功释放锁. key: {}", key);
                 }
             }
             throw new BusinessException(I18nConstants.SYSTEM_BUSY);
         } catch (InterruptedException e) {
-            log.error("Interrupted! {} {}", e.getMessage(), e);
+            LogHelp.error(log, "Interrupted! {} ", e.getMessage(), e);
             Thread.currentThread().interrupt();
             throw new BusinessException(I18nConstants.SYSTEM_BUSY);
         }

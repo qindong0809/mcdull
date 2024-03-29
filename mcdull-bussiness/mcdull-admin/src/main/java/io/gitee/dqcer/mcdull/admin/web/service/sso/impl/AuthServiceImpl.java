@@ -10,10 +10,9 @@ import io.gitee.dqcer.mcdull.admin.framework.auth.ISecurityService;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.MenuConvert;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.UserConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.LoginDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserLoginDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.*;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleEntity;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserLoginEntity;
 import io.gitee.dqcer.mcdull.admin.model.enums.LoginOperationTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.enums.MenuTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.*;
@@ -98,33 +97,33 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
 
         HttpServletRequest request = ServletUtil.getRequest();
 
-        UserLoginDO userLoginDO = this.builderLoginOrLogoutInfo(loginDTO.getUsername(),
+        UserLoginEntity userLoginDO = this.builderLoginOrLogoutInfo(loginDTO.getUsername(),
                 request.getHeader(HttpHeaders.USER_AGENT), LoginOperationTypeEnum.LOGIN);
 
 //        boolean validateResult = captchaService.validateCaptcha(loginDTO.getCode(), loginDTO.getUuid());
         boolean validateResult = true;
         if (!validateResult) {
             String error = "验证码错误";
-            this.listener(userLoginDO, UserLoginDO.FAIL, error);
+            this.listener(userLoginDO, UserLoginEntity.FAIL, error);
             return Result.error(error);
         }
         String account = loginDTO.getUsername();
-        UserDO userEntity = userRepository.queryUserByAccount(account);
+        UserEntity userEntity = userRepository.queryUserByAccount(account);
         if (null == userEntity) {
             log.warn("账号不存在 account: {}", account);
-            this.listener(userLoginDO, UserLoginDO.FAIL, AuthCodeEnum.NOT_EXIST.getMessage());
+            this.listener(userLoginDO, UserLoginEntity.FAIL, AuthCodeEnum.NOT_EXIST.getMessage());
             return Result.error(AuthCodeEnum.NOT_EXIST);
         }
         String password = userEntity.getPassword();
 
         if (!password.equals(Sha1Util.getSha1(loginDTO.getPassword() + userEntity.getSalt()))) {
             log.warn("用户密码错误");
-            this.listener(userLoginDO, UserLoginDO.FAIL, AuthCodeEnum.NOT_EXIST.getMessage());
+            this.listener(userLoginDO, UserLoginEntity.FAIL, AuthCodeEnum.NOT_EXIST.getMessage());
             return Result.error(AuthCodeEnum.NOT_EXIST);
         }
         if (!userEntity.getStatus().equals(StatusEnum.ENABLE.getCode())) {
             log.warn("账号已停用 account: {}", account);
-            this.listener(userLoginDO, UserLoginDO.FAIL, AuthCodeEnum.DISABLE.getMessage());
+            this.listener(userLoginDO, UserLoginEntity.FAIL, AuthCodeEnum.DISABLE.getMessage());
             return Result.error(AuthCodeEnum.DISABLE);
         }
 //        if (!userEntity.getDelFlag().equals(DelFlayEnum.NORMAL.getCode())) {
@@ -143,20 +142,20 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
         //  更新登录时间
         userRepository.updateLoginTimeById(userId);
 
-        this.listener(userLoginDO, UserLoginDO.OK, CodeEnum.SUCCESS.getMessage());
+        this.listener(userLoginDO, UserLoginEntity.OK, CodeEnum.SUCCESS.getMessage());
 
         return Result.success(token);
     }
 
-    private void listener(UserLoginDO userLoginDO, String type, String error) {
+    private void listener(UserLoginEntity userLoginDO, String type, String error) {
         userLoginDO.setType(type);
         userLoginDO.setRemark(error);
         userLoginRepository.save(userLoginDO);
     }
 
-    private UserLoginDO builderLoginOrLogoutInfo(String account, String agentUrl, LoginOperationTypeEnum operationType) {
+    private UserLoginEntity builderLoginOrLogoutInfo(String account, String agentUrl, LoginOperationTypeEnum operationType) {
         UserAgent agent = UserAgentUtil.parse(agentUrl);
-        UserLoginDO userLoginDO = new UserLoginDO();
+        UserLoginEntity userLoginDO = new UserLoginEntity();
         userLoginDO.setAccount(account);
         String browserName = agent.getBrowser().getName();
         if (Browser.Unknown.getName().equals(browserName)) {
@@ -251,9 +250,9 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
 
         //  记录注销信息
         Long userId = UserContextHolder.currentUserId();
-        UserDO userDO = userRepository.getById(userId);
-        UserLoginDO userLoginDO = this.builderLoginOrLogoutInfo(userDO.getAccount(), request.getHeader(HttpHeaders.USER_AGENT), LoginOperationTypeEnum.LOGOUT);
-        this.listener(userLoginDO, UserLoginDO.OK, CodeEnum.SUCCESS.getMessage());
+        UserEntity userDO = userRepository.getById(userId);
+        UserLoginEntity userLoginDO = this.builderLoginOrLogoutInfo(userDO.getAccount(), request.getHeader(HttpHeaders.USER_AGENT), LoginOperationTypeEnum.LOGOUT);
+        this.listener(userLoginDO, UserLoginEntity.OK, CodeEnum.SUCCESS.getMessage());
         return Result.success();
     }
 
@@ -266,12 +265,12 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
     public Result<CurrentUserInfVO> getCurrentUserInfo() {
         CurrentUserInfVO vo = new CurrentUserInfVO();
         Long userId = UserContextHolder.currentUserId();
-        UserDO user = userRepository.getById(userId);
+        UserEntity user = userRepository.getById(userId);
         UserVO userVO = UserConvert.entityToVO(user);
         vo.setUser(userVO);
 
-        List<RoleDO> userRoles = userManager.getUserRoles(userId);
-        Set<String> roles = userRoles.stream().map(RoleDO::getCode).collect(Collectors.toSet());
+        List<RoleEntity> userRoles = userManager.getUserRoles(userId);
+        Set<String> roles = userRoles.stream().map(RoleEntity::getCode).collect(Collectors.toSet());
         vo.setRoles(roles);
 
         Set<String> permissions = new HashSet<>();
@@ -291,16 +290,16 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
     public Result<List<RouterVO>> getCurrentUserRouters() {
         List<RouterVO> voList = new ArrayList<>();
         Long userId = UserContextHolder.currentUserId();
-        List<RoleDO> userRoles = userManager.getUserRoles(userId);
+        List<RoleEntity> userRoles = userManager.getUserRoles(userId);
         if (userRoles.isEmpty()) {
             return Result.success(voList);
         }
-        RoleDO roleDO = userRoles.get(1);
+        RoleEntity roleDO = userRoles.get(1);
         Long roleId = roleDO.getId();
 
         List<Long> roles = new ArrayList<>();
         roles.add(roleId);
-        List<MenuDO> menuList = new ArrayList<>();
+        List<MenuEntity> menuList = new ArrayList<>();
         if (UserContextHolder.isAdmin()) {
             menuList = menuManager.getAllMenu();
         } else {
@@ -309,7 +308,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
 
 
         List<MenuTreeVo> treeVoList = new ArrayList<>();
-        for (MenuDO menu : menuList) {
+        for (MenuEntity menu : menuList) {
             treeVoList.add(MenuConvert.convertMenuTreeVo(menu));
         }
 
@@ -330,7 +329,7 @@ public class AuthServiceImpl implements IAuthService, ISecurityService {
 
         for (MenuTreeVo treeVo : treeObjects) {
 
-            MenuDO menu = MenuConvert.convertDO(treeVo);
+            MenuEntity menu = MenuConvert.convertDO(treeVo);
             RouterVO router = new RouterVO();
             router.setHidden("1".equals(menu.getVisible()));
             router.setName(StrUtil.upperFirst(menu.getPath()));

@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.admin.model.convert.sys.RoleConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleInsertDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleUpdateDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleEntity;
 import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.RoleVO;
 import io.gitee.dqcer.mcdull.admin.util.LogHelpUtil;
@@ -16,7 +16,6 @@ import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IRoleService;
 import io.gitee.dqcer.mcdull.framework.base.dto.StatusDTO;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
@@ -58,9 +57,9 @@ public class RoleServiceImpl implements IRoleService {
     @Transactional(readOnly = true)
     @Override
     public Result<PagedVO<RoleVO>> listByPage(RoleLiteDTO dto) {
-        Page<RoleDO> entityPage = roleRepository.selectPage(dto);
+        Page<RoleEntity> entityPage = roleRepository.selectPage(dto);
         List<RoleVO> voList = new ArrayList<>();
-        for (RoleDO entity : entityPage.getRecords()) {
+        for (RoleEntity entity : entityPage.getRecords()) {
             voList.add(RoleConvert.convertToRoleVO(entity));
         }
         return Result.success(PageUtil.toPage(voList, entityPage));
@@ -83,7 +82,7 @@ public class RoleServiceImpl implements IRoleService {
             return Result.error(CodeEnum.DATA_EXIST);
         }
 
-        RoleDO entity = RoleConvert.convertToRoleDO(dto);
+        RoleEntity entity = RoleConvert.convertToRoleDO(dto);
         entity.setType(UserTypeEnum.READ_WRITE.getCode());
         Long entityId = roleRepository.insert(entity);
 
@@ -100,7 +99,7 @@ public class RoleServiceImpl implements IRoleService {
     }
 
     private boolean doCheckDataExist(String name) {
-        RoleDO tempEntity = new RoleDO();
+        RoleEntity tempEntity = new RoleEntity();
         tempEntity.setName(name);
         return roleRepository.exist(tempEntity);
     }
@@ -114,7 +113,7 @@ public class RoleServiceImpl implements IRoleService {
     @Transactional(readOnly = true)
     @Override
     public Result<RoleVO> detail(Long id) {
-        RoleDO entity = roleRepository.getById(id);
+        RoleEntity entity = roleRepository.getById(id);
         if (null == entity) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
@@ -133,12 +132,12 @@ public class RoleServiceImpl implements IRoleService {
     public Result<Long> update(RoleUpdateDTO dto) {
         Long id = dto.getRoleId();
 
-        RoleDO dbData = roleRepository.getById(id);
+        RoleEntity dbData = roleRepository.getById(id);
         if(null == dbData) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
-        RoleDO entity = RoleConvert.convertToRoleDO(dto);
+        RoleEntity entity = RoleConvert.convertToRoleDO(dto);
         entity.setId(id);
 ;
         boolean success = roleRepository.updateById(entity);
@@ -163,13 +162,13 @@ public class RoleServiceImpl implements IRoleService {
     public Result<Long> updateStatus(StatusDTO dto) {
         Long id = dto.getId();
 
-        RoleDO dbData = roleRepository.getById(id);
+        RoleEntity dbData = roleRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
 
-        RoleDO entity = new RoleDO();
+        RoleEntity entity = new RoleEntity();
         entity.setId(id);
         entity.setStatus(dto.getStatus());
 

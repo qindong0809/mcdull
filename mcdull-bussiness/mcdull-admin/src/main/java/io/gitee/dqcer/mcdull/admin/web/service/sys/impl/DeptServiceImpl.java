@@ -6,7 +6,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.DeptConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DeptLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DeptVO;
 import io.gitee.dqcer.mcdull.admin.util.TreeExtensionUtil;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IDeptRepository;
@@ -37,8 +37,8 @@ public class DeptServiceImpl implements IDeptService {
     @Override
     public Result<List<DeptVO>> list(DeptLiteDTO dto) {
         List<DeptVO> voList = new ArrayList<>();
-        List<DeptDO> list = deptRepository.list(dto.getDeptName(), dto.getStatus());
-        for (DeptDO deptDO : list) {
+        List<DeptEntity> list = deptRepository.list(dto.getDeptName(), dto.getStatus());
+        for (DeptEntity deptDO : list) {
             DeptVO deptVO = DeptConvert.convertToDeptVO(deptDO);
             voList.add(deptVO);
         }
@@ -48,8 +48,8 @@ public class DeptServiceImpl implements IDeptService {
     @Override
     public Result<List<DeptVO>> excludeChild(Long deptId) {
         List<DeptVO> voList = new ArrayList<>();
-        List<DeptDO> list = deptRepository.list();
-        for (DeptDO deptDO : list) {
+        List<DeptEntity> list = deptRepository.list();
+        for (DeptEntity deptDO : list) {
             DeptVO deptVO = DeptConvert.convertToDeptVO(deptDO);
             voList.add(deptVO);
         }
@@ -59,13 +59,13 @@ public class DeptServiceImpl implements IDeptService {
 
     @Override
     public Result<DeptVO> detail(Long deptId) {
-        DeptDO dept = deptRepository.getById(deptId);
+        DeptEntity dept = deptRepository.getById(deptId);
         return Result.success(DeptConvert.convertToDeptVO(dept));
     }
 
     @Override
     public Result<List<TreeSelectVO>> selectDeptTreeList() {
-        List<DeptDO> list = deptRepository.list(null, StatusEnum.ENABLE.getCode());
+        List<DeptEntity> list = deptRepository.list(null, StatusEnum.ENABLE.getCode());
 
         List<Tree<Long>> build = TreeUtil.build(list, 0L, (deptDO, treeNode) -> {
             treeNode.setId(deptDO.getId());
@@ -81,7 +81,7 @@ public class DeptServiceImpl implements IDeptService {
     @Override
     public Result<String> add(DeptVO deptVO) {
 
-        DeptDO deptDO = DeptConvert.convertToDeptDO(deptVO);
+        DeptEntity deptDO = DeptConvert.convertToDeptDO(deptVO);
         boolean b = deptRepository.saveOrUpdate(deptDO);
 
 
@@ -91,7 +91,7 @@ public class DeptServiceImpl implements IDeptService {
     @Override
     public Result<String> update(DeptVO deptVO) {
 
-        DeptDO deptDO = DeptConvert.convertToDeptDO(deptVO);
+        DeptEntity deptDO = DeptConvert.convertToDeptDO(deptVO);
         boolean b = deptRepository.saveOrUpdate(deptDO);
         return Result.success(b+"");
     }

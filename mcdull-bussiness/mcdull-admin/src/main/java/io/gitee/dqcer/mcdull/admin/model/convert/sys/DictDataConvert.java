@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictDataAddDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.DictDataDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.DictDataEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictDataVO;
 
 /**
@@ -12,7 +12,7 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictDataVO;
  */
 public class DictDataConvert {
 
-    public static DictDataVO convertToDictDataVO(DictDataDO dictDataDO) {
+    public static DictDataVO convertToDictDataVO(DictDataEntity dictDataDO) {
         DictDataVO dictDataVO = new DictDataVO();
         dictDataVO.setCreatedTime(dictDataDO.getCreatedTime());
         dictDataVO.setDictCode(dictDataDO.getId());
@@ -28,8 +28,8 @@ public class DictDataConvert {
         return dictDataVO;
     }
 
-    public static DictDataDO convertToDictDataDo(DictDataAddDTO dto) {
-        DictDataDO dictDataDO = new DictDataDO();
+    public static DictDataEntity convertToDictDataDo(DictDataAddDTO dto) {
+        DictDataEntity dictDataDO = new DictDataEntity();
         dictDataDO.setDictSort(dto.getDictSort());
         dictDataDO.setDictLabel(dto.getDictLabel());
         dictDataDO.setDictValue(dto.getDictValue());

@@ -8,15 +8,15 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleMenuDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleEntity;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleMenuEntity;
 import io.gitee.dqcer.mcdull.admin.model.enums.UserTypeEnum;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.RoleMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.RoleMenuMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
@@ -38,7 +38,7 @@ import java.util.List;
  * @since 2022/12/25
  */
 @Service
-public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implements IRoleRepository {
+public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleEntity> implements IRoleRepository {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -54,10 +54,10 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
      * @return {@link List}>}
      */
     @Override
-    public List<RoleDO> queryListByIds(List<Long> ids) {
-        LambdaQueryWrapper<RoleDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.in(RoleDO::getId, ids);
-        List<RoleDO> list =  baseMapper.selectList(wrapper);
+    public List<RoleEntity> queryListByIds(List<Long> ids) {
+        LambdaQueryWrapper<RoleEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(RoleEntity::getId, ids);
+        List<RoleEntity> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;
         }
@@ -68,25 +68,25 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
      * 分页查询
      *
      * @param dto dto
-     * @return {@link Page}<{@link RoleDO}>
+     * @return {@link Page}<{@link RoleEntity}>
      */
     @Override
-    public Page<RoleDO> selectPage(RoleLiteDTO dto) {
-        LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
+    public Page<RoleEntity> selectPage(RoleLiteDTO dto) {
+        LambdaQueryWrapper<RoleEntity> query = Wrappers.lambdaQuery();
         String name = dto.getName();
         if (StrUtil.isNotBlank(name)) {
-            query.like(RoleDO::getName, name);
+            query.like(RoleEntity::getName, name);
         }
         String status = dto.getStatus();
         if (StrUtil.isNotBlank(status)) {
-            query.eq(RoleDO::getStatus, status);
+            query.eq(RoleEntity::getStatus, status);
         }
         Date startTime = dto.getStartTime();
         Date endTime = dto.getEndTime();
         if (ObjUtil.isNotNull(startTime) && ObjUtil.isNotNull(endTime)) {
-            query.between(RelDO::getCreatedTime, startTime, endTime);
+            query.between(RelEntity::getCreatedTime, startTime, endTime);
         }
-        query.orderByDesc(BaseDO::getCreatedTime);
+        query.orderByDesc(BaseEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
     }
 
@@ -97,7 +97,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
      * @return {@link Long}
      */
     @Override
-    public Long insert(RoleDO entity) {
+    public Long insert(RoleEntity entity) {
         entity.setStatus(StatusEnum.ENABLE.getCode());
         entity.setCreatedBy(UserContextHolder.currentUserId());
         entity.setCreatedTime(new Date());
@@ -116,8 +116,8 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
      * @return boolean
      */
     @Override
-    public boolean exist(RoleDO roleDO) {
-        LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery(roleDO);
+    public boolean exist(RoleEntity roleDO) {
+        LambdaQueryWrapper<RoleEntity> query = Wrappers.lambdaQuery(roleDO);
         return !baseMapper.selectList(query).isEmpty();
     }
 
@@ -139,13 +139,13 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
      * 获取菜单
      *
      * @param roles 角色id集
-     * @return {@link List}<{@link RoleMenuDO}>
+     * @return {@link List}<{@link RoleMenuEntity}>
      */
     @Override
-    public List<RoleMenuDO> getMenuByRole(List<Long> roles) {
-        LambdaQueryWrapper<RoleMenuDO> query = Wrappers.lambdaQuery();
-        query.in(RoleMenuDO::getRoleId, roles);
-        List<RoleMenuDO> list = roleMenuMapper.selectList(query);
+    public List<RoleMenuEntity> getMenuByRole(List<Long> roles) {
+        LambdaQueryWrapper<RoleMenuEntity> query = Wrappers.lambdaQuery();
+        query.in(RoleMenuEntity::getRoleId, roles);
+        List<RoleMenuEntity> list = roleMenuMapper.selectList(query);
         if (list.isEmpty()) {
             return Collections.emptyList();
         }
@@ -153,9 +153,9 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
     }
 
     @Override
-    public List<RoleDO> getAll() {
-        LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
-        List<RoleDO> list = baseMapper.selectList(query);
+    public List<RoleEntity> getAll() {
+        LambdaQueryWrapper<RoleEntity> query = Wrappers.lambdaQuery();
+        List<RoleEntity> list = baseMapper.selectList(query);
         if (list.isEmpty()) {
             return Collections.emptyList();
         }
@@ -168,7 +168,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
             return;
         }
         for (Long menuId : menuIds) {
-            RoleMenuDO roleMenu = new RoleMenuDO();
+            RoleMenuEntity roleMenu = new RoleMenuEntity();
             roleMenu.setRoleId(roleId);
             roleMenu.setMenuId(menuId);
             roleMenuMapper.insert(roleMenu);
@@ -177,8 +177,8 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
 
     @Override
     public void batchUpdateMenu(Long roleId, List<Long> menuIds) {
-        LambdaQueryWrapper<RoleMenuDO> query = Wrappers.lambdaQuery();
-        query.eq(RoleMenuDO::getRoleId, roleId);
+        LambdaQueryWrapper<RoleMenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(RoleMenuEntity::getRoleId, roleId);
         roleMenuMapper.delete(query);
         this.batchSaveMenu(roleId, menuIds);
     }

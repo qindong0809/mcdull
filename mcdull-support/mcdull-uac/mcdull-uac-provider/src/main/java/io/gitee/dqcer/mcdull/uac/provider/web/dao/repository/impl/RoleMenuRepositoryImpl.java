@@ -4,7 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleMenuDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleMenuEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.RoleMenuMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleMenuRepository;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @since 2023/12/01
  */
 @Service
-public class RoleMenuRepositoryImpl extends ServiceImpl<RoleMenuMapper, RoleMenuDO> implements IRoleMenuRepository {
+public class RoleMenuRepositoryImpl extends ServiceImpl<RoleMenuMapper, RoleMenuEntity> implements IRoleMenuRepository {
 
 
     @Override
@@ -30,25 +30,25 @@ public class RoleMenuRepositoryImpl extends ServiceImpl<RoleMenuMapper, RoleMenu
         if (ObjectUtil.isNull(roleIdCollection)) {
             throw new IllegalArgumentException("'roleIdCollection' is null");
         }
-        LambdaQueryWrapper<RoleMenuDO> query = Wrappers.lambdaQuery();
-        query.in(RoleMenuDO::getRoleId, roleIdCollection);
-        List<RoleMenuDO> list = baseMapper.selectList(query);
-        return list.stream().collect(Collectors.groupingBy(RoleMenuDO::getRoleId,
-                Collectors.mapping(RoleMenuDO::getMenuId, Collectors.toList())));
+        LambdaQueryWrapper<RoleMenuEntity> query = Wrappers.lambdaQuery();
+        query.in(RoleMenuEntity::getRoleId, roleIdCollection);
+        List<RoleMenuEntity> list = baseMapper.selectList(query);
+        return list.stream().collect(Collectors.groupingBy(RoleMenuEntity::getRoleId,
+                Collectors.mapping(RoleMenuEntity::getMenuId, Collectors.toList())));
     }
 
     @Override
-    public List<RoleMenuDO> listByRoleId(Integer roleId) {
-        LambdaQueryWrapper<RoleMenuDO> query = Wrappers.lambdaQuery();
-        query.eq(RoleMenuDO::getRoleId, roleId);
+    public List<RoleMenuEntity> listByRoleId(Integer roleId) {
+        LambdaQueryWrapper<RoleMenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(RoleMenuEntity::getRoleId, roleId);
         return baseMapper.selectList(query);
     }
 
     @Override
     public void insert(Integer roleId, List<Integer> menuIdList) {
-        List<RoleMenuDO> list = new ArrayList<>();
+        List<RoleMenuEntity> list = new ArrayList<>();
         for (Integer menuId : menuIdList) {
-            RoleMenuDO roleMenu = new RoleMenuDO();
+            RoleMenuEntity roleMenu = new RoleMenuEntity();
             roleMenu.setMenuId(menuId);
             roleMenu.setRoleId(roleId);
             list.add(roleMenu);
@@ -64,10 +64,10 @@ public class RoleMenuRepositoryImpl extends ServiceImpl<RoleMenuMapper, RoleMenu
         if (ObjectUtil.isNull(menuIdList)) {
             throw new IllegalArgumentException("'menuIdList' is null");
         }
-        LambdaQueryWrapper<RoleMenuDO> query = Wrappers.lambdaQuery();
-        query.in(RoleMenuDO::getMenuId, menuIdList);
-        List<RoleMenuDO> list = baseMapper.selectList(query);
-        return list.stream().collect(Collectors.groupingBy(RoleMenuDO::getMenuId,
-                Collectors.mapping(RoleMenuDO::getRoleId, Collectors.toList())));
+        LambdaQueryWrapper<RoleMenuEntity> query = Wrappers.lambdaQuery();
+        query.in(RoleMenuEntity::getMenuId, menuIdList);
+        List<RoleMenuEntity> list = baseMapper.selectList(query);
+        return list.stream().collect(Collectors.groupingBy(RoleMenuEntity::getMenuId,
+                Collectors.mapping(RoleMenuEntity::getRoleId, Collectors.toList())));
     }
 }

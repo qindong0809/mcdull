@@ -1,5 +1,8 @@
 package io.gitee.dqcer.mcdull.framework.web.config;
 
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +21,14 @@ import java.util.TimeZone;
 @Configuration
 public class I18nConfig {
 
+    protected Logger log = LoggerFactory.getLogger(getClass());
+
     @PostConstruct
     void setDefaultTimeZone() {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        final String timeZone = "UTC";
+        TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+        LogHelp.info(log, "setDefaultTimeZone: {}", timeZone);
+
     }
 
     @Bean

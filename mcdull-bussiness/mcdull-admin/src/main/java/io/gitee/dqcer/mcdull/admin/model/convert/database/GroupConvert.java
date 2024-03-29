@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.database;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.database.GroupAddDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.GroupDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.GroupEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.GroupVO;
 
 /**
@@ -12,7 +12,7 @@ import io.gitee.dqcer.mcdull.admin.model.vo.database.GroupVO;
  */
 public class GroupConvert {
 
-    public static GroupVO convertToGroupVO(GroupDO entity) {
+    public static GroupVO convertToGroupVO(GroupEntity entity) {
         GroupVO groupVO = new GroupVO();
         groupVO.setId(entity.getId());
         groupVO.setName(entity.getName());
@@ -22,8 +22,8 @@ public class GroupConvert {
 
     }
 
-    public static GroupDO convertToGroupDo(GroupAddDTO dto) {
-        GroupDO groupDO = new GroupDO();
+    public static GroupEntity convertToGroupDo(GroupAddDTO dto) {
+        GroupEntity groupDO = new GroupEntity();
         groupDO.setName(dto.getName());
         groupDO.setStatus(dto.getStatus());
         return groupDO;

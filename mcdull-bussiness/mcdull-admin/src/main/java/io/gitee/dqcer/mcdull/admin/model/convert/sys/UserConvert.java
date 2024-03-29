@@ -4,8 +4,8 @@ package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 import cn.hutool.core.util.ObjectUtil;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserEmailConfigDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.UserInsertDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserEmailConfigDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserEntity;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserEmailConfigEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserDetailVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserEmailConfigVO;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.UserProfileVO;
@@ -26,7 +26,7 @@ public class UserConvert {
      * @param entity 实体
      * @return {@link UserVO}
      */
-    public static UserVO entityToVO(UserDO entity) {
+    public static UserVO entityToVO(UserEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -47,8 +47,8 @@ public class UserConvert {
         return userVO;
     }
 
-    public static UserDO dtoToEntity(UserInsertDTO dto) {
-        UserDO userDO = new UserDO();
+    public static UserEntity dtoToEntity(UserInsertDTO dto) {
+        UserEntity userDO = new UserEntity();
         userDO.setNickName(dto.getNickName());
         userDO.setAccount(dto.getAccount());
         userDO.setPassword(dto.getPassword());
@@ -59,7 +59,7 @@ public class UserConvert {
         return userDO;
     }
 
-    public static UserDetailVO convertToUserDetailVO(UserDO userDO) {
+    public static UserDetailVO convertToUserDetailVO(UserEntity userDO) {
         UserDetailVO userDetailVO = new UserDetailVO();
         userDetailVO.setType(userDO.getType());
         userDetailVO.setNickName(userDO.getNickName());
@@ -73,7 +73,7 @@ public class UserConvert {
 
     }
 
-    public static UserProfileVO toUserProfileVO(UserDO userInfo) {
+    public static UserProfileVO toUserProfileVO(UserEntity userInfo) {
         UserProfileVO vo = new UserProfileVO();
         vo.setId(userInfo.getId());
         vo.setStatus(userInfo.getStatus());
@@ -87,8 +87,8 @@ public class UserConvert {
         return vo;
     }
 
-    public static UserEmailConfigDO toEmailConfigDO(UserEmailConfigDTO dto) {
-        UserEmailConfigDO userEmailConfigDO = new UserEmailConfigDO();
+    public static UserEmailConfigEntity toEmailConfigDO(UserEmailConfigDTO dto) {
+        UserEmailConfigEntity userEmailConfigDO = new UserEmailConfigEntity();
         userEmailConfigDO.setHost(dto.getHost());
         userEmailConfigDO.setUsername(dto.getUsername());
         userEmailConfigDO.setPassword(dto.getPassword());
@@ -96,7 +96,7 @@ public class UserConvert {
         return userEmailConfigDO;
     }
 
-    public static UserEmailConfigVO toEmailConfigVO(UserEmailConfigDO dbUserEmailConfig) {
+    public static UserEmailConfigVO toEmailConfigVO(UserEmailConfigEntity dbUserEmailConfig) {
         if (ObjectUtil.isNull(dbUserEmailConfig)) {
             return null;
         }

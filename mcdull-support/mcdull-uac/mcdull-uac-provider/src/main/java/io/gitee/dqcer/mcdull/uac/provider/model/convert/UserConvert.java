@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.model.convert;
 
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 
 /**
@@ -20,7 +20,7 @@ public class UserConvert {
      * @param entity 实体
      * @return {@link UserVO}
      */
-    public static UserVO entityToVO(UserDO entity) {
+    public static UserVO entityToVO(UserEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -39,8 +39,8 @@ public class UserConvert {
         return userVO;
     }
 
-    public static UserDO insertDtoToEntity(UserInsertDTO dto) {
-        UserDO entity = new UserDO();
+    public static UserEntity insertDtoToEntity(UserInsertDTO dto) {
+        UserEntity entity = new UserEntity();
         entity.setNickName(dto.getNickname());
         entity.setUsername(dto.getAccount());
         entity.setEmail(dto.getEmail());
@@ -49,8 +49,8 @@ public class UserConvert {
         return entity;
     }
 
-    public static UserDO updateDtoToEntity(UserUpdateDTO dto) {
-        UserDO entity = new UserDO();
+    public static UserEntity updateDtoToEntity(UserUpdateDTO dto) {
+        UserEntity entity = new UserEntity();
         entity.setNickName(dto.getNickname());
         entity.setEmail(dto.getEmail());
         entity.setPhone(dto.getPhone());

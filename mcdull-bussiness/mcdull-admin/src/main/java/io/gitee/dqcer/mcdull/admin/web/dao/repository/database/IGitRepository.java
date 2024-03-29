@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.dao.repository.database;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.GitListDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.GitDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.GitEntity;
 
 import java.util.List;
 
@@ -13,14 +13,14 @@ import java.util.List;
 * @author dqcer
 * @since 2023-01-14
 */
-public interface IGitRepository extends IService<GitDO>  {
+public interface IGitRepository extends IService<GitEntity>  {
 
-    Page<GitDO> selectPage(GitListDTO dto);
+    Page<GitEntity> selectPage(GitListDTO dto);
 
-    List<GitDO> getListByName(String name);
+    List<GitEntity> getListByName(String name);
 
     void removeUpdate(Long id);
 
-    List<GitDO> allList();
+    List<GitEntity> allList();
 
 }

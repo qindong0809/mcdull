@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.mdc.client.vo;
 
-import io.gitee.dqcer.mcdull.framework.base.vo.VO;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 
 /**
  * sys dict

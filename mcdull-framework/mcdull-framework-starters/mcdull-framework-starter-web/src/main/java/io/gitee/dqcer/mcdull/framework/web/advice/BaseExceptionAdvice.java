@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.web.advice;
 
 import cn.dev33.satoken.exception.SaTokenException;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class BaseExceptionAdvice {
      */
     @ExceptionHandler(value = SQLException.class)
     public Result<?> exception(SQLException exception) {
-        log.error("sql异常: ", exception);
+        LogHelp.error(log, "sql异常: ", exception);
         return Result.error(CodeEnum.SQL_SYNTAX_ERROR, Collections.singletonList(exception.getMessage()));
     }
 

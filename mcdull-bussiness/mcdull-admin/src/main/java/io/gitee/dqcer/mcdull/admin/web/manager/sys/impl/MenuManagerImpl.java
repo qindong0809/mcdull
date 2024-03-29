@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.manager.sys.impl;
 
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuEntity;
 import io.gitee.dqcer.mcdull.admin.model.enums.MenuTypeEnum;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IMenuManager;
@@ -30,7 +30,7 @@ public class MenuManagerImpl implements IMenuManager {
      * @return boolean
      */
     @Override
-    public boolean isMenuFrame(MenuDO menuDO) {
+    public boolean isMenuFrame(MenuEntity menuDO) {
         return menuDO.getParentId().intValue() == 0 && MenuTypeEnum.MENU.getCode().equals(menuDO.getMenuType())
                 && menuDO.getIsFrame().equals("1");
     }
@@ -42,7 +42,7 @@ public class MenuManagerImpl implements IMenuManager {
      * @return boolean
      */
     @Override
-    public boolean isInnerLink(MenuDO menuDO) {
+    public boolean isInnerLink(MenuEntity menuDO) {
         return menuDO.getIsFrame().equals("1") && menuDO.getPath().contains("http");
     }
 
@@ -53,7 +53,7 @@ public class MenuManagerImpl implements IMenuManager {
      * @return boolean
      */
     @Override
-    public boolean isParentView(MenuDO menuDO) {
+    public boolean isParentView(MenuEntity menuDO) {
         return menuDO.getParentId().intValue() != 0 && "M".equals(menuDO.getMenuType());
     }
 
@@ -64,7 +64,7 @@ public class MenuManagerImpl implements IMenuManager {
      * @return 路由地址
      */
     @Override
-    public String getRouterPath(MenuDO menu) {
+    public String getRouterPath(MenuEntity menu) {
         String routerPath = menu.getPath();
         // 内链打开外网方式
         if (menu.getParentId().intValue() != 0 && isInnerLink(menu)) {
@@ -87,7 +87,7 @@ public class MenuManagerImpl implements IMenuManager {
      * @return 组件信息
      */
     @Override
-    public String getComponent(MenuDO menu) {
+    public String getComponent(MenuEntity menu) {
         String component = "Layout";
         if (StrUtil.isNotEmpty(menu.getComponent()) && !isMenuFrame(menu)) {
             component = menu.getComponent();
@@ -111,7 +111,7 @@ public class MenuManagerImpl implements IMenuManager {
     }
 
     @Override
-    public List<MenuDO> getAllMenu() {
+    public List<MenuEntity> getAllMenu() {
         return menuRepository.getAllMenu();
     }
 }

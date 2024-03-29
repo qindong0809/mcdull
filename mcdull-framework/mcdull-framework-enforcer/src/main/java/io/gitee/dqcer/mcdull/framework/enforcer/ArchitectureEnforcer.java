@@ -2,9 +2,9 @@ package io.gitee.dqcer.mcdull.framework.enforcer;
 
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.library.GeneralCodingRules;
-import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
-import io.gitee.dqcer.mcdull.framework.base.entity.DO;
-import io.gitee.dqcer.mcdull.framework.base.vo.VO;
+import io.gitee.dqcer.mcdull.framework.base.support.DTO;
+import io.gitee.dqcer.mcdull.framework.base.support.Entity;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -87,7 +87,7 @@ public final class ArchitectureEnforcer {
      * @return {@link ArchRule}
      */
     public static ArchRule doNamingRules() {
-        return classes().that().implement(DO.class)
+        return classes().that().implement(Entity.class)
                 .should().haveSimpleNameEndingWith("DO").allowEmptyShould(true)
                 .as("实现DO的类名应该以'DO'结尾");
     }

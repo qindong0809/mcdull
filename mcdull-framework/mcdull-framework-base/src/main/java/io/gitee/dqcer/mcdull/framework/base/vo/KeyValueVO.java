@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.base.vo;
 
-import io.gitee.dqcer.mcdull.framework.base.supert.KeyValue;
+import io.gitee.dqcer.mcdull.framework.base.support.KeyValue;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 
 import java.util.StringJoiner;
 
@@ -10,7 +11,7 @@ import java.util.StringJoiner;
  * @author dqcer
  * @since 2022/12/07
  */
-public class KeyValueVO<K, V> implements KeyValue<K, V> {
+public class KeyValueVO<K, V> implements KeyValue<K, V> , VO {
 
     private static final long serialVersionUID = 1L;
 

@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.admin.model.convert.database.GitConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.GitAddDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.GitEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.GitListDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.GitDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.GitEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.GitVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IGitRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.database.IGitService;
@@ -33,8 +33,8 @@ public class GitServiceImpl extends BasicServiceImpl<IGitRepository> implements 
     @Override
     public Result<PagedVO<GitVO>> list(GitListDTO dto) {
         List<GitVO> voList = new ArrayList<>();
-        Page<GitDO> entityPage = baseRepository.selectPage(dto);
-        for (GitDO entity : entityPage.getRecords()) {
+        Page<GitEntity> entityPage = baseRepository.selectPage(dto);
+        for (GitEntity entity : entityPage.getRecords()) {
             voList.add(GitConvert.convertToGitVO(entity));
         }
         return Result.success(PageUtil.toPage(voList, entityPage));
@@ -42,16 +42,16 @@ public class GitServiceImpl extends BasicServiceImpl<IGitRepository> implements 
 
     @Override
     public Result<GitVO> detail(Long id) {
-        GitDO entity = baseRepository.getById(id);
+        GitEntity entity = baseRepository.getById(id);
         return Result.success(GitConvert.convertToGitVO(entity));
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> add(GitAddDTO dto) {
-        List<GitDO> list = baseRepository.getListByName(dto.getName());
+        List<GitEntity> list = baseRepository.getListByName(dto.getName());
         this.validNameExist(null, dto.getName(), list);
-        GitDO sysConfigDO = GitConvert.convertToGitDo(dto);
+        GitEntity sysConfigDO = GitConvert.convertToGitDo(dto);
         baseRepository.save(sysConfigDO);
         return Result.success(sysConfigDO.getId());
     }
@@ -59,9 +59,9 @@ public class GitServiceImpl extends BasicServiceImpl<IGitRepository> implements 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> edit(GitEditDTO dto) {
-        List<GitDO> list = baseRepository.getListByName(dto.getName());
+        List<GitEntity> list = baseRepository.getListByName(dto.getName());
         this.validNameExist(dto.getId(), dto.getName(), list);
-        GitDO entity = GitConvert.convertToGitDo(dto);
+        GitEntity entity = GitConvert.convertToGitDo(dto);
         entity.setId(dto.getId());
         baseRepository.updateById(entity);
         return Result.success(entity.getId());
@@ -77,9 +77,9 @@ public class GitServiceImpl extends BasicServiceImpl<IGitRepository> implements 
     @Override
     public Result<List<GitVO>> allList() {
         List<GitVO> voList = new ArrayList<>();
-        List<GitDO> list = baseRepository.allList();
+        List<GitEntity> list = baseRepository.allList();
         if (CollUtil.isNotEmpty(list)) {
-            for (GitDO GitDO : list) {
+            for (GitEntity GitDO : list) {
                 GitVO vo = GitConvert.convertToGitVO(GitDO);
                 voList.add(vo);
             }

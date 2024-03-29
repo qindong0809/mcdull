@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserRoleDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserRoleEntity;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.UserRoleMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRoleRepository;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @since 2022/12/25
  */
 @Service
-public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRoleDO> implements IUserRoleRepository {
+public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRoleEntity> implements IUserRoleRepository {
 
     /**
      * 通过用户id获取角色id列表
@@ -34,13 +34,13 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
      */
     @Override
     public List<Long> listRoleByUserId(Long userId) {
-        LambdaQueryWrapper<UserRoleDO> query = Wrappers.lambdaQuery();
-        query.eq(UserRoleDO::getUserId, userId);
-        List<UserRoleDO> list = baseMapper.selectList(query);
+        LambdaQueryWrapper<UserRoleEntity> query = Wrappers.lambdaQuery();
+        query.eq(UserRoleEntity::getUserId, userId);
+        List<UserRoleEntity> list = baseMapper.selectList(query);
         if (list.isEmpty()) {
             return Collections.emptyList();
         }
-        return list.stream().map(UserRoleDO::getRoleId).collect(Collectors.toList());
+        return list.stream().map(UserRoleEntity::getRoleId).collect(Collectors.toList());
     }
 
     /**
@@ -52,15 +52,15 @@ public class UserRoleRepositoryImpl extends ServiceImpl<UserRoleMapper, UserRole
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateByUserId(Long userId, List<Long> roleIds) {
-        LambdaQueryWrapper<UserRoleDO> query = Wrappers.lambdaQuery();
-        query.eq(UserRoleDO::getUserId, userId);
+        LambdaQueryWrapper<UserRoleEntity> query = Wrappers.lambdaQuery();
+        query.eq(UserRoleEntity::getUserId, userId);
         baseMapper.delete(query);
         if (CollUtil.isEmpty(roleIds)) {
             return;
         }
-        List<UserRoleDO> entities = new ArrayList<>();
+        List<UserRoleEntity> entities = new ArrayList<>();
         for (Long roleId : roleIds) {
-            UserRoleDO entity = new UserRoleDO();
+            UserRoleEntity entity = new UserRoleEntity();
             entity.setRoleId(roleId);
             entity.setUserId(userId);
             entities.add(entity);

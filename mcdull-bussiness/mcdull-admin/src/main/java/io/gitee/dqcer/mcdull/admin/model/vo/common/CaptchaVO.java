@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.model.vo.common;
 
-import io.gitee.dqcer.mcdull.framework.base.vo.VO;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 
 /**
  * 验证码视图对象

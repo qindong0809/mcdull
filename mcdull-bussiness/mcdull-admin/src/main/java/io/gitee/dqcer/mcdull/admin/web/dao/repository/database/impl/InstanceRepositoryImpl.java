@@ -8,10 +8,10 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.InstanceListDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.InstanceDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.InstanceEntity;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.database.InstanceMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IInstanceRepository;
-import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -24,20 +24,20 @@ import java.util.List;
 * @since 2023-01-14
 */
 @Service
-public class InstanceRepositoryImpl extends ServiceImpl<InstanceMapper, InstanceDO>  implements IInstanceRepository {
+public class InstanceRepositoryImpl extends ServiceImpl<InstanceMapper, InstanceEntity>  implements IInstanceRepository {
 
     @Override
-    public Page<InstanceDO> selectPage(InstanceListDTO dto) {
-        LambdaQueryWrapper<InstanceDO> lambda = new QueryWrapper<InstanceDO>().lambda();
-        lambda.eq(ObjUtil.isNotNull(dto.getGroupId()), InstanceDO::getGroupId, dto.getGroupId());
-        lambda.orderByDesc(RelDO::getCreatedTime);
+    public Page<InstanceEntity> selectPage(InstanceListDTO dto) {
+        LambdaQueryWrapper<InstanceEntity> lambda = new QueryWrapper<InstanceEntity>().lambda();
+        lambda.eq(ObjUtil.isNotNull(dto.getGroupId()), InstanceEntity::getGroupId, dto.getGroupId());
+        lambda.orderByDesc(RelEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
     }
 
     @Override
-    public List<InstanceDO> getListByName(String name) {
-        LambdaQueryWrapper<InstanceDO> query = Wrappers.lambdaQuery();
-        query.eq(InstanceDO::getName, name);
+    public List<InstanceEntity> getListByName(String name) {
+        LambdaQueryWrapper<InstanceEntity> query = Wrappers.lambdaQuery();
+        query.eq(InstanceEntity::getName, name);
         return baseMapper.selectList(query);
     }
 
@@ -47,10 +47,10 @@ public class InstanceRepositoryImpl extends ServiceImpl<InstanceMapper, Instance
     }
 
     @Override
-    public List<InstanceDO> getByGroupId(Long groupId) {
-        LambdaQueryWrapper<InstanceDO> query = Wrappers.lambdaQuery();
-        query.eq(InstanceDO::getGroupId, groupId);
-        List<InstanceDO> list = baseMapper.selectList(query);
+    public List<InstanceEntity> getByGroupId(Long groupId) {
+        LambdaQueryWrapper<InstanceEntity> query = Wrappers.lambdaQuery();
+        query.eq(InstanceEntity::getGroupId, groupId);
+        List<InstanceEntity> list = baseMapper.selectList(query);
         if (CollUtil.isNotEmpty(list)) {
             return list;
         }

@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.framework.web.filter;
 
 import cn.dev33.satoken.stp.StpUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
@@ -25,7 +26,7 @@ import java.util.Date;
  */
 public class HttpTraceLogFilter implements Filter {
 
-    private static final Logger log = LoggerFactory.getLogger(HttpTraceLogFilter.class);
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
@@ -33,7 +34,7 @@ public class HttpTraceLogFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String requestUrl = request.getRequestURI();
-
+        LogHelp.debug(log, "start filter. url: {}", requestUrl);
         try {
             String traceId = request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER);
             if(null == traceId || traceId.trim().length() == 0) {
@@ -47,17 +48,15 @@ public class HttpTraceLogFilter implements Filter {
             unifySession.setUserId(StpUtil.isLogin() ? StpUtil.getLoginIdAsInt() : null);
             UserContextHolder.setSession(unifySession);
 
-            if (log.isDebugEnabled()) {
-                log.debug("Filter url: {}", requestUrl);
-            }
             if (!isRequestValid(request)) {
-                log.warn("非法请求....");
+                LogHelp.warn(log, "Illegal request. url: {}", requestUrl);
                 filterChain.doFilter(request, response);
                 return;
             }
 
             filterChain.doFilter(request, response);
         } finally {
+            LogHelp.debug(log, "end filter. url: {}", requestUrl);
             UserContextHolder.clearSession();
             MDC.remove(HttpHeaderConstants.LOG_TRACE_ID);
         }
@@ -67,7 +66,7 @@ public class HttpTraceLogFilter implements Filter {
         try {
             new URI(request.getRequestURL().toString());
         } catch (URISyntaxException e) {
-            log.warn(e.getMessage(), e);
+            LogHelp.warn(log, e.getMessage(), e);
             return false;
         }
         return true;

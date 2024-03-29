@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.DeptDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.DeptEntity;
 
 import java.util.List;
 
@@ -9,14 +9,14 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/26
  */
-public interface IDeptRepository extends IService<DeptDO> {
+public interface IDeptRepository extends IService<DeptEntity> {
 
 
-    Integer insert(DeptDO entity);
+    Integer insert(DeptEntity entity);
 
     boolean delete(Integer id, String reason);
 
-    List<DeptDO> listByParentId(Integer parentId);
+    List<DeptEntity> listByParentId(Integer parentId);
 }
 /***
  * menus:

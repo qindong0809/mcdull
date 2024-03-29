@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.mdc.provider.web.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.gitee.dqcer.mcdull.mdc.provider.model.entity.CustomPropertyDO;
+import io.gitee.dqcer.mcdull.mdc.provider.model.entity.CustomPropertyEntity;
 
 /**
  * 自定义属性映射器
@@ -9,5 +9,5 @@ import io.gitee.dqcer.mcdull.mdc.provider.model.entity.CustomPropertyDO;
  * @author dqcer
  * @since 2024/03/25
  */
-public interface CustomPropertyMapper extends BaseMapper<CustomPropertyDO> {
+public interface CustomPropertyMapper extends BaseMapper<CustomPropertyEntity> {
 }

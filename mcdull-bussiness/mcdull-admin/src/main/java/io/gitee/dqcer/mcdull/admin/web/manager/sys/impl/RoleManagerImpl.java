@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.manager.sys.impl;
 
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleMenuDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuEntity;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleMenuEntity;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IRoleRepository;
 import io.gitee.dqcer.mcdull.admin.web.manager.sys.IRoleManager;
@@ -30,9 +30,9 @@ public class RoleManagerImpl implements IRoleManager {
 
 
     @Override
-    public List<MenuDO> getMenuByRole(List<Long> roles) {
-        List<RoleMenuDO> list = roleRepository.getMenuByRole(roles);
-        List<Long> menuIds = list.stream().map(RoleMenuDO::getMenuId).collect(Collectors.toList());
+    public List<MenuEntity> getMenuByRole(List<Long> roles) {
+        List<RoleMenuEntity> list = roleRepository.getMenuByRole(roles);
+        List<Long> menuIds = list.stream().map(RoleMenuEntity::getMenuId).collect(Collectors.toList());
         if (menuIds.isEmpty()) {
             return Collections.emptyList();
         }

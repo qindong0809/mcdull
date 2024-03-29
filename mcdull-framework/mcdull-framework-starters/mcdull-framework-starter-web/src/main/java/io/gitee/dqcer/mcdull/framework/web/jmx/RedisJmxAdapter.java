@@ -1,7 +1,10 @@
 package io.gitee.dqcer.mcdull.framework.web.jmx;
 
 import cn.hutool.core.util.StrUtil;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedisClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedOperationParameter;
 import org.springframework.jmx.export.annotation.ManagedOperationParameters;
@@ -23,6 +26,8 @@ import java.util.Set;
         description = "redis util")
 public class RedisJmxAdapter {
 
+    protected Logger log = LoggerFactory.getLogger(getClass());
+
     @Resource
     private RedisClient redisClient;
 
@@ -32,6 +37,7 @@ public class RedisJmxAdapter {
             @ManagedOperationParameter(name = "password", description = "password"
             )})
     public String cleanAllKey(String password) {
+        LogHelp.warn(log, "RedisJmxAdapter#cleanAllKey: {}", password);
         String errorMsg = validatePassword(password);
         if (errorMsg != null) {
             return errorMsg;
@@ -48,6 +54,7 @@ public class RedisJmxAdapter {
             @ManagedOperationParameter(name = "keyPrefix", description = "keyPrefix")
     })
     public String removeByKeyPrefix(String keyPrefix){
+        LogHelp.warn(log, "RedisJmxAdapter#removeByKeyPrefix: {}", keyPrefix);
         if(StrUtil.isEmpty(keyPrefix)){
             return "key is empty";
         }

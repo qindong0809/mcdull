@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DeptVO;
 
 /**
@@ -11,7 +11,7 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.DeptVO;
  */
 public class DeptConvert {
 
-    public static DeptVO convertToDeptVO(DeptDO deptDO) {
+    public static DeptVO convertToDeptVO(DeptEntity deptDO) {
         DeptVO deptVO = new DeptVO();
         deptVO.setDeptId(deptDO.getId());
         deptVO.setParentId(deptDO.getParentId());
@@ -27,8 +27,8 @@ public class DeptConvert {
         return deptVO;
     }
 
-    public static DeptDO convertToDeptDO(DeptVO deptVO) {
-        DeptDO deptDO = new DeptDO();
+    public static DeptEntity convertToDeptDO(DeptVO deptVO) {
+        DeptEntity deptDO = new DeptEntity();
         deptDO.setId(deptVO.getDeptId());
         deptDO.setParentId(deptVO.getParentId());
         deptDO.setAncestors(deptVO.getAncestors());

@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserLoginDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserLoginEntity;
 
 /**
  * 用户登录信息 数据库操作封装接口层
@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserLoginDO;
  * @author dqcer
  * @since 2022/12/26
  */
-public interface IUserLoginRepository extends IService<UserLoginDO> {
+public interface IUserLoginRepository extends IService<UserLoginEntity> {
 
     /**
      * 保存登录信息根据用户id和令牌

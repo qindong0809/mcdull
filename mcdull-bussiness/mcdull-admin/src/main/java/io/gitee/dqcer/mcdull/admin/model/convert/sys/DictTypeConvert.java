@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictTypeAddDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.DictTypeDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.DictTypeEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictTypeVO;
 
 /**
@@ -12,7 +12,7 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictTypeVO;
 */
 public class DictTypeConvert {
 
-    public static DictTypeVO convertToDictTypeVO(DictTypeDO item){
+    public static DictTypeVO convertToDictTypeVO(DictTypeEntity item){
         DictTypeVO dictTypeVO = new DictTypeVO();
         dictTypeVO.setRemark(item.getRemark());
         dictTypeVO.setCreatedTime(item.getCreatedTime());
@@ -23,8 +23,8 @@ public class DictTypeConvert {
         return dictTypeVO;
     }
 
-    public static DictTypeDO convertToDictTypeDo(DictTypeAddDTO dto) {
-        DictTypeDO dictTypeDO = new DictTypeDO();
+    public static DictTypeEntity convertToDictTypeDo(DictTypeAddDTO dto) {
+        DictTypeEntity dictTypeDO = new DictTypeEntity();
         dictTypeDO.setDictName(dto.getDictName());
         dictTypeDO.setDictType(dto.getDictType());
         dictTypeDO.setStatus(dto.getStatus());

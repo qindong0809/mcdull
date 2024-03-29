@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.model.vo.sys;
 
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
-import io.gitee.dqcer.mcdull.framework.base.vo.VO;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import lombok.Data;
 
 import java.util.Date;

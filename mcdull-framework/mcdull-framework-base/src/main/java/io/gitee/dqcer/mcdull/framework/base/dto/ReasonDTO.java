@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.base.dto;
 
+import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
@@ -10,7 +11,7 @@ import javax.validation.constraints.NotBlank;
  * @author dqcer
  * @since 2023/12/26
  */
-public class ReasonDTO implements DTO{
+public class ReasonDTO implements DTO {
 
     @NotBlank
     @Length(max = 512)

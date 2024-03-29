@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.mdc.client.vo.DictTypeClientVO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.convert.DictConvert;
-import io.gitee.dqcer.mcdull.mdc.provider.model.entity.DictTypeDO;
+import io.gitee.dqcer.mcdull.mdc.provider.model.entity.DictTypeEntity;
 import io.gitee.dqcer.mcdull.mdc.provider.web.dao.repository.IDictTypeRepository;
 import io.gitee.dqcer.mcdull.mdc.provider.web.service.IDictTypeService;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class DictTypeServiceImpl implements IDictTypeService {
             if (log.isInfoEnabled()) {
                 log.info("list. selectType: {}", selectType);
             }
-            List<DictTypeDO> dbList = dictRepository.list(selectType);
+            List<DictTypeEntity> dbList = dictRepository.list(selectType);
             if (CollUtil.isNotEmpty(dbList)) {
                 list = DictConvert.entitiesConvertToList(dbList);
             }

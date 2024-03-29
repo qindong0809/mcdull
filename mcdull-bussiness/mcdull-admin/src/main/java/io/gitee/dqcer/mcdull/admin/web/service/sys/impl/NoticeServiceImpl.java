@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.service.sys.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.NoticeConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.NoticeLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.NoticeEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.NoticeVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.INoticeRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.INoticeService;
@@ -46,9 +46,9 @@ public class NoticeServiceImpl implements INoticeService {
     @Transactional(readOnly = true)
     @Override
     public Result<PagedVO<NoticeVO>> pagedQuery(NoticeLiteDTO dto) {
-        Page<NoticeDO> entityPage = noticeRepository.selectPage(dto);
+        Page<NoticeEntity> entityPage = noticeRepository.selectPage(dto);
         List<NoticeVO> voList = new ArrayList<>();
-        for (NoticeDO entity : entityPage.getRecords()) {
+        for (NoticeEntity entity : entityPage.getRecords()) {
             voList.add(NoticeConvert.convertToNoticeVO(entity));
         }
         return Result.success(PageUtil.toPage(voList, entityPage));
@@ -58,7 +58,7 @@ public class NoticeServiceImpl implements INoticeService {
     @Override
     public Result<Long> insert(NoticeLiteDTO dto) {
 
-        NoticeDO tempEntity = new NoticeDO();
+        NoticeEntity tempEntity = new NoticeEntity();
         tempEntity.setNoticeTitle(dto.getNoticeTitle());
         boolean isOk = noticeRepository.checkBusinessUnique(tempEntity);
         if (!isOk) {
@@ -66,7 +66,7 @@ public class NoticeServiceImpl implements INoticeService {
             return Result.error(CodeEnum.DATA_EXIST);
         }
 
-        NoticeDO entity = NoticeConvert.convertToNoticeDO(dto);
+        NoticeEntity entity = NoticeConvert.convertToNoticeDO(dto);
         Long entityId = noticeRepository.insert(entity);
         return Result.success(entityId);
     }
@@ -80,7 +80,7 @@ public class NoticeServiceImpl implements INoticeService {
     @Transactional(readOnly = true)
     @Override
     public Result<NoticeVO> detail(Long id) {
-        NoticeDO entity = noticeRepository.getById(id);
+        NoticeEntity entity = noticeRepository.getById(id);
         if (null == entity) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
@@ -99,12 +99,12 @@ public class NoticeServiceImpl implements INoticeService {
     public Result<Long> update(NoticeLiteDTO dto) {
         Long id = dto.getId();
 
-        NoticeDO dbData = noticeRepository.getById(id);
+        NoticeEntity dbData = noticeRepository.getById(id);
         if(null == dbData) {
             log.warn("数据不存在 id:{}", id);
             return Result.error(CodeEnum.DATA_NOT_EXIST);
         }
-        NoticeDO entity = NoticeConvert.convertToNoticeDO(dto);
+        NoticeEntity entity = NoticeConvert.convertToNoticeDO(dto);
 
         boolean success = noticeRepository.updateById(entity);
         if (!success) {
@@ -124,9 +124,9 @@ public class NoticeServiceImpl implements INoticeService {
     @Override
     public Result<List<Long>> logicDelete(List<Long> ids) {
         Long userId = UserContextHolder.currentUserId();
-        List<NoticeDO> doList = new ArrayList<>();
+        List<NoticeEntity> doList = new ArrayList<>();
         for (Long id : ids) {
-            NoticeDO noticeDO = new NoticeDO();
+            NoticeEntity noticeDO = new NoticeEntity();
             noticeDO.setId(id);
             doList.add(noticeDO);
         }

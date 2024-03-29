@@ -13,8 +13,8 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.*;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.*;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  * @since 2022/12/25
  */
 @Service
-public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implements IUserRepository {
+public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> implements IUserRepository {
 
     private static final Logger log = LoggerFactory.getLogger(ThreadPoolConfig.class);
 
@@ -60,25 +60,25 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
      * 分页查询
      *
      * @param dto dto
-     * @return {@link Page}<{@link UserDO}>
+     * @return {@link Page}<{@link UserEntity}>
      */
 
     @Override
-    public Page<UserDO> selectPage(UserLiteDTO dto) {
-        LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
+    public Page<UserEntity> selectPage(UserLiteDTO dto) {
+        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
         String account = dto.getAccount();
         if (StrUtil.isNotBlank(account)) {
-            query.like(UserDO::getAccount, account);
+            query.like(UserEntity::getAccount, account);
         }
         String status = dto.getStatus();
         if (StrUtil.isNotBlank(status)) {
-            query.eq(UserDO::getStatus, status);
+            query.eq(UserEntity::getStatus, status);
         }
         Long deptId = dto.getDeptId();
         if (ObjUtil.isNotNull(deptId)) {
-            query.eq(UserDO::getDeptId, deptId);
+            query.eq(UserEntity::getDeptId, deptId);
         }
-        query.orderByDesc(BaseDO::getCreatedTime);
+        query.orderByDesc(BaseEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
     }
 
@@ -89,7 +89,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
      * @return {@link Long}
      */
     @Override
-    public Long insert(UserDO entity) {
+    public Long insert(UserEntity entity) {
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {
             throw new BusinessException(CodeEnum.DB_ERROR);
@@ -101,14 +101,14 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
      * 单个根据账户名称
      *
      * @param account 账户
-     * @return {@link UserDO}
+     * @return {@link UserEntity}
      */
     @Override
-    public UserDO oneByAccount(String account) {
-        LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
-        query.eq(UserDO::getAccount, account);
+    public UserEntity oneByAccount(String account) {
+        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+        query.eq(UserEntity::getAccount, account);
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
-        List<UserDO> list = list(query);
+        List<UserEntity> list = list(query);
         if (list.isEmpty()) {
             return null;
         }
@@ -123,44 +123,44 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
      */
     @Override
     public List<UserPowerVO> queryResourceModules(Long userId) {
-        LambdaQueryWrapper<UserRoleDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.select(UserRoleDO::getRoleId);
-        wrapper.eq(UserRoleDO::getUserId, userId);
-        List<UserRoleDO> userRoleDOList = userRoleMapper.selectList(wrapper);
+        LambdaQueryWrapper<UserRoleEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.select(UserRoleEntity::getRoleId);
+        wrapper.eq(UserRoleEntity::getUserId, userId);
+        List<UserRoleEntity> userRoleDOList = userRoleMapper.selectList(wrapper);
         if (CollUtil.isEmpty(userRoleDOList)) {
             log.warn("userId: {} 查无角色权限", userId);
             return Collections.emptyList();
         }
         List<UserPowerVO> vos = new ArrayList<>();
 
-        for (UserRoleDO userRoleDO : userRoleDOList) {
+        for (UserRoleEntity userRoleDO : userRoleDOList) {
             Long roleId = userRoleDO.getRoleId();
-            RoleDO roleDO = roleMapper.selectById(roleId);
+            RoleEntity roleDO = roleMapper.selectById(roleId);
 
             UserPowerVO vo = this.builderPowerVO(roleDO);
             vos.add(vo);
-            LambdaQueryWrapper<RoleMenuDO> wrapperRoelMenu = Wrappers.lambdaQuery();
-            wrapperRoelMenu.select(RoleMenuDO::getMenuId);
-            wrapperRoelMenu.eq(RoleMenuDO::getRoleId, roleId);
-            List<RoleMenuDO> roleMenuDOList = roleMenuMapper.selectList(wrapperRoelMenu);
+            LambdaQueryWrapper<RoleMenuEntity> wrapperRoelMenu = Wrappers.lambdaQuery();
+            wrapperRoelMenu.select(RoleMenuEntity::getMenuId);
+            wrapperRoelMenu.eq(RoleMenuEntity::getRoleId, roleId);
+            List<RoleMenuEntity> roleMenuDOList = roleMenuMapper.selectList(wrapperRoelMenu);
             if (CollUtil.isNotEmpty(roleMenuDOList)) {
-                List<Long> menuIds = roleMenuDOList.stream().map(RoleMenuDO::getMenuId).collect(Collectors.toList());
-                LambdaQueryWrapper<MenuDO> wrapperMenu = Wrappers.lambdaQuery();
-                wrapperMenu.in(IdDO::getId, menuIds);
-                wrapperMenu.eq(MenuDO::getStatus, StatusEnum.ENABLE.getCode());
-                List<MenuDO> list = menuMapper.selectList(wrapperMenu);
+                List<Long> menuIds = roleMenuDOList.stream().map(RoleMenuEntity::getMenuId).collect(Collectors.toList());
+                LambdaQueryWrapper<MenuEntity> wrapperMenu = Wrappers.lambdaQuery();
+                wrapperMenu.in(IdEntity::getId, menuIds);
+                wrapperMenu.eq(MenuEntity::getStatus, StatusEnum.ENABLE.getCode());
+                List<MenuEntity> list = menuMapper.selectList(wrapperMenu);
                 if (CollUtil.isEmpty(list)) {
                     log.warn("userId: {} roleId: {} 查无模块权限", userId, vo.getRoleId());
                     continue;
                 }
-                List<String> perms = list.stream().map(MenuDO::getPerms).collect(Collectors.toList());
+                List<String> perms = list.stream().map(MenuEntity::getPerms).collect(Collectors.toList());
                 vo.setModules(perms);
             }
         }
         return vos;
     }
 
-    private UserPowerVO builderPowerVO(RoleDO roleDO) {
+    private UserPowerVO builderPowerVO(RoleEntity roleDO) {
         UserPowerVO vo = new UserPowerVO();
         vo.setRoleId(roleDO.getId());
         vo.setCode(roleDO.getName());
@@ -175,9 +175,9 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
      */
     @Override
     public void updateLoginTimeById(Long userId) {
-        LambdaUpdateWrapper<UserDO> update = Wrappers.lambdaUpdate();
-        update.set(UserDO::getLastLoginTime, new Date());
-        update.eq(IdDO::getId, userId);
+        LambdaUpdateWrapper<UserEntity> update = Wrappers.lambdaUpdate();
+        update.set(UserEntity::getLastLoginTime, new Date());
+        update.eq(IdEntity::getId, userId);
         int rowSize = baseMapper.update(null, update);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
@@ -188,13 +188,13 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
      * 查询用户帐户
      *
      * @param account 账户
-     * @return {@link UserDO}
+     * @return {@link UserEntity}
      */
     @Override
-    public UserDO queryUserByAccount(String account) {
-        LambdaQueryWrapper<UserDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(UserDO::getAccount, account);
-        List<UserDO> list = baseMapper.selectList(wrapper);
+    public UserEntity queryUserByAccount(String account) {
+        LambdaQueryWrapper<UserEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(UserEntity::getAccount, account);
+        List<UserEntity> list = baseMapper.selectList(wrapper);
         if (CollUtil.isEmpty(list)) {
             return null;
         }
@@ -203,8 +203,8 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
 
     @Override
     public void delete(Long id) {
-        LambdaUpdateWrapper<UserDO> update = Wrappers.lambdaUpdate();
-        update.eq(IdDO::getId, id);
+        LambdaUpdateWrapper<UserEntity> update = Wrappers.lambdaUpdate();
+        update.eq(IdEntity::getId, id);
         int rowSize = baseMapper.update(null, update);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
@@ -213,9 +213,9 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
 
     @Override
     public void updateStatusById(Long id, String status) {
-        LambdaUpdateWrapper<UserDO> update = Wrappers.lambdaUpdate();
-        update.set(UserDO::getStatus, status);
-        update.eq(IdDO::getId, id);
+        LambdaUpdateWrapper<UserEntity> update = Wrappers.lambdaUpdate();
+        update.set(UserEntity::getStatus, status);
+        update.eq(IdEntity::getId, id);
         int rowSize = baseMapper.update(null, update);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             throw new DatabaseRowException(CodeEnum.DB_ERROR);

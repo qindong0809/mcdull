@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdatePasswordDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 
 import java.util.Date;
@@ -17,13 +17,13 @@ import java.util.Map;
  * @author dqcer
  */
 public interface IUserService {
-    boolean passwordCheck(UserDO entity, String passwordParam);
+    boolean passwordCheck(UserEntity entity, String passwordParam);
 
     PagedVO<UserVO> listByPage(UserLiteDTO dto);
 
     Integer insert(UserInsertDTO dto);
 
-    UserDO get(String username);
+    UserEntity get(String username);
 
     Integer toggleActive(Integer id);
 
@@ -39,9 +39,9 @@ public interface IUserService {
      * userid、entity
      *
      * @param userIdList 用户id列表
-     * @return {@link Map}<{@link Long}, {@link UserDO}>
+     * @return {@link Map}<{@link Long}, {@link UserEntity}>
      */
-    Map<Integer, UserDO> getEntityMap(List<Integer> userIdList);
+    Map<Integer, UserEntity> getEntityMap(List<Integer> userIdList);
 
     /**
      * userid、username

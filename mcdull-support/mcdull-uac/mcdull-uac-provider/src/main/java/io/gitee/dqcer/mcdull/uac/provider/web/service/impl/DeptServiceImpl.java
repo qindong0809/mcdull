@@ -10,7 +10,7 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.DeptDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.DeptEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DeptVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDeptRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDeptService;
@@ -29,9 +29,9 @@ public class DeptServiceImpl extends BasicServiceImpl<IDeptRepository>  implemen
     @Override
     public List<DeptVO> list(DeptListDTO dto) {
         List<DeptVO> list = new ArrayList<>();
-        List<DeptDO> deptList = baseRepository.list();
+        List<DeptEntity> deptList = baseRepository.list();
         if (CollUtil.isNotEmpty(deptList)) {
-            for (DeptDO dept : deptList) {
+            for (DeptEntity dept : deptList) {
                 DeptVO vo = this.convertToVO(dept);
                 list.add(vo);
             }
@@ -43,19 +43,19 @@ public class DeptServiceImpl extends BasicServiceImpl<IDeptRepository>  implemen
     @Override
     public boolean insert(DeptInsertDTO dto) {
         Integer parentId = dto.getParentId();
-        List<DeptDO> childList = baseRepository.listByParentId(parentId);
+        List<DeptEntity> childList = baseRepository.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
             boolean anyMatch = childList.stream().anyMatch(i -> i.getName().equals(dto.getName()));
             if (anyMatch) {
                 throw new BusinessException(I18nConstants.NAME_DUPLICATED);
             }
         }
-        DeptDO menu = this.convertToEntity(dto);
+        DeptEntity menu = this.convertToEntity(dto);
         return baseRepository.save(menu);
     }
 
-    private DeptDO convertToEntity(DeptInsertDTO dto) {
-        DeptDO deptDO = new DeptDO();
+    private DeptEntity convertToEntity(DeptInsertDTO dto) {
+        DeptEntity deptDO = new DeptEntity();
         deptDO.setName(dto.getName());
         deptDO.setParentId(dto.getParentId());
         deptDO.setSort(dto.getSort());
@@ -72,7 +72,7 @@ public class DeptServiceImpl extends BasicServiceImpl<IDeptRepository>  implemen
     @Override
     public boolean update(Integer id, DeptUpdateDTO dto) {
         Integer parentId = dto.getParentId();
-        List<DeptDO> childList = baseRepository.listByParentId(parentId);
+        List<DeptEntity> childList = baseRepository.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
             boolean anyMatch = childList.stream()
                     .anyMatch(i -> (!i.getId().equals(id)) && i.getName().equals(dto.getName()));
@@ -80,13 +80,13 @@ public class DeptServiceImpl extends BasicServiceImpl<IDeptRepository>  implemen
                 throw new BusinessException(I18nConstants.NAME_DUPLICATED);
             }
         }
-        DeptDO menu = this.convertToEntity(dto);
+        DeptEntity menu = this.convertToEntity(dto);
         menu.setId(id);
         return baseRepository.updateById(menu);
     }
 
-    private DeptDO convertToEntity(DeptUpdateDTO dto) {
-        DeptDO deptDO = new DeptDO();
+    private DeptEntity convertToEntity(DeptUpdateDTO dto) {
+        DeptEntity deptDO = new DeptEntity();
         deptDO.setName(dto.getName());
         deptDO.setParentId(dto.getParentId());
         deptDO.setSort(dto.getSort());
@@ -105,7 +105,7 @@ public class DeptServiceImpl extends BasicServiceImpl<IDeptRepository>  implemen
         return baseRepository.delete(id, dto.getReason());
     }
 
-    private DeptVO convertToVO(DeptDO dept) {
+    private DeptVO convertToVO(DeptEntity dept) {
         DeptVO deptVO = new DeptVO();
         deptVO.setId(dept.getId());
         deptVO.setStatus(this.getStatus(dept.getInactive()));

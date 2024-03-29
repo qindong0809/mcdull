@@ -7,12 +7,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import org.springframework.stereotype.Service;
@@ -27,25 +27,25 @@ import java.util.List;
  * @since 2022/12/25
  */
 @Service
-public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implements IUserRepository {
+public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> implements IUserRepository {
 
     /**
      * 分页查询
      *
      * @param dto dto
-     * @return {@link Page}<{@link UserDO}>
+     * @return {@link Page}<{@link UserEntity}>
      */
 
     @Override
-    public Page<UserDO> selectPage(UserLiteDTO dto) {
-        LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
+    public Page<UserEntity> selectPage(UserLiteDTO dto) {
+        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
         String keyword = dto.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
-            query.and(i-> i.like(UserDO::getUsername, keyword)
-                    .or().like(UserDO::getPhone, keyword)
-                    .or().like(UserDO::getEmail, keyword));
+            query.and(i-> i.like(UserEntity::getUsername, keyword)
+                    .or().like(UserEntity::getPhone, keyword)
+                    .or().like(UserEntity::getEmail, keyword));
         }
-        query.orderByDesc(BaseDO::getCreatedTime);
+        query.orderByDesc(BaseEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
     }
 
@@ -56,7 +56,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
      * @return {@link Long}
      */
     @Override
-    public Integer insert(UserDO entity) {
+    public Integer insert(UserEntity entity) {
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {
             throw new BusinessException(CodeEnum.DB_ERROR);
@@ -68,14 +68,14 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
      * 单个根据账户名称
      *
      * @param account 账户
-     * @return {@link UserDO}
+     * @return {@link UserEntity}
      */
     @Override
-    public UserDO get(String account) {
-        LambdaQueryWrapper<UserDO> query = Wrappers.lambdaQuery();
-        query.eq(UserDO::getUsername, account);
+    public UserEntity get(String account) {
+        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+        query.eq(UserEntity::getUsername, account);
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
-        List<UserDO> list = list(query);
+        List<UserEntity> list = list(query);
         if (list.isEmpty()) {
             return null;
         }
@@ -89,7 +89,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
      */
     @Override
     public void updateLoginTime(Integer userId, Date nowTime) {
-        UserDO entity = new UserDO();
+        UserEntity entity = new UserEntity();
         entity.setId(userId);
         entity.setLastLoginTime(nowTime);
         entity.setUpdatedBy(userId);
@@ -102,7 +102,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
 
     @Override
     public boolean update(Integer id, boolean inactive) {
-        UserDO entity = new UserDO();
+        UserEntity entity = new UserEntity();
         entity.setId(id);
         entity.setInactive(inactive);
         return this.update(entity);
@@ -110,13 +110,13 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
 
     @Override
     public boolean update(Integer id, String password) {
-        UserDO entity = new UserDO();
+        UserEntity entity = new UserEntity();
         entity.setId(id);
         entity.setPassword(password);
         return this.update(entity);
     }
 
-    public boolean update(UserDO entity) {
+    public boolean update(UserEntity entity) {
         return this.updateById(entity);
     }
 }

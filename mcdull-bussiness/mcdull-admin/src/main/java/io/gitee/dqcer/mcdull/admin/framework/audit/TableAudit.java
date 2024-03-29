@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.framework.audit;
 
-import io.gitee.dqcer.mcdull.framework.base.entity.DO;
+import io.gitee.dqcer.mcdull.framework.base.support.Entity;
 import lombok.Data;
 import lombok.ToString;
 
@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @Data
 @ToString
-public class TableAudit implements DO {
+public class TableAudit implements Entity {
 
     private String operation;
     private boolean recordStatus;

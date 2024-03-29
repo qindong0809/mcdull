@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 
-import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
+import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotBlank;

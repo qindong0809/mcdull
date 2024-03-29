@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.framework.web.advice;
 
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.ICode;
@@ -58,7 +59,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(value = Exception.class)
     public Result<?> exception(Exception exception) {
-        log.error("{}. Exception: ", UserContextHolder.print(), exception);
+        LogHelp.error(log, "{}. Exception: ", UserContextHolder.print(), exception);
         StringWriter stringWriter = new StringWriter();
         PrintWriter pw = new PrintWriter(stringWriter);
         exception.printStackTrace(pw);
@@ -78,7 +79,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(value = BusinessException.class)
     public Result<?> businessException(BusinessException exception) {
         String i18nMessage = dynamicLocaleMessageSource.getMessage(exception.getMessageCode(), exception.getArgs());
-        log.error("{}. Business Exception. {}", UserContextHolder.print(), i18nMessage, exception);
+        LogHelp.error(log, "{}. Business Exception. {}", UserContextHolder.print(), i18nMessage, exception);
         return Result.error(i18nMessage);
     }
 
@@ -90,7 +91,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(value = DatabaseRowException.class)
     public Result<?> databaseRowException(DatabaseRowException exception) {
-        log.error("{}. 数据库实际预期执行不同: ", UserContextHolder.print(), exception);
+        LogHelp.error(log, "{}. 数据库实际预期执行不同: ", UserContextHolder.print(), exception);
         ICode exceptionCode = exception.getCode();
         if (exceptionCode != null) {
             return Result.error(exceptionCode);
@@ -106,7 +107,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)
     public Result<?> httpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException exception) {
-        log.error("{}. 请求头Content-Type异常: ", UserContextHolder.print(), exception);
+        LogHelp.error(log, "{}. 请求头Content-Type异常: ", UserContextHolder.print(), exception);
         return Result.error(CodeEnum.ERROR_CONTENT_TYPE);
     }
 
@@ -118,7 +119,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(value = MissingResourceException.class)
     public Result<?> missingResourceException(MissingResourceException exception) {
-        log.error("无法找到对应properties文件中对应的key: ", exception);
+        LogHelp.error(log, "无法找到对应properties文件中对应的key: ", exception);
         return Result.error(CodeEnum.NOT_FIND_PROPERTIES_KEY);
     }
 
@@ -130,7 +131,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     public Result<?> httpMessageConversionException(HttpMessageNotReadableException exception) {
-        log.error("参数接收时，类型转换异常: ", exception);
+        LogHelp.error(log, "参数接收时，类型转换异常: ", exception);
         return Result.error(CodeEnum.ERROR_CONVERSION);
     }
 
@@ -152,18 +153,18 @@ public class ExceptionAdvice {
             Object[] arguments = objectError.getArguments();
             if (arguments == null) {
                 errorMessage = String.format("appName: %s, %s", applicationName,  objectError.getDefaultMessage());
-                log.error("parameter exception: {}", errorMessage);
+                LogHelp.error(log, "parameter exception: {}", errorMessage);
                 return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
             }
             DefaultMessageSourceResolvable a = (DefaultMessageSourceResolvable) arguments[0];
             errorMessage = String.format("appName: %s, %s: %s", applicationName, a.getDefaultMessage(), objectError.getDefaultMessage());
-            log.error("parameter exception: {}", errorMessage);
+            LogHelp.error(log, "parameter exception: {}", errorMessage);
             return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
         if (e instanceof ConstraintViolationException) {
             ConstraintViolationException ex = (ConstraintViolationException) e;
             errorMessage = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining("; "));
-            log.error("parameter exception: {}", errorMessage);
+            LogHelp.error(log, "parameter exception: {}", errorMessage);
             return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
 
@@ -178,7 +179,7 @@ public class ExceptionAdvice {
                 errorMessage = String.format("appName: %s, %s: %s",
                         applicationName, fieldName, objectError.getDefaultMessage());
             }
-            log.error("parameter exception: {}", errorMessage);
+            LogHelp.error(log, "parameter exception: {}", errorMessage);
             return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
 
@@ -186,19 +187,19 @@ public class ExceptionAdvice {
             MissingServletRequestParameterException ex = (MissingServletRequestParameterException) e;
             String parameterName = ex.getParameterName();
 
-            log.error("parameter exception, parameterName: {}, {}", parameterName,
+            LogHelp.error(log, "parameter exception, parameterName: {}, {}", parameterName,
                     String.format("appName: %s, %s", applicationName, ex.getMessage()));
             return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
         if (e instanceof ValidationException) {
             ValidationException validationException = (ValidationException) e;
             String parameterName = validationException.getMessage();
-            log.error("参数异常, parameterName: {}, {}", parameterName,
+            LogHelp.error(log, "参数异常, parameterName: {}, {}", parameterName,
                     String.format("appName: %s, message:%s", applicationName, validationException.getMessage()));
             return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
         }
         errorMessage = String.format("appName: %s, message:%s", applicationName, e.getMessage());
-        log.error("parameter exception: {}", errorMessage);
+        LogHelp.error(log, "parameter exception: {}", errorMessage);
         return Result.error(CodeEnum.ERROR_PARAMETERS, Collections.singletonList(errorMessage));
     }
 }

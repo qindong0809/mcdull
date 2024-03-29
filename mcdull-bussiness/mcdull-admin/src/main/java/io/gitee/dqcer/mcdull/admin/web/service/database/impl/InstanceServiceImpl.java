@@ -5,8 +5,8 @@ import io.gitee.dqcer.mcdull.admin.model.convert.database.InstanceConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.InstanceAddDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.InstanceEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.InstanceListDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.GroupDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.InstanceDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.GroupEntity;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.InstanceEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.InstanceVO;
 import io.gitee.dqcer.mcdull.admin.util.MysqlUtil;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IGroupRepository;
@@ -41,12 +41,12 @@ public class InstanceServiceImpl extends BasicServiceImpl<IInstanceRepository> i
     @Override
     public Result<PagedVO<InstanceVO>> list(InstanceListDTO dto) {
         List<InstanceVO> voList = new ArrayList<>();
-        Page<InstanceDO> entityPage = baseRepository.selectPage(dto);
-        List<GroupDO> groupList = groupRepository.allList();
+        Page<InstanceEntity> entityPage = baseRepository.selectPage(dto);
+        List<GroupEntity> groupList = groupRepository.allList();
 
-        for (InstanceDO entity : entityPage.getRecords()) {
+        for (InstanceEntity entity : entityPage.getRecords()) {
             InstanceVO vo = InstanceConvert.convertToInstanceVO(entity);
-            Optional<GroupDO> first = groupList.stream().filter(i -> i.getId().equals(entity.getGroupId())).findFirst();
+            Optional<GroupEntity> first = groupList.stream().filter(i -> i.getId().equals(entity.getGroupId())).findFirst();
             first.ifPresent(groupDO -> vo.setGroupName(groupDO.getName()));
             voList.add(vo);
         }
@@ -55,16 +55,16 @@ public class InstanceServiceImpl extends BasicServiceImpl<IInstanceRepository> i
 
     @Override
     public Result<InstanceVO> detail(Long id) {
-        InstanceDO entity = baseRepository.getById(id);
+        InstanceEntity entity = baseRepository.getById(id);
         return Result.success(InstanceConvert.convertToInstanceVO(entity));
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> add(InstanceAddDTO dto) {
-        List<InstanceDO> list = baseRepository.getListByName(dto.getName());
+        List<InstanceEntity> list = baseRepository.getListByName(dto.getName());
         this.validNameExist(null, dto.getName(), list);
-        InstanceDO sysConfigDO = InstanceConvert.convertToInstanceDo(dto);
+        InstanceEntity sysConfigDO = InstanceConvert.convertToInstanceDo(dto);
         baseRepository.save(sysConfigDO);
         return Result.success(sysConfigDO.getId());
     }
@@ -72,9 +72,9 @@ public class InstanceServiceImpl extends BasicServiceImpl<IInstanceRepository> i
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> edit(InstanceEditDTO dto) {
-        List<InstanceDO> list = baseRepository.getListByName(dto.getName());
+        List<InstanceEntity> list = baseRepository.getListByName(dto.getName());
         this.validNameExist(dto.getId(), dto.getName(), list);
-        InstanceDO sysConfigDO = InstanceConvert.convertToInstanceDo(dto);
+        InstanceEntity sysConfigDO = InstanceConvert.convertToInstanceDo(dto);
         sysConfigDO.setId(dto.getId());
         baseRepository.updateById(sysConfigDO);
         return Result.success(sysConfigDO.getId());
@@ -90,8 +90,8 @@ public class InstanceServiceImpl extends BasicServiceImpl<IInstanceRepository> i
     @Override
     public Result<List<SelectOptionVO<Long>>> baseInfoListByGroupId(Long groupId) {
         List<SelectOptionVO<Long>> voList = new ArrayList<>();
-        List<InstanceDO> list = baseRepository.getByGroupId(groupId);
-        for (InstanceDO instanceDO : list) {
+        List<InstanceEntity> list = baseRepository.getByGroupId(groupId);
+        for (InstanceEntity instanceDO : list) {
             voList.add(new SelectOptionVO<>(instanceDO.getName(), instanceDO.getId()));
         }
         return Result.success(voList);

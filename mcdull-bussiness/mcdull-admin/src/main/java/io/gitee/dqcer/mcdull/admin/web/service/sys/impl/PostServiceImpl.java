@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.service.sys.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.PostConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.PostLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.PostEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.PostVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IPostRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IPostService;
@@ -33,9 +33,9 @@ public class PostServiceImpl implements IPostService {
     @Transactional(readOnly = true)
     @Override
     public Result<PagedVO<PostVO>> pagedQuery(PostLiteDTO dto) {
-        Page<PostDO> entityPage = postRepository.selectPage(dto);
+        Page<PostEntity> entityPage = postRepository.selectPage(dto);
         List<PostVO> voList = new ArrayList<>();
-        for (PostDO entity : entityPage.getRecords()) {
+        for (PostEntity entity : entityPage.getRecords()) {
             voList.add(PostConvert.convertToVO(entity));
         }
         return Result.success(PageUtil.toPage(voList, entityPage));
@@ -44,7 +44,7 @@ public class PostServiceImpl implements IPostService {
     @Transactional(readOnly = true)
     @Override
     public Result<PostVO> detail(Long id) {
-        PostDO postDO = postRepository.getById(id);
+        PostEntity postDO = postRepository.getById(id);
         PostVO vo = PostConvert.convertToVO(postDO);
         return Result.success(vo);
     }
@@ -56,7 +56,7 @@ public class PostServiceImpl implements IPostService {
         if (!isOk) {
             return Result.error(CodeEnum.DATA_EXIST);
         }
-        PostDO postDO = PostConvert.convertToDO(dto);
+        PostEntity postDO = PostConvert.convertToDO(dto);
         postRepository.save(postDO);
         return Result.success(postDO.getId());
     }
@@ -68,7 +68,7 @@ public class PostServiceImpl implements IPostService {
         if (!isOk) {
             return Result.error(CodeEnum.DATA_EXIST);
         }
-        PostDO postDO = PostConvert.convertToDO(dto);
+        PostEntity postDO = PostConvert.convertToDO(dto);
         postRepository.updateById(postDO);
         return Result.success(postDO.getId());
     }
@@ -76,9 +76,9 @@ public class PostServiceImpl implements IPostService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> logicDelete(Long[] ids) {
-        List<PostDO> doList = new ArrayList<>();
+        List<PostEntity> doList = new ArrayList<>();
         for (Long id : ids) {
-            PostDO postDO = new PostDO();
+            PostEntity postDO = new PostEntity();
             postDO.setId(id);
             doList.add(postDO);
         }

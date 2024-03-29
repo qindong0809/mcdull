@@ -1,11 +1,12 @@
 package io.gitee.dqcer.mcdull.framework.web.basic;
 
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * basic controller
@@ -18,12 +19,15 @@ public abstract class BasicController {
 
     protected Logger log = LoggerFactory.getLogger(getClass());
 
-    @Resource
-    protected HttpServletRequest request;
-
     protected Integer getUserId() {
         return UserContextHolder.currentUserId();
     }
 
+    protected HttpServletRequest getRequest() {
+        return ServletUtil.getRequest();
+    }
+    protected HttpServletResponse getResponse() {
+        return ServletUtil.getResponse();
+    }
 
 }

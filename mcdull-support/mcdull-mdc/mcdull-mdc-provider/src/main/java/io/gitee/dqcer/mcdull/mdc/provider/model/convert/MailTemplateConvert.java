@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.mdc.provider.model.convert;
 
-import io.gitee.dqcer.mcdull.mdc.provider.model.entity.MailTemplateDO;
+import io.gitee.dqcer.mcdull.mdc.provider.model.entity.MailTemplateEntity;
 import io.gitee.dqcer.mcdull.mdc.provider.model.vo.MailTemplateBaseVO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.vo.MailTemplateVO;
 
@@ -13,7 +13,7 @@ import io.gitee.dqcer.mcdull.mdc.provider.model.vo.MailTemplateVO;
 public class MailTemplateConvert {
 
 
-    public static MailTemplateVO convertToMailTemplateVO(MailTemplateDO item){
+    public static MailTemplateVO convertToMailTemplateVO(MailTemplateEntity item){
         if (item == null){
             return null;
         }
@@ -29,7 +29,7 @@ public class MailTemplateConvert {
         return vo;
     }
 
-    public static MailTemplateBaseVO convertToMailTemplateBaseVO(MailTemplateDO item){
+    public static MailTemplateBaseVO convertToMailTemplateBaseVO(MailTemplateEntity item){
         if (item == null){
             return null;
         }

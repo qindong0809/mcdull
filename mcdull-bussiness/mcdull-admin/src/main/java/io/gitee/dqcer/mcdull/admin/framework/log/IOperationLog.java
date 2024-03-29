@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.framework.log;
 
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogEntity;
 
 /**
  * 操作日志
@@ -15,5 +15,5 @@ public interface IOperationLog {
      *
      * @param dto dto
      */
-    void save(LogDO dto);
+    void save(LogEntity dto);
 }

@@ -1,13 +1,13 @@
 package io.gitee.dqcer.mcdull.mdc.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.mdc.provider.model.entity.CustomPropertyDO;
+import io.gitee.dqcer.mcdull.mdc.provider.model.entity.CustomPropertyEntity;
 
 /**
  * @author dqcer
  */
-public interface ICustomPropertyRepository extends IService<CustomPropertyDO> {
+public interface ICustomPropertyRepository extends IService<CustomPropertyEntity> {
 
 
-    CustomPropertyDO get(String code);
+    CustomPropertyEntity get(String code);
 }

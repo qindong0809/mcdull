@@ -1,6 +1,9 @@
 package io.gitee.dqcer.mcdull.framework.base.validator;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -14,8 +17,9 @@ import java.lang.reflect.Method;
  */
 public class EnumsStrValidator implements ConstraintValidator<EnumsStrValid, String> {
 
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
-    private Class<? extends Enum> enumClass;
+    private Class<?> enumClass;
 
     private static final String METHOD_NAME = "toEnum";
 
@@ -44,6 +48,7 @@ public class EnumsStrValidator implements ConstraintValidator<EnumsStrValid, Str
             try {
                 declareMethod.invoke(null, value);
             } catch (Exception e) {
+                LogHelp.error(log, "Invoke error.", e);
                 return false;
             }
         }

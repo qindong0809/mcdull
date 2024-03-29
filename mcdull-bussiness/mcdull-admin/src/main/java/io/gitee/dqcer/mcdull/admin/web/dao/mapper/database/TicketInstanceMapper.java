@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.mapper.database;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketInstanceDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketInstanceEntity;
 
 /**
  *  Mapper 接口
@@ -9,6 +9,6 @@ import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketInstanceDO;
  * @author dqcer
  * @since 2023-08-17
  */
-public interface TicketInstanceMapper extends BaseMapper<TicketInstanceDO> {
+public interface TicketInstanceMapper extends BaseMapper<TicketInstanceEntity> {
 
 }

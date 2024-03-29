@@ -5,7 +5,7 @@ import cn.hutool.core.convert.Convert;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public abstract class BasicServiceImpl<R extends IService> {
     @Autowired
     protected R baseRepository;
 
-    protected <T extends BaseDO> void validNameExist(Serializable id, String name, List<T> list) {
+    protected <T extends BaseEntity> void validNameExist(Serializable id, String name, List<T> list) {
         if (id == null) {
             if (CollUtil.isNotEmpty(list)) {
                 this.throwDataExistException(name);

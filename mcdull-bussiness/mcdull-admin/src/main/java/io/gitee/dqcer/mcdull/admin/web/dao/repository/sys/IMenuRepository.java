@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.MenuLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuEntity;
 
 import java.util.List;
 
@@ -13,15 +13,15 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/26
  */
-public interface IMenuRepository extends IService<MenuDO> {
+public interface IMenuRepository extends IService<MenuEntity> {
 
     /**
      * 分页查询
      *
      * @param dto dto
-     * @return {@link Page}<{@link MenuDO}>
+     * @return {@link Page}<{@link MenuEntity}>
      */
-    Page<MenuDO> selectPage(MenuLiteDTO dto);
+    Page<MenuEntity> selectPage(MenuLiteDTO dto);
 
     /**
      * 插入
@@ -29,21 +29,21 @@ public interface IMenuRepository extends IService<MenuDO> {
      * @param entity 实体
      * @return {@link Long}
      */
-    Long insert(MenuDO entity);
+    Long insert(MenuEntity entity);
 
     /**
      * 获取菜单
      *
      * @param menuIds 菜单id
-     * @return {@link List}<{@link MenuDO}>
+     * @return {@link List}<{@link MenuEntity}>
      */
-    List<MenuDO> getMenuByIds(List<Long> menuIds);
+    List<MenuEntity> getMenuByIds(List<Long> menuIds);
 
-    List<MenuDO> list(String menuName, String status, List<Long> menuIds);
+    List<MenuEntity> list(String menuName, String status, List<Long> menuIds);
 
-    List<MenuDO> getListByName(String name);
+    List<MenuEntity> getListByName(String name);
 
-    List<MenuDO> getSubMenuListByParentId(Long parentId);
+    List<MenuEntity> getSubMenuListByParentId(Long parentId);
 
-    List<MenuDO> getAllMenu();
+    List<MenuEntity> getAllMenu();
 }

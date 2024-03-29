@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogEntity;
 
 import java.util.List;
 
@@ -13,31 +13,31 @@ import java.util.List;
 * @author dqcer
 * @since 2023-01-14
 */
-public interface ILogRepository extends IService<LogDO>  {
+public interface ILogRepository extends IService<LogEntity>  {
 
    /**
     * 根据ID列表批量查询数据
     *
     * @param idList id列表
-    * @return {@link List<LogDO>}
+    * @return {@link List< LogEntity >}
     */
-    List<LogDO> queryListByIds(List<Long> idList);
+    List<LogEntity> queryListByIds(List<Long> idList);
 
    /**
     * 按条件分页查询
     *
     * @param param 参数
-    * @return {@link Page<LogDO>}
+    * @return {@link Page< LogEntity >}
     */
-    Page<LogDO> selectPage(LogLiteDTO param);
+    Page<LogEntity> selectPage(LogLiteDTO param);
 
     /**
      * 根据ID获取单条数据
      *
      * @param id 主键
-     * @return {@link LogDO}
+     * @return {@link LogEntity}
      */
-    LogDO getById(Long id);
+    LogEntity getById(Long id);
 
     /**
      * 插入数据
@@ -45,7 +45,7 @@ public interface ILogRepository extends IService<LogDO>  {
      * @param entity 实体对象
      * @return Long id
      */
-    Long insert(LogDO entity);
+    Long insert(LogEntity entity);
 
     /**
      * 通过主键删除
@@ -69,5 +69,5 @@ public interface ILogRepository extends IService<LogDO>  {
      * @param entity 实体对象
      * @return boolean true/存在 false/不存在
      */
-    boolean exist(LogDO entity);
+    boolean exist(LogEntity entity);
 }

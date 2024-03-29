@@ -7,12 +7,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.TicketAddDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.TicketEntity;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.database.TicketMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.ITicketRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ import java.util.List;
 * @since 2023-08-17
 */
 @Service
-public class TicketRepositoryImpl extends ServiceImpl<TicketMapper, TicketDO>  implements ITicketRepository {
+public class TicketRepositoryImpl extends ServiceImpl<TicketMapper, TicketEntity>  implements ITicketRepository {
 
     private static final Logger log = LoggerFactory.getLogger(TicketRepositoryImpl.class);
 
@@ -37,13 +37,13 @@ public class TicketRepositoryImpl extends ServiceImpl<TicketMapper, TicketDO>  i
      * 根据ID列表批量查询数据
      *
      * @param idList id列表
-     * @return {@link List<TicketDO>}
+     * @return {@link List< TicketEntity >}
      */
     @Override
-    public List<TicketDO> queryListByIds(List<Long> idList) {
-        LambdaQueryWrapper<TicketDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.in(TicketDO::getId, idList);
-        List<TicketDO> list =  baseMapper.selectList(wrapper);
+    public List<TicketEntity> queryListByIds(List<Long> idList) {
+        LambdaQueryWrapper<TicketEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(TicketEntity::getId, idList);
+        List<TicketEntity> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;
         }
@@ -54,16 +54,16 @@ public class TicketRepositoryImpl extends ServiceImpl<TicketMapper, TicketDO>  i
      * 按条件分页查询
      *
      * @param param 参数
-     * @return {@link Page<TicketDO>}
+     * @return {@link Page< TicketEntity >}
      */
     @Override
-    public Page<TicketDO> selectPage(TicketAddDTO param) {
-        LambdaQueryWrapper<TicketDO> lambda = new QueryWrapper<TicketDO>().lambda();
+    public Page<TicketEntity> selectPage(TicketAddDTO param) {
+        LambdaQueryWrapper<TicketEntity> lambda = new QueryWrapper<TicketEntity>().lambda();
         String keyword = param.getKeyword();
         if (ObjUtil.isNotNull(keyword)) {
             // TODO 组装查询条件
         }
-        lambda.orderByDesc(RelDO::getCreatedTime);
+        lambda.orderByDesc(RelEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(param.getCurrentPage(), param.getPageSize()), lambda);
     }
 
@@ -71,10 +71,10 @@ public class TicketRepositoryImpl extends ServiceImpl<TicketMapper, TicketDO>  i
      * 根据ID获取单条数据
      *
      * @param id 主键
-     * @return {@link TicketDO}
+     * @return {@link TicketEntity}
      */
     @Override
-    public TicketDO getById(Long id) {
+    public TicketEntity getById(Long id) {
         return baseMapper.selectById(id);
     }
 
@@ -85,7 +85,7 @@ public class TicketRepositoryImpl extends ServiceImpl<TicketMapper, TicketDO>  i
      * @return Long id
      */
     @Override
-    public Long insert(TicketDO entity) {
+    public Long insert(TicketEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
@@ -101,10 +101,10 @@ public class TicketRepositoryImpl extends ServiceImpl<TicketMapper, TicketDO>  i
      * @return boolean true/存在 false/不存在
      */
     @Override
-    public boolean exist(TicketDO entity) {
-        LambdaQueryWrapper<TicketDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(TicketDO::getName, entity.getName());
-        wrapper.ne(ObjUtil.isNotNull(entity.getId()), IdDO::getId,entity.getId());
+    public boolean exist(TicketEntity entity) {
+        LambdaQueryWrapper<TicketEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(TicketEntity::getName, entity.getName());
+        wrapper.ne(ObjUtil.isNotNull(entity.getId()), IdEntity::getId,entity.getId());
         return !baseMapper.selectList(wrapper).isEmpty();
     }
 

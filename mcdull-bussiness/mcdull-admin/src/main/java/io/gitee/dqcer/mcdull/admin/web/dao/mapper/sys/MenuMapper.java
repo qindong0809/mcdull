@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuEntity;
 
 /**
  * 菜单 mapper
@@ -9,5 +9,5 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
  * @author dqcer
  * @since 2022/12/25
  */
-public interface MenuMapper extends BaseMapper<MenuDO> {
+public interface MenuMapper extends BaseMapper<MenuEntity> {
 }

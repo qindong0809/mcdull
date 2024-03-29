@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.convert;
 
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleInsertDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 
 /**
@@ -12,7 +12,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
  */
 public class RoleConvert {
 
-    public static RoleVO entity2VO(RoleDO entity) {
+    public static RoleVO entity2VO(RoleEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -24,14 +24,14 @@ public class RoleConvert {
         return roleVO;
     }
 
-    public static RoleDO insertToEntity(RoleInsertDTO dto) {
-        RoleDO roleDO = new RoleDO();
+    public static RoleEntity insertToEntity(RoleInsertDTO dto) {
+        RoleEntity roleDO = new RoleEntity();
         roleDO.setName(dto.getName());
         roleDO.setDescription(dto.getDescription());
         return roleDO;
     }
 
-    public static RoleVO entityToVO(RoleDO entity) {
+    public static RoleVO entityToVO(RoleEntity entity) {
         RoleVO roleVO = new RoleVO();
         roleVO.setType(entity.getType());
         roleVO.setId(entity.getId());

@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.base.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 
 import java.util.List;
 import java.util.StringJoiner;
@@ -11,7 +12,7 @@ import java.util.StringJoiner;
  * @author dqcer
  * @since 2023/03/26
  */
-public class TreeSelectVO implements VO{
+public class TreeSelectVO implements VO {
 
     private static final long serialVersionUID = 1L;
 

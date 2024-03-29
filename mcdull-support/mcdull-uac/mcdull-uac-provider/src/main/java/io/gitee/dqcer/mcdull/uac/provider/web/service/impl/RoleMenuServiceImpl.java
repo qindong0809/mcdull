@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleMenuDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleMenuEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleMenuRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleMenuService;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class RoleMenuServiceImpl extends BasicServiceImpl<IRoleMenuRepository> i
 
     @Override
     public boolean deleteAndInsert(Integer roleId, List<Integer> menuIdList) {
-        List<RoleMenuDO> list = baseRepository.listByRoleId(roleId);
+        List<RoleMenuEntity> list = baseRepository.listByRoleId(roleId);
         if (CollUtil.isNotEmpty(list)) {
             baseRepository.removeBatchByIds(list);
         }

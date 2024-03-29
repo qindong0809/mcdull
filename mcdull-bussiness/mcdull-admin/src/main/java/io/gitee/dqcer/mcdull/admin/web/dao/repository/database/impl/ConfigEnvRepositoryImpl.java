@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.admin.web.dao.repository.database.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.ConfigEnvDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.ConfigEnvEntity;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.database.ConfigEnvMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IConfigEnvRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 * @since 2023-08-29
 */
 @Service
-public class ConfigEnvRepositoryImpl extends ServiceImpl<ConfigEnvMapper, ConfigEnvDO>  implements IConfigEnvRepository {
+public class ConfigEnvRepositoryImpl extends ServiceImpl<ConfigEnvMapper, ConfigEnvEntity>  implements IConfigEnvRepository {
 
     private static final Logger log = LoggerFactory.getLogger(ConfigEnvRepositoryImpl.class);
 
@@ -28,10 +28,10 @@ public class ConfigEnvRepositoryImpl extends ServiceImpl<ConfigEnvMapper, Config
      * 根据ID获取单条数据
      *
      * @param id 主键
-     * @return {@link ConfigEnvDO}
+     * @return {@link ConfigEnvEntity}
      */
     @Override
-    public ConfigEnvDO getById(Long id) {
+    public ConfigEnvEntity getById(Long id) {
         return baseMapper.selectById(id);
     }
 
@@ -42,7 +42,7 @@ public class ConfigEnvRepositoryImpl extends ServiceImpl<ConfigEnvMapper, Config
      * @return Long id
      */
     @Override
-    public Long insert(ConfigEnvDO entity) {
+    public Long insert(ConfigEnvEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
@@ -58,14 +58,14 @@ public class ConfigEnvRepositoryImpl extends ServiceImpl<ConfigEnvMapper, Config
      * @return boolean true/存在 false/不存在
      */
     @Override
-    public boolean exist(ConfigEnvDO entity) {
+    public boolean exist(ConfigEnvEntity entity) {
         return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
     }
 
     @Override
-    public ConfigEnvDO getByType(Integer type) {
-        LambdaQueryWrapper<ConfigEnvDO> query = Wrappers.lambdaQuery();
-        query.eq(ConfigEnvDO::getType, type);
+    public ConfigEnvEntity getByType(Integer type) {
+        LambdaQueryWrapper<ConfigEnvEntity> query = Wrappers.lambdaQuery();
+        query.eq(ConfigEnvEntity::getType, type);
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
         return baseMapper.selectOne(query);
     }

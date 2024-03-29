@@ -4,14 +4,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.framework.log.IOperationLog;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.LogConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogEntity;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.LogVO;
 import io.gitee.dqcer.mcdull.admin.util.LogHelpUtil;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.ILogRepository;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IMenuRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.ILogService;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -46,7 +46,7 @@ public class LogServiceImpl extends BasicServiceImpl<ILogRepository> implements 
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void save(LogDO dto) {
+    public void save(LogEntity dto) {
         dto.setLog(LogHelpUtil.getLog());
         baseRepository.save(dto);
     }
@@ -61,21 +61,21 @@ public class LogServiceImpl extends BasicServiceImpl<ILogRepository> implements 
     @Transactional(readOnly = true)
     @Override
     public Result<PagedVO<LogVO>> listByPage(LogLiteDTO dto) {
-        List<MenuDO> list = menuRepository.list();
-        Map<String, MenuDO> map = list.stream().collect(Collectors.toMap(MenuDO::getPerms, Function.identity()));
+        List<MenuEntity> list = menuRepository.list();
+        Map<String, MenuEntity> map = list.stream().collect(Collectors.toMap(MenuEntity::getPerms, Function.identity()));
 
-        Map<Long, MenuDO> parentMenuMap = list.stream().collect(Collectors.toMap(IdDO::getId, Function.identity()));
-        Page<LogDO> entityPage = baseRepository.selectPage(dto);
+        Map<Long, MenuEntity> parentMenuMap = list.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+        Page<LogEntity> entityPage = baseRepository.selectPage(dto);
         List<LogVO> voList = new ArrayList<>();
-        for (LogDO record : entityPage.getRecords()) {
+        for (LogEntity record : entityPage.getRecords()) {
             LogVO logVO = LogConvert.convertToLogVO(record);
-            MenuDO buttonDO = map.get(record.getButton());
+            MenuEntity buttonDO = map.get(record.getButton());
             logVO.setButton(buttonDO.getName());
-            MenuDO menuDO = parentMenuMap.get(buttonDO.getParentId());
+            MenuEntity menuDO = parentMenuMap.get(buttonDO.getParentId());
             logVO.setMenu(menuDO.getName());
             Long parentId = menuDO.getParentId();
             if (parentId != 0) {
-                MenuDO sysDO = parentMenuMap.get(parentId);
+                MenuEntity sysDO = parentMenuMap.get(parentId);
                 logVO.setModel(sysDO.getName());
             }
 

@@ -3,8 +3,8 @@ package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.RoleLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleDO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleMenuDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleEntity;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.RoleMenuEntity;
 
 import java.util.List;
 
@@ -14,27 +14,27 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/26
  */
-public interface IRoleRepository extends IService<RoleDO> {
+public interface IRoleRepository extends IService<RoleEntity> {
 
 
-    List<RoleDO> queryListByIds(List<Long> ids);
+    List<RoleEntity> queryListByIds(List<Long> ids);
 
 
-    Page<RoleDO> selectPage(RoleLiteDTO dto);
+    Page<RoleEntity> selectPage(RoleLiteDTO dto);
 
 
-    Long insert(RoleDO entity);
+    Long insert(RoleEntity entity);
 
 
-    boolean exist(RoleDO roleDO);
+    boolean exist(RoleEntity roleDO);
 
 
     void deleteBatchByIds(List<Long> ids);
 
 
-    List<RoleMenuDO> getMenuByRole(List<Long> roles);
+    List<RoleMenuEntity> getMenuByRole(List<Long> roles);
 
-    List<RoleDO> getAll();
+    List<RoleEntity> getAll();
 
     void batchSaveMenu(Long roleId, List<Long> menuIds);
 

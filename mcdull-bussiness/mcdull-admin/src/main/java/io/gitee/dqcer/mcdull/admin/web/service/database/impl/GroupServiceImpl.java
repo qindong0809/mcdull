@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.admin.model.convert.database.GroupConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.GroupAddDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.GroupEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.GroupListDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.GroupDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.GroupEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.database.GroupVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IGroupRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.database.IGroupService;
@@ -34,8 +34,8 @@ public class GroupServiceImpl extends BasicServiceImpl<IGroupRepository> impleme
     @Override
     public Result<PagedVO<GroupVO>> list(GroupListDTO dto) {
         List<GroupVO> voList = new ArrayList<>();
-        Page<GroupDO> entityPage = baseRepository.selectPage(dto);
-        for (GroupDO entity : entityPage.getRecords()) {
+        Page<GroupEntity> entityPage = baseRepository.selectPage(dto);
+        for (GroupEntity entity : entityPage.getRecords()) {
             voList.add(GroupConvert.convertToGroupVO(entity));
         }
         return Result.success(PageUtil.toPage(voList, entityPage));
@@ -43,16 +43,16 @@ public class GroupServiceImpl extends BasicServiceImpl<IGroupRepository> impleme
 
     @Override
     public Result<GroupVO> detail(Long id) {
-        GroupDO entity = baseRepository.getById(id);
+        GroupEntity entity = baseRepository.getById(id);
         return Result.success(GroupConvert.convertToGroupVO(entity));
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> add(GroupAddDTO dto) {
-        List<GroupDO> list = baseRepository.getListByName(dto.getName());
+        List<GroupEntity> list = baseRepository.getListByName(dto.getName());
         this.validNameExist(null, dto.getName(), list);
-        GroupDO sysConfigDO = GroupConvert.convertToGroupDo(dto);
+        GroupEntity sysConfigDO = GroupConvert.convertToGroupDo(dto);
         baseRepository.save(sysConfigDO);
         return Result.success(sysConfigDO.getId());
     }
@@ -60,9 +60,9 @@ public class GroupServiceImpl extends BasicServiceImpl<IGroupRepository> impleme
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> edit(GroupEditDTO dto) {
-        List<GroupDO> list = baseRepository.getListByName(dto.getName());
+        List<GroupEntity> list = baseRepository.getListByName(dto.getName());
         this.validNameExist(dto.getId(), dto.getName(), list);
-        GroupDO entity = GroupConvert.convertToGroupDo(dto);
+        GroupEntity entity = GroupConvert.convertToGroupDo(dto);
         entity.setId(dto.getId());
         baseRepository.updateById(entity);
         return Result.success(entity.getId());
@@ -83,9 +83,9 @@ public class GroupServiceImpl extends BasicServiceImpl<IGroupRepository> impleme
 
     private List<GroupVO> getAllList() {
         List<GroupVO> voList = new ArrayList<>();
-        List<GroupDO> list = baseRepository.allList();
+        List<GroupEntity> list = baseRepository.allList();
         if (CollUtil.isNotEmpty(list)) {
-            for (GroupDO groupDO : list) {
+            for (GroupEntity groupDO : list) {
                 GroupVO vo = GroupConvert.convertToGroupVO(groupDO);
                 voList.add(vo);
             }

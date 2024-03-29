@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.base.vo;
 
-import io.gitee.dqcer.mcdull.framework.base.supert.IPaged;
+import io.gitee.dqcer.mcdull.framework.base.support.Paged;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @since 2022/05/06
  */
 @SuppressWarnings("unused")
-public class PagedVO<T> implements IPaged, VO {
+public class PagedVO<T> implements Paged, VO {
 
     private static final long serialVersionUID = 1L;
     /**

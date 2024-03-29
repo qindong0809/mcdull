@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.web.config;
 
 import cn.hutool.core.thread.ThreadUtil;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
@@ -16,13 +17,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class BannerConfig implements ApplicationRunner {
 
-    private static final Logger log = LoggerFactory.getLogger(BannerConfig.class);
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         ThreadUtil.execute( () -> {
             ThreadUtil.sleep(1, TimeUnit.SECONDS); // 延迟 1 秒
-            log.info("\n----------------------------------------------------------\n\t" +
+            LogHelp.info(log,  "\n----------------------------------------------------------\n\t" +
                             "Druid monitor paged: \t{} \n\t" +
                             "H2 console: \t{} \n\t" +
                             "Swagger: \t{} \n\t" +

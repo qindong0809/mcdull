@@ -9,12 +9,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.LogLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.LogVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.sys.LogMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.ILogRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ import java.util.List;
 * @since 2023-01-14
 */
 @Service
-public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO>  implements ILogRepository {
+public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogEntity>  implements ILogRepository {
 
     private static final Logger log = LoggerFactory.getLogger(LogRepositoryImpl.class);
 
@@ -39,13 +39,13 @@ public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO>  implements
      * 根据ID列表批量查询数据
      *
      * @param idList id列表
-     * @return {@link List<LogDO>}
+     * @return {@link List< LogEntity >}
      */
     @Override
-    public List<LogDO> queryListByIds(List<Long> idList) {
-        LambdaQueryWrapper<LogDO> wrapper = Wrappers.lambdaQuery();
-        wrapper.in(LogDO::getId, idList);
-        List<LogDO> list =  baseMapper.selectList(wrapper);
+    public List<LogEntity> queryListByIds(List<Long> idList) {
+        LambdaQueryWrapper<LogEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(LogEntity::getId, idList);
+        List<LogEntity> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;
         }
@@ -56,16 +56,16 @@ public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO>  implements
      * 按条件分页查询
      *
      * @param param 参数
-     * @return {@link Page<LogDO>}
+     * @return {@link Page< LogEntity >}
      */
     @Override
-    public Page<LogDO> selectPage(LogLiteDTO param) {
-        LambdaQueryWrapper<LogDO> lambda = new QueryWrapper<LogDO>().lambda();
+    public Page<LogEntity> selectPage(LogLiteDTO param) {
+        LambdaQueryWrapper<LogEntity> lambda = new QueryWrapper<LogEntity>().lambda();
         String keyword = param.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
             //TODO 组装查询条件
         }
-        lambda.orderByDesc(RelDO::getCreatedTime);
+        lambda.orderByDesc(RelEntity::getCreatedTime);
         IPage<LogVO> voiPage =  baseMapper.pagedQuery(new Page<>(param.getCurrentPage(), param.getPageSize()), param);
         return baseMapper.selectPage(new Page<>(param.getCurrentPage(), param.getPageSize()), lambda);
     }
@@ -74,10 +74,10 @@ public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO>  implements
      * 根据ID获取单条数据
      *
      * @param id 主键
-     * @return {@link LogDO}
+     * @return {@link LogEntity}
      */
     @Override
-    public LogDO getById(Long id) {
+    public LogEntity getById(Long id) {
         return baseMapper.selectById(id);
     }
 
@@ -88,7 +88,7 @@ public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO>  implements
      * @return Long id
      */
     @Override
-    public Long insert(LogDO entity) {
+    public Long insert(LogEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
@@ -126,8 +126,8 @@ public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogDO>  implements
      * @return boolean true/存在 false/不存在
      */
     @Override
-    public boolean exist(LogDO entity) {
-        List<LogDO> list = baseMapper.selectList(Wrappers.lambdaQuery(entity));
+    public boolean exist(LogEntity entity) {
+        List<LogEntity> list = baseMapper.selectList(Wrappers.lambdaQuery(entity));
         return list.isEmpty();
     }
 }

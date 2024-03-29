@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.manager.sys;
 
 
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.MenuEntity;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public interface IMenuManager {
      * @param menuDO 菜单
      * @return boolean
      */
-    boolean isMenuFrame(MenuDO menuDO);
+    boolean isMenuFrame(MenuEntity menuDO);
 
 
     /**
@@ -28,7 +28,7 @@ public interface IMenuManager {
      * @param menuDO 菜单
      * @return boolean
      */
-    boolean isInnerLink(MenuDO menuDO);
+    boolean isInnerLink(MenuEntity menuDO);
 
     /**
      * 是否为parent_view组件
@@ -36,7 +36,7 @@ public interface IMenuManager {
      * @param menuDO 菜单
      * @return boolean
      */
-    boolean isParentView(MenuDO menuDO);
+    boolean isParentView(MenuEntity menuDO);
 
     /**
      * 获取路由地址
@@ -44,7 +44,7 @@ public interface IMenuManager {
      * @param menu 菜单信息
      * @return 路由地址
      */
-    String getRouterPath(MenuDO menu);
+    String getRouterPath(MenuEntity menu);
 
     /**
      * 获取组件信息
@@ -52,7 +52,7 @@ public interface IMenuManager {
      * @param menu 菜单信息
      * @return 组件信息
      */
-    String getComponent(MenuDO menu);
+    String getComponent(MenuEntity menu);
 
     /**
      * 内链域名特殊字符替换
@@ -62,5 +62,5 @@ public interface IMenuManager {
      */
     String innerLinkReplaceEach(String path);
 
-    List<MenuDO> getAllMenu();
+    List<MenuEntity> getAllMenu();
 }

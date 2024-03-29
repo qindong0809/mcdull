@@ -4,7 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.admin.model.convert.sys.LoginInfoConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.LoginInfoLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserLoginDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserLoginEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.LoginInfoVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IUserLoginRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.ILoginInfoService;
@@ -38,9 +38,9 @@ public class LoginInfoServiceImpl implements ILoginInfoService {
     @Override
     public Result<PagedVO<LoginInfoVO>> listByPage(LoginInfoLiteDTO dto) {
         List<LoginInfoVO> voList = new ArrayList<>();
-        Page<UserLoginDO> entityPage = userLoginRepository.paged(dto);
+        Page<UserLoginEntity> entityPage = userLoginRepository.paged(dto);
 
-        for (UserLoginDO entity : entityPage.getRecords()) {
+        for (UserLoginEntity entity : entityPage.getRecords()) {
             voList.add(LoginInfoConvert.convertToLoginInfoVO(entity));
         }
         return Result.success(PageUtil.toPage(voList, entityPage));

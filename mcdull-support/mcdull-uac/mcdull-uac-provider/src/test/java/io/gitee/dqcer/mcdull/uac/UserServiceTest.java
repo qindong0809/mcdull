@@ -2,8 +2,8 @@ package io.gitee.dqcer.mcdull.uac;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.mybatis.spring.MyBatisSystemException;
@@ -29,8 +29,8 @@ public class UserServiceTest {
 //    @Test
     void deleteAllTableOrUpdateAllTable() {
         Assertions.assertThrows(MyBatisSystemException.class, () -> {
-            LambdaUpdateWrapper<UserDO> update = Wrappers.lambdaUpdate();
-            update.set(BaseDO::getUpdatedTime, new Date());
+            LambdaUpdateWrapper<UserEntity> update = Wrappers.lambdaUpdate();
+            update.set(BaseEntity::getUpdatedTime, new Date());
             userRepository.update(null, update);
         }, "mybatis-plus 插件 BlockAttackInnerInterceptor：防止全表更新或删除 已生效");
 

@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.admin.model.convert.sys.DictDataConvert;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictDataAddDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictDataEditDTO;
 import io.gitee.dqcer.mcdull.admin.model.dto.sys.DictDataLiteDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.DictDataDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.DictDataEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.DictDataVO;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.sys.IDictDataRepository;
 import io.gitee.dqcer.mcdull.admin.web.service.sys.IDictDataService;
@@ -37,8 +37,8 @@ public class DictDataServiceImpl extends BasicServiceImpl<IDictDataRepository> i
     @Override
     public Result<List<DictDataVO>> dictType(String dictType) {
         List<DictDataVO> voList = new ArrayList<>();
-        List<DictDataDO> list = baseRepository.dictType(dictType);
-        for (DictDataDO dictDataDO : list) {
+        List<DictDataEntity> list = baseRepository.dictType(dictType);
+        for (DictDataEntity dictDataDO : list) {
             voList.add(DictDataConvert.convertToDictDataVO(dictDataDO));
         }
         return Result.success(voList);
@@ -49,8 +49,8 @@ public class DictDataServiceImpl extends BasicServiceImpl<IDictDataRepository> i
 
         List<DictDataVO> voList = new ArrayList<>();
 
-        Page<DictDataDO> entityPage = baseRepository.selectPage(dto);
-        for (DictDataDO entity : entityPage.getRecords()) {
+        Page<DictDataEntity> entityPage = baseRepository.selectPage(dto);
+        for (DictDataEntity entity : entityPage.getRecords()) {
             voList.add(DictDataConvert.convertToDictDataVO(entity));
         }
         return Result.success(PageUtil.toPage(voList, entityPage));
@@ -66,9 +66,9 @@ public class DictDataServiceImpl extends BasicServiceImpl<IDictDataRepository> i
      */
     @Override
     public KeyValueBO<String, String> transformer(String code, String selectType, String language) {
-        List<DictDataDO> doList = baseRepository.dictType(selectType);
+        List<DictDataEntity> doList = baseRepository.dictType(selectType);
         if (CollUtil.isNotEmpty(doList)) {
-            DictDataDO first = doList.stream().filter(i -> i.getDictValue().equals(code)).findFirst().orElse(null);
+            DictDataEntity first = doList.stream().filter(i -> i.getDictValue().equals(code)).findFirst().orElse(null);
             if (ObjUtil.isNotNull(first)) {
                 return new KeyValueBO<String, String>().setKey(first.getDictValue()).setValue(first.getDictLabel());
             }
@@ -78,16 +78,16 @@ public class DictDataServiceImpl extends BasicServiceImpl<IDictDataRepository> i
 
     @Override
     public Result<DictDataVO> detail(Long dictCode) {
-        DictDataDO dataDO = baseRepository.getById(dictCode);
+        DictDataEntity dataDO = baseRepository.getById(dictCode);
         return Result.success(DictDataConvert.convertToDictDataVO(dataDO));
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Long> add(DictDataAddDTO dto) {
-        List<DictDataDO> list = baseRepository.getNameList(dto.getDictType(), dto.getDictValue());
+        List<DictDataEntity> list = baseRepository.getNameList(dto.getDictType(), dto.getDictValue());
         this.validNameExist(null, dto.getDictValue(), list);
-        DictDataDO dataDO = DictDataConvert.convertToDictDataDo(dto);
+        DictDataEntity dataDO = DictDataConvert.convertToDictDataDo(dto);
         baseRepository.save(dataDO);
         return Result.success(dataDO.getId());
     }
@@ -96,9 +96,9 @@ public class DictDataServiceImpl extends BasicServiceImpl<IDictDataRepository> i
     @Override
     public Result<Long> edit(DictDataEditDTO dto) {
         Long dictCode = dto.getDictCode();
-        List<DictDataDO> list = baseRepository.getNameList(dto.getDictType(), dto.getDictValue());
+        List<DictDataEntity> list = baseRepository.getNameList(dto.getDictType(), dto.getDictValue());
         this.validNameExist(dictCode, dto.getDictValue(), list);
-        DictDataDO dataDO = DictDataConvert.convertToDictDataDo(dto);
+        DictDataEntity dataDO = DictDataConvert.convertToDictDataDo(dto);
         dataDO.setId(dictCode);
         baseRepository.updateById(dataDO);
         return Result.success(dictCode);

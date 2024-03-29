@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.base.engine;
 
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * @author dqcer
  * @since 2024/02/05
  */
-public class CompareBean<T extends IdDO> {
+public class CompareBean<T extends IdEntity> {
 
     private List<T> insertList;
 

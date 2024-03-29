@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.LogVO;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 
@@ -13,11 +13,11 @@ import io.gitee.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 public class LogConvert {
 
 
-    public static LogDO convertToLogDO(LogOperationDTO dto) {
+    public static LogEntity convertToLogDO(LogOperationDTO dto) {
         if (dto == null) {
             return null;
         }
-        LogDO logDO = new LogDO();
+        LogEntity logDO = new LogEntity();
         logDO.setAccountId(dto.getUserId());
         logDO.setTenantId(dto.getTenantId());
         logDO.setClientIp(dto.getClientIp());
@@ -40,7 +40,7 @@ public class LogConvert {
     * @param item LogDO
     * @return {@link LogVO}
     */
-    public static LogVO convertToLogVO(LogDO item){
+    public static LogVO convertToLogVO(LogEntity item){
         if (item == null){
             return null;
         }

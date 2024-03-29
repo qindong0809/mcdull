@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.mdc.client.dto;
 
-import io.gitee.dqcer.mcdull.framework.base.dto.DTO;
+import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import io.gitee.dqcer.mcdull.framework.base.util.ValidateUtil;
 import org.hibernate.validator.constraints.Length;
 

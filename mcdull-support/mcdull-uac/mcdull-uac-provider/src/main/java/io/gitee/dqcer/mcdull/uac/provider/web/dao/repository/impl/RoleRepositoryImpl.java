@@ -9,13 +9,13 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RolePageDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.RoleMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
 import org.springframework.stereotype.Service;
@@ -31,25 +31,25 @@ import java.util.stream.Collectors;
  * @since 2022/12/25
  */
 @Service
-public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implements IRoleRepository {
+public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleEntity> implements IRoleRepository {
 
     @Override
-    public Page<RoleDO> selectPage(RolePageDTO dto) {
-        LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
+    public Page<RoleEntity> selectPage(RolePageDTO dto) {
+        LambdaQueryWrapper<RoleEntity> query = Wrappers.lambdaQuery();
         String name = dto.getName();
         if (StrUtil.isNotBlank(name)) {
-            query.like(RoleDO::getName, name);
+            query.like(RoleEntity::getName, name);
         }
         Boolean inactive = dto.getInactive();
         if (ObjUtil.isNotNull(inactive)) {
-            query.eq(BaseDO::getInactive, inactive);
+            query.eq(BaseEntity::getInactive, inactive);
         }
-        query.orderByDesc(BaseDO::getCreatedTime);
+        query.orderByDesc(BaseEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
     }
 
     @Override
-    public Integer insert(RoleDO entity) {
+    public Integer insert(RoleEntity entity) {
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {
             throw new BusinessException(CodeEnum.DB_ERROR);
@@ -58,22 +58,22 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
     }
 
     @Override
-    public Map<Integer, List<RoleDO>> roleListMap(Map<Integer, List<Integer>> userRoleMap) {
-        Map<Integer, List<RoleDO>> resultMap = new HashMap<>(userRoleMap.size());
+    public Map<Integer, List<RoleEntity>> roleListMap(Map<Integer, List<Integer>> userRoleMap) {
+        Map<Integer, List<RoleEntity>> resultMap = new HashMap<>(userRoleMap.size());
         if (MapUtil.isNotEmpty(userRoleMap)) {
             Set<Integer> idList = userRoleMap.values().stream()
                     .flatMap(Collection::stream).collect(Collectors.toSet());
 
-            LambdaQueryWrapper<RoleDO> query = Wrappers.lambdaQuery();
-            query.eq(RoleDO::getInactive, InactiveEnum.FALSE.getCode());
-            query.in(RoleDO::getId, idList);
-            List<RoleDO> list = baseMapper.selectList(query);
+            LambdaQueryWrapper<RoleEntity> query = Wrappers.lambdaQuery();
+            query.eq(RoleEntity::getInactive, InactiveEnum.FALSE.getCode());
+            query.in(RoleEntity::getId, idList);
+            List<RoleEntity> list = baseMapper.selectList(query);
             if (CollUtil.isNotEmpty(list)) {
-                Map<Integer, RoleDO> map = list.stream()
-                        .collect(Collectors.toMap(IdDO::getId, Function.identity()));
+                Map<Integer, RoleEntity> map = list.stream()
+                        .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
                 for (Map.Entry<Integer, List<Integer>> entry : userRoleMap.entrySet()) {
                     List<Integer> roleIdList = entry.getValue();
-                    List<RoleDO> roleList = roleIdList.stream().map(map::get)
+                    List<RoleEntity> roleList = roleIdList.stream().map(map::get)
                             .filter(ObjUtil::isNotEmpty).collect(Collectors.toList());
                     if (CollUtil.isNotEmpty(roleList)) {
                         resultMap.put(entry.getKey(), roleList);
@@ -91,7 +91,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleDO> implemen
 
     @Override
     public boolean toggleStatus(Integer id, boolean inactive) {
-        RoleDO role = new RoleDO();
+        RoleEntity role = new RoleEntity();
         role.setId(id);
         role.setInactive(inactive);
         return baseMapper.updateById(role) > 0;

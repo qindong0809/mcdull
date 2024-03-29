@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.web.config;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
@@ -36,9 +37,7 @@ public class ThreadPoolConfig {
     @Bean
     public ThreadPoolTaskExecutor threadPoolTaskExecutor(){
         ThreadPoolProperties threadPool = mcdullProperties.getThreadPool();
-        if (log.isDebugEnabled()) {
-            log.debug("Init Thread Pool Config: {}", threadPool);
-        }
+        LogHelp.info(log, "Init Thread Pool Config: {}", threadPool);
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(threadPool.getCorePoolSize());
         executor.setMaxPoolSize(threadPool.getMaxPoolSize());
@@ -75,6 +74,8 @@ public class ThreadPoolConfig {
                         MDC.setContextMap(previous);
                     }
                     runnable.run();
+                } catch (Exception e) {
+                    LogHelp.error(log, "ThreadPoolDecorator error.", e);
                 } finally {
 //                    RequestContextHolder.resetRequestAttributes();
                     UserContextHolder.clearSession();

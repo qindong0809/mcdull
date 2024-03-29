@@ -4,6 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.annotation.ITransformer;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.transform.EnumTransformer;
@@ -39,9 +40,7 @@ public class TranslatorAspect {
 
     @AfterReturning(pointcut = "translatorPointCut()",  returning = "object")
     public void doAfter(Object object) {
-        if (log.isDebugEnabled()) {
-            log.debug("翻译切面处理 object: {}", object);
-        }
+        LogHelp.debug(log, "翻译切面处理 object: {}", object);
         if (object instanceof Result) {
             Result<?> result = (Result<?>) object;
 
@@ -63,7 +62,7 @@ public class TranslatorAspect {
             doTranslateObject(data);
             return;
         }
-        log.error("未命中@Transform,返回值必须为Result");
+        LogHelp.error(log, "未命中@Transform,返回值必须为Result");
         throw new BusinessException();
     }
 

@@ -233,7 +233,7 @@ public class CodeGenerator {
                 map.put("apiVo", voPackage);
                 map.put("apiConvert", convertPackage);
                 map.put("modelName", modelName);
-//                map.put("baseController", "io.gitee.common.core.supert.BaseController");
+//                map.put("baseController", "io.gitee.common.core.support.BaseController");
                 map.put("result", BASIC + "wrapper.Result");
                 map.put("baseEntity", BASIC + "entity.BaseDO");
                 map.put("baseVO", BASIC + "vo.VO");

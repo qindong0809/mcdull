@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.mdc.provider.model.vo;
 
-import io.gitee.dqcer.mcdull.mdc.provider.model.entity.LogDO;
+import io.gitee.dqcer.mcdull.mdc.provider.model.entity.LogEntity;
 
 import java.util.StringJoiner;
 
@@ -10,7 +10,7 @@ import java.util.StringJoiner;
  * @author dqcer
  * @since 2022/12/26
  */
-public class LogVO extends LogDO {
+public class LogVO extends LogEntity {
 
     private String accountIdStr;
 

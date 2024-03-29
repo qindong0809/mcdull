@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.web.feign.model;
 
-import io.gitee.dqcer.mcdull.framework.base.vo.VO;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserLoginDO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserLoginEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.UserLoginMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserLoginRepository;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  * @since 2022/12/25
  */
 @Service
-public class UserLoginRepositoryImpl extends ServiceImpl<UserLoginMapper, UserLoginDO> implements IUserLoginRepository {
+public class UserLoginRepositoryImpl extends ServiceImpl<UserLoginMapper, UserLoginEntity> implements IUserLoginRepository {
 
     /**
      * 登录
@@ -55,7 +55,7 @@ public class UserLoginRepositoryImpl extends ServiceImpl<UserLoginMapper, UserLo
      * @param type   类型 1/登录 2/注销
      */
     private void save(Integer userId, String token, Integer type) {
-        UserLoginDO loginDO = new UserLoginDO();
+        UserLoginEntity loginDO = new UserLoginEntity();
 //        loginDO.setType(type);
 //        loginDO.setToken(token);
 //        loginDO.setUserId(userId);

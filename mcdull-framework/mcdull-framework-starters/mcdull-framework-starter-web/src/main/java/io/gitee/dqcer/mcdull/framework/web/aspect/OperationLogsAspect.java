@@ -1,10 +1,11 @@
 package io.gitee.dqcer.mcdull.framework.web.aspect;
 
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.util.JsonUtil;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 import io.gitee.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
@@ -56,9 +57,7 @@ public class OperationLogsAspect {
         }
         HttpServletRequest request = ServletUtil.getRequest();
         String requestUrl = request.getRequestURI();
-        if (log.isDebugEnabled()) {
-            log.debug("Operation Logs Url:{}", requestUrl);
-        }
+        LogHelp.debug(log, "Operation Logs Url:{}", requestUrl);
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         if (method.isAnnotationPresent(UnAuthorize.class) || this.ignoreFilter(requestUrl, PATH_LIST)) {
@@ -76,9 +75,7 @@ public class OperationLogsAspect {
         } finally {
             Object[] args = joinPoint.getArgs();
             LogOperationDTO entity = buildLog(request, args, startTime);
-            if (log.isDebugEnabled()) {
-                log.debug("Operation log dto: {}", entity);
-            }
+            LogHelp.debug(log, "Operation log dto: {}", entity);
             bean.saveLog(entity, method);
         }
     }
@@ -117,7 +114,7 @@ public class OperationLogsAspect {
             if (arg instanceof InputStreamSource) {
                 continue;
             }
-            String string = JsonUtil.toJsonString(arg);
+            String string = JSONUtil.toJsonStr(arg);
             params.put(arg.getClass().getName(), string);
         }
 
@@ -125,8 +122,8 @@ public class OperationLogsAspect {
         entity.setUserId(UserContextHolder.currentUserId());
         entity.setClientIp(IpUtil.getIpAddr(request));
         entity.setUserAgent(getUserAgent(request));
-        entity.setHeaders(JsonUtil.toJsonString(headers));
-        entity.setParameterMap(JsonUtil.toJsonString(params).replaceAll("\\\\", ""));
+        entity.setHeaders(JSONUtil.toJsonStr(headers));
+        entity.setParameterMap(JSONUtil.toJsonStr(params).replaceAll("\\\\", ""));
         entity.setPath(request.getRequestURI());
         entity.setMethod(request.getMethod());
         entity.setCreatedTime(UserContextHolder.getSession().getNow());

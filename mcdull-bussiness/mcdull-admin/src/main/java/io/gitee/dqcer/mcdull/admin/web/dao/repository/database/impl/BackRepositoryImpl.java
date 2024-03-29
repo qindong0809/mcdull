@@ -8,11 +8,11 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.admin.model.dto.database.BackListDTO;
-import io.gitee.dqcer.mcdull.admin.model.entity.database.BackDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.database.BackEntity;
 import io.gitee.dqcer.mcdull.admin.web.dao.mapper.database.BackMapper;
 import io.gitee.dqcer.mcdull.admin.web.dao.repository.database.IBackRepository;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdDO;
-import io.gitee.dqcer.mcdull.framework.base.entity.RelDO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,16 +26,16 @@ import java.util.List;
 * @since 2023-01-14
 */
 @Service
-public class BackRepositoryImpl extends ServiceImpl<BackMapper, BackDO>  implements IBackRepository {
+public class BackRepositoryImpl extends ServiceImpl<BackMapper, BackEntity>  implements IBackRepository {
 
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public List<BackDO> listByBizId(Long ticketId, Integer modelTicket) {
-        LambdaQueryWrapper<BackDO> query = Wrappers.lambdaQuery();
-        query.eq(BackDO::getBizId, ticketId);
-        query.eq(BackDO::getModel, modelTicket);
-        List<BackDO> list = baseMapper.selectList(query);
+    public List<BackEntity> listByBizId(Long ticketId, Integer modelTicket) {
+        LambdaQueryWrapper<BackEntity> query = Wrappers.lambdaQuery();
+        query.eq(BackEntity::getBizId, ticketId);
+        query.eq(BackEntity::getModel, modelTicket);
+        List<BackEntity> list = baseMapper.selectList(query);
         if (CollUtil.isNotEmpty(list)) {
             return list;
         }
@@ -44,18 +44,18 @@ public class BackRepositoryImpl extends ServiceImpl<BackMapper, BackDO>  impleme
 
     @Transactional(readOnly = true)
     @Override
-    public Page<BackDO> selectPage(BackListDTO dto) {
-        LambdaQueryWrapper<BackDO> lambda = new QueryWrapper<BackDO>().lambda();
-        lambda.eq(BackDO::getBizId, dto.getTicketId());
-        lambda.orderByDesc(RelDO::getCreatedTime);
+    public Page<BackEntity> selectPage(BackListDTO dto) {
+        LambdaQueryWrapper<BackEntity> lambda = new QueryWrapper<BackEntity>().lambda();
+        lambda.eq(BackEntity::getBizId, dto.getTicketId());
+        lambda.orderByDesc(RelEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateToDelete(Long id) {
-        LambdaUpdateWrapper<BackDO> update = Wrappers.lambdaUpdate();
-        update.eq(IdDO::getId, id);
+        LambdaUpdateWrapper<BackEntity> update = Wrappers.lambdaUpdate();
+        update.eq(IdEntity::getId, id);
         baseMapper.update(null, update);
     }
 }

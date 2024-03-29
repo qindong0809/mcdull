@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.admin.web.dao.repository.sys;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.DeptEntity;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
 * @author dqcer
 * @since 2023-01-14
 */
-public interface IDeptRepository extends IService<DeptDO>  {
+public interface IDeptRepository extends IService<DeptEntity>  {
 
-    List<DeptDO> list(String name, String status);
+    List<DeptEntity> list(String name, String status);
 }

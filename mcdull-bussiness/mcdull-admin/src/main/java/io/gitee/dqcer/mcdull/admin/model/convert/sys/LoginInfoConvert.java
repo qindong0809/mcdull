@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.admin.model.convert.sys;
 
-import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserLoginDO;
+import io.gitee.dqcer.mcdull.admin.model.entity.sys.UserLoginEntity;
 import io.gitee.dqcer.mcdull.admin.model.vo.sys.LoginInfoVO;
 
 /**
@@ -11,7 +11,7 @@ import io.gitee.dqcer.mcdull.admin.model.vo.sys.LoginInfoVO;
 */
 public class LoginInfoConvert {
 
-    public static LoginInfoVO convertToLoginInfoVO(UserLoginDO item){
+    public static LoginInfoVO convertToLoginInfoVO(UserLoginEntity item){
         LoginInfoVO vo = new LoginInfoVO();
         vo.setId(item.getId());
         vo.setCreatedTime(item.getCreatedTime());
