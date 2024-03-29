@@ -35,11 +35,12 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
+        <!-- loadbalancer 中已有Caffeine 因此注释 -->
         <!--替换LoadBalancer用默认的缓存，生产环境中使用Caffeine 缓存以获得更好的性能和内存管理 -->
-        <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.github.ben-manes.caffeine</groupId>-->
+<!--            <artifactId>caffeine</artifactId>-->
+<!--        </dependency>-->
     </dependencies>
     <build>
         <plugins>

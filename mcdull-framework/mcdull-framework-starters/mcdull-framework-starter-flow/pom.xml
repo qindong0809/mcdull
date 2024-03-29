@@ -25,7 +25,8 @@
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
+            <artifactId>hutool-json</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>

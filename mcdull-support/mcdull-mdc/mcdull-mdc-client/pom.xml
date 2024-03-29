@@ -24,6 +24,7 @@
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-framework-starter-feign</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

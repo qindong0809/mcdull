@@ -21,6 +21,7 @@
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-framework-base</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

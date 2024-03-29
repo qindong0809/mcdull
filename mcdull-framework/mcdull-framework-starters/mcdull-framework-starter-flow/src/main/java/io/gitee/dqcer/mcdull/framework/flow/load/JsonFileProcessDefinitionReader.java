@@ -1,8 +1,9 @@
 package io.gitee.dqcer.mcdull.framework.flow.load;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ObjUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
-import io.gitee.dqcer.mcdull.framework.base.util.JsonUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.flow.properties.ProcessBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,6 @@ import java.util.*;
 public class JsonFileProcessDefinitionReader implements ProcessDefinitionReader {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-    private static final TypeReference<List<ProcessBean>> LIST_OF_PROCESS = new TypeReference<List<ProcessBean>>() {};
 
     public static final String DEFAULT_PROCESS_FILE_PATH = "flow/process_flow_*.json";
 
@@ -67,7 +66,10 @@ public class JsonFileProcessDefinitionReader implements ProcessDefinitionReader 
         List<ProcessBean> processBeanList = new ArrayList<>();
         Resource[] resources = fileResolver.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + resourcePath);
         for (Resource resource : resources) {
-            processBeanList.addAll(JsonUtil.deserializeList(resource.getInputStream(), LIST_OF_PROCESS));
+            String read = IoUtil.readUtf8(resource.getInputStream());
+            JSONArray objects = JSONUtil.parseArray(read);
+            List<ProcessBean> list = objects.toList(ProcessBean.class);
+            processBeanList.addAll(list);
         }
         return processBeanList;
     }
