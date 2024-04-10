@@ -15,7 +15,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @EnableFeignClients
-public @interface EnableUacFeignClients {
+public @interface EnableFeignClientsScan {
 
     @SuppressWarnings("unused")
     String[] basePackages() default {GlobalConstant.BASE_PACKAGE + ".*.client.service", GlobalConstant.BASE_PACKAGE +  ".framework.web.feign"};

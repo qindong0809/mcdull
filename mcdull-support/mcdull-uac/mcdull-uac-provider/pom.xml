@@ -68,6 +68,10 @@
         </dependency>
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
+            <artifactId>mcdull-framework-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-framework-starter-swagger</artifactId>
         </dependency>
         <dependency>

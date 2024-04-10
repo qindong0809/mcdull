@@ -4,7 +4,7 @@ import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.gitee.dqcer.mcdull.framework.redis.EnableCache;
 import io.gitee.dqcer.mcdull.framework.web.EnableWebCore;
 import io.gitee.dqcer.mcdull.uac.provider.config.EnableMapperScan;
-import io.gitee.dqcer.mcdull.uac.provider.config.EnableUacFeignClients;
+import io.gitee.dqcer.mcdull.uac.provider.config.EnableFeignClientsScan;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @EnableWebCore
 @EnableMapperScan
-@EnableUacFeignClients
+@EnableFeignClientsScan
 @EnableCache
 @EnableDiscoveryClient
 @SpringBootApplication

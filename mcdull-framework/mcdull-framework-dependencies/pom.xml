@@ -102,6 +102,11 @@
                 <artifactId>mcdull-business-common</artifactId>
                 <version>${mcdull.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-mdc-client</artifactId>
+                <version>${mcdull.version}</version>
+            </dependency>
             <!-- spring boot 依赖 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>

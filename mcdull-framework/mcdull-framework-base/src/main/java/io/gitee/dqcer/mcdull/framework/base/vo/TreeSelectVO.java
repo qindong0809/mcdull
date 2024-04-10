@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.framework.base.vo;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class TreeSelectVO implements VO {
     private String label;
 
     /** 子节点 */
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+//    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<TreeSelectVO> children;
 
     @Override

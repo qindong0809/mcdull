@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.feign;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.ICode;
 
@@ -132,7 +131,7 @@ public class ResultApi<T> implements Serializable {
      *
      * @return boolean
      */
-    @JsonIgnore
+//    @JsonIgnore
     public boolean isOk() {
         return code == CodeEnum.SUCCESS.getCode();
     }

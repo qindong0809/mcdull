@@ -3,7 +3,6 @@ package io.gitee.dqcer.mcdull.framework.base.wrapper;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 
@@ -134,7 +133,7 @@ public class Result<T> implements Serializable {
      *
      * @return boolean
      */
-    @JsonIgnore
+//    @JsonIgnore
     public boolean isOk() {
         return code == CodeEnum.SUCCESS.code;
     }
