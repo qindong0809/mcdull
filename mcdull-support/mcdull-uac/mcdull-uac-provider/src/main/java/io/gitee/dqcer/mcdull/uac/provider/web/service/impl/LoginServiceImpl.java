@@ -5,7 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.StrUtil;
+
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -13,6 +13,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.slf4j.Logger;
@@ -24,7 +25,6 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.gitee.dqcer.mcdull.uac.provider.web.controller.CaptchaController.CAPTCHA;
 
 /**
  * 登录服务
@@ -45,13 +45,22 @@ public class LoginServiceImpl implements ILoginService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void login(String username, String password, String code, String uuid) {
+    public LogonVO login(String username, String password, String code, String uuid) {
         // todo 验证码校验
-//        this.validateCaptcha(username, code, uuid);
+        this.validateCaptcha(username, code, uuid);
         // 登录前置校验
         Integer loginId = this.loginPreCheck(username, password);
         StpUtil.login(loginId);
         userService.updateLoginTime(loginId, UserContextHolder.getSession().getNow());
+
+        return this.buildLogonVo();
+    }
+
+    private LogonVO buildLogonVo() {
+        return new LogonVO();
+    }
+
+    private void validateCaptcha(String username, String code, String uuid) {
 
     }
 
@@ -69,16 +78,6 @@ public class LoginServiceImpl implements ILoginService {
         throw new BusinessException("incorrect.username.or.password");
     }
 
-    public void validateCaptcha(String username, String code, String uuid) {
-        String verifyKey = CAPTCHA + uuid;
-        String captcha = redissonCache.get(verifyKey, String.class);
-        if (StrUtil.isEmpty(captcha)) {
-            throw new BusinessException("user.captcha.expire");
-        }
-        if (!StrUtil.equals(captcha, code)) {
-            throw new BusinessException("user.captcha.error");
-        }
-    }
 
     /**
      * 注销

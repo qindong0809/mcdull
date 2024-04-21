@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -12,13 +13,11 @@ import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.client.api.AuthServiceApi;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.CaptchaVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.PermissionRouterVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +49,16 @@ public class LoginController implements AuthServiceApi {
     @Resource
     private IRoleService roleService;
 
+    @Resource
+    private ICaptchaService captchaService;
+
+    @Operation(summary = "获取验证码")
+    @GetMapping("/login/getCaptcha")
+    @SaIgnore
+    public Result<CaptchaVO> getCaptcha() {
+        return Result.success(captchaService.get());
+    }
+
     /**
      * 登录 21232F297A57A5A743894A0E4A801FC3
      *
@@ -59,18 +68,8 @@ public class LoginController implements AuthServiceApi {
     @Operation(summary = "登录", description = "Default username=admin  password=21232F297A57A5A743894A0E4A801FC3")
     @PostMapping("login")
     public Result<LogonVO> login(@RequestBody @Valid LoginDTO dto) {
-        loginService.login(dto.getUsername(), dto.getPassword(), dto.getCode(), dto.getUuid());
-        Integer userId = StpUtil.getLoginId(0);
-        LogonVO vo = new LogonVO();
-        vo.setAccessToken(StpUtil.getTokenValue());
-        vo.setRefreshToken(StpUtil.getTokenValue());
-        vo.setExpires(DateUtil.offsetDay(new Date(), 1));
-        UserVO user = userService.get(userId);
-        if (ObjUtil.isNotNull(user)) {
-            vo.setUsername(user.getNickname());
-        }
-        vo.setRoles(loginService.getRoleList(userId));
-        return Result.success(vo);
+        return Result.success(loginService.login(dto.getLoginName(), dto.getPassword(),
+                dto.getCaptchaCode(), dto.getCaptchaUuid()));
     }
 
     @Operation(summary = "当前登录人信息", description = "角色、权限、个人信息")

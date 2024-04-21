@@ -2,6 +2,10 @@ package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.validation.constraints.NotBlank;
 import java.util.StringJoiner;
@@ -12,62 +16,28 @@ import java.util.StringJoiner;
  * @author dqcer
  * @since 2022/12/26
  */
+@Getter
+@Setter
 @Schema(name = "用户登录对象")
 public class LoginDTO implements DTO {
 
+    @Schema(description = "登录账号")
     @NotBlank(message = "{login.username.not-blank}")
-    @Schema(description = "账号", example = "admin", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String username;
+    @Length(max = 30, message = "登录账号最多30字符")
+    private String loginName;
 
+    @Schema(description = "密码")
     @NotBlank(message = "{login.password.not-blank}")
-    @Schema(description = "密码", example = "sha215(123456)", requiredMode = Schema.RequiredMode.REQUIRED)
     private String password;
 
     @Schema(description = "验证码")
-    private String code;
+    @NotBlank(message = "验证码不能为空")
+    private String captchaCode;
 
-    @Schema(description = "唯一标识")
-    private String uuid;
+    @Schema(description = "验证码uuid标识")
+    @NotBlank(message = "验证码uuid标识不能为空")
+    private String captchaUuid;
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", LoginDTO.class.getSimpleName() + "[", "]")
-                .add("username='" + username + "'")
-                .add("password='" + password + "'")
-                .add("code='" + code + "'")
-                .add("uuid='" + uuid + "'")
-                .toString();
-    }
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
 }

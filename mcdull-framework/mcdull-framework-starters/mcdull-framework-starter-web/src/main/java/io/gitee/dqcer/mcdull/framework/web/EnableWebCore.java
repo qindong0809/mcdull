@@ -32,7 +32,8 @@ import java.lang.annotation.Target;
         UndertowConfig.class,
         SpringContextHolder.class,
         I18nConfig.class,
-        RedisJmxAdapter.class
+        RedisJmxAdapter.class,
+        SystemEnvironmentConfig.class
 })
 public @interface EnableWebCore {
 }

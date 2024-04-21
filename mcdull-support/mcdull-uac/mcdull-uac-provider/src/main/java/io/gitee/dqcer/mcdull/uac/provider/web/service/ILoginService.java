@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
+
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ public interface ILoginService {
      * @param code     code
      * @param uuid     uuid
      */
-    void login(String username, String password, String code, String uuid);
+    LogonVO login(String username, String password, String code, String uuid);
 
     /**
      * 注销

@@ -19,7 +19,7 @@ import java.util.Properties;
 public class CaptchaConfig {
 
 
-    @Bean(name = "captchaProducerMath")
+//    @Bean(name = "captchaProducerMath")
     public DefaultKaptcha getKaptchaBeanMath() {
         DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
         Properties properties = new Properties();
