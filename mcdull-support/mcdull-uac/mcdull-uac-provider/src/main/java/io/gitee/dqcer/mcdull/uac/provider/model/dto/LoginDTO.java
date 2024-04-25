@@ -1,14 +1,15 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 
+import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
+import io.gitee.dqcer.mcdull.framework.swagger.SchemaEnum;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginDeviceEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.validation.constraints.NotBlank;
-import java.util.StringJoiner;
 
 /**
  * 登录 dto
@@ -38,6 +39,8 @@ public class LoginDTO implements DTO {
     @NotBlank(message = "验证码uuid标识不能为空")
     private String captchaUuid;
 
-
+    @EnumsIntValid(value = LoginDeviceEnum.class)
+    @SchemaEnum(desc = "登录终端", value = LoginDeviceEnum.class)
+    private Integer loginDevice;
 
 }

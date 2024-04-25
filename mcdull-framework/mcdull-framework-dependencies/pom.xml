@@ -36,6 +36,7 @@
         <poi.version>4.1.2</poi.version>
         <itext7.version>7.2.5</itext7.version>
         <html2pdf.version>4.0.5</html2pdf.version>
+        <sa-token.version>1.37.0</sa-token.version>
 <!--        <jsqlparser.version>4.6</jsqlparser.version>-->
     </properties>
 
@@ -240,6 +241,11 @@
 <!--                <artifactId>jsqlparser</artifactId>-->
 <!--                <version>${jsqlparser.version}</version>-->
 <!--            </dependency>-->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-core</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
