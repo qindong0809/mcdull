@@ -1,10 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
-import lombok.Data;
-import org.hibernate.validator.constraints.Length;
-
-import javax.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
 * 角色 接收客户端参数
@@ -12,23 +10,16 @@ import javax.validation.constraints.NotBlank;
 * @author dqcer
 * @since 2022-11-16
 */
-@Data
+@Getter
+@Setter
 public class RoleUpdateDTO implements DTO {
 
     private static final long serialVersionUID = 1L;
-    
-    /**
-     * 昵称
-     */
-    @NotBlank
-    @Length(min = 1, max = 512)
-    private String name;
 
-    /**
-     * 描述
-     */
-    @Length(max = 2048)
-    private String description;
+    private String roleName;
 
+    private String roleCode;
+
+    private String remark;
    
 }

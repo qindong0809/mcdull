@@ -44,9 +44,9 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     private IRoleService roleService;
 
     @Override
-    public Map<Integer, List<String>> getMenuCodeListMap(List<Integer> roleIdList) {
+    public Map<Long, List<String>> getMenuCodeListMap(List<Long> roleIdList) {
         if (CollUtil.isNotEmpty(roleIdList)) {
-            Map<Integer, List<Integer>> menuListMap = roleMenuService.getMenuIdListMap(roleIdList);
+            Map<Long, List<Long>> menuListMap = roleMenuService.getMenuIdListMap(roleIdList);
             return baseRepository.menuCodeListMap(menuListMap);
         }
         return MapUtil.empty();
@@ -73,11 +73,11 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean insert(MenuInsertDTO dto) {
-        Integer parentId = dto.getParentId();
+        Long parentId = dto.getParentId();
 
         List<MenuEntity> childList = baseRepository.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
-            boolean anyMatch = childList.stream().anyMatch(i -> i.getName().equals(dto.getName()));
+            boolean anyMatch = childList.stream().anyMatch(i -> i.getMenuName().equals(dto.getMenuName()));
             if (anyMatch) {
                 throw new BusinessException(I18nConstants.NAME_DUPLICATED);
             }
@@ -88,12 +88,12 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean update(Integer id, MenuUpdateDTO dto) {
-        Integer parentId = dto.getParentId();
+    public boolean update(Long id, MenuUpdateDTO dto) {
+        Long parentId = dto.getParentId();
         List<MenuEntity> childList = baseRepository.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
             boolean anyMatch = childList.stream()
-                    .anyMatch(i -> (!i.getId().equals(id)) && i.getName().equals(dto.getName()));
+                    .anyMatch(i -> (!i.getId().equals(id)) && i.getMenuName().equals(dto.getMenuName()));
             if (anyMatch) {
                 throw new BusinessException(I18nConstants.NAME_DUPLICATED);
             }
@@ -105,7 +105,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean delete(Integer id, ReasonDTO dto) {
+    public boolean delete(Long id, ReasonDTO dto) {
         return baseRepository.delete(id, dto.getReason());
     }
 
@@ -123,10 +123,10 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     }
 
     @Override
-    public List<Integer> roleMenuIdList(Integer roleId) {
-        Map<Integer, List<Integer>> menuIdListMap = roleMenuService.getMenuIdListMap(ListUtil.of(roleId));
+    public List<Long> roleMenuIdList(Long roleId) {
+        Map<Long, List<Long>> menuIdListMap = roleMenuService.getMenuIdListMap(ListUtil.of(roleId));
         if (MapUtil.isNotEmpty(menuIdListMap)) {
-            List<Integer> list = menuIdListMap.get(roleId);
+            List<Long> list = menuIdListMap.get(roleId);
             if (CollUtil.isNotEmpty(list)) {
                 List<MenuEntity> menuList = baseRepository.listByIds(list);
                 if (CollUtil.isNotEmpty(menuList)) {
@@ -140,156 +140,136 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     @Override
     public List<PermissionRouterVO> getPermissionRouter() {
         List<MenuEntity> menuList = baseRepository.all();
-        List<Tree<Integer>> integerTree = this.getTrees(menuList);
+        List<Tree<Long>> integerTree = this.getTrees(menuList);
         return this.convertPermissionRouter(integerTree);
     }
 
     @Override
-    public List<PermissionRouterVO> getPermissionRouterByRole(Integer roleId) {
+    public List<PermissionRouterVO> getPermissionRouterByRole(Long roleId) {
         return this.getRouter(ListUtil.of(roleId));
     }
 
     private RoleMenuVO convertToRoleMenuVO(MenuEntity menu) {
         RoleMenuVO roleMenuVO = new RoleMenuVO();
         roleMenuVO.setId(menu.getId());
-        roleMenuVO.setMenuType(menu.getMenuType());
-        roleMenuVO.setParentId(menu.getParentId());
-        roleMenuVO.setTitle(menu.getTitle());
         return roleMenuVO;
     }
 
     private MenuEntity convertToEntity(MenuUpdateDTO dto) {
-        MenuEntity menuDO = new MenuEntity();
-        menuDO.setMenuType(dto.getMenuType());
-        menuDO.setParentId(dto.getParentId());
-        menuDO.setTitle(dto.getTitle());
-        menuDO.setName(dto.getName());
-        menuDO.setPath(dto.getPath());
-        menuDO.setComponent(dto.getComponent());
-        menuDO.setRankOrder(dto.getRank());
-        menuDO.setRedirect(dto.getRedirect());
-        menuDO.setIcon(dto.getIcon());
-        menuDO.setExtraIcon(dto.getExtraIcon());
-        menuDO.setEnterTransition(dto.getEnterTransition());
-        menuDO.setLeaveTransition(dto.getLeaveTransition());
-        menuDO.setActivePath(dto.getActivePath());
-        menuDO.setAuths(dto.getAuths());
-        menuDO.setFrameSrc(dto.getFrameSrc());
-        menuDO.setFrameLoading(dto.getFrameLoading());
-        menuDO.setKeepAlive(dto.getKeepAlive());
-        menuDO.setHiddenTag(dto.getHiddenTag());
-        menuDO.setShowLink(dto.getShowLink());
-        menuDO.setShowParent(dto.getShowParent());
-        return menuDO;
+        MenuEntity entity = new MenuEntity();
+        entity.setMenuName(dto.getMenuName());
+        entity.setMenuType(dto.getMenuType());
+        entity.setParentId(dto.getParentId());
+        entity.setSort(dto.getSort());
+        entity.setPath(dto.getPath());
+        entity.setComponent(dto.getComponent());
+        entity.setPermsType(dto.getPermsType());
+        entity.setApiPerms(dto.getApiPerms());
+        entity.setWebPerms(dto.getWebPerms());
+        entity.setIcon(dto.getIcon());
+        entity.setContextMenuId(dto.getContextMenuId());
+        entity.setFrameFlag(dto.getFrameFlag());
+        entity.setFrameUrl(dto.getFrameUrl());
+        entity.setCacheFlag(dto.getCacheFlag());
+        entity.setVisibleFlag(dto.getVisibleFlag());
+        return entity;
     }
 
     private MenuEntity convertToEntity(MenuInsertDTO dto) {
-        MenuEntity menuDO = new MenuEntity();
-        menuDO.setMenuType(dto.getMenuType());
-        menuDO.setParentId(dto.getParentId());
-        menuDO.setTitle(dto.getTitle());
-        menuDO.setName(dto.getName());
-        menuDO.setPath(dto.getPath());
-        menuDO.setComponent(dto.getComponent());
-        menuDO.setRankOrder(dto.getRank());
-        menuDO.setRedirect(dto.getRedirect());
-        menuDO.setIcon(dto.getIcon());
-        menuDO.setExtraIcon(dto.getExtraIcon());
-        menuDO.setEnterTransition(dto.getEnterTransition());
-        menuDO.setLeaveTransition(dto.getLeaveTransition());
-        menuDO.setActivePath(dto.getActivePath());
-        menuDO.setAuths(dto.getAuths());
-        menuDO.setFrameSrc(dto.getFrameSrc());
-        menuDO.setFrameLoading(dto.getFrameLoading());
-        menuDO.setKeepAlive(dto.getKeepAlive());
-        menuDO.setHiddenTag(dto.getHiddenTag());
-        menuDO.setShowLink(dto.getShowLink());
-        menuDO.setShowParent(dto.getShowParent());
-        return menuDO;
+        MenuEntity entity = new MenuEntity();
+        entity.setMenuName(dto.getMenuName());
+        entity.setMenuType(dto.getMenuType());
+        entity.setParentId(dto.getParentId());
+        entity.setSort(dto.getSort());
+        entity.setPath(dto.getPath());
+        entity.setComponent(dto.getComponent());
+        entity.setPermsType(dto.getPermsType());
+        entity.setApiPerms(dto.getApiPerms());
+        entity.setWebPerms(dto.getWebPerms());
+        entity.setIcon(dto.getIcon());
+        entity.setContextMenuId(dto.getContextMenuId());
+        entity.setFrameFlag(dto.getFrameFlag());
+        entity.setFrameUrl(dto.getFrameUrl());
+        entity.setCacheFlag(dto.getCacheFlag());
+        entity.setVisibleFlag(dto.getVisibleFlag());
+        return entity;
     }
 
     private MenuVO convertToVO(MenuEntity menu) {
-        MenuVO menuVO = new MenuVO();
-        menuVO.setId(menu.getId());
-        menuVO.setMenuType(menu.getMenuType());
-        menuVO.setParentId(menu.getParentId());
-        menuVO.setTitle(menu.getTitle());
-        menuVO.setName(menu.getName());
-        menuVO.setPath(menu.getPath());
-        menuVO.setComponent(menu.getComponent());
-        menuVO.setRank(menu.getRankOrder());
-        menuVO.setRedirect(menu.getRedirect());
-        menuVO.setIcon(menu.getIcon());
-        menuVO.setExtraIcon(menu.getExtraIcon());
-        menuVO.setEnterTransition(menu.getEnterTransition());
-        menuVO.setLeaveTransition(menu.getLeaveTransition());
-        menuVO.setActivePath(menu.getActivePath());
-        menuVO.setAuths(menu.getAuths());
-        menuVO.setFrameSrc(menu.getFrameSrc());
-        menuVO.setFrameLoading(menu.getFrameLoading());
-        menuVO.setKeepAlive(menu.getKeepAlive());
-        menuVO.setHiddenTag(menu.getHiddenTag());
-        menuVO.setShowLink(menu.getShowLink());
-        menuVO.setShowParent(menu.getShowParent());
-        return menuVO;
-
+        MenuVO vo = new MenuVO();
+        vo.setMenuName(menu.getMenuName());
+        vo.setMenuType(menu.getMenuType());
+        vo.setParentId(menu.getParentId());
+        vo.setSort(menu.getSort());
+        vo.setPath(menu.getPath());
+        vo.setComponent(menu.getComponent());
+        vo.setPermsType(menu.getPermsType());
+        vo.setApiPerms(menu.getApiPerms());
+        vo.setWebPerms(menu.getWebPerms());
+        vo.setIcon(menu.getIcon());
+        vo.setContextMenuId(menu.getContextMenuId());
+        vo.setFrameFlag(menu.getFrameFlag());
+        vo.setFrameUrl(menu.getFrameUrl());
+        vo.setCacheFlag(menu.getCacheFlag());
+        vo.setVisibleFlag(menu.getVisibleFlag());
+        return vo;
     }
 
 
-    private List<PermissionRouterVO> getRouter(List<Integer> roleIdList) {
-        Map<Integer, List<Integer>> menuIdListMap = roleMenuService.getMenuIdListMap(roleIdList);
+    private List<PermissionRouterVO> getRouter(List<Long> roleIdList) {
+        Map<Long, List<Long>> menuIdListMap = roleMenuService.getMenuIdListMap(roleIdList);
         if (MapUtil.isNotEmpty(menuIdListMap)) {
-            Set<Integer> idSet = menuIdListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+            Set<Long> idSet = menuIdListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
             if (CollUtil.isNotEmpty(idSet)) {
                 List<MenuEntity> menuList = baseRepository.list(idSet);
-                List<Tree<Integer>> integerTree = this.getTrees(menuList);
+                List<Tree<Long>> integerTree = this.getTrees(menuList);
                 return this.convertPermissionRouter(integerTree);
             }
         }
         return Collections.emptyList();
     }
 
-    private List<Tree<Integer>> getTrees(List<MenuEntity> menuList) {
-        Map<Integer, List<RoleEntity>> roleMap = MapUtil.newHashMap();
+    private List<Tree<Long>> getTrees(List<MenuEntity> menuList) {
+        Map<Long, List<RoleEntity>> roleMap = MapUtil.newHashMap();
         if (CollUtil.isNotEmpty(menuList)) {
-            List<Integer> menuIdList = menuList.stream().map(IdEntity::getId).collect(Collectors.toList());
+            List<Long> menuIdList = menuList.stream().map(IdEntity::getId).collect(Collectors.toList());
             roleMap = roleService.getRoleMapByMenuId(menuIdList);
         }
-        Map<Integer, List<RoleEntity>> finalRoleMap = roleMap;
-        return TreeUtil.build(menuList, 0,
+        Map<Long, List<RoleEntity>> finalRoleMap = roleMap;
+        return TreeUtil.build(menuList, 0L,
                 (menu, treeNode) -> {
                     treeNode.setName(StrUtil.upperFirst(menu.getPath()));
                     treeNode.setId(menu.getId());
                     treeNode.setParentId(menu.getParentId());
                     treeNode.put("path", menu.getPath());
                     treeNode.put("component", menu.getComponent());
-                    treeNode.setName(menu.getName());
-                    treeNode.setWeight(menu.getRankOrder());
+//                    treeNode.setName(menu.getName());
+//                    treeNode.setWeight(menu.getRankOrder());
                     PermissionRouterVO.MetaVO meta = new PermissionRouterVO.MetaVO();
-                    meta.setTitle(menu.getTitle());
-                    meta.setIcon(menu.getIcon());
-                    meta.setRank(menu.getRankOrder());
-                    meta.setFrameSrc(menu.getFrameSrc());
-                    meta.setKeepAlive(menu.getKeepAlive());
-                    String auths = menu.getAuths();
-                    if (StrUtil.isNotBlank(auths)) {
-                        meta.setAuths(ListUtil.of(auths));
-                    }
+//                    meta.setTitle(menu.getTitle());
+//                    meta.setIcon(menu.getIcon());
+//                    meta.setRank(menu.getRankOrder());
+//                    meta.setFrameSrc(menu.getFrameSrc());
+//                    meta.setKeepAlive(menu.getKeepAlive());
+//                    String auths = menu.getAuths();
+//                    if (StrUtil.isNotBlank(auths)) {
+//                        meta.setAuths(ListUtil.of(auths));
+//                    }
                     List<RoleEntity> roleList = finalRoleMap.get(menu.getId());
                     if (CollUtil.isNotEmpty(roleList)) {
-                        meta.setRoles(roleList.stream().map(RoleEntity::getCode).collect(Collectors.toList()));
+                        meta.setRoles(roleList.stream().map(RoleEntity::getRoleCode).collect(Collectors.toList()));
                     }
                     treeNode.put("meta", JSONUtil.parseObj(meta).toString());
         });
     }
 
 
-    public List<PermissionRouterVO> convertPermissionRouter(List<Tree<Integer>> treeList) {
+    public List<PermissionRouterVO> convertPermissionRouter(List<Tree<Long>> treeList) {
         if (CollUtil.isEmpty(treeList)) {
             return Collections.emptyList();
         }
         List<PermissionRouterVO> list = new ArrayList<>();
-        for (Tree<Integer> tree : treeList) {
+        for (Tree<Long> tree : treeList) {
             PermissionRouterVO vo = this.convertPermission(tree);
             if (ObjUtil.isNotNull(vo)) {
                 list.add(vo);
@@ -298,7 +278,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         return list;
     }
 
-    private PermissionRouterVO convertPermission(Tree<Integer> tree) {
+    private PermissionRouterVO convertPermission(Tree<Long> tree) {
         if (ObjUtil.isNull(tree)) {
             return null;
         }
@@ -311,11 +291,11 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
             PermissionRouterVO.MetaVO metaVO = JSONUtil.toBean(meta, PermissionRouterVO.MetaVO.class);
             routerVO.setMeta(metaVO);
         }
-        List<Tree<Integer>> children = tree.getChildren();
+        List<Tree<Long>> children = tree.getChildren();
         if (CollUtil.isNotEmpty(children)) {
             List<PermissionRouterVO> childVOList = new ArrayList<>();
 
-            for (Tree<Integer> childTree : children) {
+            for (Tree<Long> childTree : children) {
                 PermissionRouterVO childVO = this.convertPermission(childTree);
                 if (ObjUtil.isNotNull(childVO)) {
                     childVOList.add(childVO);

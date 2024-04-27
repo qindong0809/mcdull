@@ -7,9 +7,9 @@ import java.util.Map;
  * @author dqcer
  */
 public interface IRoleMenuService {
-    Map<Integer, List<Integer>> getMenuIdListMap(List<Integer> roleIdList);
+    Map<Long, List<Long>> getMenuIdListMap(List<Long> roleIdList);
 
-    boolean deleteAndInsert(Integer id, List<Integer> menuIdList);
+    boolean deleteAndInsert(Long id, List<Long> menuIdList);
 
-    Map<Integer, List<Integer>> getRoleIdMap(List<Integer> menuIdList);
+    Map<Long, List<Long>> getRoleIdMap(List<Long> menuIdList);
 }

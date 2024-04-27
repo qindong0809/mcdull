@@ -63,8 +63,8 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     @Override
     public boolean passwordCheck(UserEntity entity, String passwordParam) {
         if (ObjUtil.isNotNull(entity) && StrUtil.isNotBlank(passwordParam)) {
-            String password = entity.getPassword();
-            return password.equals(Sha1Util.getSha1(passwordParam + entity.getSalt()));
+            String password = entity.getLoginPwd();
+            return password.equals(Sha1Util.getSha1(passwordParam));
         }
         return false;
     }
@@ -87,13 +87,13 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
                 .filter(ObjUtil::isNotNull).collect(Collectors.toSet());
         createdBySet.addAll(updatedBySet);
         List<UserEntity> list = baseRepository.listByIds(createdBySet);
-        Map<Integer, UserEntity> userMap = new HashMap<>(list.size());
+        Map<Long, UserEntity> userMap = new HashMap<>(list.size());
         if (CollUtil.isNotEmpty(list)) {
             userMap = list.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
         }
 
-        List<Integer> userIdList = userList.stream().map(IdEntity::getId).collect(Collectors.toList());
-        Map<Integer, List<RoleEntity>> roleListMap = roleService.getRoleMap(userIdList);
+        List<Long> userIdList = userList.stream().map(IdEntity::getId).collect(Collectors.toList());
+        Map<Long, List<RoleEntity>> roleListMap = roleService.getRoleMap(userIdList);
 
         for (UserEntity entity : userList) {
             UserVO vo = UserConvert.entityToVO(entity);
@@ -104,25 +104,25 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         return PageUtil.toPage(voList, entityPage);
     }
 
-    private void setRoleListFieldValue(Map<Integer, List<RoleEntity>> roleListMap, UserVO vo) {
-        Integer id = vo.getUserId();
-        List<RoleEntity> list = roleListMap.getOrDefault(id, ListUtil.empty());
-        if (CollUtil.isNotEmpty(list)) {
-            List<BaseVO<Integer, String>> roleList = list.stream()
-                    .map(i -> new BaseVO<>(i.getId(), i.getName())).collect(Collectors.toList());
-            vo.setRoles(roleList);
-        }
+    private void setRoleListFieldValue(Map<Long, List<RoleEntity>> roleListMap, UserVO vo) {
+//        Integer id = vo.getUserId();
+//        List<RoleEntity> list = roleListMap.getOrDefault(id, ListUtil.empty());
+//        if (CollUtil.isNotEmpty(list)) {
+//            List<BaseVO<Integer, String>> roleList = list.stream()
+//                    .map(i -> new BaseVO<>(i.getId(), i.getName())).collect(Collectors.toList());
+//            vo.setRoles(roleList);
+//        }
     }
 
-    private void setUserFieldValue(Map<Integer, UserEntity> userMap, UserVO vo) {
+    private void setUserFieldValue(Map<Long, UserEntity> userMap, UserVO vo) {
         Integer createdBy = vo.getCreatedBy();
-        if (ObjUtil.isNotNull(createdBy)) {
-            vo.setCreatedByStr(userMap.getOrDefault(createdBy, new UserEntity()).getUsername());
-        }
-        Integer updatedBy = vo.getUpdatedBy();
-        if (ObjUtil.isNotNull(updatedBy)) {
-            vo.setUpdatedByStr(userMap.getOrDefault(updatedBy, new UserEntity()).getUsername());
-        }
+//        if (ObjUtil.isNotNull(createdBy)) {
+//            vo.setCreatedByStr(userMap.getOrDefault(createdBy, new UserEntity()).getUsername());
+//        }
+//        Integer updatedBy = vo.getUpdatedBy();
+//        if (ObjUtil.isNotNull(updatedBy)) {
+//            vo.setUpdatedByStr(userMap.getOrDefault(updatedBy, new UserEntity()).getUsername());
+//        }
     }
 
     @Override
@@ -130,7 +130,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     public Integer insert(UserInsertDTO dto) {
         this.checkParam(dto);
         Integer id = this.buildEntityAndInsert(dto);
-        userRoleService.deleteAndInsert(id, dto.getRoleIds());
+//        userRoleService.deleteAndInsert(id, dto.getRoleIds());
         return id;
     }
 
@@ -143,25 +143,25 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     }
 
     private void checkParam(UserInsertDTO dto) {
-        UserEntity user = baseRepository.get(dto.getAccount());
-        if (ObjUtil.isNotNull(user)) {
-            throw new BusinessException(I18nConstants.DATA_EXISTS);
-        }
+//        UserEntity user = baseRepository.get(dto.getAccount());
+//        if (ObjUtil.isNotNull(user)) {
+//            throw new BusinessException(I18nConstants.DATA_EXISTS);
+//        }
     }
 
-    private Integer buildEntityAndInsert(UserInsertDTO dto) {
+    private Long buildEntityAndInsert(UserInsertDTO dto) {
         UserEntity entity = UserConvert.insertDtoToEntity(dto);
         String salt = RandomUtil.uuid();
-        String password = Sha1Util.getSha1(Md5Util.getMd5(dto.getAccount() + salt));
-        entity.setSalt(salt);
-        entity.setPassword(password);
-        entity.setType(1);
+//        String password = Sha1Util.getSha1(Md5Util.getMd5(dto.getAccount() + salt));
+//        entity.setSalt(salt);
+//        entity.setPassword(password);
+//        entity.setType(1);
         return baseRepository.insert(entity);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer toggleActive(Integer id) {
+    public Long toggleActive(Long id) {
         UserEntity dbData = baseRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
@@ -177,7 +177,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean delete(Integer id) {
+    public boolean delete(Long id) {
         UserEntity dbData = baseRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
@@ -196,7 +196,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer updatePassword(Integer id, UserUpdatePasswordDTO dto) {
+    public Long updatePassword(Long id, UserUpdatePasswordDTO dto) {
         UserEntity entity = baseRepository.getById(id);
         if (entity == null) {
             log.warn("数据不存在 id:{}", id);
@@ -206,40 +206,40 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         if (!isOk) {
             throw new BusinessException("user.password.incorrect");
         }
-        String password = this.buildPassword(dto.getNewPassword(), entity.getSalt());
+        String password = this.buildPassword(dto.getNewPassword(), StrUtil.EMPTY);
         baseRepository.update(id, password);
         return id;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer update(Integer id, UserUpdateDTO dto) {
+    public Long update(Long id, UserUpdateDTO dto) {
         this.checkParamThrowException(id, dto);
         UserEntity updateDO = UserConvert.updateDtoToEntity(dto);
         updateDO.setId(id);
         baseRepository.updateById(updateDO);
-        userRoleService.deleteAndInsert(id, dto.getRoleIds());
+//        userRoleService.deleteAndInsert(id, dto.getRoleIds());
         return updateDO.getId();
     }
 
-    private void checkParamThrowException(Integer id, UserUpdateDTO dto) {
+    private void checkParamThrowException(Long id, UserUpdateDTO dto) {
         UserEntity entity = baseRepository.getById(id);
         if (entity == null) {
             log.warn("数据不存在 id:{}", id);
             throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
         }
-        UserEntity userDO = baseRepository.get(dto.getAccount());
+        UserEntity userDO = baseRepository.get(dto.getLoginName());
         if (userDO != null) {
             if (!userDO.getId().equals(id)) {
-                log.warn("账号名称已存在 account: {}", dto.getAccount());
+                log.warn("账号名称已存在 account: {}", dto.getLoginName());
                 throw new BusinessException(I18nConstants.DATA_EXISTS);
             }
         }
     }
 
     @Override
-    public List<UserPowerVO> getResourceModuleList(Integer userId) {
-        Map<Integer, List<RoleEntity>> roleListMap = roleService.getRoleMap(ListUtil.of(userId));
+    public List<UserPowerVO> getResourceModuleList(Long userId) {
+        Map<Long, List<RoleEntity>> roleListMap = roleService.getRoleMap(ListUtil.of(userId));
         List<RoleEntity> roleDOList = roleListMap.get(userId);
         if (CollUtil.isEmpty(roleDOList)) {
             log.warn("userId: {} 查无角色权限", userId);
@@ -248,12 +248,12 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         List<UserPowerVO> vos = roleDOList.stream().map(i-> {
             UserPowerVO vo = new UserPowerVO();
             vo.setRoleId(i.getId());
-            vo.setCode(i.getCode());
+            vo.setCode(i.getRoleCode());
             return vo;
         }).collect(Collectors.toList());
 
-        Set<Integer> roleSet = vos.stream().map(UserPowerVO::getRoleId).collect(Collectors.toSet());
-        Map<Integer, List<String>> keyRoleIdValueMenuCode = menuService.getMenuCodeListMap(new ArrayList<>(roleSet));
+        Set<Long> roleSet = vos.stream().map(UserPowerVO::getRoleId).collect(Collectors.toSet());
+        Map<Long, List<String>> keyRoleIdValueMenuCode = menuService.getMenuCodeListMap(new ArrayList<>(roleSet));
         for (UserPowerVO vo : vos) {
             String code = vo.getCode();
             if (ObjectUtil.equals(GlobalConstant.SUPER_ADMIN_ROLE, code)) {
@@ -272,24 +272,15 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     }
 
     @Override
-    public Map<Integer, UserEntity> getEntityMap(List<Integer> userIdList) {
+    public Map<Long, UserEntity> getEntityMap(List<Long> userIdList) {
         List<UserEntity> list = this.list(userIdList);
         return list.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
     }
 
     @Override
-    public Map<Integer, String> getNameMap(List<Integer> userIdList) {
+    public Map<Long, String> getNameMap(List<Long> userIdList) {
         List<UserEntity> list = this.list(userIdList);
-        return list.stream().collect(Collectors.toMap(IdEntity::getId, UserEntity::getNickName));
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void updateLoginTime(Integer userId, Date nowTime) {
-        if (ObjUtil.isNull(userId) || ObjUtil.isNull(nowTime)) {
-            throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
-        }
-        baseRepository.updateLoginTime(userId, nowTime);
+        return list.stream().collect(Collectors.toMap(IdEntity::getId, UserEntity::getLoginName));
     }
 
     @Override
@@ -304,13 +295,13 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         return null;
     }
 
-    private List<UserEntity> list(List<Integer> userIdList) {
+    private List<UserEntity> list(List<Long> userIdList) {
         if (CollUtil.isNotEmpty(userIdList)) {
             List<UserEntity> userList = baseRepository.listByIds(userIdList);
             return CollUtil.emptyIfNull(userList);
         }
         return Collections.emptyList();
-    }
+    }7
 
 
 }

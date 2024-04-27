@@ -20,7 +20,7 @@
     </properties>
 
     <modules>
-        <module>mcdull-admin</module>
+<!--        <module>mcdull-admin</module>-->
         <module>mcdull-business-common</module>
     </modules>
 

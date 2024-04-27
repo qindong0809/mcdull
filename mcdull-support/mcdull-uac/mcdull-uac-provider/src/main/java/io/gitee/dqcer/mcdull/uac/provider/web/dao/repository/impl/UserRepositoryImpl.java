@@ -6,10 +6,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
-import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
@@ -17,7 +15,6 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,9 +38,9 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
         LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
         String keyword = dto.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
-            query.and(i-> i.like(UserEntity::getUsername, keyword)
+            query.and(i-> i.like(UserEntity::getLoginName, keyword)
                     .or().like(UserEntity::getPhone, keyword)
-                    .or().like(UserEntity::getEmail, keyword));
+            );
         }
         query.orderByDesc(BaseEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
@@ -56,7 +53,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
      * @return {@link Long}
      */
     @Override
-    public Integer insert(UserEntity entity) {
+    public Long insert(UserEntity entity) {
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {
             throw new BusinessException(CodeEnum.DB_ERROR);
@@ -73,7 +70,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
     @Override
     public UserEntity get(String account) {
         LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
-        query.eq(UserEntity::getUsername, account);
+        query.eq(UserEntity::getLoginName, account);
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
         List<UserEntity> list = list(query);
         if (list.isEmpty()) {
@@ -82,26 +79,8 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
         return list.get(0);
     }
 
-    /**
-     * 更新登录时间通过id
-     *
-     * @param userId 用户id
-     */
     @Override
-    public void updateLoginTime(Integer userId, Date nowTime) {
-        UserEntity entity = new UserEntity();
-        entity.setId(userId);
-        entity.setLastLoginTime(nowTime);
-        entity.setUpdatedBy(userId);
-        int rowSize = baseMapper.updateById(entity);
-        if (rowSize == GlobalConstant.Database.ROW_0) {
-            throw new DatabaseRowException(I18nConstants.DB_OPERATION_FAILED);
-        }
-    }
-
-
-    @Override
-    public boolean update(Integer id, boolean inactive) {
+    public boolean update(Long id, boolean inactive) {
         UserEntity entity = new UserEntity();
         entity.setId(id);
         entity.setInactive(inactive);
@@ -109,10 +88,10 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
     }
 
     @Override
-    public boolean update(Integer id, String password) {
+    public boolean update(Long id, String password) {
         UserEntity entity = new UserEntity();
         entity.setId(id);
-        entity.setPassword(password);
+        entity.setLoginPwd(password);
         return this.update(entity);
     }
 

@@ -13,7 +13,7 @@ import lombok.Data;
 public class RoleMenuVO implements VO {
 
 
-    private Integer id;
+    private Long id;
 
     private Integer menuType;
 

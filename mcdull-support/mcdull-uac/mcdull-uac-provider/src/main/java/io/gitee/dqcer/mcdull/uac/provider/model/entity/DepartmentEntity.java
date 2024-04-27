@@ -6,19 +6,21 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 系统角色实体
+ * sys department
  *
  * @author dqcer
  * @since 2022/11/07
  */
-@TableName("sys_role")
+@TableName("sys_department")
 @Getter
 @Setter
-public class RoleEntity extends BaseEntity<Long> {
+public class DepartmentEntity extends BaseEntity<Long> {
 
-    private String roleName;
+    private String name;
 
-    private String roleCode;
+    private Long managerId;
 
-    private String remark;
+    private Long parentId;
+
+    private Integer sort;
 }

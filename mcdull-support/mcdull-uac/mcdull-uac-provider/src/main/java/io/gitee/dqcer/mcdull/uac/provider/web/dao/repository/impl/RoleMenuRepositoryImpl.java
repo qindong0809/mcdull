@@ -26,7 +26,7 @@ public class RoleMenuRepositoryImpl extends ServiceImpl<RoleMenuMapper, RoleMenu
 
 
     @Override
-    public Map<Integer, List<Integer>> menuIdListMap(Collection<Integer> roleIdCollection) {
+    public Map<Long, List<Long>> menuIdListMap(Collection<Long> roleIdCollection) {
         if (ObjectUtil.isNull(roleIdCollection)) {
             throw new IllegalArgumentException("'roleIdCollection' is null");
         }
@@ -38,16 +38,16 @@ public class RoleMenuRepositoryImpl extends ServiceImpl<RoleMenuMapper, RoleMenu
     }
 
     @Override
-    public List<RoleMenuEntity> listByRoleId(Integer roleId) {
+    public List<RoleMenuEntity> listByRoleId(Long roleId) {
         LambdaQueryWrapper<RoleMenuEntity> query = Wrappers.lambdaQuery();
         query.eq(RoleMenuEntity::getRoleId, roleId);
         return baseMapper.selectList(query);
     }
 
     @Override
-    public void insert(Integer roleId, List<Integer> menuIdList) {
+    public void insert(Long roleId, List<Long> menuIdList) {
         List<RoleMenuEntity> list = new ArrayList<>();
-        for (Integer menuId : menuIdList) {
+        for (Long menuId : menuIdList) {
             RoleMenuEntity roleMenu = new RoleMenuEntity();
             roleMenu.setMenuId(menuId);
             roleMenu.setRoleId(roleId);
@@ -60,7 +60,7 @@ public class RoleMenuRepositoryImpl extends ServiceImpl<RoleMenuMapper, RoleMenu
     }
 
     @Override
-    public Map<Integer, List<Integer>> listByMenuIdList(List<Integer> menuIdList) {
+    public Map<Long, List<Long>> listByMenuIdList(List<Long> menuIdList) {
         if (ObjectUtil.isNull(menuIdList)) {
             throw new IllegalArgumentException("'menuIdList' is null");
         }

@@ -22,9 +22,9 @@ public class DomainEngine {
      * @param frontEndParamConvertEntityList 前端参数转换实体列表
      * @return {@link CompareBean}<{@link T}>
      */
-    public static <T extends IdEntity> CompareBean<T> compare(List<T> dbQueryEntityList,
+    public static <T extends IdEntity<PK>, PK> CompareBean<T, PK> compare(List<T> dbQueryEntityList,
                                                               List<T> frontEndParamConvertEntityList) {
-        CompareBean<T> bean = new CompareBean<>();
+        CompareBean<T, PK> bean = new CompareBean<>();
         if (CollUtil.isEmpty(frontEndParamConvertEntityList)) {
             bean.setRemoveList(dbQueryEntityList);
             return bean;
@@ -34,26 +34,26 @@ public class DomainEngine {
             return bean;
         }
 
-        Map<Integer, T> oldMap = getMap(dbQueryEntityList);
-        List<Integer> oldIdList = new ArrayList<>();
-        for (Map.Entry<Integer, T> entry : oldMap.entrySet()) {
+        Map<PK, T> oldMap = getMap(dbQueryEntityList);
+        List<PK> oldIdList = new ArrayList<>();
+        for (Map.Entry<PK, T> entry : oldMap.entrySet()) {
             oldIdList.add(entry.getKey());
         }
 
-        Map<Integer, T> newMap = getMap(frontEndParamConvertEntityList);
-        List<Integer> newIdList = new ArrayList<>();
-        for (Map.Entry<Integer, T> entry : newMap.entrySet()) {
+        Map<PK, T> newMap = getMap(frontEndParamConvertEntityList);
+        List<PK> newIdList = new ArrayList<>();
+        for (Map.Entry<PK, T> entry : newMap.entrySet()) {
             newIdList.add(entry.getKey());
         }
 
-        Set<Integer> allList = new HashSet<>();
+        Set<PK> allList = new HashSet<>();
         allList.addAll(oldIdList);
         allList.addAll(newIdList);
 
-        List<Integer> removeIdList = CollUtil.subtractToList(allList, newIdList);
+        List<PK> removeIdList = CollUtil.subtractToList(allList, newIdList);
 
         List<T> removeList = new ArrayList<>();
-        for (Integer id : removeIdList) {
+        for (PK id : removeIdList) {
             removeList.add(oldMap.get(id));
         }
         bean.setRemoveList(removeList);
@@ -61,7 +61,7 @@ public class DomainEngine {
         List<T> insertList = new ArrayList<>();
         List<T> updateList = new ArrayList<>();
         for (T t : frontEndParamConvertEntityList) {
-            Integer id = t.getId();
+            PK id = t.getId();
             if (id != null) {
                 updateList.add(t);
             } else {
@@ -73,10 +73,10 @@ public class DomainEngine {
         return bean;
     }
 
-    private static <T extends IdEntity> Map<Integer, T> getMap(List<T> list) {
-        Map<Integer, T> map = new HashMap<>(16);
+    private static <T extends IdEntity<PK>, PK> Map<PK, T> getMap(List<T> list) {
+        Map<PK, T> map = new HashMap<>(16);
         for (T t : list) {
-            Integer id = t.getId();
+            PK id = t.getId();
             if (id != null) {
                 map.put(id, t);
             }

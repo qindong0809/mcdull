@@ -1,7 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 角色视图对象
@@ -9,15 +10,18 @@ import lombok.Data;
  * @author dqcer
  * @since  2022/11/27
  */
-@Data
-public class RoleVO implements VO {
+@Getter
+@Setter
+public class DepartmentVO implements VO {
 
     private Long id;
 
-    private String roleName;
+    private String name;
 
-    private String roleCode;
+    private Long managerId;
 
-    private String remark;
+    private Long parentId;
+
+    private Integer sort;
 
 }

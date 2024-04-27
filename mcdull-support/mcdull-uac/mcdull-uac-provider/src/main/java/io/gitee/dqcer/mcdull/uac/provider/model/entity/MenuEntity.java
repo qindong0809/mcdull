@@ -14,27 +14,38 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("sys_menu")
-public class MenuEntity extends BaseEntity {
+public class MenuEntity extends BaseEntity<Long> {
 
+    private String menuName;
 
+    /**
+     * {@link io.gitee.dqcer.mcdull.uac.provider.model.enums.MenuTypeEnum}
+     */
     private Integer menuType;
-    private Integer parentId;
-    private String title;
-    private String name;
+
+    private Long parentId;
+
+    private Integer sort;
+
     private String path;
+
     private String component;
-    private Integer rankOrder;
-    private String redirect;
+
+    private String permsType;
+
+    private String apiPerms;
+
+    private String webPerms;
+
     private String icon;
-    private String extraIcon;
-    private String enterTransition;
-    private String leaveTransition;
-    private String activePath;
-    private String auths;
-    private String frameSrc;
-    private Boolean frameLoading;
-    private Boolean keepAlive;
-    private Boolean hiddenTag;
-    private Boolean showLink;
-    private Boolean showParent;
+
+    private Long contextMenuId;
+
+    private Boolean frameFlag;
+
+    private String frameUrl;
+
+    private Boolean cacheFlag;
+
+    private Boolean visibleFlag;
 }

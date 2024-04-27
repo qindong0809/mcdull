@@ -4,9 +4,8 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
-
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -49,10 +48,8 @@ public class LoginServiceImpl implements ILoginService {
         // todo 验证码校验
         this.validateCaptcha(username, code, uuid);
         // 登录前置校验
-        Integer loginId = this.loginPreCheck(username, password);
+        Long loginId = this.loginPreCheck(username, password);
         StpUtil.login(loginId);
-        userService.updateLoginTime(loginId, UserContextHolder.getSession().getNow());
-
         return this.buildLogonVo();
     }
 
@@ -64,7 +61,7 @@ public class LoginServiceImpl implements ILoginService {
 
     }
 
-    private Integer loginPreCheck(String username, String passwordDTO) {
+    private Long loginPreCheck(String username, String passwordDTO) {
         UserEntity userEntity = userService.get(username);
         if (ObjUtil.isNotNull(userEntity)) {
             boolean isOk = userService.passwordCheck(userEntity, passwordDTO);
@@ -95,12 +92,12 @@ public class LoginServiceImpl implements ILoginService {
         if (MapUtil.isNotEmpty(entityMap)) {
             UserEntity userDO = entityMap.get(userId);
             if (ObjUtil.isNotNull(userDO)) {
-                if (GlobalConstant.SUPER_ADMIN_USER_TYPE.equals(userDO.getType())) {
+                Boolean administratorFlag = userDO.getAdministratorFlag();
+                if (BooleanUtil.isTrue(administratorFlag)) {
                     return ListUtil.of("*:*:*");
                 }
             }
         }
-
         List<UserPowerVO> userPowerVOList = userService.getResourceModuleList(userId);
         Set<String> set = new HashSet<>();
         if (CollUtil.isNotEmpty(userPowerVOList)) {

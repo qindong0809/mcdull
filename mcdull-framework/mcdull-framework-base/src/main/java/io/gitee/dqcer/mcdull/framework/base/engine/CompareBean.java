@@ -10,7 +10,7 @@ import java.util.List;
  * @author dqcer
  * @since 2024/02/05
  */
-public class CompareBean<T extends IdEntity> {
+public class CompareBean<T extends IdEntity<PK>, PK> {
 
     private List<T> insertList;
 

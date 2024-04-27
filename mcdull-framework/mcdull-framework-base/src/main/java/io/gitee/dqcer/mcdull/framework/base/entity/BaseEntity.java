@@ -11,7 +11,7 @@ import java.util.StringJoiner;
  * @author dqcer
  * @since 2022/01/12
  */
-public class BaseEntity extends RelEntity {
+public class BaseEntity<T> extends RelEntity<T> {
 
     private static final long serialVersionUID = 1L;
 

@@ -2,11 +2,8 @@ package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.hibernate.validator.constraints.Length;
-
-import javax.validation.constraints.*;
-import java.util.List;
-import java.util.StringJoiner;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
 * 用户 接收客户端参数
@@ -15,96 +12,23 @@ import java.util.StringJoiner;
 * @since 2022-11-16
 */
 @Schema
+@Getter
+@Setter
 public class UserInsertDTO implements DTO {
 
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "昵称", minLength = 1, maxLength = 512)
-    @NotBlank
-    @Length(min = 1, max = 512)
-    private String nickname;
+    private String loginName;
 
-    @Schema(description = "昵称", minLength = 1, maxLength = 512)
-    @NotBlank
-    @Length(min = 5, max = 64)
-    private String account;
+    private String loginPwd;
 
-    @NotBlank
-    @Schema(description = "电子邮件", minLength = 1, maxLength = 512)
-    @Email
-    private String email;
+    private Integer gender;
 
-    @NotBlank
-    @Schema(description = "电话", minLength = 8, maxLength = 11)
-    @Length(min = 8, max = 11)
     private String phone;
 
-    @NotEmpty
-    @Schema(description = "角色id集", minProperties = 1)
-    @Size(min = 1)
-    private List<Integer> roleIds;
+    private Long departmentId;
 
-    @NotNull
-    @Schema(description = "部门id")
-    private Integer deptId;
+    private Boolean administratorFlag;
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", UserInsertDTO.class.getSimpleName() + "[", "]")
-                .add("nickname='" + nickname + "'")
-                .add("account='" + account + "'")
-                .add("email='" + email + "'")
-                .add("phone='" + phone + "'")
-                .add("roleIds=" + roleIds)
-                .add("deptId=" + deptId)
-                .toString();
-    }
-
-    public Integer getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(Integer deptId) {
-        this.deptId = deptId;
-    }
-
-    public List<Integer> getRoleIds() {
-        return roleIds;
-    }
-
-    public void setRoleIds(List<Integer> roleIds) {
-        this.roleIds = roleIds;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+    private String remark;
 }

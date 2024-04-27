@@ -52,14 +52,6 @@ public interface IUserService {
     Map<Integer, String> getNameMap(List<Integer> userIdList);
 
     /**
-     * update登录时间
-     *
-     * @param userId  用户id
-     * @param nowTime 现在时间
-     */
-    void updateLoginTime(Integer userId, Date nowTime);
-
-    /**
      * get
      *
      * @param userId 用户id

@@ -24,7 +24,7 @@ public class DictConvert {
      */
     public static DictTypeClientVO entityConvertToVo(DictTypeEntity item) {
         DictTypeClientVO dictTypeClientVO = new DictTypeClientVO();
-        dictTypeClientVO.setId(item.getId());
+//        dictTypeClientVO.setId(item.getId());
         dictTypeClientVO.setDictName(item.getDictName());
         dictTypeClientVO.setDictType(item.getDictType());
         dictTypeClientVO.setRemark(item.getRemark());

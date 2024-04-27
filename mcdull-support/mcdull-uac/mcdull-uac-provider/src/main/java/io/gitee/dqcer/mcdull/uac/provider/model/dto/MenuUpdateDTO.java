@@ -3,8 +3,6 @@ package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-
 /**
 * 角色 接收客户端参数
 *
@@ -16,28 +14,39 @@ public class MenuUpdateDTO implements DTO {
 
     private static final long serialVersionUID = 1L;
 
+
+    private String menuName;
+
+    /**
+     * {@link io.gitee.dqcer.mcdull.uac.provider.model.enums.MenuTypeEnum}
+     */
     private Integer menuType;
-    @NotNull
-    private Integer parentId;
-    private String title;
-    private String name;
+
+    private Long parentId;
+
+    private Integer sort;
+
     private String path;
+
     private String component;
-    @NotNull
-    private Integer rank;
-    private String redirect;
+
+    private String permsType;
+
+    private String apiPerms;
+
+    private String webPerms;
+
     private String icon;
-    private String extraIcon;
-    private String enterTransition;
-    private String leaveTransition;
-    private String activePath;
-    private String auths;
-    private String frameSrc;
-    private Boolean frameLoading;
-    private Boolean keepAlive;
-    private Boolean hiddenTag;
-    private Boolean showLink;
-    private Boolean showParent;
+
+    private Long contextMenuId;
+
+    private Boolean frameFlag;
+
+    private String frameUrl;
+
+    private Boolean cacheFlag;
+
+    private Boolean visibleFlag;
 
    
 }

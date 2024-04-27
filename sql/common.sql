@@ -7,8 +7,14 @@ create table if not exists `xxx_xxx` (
     `created_time` datetime not null comment '创建时间',
     `updated_by` bigint(20) default null comment '更新人',
     `updated_time` datetime default null comment '更新时间',
-    `inactive` int(1) not null default b'0' comment '状态（true/已失活 false/未失活）',
-    `del_flag` bit(1) not null default b'0' comment '删除标识（true/已删除 false/未删除）',
+
+    `inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
+    `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+
+-- 0 false，1true
+    `bool_flag` tinyint(0) not null default 0 COMMENT '是否为超级管理员: 0 false，1true',
+-- remark
+    `remark` varchar(200)  NULL DEFAULT NULL COMMENT '备注',
     primary key (`id`)
 )  comment='xxxxx';
 

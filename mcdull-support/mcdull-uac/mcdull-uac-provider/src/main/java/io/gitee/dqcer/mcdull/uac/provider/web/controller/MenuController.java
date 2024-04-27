@@ -52,7 +52,7 @@ public class MenuController {
     }
 
     @PutMapping("{id}/update")
-    public Result<Boolean> update(@PathVariable("id") Integer id, @RequestBody @Validated MenuUpdateDTO dto){
+    public Result<Boolean> update(@PathVariable("id") Long id, @RequestBody @Validated MenuUpdateDTO dto){
         return Result.success(menuService.update(id, dto));
     }
 
@@ -63,7 +63,7 @@ public class MenuController {
      * @return {@link Result<Integer>}
      */
     @DeleteMapping("{id}")
-    public Result<Boolean> delete(@PathVariable("id") Integer id, @Validated ReasonDTO dto){
+    public Result<Boolean> delete(@PathVariable("id") Long id, @Validated ReasonDTO dto){
         return Result.success(menuService.delete(id, dto));
     }
 
@@ -73,7 +73,7 @@ public class MenuController {
     }
 
     @GetMapping("{roleId}/role-menu-ids")
-    public Result<List<Integer>> roleMenuIdList(@PathVariable("roleId") Integer roleId){
+    public Result<List<Long>> roleMenuIdList(@PathVariable("roleId") Long roleId){
         return Result.success(menuService.roleMenuIdList(roleId));
     }
 

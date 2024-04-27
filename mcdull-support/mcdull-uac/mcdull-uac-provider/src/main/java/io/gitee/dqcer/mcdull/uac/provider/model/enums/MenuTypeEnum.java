@@ -1,35 +1,31 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.enums;
 
+
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 
 /**
- * 菜单枚举
+ * 菜单类型枚举
  *
  * @author dqcer
- * @since 2022/07/26
  */
-@SuppressWarnings("unused")
 public enum MenuTypeEnum implements IEnum<Integer> {
+    /**
+     * 目录
+     */
+    CATALOG(1, "目录"),
+    /**
+     * 菜单
+     */
+    MENU(2, "菜单"),
+    /**
+     * 功能点
+     */
+    POINTS(3, "功能点");
 
 
-    MENU(0, "菜单"),
-    IFRAME(1, "iframe"),
-    LINK(2, "外链"),
-    BUTTON(3, "按钮")
-    ;
 
-    MenuTypeEnum(Integer code, String text) {
-        init(code, text);
+    MenuTypeEnum(Integer value, String desc) {
+        this.init(value, desc);
     }
 
-    public static MenuTypeEnum toEnum(String code) {
-        switch (code) {
-            case "menu":
-                return MenuTypeEnum.MENU;
-            case "button":
-                return MenuTypeEnum.BUTTON;
-            default:
-                throw new IllegalArgumentException("invalid value , only [menu, button] is allowed");
-        }
-    }
 }

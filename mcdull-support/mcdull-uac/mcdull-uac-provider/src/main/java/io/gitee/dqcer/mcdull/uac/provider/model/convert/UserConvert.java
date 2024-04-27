@@ -21,39 +21,40 @@ public class UserConvert {
      * @return {@link UserVO}
      */
     public static UserVO entityToVO(UserEntity entity) {
-        if (entity == null) {
-            return null;
-        }
         UserVO userVO = new UserVO();
-        userVO.setUserId(entity.getId());
-        userVO.setCreatedTime(entity.getCreatedTime());
-        userVO.setCreatedBy(entity.getCreatedBy());
-        userVO.setUpdatedTime(entity.getUpdatedTime());
-        userVO.setUpdatedBy(entity.getUpdatedBy());
-        userVO.setNickname(entity.getNickName());
-        userVO.setAccount(entity.getUsername());
-        userVO.setEmail(entity.getEmail());
+        userVO.setLoginName(entity.getLoginName());
+        userVO.setLoginPwd(entity.getLoginPwd());
+        userVO.setGender(entity.getGender());
         userVO.setPhone(entity.getPhone());
-        userVO.setLastLoginTime(entity.getLastLoginTime());
-        userVO.setType(entity.getType());
+        userVO.setDepartmentId(entity.getDepartmentId());
+        userVO.setAdministratorFlag(entity.getAdministratorFlag());
+        userVO.setRemark(entity.getRemark());
         return userVO;
     }
 
     public static UserEntity insertDtoToEntity(UserInsertDTO dto) {
         UserEntity entity = new UserEntity();
-        entity.setNickName(dto.getNickname());
-        entity.setUsername(dto.getAccount());
-        entity.setEmail(dto.getEmail());
+        entity.setLoginName(dto.getLoginName());
+        entity.setLoginPwd(dto.getLoginPwd());
+        entity.setGender(dto.getGender());
         entity.setPhone(dto.getPhone());
-        entity.setDeptId(dto.getDeptId());
+        entity.setDepartmentId(dto.getDepartmentId());
+        entity.setAdministratorFlag(dto.getAdministratorFlag());
+        entity.setRemark(dto.getRemark());
         return entity;
+
     }
 
     public static UserEntity updateDtoToEntity(UserUpdateDTO dto) {
         UserEntity entity = new UserEntity();
-        entity.setNickName(dto.getNickname());
-        entity.setEmail(dto.getEmail());
+        entity.setLoginName(dto.getLoginName());
+        entity.setLoginPwd(dto.getLoginPwd());
+        entity.setGender(dto.getGender());
         entity.setPhone(dto.getPhone());
+        entity.setDepartmentId(dto.getDepartmentId());
+        entity.setAdministratorFlag(dto.getAdministratorFlag());
+        entity.setRemark(dto.getRemark());
         return entity;
+
     }
 }

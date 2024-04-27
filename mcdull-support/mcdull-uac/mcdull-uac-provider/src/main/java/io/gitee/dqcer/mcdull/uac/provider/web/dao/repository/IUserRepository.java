@@ -5,8 +5,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 
-import java.util.Date;
-
 /**
  * 用户 数据库操作封装接口层
  *
@@ -29,7 +27,7 @@ public interface IUserRepository extends IService<UserEntity> {
      * @param entity 实体
      * @return {@link Long}
      */
-    Integer insert(UserEntity entity);
+    Long insert(UserEntity entity);
 
     /**
      * 单个根据账户名称
@@ -46,9 +44,8 @@ public interface IUserRepository extends IService<UserEntity> {
      * @param inactive 不活跃
      * @return boolean
      */
-    boolean update(Integer id, boolean inactive);
+    boolean update(Long id, boolean inactive);
 
-    boolean update(Integer id, String password);
+    boolean update(Long id, String password);
 
-    void updateLoginTime(Integer userId, Date nowTime);
 }

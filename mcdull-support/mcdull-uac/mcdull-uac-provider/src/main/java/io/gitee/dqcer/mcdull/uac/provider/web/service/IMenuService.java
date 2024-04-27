@@ -15,7 +15,7 @@ import java.util.Map;
  * @author dqcer
  */
 public interface IMenuService {
-    Map<Integer, List<String>> getMenuCodeListMap(List<Integer> roleIdList);
+    Map<Long, List<String>> getMenuCodeListMap(List<Long> roleIdList);
 
     List<String> getAllCodeList();
 
@@ -23,15 +23,15 @@ public interface IMenuService {
 
     boolean insert(MenuInsertDTO dto);
 
-    boolean update(Integer id, MenuUpdateDTO dto);
+    boolean update(Long id, MenuUpdateDTO dto);
 
-    boolean delete(Integer id, ReasonDTO dto);
+    boolean delete(Long id, ReasonDTO dto);
 
     List<RoleMenuVO> roleMenuList();
 
-    List<Integer> roleMenuIdList(Integer roleId);
+    List<Long> roleMenuIdList(Long roleId);
 
     List<PermissionRouterVO> getPermissionRouter();
 
-    List<PermissionRouterVO> getPermissionRouterByRole(Integer roleId);
+    List<PermissionRouterVO> getPermissionRouterByRole(Long roleId);
 }

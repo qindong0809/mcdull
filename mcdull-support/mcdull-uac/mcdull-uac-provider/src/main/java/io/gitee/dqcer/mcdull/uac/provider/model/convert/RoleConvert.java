@@ -18,31 +18,25 @@ public class RoleConvert {
         }
         RoleVO roleVO = new RoleVO();
         roleVO.setId(entity.getId());
-        roleVO.setName(entity.getName());
-        roleVO.setDescription(entity.getDescription());
-        roleVO.setType(entity.getType());
+        roleVO.setRoleName(entity.getRoleName());
+        roleVO.setRoleCode(entity.getRoleCode());
         return roleVO;
     }
 
     public static RoleEntity insertToEntity(RoleInsertDTO dto) {
         RoleEntity roleDO = new RoleEntity();
-        roleDO.setName(dto.getName());
-        roleDO.setDescription(dto.getDescription());
+        roleDO.setRoleName(dto.getRoleName());
+        roleDO.setRoleCode(dto.getRoleCode());
+        roleDO.setRoleCode(roleDO.getRoleCode());
         return roleDO;
     }
 
     public static RoleVO entityToVO(RoleEntity entity) {
         RoleVO roleVO = new RoleVO();
-        roleVO.setType(entity.getType());
         roleVO.setId(entity.getId());
-        roleVO.setCreatedTime(entity.getCreatedTime());
-        roleVO.setCreatedBy(entity.getCreatedBy());
-        roleVO.setUpdatedTime(entity.getUpdatedTime());
-        roleVO.setUpdatedBy(entity.getUpdatedBy());
-        roleVO.setName(entity.getName());
-        roleVO.setCode(entity.getCode());
-        roleVO.setDescription(entity.getDescription());
-        roleVO.setInactive(entity.getInactive());
+        roleVO.setRoleName(entity.getRoleName());
+        roleVO.setRoleCode(entity.getRoleCode());
+        roleVO.setRemark(entity.getRemark());
         return roleVO;
     }
 }

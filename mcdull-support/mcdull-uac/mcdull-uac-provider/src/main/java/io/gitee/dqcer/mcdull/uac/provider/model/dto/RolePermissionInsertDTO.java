@@ -8,5 +8,5 @@ import java.util.List;
 @Data
 public class RolePermissionInsertDTO implements DTO {
 
-    private List<Integer> menuIdList;
+    private List<Long> menuIdList;
 }

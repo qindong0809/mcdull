@@ -20,12 +20,12 @@ public class UserRoleServiceImpl extends BasicServiceImpl<IUserRoleRepository>  
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteAndInsert(Integer userId, List<Integer> roleList) {
+    public void deleteAndInsert(Long userId, List<Long> roleList) {
         baseRepository.deleteAndInsert(userId, roleList);
     }
 
     @Override
-    public Map<Integer, List<Integer>> getRoleIdListMap(List<Integer> userIdList) {
+    public Map<Long, List<Long>> getRoleIdListMap(List<Long> userIdList) {
         if (CollUtil.isNotEmpty(userIdList)) {
             return baseRepository.roleIdListMap(userIdList);
         }

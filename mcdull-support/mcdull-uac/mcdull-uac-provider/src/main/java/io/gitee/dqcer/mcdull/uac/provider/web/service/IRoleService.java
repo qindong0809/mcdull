@@ -3,7 +3,6 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service;
 import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
@@ -17,25 +16,23 @@ import java.util.Map;
 public interface IRoleService {
     PagedVO<RoleVO> listByPage(RolePageDTO dto);
 
-    Result<RoleVO> detail(RoleLiteDTO dto);
+    RoleVO detail(RoleLiteDTO dto);
 
-    Integer insert(RoleInsertDTO dto);
+    Long insert(RoleInsertDTO dto);
 
-    Result<Integer> toggleStatus(RoleLiteDTO dto);
+    Long delete(UserLiteDTO dto);
 
-    Result<Integer> delete(UserLiteDTO dto);
+    Map<Long, List<RoleEntity>> getRoleMap(List<Long> userIdList);
 
-    Map<Integer, List<RoleEntity>> getRoleMap(List<Integer> userIdList);
+    List<LabelValueVO<Long, String>> getSimple(Long userId);
 
-    List<LabelValueVO<Integer, String>> getSimple(Integer userId);
+    boolean update(Long id, RoleUpdateDTO dto);
 
-    boolean update(Integer id, RoleUpdateDTO dto);
+    boolean delete(Long id, ReasonDTO dto);
 
-    boolean delete(Integer id, ReasonDTO dto);
+    boolean toggleStatus(Long id, ReasonDTO dto);
 
-    boolean toggleStatus(Integer id, ReasonDTO dto);
+    boolean insertPermission(Long id, RolePermissionInsertDTO dto);
 
-    boolean insertPermission(Integer id, RolePermissionInsertDTO dto);
-
-    Map<Integer, List<RoleEntity>> getRoleMapByMenuId(List<Integer> menuIdList);
+    Map<Long, List<RoleEntity>> getRoleMapByMenuId(List<Long> menuIdList);
 }

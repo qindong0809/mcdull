@@ -5,8 +5,8 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.DeptVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IDeptService;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IDepartmentService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,11 +22,11 @@ import java.util.List;
 public class DeptController {
 
     @Resource
-    private IDeptService deptService;
+    private IDepartmentService deptService;
 
 
     @GetMapping("list")
-    public Result<List<DeptVO>> list(@Validated DeptListDTO dto) {
+    public Result<List<DepartmentVO>> list(@Validated DeptListDTO dto) {
         return Result.success(deptService.list(dto));
     }
 
@@ -37,12 +37,12 @@ public class DeptController {
     }
 
     @PutMapping("{id}/update")
-    public Result<Boolean> update(@PathVariable("id") Integer id, @RequestBody @Validated DeptUpdateDTO dto){
+    public Result<Boolean> update(@PathVariable("id") Long id, @RequestBody @Validated DeptUpdateDTO dto){
         return Result.success(deptService.update(id, dto));
     }
 
     @DeleteMapping("{id}")
-    public Result<Boolean> delete(@PathVariable("id") Integer id, @Validated ReasonDTO dto){
+    public Result<Boolean> delete(@PathVariable("id") Long id, @Validated ReasonDTO dto){
         return Result.success(deptService.delete(id, dto));
     }
 

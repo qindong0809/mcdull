@@ -6,17 +6,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 系统角色菜单实体
+ * 系统角色实体
  *
  * @author dqcer
  * @since 2022/11/07
  */
-@TableName("sys_role_menu")
 @Getter
 @Setter
-public class RoleMenuEntity extends RelEntity<Long> {
+@TableName("sys_role_user")
+public class RoleUserEntity extends RelEntity<Long> {
 
-    private Long menuId;
+    private static final long serialVersionUID = 1L;
+
+    private Long userId;
 
     private Long roleId;
 

@@ -13,7 +13,7 @@ import java.util.StringJoiner;
  * @author dqcer
  * @since 2022/01/12
  */
-public class RelEntity extends IdEntity {
+public class RelEntity<T> extends IdEntity<T> {
 
     private static final long serialVersionUID = 1L;
 

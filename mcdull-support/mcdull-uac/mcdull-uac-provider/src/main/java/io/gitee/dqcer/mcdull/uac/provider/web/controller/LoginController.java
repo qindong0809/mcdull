@@ -6,7 +6,6 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -84,21 +83,22 @@ public class LoginController implements AuthServiceApi {
 
     @Operation(summary = "当前登录人角色信息", description = "角色")
     @GetMapping("role-list")
-    public Result<List<LabelValueVO<Integer, String>>> getRoleList() {
-        Integer currentUserId = UserContextHolder.currentUserId();
-        return Result.success(roleService.getSimple(currentUserId));
+    public Result<List<LabelValueVO<Long, String>>> getRoleList() {
+//        Integer currentUserId = UserContextHolder.currentUserId();
+//        return Result.success(roleService.getSimple(currentUserId));
+        return Result.success(roleService.getSimple(1L));
     }
 
     @GetMapping("getRouters/{roleId}")
-    public Result<List<PermissionRouterVO>> getPermissionRouter(@PathVariable("roleId") Integer roleId) {
+    public Result<List<PermissionRouterVO>> getPermissionRouter(@PathVariable("roleId") Long roleId) {
         Integer userId = UserContextHolder.currentUserId();
         UserVO userVO = userService.get(userId);
         if (ObjUtil.isNull(userVO)) {
             return Result.success();
         }
-        if (GlobalConstant.SUPER_ADMIN_USER_TYPE.equals(userVO.getType())) {
-            return Result.success(menuService.getPermissionRouter());
-        }
+//        if (GlobalConstant.SUPER_ADMIN_USER_TYPE.equals(userVO.getType())) {
+//            return Result.success(menuService.getPermissionRouter());
+//        }
         List<PermissionRouterVO> routerVO = menuService.getPermissionRouterByRole(roleId);
         return Result.success(routerVO);
     }

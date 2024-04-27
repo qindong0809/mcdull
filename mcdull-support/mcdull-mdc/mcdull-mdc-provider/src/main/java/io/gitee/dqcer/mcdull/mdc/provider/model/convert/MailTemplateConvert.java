@@ -18,7 +18,7 @@ public class MailTemplateConvert {
             return null;
         }
         MailTemplateVO vo = new MailTemplateVO();
-        vo.setId(item.getId());
+//        vo.setId(item.getId());
         vo.setStatus(item.getStatus());
         vo.setModelCode(item.getModelCode());
         vo.setTemplateName(item.getTemplateName());
@@ -34,7 +34,7 @@ public class MailTemplateConvert {
             return null;
         }
         MailTemplateBaseVO vo = new MailTemplateBaseVO();
-        vo.setId(item.getId());
+//        vo.setId(item.getId());
         vo.setStatus(item.getStatus());
         vo.setModelCode(item.getModelCode());
         vo.setTemplateName(item.getTemplateName());
