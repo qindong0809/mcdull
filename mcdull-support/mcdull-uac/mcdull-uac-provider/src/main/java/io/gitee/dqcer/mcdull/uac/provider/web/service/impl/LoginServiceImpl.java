@@ -6,15 +6,23 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.convert.MenuConvert;
+import io.gitee.dqcer.mcdull.uac.provider.model.convert.RoleConvert;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginDeviceEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.MenuVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -42,26 +50,51 @@ public class LoginServiceImpl implements ILoginService {
     @Resource
     private IUserService userService;
 
+    @Resource
+    private IRoleService roleService;
+
+    @Resource
+    private IMenuService menuService;
+
+    @Resource
+    private ICaptchaService captchaService;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public LogonVO login(String username, String password, String code, String uuid) {
-        // todo 验证码校验
-        this.validateCaptcha(username, code, uuid);
+    public LogonVO login(LoginDTO dto) {
+        this.validateCaptcha(dto.getCaptchaCode(), dto.getCaptchaUuid());
         // 登录前置校验
-        Long loginId = this.loginPreCheck(username, password);
-        StpUtil.login(loginId);
-        return this.buildLogonVo();
+        UserEntity userEntity = this.loginPreCheck(dto.getLoginName(), dto.getPassword());
+        StpUtil.login(userEntity.getId(), IEnum.getByCode(LoginDeviceEnum.class, dto.getLoginDevice()).getText());
+        return this.buildLogonVo(userEntity);
     }
 
-    private LogonVO buildLogonVo() {
-        return new LogonVO();
+    private LogonVO buildLogonVo(UserEntity userEntity) {
+        LogonVO logonVO = new LogonVO();
+        logonVO.setToken(StpUtil.getTokenValue());
+        logonVO.setUserId(userEntity.getId());
+        logonVO.setLoginName(userEntity.getLoginName());
+//        logonVO.setUserType(userEntity.getUserType());
+        logonVO.setActualName(userEntity.getActualName());
+        logonVO.setDepartmentId(userEntity.getDepartmentId());
+//        logonVO.setDepartmentName(userEntity.getDepartmentName());
+        logonVO.setAdministratorFlag(userEntity.getAdministratorFlag());
+        logonVO.setGender(userEntity.getGender());
+        logonVO.setPhone(userEntity.getPhone());
+//        logonVO.setIp(UserContextHolder.currentIp());
+//        logonVO.setUserAgent(UserContextHolder.currentUserAgent());
+//        logonVO.setLastLoginIp(userEntity.getLastLoginIp());
+        logonVO.setMenuList(menuService.getList(userEntity.getId(), userEntity.getAdministratorFlag()));
+       return logonVO;
     }
 
-    private void validateCaptcha(String username, String code, String uuid) {
 
+
+    private void validateCaptcha(String code, String uuid) {
+        captchaService.checkCaptcha(code, uuid);
     }
 
-    private Long loginPreCheck(String username, String passwordDTO) {
+    private UserEntity loginPreCheck(String username, String passwordDTO) {
         UserEntity userEntity = userService.get(username);
         if (ObjUtil.isNotNull(userEntity)) {
             boolean isOk = userService.passwordCheck(userEntity, passwordDTO);
@@ -69,7 +102,7 @@ public class LoginServiceImpl implements ILoginService {
                 if (Boolean.TRUE.equals(userEntity.getInactive())) {
                     throw new BusinessException("user.account.not.active");
                 }
-                return userEntity.getId();
+                return userEntity;
             }
         }
         throw new BusinessException("incorrect.username.or.password");

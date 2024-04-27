@@ -12,6 +12,8 @@ import lombok.Data;
 @Data
 public class MenuVO implements VO {
 
+    private Integer menuId;
+
     private String menuName;
 
     /**
@@ -19,7 +21,7 @@ public class MenuVO implements VO {
      */
     private Integer menuType;
 
-    private Long parentId;
+    private Integer parentId;
 
     private Integer sort;
 
@@ -35,7 +37,7 @@ public class MenuVO implements VO {
 
     private String icon;
 
-    private Long contextMenuId;
+    private Integer contextMenuId;
 
     private Boolean frameFlag;
 

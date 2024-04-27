@@ -11,6 +11,7 @@ public class GlobalConstant {
 
     public static final String BASE_PACKAGE = "io.gitee.dqcer.mcdull";
     public static final String ROOT_PREFIX = "mcdull";
+    public static final String UTF_8 = "UTF-8";
 
     /**
      * 内部接口调用 前缀

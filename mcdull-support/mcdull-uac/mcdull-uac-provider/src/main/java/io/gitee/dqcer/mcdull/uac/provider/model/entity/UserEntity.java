@@ -20,6 +20,8 @@ public class UserEntity extends BaseEntity<Long> {
 
     private String loginPwd;
 
+    private String actualName;
+
     private Integer gender;
 
     private String phone;

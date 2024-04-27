@@ -6,4 +6,5 @@ public interface ICaptchaService {
 
     CaptchaVO get();
 
+    void checkCaptcha(String code, String uuid);
 }

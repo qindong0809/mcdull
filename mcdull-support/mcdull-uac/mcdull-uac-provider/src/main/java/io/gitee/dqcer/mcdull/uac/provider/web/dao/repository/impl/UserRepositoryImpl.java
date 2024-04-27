@@ -64,13 +64,13 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
     /**
      * 单个根据账户名称
      *
-     * @param account 账户
+     * @param loginName 账户
      * @return {@link UserEntity}
      */
     @Override
-    public UserEntity get(String account) {
+    public UserEntity get(String loginName) {
         LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
-        query.eq(UserEntity::getLoginName, account);
+        query.eq(UserEntity::getLoginName, loginName);
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
         List<UserEntity> list = list(query);
         if (list.isEmpty()) {

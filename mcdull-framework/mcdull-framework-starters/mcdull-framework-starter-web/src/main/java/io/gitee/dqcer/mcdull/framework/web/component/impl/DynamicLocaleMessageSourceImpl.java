@@ -31,7 +31,7 @@ public class DynamicLocaleMessageSourceImpl implements DynamicLocaleMessageSourc
         } catch (NoSuchMessageException e) {
             LogHelp.error(log, e.getMessage(), e);
         }
-        return StrUtil.EMPTY;
+        return code;
     }
 
     @Override

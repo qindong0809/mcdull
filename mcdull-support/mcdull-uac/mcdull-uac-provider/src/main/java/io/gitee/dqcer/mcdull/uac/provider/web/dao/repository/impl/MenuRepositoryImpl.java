@@ -51,9 +51,7 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuEntity> impl
 
     @Override
     public List<String> allCodeList() {
-        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
-        query.eq(BaseEntity::getInactive, InactiveEnum.FALSE.getCode());
-        List<MenuEntity> list = baseMapper.selectList(query);
+        List<MenuEntity> list = this.allList();
         if (CollUtil.isEmpty(list)) {
             return Collections.emptyList();
         }
@@ -61,14 +59,17 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuEntity> impl
     }
 
     @Override
+    public List<MenuEntity> allList() {
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(BaseEntity::getInactive, InactiveEnum.FALSE.getCode());
+        return baseMapper.selectList(query);
+    }
+
+    @Override
     public Map<Long, List<String>> menuCodeListMap(Map<Long, List<Long>> menuListMap) {
         Map<Long, List<String>> resultMap = new HashMap<>(menuListMap.size());
         if (MapUtil.isNotEmpty(menuListMap)) {
-            Set<Long> idList = menuListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
-            LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
-            query.eq(BaseEntity::getInactive, InactiveEnum.FALSE.getCode());
-            query.in(MenuEntity::getId, idList);
-            List<MenuEntity> list = baseMapper.selectList(query);
+            List<MenuEntity> list = this.getMenuList(menuListMap);
             if (CollUtil.isNotEmpty(list)) {
                 Map<Long, MenuEntity> map = list.stream()
                         .filter(i-> StrUtil.isNotBlank(i.getApiPerms()))
@@ -137,6 +138,40 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuEntity> impl
     @Override
     public boolean delete(Long id, String reason) {
         return this.removeById(id);
+    }
+
+    @Override
+    public Map<Long, List<MenuEntity>> getMenuListMap(Map<Long, List<Long>> menuListMap) {
+        if (MapUtil.isNotEmpty(menuListMap)) {
+            List<MenuEntity> list = this.getMenuList(menuListMap);
+            if (CollUtil.isNotEmpty(list)) {
+                Map<Long, List<MenuEntity>> map = list.stream()
+                        .collect(Collectors.groupingBy(MenuEntity::getParentId));
+                for (Map.Entry<Long, List<Long>> entry : menuListMap.entrySet()) {
+                    List<Long> menuIdList = entry.getValue();
+                    List<MenuEntity> menuList = new ArrayList<>();
+                    if (CollUtil.isNotEmpty(menuIdList)) {
+                        for (Long menuId : menuIdList) {
+                            List<MenuEntity> menu = map.get(menuId);
+                            if (CollUtil.isNotEmpty(menu)) {
+                                menuList.addAll(menu);
+                            }
+                        }
+                    }
+                    map.put(entry.getKey(), menuList);
+                }
+                return map;
+            }
+        }
+        return Collections.emptyMap();
+    }
+
+    private List<MenuEntity> getMenuList(Map<Long, List<Long>> menuListMap) {
+        Set<Long> idList = menuListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(BaseEntity::getInactive, InactiveEnum.FALSE.getCode());
+        query.in(MenuEntity::getId, idList);
+        return baseMapper.selectList(query);
     }
 
 }

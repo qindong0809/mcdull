@@ -14,6 +14,7 @@ import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.convert.MenuConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
@@ -53,6 +54,15 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     }
 
     @Override
+    public Map<Long, List<MenuEntity>> getMenuListMap(List<Long> roleIdList) {
+        if (CollUtil.isNotEmpty(roleIdList)) {
+            Map<Long, List<Long>> menuListMap = roleMenuService.getMenuIdListMap(roleIdList);
+            return baseRepository.getMenuListMap(menuListMap);
+        }
+        return MapUtil.empty();
+    }
+
+    @Override
     public List<String> getAllCodeList() {
         return baseRepository.allCodeList();
     }
@@ -63,7 +73,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         List<MenuEntity> menuList = baseRepository.allAndButton();
         if (CollUtil.isNotEmpty(menuList)) {
             for (MenuEntity menu : menuList) {
-                MenuVO vo = this.convertToVO(menu);
+                MenuVO vo = MenuConvert.toVO(menu);
                 list.add(vo);
             }
         }
@@ -194,27 +204,6 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         entity.setVisibleFlag(dto.getVisibleFlag());
         return entity;
     }
-
-    private MenuVO convertToVO(MenuEntity menu) {
-        MenuVO vo = new MenuVO();
-        vo.setMenuName(menu.getMenuName());
-        vo.setMenuType(menu.getMenuType());
-        vo.setParentId(menu.getParentId());
-        vo.setSort(menu.getSort());
-        vo.setPath(menu.getPath());
-        vo.setComponent(menu.getComponent());
-        vo.setPermsType(menu.getPermsType());
-        vo.setApiPerms(menu.getApiPerms());
-        vo.setWebPerms(menu.getWebPerms());
-        vo.setIcon(menu.getIcon());
-        vo.setContextMenuId(menu.getContextMenuId());
-        vo.setFrameFlag(menu.getFrameFlag());
-        vo.setFrameUrl(menu.getFrameUrl());
-        vo.setCacheFlag(menu.getCacheFlag());
-        vo.setVisibleFlag(menu.getVisibleFlag());
-        return vo;
-    }
-
 
     private List<PermissionRouterVO> getRouter(List<Long> roleIdList) {
         Map<Long, List<Long>> menuIdListMap = roleMenuService.getMenuIdListMap(roleIdList);
@@ -353,5 +342,37 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
 
         }
         return routerVO;
+    }
+
+
+    @Override
+    public List<MenuVO> getList(Long userId, boolean administratorFlag) {
+        Set<MenuVO> list = new HashSet<>();
+        if (administratorFlag) {
+            baseRepository.allList().forEach(menuEntity -> {
+                MenuVO menuVO = MenuConvert.toVO(menuEntity);
+                list.add(menuVO);
+            });
+            return new ArrayList<>(list);
+        }
+        Map<Long, List<RoleEntity>> roleListMap = roleService.getRoleMap(ListUtil.of(userId));
+        if (MapUtil.isNotEmpty(roleListMap)) {
+            List<Long> roleIdList = roleListMap.values().stream()
+                    .flatMap(roleList -> roleList.stream().map(IdEntity::getId)).collect(Collectors.toList());
+            Map<Long, List<MenuEntity>> menuListMap = this.getMenuListMap(roleIdList);
+            if (MapUtil.isNotEmpty(menuListMap)) {
+                for (Map.Entry<Long, List<MenuEntity>> entry : menuListMap.entrySet()) {
+                    List<MenuEntity> menuList = entry.getValue();
+                    if (CollUtil.isNotEmpty(menuList)) {
+                        for (MenuEntity menuEntity : menuList) {
+                            MenuVO menuVO = MenuConvert.toVO(menuEntity);
+                            list.add(menuVO);
+                        }
+                    }
+                }
+            }
+        }
+
+        return new ArrayList<>(list);
     }
 }

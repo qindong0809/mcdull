@@ -21,6 +21,8 @@ public interface IMenuRepository extends IService<MenuEntity> {
 
     List<String> allCodeList();
 
+    List<MenuEntity> allList();
+
     Map<Long, List<String>> menuCodeListMap(Map<Long, List<Long>> menuListMap);
 
     List<MenuEntity> list(Collection<Long> collection);
@@ -32,4 +34,6 @@ public interface IMenuRepository extends IService<MenuEntity> {
     List<MenuEntity> listByParentId(Long parentId);
 
     boolean delete(Long id, String reason);
+
+    Map<Long, List<MenuEntity>> getMenuListMap(Map<Long, List<Long>> menuListMap);
 }

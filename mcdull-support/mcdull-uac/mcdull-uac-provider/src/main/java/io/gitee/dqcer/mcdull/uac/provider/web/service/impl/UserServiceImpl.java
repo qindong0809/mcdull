@@ -5,6 +5,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.symmetric.AES;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
@@ -36,6 +37,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -58,15 +60,35 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     @Resource
     private IMenuService menuService;
 
+    private static final String AES_KEY = "1024abcd1024abcd1024abcd1024abcd";
+
+
 
 
     @Override
     public boolean passwordCheck(UserEntity entity, String passwordParam) {
         if (ObjUtil.isNotNull(entity) && StrUtil.isNotBlank(passwordParam)) {
             String password = entity.getLoginPwd();
-            return password.equals(Sha1Util.getSha1(passwordParam));
+            String sha1 = Sha1Util.getSha1(this.decrypt(passwordParam));
+            return password.equals(sha1);
         }
         return false;
+    }
+
+    public String decrypt(String data) {
+        try {
+            // 第一步： Base64 解码
+            byte[] base64Decode = Base64.getDecoder().decode(data);
+
+            // 第二步： AES 解密
+            AES aes = new AES(AES_KEY.getBytes(StandardCharsets.UTF_8));
+            byte[] decryptedBytes = aes.decrypt(base64Decode);
+            return new String(decryptedBytes, StandardCharsets.UTF_8);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return StrUtil.EMPTY;
+        }
     }
 
     public String buildPassword(String param, String salt) {

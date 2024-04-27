@@ -4,6 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.MenuVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.PermissionRouterVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleMenuVO;
@@ -16,6 +17,8 @@ import java.util.Map;
  */
 public interface IMenuService {
     Map<Long, List<String>> getMenuCodeListMap(List<Long> roleIdList);
+
+    Map<Long, List<MenuEntity>> getMenuListMap(List<Long> roleIdList);
 
     List<String> getAllCodeList();
 
@@ -34,4 +37,6 @@ public interface IMenuService {
     List<PermissionRouterVO> getPermissionRouter();
 
     List<PermissionRouterVO> getPermissionRouterByRole(Long roleId);
+
+    List<MenuVO> getList(Long userId, boolean administratorFlag);
 }

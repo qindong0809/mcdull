@@ -11,6 +11,7 @@ import io.gitee.dqcer.mcdull.framework.web.config.SystemEnvironment;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.CaptchaVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ICaptchaService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
@@ -18,6 +19,7 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -32,6 +34,8 @@ public class CaptchaServiceImpl implements ICaptchaService {
 
     @Resource
     private SystemEnvironment systemEnvironment;
+
+    private static final String CAPTCHA_KEY = "login_captcha:{}";
 
     private static final int EXPIRE_SECOND = 65;
 
@@ -59,8 +63,23 @@ public class CaptchaServiceImpl implements ICaptchaService {
         if (!systemEnvironment.getProd()) {
             captchaVO.setCaptchaText(captchaText);
         }
-        redisClient.set(StrUtil.format("login_captcha:{}", uuid), captchaText, EXPIRE_SECOND);
+        String key = StrUtil.format(CAPTCHA_KEY, uuid);
+        redisClient.set(key, captchaText, EXPIRE_SECOND);
         return captchaVO;
 
+    }
+
+    @Override
+    public void checkCaptcha(String code, String uuid) {
+        String key = StrUtil.format(CAPTCHA_KEY, uuid);
+        String redisCaptchaCode = redisClient.get(key);
+        if (StrUtil.isBlank(redisCaptchaCode)) {
+            throw new BusinessException("验证码已过期");
+        }
+        if (!StrUtil.equals(redisCaptchaCode, code)) {
+            throw  new BusinessException("验证码错误，请输入正确的验证码");
+        }
+        // 删除已使用的验证码
+        redisClient.delete(key);
     }
 }
