@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.config.interceptor;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import io.gitee.dqcer.mcdull.framework.security.AbstractUserDetailsService;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
@@ -21,8 +22,8 @@ public class StpInterfaceImpl extends AbstractUserDetailsService {
     private IUserService userService;
 
     @Override
-    protected List<String> permissionList(Integer userId) {
-        List<UserPowerVO> list = userService.getResourceModuleList(userId);
+    protected List<String> permissionList(Object userId) {
+        List<UserPowerVO> list = userService.getResourceModuleList(Convert.toLong(userId));
         if (CollUtil.isNotEmpty(list)) {
             return list.stream().flatMap(i -> i.getModules().stream()).distinct().collect(Collectors.toList());
         }
@@ -30,8 +31,8 @@ public class StpInterfaceImpl extends AbstractUserDetailsService {
     }
 
     @Override
-    protected List<String> roleList(Integer userId) {
-        List<UserPowerVO> list = userService.getResourceModuleList(userId);
+    protected List<String> roleList(Object userId) {
+        List<UserPowerVO> list = userService.getResourceModuleList(Convert.toLong(userId));
         if (CollUtil.isNotEmpty(list)) {
             return list.stream().map(UserPowerVO::getCode).collect(Collectors.toList());
         }

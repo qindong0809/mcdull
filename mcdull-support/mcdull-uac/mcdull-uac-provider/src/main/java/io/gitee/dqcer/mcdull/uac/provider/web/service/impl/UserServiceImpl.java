@@ -127,9 +127,9 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer insert(UserInsertDTO dto) {
+    public Long insert(UserInsertDTO dto) {
         this.checkParam(dto);
-        Integer id = this.buildEntityAndInsert(dto);
+        Long id = this.buildEntityAndInsert(dto);
 //        userRoleService.deleteAndInsert(id, dto.getRoleIds());
         return id;
     }
@@ -284,7 +284,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     }
 
     @Override
-    public UserVO get(Integer userId) {
+    public UserVO get(Long userId) {
         if (ObjUtil.isNotNull(userId)) {
             List<UserEntity> list = this.list(ListUtil.of(userId));
             if (CollUtil.isNotEmpty(list)) {
@@ -301,7 +301,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
             return CollUtil.emptyIfNull(userList);
         }
         return Collections.emptyList();
-    }7
+    }
 
 
 }

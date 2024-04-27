@@ -33,7 +33,8 @@ public class UserServerFeign implements UserServiceApi {
      */
     @PostMapping(GlobalConstant.INNER_API + "/user/res-module/list")
     public ResultApi<List<UserPowerVO>> queryResourceModules() {
-        return ResultApi.success(userService.getResourceModuleList(UserContextHolder.currentUserId()));
+//        return ResultApi.success(userService.getResourceModuleList(UserContextHolder.currentUserId()));
+        throw new RuntimeException("未实现");
     }
 
     /**

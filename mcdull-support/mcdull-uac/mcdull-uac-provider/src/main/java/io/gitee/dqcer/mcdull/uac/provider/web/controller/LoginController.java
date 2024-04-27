@@ -75,9 +75,9 @@ public class LoginController implements AuthServiceApi {
         Integer currentUserId = UserContextHolder.currentUserId();
         Result<UserVO> success = Result.success();
         JSONObject jsonObject = JSONUtil.parseObj(success);
-        jsonObject.set("permissions", loginService.getPermissionList(currentUserId));
-        jsonObject.set("roles", loginService.getRoleList(currentUserId));
-        jsonObject.set("user", userService.get(currentUserId));
+//        jsonObject.set("permissions", loginService.getPermissionList(currentUserId));
+//        jsonObject.set("roles", loginService.getRoleList(currentUserId));
+//        jsonObject.set("user", userService.get(currentUserId));
         return jsonObject;
     }
 
@@ -92,10 +92,10 @@ public class LoginController implements AuthServiceApi {
     @GetMapping("getRouters/{roleId}")
     public Result<List<PermissionRouterVO>> getPermissionRouter(@PathVariable("roleId") Long roleId) {
         Integer userId = UserContextHolder.currentUserId();
-        UserVO userVO = userService.get(userId);
-        if (ObjUtil.isNull(userVO)) {
-            return Result.success();
-        }
+//        UserVO userVO = userService.get(userId);
+//        if (ObjUtil.isNull(userVO)) {
+//            return Result.success();
+//        }
 //        if (GlobalConstant.SUPER_ADMIN_USER_TYPE.equals(userVO.getType())) {
 //            return Result.success(menuService.getPermissionRouter());
 //        }
@@ -130,12 +130,12 @@ public class LoginController implements AuthServiceApi {
     }
 
     @Override
-    public Result<List<String>> getPermissionList(Integer userId) {
+    public Result<List<String>> getPermissionList(Long userId) {
         return Result.success(loginService.getPermissionList(userId));
     }
 
     @Override
-    public Result<List<String>> getRoleList(Integer userId) {
+    public Result<List<String>> getRoleList(Long userId) {
         return Result.success(loginService.getRoleList(userId));
     }
 }

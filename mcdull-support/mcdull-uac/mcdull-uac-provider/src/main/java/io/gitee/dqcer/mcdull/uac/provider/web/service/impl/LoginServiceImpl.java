@@ -76,19 +76,15 @@ public class LoginServiceImpl implements ILoginService {
     }
 
 
-    /**
-     * 注销
-     *
-     * @return {@link Result<String>}
-     */
+
     @Override
     public void logout() {
         StpUtil.logout(UserContextHolder.currentUserId());
     }
 
     @Override
-    public List<String> getPermissionList(Integer userId) {
-        Map<Integer, UserEntity> entityMap = userService.getEntityMap(ListUtil.of(userId));
+    public List<String> getPermissionList(Long userId) {
+        Map<Long, UserEntity> entityMap = userService.getEntityMap(ListUtil.of(userId));
         if (MapUtil.isNotEmpty(entityMap)) {
             UserEntity userDO = entityMap.get(userId);
             if (ObjUtil.isNotNull(userDO)) {
@@ -110,7 +106,7 @@ public class LoginServiceImpl implements ILoginService {
 
 
     @Override
-    public List<String> getRoleList(Integer userId) {
+    public List<String> getRoleList(Long userId) {
         List<UserPowerVO> userPowerVOList = userService.getResourceModuleList(userId);
         Set<String> set = new HashSet<>();
         if (CollUtil.isNotEmpty(userPowerVOList)) {

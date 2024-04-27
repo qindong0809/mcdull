@@ -23,21 +23,21 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
         // 返回此 loginId 拥有的权限列表
-        return permissionList(Convert.toInt(loginId));
+        return permissionList(loginId);
     }
 
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         // 返回此 loginId 拥有的角色列表
-        return this.roleList(Convert.toInt(loginId));
+        return this.roleList(loginId);
     }
 
-    private List<String> permissionList(Integer userId) {
+    private List<String> permissionList(Object userId) {
         AuthClientService authClientService = SpringUtils.getBean(AuthClientService.class);
 
         RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
         // WebFlux异步调用，同步会报错
-        Future<Result<List<String>>> future = executorService.submit(() -> authClientService.getPermissionList(userId));
+        Future<Result<List<String>>> future = executorService.submit(() -> authClientService.getPermissionList(Convert.toLong(userId)));
         Result<List<String>> result;
         try {
             result = future.get();
@@ -48,12 +48,12 @@ public class StpInterfaceImpl implements StpInterface {
         return result.getData();
     }
 
-    private List<String> roleList(Integer userId) {
+    private List<String> roleList(Object userId) {
         AuthClientService authClientService = SpringUtils.getBean(AuthClientService.class);
 
         RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
         // WebFlux异步调用，同步会报错
-        Future<Result<List<String>>> future = executorService.submit(() -> authClientService.getRoleList(userId));
+        Future<Result<List<String>>> future = executorService.submit(() -> authClientService.getRoleList(Convert.toLong(userId)));
         Result<List<String>> result;
         try {
             result = future.get();
