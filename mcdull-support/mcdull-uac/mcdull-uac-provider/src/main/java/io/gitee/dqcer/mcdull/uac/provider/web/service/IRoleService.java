@@ -35,4 +35,8 @@ public interface IRoleService {
     boolean insertPermission(Long id, RolePermissionInsertDTO dto);
 
     Map<Long, List<RoleEntity>> getRoleMapByMenuId(List<Long> menuIdList);
+
+    List<RoleVO> all();
+
+    RoleVO get(Long roleId);
 }

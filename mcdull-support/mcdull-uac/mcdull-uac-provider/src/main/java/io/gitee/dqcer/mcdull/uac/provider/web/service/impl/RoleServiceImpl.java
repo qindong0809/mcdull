@@ -19,7 +19,9 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.RoleConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.uac.IRoleManager;
@@ -201,6 +203,28 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
             }
         }
         return map;
+    }
+
+    @Override
+    public List<RoleVO> all() {
+        List<RoleVO> list = new ArrayList<>();
+        List<RoleEntity> roleEntityList = baseRepository.list();
+        if (CollUtil.isNotEmpty(roleEntityList)) {
+            for (RoleEntity dept : roleEntityList) {
+                RoleVO vo = RoleConvert.entityToVO(dept);
+                list.add(vo);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public RoleVO get(Long roleId) {
+        RoleEntity entity = baseRepository.getById(roleId);
+        if (ObjUtil.isNotNull(entity)) {
+            return RoleConvert.entityToVO(entity);
+        }
+        return null;
     }
 
 }

@@ -230,25 +230,9 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
                     treeNode.setName(StrUtil.upperFirst(menu.getPath()));
                     treeNode.setId(menu.getId());
                     treeNode.setParentId(menu.getParentId());
-                    treeNode.put("path", menu.getPath());
-                    treeNode.put("component", menu.getComponent());
-//                    treeNode.setName(menu.getName());
-//                    treeNode.setWeight(menu.getRankOrder());
-                    PermissionRouterVO.MetaVO meta = new PermissionRouterVO.MetaVO();
-//                    meta.setTitle(menu.getTitle());
-//                    meta.setIcon(menu.getIcon());
-//                    meta.setRank(menu.getRankOrder());
-//                    meta.setFrameSrc(menu.getFrameSrc());
-//                    meta.setKeepAlive(menu.getKeepAlive());
-//                    String auths = menu.getAuths();
-//                    if (StrUtil.isNotBlank(auths)) {
-//                        meta.setAuths(ListUtil.of(auths));
-//                    }
-                    List<RoleEntity> roleList = finalRoleMap.get(menu.getId());
-                    if (CollUtil.isNotEmpty(roleList)) {
-                        meta.setRoles(roleList.stream().map(RoleEntity::getRoleCode).collect(Collectors.toList()));
-                    }
-                    treeNode.put("meta", JSONUtil.parseObj(meta).toString());
+                    treeNode.put("menuType", menu.getMenuType());
+                    treeNode.put("contextMenuId", menu.getContextMenuId());
+                    treeNode.setName(menu.getMenuName());
         });
     }
 
@@ -265,6 +249,47 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
             }
         }
         return list;
+    }
+
+    public List<MenuSimpleTreeVO> convertSimpleRouter(List<Tree<Long>> treeList) {
+        if (CollUtil.isEmpty(treeList)) {
+            return Collections.emptyList();
+        }
+        List<MenuSimpleTreeVO> list = new ArrayList<>();
+        for (Tree<Long> tree : treeList) {
+            MenuSimpleTreeVO vo = this.convertSimpleTree(tree);
+            if (ObjUtil.isNotNull(vo)) {
+                list.add(vo);
+            }
+        }
+        return list;
+    }
+
+    private MenuSimpleTreeVO convertSimpleTree(Tree<Long> tree) {
+        if (ObjUtil.isNull(tree)) {
+            return null;
+        }
+        MenuSimpleTreeVO routerVO = new MenuSimpleTreeVO();
+        routerVO.setMenuId(tree.getId());
+        routerVO.setParentId(tree.getParentId());
+        routerVO.setMenuName(String.valueOf(tree.getName()));
+        routerVO.setMenuType(Convert.toInt(tree.get("menuType")));
+        routerVO.setContextMenuId(Convert.toLong(tree.get("contextMenuId")));
+        List<Tree<Long>> children = tree.getChildren();
+        if (CollUtil.isNotEmpty(children)) {
+            List<MenuSimpleTreeVO> childVOList = new ArrayList<>();
+
+            for (Tree<Long> childTree : children) {
+                MenuSimpleTreeVO childVO = this.convertSimpleTree(childTree);
+                if (ObjUtil.isNotNull(childVO)) {
+                    childVOList.add(childVO);
+                }
+            }
+            if (CollUtil.isNotEmpty(childVOList)) {
+                routerVO.setChildren(childVOList);
+            }
+        }
+        return routerVO;
     }
 
     private PermissionRouterVO convertPermission(Tree<Long> tree) {
@@ -374,5 +399,30 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         }
 
         return new ArrayList<>(list);
+    }
+
+    @Override
+    public RoleMenuTreeVO getTreeRoleId(Long roleId) {
+        RoleVO vo = roleService.get(roleId);
+        if (ObjUtil.isNotNull(vo)) {
+            RoleMenuTreeVO treeVO = new RoleMenuTreeVO();
+            treeVO.setRoleId(roleId);
+            List<MenuEntity> entityList = baseRepository.allList();
+            if (CollUtil.isNotEmpty(entityList)) {
+                List<Tree<Long>> integerTree = this.getTrees(entityList);
+                List<MenuSimpleTreeVO> menuList = this.convertSimpleRouter(integerTree);
+                treeVO.setMenuTreeList(menuList);
+            }
+            Map<Long, List<Long>> menuIdListMap = roleMenuService.getMenuIdListMap(ListUtil.of(roleId));
+            if (MapUtil.isNotEmpty(menuIdListMap)) {
+                List<Long> mendIdList = menuIdListMap.get(roleId);
+                if (CollUtil.isNotEmpty(mendIdList)) {
+                   treeVO.setSelectedMenuId(mendIdList);
+                }
+            }
+            return treeVO;
+        }
+
+        return null;
     }
 }

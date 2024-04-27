@@ -40,6 +40,11 @@ public class RoleController {
         return Result.success(roleService.listByPage(dto));
     }
 
+    @GetMapping("list-all")
+    public Result<List<RoleVO>> getListAll() {
+        return Result.success(roleService.all());
+    }
+
 
     /**
      * 新增数据

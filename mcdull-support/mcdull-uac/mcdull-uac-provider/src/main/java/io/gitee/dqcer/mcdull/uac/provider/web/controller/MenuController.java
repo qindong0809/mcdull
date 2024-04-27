@@ -6,9 +6,11 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.MenuVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleMenuTreeVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleMenuVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +39,12 @@ public class MenuController {
     @GetMapping("list")
     public Result<List<MenuVO>> list(@Validated MenuListDTO dto) {
         return Result.success(menuService.list(dto));
+    }
+
+    @Operation(summary = "获取角色关联菜单权限")
+    @GetMapping("{roleId}/tree")
+    public Result<RoleMenuTreeVO> getTreeRoleId(@PathVariable Long roleId) {
+        return Result.success(menuService.getTreeRoleId(roleId));
     }
 
 

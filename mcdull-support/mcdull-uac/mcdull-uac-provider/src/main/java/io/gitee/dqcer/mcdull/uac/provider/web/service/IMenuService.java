@@ -7,6 +7,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.MenuVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.PermissionRouterVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleMenuTreeVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleMenuVO;
 
 import java.util.List;
@@ -39,4 +40,6 @@ public interface IMenuService {
     List<PermissionRouterVO> getPermissionRouterByRole(Long roleId);
 
     List<MenuVO> getList(Long userId, boolean administratorFlag);
+
+    RoleMenuTreeVO getTreeRoleId(Long roleId);
 }

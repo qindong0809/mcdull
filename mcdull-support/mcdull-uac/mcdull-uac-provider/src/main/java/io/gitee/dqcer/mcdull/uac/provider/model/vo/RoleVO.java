@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 public class RoleVO implements VO {
 
-    private Long id;
+    private Integer roleId;
 
     private String roleName;
 
