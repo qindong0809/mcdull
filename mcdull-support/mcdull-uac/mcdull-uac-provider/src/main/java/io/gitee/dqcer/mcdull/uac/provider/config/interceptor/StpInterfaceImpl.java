@@ -1,9 +1,13 @@
 package io.gitee.dqcer.mcdull.uac.provider.config.interceptor;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.security.AbstractUserDetailsService;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.controller.UserController;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +27,12 @@ public class StpInterfaceImpl extends AbstractUserDetailsService {
 
     @Override
     protected List<String> permissionList(Object userId) {
+        // FIXME: 2024/4/27 魔法值， 不能用 UserContextH... 因为还没有初始化
+        Boolean administratorFlag = StpUtil.getSession().get("administratorFlag", false);
+
+        if (administratorFlag) {
+            return ListUtil.of("*:*:*");
+        }
         List<UserPowerVO> list = userService.getResourceModuleList(Convert.toLong(userId));
         if (CollUtil.isNotEmpty(list)) {
             return list.stream().flatMap(i -> i.getModules().stream()).distinct().collect(Collectors.toList());

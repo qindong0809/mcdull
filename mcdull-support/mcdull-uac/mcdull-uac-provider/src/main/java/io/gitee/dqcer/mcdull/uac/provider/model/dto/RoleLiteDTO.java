@@ -53,7 +53,7 @@ public class RoleLiteDTO extends PagedDTO {
                 .add("name='" + name + "'")
                 .add("description='" + description + "'")
                 .add("pageSize=" + pageSize)
-                .add("page=" + currentPage)
+                .add("page=" + pageNum)
                 .add("orders=" + orders)
                 .add("keyword='" + keyword + "'")
                 .toString();

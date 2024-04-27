@@ -43,7 +43,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
             );
         }
         query.orderByDesc(BaseEntity::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 
     /**

@@ -39,6 +39,19 @@ public class DepartmentServiceImpl extends BasicServiceImpl<IDepartmentRepositor
         return list;
     }
 
+    @Override
+    public List<DepartmentVO> getAll() {
+        List<DepartmentVO> list = new ArrayList<>();
+        List<DepartmentEntity> deptList = baseRepository.list();
+        if (CollUtil.isNotEmpty(deptList)) {
+            for (DepartmentEntity dept : deptList) {
+                DepartmentVO vo = this.convertToVO(dept);
+                list.add(vo);
+            }
+        }
+        return list;
+    }
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean insert(DeptInsertDTO dto) {
@@ -98,10 +111,10 @@ public class DepartmentServiceImpl extends BasicServiceImpl<IDepartmentRepositor
 
     private DepartmentVO convertToVO(DepartmentEntity dept) {
         DepartmentVO vo = new DepartmentVO();
-        vo.setId(dept.getId());
+        vo.setDepartmentId(Convert.toInt(dept.getId()));
         vo.setName(dept.getName());
         vo.setManagerId(dept.getManagerId());
-        vo.setParentId(dept.getParentId());
+        vo.setParentId(Convert.toInt(dept.getParentId()));
         vo.setSort(dept.getSort());
         return vo;
 

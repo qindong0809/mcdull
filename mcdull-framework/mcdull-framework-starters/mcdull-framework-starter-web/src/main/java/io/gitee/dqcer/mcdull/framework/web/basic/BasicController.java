@@ -18,11 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 public abstract class BasicController {
 
     protected Logger log = LoggerFactory.getLogger(getClass());
-
-    protected Integer getUserId() {
-        return UserContextHolder.currentUserId();
-    }
-
     protected HttpServletRequest getRequest() {
         return ServletUtil.getRequest();
     }

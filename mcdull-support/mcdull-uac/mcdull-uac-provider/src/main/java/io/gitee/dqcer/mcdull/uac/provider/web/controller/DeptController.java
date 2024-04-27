@@ -30,6 +30,11 @@ public class DeptController {
         return Result.success(deptService.list(dto));
     }
 
+    @GetMapping("list-all")
+    public Result<List<DepartmentVO>> getAll() {
+        return Result.success(deptService.getAll());
+    }
+
 
     @PostMapping("insert")
     public Result<Boolean> insert(@RequestBody @Validated DeptInsertDTO dto){

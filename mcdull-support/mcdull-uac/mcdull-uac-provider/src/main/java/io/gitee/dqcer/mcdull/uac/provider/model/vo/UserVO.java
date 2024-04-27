@@ -20,6 +20,8 @@ public class UserVO implements VO {
 
     private String loginPwd;
 
+    private String actualName;
+
     private Integer gender;
 
     private String phone;

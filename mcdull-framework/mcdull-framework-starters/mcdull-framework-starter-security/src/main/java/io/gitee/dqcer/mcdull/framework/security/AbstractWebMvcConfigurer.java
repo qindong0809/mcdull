@@ -20,7 +20,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
 
-    public static final String [] EXCLUDE_PATTERNS = {
+    protected static final String [] EXCLUDE_PATTERNS = {
             GlobalConstant.LOGIN_URL,
             GlobalConstant.INNER_API + GlobalConstant.ALL_PATTERNS,
             GlobalConstant.FAVICON_ICO,

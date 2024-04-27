@@ -119,7 +119,8 @@ public class OperationLogsAspect {
         }
 
         LogOperationDTO entity = new LogOperationDTO();
-        entity.setUserId(UserContextHolder.currentUserId());
+        // FIXME: 2024/4/27 userId int类型是否一直 
+        entity.setUserId(UserContextHolder.userId());
         entity.setClientIp(IpUtil.getIpAddr(request));
         entity.setUserAgent(getUserAgent(request));
         entity.setHeaders(JSONUtil.toJsonStr(headers));

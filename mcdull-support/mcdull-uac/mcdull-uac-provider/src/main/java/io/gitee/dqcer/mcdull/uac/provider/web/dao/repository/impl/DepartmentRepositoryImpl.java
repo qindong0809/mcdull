@@ -45,4 +45,9 @@ public class DepartmentRepositoryImpl extends ServiceImpl<DepartmentMapper, Depa
         query.eq(DepartmentEntity::getParentId, parentId);
         return baseMapper.selectList(query);
     }
+
+    @Override
+    public List<DepartmentEntity> all() {
+        return baseMapper.selectList(null);
+    }
 }

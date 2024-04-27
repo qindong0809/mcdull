@@ -46,7 +46,7 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuEntity> impl
         if (StrUtil.isNotBlank(keyword)) {
             query.and(i-> i.like(MenuEntity::getMenuName, keyword));
         }
-        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 
     @Override

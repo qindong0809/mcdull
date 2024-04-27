@@ -74,7 +74,7 @@ public class NoticeRepositoryImpl extends ServiceImpl<NoticeMapper, NoticeEntity
             lambda.eq(NoticeEntity::getNoticeType, noticeType);
         }
         lambda.orderByDesc(RelEntity::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
     }
 
     /**

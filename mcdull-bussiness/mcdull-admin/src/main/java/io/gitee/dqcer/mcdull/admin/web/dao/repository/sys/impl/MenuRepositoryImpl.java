@@ -46,7 +46,7 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuEntity> impl
             query.and(i-> i.like(MenuEntity::getName, keyword));
         }
         query.orderByDesc(RelEntity::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 
     /**

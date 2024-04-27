@@ -12,7 +12,7 @@ import lombok.Setter;
 public class UserBO {
 
     @Schema(description = "员工id")
-    private Long userId;
+    private Long employeeId;
 
     @SchemaEnum(UserTypeEnum.class)
     private UserTypeEnum userType;

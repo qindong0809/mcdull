@@ -38,4 +38,6 @@ public interface ILoginService {
      * @return {@link List}<{@link String}>
      */
     List<String> getRoleList(Long userId);
+
+    LogonVO getCurrentUserInfo(Long userId);
 }

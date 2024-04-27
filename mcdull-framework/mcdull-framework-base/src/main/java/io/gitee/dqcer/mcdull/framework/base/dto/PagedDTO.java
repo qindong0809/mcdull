@@ -33,7 +33,7 @@ public class PagedDTO extends KeywordDTO implements Paged {
      */
     @NotNull(groups = ValidGroup.Paged.class)
     @Min(groups = ValidGroup.Paged.class, value = 1)
-    protected Integer currentPage;
+    protected Integer pageNum;
 
     /**
      * 排序字段信息
@@ -49,7 +49,7 @@ public class PagedDTO extends KeywordDTO implements Paged {
     public String toString() {
         return new StringJoiner(", ", PagedDTO.class.getSimpleName() + "[", "]")
                 .add("pageSize=" + pageSize)
-                .add("pageNum=" + currentPage)
+                .add("pageNum=" + pageNum)
                 .add("orders=" + orders)
                 .add("notNeedPaged=" + notNeedPaged)
                 .add("keyword='" + keyword + "'")
@@ -72,12 +72,12 @@ public class PagedDTO extends KeywordDTO implements Paged {
     }
 
     @Override
-    public Integer getCurrentPage() {
-        return Convert.toInt(currentPage, GlobalConstant.Number.NUMBER_1);
+    public Integer getPageNum() {
+        return Convert.toInt(pageNum, GlobalConstant.Number.NUMBER_1);
     }
 
-    public PagedDTO setCurrentPage(Integer currentPage) {
-        this.currentPage = currentPage;
+    public PagedDTO setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
         return this;
     }
 

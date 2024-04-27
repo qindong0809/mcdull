@@ -16,6 +16,8 @@ public interface IDepartmentService {
 
     List<DepartmentVO> list(DeptListDTO dto);
 
+    List<DepartmentVO> getAll();
+
     boolean insert(DeptInsertDTO dto);
 
     boolean update(Long id, DeptUpdateDTO dto);

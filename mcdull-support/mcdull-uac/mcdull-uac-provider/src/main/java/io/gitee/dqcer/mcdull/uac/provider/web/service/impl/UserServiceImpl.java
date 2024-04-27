@@ -306,12 +306,11 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     }
 
     @Override
-    public UserVO get(Long userId) {
+    public UserEntity get(Long userId) {
         if (ObjUtil.isNotNull(userId)) {
             List<UserEntity> list = this.list(ListUtil.of(userId));
             if (CollUtil.isNotEmpty(list)) {
-                UserEntity user = list.get(0);
-                return UserConvert.entityToVO(user);
+                return list.get(0);
             }
         }
         return null;

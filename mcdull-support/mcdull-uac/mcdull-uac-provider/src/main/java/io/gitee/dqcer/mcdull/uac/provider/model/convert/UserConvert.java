@@ -24,6 +24,7 @@ public class UserConvert {
         UserVO userVO = new UserVO();
         userVO.setLoginName(entity.getLoginName());
         userVO.setLoginPwd(entity.getLoginPwd());
+        userVO.setActualName(entity.getActualName());
         userVO.setGender(entity.getGender());
         userVO.setPhone(entity.getPhone());
         userVO.setDepartmentId(entity.getDepartmentId());

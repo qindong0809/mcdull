@@ -14,13 +14,13 @@ import lombok.Setter;
 @Setter
 public class DepartmentVO implements VO {
 
-    private Long id;
+    private Integer departmentId;
 
     private String name;
 
     private Long managerId;
 
-    private Long parentId;
+    private Integer parentId;
 
     private Integer sort;
 

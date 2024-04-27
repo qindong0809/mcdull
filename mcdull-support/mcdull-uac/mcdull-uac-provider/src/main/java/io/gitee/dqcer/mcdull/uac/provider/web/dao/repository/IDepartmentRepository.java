@@ -17,5 +17,7 @@ public interface IDepartmentRepository extends IService<DepartmentEntity> {
     boolean delete(Long id, String reason);
 
     List<DepartmentEntity> listByParentId(Long parentId);
+
+    List<DepartmentEntity> all();
 }
 

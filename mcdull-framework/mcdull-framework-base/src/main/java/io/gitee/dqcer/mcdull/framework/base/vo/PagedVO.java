@@ -84,7 +84,7 @@ public class PagedVO<T> implements Paged, VO {
      * @return {@link Long}
      */
     @Override
-    public Integer getCurrentPage() {
+    public Integer getPageNum() {
         return currentPage;
     }
 

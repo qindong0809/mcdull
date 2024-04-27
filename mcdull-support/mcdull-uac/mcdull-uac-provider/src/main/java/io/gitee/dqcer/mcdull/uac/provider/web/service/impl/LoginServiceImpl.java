@@ -6,22 +6,15 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.convert.MenuConvert;
-import io.gitee.dqcer.mcdull.uac.provider.model.convert.RoleConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginDeviceEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.MenuVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,13 +59,14 @@ public class LoginServiceImpl implements ILoginService {
         // 登录前置校验
         UserEntity userEntity = this.loginPreCheck(dto.getLoginName(), dto.getPassword());
         StpUtil.login(userEntity.getId(), IEnum.getByCode(LoginDeviceEnum.class, dto.getLoginDevice()).getText());
+        StpUtil.getSession().set("administratorFlag", userEntity.getAdministratorFlag());
         return this.buildLogonVo(userEntity);
     }
 
     private LogonVO buildLogonVo(UserEntity userEntity) {
         LogonVO logonVO = new LogonVO();
         logonVO.setToken(StpUtil.getTokenValue());
-        logonVO.setUserId(userEntity.getId());
+        logonVO.setEmployeeId(userEntity.getId());
         logonVO.setLoginName(userEntity.getLoginName());
 //        logonVO.setUserType(userEntity.getUserType());
         logonVO.setActualName(userEntity.getActualName());
@@ -146,5 +140,16 @@ public class LoginServiceImpl implements ILoginService {
             set = userPowerVOList.stream().map(UserPowerVO::getCode).collect(Collectors.toSet());
         }
         return new ArrayList<>(set);
+    }
+
+    @Override
+    public LogonVO getCurrentUserInfo(Long userId) {
+        if (ObjUtil.isNotNull(userId)) {
+            UserEntity userEntity = userService.get(userId);
+            if (ObjUtil.isNotNull(userEntity)) {
+                return this.buildLogonVo(userEntity);
+            }
+        }
+        return null;
     }
 }

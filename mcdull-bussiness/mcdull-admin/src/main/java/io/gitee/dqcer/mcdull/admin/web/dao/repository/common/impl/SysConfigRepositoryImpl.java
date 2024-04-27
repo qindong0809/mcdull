@@ -68,7 +68,7 @@ public class SysConfigRepositoryImpl extends ServiceImpl<SysConfigMapper, SysCon
             lambda.between(RelEntity::getCreatedTime, startTime, endTime);
         }
         lambda.orderByDesc(RelEntity::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
     }
 
     @Override

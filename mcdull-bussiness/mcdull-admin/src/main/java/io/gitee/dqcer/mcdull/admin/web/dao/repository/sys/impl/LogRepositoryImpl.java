@@ -66,8 +66,8 @@ public class LogRepositoryImpl extends ServiceImpl<LogMapper, LogEntity>  implem
             //TODO 组装查询条件
         }
         lambda.orderByDesc(RelEntity::getCreatedTime);
-        IPage<LogVO> voiPage =  baseMapper.pagedQuery(new Page<>(param.getCurrentPage(), param.getPageSize()), param);
-        return baseMapper.selectPage(new Page<>(param.getCurrentPage(), param.getPageSize()), lambda);
+        IPage<LogVO> voiPage =  baseMapper.pagedQuery(new Page<>(param.getPageNum(), param.getPageSize()), param);
+        return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 
     /**

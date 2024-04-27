@@ -27,7 +27,7 @@ public class GitRepositoryImpl extends ServiceImpl<GitMapper, GitEntity>  implem
     public Page<GitEntity> selectPage(GitListDTO dto) {
         LambdaQueryWrapper<GitEntity> lambda = new QueryWrapper<GitEntity>().lambda();
         lambda.orderByDesc(RelEntity::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
     }
 
     @Override

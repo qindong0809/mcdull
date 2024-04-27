@@ -10,19 +10,21 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author dqcer
  * @since 2021/11/13
  */
-public class UnifySession implements Serializable {
+public class UnifySession<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 账号主键
      */
-    private Integer userId;
+    private T userId;
 
     /**
      * 用户类型
      */
     private Integer userType;
+
+    private Boolean administratorFlag;
 
     /**
      * 所属客户
@@ -63,28 +65,40 @@ public class UnifySession implements Serializable {
     public String toString() {
         return "UnifySession{" +
                 "userId=" + userId +
+                ", userType=" + userType +
+                ", administratorFlag=" + administratorFlag +
                 ", tenantId=" + tenantId +
                 ", roleId=" + roleId +
                 ", language='" + language + '\'' +
                 ", traceId='" + traceId + '\'' +
+                ", now=" + now +
+                ", requestUrl='" + requestUrl + '\'' +
                 ", extension=" + extension +
                 '}';
+    }
+
+    public Boolean getAdministratorFlag() {
+        return administratorFlag;
+    }
+
+    public void setAdministratorFlag(Boolean administratorFlag) {
+        this.administratorFlag = administratorFlag;
     }
 
     public Integer getUserType() {
         return userType;
     }
 
-    public UnifySession setUserType(Integer userType) {
+    public UnifySession<T> setUserType(Integer userType) {
         this.userType = userType;
         return this;
     }
 
-    public Integer getUserId() {
+    public T getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(T userId) {
         this.userId = userId;
     }
 

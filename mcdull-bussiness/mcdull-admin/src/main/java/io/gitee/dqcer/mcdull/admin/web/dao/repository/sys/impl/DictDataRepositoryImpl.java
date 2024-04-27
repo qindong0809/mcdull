@@ -53,7 +53,7 @@ public class DictDataRepositoryImpl extends ServiceImpl<DictDataMapper, DictData
             lambda.eq(DictDataEntity::getStatus, status);
         }
         lambda.orderByAsc(DictDataEntity::getDictSort);
-        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
     }
 
     @Override

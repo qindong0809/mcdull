@@ -87,7 +87,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleEntity> impl
             query.between(RelEntity::getCreatedTime, startTime, endTime);
         }
         query.orderByDesc(BaseEntity::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), query);
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 
     /**

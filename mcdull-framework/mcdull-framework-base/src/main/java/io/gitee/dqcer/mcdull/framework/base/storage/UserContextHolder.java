@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.base.storage;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
@@ -15,14 +16,14 @@ public class UserContextHolder {
     /**
      * 统一的会话
      */
-    static InheritableThreadLocal<UnifySession> UNIFY_SESSION = new InheritableThreadLocal<>();
+    static InheritableThreadLocal<UnifySession<?>> UNIFY_SESSION = new InheritableThreadLocal<>();
 
     /**
      * 获取会话
      *
      * @return {@link UnifySession}
      */
-    public static UnifySession getSession() {
+    public static UnifySession<?> getSession() {
         return UNIFY_SESSION.get();
     }
 
@@ -31,7 +32,7 @@ public class UserContextHolder {
      *
      * @param box 盒子
      */
-    public static void setSession(UnifySession box) {
+    public static void setSession(UnifySession<?> box) {
         UNIFY_SESSION.set(box);
     }
 
@@ -48,8 +49,8 @@ public class UserContextHolder {
      * @return boolean
      */
     public static boolean isAdmin() {
-        UnifySession session = UNIFY_SESSION.get();
-        return GlobalConstant.SUPER_ADMIN_USER_TYPE.equals(session.getUserType());
+        UnifySession<?> session = UNIFY_SESSION.get();
+        return session.getAdministratorFlag();
     }
 
     /**
@@ -57,12 +58,35 @@ public class UserContextHolder {
      *
      * @return {@link Long}
      */
-    public static Integer currentUserId() {
+    public static Object currentUserId() {
         return UNIFY_SESSION.get().getUserId();
     }
 
+    @SuppressWarnings("all")
+    public static <T> T currentUserId(Class<T> tClass) {
+        if (tClass == Long.class) {
+            return (T) userIdLong();
+        }
+        if (tClass == Integer.class) {
+            return (T) userId();
+        }
+        return (T) userIdStr();
+    }
+
+    public static Long userIdLong() {
+        return Convert.toLong(UNIFY_SESSION.get().getUserId());
+    }
+
+    public static Integer userId() {
+        return Convert.toInt(UNIFY_SESSION.get().getUserId());
+    }
+
+    public static String userIdStr() {
+        return Convert.toStr(UNIFY_SESSION.get().getUserId());
+    }
+
     public static String print() {
-        UnifySession session = getSession();
+        UnifySession<?> session = getSession();
         if (ObjUtil.isNotNull(session)) {
             return StrUtil.format("url: {}. userId: {}", session.getRequestUrl(), session.getUserId());
         }

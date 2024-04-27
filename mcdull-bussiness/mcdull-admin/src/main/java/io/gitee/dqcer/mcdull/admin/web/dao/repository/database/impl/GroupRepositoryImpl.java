@@ -27,7 +27,7 @@ public class GroupRepositoryImpl extends ServiceImpl<GroupMapper, GroupEntity>  
     public Page<GroupEntity> selectPage(GroupListDTO dto) {
         LambdaQueryWrapper<GroupEntity> lambda = new QueryWrapper<GroupEntity>().lambda();
         lambda.orderByDesc(RelEntity::getCreatedTime);
-        return baseMapper.selectPage(new Page<>(dto.getCurrentPage(), dto.getPageSize()), lambda);
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
     }
 
     @Override

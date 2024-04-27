@@ -68,16 +68,13 @@ public class LoginController implements AuthServiceApi {
         return Result.success(loginService.login(dto));
     }
 
+    @GetMapping("/login1/user-info")
     @Operation(summary = "当前登录人信息", description = "角色、权限、个人信息")
-    @GetMapping("getInfo")
-    public JSONObject getInfo() {
-        Integer currentUserId = UserContextHolder.currentUserId();
-        Result<UserVO> success = Result.success();
-        JSONObject jsonObject = JSONUtil.parseObj(success);
-//        jsonObject.set("permissions", loginService.getPermissionList(currentUserId));
-//        jsonObject.set("roles", loginService.getRoleList(currentUserId));
-//        jsonObject.set("user", userService.get(currentUserId));
-        return jsonObject;
+    public Result<LogonVO> getCurrentUserInfo() {
+        LogonVO currentUserInfo = loginService.getCurrentUserInfo(UserContextHolder.userIdLong());
+        String tokenValue = StpUtil.getTokenValue();
+        currentUserInfo.setToken(tokenValue);
+        return Result.success(currentUserInfo);
     }
 
     @Operation(summary = "当前登录人角色信息", description = "角色")
@@ -90,7 +87,7 @@ public class LoginController implements AuthServiceApi {
 
     @GetMapping("getRouters/{roleId}")
     public Result<List<PermissionRouterVO>> getPermissionRouter(@PathVariable("roleId") Long roleId) {
-        Integer userId = UserContextHolder.currentUserId();
+//        Integer userId = UserContextHolder.currentUserId();
 //        UserVO userVO = userService.get(userId);
 //        if (ObjUtil.isNull(userVO)) {
 //            return Result.success();

@@ -57,5 +57,5 @@ public interface IUserService {
      * @param userId 用户id
      * @return {@link UserVO}
      */
-    UserVO get(Long userId);
+    UserEntity get(Long userId);
 }
