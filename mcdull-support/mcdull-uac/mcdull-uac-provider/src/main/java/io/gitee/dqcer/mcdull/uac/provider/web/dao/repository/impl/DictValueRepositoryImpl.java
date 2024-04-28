@@ -12,6 +12,7 @@ import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictValueAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictValueQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictValueUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.DictValueEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.DictValueMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDictValueRepository;
@@ -27,7 +28,7 @@ import java.util.List;
  * @since 2023/12/01
  */
 @Service
-public class DicctValueRepositoryImpl extends ServiceImpl<DictValueMapper, DictValueEntity> implements IDictValueRepository {
+public class DictValueRepositoryImpl extends ServiceImpl<DictValueMapper, DictValueEntity> implements IDictValueRepository {
 
 
 
@@ -72,5 +73,16 @@ public class DicctValueRepositoryImpl extends ServiceImpl<DictValueMapper, DictV
         entity.setSort(dto.getSort());
         entity.setRemark(dto.getRemark());
         this.insert(entity);
+    }
+
+    @Override
+    public void update(DictValueUpdateDTO dto) {
+        DictValueEntity entity = new DictValueEntity();
+        entity.setId(dto.getDictValueId());
+        entity.setValueCode(dto.getValueCode());
+        entity.setValueName(dto.getValueName());
+        entity.setSort(dto.getSort());
+        entity.setRemark(dto.getRemark());
+        this.updateById(entity);
     }
 }

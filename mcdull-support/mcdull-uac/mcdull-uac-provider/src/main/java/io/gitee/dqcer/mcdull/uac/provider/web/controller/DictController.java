@@ -76,7 +76,9 @@ public class DictController extends BasicController {
     @GetMapping("/dict/cache/refresh")
     @SaCheckPermission("support:dict:refresh")
     public Result<String> cacheRefresh() {
-        return dictCacheService.cacheRefresh();
+//         dictCacheService.cacheRefresh();
+        Integer.parseInt("ee");
+        return null;
     }
 
     @Operation(summary = "Query value paged list")
@@ -92,22 +94,24 @@ public class DictController extends BasicController {
         return Result.success(true);
     }
 
-    @Operation(summary = "数据字典Value-更新- Result<")
+    @Operation(summary = "Value edit")
     @PostMapping("/dict/value/edit")
-    public Result<String> valueEdit(@Valid @RequestBody DictValueUpdateDTO valueUpdateDTO) {
-        return dictValueService.valueEdit(valueUpdateDTO);
+    public Result<Boolean> valueEdit(@Valid @RequestBody DictValueUpdateDTO valueUpdateDTO) {
+        dictValueService.update(valueUpdateDTO);
+        return Result.success(true);
     }
 
-    @Operation(summary = "数据字典Value-删除- Result<")
+    @Operation(summary = "Value delete")
     @PostMapping("/dict/value/delete")
-    public Result<String> valueDelete(@RequestBody List<Long> valueIdList) {
-        return dictValueService.valueDelete(valueIdList);
+    public Result<Boolean> valueDelete(@RequestBody List<Long> valueIdList) {
+        dictValueService.delete(valueIdList);
+        return Result.success(true);
     }
 
-    @Operation(summary = "数据字典-值列表- Result<")
+    @Operation(summary = "Value list(by keyCode)")
     @GetMapping("/dict/value/list/{keyCode}")
     public Result<List<DictValueVO>> valueList(@PathVariable String keyCode) {
         List<DictValueVO> dictValueVOList = dictValueService.selectByKeyCode(keyCode);
-        return Result.ok(dictValueVOList);
+        return Result.success(dictValueVOList);
     }
 }

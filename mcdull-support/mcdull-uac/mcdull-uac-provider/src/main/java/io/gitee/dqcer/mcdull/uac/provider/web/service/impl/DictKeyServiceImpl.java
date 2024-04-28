@@ -121,4 +121,22 @@ public class DictKeyServiceImpl
             baseRepository.update(dictKeyId, dto.getKeyCode(), dto.getKeyName(), dto.getRemark());
         }
     }
+
+    @Override
+    public DictKeyVO  getByCode(String keyCode) {
+        List<DictKeyEntity> listAll = baseRepository.getListAll();
+        if (CollUtil.isNotEmpty(listAll)) {
+            for (DictKeyEntity entity : listAll) {
+                if (entity.getKeyCode().equals(keyCode)) {
+                    DictKeyVO vo = new DictKeyVO();
+                    vo.setDictKeyId(entity.getId());
+                    vo.setKeyCode(entity.getKeyCode());
+                    vo.setKeyName(entity.getKeyName());
+                    vo.setRemark(entity.getRemark());
+                    return vo;
+                }
+            }
+        }
+        return null;
+    }
 }
