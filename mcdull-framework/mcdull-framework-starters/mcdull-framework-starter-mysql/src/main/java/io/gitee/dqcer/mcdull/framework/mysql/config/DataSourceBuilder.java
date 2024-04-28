@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.framework.mysql.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,7 @@ public class DataSourceBuilder {
     public static DataSource builder(DataSourceProperties dataSourceProperty) {
 
         String poolType = dataSourceProperty.getPoolType();
+        LogHelp.info(log, "{} pool init", poolType);
         if (DataSourceProperties.DRUID.equals(poolType)) {
             DruidDataSource druidDataSource = new DruidDataSource();
             druidDataSource.setUsername(dataSourceProperty.getUsername());

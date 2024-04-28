@@ -12,9 +12,12 @@ import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerIntercep
 import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.mysql.aspect.DataSourceAspect;
 import io.gitee.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -41,6 +44,8 @@ import java.util.Map;
 @Configuration
 @EnableConfigurationProperties(DataSourceProperties.class)
 public class AutoConfiguration {
+
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Resource
     private ApplicationContext context;
@@ -74,6 +79,7 @@ public class AutoConfiguration {
 
     @Bean
     public IdentifierGenerator idGenerator() {
+        LogHelp.info(log, "idGenerator init...");
         return new CustomIdGenerator();
     }
 
@@ -160,6 +166,7 @@ public class AutoConfiguration {
     @ConditionalOnProperty(name = "spring.datasource.poolType", havingValue = DataSourceProperties.DRUID)
     @Bean
     public ServletRegistrationBean<StatViewServlet> statViewServlet(DataSourceProperties dataSourceProperties) {
+        LogHelp.info(log, "Druid ServletRegistrationBean Init...");
         ServletRegistrationBean<StatViewServlet> bean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
 
         // 这些参数可以在 com.alibaba.druid.support.http.StatViewServlet
@@ -175,6 +182,7 @@ public class AutoConfiguration {
 
         //设置初始化参数
         bean.setInitParameters(initParams);
+
         return bean;
     }
 

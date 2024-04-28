@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.framework.mysql.config;
 
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.util.Snowflake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,9 +47,7 @@ public class CustomIdGenerator implements IdentifierGenerator {
                 snowflake = new Snowflake(workId, dataCenterId);
             }
             long nextId = snowflake.nextId();
-            if (log.isDebugEnabled()) {
-                log.debug("Custom Id Generator ip: {}  dataCenterId: {}  workId: {} nextId: {} ", hostAddress, dataCenterId, workId, nextId);
-            }
+            LogHelp.info(log, "Custom Id Generator ip: {}  dataCenterId: {}  workId: {} nextId: {} ", hostAddress, dataCenterId, workId, nextId);
 
             return nextId;
         } catch (Exception e) {
