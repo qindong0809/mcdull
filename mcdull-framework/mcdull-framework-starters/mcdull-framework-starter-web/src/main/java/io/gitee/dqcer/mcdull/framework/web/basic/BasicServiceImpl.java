@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * basic service impl
@@ -30,14 +30,17 @@ public abstract class BasicServiceImpl<R extends IService> {
     @Autowired
     protected R baseRepository;
 
-    protected <T extends IdEntity<?>> void validNameExist(Serializable id, String name, List<T> list) {
+    protected <T extends IdEntity<?>> void validNameExist(Serializable id, String name, List<T> list, Predicate<T> uniquenessPredicate) {
         if (id == null) {
             if (CollUtil.isNotEmpty(list)) {
-                this.throwDataExistException(name);
+                long count = list.stream().filter(uniquenessPredicate).count();
+                if (!GlobalConstant.Number.NUMBER_0.equals(Convert.toInt(count))) {
+                    this.throwDataExistException(name);
+                }
             }
             return;
         }
-        long count = list.stream().filter(i -> !Objects.equals(id, i.getId())).count();
+        long count = list.stream().filter(uniquenessPredicate).count();
         if (!GlobalConstant.Number.NUMBER_0.equals(Convert.toInt(count))) {
             this.throwDataExistException(name);
         }
