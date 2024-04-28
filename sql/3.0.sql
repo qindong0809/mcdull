@@ -255,5 +255,20 @@ primary key (`id`) using btree
 
 
 insert into `sys_dict_value` values (1, 1, 'luo_yang', '洛阳', '', 1, 0, sysdate(), sysdate());
-insert into `sys_dict_value` values (2, 1, 'zheng_zhou', '郑州', '', 1, 0, sysdate(), sysdate());
+insert into `sys_dict_value` values (2, 1, 'zheng_zhou', '郑州', '', 2, 0, sysdate(), sysdate());
 insert into `sys_dict_value` values (3, 1, 'bei_jing', '北京', '', 3, 0, sysdate(), sysdate());
+
+drop table if exists `sys_config`;
+create table `sys_config`  (
+`id` bigint(0) not null auto_increment comment '主键',
+`config_name` varchar(255)  not null comment '参数名字',
+`config_key` varchar(255)  not null comment '参数key',
+`config_value` text  not null,
+`remark` varchar(255)  null default null,
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree
+) comment = '系统配置';
+
+insert into `sys_config` values (1, '万能密码', 'super_password', '1024lab', '建议定期修改', 0, sysdate(), sysdate());

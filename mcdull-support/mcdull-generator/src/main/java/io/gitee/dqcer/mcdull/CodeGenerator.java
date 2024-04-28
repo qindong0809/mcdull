@@ -56,7 +56,6 @@ public class CodeGenerator {
         throw new MybatisPlusException("请输入正确的" + tip + "！");
     }
 
-
     /**
      * 运行
      *
@@ -72,7 +71,7 @@ public class CodeGenerator {
         final String outputBase = "/mcdull-bussiness/mcdull-admin/";
         //  作者
         String author = "dqcer";
-        String dataUrl = "jdbc:mysql://mcdull.io:3306/mcdull-cloud?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+        String dataUrl = "jdbc:mysql://mcdull.io:3306/mcdull-cloud-3?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC&allowPublicKeyRetrieval=true";
         String driverName = "com.mysql.cj.jdbc.Driver";
         String username = "root";
         String password = "123456";
