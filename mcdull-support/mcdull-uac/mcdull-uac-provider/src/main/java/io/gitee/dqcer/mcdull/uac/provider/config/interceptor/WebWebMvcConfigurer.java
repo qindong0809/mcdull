@@ -1,10 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.config.interceptor;
 
 
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.security.AbstractWebMvcConfigurer;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
 /**
  * 拦截器
@@ -16,11 +14,11 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 public class WebWebMvcConfigurer extends AbstractWebMvcConfigurer {
 
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        super.addInterceptors(registry);
-        registry.addInterceptor(new BaseInterceptor())
-                .addPathPatterns(GlobalConstant.ALL_PATTERNS)
-                .excludePathPatterns(EXCLUDE_PATTERNS);
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        super.addInterceptors(registry);
+//        registry.addInterceptor(new BaseInterceptor())
+//                .addPathPatterns(GlobalConstant.ALL_PATTERNS)
+//                .excludePathPatterns(EXCLUDE_PATTERNS);
+//    }
 }

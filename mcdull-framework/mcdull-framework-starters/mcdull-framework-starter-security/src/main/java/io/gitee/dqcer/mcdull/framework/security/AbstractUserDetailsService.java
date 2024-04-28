@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 用户详细信息服务
  *
- * @author QinDong
+ * @author dqcer
  * @since 2023/12/01
  */
 public abstract class AbstractUserDetailsService implements StpInterface {

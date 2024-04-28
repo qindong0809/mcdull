@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,6 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Tag(name = "验证码相关")
 @RestController
-public class CaptchaController {
+public class CaptchaController extends BasicController {
 
 }

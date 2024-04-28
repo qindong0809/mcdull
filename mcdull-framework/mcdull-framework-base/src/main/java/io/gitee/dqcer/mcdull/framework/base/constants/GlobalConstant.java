@@ -13,6 +13,8 @@ public class GlobalConstant {
     public static final String ROOT_PREFIX = "mcdull";
     public static final String UTF_8 = "UTF-8";
 
+    public static final String ADMINISTRATOR_FLAG = "administratorFlag";
+
     /**
      * 内部接口调用 前缀
      */

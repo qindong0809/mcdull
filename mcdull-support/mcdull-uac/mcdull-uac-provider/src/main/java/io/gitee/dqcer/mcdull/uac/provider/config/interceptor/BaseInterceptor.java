@@ -1,31 +1,21 @@
 package io.gitee.dqcer.mcdull.uac.provider.config.interceptor;
 
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.enums.LanguageEnum;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
-import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.List;
 
 /**
  * 基础信息拦截器
@@ -66,8 +56,7 @@ public class BaseInterceptor implements HandlerInterceptor {
         unifySession.setLanguage(language);
         unifySession.setUserId(userId);
         unifySession.setTraceId(request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER));
-        // FIXME: 2024/4/27 魔法值
-        Boolean administratorFlag = StpUtil.getSession().get("administratorFlag", false);
+        Boolean administratorFlag = StpUtil.getSession().get(GlobalConstant.ADMINISTRATOR_FLAG, false);
         unifySession.setAdministratorFlag(administratorFlag);
         UserContextHolder.setSession(unifySession);
     }

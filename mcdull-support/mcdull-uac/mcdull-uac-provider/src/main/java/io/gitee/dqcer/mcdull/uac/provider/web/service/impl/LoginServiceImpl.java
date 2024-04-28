@@ -6,6 +6,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -59,7 +60,7 @@ public class LoginServiceImpl implements ILoginService {
         // 登录前置校验
         UserEntity userEntity = this.loginPreCheck(dto.getLoginName(), dto.getPassword());
         StpUtil.login(userEntity.getId(), IEnum.getByCode(LoginDeviceEnum.class, dto.getLoginDevice()).getText());
-        StpUtil.getSession().set("administratorFlag", userEntity.getAdministratorFlag());
+        StpUtil.getSession().set(GlobalConstant.ADMINISTRATOR_FLAG, userEntity.getAdministratorFlag());
         return this.buildLogonVo(userEntity);
     }
 

@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.web.filter;
 
 import cn.dev33.satoken.stp.StpUtil;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
@@ -41,11 +42,14 @@ public class HttpTraceLogFilter implements Filter {
                 traceId = RandomUtil.uuid();
             }
             MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
-            UnifySession unifySession = new UnifySession();
+            UnifySession<Object> unifySession = new UnifySession<>();
             unifySession.setTraceId(traceId);
             unifySession.setRequestUrl(requestUrl);
             unifySession.setNow(new Date());
-            unifySession.setUserId(StpUtil.isLogin() ? StpUtil.getLoginIdAsInt() : null);
+            if (StpUtil.isLogin()) {
+                unifySession.setUserId(StpUtil.isLogin() ? StpUtil.getLoginId() : null);
+                unifySession.setAdministratorFlag(StpUtil.getSession().get(GlobalConstant.ADMINISTRATOR_FLAG, false));
+            }
             UserContextHolder.setSession(unifySession);
 
             if (!isRequestValid(request)) {

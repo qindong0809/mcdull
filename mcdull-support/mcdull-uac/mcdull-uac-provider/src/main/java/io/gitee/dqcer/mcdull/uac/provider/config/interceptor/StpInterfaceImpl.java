@@ -4,10 +4,9 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.security.AbstractUserDetailsService;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.controller.UserController;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +27,7 @@ public class StpInterfaceImpl extends AbstractUserDetailsService {
     @Override
     protected List<String> permissionList(Object userId) {
         // FIXME: 2024/4/27 魔法值， 不能用 UserContextH... 因为还没有初始化
-        Boolean administratorFlag = StpUtil.getSession().get("administratorFlag", false);
+        Boolean administratorFlag = StpUtil.getSession().get(GlobalConstant.ADMINISTRATOR_FLAG, false);
 
         if (administratorFlag) {
             return ListUtil.of("*:*:*");
