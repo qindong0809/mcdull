@@ -46,6 +46,11 @@ public abstract class BasicServiceImpl<R extends IService> {
         }
     }
 
+    protected void throwDataNotExistException(Object data) {
+        LogHelp.error(log, "Data not exists.  data: {}", () -> data);
+        throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
+    }
+
     protected void throwDataExistException(String name) {
         LogHelp.error(log, "Data exists.  data: {}", () -> name);
         throw new BusinessException(I18nConstants.DATA_EXISTS);

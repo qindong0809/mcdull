@@ -52,5 +52,11 @@ public interface IDictKeyService {
      */
     void update(DictKeyUpdateDTO dto);
 
+    /**
+     * get by code
+     *
+     * @param keyCode key code
+     * @return {@link DictKeyVO}
+     */
     DictKeyVO getByCode(String keyCode);
 }

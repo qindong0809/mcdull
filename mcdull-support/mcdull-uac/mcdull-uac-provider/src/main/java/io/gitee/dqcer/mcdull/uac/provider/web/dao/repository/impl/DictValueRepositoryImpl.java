@@ -60,6 +60,10 @@ public class DictValueRepositoryImpl extends ServiceImpl<DictValueMapper, DictVa
                     .or().like(DictValueEntity::getValueCode, keyword)
             );
         }
+        Long dictKeyId = dto.getDictKeyId();
+        if (ObjUtil.isNotNull(dictKeyId)) {
+            query.eq(DictValueEntity::getDictKeyId, dictKeyId);
+        }
         query.orderByDesc(RelEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
