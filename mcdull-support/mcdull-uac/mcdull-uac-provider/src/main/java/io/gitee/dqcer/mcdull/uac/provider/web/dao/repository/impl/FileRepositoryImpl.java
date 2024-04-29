@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -12,8 +13,9 @@ import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.ConfigMapper;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IConfigRepository;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.FileEntity;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.FileMapper;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,9 +30,9 @@ import java.util.List;
 * @since 2024-04-29
 */
 @Service
-public class ConfigRepositoryImpl extends ServiceImpl<ConfigMapper, ConfigEntity>  implements IConfigRepository {
+public class FileRepositoryImpl extends ServiceImpl<FileMapper, FileEntity>  implements IFileRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(ConfigRepositoryImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(FileRepositoryImpl.class);
 
     /**
      * 根据ID列表批量查询数据
@@ -39,12 +41,14 @@ public class ConfigRepositoryImpl extends ServiceImpl<ConfigMapper, ConfigEntity
      * @return {@link List< ConfigEntity >}
      */
     @Override
-    public List<ConfigEntity> queryListByIds(List<Long> idList) {
-        LambdaQueryWrapper<ConfigEntity> wrapper = Wrappers.lambdaQuery();
-        wrapper.in(ConfigEntity::getId, idList);
-        List<ConfigEntity> list =  baseMapper.selectList(wrapper);
-        if (ObjUtil.isNotNull(list)) {
-            return list;
+    public List<FileEntity> queryListByIds(List<Long> idList) {
+        if (CollUtil.isNotEmpty(idList)) {
+            LambdaQueryWrapper<FileEntity> wrapper = Wrappers.lambdaQuery();
+            wrapper.in(FileEntity::getId, idList);
+            List<FileEntity> list =  baseMapper.selectList(wrapper);
+            if (ObjUtil.isNotNull(list)) {
+                return list;
+            }
         }
         return Collections.emptyList();
     }
@@ -56,13 +60,13 @@ public class ConfigRepositoryImpl extends ServiceImpl<ConfigMapper, ConfigEntity
      * @return {@link Page< ConfigEntity >}
      */
     @Override
-    public Page<ConfigEntity> selectPage(ConfigQueryDTO param) {
-        LambdaQueryWrapper<ConfigEntity> lambda = new QueryWrapper<ConfigEntity>().lambda();
+    public Page<FileEntity> selectPage(ConfigQueryDTO param) {
+        LambdaQueryWrapper<FileEntity> lambda = new QueryWrapper<FileEntity>().lambda();
         String keyword = param.getKeyword();
         if (ObjUtil.isNotNull(keyword)) {
-            lambda.like(ConfigEntity::getConfigKey, keyword);
+            lambda.like(FileEntity::getFileName, keyword);
         }
-        lambda.orderByDesc(ListUtil.of(ConfigEntity::getCreatedTime, ConfigEntity::getUpdatedTime));
+        lambda.orderByDesc(ListUtil.of(FileEntity::getCreatedTime, FileEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 
@@ -73,7 +77,7 @@ public class ConfigRepositoryImpl extends ServiceImpl<ConfigMapper, ConfigEntity
      * @return {@link ConfigEntity}
      */
     @Override
-    public ConfigEntity getById(Long id) {
+    public FileEntity getById(Long id) {
         return baseMapper.selectById(id);
     }
 
@@ -84,7 +88,7 @@ public class ConfigRepositoryImpl extends ServiceImpl<ConfigMapper, ConfigEntity
      * @return Long id
      */
     @Override
-    public Long insert(ConfigEntity entity) {
+    public Long insert(FileEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
@@ -100,7 +104,7 @@ public class ConfigRepositoryImpl extends ServiceImpl<ConfigMapper, ConfigEntity
      * @return boolean true/存在 false/不存在
      */
     @Override
-    public boolean exist(ConfigEntity entity) {
+    public boolean exist(FileEntity entity) {
         return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
     }
 

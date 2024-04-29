@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.config;
+package io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;

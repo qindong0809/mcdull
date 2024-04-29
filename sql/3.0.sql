@@ -272,3 +272,23 @@ primary key (`id`) using btree
 ) comment = '系统配置';
 
 insert into `sys_config` values (1, '万能密码', 'super_password', '1024lab', '建议定期修改', 0, sysdate(), sysdate());
+
+drop table if exists `sys_file`;
+create table `sys_file`  (
+`id` bigint(0) not null auto_increment comment '主键id',
+`folder_type` tinyint unsigned not null comment '文件夹类型',
+`file_name` varchar(100) null default null comment '文件名称',
+`file_size` int(0) null default null comment '文件大小',
+`file_key` varchar(200)  not null comment '文件key，用于文件下载',
+`file_type` varchar(50)  not null comment '文件类型',
+`created_by` bigint(20) not null comment '创建人',
+`updated_by` bigint(20) default null comment '更新人',
+`inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree,
+unique index `uk_file_key`(`file_key`) using btree,
+index `module_id_module_type`(`folder_type`) using btree,
+index `module_type`(`folder_type`) using btree
+) comment = '文件';
