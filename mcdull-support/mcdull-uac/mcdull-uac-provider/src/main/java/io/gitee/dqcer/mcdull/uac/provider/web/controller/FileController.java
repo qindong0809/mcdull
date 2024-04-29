@@ -3,20 +3,22 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigAddDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.FileQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.FileEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileDownloadVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileUploadVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
+import java.io.IOException;
 
 /**
 * 系统配置 控制器
@@ -25,40 +27,41 @@ import java.util.List;
 * @since 2024-04-29
 */
 @RestController
-@RequestMapping("/sys-config")
+@RequestMapping
 public class FileController {
 
     @Resource
-    private IConfigService configService;
+    private IFileService fileService;
 
-    @Operation(summary = "Query")
-    @PostMapping("/config/query")
-    @SaCheckPermission("support:config:query")
-    public Result<PagedVO<ConfigVO>> query(@RequestBody @Valid ConfigQueryDTO queryDTO) {
-        return Result.success(configService.queryPage(queryDTO));
+    @Operation(summary = "分页查询")
+    @PostMapping("/file/queryPage")
+    @SaCheckPermission("support:file:query")
+    public Result<PagedVO<FileVO>> queryPage(@RequestBody @Valid FileQueryDTO dto) {
+        return Result.success(fileService.queryPage(dto));
     }
 
-    @Operation(summary = "Add")
-    @PostMapping("/config/add")
-    @SaCheckPermission("support:config:add")
-    public Result<Boolean> add(@RequestBody @Valid ConfigAddDTO configAddDTO) {
-        configService.add(configAddDTO);
-        return Result.success(true);
+
+    @Operation(summary = "文件上传")
+    @PostMapping("/file/upload")
+    public Result<FileUploadVO> upload(@RequestParam MultipartFile file, @RequestParam Integer folder) {
+        return Result.success(fileService.fileUpload(file, folder));
     }
 
-    @Operation(summary = "Update")
-    @PostMapping("/config/update")
-    @SaCheckPermission("support:config:update")
-    public Result<Boolean> update(@RequestBody @Valid ConfigUpdateDTO updateDTO) {
-        configService.update(updateDTO);
-        return Result.success(true);
+    @Operation(summary = "获取文件URL：根据fileKey")
+    @GetMapping("/file/getFileUrl")
+    public Result<String> getUrl(@RequestParam String fileKey) {
+        return Result.success(fileService.getFileUrl(fileKey));
     }
 
-    @Operation(summary = "Delete")
-    @PostMapping("/config/delete")
-    @SaCheckPermission("support:config:delete")
-    public Result<Boolean> delete(@RequestBody List<Long> configIdList) {
-        configService.delete(configIdList);
-        return Result.success(true);
+    @Operation(summary = "下载文件流（根据fileKey）")
+    @GetMapping("/file/downLoad")
+    public void downLoad(@RequestParam String fileKey, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String userAgent = null;
+        FileDownloadVO fileDownloadVO = fileService.getDownloadFile(fileKey, userAgent);
+        // 设置下载消息头
+        ServletUtil.setDownloadFileHeader(response, fileDownloadVO.getMetadata().getFileName(), fileDownloadVO.getMetadata().getFileSize());
+
+        // 下载
+        response.getOutputStream().write(fileDownloadVO.getData());
     }
 }

@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.FileQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FileEntity;
 
@@ -62,4 +63,8 @@ public interface IFileRepository extends IService<FileEntity>  {
      * @return boolean true/存在 false/不存在
      */
     boolean exist(FileEntity entity);
+
+    Page<FileEntity> selectPage(FileQueryDTO dto);
+
+    FileEntity getByFileKey(String fileKey);
 }

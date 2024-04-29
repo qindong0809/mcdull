@@ -25,23 +25,18 @@ public class ConfigConvert {
         return entity;
     }
 
-
-
-    public static ConfigVO convertToConfigVO(ConfigEntity item){
-        if (item == null){
-            return null;
-        }
-        ConfigVO vo = new ConfigVO();
-        vo.setId(item.getId());
-        vo.setConfigName(item.getConfigName());
-        vo.setConfigKey(item.getConfigKey());
-        vo.setConfigValue(item.getConfigValue());
-        vo.setRemark(item.getRemark());
-        vo.setUpdateTime(item.getUpdatedTime());
-        vo.setCreateTime(item.getCreatedTime());
-
-        return vo;
-    }
     private ConfigConvert() {
+    }
+
+    public static ConfigVO convertToConfigVO(ConfigEntity entity) {
+        if (entity != null) {
+            ConfigVO vo = new ConfigVO();
+            vo.setConfigName(entity.getConfigName());
+            vo.setConfigKey(entity.getConfigKey());
+            vo.setConfigValue(entity.getConfigValue());
+            vo.setRemark(entity.getRemark());
+            return vo;
+        }
+        return null;
     }
 }

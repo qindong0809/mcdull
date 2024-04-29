@@ -26,17 +26,17 @@ public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
      */
     @Override
     public void insertFill(MetaObject metaObject) {
-        LogHelp.debug(log, () -> "Field [createdTime、createdBy、delFlag、inactive] start insert fill ....");
-        this.strictInsertFill(metaObject, "createdTime", () -> UserContextHolder.getSession().getNow(), Date.class);
-        this.strictInsertFill(metaObject, "createdBy", UserContextHolder::currentUserId, Object.class);
-        this.strictInsertFill(metaObject, "delFlag", () -> Boolean.FALSE, Boolean.class);
-        this.strictInsertFill(metaObject, "inactive", () -> Boolean.FALSE, Boolean.class);
+        LogHelp.info(log, () -> "Field [createdTime、createdBy、delFlag、inactive] start insert fill ....");
+        this.fillStrategy(metaObject, "createdTime", UserContextHolder.getSession().getNow());
+        this.fillStrategy(metaObject, "createdBy", UserContextHolder.userId());
+        this.fillStrategy(metaObject, "delFlag", Boolean.FALSE);
+        this.fillStrategy(metaObject, "inactive", Boolean.FALSE);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        LogHelp.debug(log, () -> "Field [updatedTime、updatedBy] start update fill ....");
-        this.strictUpdateFill(metaObject, "updatedTime", () -> UserContextHolder.getSession().getNow(), Date.class);
-        this.strictUpdateFill(metaObject, "updatedBy", UserContextHolder::currentUserId, Object.class);
+        LogHelp.info(log, () -> "Field [updatedTime、updatedBy] start update fill ....");
+        this.fillStrategy(metaObject, "updatedTime", UserContextHolder.getSession().getNow());
+        this.fillStrategy(metaObject, "updatedBy", UserContextHolder.userId());
     }
 }

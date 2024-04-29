@@ -23,4 +23,6 @@ public class FileEntity extends BaseEntity<Long> {
     private Integer fileSize;
 
     private String fileKey;
+
+    private String fileType;
 }

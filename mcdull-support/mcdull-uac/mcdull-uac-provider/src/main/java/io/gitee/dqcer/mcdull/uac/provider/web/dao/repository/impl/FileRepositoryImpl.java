@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -12,6 +13,7 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.FileQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FileEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.FileMapper;
@@ -106,6 +108,28 @@ public class FileRepositoryImpl extends ServiceImpl<FileMapper, FileEntity>  imp
     @Override
     public boolean exist(FileEntity entity) {
         return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
+    }
+
+    @Override
+    public Page<FileEntity> selectPage(FileQueryDTO dto) {
+        LambdaQueryWrapper<FileEntity> lambda = new QueryWrapper<FileEntity>().lambda();
+        String keyword = dto.getKeyword();
+        if (ObjUtil.isNotNull(keyword)) {
+            lambda.like(FileEntity::getFileName, keyword);
+        }
+        lambda.orderByDesc(ListUtil.of(FileEntity::getCreatedTime, FileEntity::getUpdatedTime));
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
+    }
+
+    @Override
+    public FileEntity getByFileKey(String fileKey) {
+        if (StrUtil.isNotBlank(fileKey)) {
+            LambdaQueryWrapper<FileEntity> lambda = new QueryWrapper<FileEntity>().lambda();
+            lambda.eq(FileEntity::getFileKey, fileKey);
+            return baseMapper.selectOne(lambda);
+        }
+
+        return null;
     }
 
     /**
