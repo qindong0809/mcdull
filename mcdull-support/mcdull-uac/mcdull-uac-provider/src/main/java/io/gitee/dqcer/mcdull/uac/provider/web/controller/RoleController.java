@@ -10,6 +10,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ import java.util.List;
  * @since 2022/12/26
  */
 @RequestMapping("role")
+@Tag(name = "Role API")
 @RestController
 public class RoleController {
 
@@ -53,12 +55,12 @@ public class RoleController {
      * @return {@link Result<Integer> 返回新增主键}
      */
     @PostMapping("insert")
-    public Result<Long> insert(@RequestBody @Validated RoleInsertDTO dto){
+    public Result<Long> insert(@RequestBody @Validated RoleInsertDTO dto) {
         return Result.success(roleService.insert(dto));
     }
 
     @PutMapping("{id}/update")
-    public Result<Boolean> update(@PathVariable("id") Long id, @RequestBody @Validated RoleUpdateDTO dto){
+    public Result<Boolean> update(@PathVariable("id") Long id, @RequestBody @Validated RoleUpdateDTO dto) {
         return Result.success(roleService.update(id, dto));
     }
 
@@ -69,7 +71,7 @@ public class RoleController {
      * @return {@link Result<Integer>}
      */
     @PutMapping("{id}/status")
-    public Result<Boolean> toggleStatus(@PathVariable("id") Long id, @RequestBody ReasonDTO dto){
+    public Result<Boolean> toggleStatus(@PathVariable("id") Long id, @RequestBody ReasonDTO dto) {
         return Result.success(roleService.toggleStatus(id, dto));
     }
 
@@ -80,12 +82,12 @@ public class RoleController {
      * @return {@link Result<Integer>}
      */
     @DeleteMapping("{id}")
-    public Result<Boolean> delete(@PathVariable("id") Long id, @Validated ReasonDTO dto){
+    public Result<Boolean> delete(@PathVariable("id") Long id, @Validated ReasonDTO dto) {
         return Result.success(roleService.delete(id, dto));
     }
 
     @PutMapping("{id}/permission")
-    public Result<Boolean> insertPermission(@PathVariable("id") Long id, @RequestBody RolePermissionInsertDTO dto){
+    public Result<Boolean> insertPermission(@PathVariable("id") Long id, @RequestBody RolePermissionInsertDTO dto) {
         return Result.success(roleService.insertPermission(id, dto));
     }
 

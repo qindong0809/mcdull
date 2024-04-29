@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author dqcer
  */
-@Tag(name = "Dict Info")
+@Tag(name = "Dict API")
 @RestController
 public class DictController extends BasicController {
 

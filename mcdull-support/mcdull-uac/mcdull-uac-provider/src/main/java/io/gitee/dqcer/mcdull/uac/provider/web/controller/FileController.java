@@ -11,6 +11,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileUploadVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +28,7 @@ import java.io.IOException;
 * @since 2024-04-29
 */
 @RestController
+@Tag(name = "File API")
 @RequestMapping
 public class FileController {
 

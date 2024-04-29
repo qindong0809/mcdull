@@ -9,6 +9,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import java.util.List;
 * @since 2024-04-29
 */
 @RestController
+@Tag(name = "Config API")
 @RequestMapping
 public class ConfigController {
 

@@ -27,7 +27,7 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/25
  */
-@Tag(name = "系统用户")
+@Tag(name = "User API")
 @RestController
 public class UserController {
 

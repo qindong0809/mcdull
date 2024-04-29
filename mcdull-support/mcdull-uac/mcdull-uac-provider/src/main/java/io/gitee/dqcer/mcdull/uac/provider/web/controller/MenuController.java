@@ -11,6 +11,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleMenuVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/26
  */
+@Tag(name = "Menu API")
 @RequestMapping("menu")
 @RestController
 public class MenuController {

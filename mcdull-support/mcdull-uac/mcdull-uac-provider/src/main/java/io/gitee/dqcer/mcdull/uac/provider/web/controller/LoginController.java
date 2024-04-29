@@ -31,7 +31,7 @@ import java.util.List;
  * @since 2022/12/26
  */
 @RestController
-@Tag(name = "认证授权")
+@Tag(name = "Auth API")
 public class LoginController implements AuthServiceApi {
 
     @Resource

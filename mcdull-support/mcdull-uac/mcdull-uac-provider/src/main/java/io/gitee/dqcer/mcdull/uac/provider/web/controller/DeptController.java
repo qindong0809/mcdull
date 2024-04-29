@@ -7,6 +7,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDepartmentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/26
  */
+@Tag(name = "Dept API")
 @RequestMapping("dept")
 @RestController
 public class DeptController {
