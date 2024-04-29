@@ -68,14 +68,14 @@ public class CodeGenerator {
 
         /**************************要修改的信息*********************************/
         //  项目的根路径
-        final String outputBase = "/mcdull-bussiness/mcdull-admin/";
+        final String outputBase = "/mcdull-support/mcdull-uac/mcdull-uac-provider/";
         //  作者
         String author = "dqcer";
         String dataUrl = "jdbc:mysql://mcdull.io:3306/mcdull-cloud-3?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC&allowPublicKeyRetrieval=true";
         String driverName = "com.mysql.cj.jdbc.Driver";
         String username = "root";
         String password = "123456";
-        String projectNames = "mcdull.admin";
+        String projectNames = "mcdull.uac.provider";
 
         Long parentMenuId = 1L;
 
@@ -234,8 +234,8 @@ public class CodeGenerator {
                 map.put("modelName", modelName);
 //                map.put("baseController", "io.gitee.common.core.support.BaseController");
                 map.put("result", BASIC + "wrapper.Result");
-                map.put("baseEntity", BASIC + "entity.BaseDO");
-                map.put("baseVO", BASIC + "vo.VO");
+                map.put("baseEntity", BASIC + "entity.BaseEntity");
+                map.put("baseVO", BASIC + "support.VO");
                 map.put("GlobalConstant", BASIC + "constants.GlobalConstant");
                 map.put("DelFlayEnum", BASIC + "enums.DelFlayEnum");
                 map.put("DatabaseRowException", BASIC + "exception.DatabaseRowException");

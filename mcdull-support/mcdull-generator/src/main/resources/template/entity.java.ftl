@@ -15,7 +15,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("${table.name}")
-public class ${cfg.entityName} extends BaseDO {
+public class ${cfg.entityName} extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 1L;
 <#-- ----------  BEGIN 字段循环遍历  ---------->
