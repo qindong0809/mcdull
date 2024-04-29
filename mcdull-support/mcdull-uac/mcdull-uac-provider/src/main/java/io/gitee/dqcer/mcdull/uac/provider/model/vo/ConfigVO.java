@@ -1,9 +1,11 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -20,7 +22,7 @@ public class ConfigVO implements VO {
     /**
      * 主键
      */
-    private Long id;
+    private Long configId;
 
     /**
      * 参数名字
@@ -36,15 +38,11 @@ public class ConfigVO implements VO {
 
     private String remark;
 
-    /**
-     * 上次修改时间
-     */
-    private Date updateTime;
+    @Schema(description = "创建时间")
+    private LocalDateTime createTime;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
+    @Schema(description = "上次修改时间")
+    private LocalDateTime updateTime;
 
 
 }

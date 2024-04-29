@@ -1,11 +1,12 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.convert;
 
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigAddDTO;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FileEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileDownloadVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileVO;
+
+import java.time.LocalDateTime;
 
 /**
 * 系统配置 对象转换工具类
@@ -27,23 +28,6 @@ public class FileConvert {
         return fileVO;
     }
 
-
-
-    public static ConfigVO convertToConfigVO(ConfigEntity item){
-        if (item == null){
-            return null;
-        }
-        ConfigVO vo = new ConfigVO();
-        vo.setId(item.getId());
-        vo.setConfigName(item.getConfigName());
-        vo.setConfigKey(item.getConfigKey());
-        vo.setConfigValue(item.getConfigValue());
-        vo.setRemark(item.getRemark());
-        vo.setUpdateTime(item.getUpdatedTime());
-        vo.setCreateTime(item.getCreatedTime());
-
-        return vo;
-    }
     private FileConvert() {
     }
 }

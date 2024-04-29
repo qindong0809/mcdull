@@ -25,7 +25,7 @@ import java.util.List;
 * @since 2024-04-29
 */
 @RestController
-@RequestMapping("/sys-config")
+@RequestMapping
 public class ConfigController {
 
     @Resource
