@@ -29,6 +29,43 @@ import java.util.stream.Collectors;
 public class UserRoleRepositoryImpl extends ServiceImpl<RoleUserMapper, RoleUserEntity> implements IUserRoleRepository {
 
     /**
+     * 优化一下方法
+     * {@link #deleteAndInsert(Long, List)}
+     * @param userId
+     * @param roleIds
+     */
+    public void dd(Long userId, List<Long> roleIds) {
+        List<RoleUserEntity> roleUserEntities = baseMapper.selectList(
+                Wrappers.<RoleUserEntity>lambdaQuery().eq(RoleUserEntity::getUserId, userId));
+        if (CollUtil.isNotEmpty(roleUserEntities)) {
+            List<Long> roleIdList = roleUserEntities.stream().map(RoleUserEntity::getRoleId).collect(Collectors.toList());
+            List<Long> collect = roleIds.stream().filter(roleId -> !roleIdList.contains(roleId)).collect(Collectors.toList());
+            if (CollUtil.isNotEmpty(collect)) {
+                List<RoleUserEntity> entities = new ArrayList<>();
+                for (Long roleId :collect) {
+                }
+            }
+        }
+
+        // FIXME: 2024/4/30
+
+        if (CollUtil.isEmpty(roleUserEntities)) {
+            List<RoleUserEntity> entities = new ArrayList<>();
+            for (Long roleId : roleIds) {
+                RoleUserEntity entity = new RoleUserEntity();
+                entity.setRoleId(roleId);
+                entity.setUserId(userId);
+                entities.add(entity);
+            }
+            boolean saveBatch = saveBatch(entities);
+            if (!saveBatch) {
+                throw new DatabaseRowException(CodeEnum.DB_ERROR);
+            }
+        }
+    }
+
+
+    /**
      * 更新根据用户id
      *
      * @param userId  用户id

@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.convert;
 
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserInsertDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
@@ -33,15 +33,13 @@ public class UserConvert {
         return userVO;
     }
 
-    public static UserEntity insertDtoToEntity(UserInsertDTO dto) {
+    public static UserEntity insertDtoToEntity(UserAddDTO dto) {
         UserEntity entity = new UserEntity();
+        entity.setActualName(dto.getActualName());
         entity.setLoginName(dto.getLoginName());
-        entity.setLoginPwd(dto.getLoginPwd());
         entity.setGender(dto.getGender());
         entity.setPhone(dto.getPhone());
         entity.setDepartmentId(dto.getDepartmentId());
-        entity.setAdministratorFlag(dto.getAdministratorFlag());
-        entity.setRemark(dto.getRemark());
         return entity;
 
     }

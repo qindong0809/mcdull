@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -11,11 +12,14 @@ public class UserUpdatePasswordDTO implements DTO {
 
     private static final long serialVersionUID = 1L;
 
-     @Length(min = 5)
-     private String oldPassword;
 
-     @Length(min = 5)
-     private String newPassword;
+    @Schema(description = "old password")
+    @Length(min = 5)
+    private String oldPassword;
+
+    @Schema(description = "new password")
+    @Length(min = 5)
+    private String newPassword;
 
     public String getOldPassword() {
         return oldPassword;

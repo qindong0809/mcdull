@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -12,16 +13,14 @@ import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
-import io.gitee.dqcer.mcdull.framework.base.util.Md5Util;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
-import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.UserConvert;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserInsertDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdatePasswordDTO;
@@ -69,12 +68,16 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     public boolean passwordCheck(UserEntity entity, String passwordParam) {
         if (ObjUtil.isNotNull(entity) && StrUtil.isNotBlank(passwordParam)) {
             String password = entity.getLoginPwd();
-            String sha1 = Sha1Util.getSha1(this.decrypt(passwordParam));
+            String sha1 = this.hash(passwordParam);
             return password.equals(sha1);
         }
         return false;
     }
 
+
+    private String hash(String webPassword) {
+        return Sha1Util.getSha1(this.decrypt(webPassword));
+    }
     public String decrypt(String data) {
         try {
             // 第一步： Base64 解码
@@ -91,8 +94,8 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         }
     }
 
-    public String buildPassword(String param, String salt) {
-        return Sha1Util.getSha1(param + salt);
+    public String buildPassword(String param) {
+        return this.hash(param);
     }
 
     @Override
@@ -149,10 +152,10 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long insert(UserInsertDTO dto) {
+    public Long insert(UserAddDTO dto) {
         this.checkParam(dto);
         Long id = this.buildEntityAndInsert(dto);
-//        userRoleService.deleteAndInsert(id, dto.getRoleIds());
+        userRoleService.deleteAndInsert(id, dto.getRoleIdList());
         return id;
     }
 
@@ -164,20 +167,18 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         return null;
     }
 
-    private void checkParam(UserInsertDTO dto) {
-//        UserEntity user = baseRepository.get(dto.getAccount());
-//        if (ObjUtil.isNotNull(user)) {
-//            throw new BusinessException(I18nConstants.DATA_EXISTS);
-//        }
+    private void checkParam(UserAddDTO dto) {
+        List<UserEntity> list = baseRepository.list();
+        if (CollUtil.isNotEmpty(list)) {
+            this.validNameExist(null, dto.getLoginName(), list,
+                    i -> i.getLoginName().equals(dto.getLoginName()));
+        }
     }
 
-    private Long buildEntityAndInsert(UserInsertDTO dto) {
+    private Long buildEntityAndInsert(UserAddDTO dto) {
         UserEntity entity = UserConvert.insertDtoToEntity(dto);
-        String salt = RandomUtil.uuid();
-//        String password = Sha1Util.getSha1(Md5Util.getMd5(dto.getAccount() + salt));
-//        entity.setSalt(salt);
-//        entity.setPassword(password);
-//        entity.setType(1);
+        entity.setLoginPwd("a29c57c6894dee6e8251510d58c07078ee3f49bf");
+        entity.setAdministratorFlag(false);
         return baseRepository.insert(entity);
     }
 
@@ -221,14 +222,13 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     public Long updatePassword(Long id, UserUpdatePasswordDTO dto) {
         UserEntity entity = baseRepository.getById(id);
         if (entity == null) {
-            log.warn("数据不存在 id:{}", id);
-            throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
+            this.throwDataNotExistException(id);
         }
         boolean isOk = this.passwordCheck(entity, dto.getOldPassword());
         if (!isOk) {
             throw new BusinessException("user.password.incorrect");
         }
-        String password = this.buildPassword(dto.getNewPassword(), StrUtil.EMPTY);
+        String password = this.buildPassword(dto.getNewPassword());
         baseRepository.update(id, password);
         return id;
     }
@@ -240,7 +240,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         UserEntity updateDO = UserConvert.updateDtoToEntity(dto);
         updateDO.setId(id);
         baseRepository.updateById(updateDO);
-//        userRoleService.deleteAndInsert(id, dto.getRoleIds());
+        userRoleService.deleteAndInsert(id, dto.getRoleIdList());
         return updateDO.getId();
     }
 
@@ -314,6 +314,14 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
             }
         }
         return null;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public String resetPassword(Integer userId) {
+        String newPassword = RandomUtil.genAz09(5);
+        baseRepository.update(Convert.toLong(userId), newPassword);
+        return newPassword;
     }
 
     private List<UserEntity> list(List<Long> userIdList) {

@@ -2,14 +2,12 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserInsertDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdatePasswordDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -41,7 +40,7 @@ public class UserController {
      * @return {@link Result}<{@link List}<{@link UserVO}>>
      */
     @Authorized("sys:user:view")
-    @Operation(summary = "分页列表", description = "")
+    @Operation(summary = "Query Page", description = "")
     @SaCheckPermission("system:user:query")
     @GetMapping("user/list")
     @RedisLock(key = "'lock:uac:user:' + #dto.pageSize ", timeout = 3)
@@ -51,18 +50,33 @@ public class UserController {
         return Result.success(userService.listByPage(dto));
     }
 
-    @Operation(summary = "新增数据", description = "重复控制")
+    @Operation(summary = "Update Current User Password")
+    @PostMapping("/update/password")
+    public Result<Boolean> updatePassword(@Valid @RequestBody UserUpdatePasswordDTO dto) {
+        userService.updatePassword(UserContextHolder.userIdLong(), dto);
+        return Result.success(true);
+    }
+
+    @Operation(summary = "Reset Password")
+    @PostMapping("/update/password/reset/{userId}")
+    @SaCheckPermission("system:employee:password:reset")
+    public Result<String> resetPassword(@PathVariable Integer userId) {
+        return Result.success(userService.resetPassword(userId));
+    }
+
+    @Operation(summary = "添加员工(返回添加员工的密码) @author 卓大")
     @RedisLock(key = "'lock:uac:user:' + #dto.nickname + '-' + #dto.account", timeout = 3)
-    @PostMapping("user/insert")
-    public Result<Long> insert(@RequestBody @Validated UserInsertDTO dto){
+    @PostMapping("/user/add")
+    @SaCheckPermission("system:employee:add")
+    public Result<Long> addEmployee(@Valid @RequestBody UserAddDTO dto) {
         return Result.success(userService.insert(dto));
     }
 
     @Operation(summary = "更新数据", description = "")
-    @PutMapping("user/{id}/update")
-    public Result<Long> update(@PathVariable("id") Long id,
-                               @RequestBody @Validated UserUpdateDTO dto){
-        return Result.success(userService.update(id, dto));
+    @PostMapping("/user/update")
+    @SaCheckPermission("system:employee:update")
+    public Result<Long> update(@RequestBody @Validated UserUpdateDTO dto){
+        return Result.success(userService.update(dto.getEmployeeId(), dto));
     }
 
     @Operation(summary = "切换状态", description = "")

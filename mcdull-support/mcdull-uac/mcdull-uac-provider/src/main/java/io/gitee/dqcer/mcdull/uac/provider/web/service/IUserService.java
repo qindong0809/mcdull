@@ -2,14 +2,13 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserInsertDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdatePasswordDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +20,7 @@ public interface IUserService {
 
     PagedVO<UserVO> listByPage(UserLiteDTO dto);
 
-    Long insert(UserInsertDTO dto);
+    Long insert(UserAddDTO dto);
 
     UserEntity get(String username);
 
@@ -58,4 +57,6 @@ public interface IUserService {
      * @return {@link UserVO}
      */
     UserEntity get(Long userId);
+
+    String resetPassword(Integer userId);
 }

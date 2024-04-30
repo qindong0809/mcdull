@@ -18,9 +18,9 @@ create table if not exists `sys_user` (
 primary key (`id`)
 )  comment='用户';
 
-insert into `sys_user` values(1, 'admin', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'Terry', 0, '13800000000', 1, 1, '超级管理员', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(2, 'user', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'mcdull', 0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(3, 'user1', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'mcdull1', 0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(1, 'admin', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', 'Terry', 0, '13800000000', 1, 1, '超级管理员', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(2, 'user', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', 'mcdull', 0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(3, 'user1', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', 'mcdull1', 0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
 
 drop table if exists `sys_role`;
 create table `sys_role`  (
