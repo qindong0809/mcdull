@@ -47,12 +47,9 @@ public class UserConvert {
     public static UserEntity updateDtoToEntity(UserUpdateDTO dto) {
         UserEntity entity = new UserEntity();
         entity.setLoginName(dto.getLoginName());
-        entity.setLoginPwd(dto.getLoginPwd());
         entity.setGender(dto.getGender());
         entity.setPhone(dto.getPhone());
         entity.setDepartmentId(dto.getDepartmentId());
-        entity.setAdministratorFlag(dto.getAdministratorFlag());
-        entity.setRemark(dto.getRemark());
         return entity;
 
     }

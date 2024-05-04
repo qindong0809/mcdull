@@ -292,3 +292,91 @@ unique index `uk_file_key`(`file_key`) using btree,
 index `module_id_module_type`(`folder_type`) using btree,
 index `module_type`(`folder_type`) using btree
 ) comment = '文件';
+
+drop table if exists `sys_table_column`;
+create table `sys_table_column`  (
+`id` bigint(0) not null auto_increment,
+`user_id` bigint(0) not null comment '用户id',
+`table_id` int(0) not null comment '表格id',
+`columns` text null comment '具体的表格列，存入的json',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree,
+unique index `uni_employee_table`(`user_id`, `table_id`) using btree
+)  comment = '表格的自定义列存储';
+
+drop table if exists `sys_help_doc_catalog`;
+create table `sys_help_doc_catalog`  (
+`id` bigint(0) not null auto_increment comment '帮助文档目录',
+`name` varchar(1000) not null comment '名称',
+`sort` int(0) not null default 0 comment '排序字段',
+`parent_id` bigint(0) not null comment '父级id',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree
+) comment = '帮助文档-目录';
+insert into `sys_help_doc_catalog` values (6, '企业信息', 0, 0, 0, sysdate(), sysdate());
+insert into `sys_help_doc_catalog` values (9, '企业信用', 0, 6, 0, sysdate(), sysdate());
+insert into `sys_help_doc_catalog` values (10, '采购文档', 0, 11, 0, sysdate(), sysdate());
+insert into `sys_help_doc_catalog` values (11, '进销存', 0, 0, 0, sysdate(), sysdate());
+
+
+DROP TABLE IF EXISTS `sys_help_doc`;
+create table `sys_help_doc`  (
+`id` bigint(0) not null auto_increment,
+`help_doc_catalog_id` bigint(0) not null comment '类型1公告 2动态',
+`title` varchar(200)  not null comment '标题',
+`content_text` text  not null comment '文本内容',
+`content_html` text  not null comment 'html内容',
+`attachment` varchar(1000)  null default null comment '附件',
+`sort` int(0) not null default 0 comment '排序',
+`page_view_count` int(0) not null default 0 comment '页面浏览量，传说中的pv',
+`user_view_count` int(0) not null default 0 comment '用户浏览量，传说中的uv',
+`author` varchar(1000)  null default null comment '作者',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree
+) comment = '帮助文档';
+
+insert into `sys_help_doc` values (32, 6, '企业名称该写什么？', '、行、备注等，数据变动记录；', '<ul><li style=\"text-align: start;\">需求1：管理公司基本信息，包含：企业名称、logo、地区、营业执照、联系人 等等，可以 增删拆改</li><li style=\"text-align: start;\">需求2：管理公司的银行账户，包含：银行信息、账户名称、账号、类型等，可以 增删拆改</li><li style=\"text-align: start;\">需求3：管理公司的发票信息，包含：开票抬头、纳税号、银行账户、开户行、备注等，可以 增删拆改</li><li style=\"text-align: start;\">需求4：对于公司信息、银行信息、发票信息 任何的修改，都有记录 数据变动记录；</li></ul>', '', 0, 49, 1, '卓大', 0, sysdate(), sysdate());
+insert into `sys_help_doc` values (33, 6, '谁有权限查看企业信息', '纳税号、银行账 任何的修改，都有记录 数据变动记录；', '<ul><li style=\"text-align: start;\">需求1：管理公司基本信息，包含：企业名称、logo、地区、营业执照、联系人 等等，可以 增删拆改</li><li style=\"text-align: start;\">需求2：管理公司的银行账户，包含：银行信息、账户名称、账号、类型等，可以 增删拆改</li><li style=\"text-align: start;\">需求3：管理公司的发票信息，包含：开票抬头、纳税号、银行账户、开户行、备注等，可以 增删拆改</li><li style=\"text-align: start;\">需求4：对于公司信息、银行信息、发票信息 任何的修改，都有记录 数据变动记录；</li></ul>', '', 0, 12, 1, '卓大', 0, sysdate(), sysdate());
+
+
+drop table if exists `sys_help_doc_relation`;
+create table `sys_help_doc_relation`  (
+`id` bigint(0) not null auto_increment,
+`relation_id` bigint(0) not null comment '关联id',
+`relation_name` varchar(255) null default null comment '关联名称',
+`help_doc_id` bigint(0) not null comment '文档id',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`, `relation_id`, `help_doc_id`) using btree,
+unique index `uni_menu_help_doc`(`relation_id`, `help_doc_id`) using btree
+) comment = '帮助文档-关联表';
+
+insert into `sys_help_doc_relation` values (1, 0, '首页', 32,  0, sysdate(), sysdate());
+insert into `sys_help_doc_relation` values (2, 0, '首页', 33,  0, sysdate(), sysdate());
+
+
+
+drop table if exists `sys_help_doc_view_record`;
+create table `sys_help_doc_view_record`  (
+`id` bigint(0) not null auto_increment,
+`help_doc_id` bigint(0) not null comment 'help doc id',
+`user_id` bigint(0) not null comment '用户id',
+`page_view_count` int(0) null default 0 comment '查看次数',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`, `help_doc_id`, `user_id`) using btree,
+unique index `uk_notice_employee`(`help_doc_id`, `user_id`) using btree comment '资讯员工'
+) comment = '帮助文档-查看记录';
+
+insert into `sys_help_doc_view_record` values (1, 31, 1,  3,  0, sysdate(), sysdate());
+insert into `sys_help_doc_view_record` values (2, 32, 1,  49, 0, sysdate(), sysdate());
+insert into `sys_help_doc_view_record` values (3, 33, 1,  12, 0, sysdate(), sysdate());
+insert into `sys_help_doc_view_record` values (4, 34, 1,  5,  0, sysdate(), sysdate());

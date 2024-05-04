@@ -1,0 +1,41 @@
+package io.gitee.dqcer.mcdull.uac.provider.config;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.google.common.collect.Lists;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * 文件key进行序列化对象
+ *
+ */
+public class FileKeyVoSerializer extends JsonSerializer<String> {
+
+    @Resource
+    private IFileService fileService;
+
+
+    @Override
+    public void serialize(String value, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        if (StringUtils.isEmpty(value)) {
+            jsonGenerator.writeObject(Lists.newArrayList());
+            return;
+        }
+        if(fileService == null){
+            jsonGenerator.writeString(value);
+            return;
+        }
+        String[] fileKeyArray = value.split(",");
+        List<String> fileKeyList = Arrays.asList(fileKeyArray);
+        List<FileVO> fileKeyVOList = fileService.getFileList(fileKeyList);
+        jsonGenerator.writeObject(fileKeyVOList);
+    }
+}

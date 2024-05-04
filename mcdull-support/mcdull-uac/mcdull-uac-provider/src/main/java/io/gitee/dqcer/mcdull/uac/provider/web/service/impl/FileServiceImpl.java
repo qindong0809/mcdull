@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -115,5 +116,19 @@ public class FileServiceImpl extends BasicServiceImpl<IFileRepository> implement
         FileMetadataVO metadata = download.getMetadata();
         metadata.setFileName(fileEntity.getFileName());
         return download;
+    }
+
+    @Override
+    public List<FileVO> getFileList(List<String> fileKeyList) {
+        if (fileKeyList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<FileVO> list = new ArrayList<>();
+        for (String fileKey : fileKeyList) {
+            FileEntity entity = baseRepository.getByFileKey(fileKey);
+            FileVO fileVO = FileConvert.convertToEntity(entity);
+            list.add(fileVO);
+        }
+        return list;
     }
 }

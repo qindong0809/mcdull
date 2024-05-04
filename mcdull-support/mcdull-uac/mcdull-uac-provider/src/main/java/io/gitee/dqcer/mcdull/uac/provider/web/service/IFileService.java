@@ -9,6 +9,8 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileUploadVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileVO;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface IFileService {
 
     PagedVO<FileVO> queryPage(FileQueryDTO dto);
@@ -18,4 +20,6 @@ public interface IFileService {
     String getFileUrl(String fileKey);
 
     FileDownloadVO getDownloadFile(String fileKey, String userAgent);
+
+    List<FileVO> getFileList(List<String> fileKeyList);
 }
