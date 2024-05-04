@@ -18,16 +18,16 @@ import java.util.List;
 public class HelpDocDetailVO implements VO  {
 
     @Schema(description = "id")
-    private Long helpDocId;
+    private Integer helpDocId;
 
     @Schema(description = "标题")
     private String title;
 
     @Schema(description = "分类")
-    private Long helpDocCatalogId;
+    private Integer helpDocCatalogId;
 
     @Schema(description = "分类名称")
-    private Long helpDocCatalogName;
+    private String helpDocCatalogName;
 
     @Schema(description = "纯文本内容")
     private String contentText;

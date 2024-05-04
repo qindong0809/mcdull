@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -64,7 +65,7 @@ public class HelpDocServiceImpl extends BasicServiceImpl<IHelpDocRepository> imp
 
     private  HelpDocDetailVO convert(HelpDocEntity entity) {
         HelpDocDetailVO vo = new HelpDocDetailVO();
-        vo.setHelpDocId(entity.getId());
+        vo.setHelpDocId(Convert.toInt(entity.getId()));
         vo.setTitle(entity.getTitle());
         vo.setContentHtml(entity.getContentHtml());
         vo.setContentText(entity.getContentText());
@@ -72,6 +73,8 @@ public class HelpDocServiceImpl extends BasicServiceImpl<IHelpDocRepository> imp
         vo.setPageViewCount(entity.getPageViewCount());
         vo.setUserViewCount(entity.getUserViewCount());
         vo.setAuthor(entity.getAuthor());
+        vo.setHelpDocCatalogId(Convert.toInt(entity.getHelpDocCatalogId()));
+        vo.setHelpDocCatalogName(helpDocCatalogRepository.getById(entity.getHelpDocCatalogId()).getName());
         return vo;
     }
 
@@ -186,7 +189,7 @@ public class HelpDocServiceImpl extends BasicServiceImpl<IHelpDocRepository> imp
         List<HelpDocEntity> list = baseRepository.listByCatalogId(helpDocCatalogId);
         if (CollUtil.isNotEmpty(list)) {
             this.validNameExist(helpDocId, dto.getTitle(), list,
-                    entity -> (!helpDocId.equals(entity.getHelpDocCatalogId())) && entity.getTitle().equals(dto.getTitle()));
+                    entity -> (!helpDocId.equals(entity.getId())) && entity.getTitle().equals(dto.getTitle()));
         }
         docEntity.setTitle(dto.getTitle());
         docEntity.setContentHtml(dto.getContentHtml());
