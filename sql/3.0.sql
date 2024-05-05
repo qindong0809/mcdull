@@ -380,3 +380,22 @@ insert into `sys_help_doc_view_record` values (1, 31, 1,  3,  0, sysdate(), sysd
 insert into `sys_help_doc_view_record` values (2, 32, 1,  49, 0, sysdate(), sysdate());
 insert into `sys_help_doc_view_record` values (3, 33, 1,  12, 0, sysdate(), sysdate());
 insert into `sys_help_doc_view_record` values (4, 34, 1,  5,  0, sysdate(), sysdate());
+
+
+drop table if exists `sys_change_log`;
+create table `sys_change_log`  (
+`id` bigint(0) not null auto_increment comment '更新日志id',
+`version` varchar(255) not null comment '版本',
+`type` int(0) not null comment '更新类型:[1:特大版本功能更新;2:功能更新;3:bug修复]',
+`publish_author` varchar(255) not null comment '发布人',
+`public_date` date not null comment '发布日期',
+`content` text not null comment '更新内容',
+`link` text null comment '跳转链接',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree,
+unique index `version_unique`(`version`) using btree
+) comment = '系统更新日志';
+
+insert into `sys_change_log` values (2, 'v1.1.0', 2, '卓大', '2020-05-09', 'smartadmin中后台系统 v1.1.0 版本（20200422）正式更新上线，更新内容如下：\n\n1.【新增】增加员工姓名查询\n\n2.【新增】增加文件预览组件\n\n3.【新增】新增四级菜单\n', 'http://smartadmin.1024lab.net/views/1.x/base/about.html', 0, sysdate(), sysdate());

@@ -4,9 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.HelpDocCatalogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.HelpDocEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.TableColumnEntity;
 
 import java.util.List;
 

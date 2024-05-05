@@ -2,8 +2,10 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.TableColumnEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.ChangeLogEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 
 import java.util.List;
 
@@ -13,31 +15,31 @@ import java.util.List;
 * @author dqcer
 * @since 2024-04-29
 */
-public interface ITableColumnRepository extends IService<TableColumnEntity>  {
+public interface IChangeLogRepository extends IService<ChangeLogEntity>  {
 
    /**
     * 根据ID列表批量查询数据
     *
     * @param idList id列表
-    * @return {@link List< TableColumnEntity >}
+    * @return {@link List< ChangeLogEntity >}
     */
-    List<TableColumnEntity> queryListByIds(List<Long> idList);
+    List<ChangeLogEntity> queryListByIds(List<Long> idList);
 
    /**
     * 按条件分页查询
     *
     * @param param 参数
-    * @return {@link Page< TableColumnEntity >}
+    * @return {@link Page< ChangeLogEntity >}
     */
-    Page<TableColumnEntity> selectPage(ConfigQueryDTO param);
+    Page<ChangeLogEntity> selectPage(ChangeLogQueryDTO param);
 
     /**
      * 根据ID获取单条数据
      *
      * @param id 主键
-     * @return {@link TableColumnEntity}
+     * @return {@link ConfigEntity}
      */
-    TableColumnEntity getById(Long id);
+    ChangeLogEntity getById(Long id);
 
     /**
      * 插入数据
@@ -45,7 +47,7 @@ public interface ITableColumnRepository extends IService<TableColumnEntity>  {
      * @param entity 实体对象
      * @return Long id
      */
-    Long insert(TableColumnEntity entity);
+    Long insert(ChangeLogEntity entity);
 
     /**
      * 批量删除
@@ -60,7 +62,5 @@ public interface ITableColumnRepository extends IService<TableColumnEntity>  {
      * @param entity 实体对象
      * @return boolean true/存在 false/不存在
      */
-    boolean exist(TableColumnEntity entity);
-
-   List<TableColumnEntity> selectList(Long userId);
+    boolean exist(ChangeLogEntity entity);
 }

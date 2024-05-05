@@ -10,11 +10,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.TableColumnEntity;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.TableColumnMapper;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.ITableColumnRepository;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.ChangeLogEntity;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.ChangeLogMapper;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IChangeLogRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,27 +23,27 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+* 系统配置 数据库操作封装实现层
 *
 * @author dqcer
 * @since 2024-04-29
 */
 @Service
-public class TableColumnRepositoryImpl
-        extends ServiceImpl<TableColumnMapper, TableColumnEntity>  implements ITableColumnRepository {
+public class ChangeLogRepositoryImpl extends ServiceImpl<ChangeLogMapper, ChangeLogEntity>  implements IChangeLogRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(TableColumnRepositoryImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ChangeLogRepositoryImpl.class);
 
     /**
      * 根据ID列表批量查询数据
      *
      * @param idList id列表
-     * @return {@link List< ConfigEntity >}
+     * @return {@link List< ChangeLogEntity >}
      */
     @Override
-    public List<TableColumnEntity> queryListByIds(List<Long> idList) {
-        LambdaQueryWrapper<TableColumnEntity> wrapper = Wrappers.lambdaQuery();
-        wrapper.in(TableColumnEntity::getId, idList);
-        List<TableColumnEntity> list =  baseMapper.selectList(wrapper);
+    public List<ChangeLogEntity> queryListByIds(List<Long> idList) {
+        LambdaQueryWrapper<ChangeLogEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(ChangeLogEntity::getId, idList);
+        List<ChangeLogEntity> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;
         }
@@ -54,16 +54,16 @@ public class TableColumnRepositoryImpl
      * 按条件分页查询
      *
      * @param param 参数
-     * @return {@link Page< ConfigEntity >}
+     * @return {@link Page< ChangeLogEntity >}
      */
     @Override
-    public Page<TableColumnEntity> selectPage(ConfigQueryDTO param) {
-        LambdaQueryWrapper<TableColumnEntity> lambda = new QueryWrapper<TableColumnEntity>().lambda();
+    public Page<ChangeLogEntity> selectPage(ChangeLogQueryDTO param) {
+        LambdaQueryWrapper<ChangeLogEntity> lambda = new QueryWrapper<ChangeLogEntity>().lambda();
         String keyword = param.getKeyword();
         if (ObjUtil.isNotNull(keyword)) {
-            lambda.like(TableColumnEntity::getColumns, keyword);
+            lambda.like(ChangeLogEntity::getVersion, keyword);
         }
-        lambda.orderByDesc(ListUtil.of(TableColumnEntity::getCreatedTime, TableColumnEntity::getUpdatedTime));
+        lambda.orderByDesc(ListUtil.of(ChangeLogEntity::getCreatedTime, ChangeLogEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 
@@ -71,10 +71,10 @@ public class TableColumnRepositoryImpl
      * 根据ID获取单条数据
      *
      * @param id 主键
-     * @return {@link ConfigEntity}
+     * @return {@link ChangeLogEntity}
      */
     @Override
-    public TableColumnEntity getById(Long id) {
+    public ChangeLogEntity getById(Long id) {
         return baseMapper.selectById(id);
     }
 
@@ -85,7 +85,7 @@ public class TableColumnRepositoryImpl
      * @return Long id
      */
     @Override
-    public Long insert(TableColumnEntity entity) {
+    public Long insert(ChangeLogEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
@@ -101,15 +101,8 @@ public class TableColumnRepositoryImpl
      * @return boolean true/存在 false/不存在
      */
     @Override
-    public boolean exist(TableColumnEntity entity) {
+    public boolean exist(ChangeLogEntity entity) {
         return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
-    }
-
-    @Override
-    public List<TableColumnEntity> selectList(Long userId) {
-        LambdaQueryWrapper<TableColumnEntity> query = Wrappers.lambdaQuery();
-        query.eq(TableColumnEntity::getUserId, userId);
-        return baseMapper.selectList(query);
     }
 
     /**
