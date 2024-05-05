@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -21,10 +22,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.UserConvert;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserAddDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserListDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdatePasswordDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
@@ -188,35 +186,38 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long toggleActive(Long id) {
+    public void toggleActive(Long id) {
         UserEntity dbData = baseRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
             throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
         }
+        Boolean administratorFlag = dbData.getAdministratorFlag();
+        if (administratorFlag != null && administratorFlag) {
+            log.warn("管理员账号禁止禁用，id:{}", id);
+            throw new BusinessException(I18nConstants.PERMISSION_DENIED);
+        }
+
         boolean success = baseRepository.update(id, !dbData.getInactive());
         if (!success) {
             log.error("数据更新失败，id:{}", id);
             throw new BusinessException(I18nConstants.DB_OPERATION_FAILED);
         }
-        return id;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean delete(Long id) {
-        UserEntity dbData = baseRepository.getById(id);
-        if (null == dbData) {
-            log.warn("数据不存在 id:{}", id);
-            throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
+    public boolean delete(List<Long> idList) {
+        List<UserEntity> userEntities = baseRepository.listByIds(idList);
+        if (userEntities.size() != idList.size()) {
+            this.throwDataNotExistException(idList);
         }
-        UserEntity entity = new UserEntity();
-        entity.setId(id);
-        boolean success = baseRepository.removeById(id);
-        if (!success) {
-            log.error("数据删除失败，entity:{}", entity);
-            throw new BusinessException(I18nConstants.DB_OPERATION_FAILED);
+        boolean anyMatch = userEntities.stream().anyMatch(UserEntity::getAdministratorFlag);
+        if (anyMatch) {
+            log.warn("管理员账号禁止删除，id:{}", idList);
+            throw new BusinessException(I18nConstants.PERMISSION_DENIED);
         }
+        baseRepository.removeBatchByIds(idList);
         return true;
     }
 
@@ -256,6 +257,12 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         }
         UserEntity userDO = baseRepository.get(dto.getLoginName());
         if (userDO != null) {
+            boolean administratorFlag = userDO.getAdministratorFlag();
+            if (administratorFlag) {
+                log.warn("管理员账号禁止操作，id:{}", id);
+                throw new BusinessException(I18nConstants.PERMISSION_DENIED);
+            }
+
             if (!userDO.getId().equals(id)) {
                 log.warn("账号名称已存在 account: {}", dto.getLoginName());
                 throw new BusinessException(I18nConstants.DATA_EXISTS);
@@ -363,6 +370,19 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
             }
         }
         return voList;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void batchUpdateDepartment(UserBatchUpdateDepartmentDTO dto) {
+        List<Long> list = dto.getEmployeeIdList();
+        List<UserEntity> userEntities = baseRepository.listByIds(list);
+        if (list.size() != userEntities.size()) {
+            this.throwDataNotExistException(list);
+        }
+        Long departmentId = dto.getDepartmentId();
+        userEntities.forEach(i -> i.setDepartmentId(departmentId));
+        baseRepository.updateBatchById(userEntities);
     }
 
     private List<UserEntity> list(List<Long> userIdList) {

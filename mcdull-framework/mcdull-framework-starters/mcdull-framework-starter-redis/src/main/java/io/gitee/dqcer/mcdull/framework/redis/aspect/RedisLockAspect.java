@@ -86,17 +86,20 @@ public class RedisLockAspect {
                     return proceedingJoinPoint.proceed();
                 }catch (Exception e){
                     LogHelp.error(log, e.getMessage(), e);
+                    throw e;
                 } finally {
                     lock.unlock();
                     LogHelp.debug(log, "分布式锁成功释放锁. key: {}", key);
                 }
             }
-            throw new BusinessException(I18nConstants.SYSTEM_BUSY);
+//            throw new BusinessException(I18nConstants.SYSTEM_BUSY);
         } catch (InterruptedException e) {
             LogHelp.error(log, "Interrupted! {} ", e.getMessage(), e);
             Thread.currentThread().interrupt();
-            throw new BusinessException(I18nConstants.SYSTEM_BUSY);
+//            throw new BusinessException(I18nConstants.SYSTEM_BUSY);
+            throw e;
         }
+        return null;
     }
 
     /**

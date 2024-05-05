@@ -12,7 +12,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -58,19 +57,28 @@ public class UserController {
         return Result.success(true);
     }
 
-    @Operation(summary = "Reset Password")
-    @PostMapping("/update/password/reset/{userId}")
-    @SaCheckPermission("system:employee:password:reset")
-    public Result<String> resetPassword(@PathVariable Integer userId) {
-        return Result.success(userService.resetPassword(userId));
-    }
-
-    @Operation(summary = "添加员工(返回添加员工的密码) @author 卓大")
-    @RedisLock(key = "'lock:uac:user:' + #dto.nickname + '-' + #dto.account", timeout = 3)
+    @Operation(summary = "添加员工(返回添加员工的密码)")
+    @RedisLock(key = "'lock:uac:user:' + #dto.loginName + '-' + #dto.actualName", timeout = 3)
     @PostMapping("/user/add")
     @SaCheckPermission("system:employee:add")
     public Result<Long> addEmployee(@Valid @RequestBody UserAddDTO dto) {
         return Result.success(userService.insert(dto));
+    }
+
+    @Operation(summary = "更新员工禁用/启用状态")
+    @GetMapping("/employee/update/disabled/{userId}")
+    @SaCheckPermission("system:employee:disabled")
+    public Result<Boolean> updateDisableFlag(@PathVariable Long userId) {
+        userService.toggleActive(userId);
+        return Result.success(true);
+    }
+
+    @Operation(summary = "批量删除员工")
+    @PostMapping("/employee/update/batch/delete")
+    @SaCheckPermission("system:employee:delete")
+    public Result<Boolean> batchUpdateDeleteFlag(@RequestBody List<Long> userIdList) {
+        userService.delete(userIdList);
+        return Result.success(true);
     }
 
     @Operation(summary = "更新数据", description = "")
@@ -80,25 +88,28 @@ public class UserController {
         return Result.success(userService.update(dto.getEmployeeId(), dto));
     }
 
-    @Operation(summary = "切换状态", description = "")
-    @Parameter(name = "id", required = true, description = "主键")
-    @PutMapping("user/{id}/status")
-    public Result<Long> toggleActive(@PathVariable("id") Long id) {
-        return Result.success(userService.toggleActive(id));
-    }
-
-    @Operation(summary = "单个删除", description = "")
-    @DeleteMapping("user/{id}/delete")
-    public Result<Boolean> delete(@PathVariable("id") Long id){
-        return Result.success(userService.delete(id));
-    }
-
     @Operation(summary = "修改密码", description = "")
     @PostMapping("user/{id}/update-password")
     public Result<Long> updatePassword(@PathVariable("id") Long id,
                                        @RequestBody UserUpdatePasswordDTO dto){
         return Result.success(userService.updatePassword(id, dto));
     }
+
+    @Operation(summary = "Reset Password")
+    @PostMapping("/user/update/password/reset/{userId}")
+    @SaCheckPermission("system:employee:password:reset")
+    public Result<String> resetPassword(@PathVariable Integer userId) {
+        return Result.success(userService.resetPassword(userId));
+    }
+
+    @Operation(summary = "批量调整员工部门")
+    @PostMapping("/user/update/batch/department")
+    @SaCheckPermission("system:employee:department:update")
+    public Result<Boolean> batchUpdateDepartment(@Valid @RequestBody UserBatchUpdateDepartmentDTO dto) {
+        userService.batchUpdateDepartment(dto);
+        return Result.success(true);
+    }
+
 
     @Operation(summary = "查询所有员工")
     @GetMapping("/user/queryAll")

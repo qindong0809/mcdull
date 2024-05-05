@@ -2,10 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserAddDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserListDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdatePasswordDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
@@ -25,9 +22,9 @@ public interface IUserService {
 
     UserEntity get(String username);
 
-    Long toggleActive(Long id);
+    void toggleActive(Long id);
 
-    boolean delete(Long id);
+    boolean delete(List<Long> id);
 
     Long updatePassword(Long id, UserUpdatePasswordDTO dto);
 
@@ -62,4 +59,6 @@ public interface IUserService {
     String resetPassword(Integer userId);
 
     List<UserAllVO> queryAll(Boolean disabledFlag);
+
+    void batchUpdateDepartment(UserBatchUpdateDepartmentDTO dto);
 }
