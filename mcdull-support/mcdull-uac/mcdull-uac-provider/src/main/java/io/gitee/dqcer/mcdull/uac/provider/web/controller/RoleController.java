@@ -1,20 +1,20 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleInsertDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.RolePageDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.RolePermissionInsertDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleUpdateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -23,7 +23,6 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/26
  */
-@RequestMapping("role")
 @Tag(name = "Role API")
 @RestController
 public class RoleController {
@@ -37,54 +36,46 @@ public class RoleController {
      * @param dto dto
      * @return {@link Result}<{@link List}<{@link UserVO}>>
      */
-    @GetMapping("list")
+    @GetMapping("/role/list")
     public Result<PagedVO<RoleVO>> listByPage(@Validated RolePageDTO dto) {
         return Result.success(roleService.listByPage(dto));
     }
 
-    @GetMapping("list-all")
+    @GetMapping("role/list-all")
     public Result<List<RoleVO>> getListAll() {
         return Result.success(roleService.all());
     }
 
-
-    /**
-     * 新增数据
-     *
-     * @param dto dto
-     * @return {@link Result<Integer> 返回新增主键}
-     */
-    @PostMapping("insert")
-    public Result<Long> insert(@RequestBody @Validated RoleInsertDTO dto) {
-        return Result.success(roleService.insert(dto));
+    @Operation(summary = "添加角色 @author 卓大")
+    @PostMapping("/role/add")
+    @SaCheckPermission("system:role:add")
+    public Result<Boolean> addRole(@Valid @RequestBody RoleAddDTO dto) {
+        roleService.insert(dto);
+        return Result.success(true);
     }
 
-    @PutMapping("{id}/update")
-    public Result<Boolean> update(@PathVariable("id") Long id, @RequestBody @Validated RoleUpdateDTO dto) {
-        return Result.success(roleService.update(id, dto));
+    @Operation(summary = "删除角色 @author 卓大")
+    @GetMapping("/role/delete/{roleId}")
+    @SaCheckPermission("system:role:delete")
+    public Result<Boolean> deleteRole(@PathVariable Long roleId) {
+        roleService.delete(roleId);
+        return Result.success(true);
     }
 
-    /**
-     * 状态更新
-     *
-     * @param dto dto
-     * @return {@link Result<Integer>}
-     */
-    @PutMapping("{id}/status")
-    public Result<Boolean> toggleStatus(@PathVariable("id") Long id, @RequestBody ReasonDTO dto) {
-        return Result.success(roleService.toggleStatus(id, dto));
+    @Operation(summary = "更新角色")
+    @PostMapping("/role/update")
+    @SaCheckPermission("system:role:update")
+    public Result<Boolean> updateRole(@Valid @RequestBody RoleUpdateDTO dto) {
+        roleService.updateRole(dto);
+        return Result.success(true);
     }
 
-    /**
-     * 单个删除
-     *
-     * @param dto dto
-     * @return {@link Result<Integer>}
-     */
-    @DeleteMapping("{id}")
-    public Result<Boolean> delete(@PathVariable("id") Long id, @Validated ReasonDTO dto) {
-        return Result.success(roleService.delete(id, dto));
+    @Operation(summary = "获取角色数据 @author 卓大")
+    @GetMapping("/role/get/{roleId}")
+    public Result<RoleVO> getRole(@PathVariable("roleId") Long roleId) {
+        return Result.success(roleService.detail(roleId));
     }
+
 
     @PutMapping("{id}/permission")
     public Result<Boolean> insertPermission(@PathVariable("id") Long id, @RequestBody RolePermissionInsertDTO dto) {

@@ -65,48 +65,36 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
     }
 
     @Override
-    public RoleVO detail(RoleLiteDTO dto) {
-        return roleManager.entity2VO(baseRepository.getById(dto.getId()));
+    public RoleVO detail(Long id) {
+        RoleEntity entity = baseRepository.getById(id);
+        if (ObjUtil.isNull(entity)) {
+            this.throwDataNotExistException(id);
+        }
+        return RoleConvert.entityToVO(entity);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long insert(RoleInsertDTO dto) {
-        LambdaQueryWrapper<RoleEntity> query = Wrappers.lambdaQuery();
-        query.eq(RoleEntity::getRoleName, dto.getRoleName());
-        query.last(GlobalConstant.Database.SQL_LIMIT_1);
-        List<RoleEntity> list = baseRepository.list(query);
-        if (!list.isEmpty()) {
-            throw new BusinessException(I18nConstants.NAME_DUPLICATED);
+    public void insert(RoleAddDTO dto) {
+        List<RoleEntity> roleEntityList = baseRepository.list();
+        if (CollUtil.isNotEmpty(roleEntityList)) {
+            this.validNameExist(null, dto.getRoleName(), roleEntityList,
+                    roleEntity -> roleEntity.getRoleName().equals(dto.getRoleName()));
+            this.validNameExist(null, dto.getRoleCode(), roleEntityList,
+                    roleEntity -> roleEntity.getRoleCode().equals(dto.getRoleCode()));
         }
         RoleEntity entity = RoleConvert.insertToEntity(dto);
         baseRepository.insert(entity);
-        return entity.getId();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long delete(UserListDTO dto) {
-//        Long id = dto.getId();
-//
-//
-//        RoleEntity dbData = baseRepository.getById(id);
-//        if (null == dbData) {
-//            log.warn("数据不存在 id:{}", id);
-////            return Result.error(CodeEnum.DATA_NOT_EXIST);
-//        }
-//
-//        RoleEntity entity = new RoleEntity();
-//        entity.setId(id);
-//
-//        boolean success = baseRepository.updateById(entity);
-//        if (!success) {
-//            log.error("数据删除失败，entity:{}", entity);
-//            throw new BusinessException(CodeEnum.DB_ERROR);
-//        }
-//
-//        return id;
-        return null;
+    public void delete(Long id) {
+        RoleEntity dbData = baseRepository.getById(id);
+        if (null == dbData) {
+            this.throwDataNotExistException(id);
+        }
+        baseRepository.removeById(id);
     }
 
     @Override
@@ -224,6 +212,27 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
             return RoleConvert.entityToVO(entity);
         }
         return null;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateRole(RoleUpdateDTO dto) {
+        Long roleId = dto.getRoleId();
+        RoleEntity entity = baseRepository.getById(roleId);
+        if (ObjUtil.isNull(entity)) {
+            this.throwDataNotExistException(roleId);
+        }
+        List<RoleEntity> list = baseRepository.list();
+        if (CollUtil.isNotEmpty(list)) {
+            this.validNameExist(roleId, dto.getRoleName(), list,
+                    i -> (!roleId.equals(i.getId())) && i.getRoleName().equals(dto.getRoleName()));
+            this.validNameExist(roleId, dto.getRoleCode(), list,
+                    i -> (!dto.getRoleId().equals(i.getId())) && i.getRoleCode().equals(dto.getRoleCode()));
+        }
+        entity.setRoleName(dto.getRoleName());
+        entity.setRoleCode(dto.getRoleCode());
+        entity.setRemark(dto.getRemark());
+        baseRepository.updateById(entity);
     }
 
 }

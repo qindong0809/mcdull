@@ -1,8 +1,10 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 
-import io.gitee.dqcer.mcdull.framework.base.support.DTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
 
 /**
 * 角色 接收客户端参数
@@ -12,14 +14,13 @@ import lombok.Setter;
 */
 @Getter
 @Setter
-public class RoleUpdateDTO implements DTO {
+public class RoleUpdateDTO extends RoleAddDTO {
 
-    private static final long serialVersionUID = 1L;
-
-    private String roleName;
-
-    private String roleCode;
-
-    private String remark;
+    /**
+     * 角色id
+     */
+    @Schema(description = "角色id")
+    @NotNull(message = "角色id不能为空")
+    protected Long roleId;
    
 }
