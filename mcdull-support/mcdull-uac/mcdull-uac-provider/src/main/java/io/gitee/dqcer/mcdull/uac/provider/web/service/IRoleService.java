@@ -20,7 +20,7 @@ public interface IRoleService {
 
     Long insert(RoleInsertDTO dto);
 
-    Long delete(UserLiteDTO dto);
+    Long delete(UserListDTO dto);
 
     Map<Long, List<RoleEntity>> getRoleMap(List<Long> userIdList);
 

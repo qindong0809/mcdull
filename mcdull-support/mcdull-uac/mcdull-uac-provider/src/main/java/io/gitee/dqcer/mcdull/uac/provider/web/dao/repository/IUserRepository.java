@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 
 /**
@@ -19,7 +19,7 @@ public interface IUserRepository extends IService<UserEntity> {
      * @param dto dto
      * @return {@link Page}<{@link UserEntity}>
      */
-    Page<UserEntity> selectPage(UserLiteDTO dto);
+    Page<UserEntity> selectPage(UserListDTO dto);
 
     /**
      * 插入

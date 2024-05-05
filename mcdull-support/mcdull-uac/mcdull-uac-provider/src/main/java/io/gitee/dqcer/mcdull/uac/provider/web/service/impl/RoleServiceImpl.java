@@ -19,9 +19,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.RoleConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.uac.IRoleManager;
@@ -88,26 +86,27 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long delete(UserLiteDTO dto) {
-        Long id = dto.getId();
-
-
-        RoleEntity dbData = baseRepository.getById(id);
-        if (null == dbData) {
-            log.warn("数据不存在 id:{}", id);
-//            return Result.error(CodeEnum.DATA_NOT_EXIST);
-        }
-
-        RoleEntity entity = new RoleEntity();
-        entity.setId(id);
-
-        boolean success = baseRepository.updateById(entity);
-        if (!success) {
-            log.error("数据删除失败，entity:{}", entity);
-            throw new BusinessException(CodeEnum.DB_ERROR);
-        }
-
-        return id;
+    public Long delete(UserListDTO dto) {
+//        Long id = dto.getId();
+//
+//
+//        RoleEntity dbData = baseRepository.getById(id);
+//        if (null == dbData) {
+//            log.warn("数据不存在 id:{}", id);
+////            return Result.error(CodeEnum.DATA_NOT_EXIST);
+//        }
+//
+//        RoleEntity entity = new RoleEntity();
+//        entity.setId(id);
+//
+//        boolean success = baseRepository.updateById(entity);
+//        if (!success) {
+//            log.error("数据删除失败，entity:{}", entity);
+//            throw new BusinessException(CodeEnum.DB_ERROR);
+//        }
+//
+//        return id;
+        return null;
     }
 
     @Override

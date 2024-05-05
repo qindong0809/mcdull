@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.framework.base.util;
 import io.gitee.dqcer.mcdull.framework.base.vo.TreeVO;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +28,7 @@ public class TreeUtil {
      * @return {@link List}<{@link T}>
      */
     public static <T extends TreeVO<T, ID>, ID extends Serializable> List<T> getChildTreeObjects(List<T> list, ID parentId) {
-        List<T> returnList = new java.util.ArrayList<>(Collections.emptyList());
+        List<T> returnList = new ArrayList<>(Collections.emptyList());
         for (T res : list) {
             if (res.getParentId() == null) {
                 continue;
@@ -74,7 +75,7 @@ public class TreeUtil {
      * @return the child list
      */
     public static <T extends TreeVO<T, ID>, ID extends Serializable> List<T> getChildList(List<T> list, T t) {
-        List<T> childList = new java.util.ArrayList<>(Collections.emptyList());
+        List<T> childList = new ArrayList<>(Collections.emptyList());
         for (T child : list) {
             if (Objects.isNull(child.getParentId())) {
                 continue;

@@ -1,8 +1,10 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.convert;
 
+import cn.hutool.core.date.LocalDateTimeUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 
 /**
@@ -22,6 +24,7 @@ public class UserConvert {
      */
     public static UserVO entityToVO(UserEntity entity) {
         UserVO userVO = new UserVO();
+        userVO.setEmployeeId(entity.getId());
         userVO.setLoginName(entity.getLoginName());
         userVO.setLoginPwd(entity.getLoginPwd());
         userVO.setActualName(entity.getActualName());
@@ -52,5 +55,19 @@ public class UserConvert {
         entity.setDepartmentId(dto.getDepartmentId());
         return entity;
 
+    }
+
+    public static UserAllVO entityToAllVO(UserEntity userEntity) {
+        UserAllVO userAllVO = new UserAllVO();
+        userAllVO.setEmployeeId(userEntity.getId());
+        userAllVO.setLoginName(userEntity.getLoginName());
+        userAllVO.setGender(userEntity.getGender());
+        userAllVO.setActualName(userEntity.getActualName());
+        userAllVO.setPhone(userEntity.getPhone());
+        userAllVO.setDepartmentId(userEntity.getDepartmentId());
+        userAllVO.setDisabledFlag(userEntity.getInactive());
+        userAllVO.setAdministratorFlag(userEntity.getAdministratorFlag());
+        userAllVO.setCreateTime(LocalDateTimeUtil.of(userEntity.getCreatedTime()));
+        return userAllVO;
     }
 }

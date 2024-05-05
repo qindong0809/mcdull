@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.ToString;
 
@@ -15,6 +16,9 @@ import lombok.ToString;
 public class UserVO implements VO {
 
     private static final long serialVersionUID = 1L;
+
+    @Schema(description = "主键id")
+    private Long employeeId;
 
     private String loginName;
 

@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -9,7 +10,7 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
@@ -34,13 +35,21 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
      */
 
     @Override
-    public Page<UserEntity> selectPage(UserLiteDTO dto) {
+    public Page<UserEntity> selectPage(UserListDTO dto) {
         LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
         String keyword = dto.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
             query.and(i-> i.like(UserEntity::getLoginName, keyword)
                     .or().like(UserEntity::getPhone, keyword)
             );
+        }
+        Long departmentId = dto.getDepartmentId();
+        if (ObjUtil.isNotNull(departmentId)) {
+            query.eq(UserEntity::getDepartmentId, departmentId);
+        }
+        Boolean disabledFlag = dto.getDisabledFlag();
+        if (ObjUtil.isNotNull(disabledFlag)) {
+            query.eq(BaseEntity::getInactive, disabledFlag);
         }
         query.orderByDesc(BaseEntity::getCreatedTime);
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);

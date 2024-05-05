@@ -5,8 +5,10 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptUpdateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentTreeVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDepartmentService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +55,11 @@ public class DeptController {
         return Result.success(deptService.delete(id, dto));
     }
 
+    @Operation(summary = "查询部门树形列表")
+    @GetMapping("treeList")
+    public Result<List<DepartmentTreeVO>> departmentTree() {
+        return Result.success(deptService.departmentTree());
+    }
 
 
 }

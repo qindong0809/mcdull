@@ -4,6 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptUpdateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentTreeVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentVO;
 
 import java.util.List;
@@ -24,4 +25,5 @@ public interface IDepartmentService {
 
     boolean delete(Long id, ReasonDTO dto);
 
+    List<DepartmentTreeVO> departmentTree();
 }

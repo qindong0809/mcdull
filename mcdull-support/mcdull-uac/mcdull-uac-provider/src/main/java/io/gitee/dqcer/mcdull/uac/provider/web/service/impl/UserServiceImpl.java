@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -21,17 +22,17 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.UserConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserAddDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdatePasswordDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserRoleService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,6 +59,9 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
     @Resource
     private IMenuService menuService;
+
+    @Resource
+    private IDepartmentRepository departmentRepository;
 
     private static final String AES_KEY = "1024abcd1024abcd1024abcd1024abcd";
 
@@ -100,7 +104,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
     @Override
     @Transactional(readOnly = true)
-    public PagedVO<UserVO> listByPage(UserLiteDTO dto) {
+    public PagedVO<UserVO> listByPage(UserListDTO dto) {
         Page<UserEntity> entityPage = baseRepository.selectPage(dto);
         List<UserVO> voList = new ArrayList<>();
         List<UserEntity> userList = entityPage.getRecords();
@@ -322,6 +326,43 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         String newPassword = RandomUtil.genAz09(5);
         baseRepository.update(Convert.toLong(userId), newPassword);
         return newPassword;
+    }
+
+    @Override
+    public List<UserAllVO> queryAll(Boolean disabledFlag) {
+        List<UserAllVO> voList = new ArrayList<>();
+        List<UserEntity> list = baseRepository.list();
+        if (CollUtil.isNotEmpty(list)) {
+            Set<Long> deptIdSet = list.stream().map(UserEntity::getDepartmentId).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+            List<DepartmentEntity> departmentEntities = departmentRepository.listByIds(new ArrayList<>(deptIdSet));
+            Map<Long, DepartmentEntity> map = new HashMap<>();
+            if (CollUtil.isNotEmpty(departmentEntities)) {
+               map = departmentEntities.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+            }
+            List<Long> userIdList = list.stream().map(IdEntity::getId).collect(Collectors.toList());
+
+            Map<Long, List<RoleEntity>> roleMap = roleService.getRoleMap(userIdList);
+
+            for (UserEntity userEntity : list) {
+                UserAllVO vo = UserConvert.entityToAllVO(userEntity);
+                Long departmentId = vo.getDepartmentId();
+                if (ObjUtil.isNotNull(departmentId)) {
+                    DepartmentEntity departmentEntity = map.get(departmentId);
+                    if (ObjUtil.isNotNull(departmentEntity)) {
+                        vo.setDepartmentName(departmentEntity.getName());
+                    }
+                }
+                if (MapUtil.isNotEmpty(roleMap)) {
+                    List<RoleEntity> roleEntities = roleMap.get(vo.getEmployeeId());
+                    if (CollUtil.isNotEmpty(roleEntities)) {
+                        vo.setRoleIdList(roleEntities.stream().map(IdEntity::getId).collect(Collectors.toList()));
+                        vo.setRoleNameList(roleEntities.stream().map(RoleEntity::getRoleName).collect(Collectors.toList()));
+                    }
+                }
+                voList.add(vo);
+            }
+        }
+        return voList;
     }
 
     private List<UserEntity> list(List<Long> userIdList) {

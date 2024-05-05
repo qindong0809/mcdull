@@ -8,6 +8,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,7 +46,7 @@ public class UserController {
     @GetMapping("user/list")
     @RedisLock(key = "'lock:uac:user:' + #dto.pageSize ", timeout = 3)
 //    @Transform
-    public Result<PagedVO<UserVO>> listByPage(@Validated(ValidGroup.Paged.class) UserLiteDTO dto) {
+    public Result<PagedVO<UserVO>> listByPage(@Validated(ValidGroup.Paged.class) UserListDTO dto) {
 //        ThreadUtil.sleep(8000);
         return Result.success(userService.listByPage(dto));
     }
@@ -97,5 +98,11 @@ public class UserController {
     public Result<Long> updatePassword(@PathVariable("id") Long id,
                                        @RequestBody UserUpdatePasswordDTO dto){
         return Result.success(userService.updatePassword(id, dto));
+    }
+
+    @Operation(summary = "查询所有员工")
+    @GetMapping("/user/queryAll")
+    public Result<List<UserAllVO>> queryAll(@RequestParam(value = "disabledFlag", required = false) Boolean disabledFlag) {
+        return Result.success(userService.queryAll(disabledFlag));
     }
 }

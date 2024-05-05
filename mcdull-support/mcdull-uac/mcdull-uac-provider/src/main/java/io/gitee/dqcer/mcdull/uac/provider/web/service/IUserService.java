@@ -3,10 +3,11 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserAddDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserLiteDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdatePasswordDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Map;
 public interface IUserService {
     boolean passwordCheck(UserEntity entity, String passwordParam);
 
-    PagedVO<UserVO> listByPage(UserLiteDTO dto);
+    PagedVO<UserVO> listByPage(UserListDTO dto);
 
     Long insert(UserAddDTO dto);
 
@@ -59,4 +60,6 @@ public interface IUserService {
     UserEntity get(Long userId);
 
     String resetPassword(Integer userId);
+
+    List<UserAllVO> queryAll(Boolean disabledFlag);
 }
