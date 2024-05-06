@@ -42,4 +42,6 @@ public interface IRoleService {
     RoleVO get(Long roleId);
 
     void updateRole(RoleUpdateDTO dto);
+
+    void updateRoleMenu(RoleMenuUpdateDTO dto);
 }

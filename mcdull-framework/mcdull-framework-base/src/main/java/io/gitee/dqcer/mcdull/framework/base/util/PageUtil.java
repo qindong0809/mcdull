@@ -2,8 +2,10 @@ package io.gitee.dqcer.mcdull.framework.base.util;
 
 import cn.hutool.core.convert.Convert;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.gitee.dqcer.mcdull.framework.base.support.Paged;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,5 +34,10 @@ public class PageUtil {
     public static <T> PagedVO<T> toPage(List<T> list, IPage<?> iPage) {
         return new PagedVO<>(list, Convert.toInt(iPage.getTotal()),
                 Convert.toInt(iPage.getSize()), Convert.toInt(iPage.getCurrent()));
+    }
+
+    public static <T> PagedVO<T> empty(Paged iPage) {
+        return new PagedVO<>(Collections.emptyList(), 0,
+                Convert.toInt(iPage.getPageSize()), Convert.toInt(iPage.getPageNum()));
     }
 }

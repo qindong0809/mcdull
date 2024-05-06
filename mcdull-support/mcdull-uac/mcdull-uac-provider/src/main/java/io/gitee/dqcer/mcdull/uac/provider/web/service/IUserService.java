@@ -61,4 +61,10 @@ public interface IUserService {
     List<UserAllVO> queryAll(Boolean disabledFlag);
 
     void batchUpdateDepartment(UserBatchUpdateDepartmentDTO dto);
+
+    PagedVO<UserVO> query(RoleUserQueryDTO dto);
+
+    List<UserVO> getAllByRoleId(Long roleId);
+
+    void addUserListByRole(RoleUserUpdateDTO dto);
 }

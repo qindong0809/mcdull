@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -7,9 +9,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleUserQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
@@ -102,6 +107,54 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
         entity.setId(id);
         entity.setLoginPwd(password);
         return this.update(entity);
+    }
+
+    @Override
+    public Page<UserEntity> selectPageByRoleId(List<Long> userIdList, RoleUserQueryDTO dto) {
+        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+        String keyword = dto.getKeyword();
+        if (StrUtil.isNotBlank(keyword)) {
+            query.and(i-> i.like(UserEntity::getLoginName, keyword)
+                    .or().like(UserEntity::getPhone, keyword)
+            );
+        }
+
+        if (CollUtil.isNotEmpty(userIdList)) {
+            query.in(IdEntity::getId, userIdList);
+        }
+        query.orderByDesc(BaseEntity::getCreatedTime);
+        Boolean notNeedPaged = dto.getNotNeedPaged();
+        if (BooleanUtil.isTrue(notNeedPaged)) {
+            List<UserEntity> userEntities = baseMapper.selectList(query);
+            Page<UserEntity> objectPage = new Page<>();
+            objectPage.setRecords(userEntities);
+            return objectPage;
+        }
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
+    }
+
+    @Override
+    public Page<UserEntity> selectPageByRoleId(List<Long> userIdList, PagedDTO dto) {
+        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+        String keyword = dto.getKeyword();
+        if (StrUtil.isNotBlank(keyword)) {
+            query.and(i-> i.like(UserEntity::getLoginName, keyword)
+                    .or().like(UserEntity::getPhone, keyword)
+            );
+        }
+
+        if (CollUtil.isNotEmpty(userIdList)) {
+            query.in(IdEntity::getId, userIdList);
+        }
+        query.orderByDesc(BaseEntity::getCreatedTime);
+        Boolean notNeedPaged = dto.getNotNeedPaged();
+        if (BooleanUtil.isTrue(notNeedPaged)) {
+            List<UserEntity> userEntities = baseMapper.selectList(query);
+            Page<UserEntity> objectPage = new Page<>();
+            objectPage.setRecords(userEntities);
+            return objectPage;
+        }
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 
     public boolean update(UserEntity entity) {

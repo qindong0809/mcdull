@@ -3,7 +3,6 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -12,6 +11,7 @@ import cn.hutool.crypto.symmetric.AES;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
+import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
@@ -30,7 +30,10 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserRoleService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -109,25 +112,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         if (entityPage.getTotal() == GlobalConstant.Number.NUMBER_0) {
             return PageUtil.toPage(voList, entityPage);
         }
-        Set<Integer> createdBySet = userList.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
-        Set<Integer> updatedBySet = userList.stream().map(BaseEntity::getUpdatedBy)
-                .filter(ObjUtil::isNotNull).collect(Collectors.toSet());
-        createdBySet.addAll(updatedBySet);
-        List<UserEntity> list = baseRepository.listByIds(createdBySet);
-        Map<Long, UserEntity> userMap = new HashMap<>(list.size());
-        if (CollUtil.isNotEmpty(list)) {
-            userMap = list.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
-        }
-
-        List<Long> userIdList = userList.stream().map(IdEntity::getId).collect(Collectors.toList());
-        Map<Long, List<RoleEntity>> roleListMap = roleService.getRoleMap(userIdList);
-
-        for (UserEntity entity : userList) {
-            UserVO vo = UserConvert.entityToVO(entity);
-            this.setUserFieldValue(userMap, vo);
-            this.setRoleListFieldValue(roleListMap, vo);
-            voList.add(vo);
-        }
+        voList = getVoList(userList);
         return PageUtil.toPage(voList, entityPage);
     }
 
@@ -157,7 +142,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     public Long insert(UserAddDTO dto) {
         this.checkParam(dto);
         Long id = this.buildEntityAndInsert(dto);
-        userRoleService.deleteAndInsert(id, dto.getRoleIdList());
+        userRoleService.batchUserListByRoleId(id, dto.getRoleIdList());
         return id;
     }
 
@@ -245,7 +230,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         UserEntity updateDO = UserConvert.updateDtoToEntity(dto);
         updateDO.setId(id);
         baseRepository.updateById(updateDO);
-        userRoleService.deleteAndInsert(id, dto.getRoleIdList());
+        userRoleService.batchUserListByRoleId(id, dto.getRoleIdList());
         return updateDO.getId();
     }
 
@@ -383,6 +368,66 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         Long departmentId = dto.getDepartmentId();
         userEntities.forEach(i -> i.setDepartmentId(departmentId));
         baseRepository.updateBatchById(userEntities);
+    }
+
+    @Override
+    public PagedVO<UserVO> query(RoleUserQueryDTO dto) {
+        List<Long> idList = userRoleService.getUserId(dto.getRoleId());
+        if (CollUtil.isEmpty(idList)) {
+            return PageUtil.empty(dto);
+        }
+        Page<UserEntity> entityPage = baseRepository.selectPageByRoleId(idList, dto);
+        List<UserVO> voList = new ArrayList<>();
+        List<UserEntity> userList = entityPage.getRecords();
+        if (entityPage.getTotal() == GlobalConstant.Number.NUMBER_0) {
+            return PageUtil.toPage(voList, entityPage);
+        }
+         voList = getVoList( userList);
+        return PageUtil.toPage(voList, entityPage);
+    }
+
+    private List<UserVO> getVoList(List<UserEntity> userList) {
+        List<UserVO> voList = new ArrayList<>();
+        Set<Integer> createdBySet = userList.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
+        Set<Integer> updatedBySet = userList.stream().map(BaseEntity::getUpdatedBy)
+                .filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+        createdBySet.addAll(updatedBySet);
+        List<UserEntity> list = baseRepository.listByIds(createdBySet);
+        Map<Long, UserEntity> userMap = new HashMap<>(list.size());
+        if (CollUtil.isNotEmpty(list)) {
+            userMap = list.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+        }
+
+        List<Long> userIdList = userList.stream().map(IdEntity::getId).collect(Collectors.toList());
+        Map<Long, List<RoleEntity>> roleListMap = roleService.getRoleMap(userIdList);
+
+        for (UserEntity entity : userList) {
+            UserVO vo = UserConvert.entityToVO(entity);
+            this.setUserFieldValue(userMap, vo);
+            this.setRoleListFieldValue(roleListMap, vo);
+            voList.add(vo);
+        }
+        return voList;
+    }
+
+
+    @Override
+    public List<UserVO> getAllByRoleId(Long roleId) {
+        List<Long> idList = userRoleService.getUserId(roleId);
+        if (CollUtil.isEmpty(idList)) {
+            return Collections.emptyList();
+        }
+        PagedDTO dto = new PagedDTO();
+        dto.setNotNeedPaged(true);
+        Page<UserEntity> entityPage = baseRepository.selectPageByRoleId(idList, dto);
+        List<UserEntity> records = entityPage.getRecords();
+        return this.getVoList(records);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void addUserListByRole(RoleUserUpdateDTO dto) {
+        userRoleService.batchUserListByRoleId(dto.getEmployeeIdList(), dto.getRoleId());
     }
 
     private List<UserEntity> list(List<Long> userIdList) {

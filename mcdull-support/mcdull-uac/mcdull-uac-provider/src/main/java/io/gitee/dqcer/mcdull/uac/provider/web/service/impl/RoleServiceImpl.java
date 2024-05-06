@@ -235,4 +235,10 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
         baseRepository.updateById(entity);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateRoleMenu(RoleMenuUpdateDTO dto) {
+        roleMenuService.deleteAndInsert(dto.getRoleId(), dto.getMenuIdList());
+    }
+
 }

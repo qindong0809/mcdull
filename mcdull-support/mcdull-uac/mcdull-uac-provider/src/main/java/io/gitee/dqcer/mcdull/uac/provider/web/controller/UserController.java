@@ -41,7 +41,6 @@ public class UserController {
      */
     @Authorized("sys:user:view")
     @Operation(summary = "Query Page", description = "")
-    @SaCheckPermission("system:user:query")
     @GetMapping("user/list")
     @RedisLock(key = "'lock:uac:user:' + #dto.pageSize ", timeout = 3)
 //    @Transform
@@ -61,8 +60,28 @@ public class UserController {
     @RedisLock(key = "'lock:uac:user:' + #dto.loginName + '-' + #dto.actualName", timeout = 3)
     @PostMapping("/user/add")
     @SaCheckPermission("system:employee:add")
-    public Result<Long> addEmployee(@Valid @RequestBody UserAddDTO dto) {
+    public Result<Long> insert(@Valid @RequestBody UserAddDTO dto) {
         return Result.success(userService.insert(dto));
+    }
+
+    @Operation(summary = "查询某个角色下的员工列表")
+    @PostMapping("/role/employee/queryEmployee")
+    public Result<PagedVO<UserVO>> query(@Valid @RequestBody RoleUserQueryDTO dto) {
+        return Result.success(userService.query(dto));
+    }
+
+    @Operation(summary = "获取某个角色下的所有员工列表(无分页)")
+    @GetMapping("/role/employee/getAllEmployeeByRoleId/{roleId}")
+    public Result<List<UserVO>> getAllRoleId(@PathVariable Long roleId) {
+        return Result.success(userService.getAllByRoleId(roleId));
+    }
+
+    @Operation(summary = "角色成员列表中批量添加员工")
+    @PostMapping("/role/employee/batchAddRoleEmployee")
+    @SaCheckPermission("system:role:employee:add")
+    public Result<Boolean> addUserListByRole(@Valid @RequestBody RoleUserUpdateDTO dto) {
+        userService.addUserListByRole(dto);
+        return Result.success(true);
     }
 
     @Operation(summary = "更新员工禁用/启用状态")

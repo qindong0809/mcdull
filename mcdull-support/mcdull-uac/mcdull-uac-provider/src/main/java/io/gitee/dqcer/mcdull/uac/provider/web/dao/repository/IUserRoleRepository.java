@@ -21,7 +21,7 @@ public interface IUserRoleRepository extends IService<RoleUserEntity> {
      * @param id      id
      * @param roleIds 角色id
      */
-    void deleteAndInsert(Long id, List<Long> roleIds);
+    void insert(Long id, List<Long> roleIds);
 
     /**
      * 角色map
@@ -38,4 +38,10 @@ public interface IUserRoleRepository extends IService<RoleUserEntity> {
      * @return {@link List}<{@link RoleUserEntity}>
      */
     List<RoleUserEntity> list(List<Long> userIdList);
+
+    List<Long> listByRole(Long roleId);
+
+    void insert(List<Long> userIdList, Long roleId);
+
+    List<RoleUserEntity> list(List<Long> userIdList, Long roleId);
 }

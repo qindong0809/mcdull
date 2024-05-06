@@ -2,8 +2,12 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleUserQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
+
+import java.util.List;
 
 /**
  * 用户 数据库操作封装接口层
@@ -48,4 +52,7 @@ public interface IUserRepository extends IService<UserEntity> {
 
     boolean update(Long id, String password);
 
+    Page<UserEntity> selectPageByRoleId(List<Long> userIdList, RoleUserQueryDTO dto);
+
+    Page<UserEntity> selectPageByRoleId(List<Long> userIdList, PagedDTO dto);
 }

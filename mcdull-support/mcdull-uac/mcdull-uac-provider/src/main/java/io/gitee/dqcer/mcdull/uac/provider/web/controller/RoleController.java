@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
@@ -76,6 +75,13 @@ public class RoleController {
         return Result.success(roleService.detail(roleId));
     }
 
+    @Operation(summary = "更新角色权限")
+    @PostMapping("/role/menu/updateRoleMenu")
+    @SaCheckPermission("system:role:menu:update")
+    public Result<Boolean> updateRoleMenu(@Valid @RequestBody RoleMenuUpdateDTO dto) {
+        roleService.updateRoleMenu(dto);
+        return Result.success(true);
+    }
 
     @PutMapping("{id}/permission")
     public Result<Boolean> insertPermission(@PathVariable("id") Long id, @RequestBody RolePermissionInsertDTO dto) {

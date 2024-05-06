@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 
@@ -7,7 +9,11 @@ import java.util.Map;
  * @author dqcer
  */
 public interface IUserRoleService {
-    void deleteAndInsert(Long userId, List<Long> roleList);
+    void batchUserListByRoleId(Long userId, List<Long> roleList);
+
+    void batchUserListByRoleId(List<Long> userIdList, Long roleId);
 
     Map<Long, List<Long>> getRoleIdListMap(List<Long> userIdList);
+
+    List<Long> getUserId(Long roleId);
 }

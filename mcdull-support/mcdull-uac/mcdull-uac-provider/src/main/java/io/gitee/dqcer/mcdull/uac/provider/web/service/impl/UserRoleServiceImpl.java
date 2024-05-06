@@ -2,7 +2,9 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleUserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserRoleService;
 import org.springframework.stereotype.Service;
@@ -20,8 +22,18 @@ public class UserRoleServiceImpl extends BasicServiceImpl<IUserRoleRepository>  
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteAndInsert(Long userId, List<Long> roleList) {
-        baseRepository.deleteAndInsert(userId, roleList);
+    public void batchUserListByRoleId(Long userId, List<Long> roleList) {
+        baseRepository.insert(userId, roleList);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void batchUserListByRoleId(List<Long> userIdList, Long roleId) {
+        List<RoleUserEntity> roleUserEntities = baseRepository.list(userIdList, roleId);
+        if (CollUtil.isNotEmpty(roleUserEntities)) {
+            this.throwDataExistException(StrUtil.format("roleId: {} userIdList: {}", roleId, userIdList));
+        }
+        baseRepository.insert(userIdList, roleId);
     }
 
     @Override
@@ -30,5 +42,10 @@ public class UserRoleServiceImpl extends BasicServiceImpl<IUserRoleRepository>  
             return baseRepository.roleIdListMap(userIdList);
         }
         return MapUtil.empty();
+    }
+
+    @Override
+    public List<Long> getUserId(Long roleId) {
+        return baseRepository.listByRole(roleId);
     }
 }

@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.security;
 
 import cn.dev33.satoken.stp.StpInterface;
-import cn.hutool.core.convert.Convert;
 
 import java.util.List;
 
