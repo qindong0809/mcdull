@@ -13,16 +13,16 @@ import java.util.List;
 public class MenuSimpleTreeVO {
 
     @Schema(description = "菜单ID")
-    private Long menuId;
+    private Integer menuId;
 
     @Schema(description = "菜单名称")
     private String menuName;
 
     @Schema(description = "功能点关联菜单ID")
-    private Long contextMenuId;
+    private Integer contextMenuId;
 
     @Schema(description = "父级菜单ID")
-    private Long parentId;
+    private Integer parentId;
 
     @Schema(description = "菜单类型")
     private Integer menuType;

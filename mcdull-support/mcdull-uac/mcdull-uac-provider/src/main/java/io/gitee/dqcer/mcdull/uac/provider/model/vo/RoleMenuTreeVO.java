@@ -13,11 +13,11 @@ import java.util.List;
 public class RoleMenuTreeVO {
 
     @Schema(description = "角色ID")
-    private Long roleId;
+    private Integer roleId;
 
     @Schema(description = "菜单列表")
     private List<MenuSimpleTreeVO> menuTreeList;
 
     @Schema(description = "选中的菜单ID")
-    private List<Long> selectedMenuId;
+    private List<Integer> selectedMenuId;
 }
