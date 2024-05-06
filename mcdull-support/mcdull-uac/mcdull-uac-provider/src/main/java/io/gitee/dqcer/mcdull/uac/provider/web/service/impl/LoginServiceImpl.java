@@ -38,8 +38,6 @@ import java.util.stream.Collectors;
 @Service
 public class LoginServiceImpl implements ILoginService {
 
-    private static final Logger log = LoggerFactory.getLogger(LoginServiceImpl.class);
-
     @Resource
     private IUserService userService;
 

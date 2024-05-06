@@ -15,14 +15,12 @@ import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.RoleConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.manager.uac.IRoleManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserRoleService;
@@ -42,9 +40,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implements IRoleService {
-
-    @Resource
-    private IRoleManager roleManager;
 
     @Resource
     private IUserRoleService userRoleService;
@@ -104,20 +99,6 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
             return baseRepository.roleListMap(userRoleMap);
         }
         return MapUtil.empty();
-    }
-
-    @Override
-    public List<LabelValueVO<Long, String>> getSimple(Long userId) {
-        List<LabelValueVO<Long, String>> list = new ArrayList<>();
-        Map<Long, List<RoleEntity>> roleMap = this.getRoleMap(ListUtil.of(userId));
-        if (MapUtil.isNotEmpty(roleMap)) {
-            for (Map.Entry<Long, List<RoleEntity>> entry : roleMap.entrySet()) {
-                for (RoleEntity role : entry.getValue()) {
-                    list.add(new LabelValueVO<>(role.getId(), role.getRoleName()));
-                }
-            }
-        }
-        return list;
     }
 
     @Transactional(rollbackFor = Exception.class)

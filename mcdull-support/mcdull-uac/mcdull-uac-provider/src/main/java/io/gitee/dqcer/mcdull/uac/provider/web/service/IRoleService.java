@@ -25,8 +25,6 @@ public interface IRoleService {
 
     Map<Long, List<RoleEntity>> getRoleMap(List<Long> userIdList);
 
-    List<LabelValueVO<Long, String>> getSimple(Long userId);
-
     boolean update(Long id, RoleUpdateDTO dto);
 
     boolean delete(Long id, ReasonDTO dto);

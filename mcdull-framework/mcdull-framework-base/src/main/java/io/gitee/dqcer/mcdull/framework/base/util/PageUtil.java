@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.framework.base.util;
 
 import cn.hutool.core.convert.Convert;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.support.Paged;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 

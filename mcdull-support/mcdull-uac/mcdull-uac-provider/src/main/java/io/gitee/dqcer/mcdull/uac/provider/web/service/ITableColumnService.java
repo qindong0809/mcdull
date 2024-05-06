@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.TableColumnUpdateDTO;
 
 /**

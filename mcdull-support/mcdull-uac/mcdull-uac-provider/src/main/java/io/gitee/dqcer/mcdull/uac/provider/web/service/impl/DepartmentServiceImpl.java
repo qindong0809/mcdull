@@ -8,7 +8,6 @@ import cn.hutool.core.util.BooleanUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
-import io.gitee.dqcer.mcdull.framework.base.vo.TreeSelectVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptListDTO;

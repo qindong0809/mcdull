@@ -3,8 +3,11 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FeedbackQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.TableQueryForm;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.CodeGeneratorConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.TableColumnVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.TableVO;
 
 import java.util.List;
 
@@ -60,4 +63,8 @@ public interface ICodeGeneratorConfigRepository extends IService<CodeGeneratorCo
      * @return boolean true/存在 false/不存在
      */
     boolean exist(CodeGeneratorConfigEntity entity);
+
+    List<TableColumnVO> getByTable(String table);
+
+    List<TableVO> queryTableList(Page<?> page, TableQueryForm dto);
 }

@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
@@ -11,7 +10,6 @@ import io.gitee.dqcer.mcdull.framework.web.config.SystemEnvironment;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.CaptchaVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ICaptchaService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
@@ -19,7 +17,6 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j

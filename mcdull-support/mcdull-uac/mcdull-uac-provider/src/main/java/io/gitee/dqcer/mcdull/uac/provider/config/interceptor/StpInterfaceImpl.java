@@ -7,6 +7,7 @@ import cn.hutool.core.convert.Convert;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.security.AbstractUserDetailsService;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 public class StpInterfaceImpl extends AbstractUserDetailsService {
 
     @Resource
-    private IUserService userService;
+    private ILoginService loginService;
 
     @Override
     protected List<String> permissionList(Object userId) {
@@ -32,20 +33,14 @@ public class StpInterfaceImpl extends AbstractUserDetailsService {
         if (administratorFlag) {
             return ListUtil.of("*:*:*");
         }
-        List<UserPowerVO> list = userService.getResourceModuleList(Convert.toLong(userId));
-        if (CollUtil.isNotEmpty(list)) {
-            return list.stream().flatMap(i -> i.getModules().stream()).distinct().collect(Collectors.toList());
-        }
-        return Collections.emptyList();
+        Long id = Convert.toLong(userId);
+        return loginService.getPermissionList(id);
     }
 
     @Override
     protected List<String> roleList(Object userId) {
-        List<UserPowerVO> list = userService.getResourceModuleList(Convert.toLong(userId));
-        if (CollUtil.isNotEmpty(list)) {
-            return list.stream().map(UserPowerVO::getCode).collect(Collectors.toList());
-        }
-        return Collections.emptyList();
+        Long id = Convert.toLong(userId);
+        return loginService.getRoleList(id);
     }
 
 }

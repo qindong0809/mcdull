@@ -11,7 +11,10 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FeedbackQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.TableQueryForm;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.CodeGeneratorConfigEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.TableColumnVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.TableVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.CodeGeneratorConfigMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.ICodeGeneratorConfigRepository;
 import org.slf4j.Logger;
@@ -101,6 +104,16 @@ public class CodeGeneratorConfigRepositoryImpl extends ServiceImpl<CodeGenerator
     @Override
     public boolean exist(CodeGeneratorConfigEntity entity) {
         return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
+    }
+
+    @Override
+    public List<TableColumnVO> getByTable(String table) {
+        return baseMapper.getByTable(table);
+    }
+
+    @Override
+    public List<TableVO> queryTableList(Page<?> page, TableQueryForm dto) {
+        return baseMapper.queryTableList(page, dto);
     }
 
     /**

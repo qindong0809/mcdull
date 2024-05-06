@@ -35,10 +35,6 @@ public interface IMenuService {
 
     List<Long> roleMenuIdList(Long roleId);
 
-    List<PermissionRouterVO> getPermissionRouter();
-
-    List<PermissionRouterVO> getPermissionRouterByRole(Long roleId);
-
     List<MenuVO> getList(Long userId, boolean administratorFlag);
 
     RoleMenuTreeVO getTreeRoleId(Long roleId);

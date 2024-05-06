@@ -147,18 +147,6 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         return Collections.emptyList();
     }
 
-    @Override
-    public List<PermissionRouterVO> getPermissionRouter() {
-        List<MenuEntity> menuList = baseRepository.all();
-        List<Tree<Long>> integerTree = this.getTrees(menuList);
-        return this.convertPermissionRouter(integerTree);
-    }
-
-    @Override
-    public List<PermissionRouterVO> getPermissionRouterByRole(Long roleId) {
-        return this.getRouter(ListUtil.of(roleId));
-    }
-
     private RoleMenuVO convertToRoleMenuVO(MenuEntity menu) {
         RoleMenuVO roleMenuVO = new RoleMenuVO();
         roleMenuVO.setId(menu.getId());
@@ -205,26 +193,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         return entity;
     }
 
-    private List<PermissionRouterVO> getRouter(List<Long> roleIdList) {
-        Map<Long, List<Long>> menuIdListMap = roleMenuService.getMenuIdListMap(roleIdList);
-        if (MapUtil.isNotEmpty(menuIdListMap)) {
-            Set<Long> idSet = menuIdListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
-            if (CollUtil.isNotEmpty(idSet)) {
-                List<MenuEntity> menuList = baseRepository.list(idSet);
-                List<Tree<Long>> integerTree = this.getTrees(menuList);
-                return this.convertPermissionRouter(integerTree);
-            }
-        }
-        return Collections.emptyList();
-    }
-
     private List<Tree<Long>> getTrees(List<MenuEntity> menuList) {
-        Map<Long, List<RoleEntity>> roleMap = MapUtil.newHashMap();
-        if (CollUtil.isNotEmpty(menuList)) {
-            List<Long> menuIdList = menuList.stream().map(IdEntity::getId).collect(Collectors.toList());
-            roleMap = roleService.getRoleMapByMenuId(menuIdList);
-        }
-        Map<Long, List<RoleEntity>> finalRoleMap = roleMap;
         return TreeUtil.build(menuList, 0L,
                 (menu, treeNode) -> {
                     treeNode.setName(StrUtil.upperFirst(menu.getPath()));
@@ -236,20 +205,6 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         });
     }
 
-
-    public List<PermissionRouterVO> convertPermissionRouter(List<Tree<Long>> treeList) {
-        if (CollUtil.isEmpty(treeList)) {
-            return Collections.emptyList();
-        }
-        List<PermissionRouterVO> list = new ArrayList<>();
-        for (Tree<Long> tree : treeList) {
-            PermissionRouterVO vo = this.convertPermission(tree);
-            if (ObjUtil.isNotNull(vo)) {
-                list.add(vo);
-            }
-        }
-        return list;
-    }
 
     public List<MenuSimpleTreeVO> convertSimpleRouter(List<Tree<Long>> treeList) {
         if (CollUtil.isEmpty(treeList)) {
@@ -281,36 +236,6 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
 
             for (Tree<Long> childTree : children) {
                 MenuSimpleTreeVO childVO = this.convertSimpleTree(childTree);
-                if (ObjUtil.isNotNull(childVO)) {
-                    childVOList.add(childVO);
-                }
-            }
-            if (CollUtil.isNotEmpty(childVOList)) {
-                routerVO.setChildren(childVOList);
-            }
-        }
-        return routerVO;
-    }
-
-    private PermissionRouterVO convertPermission(Tree<Long> tree) {
-        if (ObjUtil.isNull(tree)) {
-            return null;
-        }
-        PermissionRouterVO routerVO = new PermissionRouterVO();
-        routerVO.setName(String.valueOf(tree.getName()));
-        routerVO.setPath(Convert.toStr(tree.get("path")));
-        routerVO.setComponent(Convert.toStr(tree.get("component")));
-        String meta = Convert.toStr(tree.get("meta"));
-        if (StrUtil.isNotBlank(meta)) {
-            PermissionRouterVO.MetaVO metaVO = JSONUtil.toBean(meta, PermissionRouterVO.MetaVO.class);
-            routerVO.setMeta(metaVO);
-        }
-        List<Tree<Long>> children = tree.getChildren();
-        if (CollUtil.isNotEmpty(children)) {
-            List<PermissionRouterVO> childVOList = new ArrayList<>();
-
-            for (Tree<Long> childTree : children) {
-                PermissionRouterVO childVO = this.convertPermission(childTree);
                 if (ObjUtil.isNotNull(childVO)) {
                     childVOList.add(childVO);
                 }

@@ -427,6 +427,6 @@ create table `sys_code_generator_config`  (
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
-primary key (`table_name`) using btree,
+primary key (`id`, `table_name`) using btree,
 unique index `table_unique`(`table_name`) using btree
 ) comment = '代码生成器的每个表的配置' ;

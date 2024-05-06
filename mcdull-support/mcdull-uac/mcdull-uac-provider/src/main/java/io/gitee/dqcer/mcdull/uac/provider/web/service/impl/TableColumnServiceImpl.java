@@ -6,7 +6,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.TableColumnUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.TableColumnEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.ITableColumnRepository;
