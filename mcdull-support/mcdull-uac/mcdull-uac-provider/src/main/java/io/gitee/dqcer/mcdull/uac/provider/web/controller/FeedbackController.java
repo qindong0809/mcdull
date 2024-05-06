@@ -1,0 +1,44 @@
+package io.gitee.dqcer.mcdull.uac.provider.web.controller;
+
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.FeedbackAddDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.FeedbackQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FeedbackVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IFeedbackService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
+
+/**
+*
+* @author dqcer
+* @since 2024-04-29
+*/
+@RestController
+@Tag(name = "Feedback API")
+@RequestMapping
+public class FeedbackController {
+
+    @Resource
+    private IFeedbackService feedbackService;
+
+    @Operation(summary = "意见反馈-分页查询")
+    @PostMapping("/feedback/query")
+    public Result<PagedVO<FeedbackVO>> query(@RequestBody @Valid FeedbackQueryDTO dto) {
+        return Result.success(feedbackService.query(dto));
+    }
+
+    @Operation(summary = "意见反馈-新增")
+    @PostMapping("/feedback/add")
+    public Result<Boolean> add(@RequestBody @Valid FeedbackAddDTO dto) {
+        feedbackService.add(dto);
+        return Result.success(true);
+    }
+}

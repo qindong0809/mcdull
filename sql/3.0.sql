@@ -399,3 +399,34 @@ unique index `version_unique`(`version`) using btree
 ) comment = '系统更新日志';
 
 insert into `sys_change_log` values (2, 'v1.1.0', 2, '卓大', '2020-05-09', 'smartadmin中后台系统 v1.1.0 版本（20200422）正式更新上线，更新内容如下：\n\n1.【新增】增加员工姓名查询\n\n2.【新增】增加文件预览组件\n\n3.【新增】新增四级菜单\n', 'http://smartadmin.1024lab.net/views/1.x/base/about.html', 0, sysdate(), sysdate());
+
+
+drop table if exists `sys_feedback`;
+create table `sys_feedback`  (
+`id` bigint(0) not null auto_increment comment '主键',
+`feedback_content` text  null comment '反馈内容',
+`feedback_attachment` varchar(500)  null default null comment '反馈图片',
+`user_id` bigint(0) not null comment '创建人id',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree
+) comment = '意见反馈';
+
+drop table if exists `sys_code_generator_config`;
+create table `sys_code_generator_config`  (
+`id` bigint(0) not null auto_increment comment '主键',
+`table_name` varchar(255) not null comment '表名',
+`basic` text null comment '基础命名信息',
+`fields` text null comment '字段列表',
+`insert_and_update` text null comment '新建、修改',
+`delete_info` text null comment '删除',
+`query_fields` text null comment '查询',
+`table_fields` text null comment '列表',
+`detail` text null comment '详情',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`table_name`) using btree,
+unique index `table_unique`(`table_name`) using btree
+) comment = '代码生成器的每个表的配置' ;
