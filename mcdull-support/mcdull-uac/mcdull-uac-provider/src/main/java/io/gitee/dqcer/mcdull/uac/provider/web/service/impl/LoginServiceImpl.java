@@ -10,13 +10,15 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginDeviceEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.ICaptchaService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -39,13 +41,7 @@ public class LoginServiceImpl implements ILoginService {
     private static final Logger log = LoggerFactory.getLogger(LoginServiceImpl.class);
 
     @Resource
-    private RedissonCache redissonCache;
-
-    @Resource
     private IUserService userService;
-
-    @Resource
-    private IRoleService roleService;
 
     @Resource
     private IMenuService menuService;
@@ -144,12 +140,13 @@ public class LoginServiceImpl implements ILoginService {
     }
 
     @Override
-    public LogonVO getCurrentUserInfo(Long userId) {
-        if (ObjUtil.isNotNull(userId)) {
-            UserEntity userEntity = userService.get(userId);
-            if (ObjUtil.isNotNull(userEntity)) {
-                return this.buildLogonVo(userEntity);
-            }
+    public LogonVO getCurrentUserInfo() {
+        Long userId = UserContextHolder.userIdLong();
+        UserEntity userEntity = userService.get(userId);
+        if (ObjUtil.isNotNull(userEntity)) {
+            LogonVO vo = this.buildLogonVo(userEntity);
+            vo.setToken(StpUtil.getTokenValue());
+            return vo;
         }
         return null;
     }

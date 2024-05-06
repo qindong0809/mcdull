@@ -39,5 +39,10 @@ public interface ILoginService {
      */
     List<String> getRoleList(Long userId);
 
-    LogonVO getCurrentUserInfo(Long userId);
+    /**
+     * 获取当前用户信息
+     *
+     * @return {@link LogonVO}
+     */
+    LogonVO getCurrentUserInfo();
 }

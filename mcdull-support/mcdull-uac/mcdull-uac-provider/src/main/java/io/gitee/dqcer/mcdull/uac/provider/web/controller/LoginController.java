@@ -36,88 +36,36 @@ public class LoginController implements AuthServiceApi {
 
     @Resource
     private ILoginService loginService;
-
-    @Resource
-    private IUserService userService;
-
-    @Resource
-    private IMenuService menuService;
-
-    @Resource
-    private IRoleService roleService;
-
     @Resource
     private ICaptchaService captchaService;
 
-    @Operation(summary = "获取验证码")
+    @Operation(summary = "Captcha")
     @GetMapping("/login/getCaptcha")
     @SaIgnore
     public Result<CaptchaVO> getCaptcha() {
         return Result.success(captchaService.get());
     }
 
-    /**
-     * 登录 21232F297A57A5A743894A0E4A801FC3
-     *
-     * @param dto 登录dto
-     * @return {@link Result}
-     */
-    @Operation(summary = "登录", description = "Default username=admin  password=21232F297A57A5A743894A0E4A801FC3")
+    @Operation(summary = "Login")
     @PostMapping("login")
     public Result<LogonVO> login(@RequestBody @Valid LoginDTO dto) {
         return Result.success(loginService.login(dto));
     }
 
-    @GetMapping("/login1/user-info")
-    @Operation(summary = "当前登录人信息", description = "角色、权限、个人信息")
+    @GetMapping("/current/user-info")
+    @Operation(summary = "Current User Info", description = "角色、权限、个人信息")
     public Result<LogonVO> getCurrentUserInfo() {
-        LogonVO currentUserInfo = loginService.getCurrentUserInfo(UserContextHolder.userIdLong());
-        String tokenValue = StpUtil.getTokenValue();
-        currentUserInfo.setToken(tokenValue);
-        return Result.success(currentUserInfo);
+        return Result.success(loginService.getCurrentUserInfo());
     }
 
-    @Operation(summary = "当前登录人角色信息", description = "角色")
-    @GetMapping("role-list")
-    public Result<List<LabelValueVO<Long, String>>> getRoleList() {
-//        Integer currentUserId = UserContextHolder.currentUserId();
-//        return Result.success(roleService.getSimple(currentUserId));
-        return Result.success(roleService.getSimple(1L));
-    }
-
-    @GetMapping("getRouters/{roleId}")
-    public Result<List<PermissionRouterVO>> getPermissionRouter(@PathVariable("roleId") Long roleId) {
-//        Integer userId = UserContextHolder.currentUserId();
-//        UserVO userVO = userService.get(userId);
-//        if (ObjUtil.isNull(userVO)) {
-//            return Result.success();
-//        }
-//        if (GlobalConstant.SUPER_ADMIN_USER_TYPE.equals(userVO.getType())) {
-//            return Result.success(menuService.getPermissionRouter());
-//        }
-        List<PermissionRouterVO> routerVO = menuService.getPermissionRouterByRole(roleId);
-        return Result.success(routerVO);
-    }
-
-
-    /**
-     * 注销
-     *
-     * @return {@link Result<String>}
-     */
     @PostMapping("logout")
-    @Operation(summary = "注销当前token", description = "logout def")
-    public Result<String> logout() {
+    @Operation(summary = "Logout")
+    public Result<Boolean> logout() {
         loginService.logout();
-        return Result.success();
+        return Result.success(true);
     }
 
-    /**
-     * 验证token
-     *
-     * @param token token
-     * @return {@link Long}
-     */
+
     @UnAuthorize
     @Override
     public Result<Integer> tokenValid(String token, String traceId) {
