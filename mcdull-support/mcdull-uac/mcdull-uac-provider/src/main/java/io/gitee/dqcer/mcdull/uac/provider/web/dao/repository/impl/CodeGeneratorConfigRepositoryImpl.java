@@ -116,6 +116,13 @@ public class CodeGeneratorConfigRepositoryImpl extends ServiceImpl<CodeGenerator
         return baseMapper.queryTableList(page, dto);
     }
 
+    @Override
+    public CodeGeneratorConfigEntity getTableConfig(String tableName) {
+        LambdaQueryWrapper<CodeGeneratorConfigEntity> query = Wrappers.lambdaQuery();
+        query.eq(CodeGeneratorConfigEntity::getTableName, tableName);
+        return baseMapper.selectOne(query);
+    }
+
     /**
     * 根据id删除批处理
     *

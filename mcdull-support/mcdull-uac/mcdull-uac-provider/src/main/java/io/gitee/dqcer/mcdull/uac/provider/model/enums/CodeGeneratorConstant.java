@@ -3,6 +3,8 @@ package io.gitee.dqcer.mcdull.uac.provider.model.enums;
 /**
  * 常量
  *
+ * @author dqcer
+ * @since 2024/05/07
  */
 public class CodeGeneratorConstant {
 
@@ -12,14 +14,9 @@ public class CodeGeneratorConstant {
     public final static String PRIMARY_KEY = "PRI";
 
     /**
-     * 自增
-     */
-    public final static String AUTO_INCREMENT = "auto_increment";
-
-    /**
      * 默认逻辑删除字段名称
      */
-    public static String DELETED_FLAG = "deleted_flag";
+    public static String DELETED_FLAG = "delFlag";
 
 
 }
