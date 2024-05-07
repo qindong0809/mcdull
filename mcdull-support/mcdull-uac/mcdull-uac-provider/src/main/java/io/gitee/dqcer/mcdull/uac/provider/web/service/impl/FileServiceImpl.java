@@ -43,7 +43,9 @@ public class FileServiceImpl extends BasicServiceImpl<IFileRepository> implement
         Page<FileEntity> entityPage = baseRepository.selectPage(dto);
         List<FileVO> voList = new ArrayList<>();
         for (FileEntity entity : entityPage.getRecords()) {
-            voList.add(FileConvert.convertToEntity(entity));
+            FileVO fileVO = FileConvert.convertToEntity(entity);
+            fileVO.setFileUrl(fileStorageService.getFileUrl(entity.getFileKey()));
+            voList.add(fileVO);
         }
         return PageUtil.toPage(voList, entityPage);
     }
@@ -127,6 +129,8 @@ public class FileServiceImpl extends BasicServiceImpl<IFileRepository> implement
         for (String fileKey : fileKeyList) {
             FileEntity entity = baseRepository.getByFileKey(fileKey);
             FileVO fileVO = FileConvert.convertToEntity(entity);
+            String fileUrl = this.getFileUrl(fileKey);
+            fileVO.setFileUrl(fileUrl);
             list.add(fileVO);
         }
         return list;

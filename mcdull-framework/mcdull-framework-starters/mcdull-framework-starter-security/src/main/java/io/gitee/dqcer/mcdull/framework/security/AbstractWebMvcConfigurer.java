@@ -1,15 +1,13 @@
 package io.gitee.dqcer.mcdull.framework.security;
 
-import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.filter.SaServletFilter;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.router.SaRouter;
-import cn.dev33.satoken.same.SaSameUtil;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.util.SaResult;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -20,12 +18,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
 
+
+    @Value("${file.storage.local.upload-path:/home/upload/}")
+    private String uploadPath;
+
     protected static final String [] EXCLUDE_PATTERNS = {
             GlobalConstant.LOGIN_URL,
             GlobalConstant.INNER_API + GlobalConstant.ALL_PATTERNS,
             GlobalConstant.FAVICON_ICO,
             GlobalConstant.ACTUATOR_ALL,
             "/druid/**",
+            "/upload" + GlobalConstant.ALL_PATTERNS,
             "/doc.html/**",
             "/swagger-ui.html/**",
             "/swagger-resources/**",
@@ -54,25 +57,31 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
 
     }
 
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+            String path = uploadPath.endsWith("/") ? uploadPath : uploadPath + "/";
+            registry.addResourceHandler("/upload" + GlobalConstant.ALL_PATTERNS).addResourceLocations("file:" + path);
+    }
+
     /**
      * 注册 Sa-Token 全局过滤器
      *
      * @return {@link SaServletFilter}
      */
-    @Bean
-    public SaServletFilter getSaServletFilter() {
-        return new SaServletFilter()
-                .addInclude(GlobalConstant.ALL_PATTERNS)
-                .addExclude(GlobalConstant.FAVICON_ICO)
-                .addExclude(EXCLUDE_PATTERNS)
-                .setAuth(obj -> {
-                    // 校验 Same-Token 身份凭证     —— 以下两句代码可简化为：SaSameUtil.checkCurrentRequestToken();
-                    String token = SaHolder.getRequest().getHeader(SaSameUtil.SAME_TOKEN);
-                    SaSameUtil.checkToken(token);
-                })
-                .setError(e -> SaResult.error(e.getMessage()))
-                ;
-    }
+//    @Bean
+//    public SaServletFilter getSaServletFilter() {
+//        return new SaServletFilter()
+//                .addInclude(GlobalConstant.ALL_PATTERNS)
+//                .addExclude(GlobalConstant.FAVICON_ICO)
+//                .addExclude(EXCLUDE_PATTERNS)
+//                .setAuth(obj -> {
+//                    // 校验 Same-Token 身份凭证     —— 以下两句代码可简化为：SaSameUtil.checkCurrentRequestToken();
+//                    String token = SaHolder.getRequest().getHeader(SaSameUtil.SAME_TOKEN);
+//                    SaSameUtil.checkToken(token);
+//                })
+//                .setError(e -> SaResult.error(e.getMessage()))
+//                ;
+//    }
 
 
 }

@@ -58,7 +58,7 @@ public class FileStorageLocalServiceImpl implements IFileStorageService {
         if (finalContextPath.endsWith("/")) {
             finalContextPath = finalContextPath.substring(0, finalContextPath.length() - 1);
         }
-        urlPrefix = "http://" + localhostIp + ":" + port + finalContextPath + UPLOAD_MAPPING;
+        urlPrefix = "http://" + "mcdull.io" + ":" + port + finalContextPath + UPLOAD_MAPPING;
         urlPrefix = urlPrefix.endsWith("/") ? urlPrefix : urlPrefix + "/";
     }
 
