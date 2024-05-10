@@ -117,6 +117,11 @@ public class CodeGeneratorConfigRepositoryImpl extends ServiceImpl<CodeGenerator
     }
 
     @Override
+    public boolean existByTable(String tableName) {
+        return baseMapper.existByTable(tableName) > 0;
+    }
+
+    @Override
     public CodeGeneratorConfigEntity getTableConfig(String tableName) {
         LambdaQueryWrapper<CodeGeneratorConfigEntity> query = Wrappers.lambdaQuery();
         query.eq(CodeGeneratorConfigEntity::getTableName, tableName);

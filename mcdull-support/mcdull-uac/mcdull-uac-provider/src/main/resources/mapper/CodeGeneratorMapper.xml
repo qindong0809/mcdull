@@ -22,4 +22,10 @@
             AND INSTR(tables.table_name,#{queryForm.tableNameKeywords})
         </if>
     </select>
+    <select id="existByTable" resultType="java.lang.Long">
+        select count(*)
+        from information_schema.tables
+        where table_schema = (select database())
+          and table_name = #{tableName}
+    </select>
 </mapper>

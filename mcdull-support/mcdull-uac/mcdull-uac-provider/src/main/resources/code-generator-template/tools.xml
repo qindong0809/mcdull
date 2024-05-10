@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tools>
+    <toolbox scope="application">
+        <tool key="codeGeneratorTool" class="io.gitee.dqcer.mcdull.uac.provider.util.CodeGeneratorTool"></tool>
+    </toolbox>
+</tools>

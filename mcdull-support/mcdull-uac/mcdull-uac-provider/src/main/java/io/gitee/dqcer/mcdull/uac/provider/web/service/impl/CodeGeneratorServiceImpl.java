@@ -1,9 +1,12 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
@@ -15,9 +18,11 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.TableConfigVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.TableVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.ICodeGeneratorConfigRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ICodeGeneratorService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.CodeGeneratorTemplateService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +35,8 @@ import java.util.Optional;
 @Service
 public class CodeGeneratorServiceImpl extends BasicServiceImpl<ICodeGeneratorConfigRepository> implements ICodeGeneratorService {
 
+    @Resource
+    private CodeGeneratorTemplateService codeGeneratorTemplateService;
 
     @Override
     public List<TableColumnVO> getTableColumns(String table) {
@@ -56,7 +63,7 @@ public class CodeGeneratorServiceImpl extends BasicServiceImpl<ICodeGeneratorCon
             vo.setDeleteInfo(JSONUtil.parseObj(config.getDeleteInfo()).toBean(CodeDelete.class));
             return vo;
         }
-        return null;
+        return new TableConfigVO();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -101,6 +108,22 @@ public class CodeGeneratorServiceImpl extends BasicServiceImpl<ICodeGeneratorCon
 
     @Override
     public String preview(CodeGeneratorPreviewForm dto) {
-        return null;
+        String tableName = dto.getTableName();
+        boolean existedByTable = baseRepository.existByTable(tableName);
+        if (BooleanUtil.isFalse(existedByTable)) {
+            this.throwDataNotExistException(tableName);
+        }
+        CodeGeneratorConfigEntity codeGeneratorConfigEntity = baseRepository.getTableConfig(tableName);
+        if (ObjUtil.isNull(codeGeneratorConfigEntity)) {
+            this.throwDataNotExistException(tableName);
+        }
+        List<TableColumnVO> columns = baseRepository.getByTable(tableName);
+        if (CollUtil.isEmpty(columns)) {
+            LogHelp.error(log, "表: {} 没有列信息无法生成", tableName);
+            this.throwDataNotExistException(tableName);
+        }
+
+        String result = codeGeneratorTemplateService.generate(dto.getTableName(), dto.getTemplateFile(), codeGeneratorConfigEntity);
+        return result;
     }
 }

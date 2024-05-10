@@ -68,5 +68,7 @@ public interface ICodeGeneratorConfigRepository extends IService<CodeGeneratorCo
 
     List<TableVO> queryTableList(Page<?> page, TableQueryForm dto);
 
-    CodeGeneratorConfigEntity getTableConfig(String tableName);
+ boolean existByTable(String tableName);
+
+ CodeGeneratorConfigEntity getTableConfig(String tableName);
 }
