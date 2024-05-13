@@ -23,7 +23,7 @@ public interface IDepartmentService {
 
     boolean update(Long id, DeptUpdateDTO dto);
 
-    boolean delete(Long id, ReasonDTO dto);
+    boolean delete(Long id);
 
     List<DepartmentTreeVO> departmentTree();
 }

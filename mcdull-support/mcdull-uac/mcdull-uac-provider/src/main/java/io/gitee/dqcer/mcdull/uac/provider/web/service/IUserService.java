@@ -67,4 +67,6 @@ public interface IUserService {
     List<UserVO> getAllByRoleId(Long roleId);
 
     void addUserListByRole(RoleUserUpdateDTO dto);
+
+    List<UserEntity> listByDeptList(List<Long> deptIdList);
 }

@@ -21,6 +21,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -155,6 +156,16 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
             return objectPage;
         }
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
+    }
+
+    @Override
+    public List<UserEntity> listByDeptList(List<Long> deptIdList) {
+        if (CollUtil.isNotEmpty(deptIdList)) {
+            LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+            query.in(UserEntity::getDepartmentId, deptIdList);
+            return baseMapper.selectList(query);
+        }
+        return Collections.emptyList();
     }
 
     public boolean update(UserEntity entity) {

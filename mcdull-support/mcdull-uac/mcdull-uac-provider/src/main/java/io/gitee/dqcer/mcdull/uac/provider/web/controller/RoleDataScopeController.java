@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleDataScopeUpdateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.DataScopeAndViewTypeVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleDataScopeVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleDataScopeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,5 +39,11 @@ public class RoleDataScopeController {
     public Result<Boolean> updateRoleDataScopeList(@RequestBody @Valid RoleDataScopeUpdateDTO dto) {
         roleDataScopeService.updateByRoleId(dto);
         return Result.success(true);
+    }
+
+    @Operation(summary = "获取当前系统所配置的所有数据范围")
+    @GetMapping("/dataScope/list")
+    public Result<List<DataScopeAndViewTypeVO>> dataScopeList() {
+        return Result.success(roleDataScopeService.dataScopeList());
     }
 }

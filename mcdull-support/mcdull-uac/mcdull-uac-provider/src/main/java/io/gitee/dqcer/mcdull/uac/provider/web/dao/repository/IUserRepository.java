@@ -55,4 +55,6 @@ public interface IUserRepository extends IService<UserEntity> {
     Page<UserEntity> selectPageByRoleId(List<Long> userIdList, RoleUserQueryDTO dto);
 
     Page<UserEntity> selectPageByRoleId(List<Long> userIdList, PagedDTO dto);
+
+    List<UserEntity> listByDeptList(List<Long> deptIdList);
 }

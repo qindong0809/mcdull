@@ -36,13 +36,13 @@ public class RoleDataScopeRepositoryImpl extends ServiceImpl<RoleDataScopeMapper
                        List<RoleDataScopeEntity> updateList,
                        List<RoleDataScopeEntity> removeList) {
         if (CollUtil.isNotEmpty(insertList)) {
-            this.saveBatch(insertList);
+            this.saveBatch(insertList, insertList.size());
         }
         if (CollUtil.isNotEmpty(updateList)) {
-            this.updateBatchById(updateList);
+            this.updateBatchById(updateList, updateList.size());
         }
         if (CollUtil.isNotEmpty(removeList)) {
-            this.removeBatchByIds(removeList);
+            this.removeBatchByIds(removeList, removeList.size());
         }
     }
 }

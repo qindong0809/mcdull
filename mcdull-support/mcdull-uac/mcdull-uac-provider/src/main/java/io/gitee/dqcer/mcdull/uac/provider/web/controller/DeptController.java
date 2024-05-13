@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
@@ -14,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -40,19 +42,25 @@ public class DeptController {
     }
 
 
+    @Operation(summary = "Add")
     @PostMapping("insert")
+    @SaCheckPermission("system:department:add")
     public Result<Boolean> insert(@RequestBody @Validated DeptInsertDTO dto){
         return Result.success(deptService.insert(dto));
     }
 
-    @PutMapping("{id}/update")
-    public Result<Boolean> update(@PathVariable("id") Long id, @RequestBody @Validated DeptUpdateDTO dto){
-        return Result.success(deptService.update(id, dto));
+    @Operation(summary = "Update")
+    @PostMapping("update")
+    @SaCheckPermission("system:department:update")
+    public Result<Boolean> updateDepartment(@Valid @RequestBody DeptUpdateDTO dto) {
+        return Result.success(deptService.update(dto.getDepartmentId(), dto));
     }
 
-    @DeleteMapping("{id}")
-    public Result<Boolean> delete(@PathVariable("id") Long id, @Validated ReasonDTO dto){
-        return Result.success(deptService.delete(id, dto));
+    @Operation(summary = "Delete ")
+    @DeleteMapping("delete/{departmentId}")
+    @SaCheckPermission("system:department:delete")
+    public Result<Boolean> deleteDepartment(@PathVariable Long departmentId) {
+        return Result.success(deptService.delete(departmentId));
     }
 
     @Operation(summary = "查询部门树形列表")

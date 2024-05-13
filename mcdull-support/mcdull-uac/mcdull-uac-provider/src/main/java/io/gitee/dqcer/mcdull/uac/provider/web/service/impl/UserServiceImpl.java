@@ -430,6 +430,11 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         userRoleService.batchUserListByRoleId(dto.getEmployeeIdList(), dto.getRoleId());
     }
 
+    @Override
+    public List<UserEntity> listByDeptList(List<Long> deptIdList) {
+        return baseRepository.listByDeptList(deptIdList);
+    }
+
     private List<UserEntity> list(List<Long> userIdList) {
         if (CollUtil.isNotEmpty(userIdList)) {
             List<UserEntity> userList = baseRepository.listByIds(userIdList);
