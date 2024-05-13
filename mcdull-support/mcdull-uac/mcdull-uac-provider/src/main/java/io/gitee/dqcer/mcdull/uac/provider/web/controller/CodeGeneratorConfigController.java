@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeGeneratorConfigForm;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeGeneratorPreviewForm;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.TableQueryForm;
@@ -66,25 +67,19 @@ public class CodeGeneratorConfigController {
 
     // ------------------- 生成 -------------------
 
-    @Operation(summary = "代码预览")
+    @Operation(summary = "Preview")
     @PostMapping("/codeGenerator/code/preview")
     @ResponseBody
     public Result<String> preview(@RequestBody @Valid CodeGeneratorPreviewForm form) {
         return Result.success(codeGeneratorService.preview(form));
     }
 
-    @Operation(summary = "代码下载")
+    @Operation(summary = "Download")
     @GetMapping(value = "/codeGenerator/code/download/{tableName}", produces = "application/octet-stream")
     public void download(@PathVariable String tableName, HttpServletResponse response) throws IOException {
-
-//        ResponseDTO<byte[]> download = codeGeneratorService.download(tableName);
-//
-//        if (download.getOk()) {
-//            SmartResponseUtil.setDownloadFileHeader(response, tableName + "_code.zip", (long) download.getData().length);
-//            response.getOutputStream().write(download.getData());
-//        } else {
-//            SmartResponseUtil.write(response, download);
-//        }
+        byte[] dataStream = codeGeneratorService.download(tableName);
+        ServletUtil.setDownloadFileHeader(response, tableName + "_code.zip", (long) dataStream.length);
+        response.getOutputStream().write(dataStream);
     }
 
 }

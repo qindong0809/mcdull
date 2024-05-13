@@ -226,6 +226,18 @@ primary key (`id`) using btree,
 unique index `uk_role_employee`(`role_id`, `user_id`) using btree
 ) comment = '角色用户';
 
+drop table if exists `sys_role_data_scope`;
+create table `sys_role_data_scope`  (
+`id` int not null auto_increment,
+`data_scope_type` int(0) not null comment '数据范围id',
+`view_type` int(0) not null comment '数据范围类型',
+`role_id` bigint(0) not null comment '角色id',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+primary key (`id`) using btree
+) comment = '角色的数据范围';
+
 drop table if exists `sys_dict_key`;
 create table `sys_dict_key`  (
 `id` bigint(0) not null auto_increment,

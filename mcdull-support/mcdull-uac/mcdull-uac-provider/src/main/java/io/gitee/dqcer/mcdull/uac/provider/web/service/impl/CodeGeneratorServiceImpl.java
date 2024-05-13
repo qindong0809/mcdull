@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,12 +110,25 @@ public class CodeGeneratorServiceImpl extends BasicServiceImpl<ICodeGeneratorCon
     @Override
     public String preview(CodeGeneratorPreviewForm dto) {
         String tableName = dto.getTableName();
+        CodeGeneratorConfigEntity codeGeneratorConfigEntity = this.getConfigInfo(tableName);
+        return codeGeneratorTemplateService.generate(dto.getTableName(), dto.getTemplateFile(), codeGeneratorConfigEntity);
+    }
+
+    @Override
+    public byte[] download(String tableName) {
+        CodeGeneratorConfigEntity configInfo = this.getConfigInfo(tableName);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        codeGeneratorTemplateService.zipGeneratedFiles(out, tableName, configInfo);
+        return out.toByteArray();
+    }
+
+    private CodeGeneratorConfigEntity getConfigInfo(String tableName) {
         boolean existedByTable = baseRepository.existByTable(tableName);
         if (BooleanUtil.isFalse(existedByTable)) {
             this.throwDataNotExistException(tableName);
         }
-        CodeGeneratorConfigEntity codeGeneratorConfigEntity = baseRepository.getTableConfig(tableName);
-        if (ObjUtil.isNull(codeGeneratorConfigEntity)) {
+        CodeGeneratorConfigEntity entity = baseRepository.getTableConfig(tableName);
+        if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(tableName);
         }
         List<TableColumnVO> columns = baseRepository.getByTable(tableName);
@@ -122,8 +136,6 @@ public class CodeGeneratorServiceImpl extends BasicServiceImpl<ICodeGeneratorCon
             LogHelp.error(log, "表: {} 没有列信息无法生成", tableName);
             this.throwDataNotExistException(tableName);
         }
-
-        String result = codeGeneratorTemplateService.generate(dto.getTableName(), dto.getTemplateFile(), codeGeneratorConfigEntity);
-        return result;
+        return entity;
     }
 }

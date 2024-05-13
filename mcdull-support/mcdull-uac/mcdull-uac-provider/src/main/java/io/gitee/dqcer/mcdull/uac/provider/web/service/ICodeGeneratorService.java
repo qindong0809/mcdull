@@ -27,4 +27,6 @@ public interface ICodeGeneratorService {
     void updateConfig(CodeGeneratorConfigForm dto);
 
     String preview(CodeGeneratorPreviewForm dto);
+
+    byte[] download(String tableName);
 }

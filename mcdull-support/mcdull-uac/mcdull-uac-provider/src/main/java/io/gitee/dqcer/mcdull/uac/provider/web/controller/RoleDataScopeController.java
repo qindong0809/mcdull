@@ -1,0 +1,42 @@
+package io.gitee.dqcer.mcdull.uac.provider.web.controller;
+
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleDataScopeUpdateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleDataScopeVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleDataScopeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.util.List;
+
+/**
+ *
+ *
+ * @author dqcer
+ * @since 2024/05/13
+ */
+@Tag(name = "Role Data Scope API")
+@RestController
+public class RoleDataScopeController {
+
+    @Resource
+    private IRoleDataScopeService roleDataScopeService;
+
+    @Operation(summary = "获取某角色所设置的数据范围")
+    @GetMapping("/role/dataScope/getRoleDataScopeList/{roleId}")
+    public Result<List<RoleDataScopeVO>> dataScopeListByRole(@PathVariable Long roleId) {
+        return Result.success(roleDataScopeService.getListByRole(roleId));
+    }
+
+    @Operation(summary = "批量设置某角色数据范围")
+    @PostMapping("/role/dataScope/updateRoleDataScopeList")
+    @SaCheckPermission("system:role:dataScope:update")
+    public Result<Boolean> updateRoleDataScopeList(@RequestBody @Valid RoleDataScopeUpdateDTO dto) {
+        roleDataScopeService.updateByRoleId(dto);
+        return Result.success(true);
+    }
+}

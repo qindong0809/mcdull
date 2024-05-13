@@ -23,7 +23,6 @@ import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.front.C
 import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.front.FormVariableService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.front.ListVariableService;
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.velocity.Template;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
@@ -35,7 +34,7 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,7 +70,8 @@ public class CodeGeneratorTemplateService {
         map.put("js/form.vue", new FormVariableService());
     }
 
-    public void zipGeneratedFiles(OutputStream outputStream, String tableName, CodeGeneratorConfigEntity codeGeneratorConfigEntity) {
+    public void zipGeneratedFiles(OutputStream outputStream, String tableName,
+                                  CodeGeneratorConfigEntity codeGeneratorConfigEntity) {
         String uuid = UUID.randomUUID().toString();
         File dir = new File(uuid);
 
@@ -123,7 +123,7 @@ public class CodeGeneratorTemplateService {
         }
 
 
-        ZipUtil.zip(outputStream, Charset.forName("utf-8"), false, null, dir);
+        ZipUtil.zip(outputStream, StandardCharsets.UTF_8, false, null, dir);
 
         FileUtil.del(dir);
 
@@ -152,7 +152,7 @@ public class CodeGeneratorTemplateService {
         CodeDelete deleteInfo = JSONUtil.toBean(codeGeneratorConfigEntity.getDeleteInfo(), CodeDelete.class);
         List<CodeQueryField> queryFields = JSONUtil.toList(codeGeneratorConfigEntity.getQueryFields(), CodeQueryField.class);
         List<CodeTableField> tableFields = JSONUtil.toList(codeGeneratorConfigEntity.getTableFields(), CodeTableField.class);
-        tableFields.stream().forEach(e -> e.setWidth(e.getWidth() == null ? 0 : e.getWidth()));
+        tableFields.forEach(e -> e.setWidth(e.getWidth() == null ? 0 : e.getWidth()));
 
         CodeGeneratorConfigForm form = CodeGeneratorConfigForm.builder().basic(basic).fields(fields).insertAndUpdate(insertAndUpdate).deleteInfo(deleteInfo).queryFields(queryFields).tableFields(tableFields).deleteInfo(deleteInfo).build();
         form.setTableName(tableName);
@@ -184,7 +184,7 @@ public class CodeGeneratorTemplateService {
         variablesMap.put("name", names);
 
         //主键字段名称和java类型
-        CodeField primaryKeycodeField = fields.stream().filter(e -> e.getPrimaryKeyFlag()).findFirst().get();
+        CodeField primaryKeycodeField = fields.stream().filter(CodeField::getPrimaryKeyFlag).findFirst().orElse(null);
         if (primaryKeycodeField != null) {
             variablesMap.put("primaryKeyJavaType", primaryKeycodeField.getJavaType());
             variablesMap.put("primaryKeyFieldName", primaryKeycodeField.getFieldName());
