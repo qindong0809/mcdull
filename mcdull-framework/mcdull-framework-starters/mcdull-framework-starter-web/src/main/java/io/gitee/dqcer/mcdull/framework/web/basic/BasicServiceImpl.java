@@ -8,10 +8,12 @@ import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 import java.util.function.Predicate;
@@ -24,6 +26,9 @@ import java.util.function.Predicate;
  */
 @SuppressWarnings("all")
 public abstract class BasicServiceImpl<R extends IService> {
+
+    @Resource
+    protected DynamicLocaleMessageSource dynamicLocaleMessageSource;
 
     protected  Logger log = LoggerFactory.getLogger(getClass());
 

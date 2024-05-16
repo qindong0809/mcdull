@@ -58,8 +58,8 @@ public class LoginController implements AuthServiceApi {
         return Result.success(loginService.getCurrentUserInfo());
     }
 
-    @PostMapping("logout")
-    @Operation(summary = "Logout")
+    @Operation(summary = "logout")
+    @GetMapping("/login/logout")
     public Result<Boolean> logout() {
         loginService.logout();
         return Result.success(true);

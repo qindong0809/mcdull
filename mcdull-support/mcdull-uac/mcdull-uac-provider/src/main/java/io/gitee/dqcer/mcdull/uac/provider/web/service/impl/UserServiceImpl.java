@@ -18,6 +18,7 @@ import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
+import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
@@ -117,12 +118,12 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     }
 
     private void setRoleListFieldValue(Map<Long, List<RoleEntity>> roleListMap, UserVO vo) {
-//        Integer id = vo.getUserId();
+//        Long id = vo.getEmployeeId();
 //        List<RoleEntity> list = roleListMap.getOrDefault(id, ListUtil.empty());
 //        if (CollUtil.isNotEmpty(list)) {
-//            List<BaseVO<Integer, String>> roleList = list.stream()
-//                    .map(i -> new BaseVO<>(i.getId(), i.getName())).collect(Collectors.toList());
-//            vo.setRoles(roleList);
+//            List<BaseVO<Long, String>> roleList = list.stream()
+//                    .map(i -> new BaseVO<>(i.getId(), i.getRoleName())).collect(Collectors.toList());
+//            vo.setRoleList(roleList);
 //        }
     }
 

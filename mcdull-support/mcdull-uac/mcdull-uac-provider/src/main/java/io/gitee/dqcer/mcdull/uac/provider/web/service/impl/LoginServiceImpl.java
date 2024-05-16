@@ -6,25 +6,26 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginDeviceEnum;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.ICaptchaService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,15 +48,52 @@ public class LoginServiceImpl implements ILoginService {
     @Resource
     private ICaptchaService captchaService;
 
+    @Resource
+    private ILoginLogService loginLogService;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public LogonVO login(LoginDTO dto) {
-        this.validateCaptcha(dto.getCaptchaCode(), dto.getCaptchaUuid());
-        // 登录前置校验
-        UserEntity userEntity = this.loginPreCheck(dto.getLoginName(), dto.getPassword());
-        StpUtil.login(userEntity.getId(), IEnum.getByCode(LoginDeviceEnum.class, dto.getLoginDevice()).getText());
-        StpUtil.getSession().set(GlobalConstant.ADMINISTRATOR_FLAG, userEntity.getAdministratorFlag());
-        return this.buildLogonVo(userEntity);
+        String message = null;
+        LoginLogResultTypeEnum typeEnum = LoginLogResultTypeEnum.LOGIN_SUCCESS;
+        try {
+            this.validateCaptcha(dto.getCaptchaCode(), dto.getCaptchaUuid());
+            // 登录前置校验
+            UserEntity userEntity = this.loginPreCheck(dto.getLoginName(), dto.getPassword());
+            StpUtil.login(userEntity.getId(), IEnum.getByCode(LoginDeviceEnum.class, dto.getLoginDevice()).getText());
+            StpUtil.getSession().set(GlobalConstant.ADMINISTRATOR_FLAG, userEntity.getAdministratorFlag());
+            return this.buildLogonVo(userEntity);
+        } catch (Exception e) {
+            message = e.getMessage();
+            typeEnum = LoginLogResultTypeEnum.LOGIN_FAIL;
+            throw e;
+        } finally {
+            this.saveLoginLog(dto.getLoginName(), typeEnum, message);
+        }
+    }
+
+    private void saveLoginLog(String loginName, LoginLogResultTypeEnum resultTypeEnum, String remark) {
+        LoginLogEntity log = new LoginLogEntity();
+        log.setLoginName(loginName);
+        log.setLoginIp(IpUtil.getIpAddr(ServletUtil.getRequest()));
+        log.setLoginIpRegion("localhost");
+        log.setLoginResult(resultTypeEnum.getCode());
+        log.setUserAgent(getUserAgent());
+        log.setRemark(remark);
+        loginLogService.add(log);
+    }
+
+    private static String getUserAgent() {
+        HttpServletRequest request = ServletUtil.getRequest();
+        String userAgent = null;
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String element = headerNames.nextElement();
+            if ("User-Agent".equalsIgnoreCase(element)) {
+                userAgent = request.getHeader(element);
+            }
+        }
+        return userAgent;
     }
 
     private LogonVO buildLogonVo(UserEntity userEntity) {
@@ -98,10 +136,15 @@ public class LoginServiceImpl implements ILoginService {
     }
 
 
-
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void logout() {
-        StpUtil.logout(UserContextHolder.currentUserId());
+        Long userId = UserContextHolder.userIdLong();
+        UserEntity user = userService.get(userId);
+        StpUtil.logout(userId);
+        if (ObjUtil.isNotNull(user)) {
+            this.saveLoginLog(user.getLoginName(), LoginLogResultTypeEnum.LOGIN_OUT, StrUtil.EMPTY);
+        }
     }
 
     @Override

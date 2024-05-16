@@ -442,3 +442,19 @@ create table `sys_code_generator_config`  (
 primary key (`id`, `table_name`) using btree,
 unique index `table_unique`(`table_name`) using btree
 ) comment = '代码生成器的每个表的配置' ;
+
+drop table if exists `sys_login_log`;
+create table `sys_login_log`  (
+`id` int(0) not null auto_increment comment '主键',
+`login_name` varchar(512) not null comment '用户id',
+`login_ip` varchar(1000)  null default null comment '用户ip',
+`login_ip_region` varchar(1000)  null default null comment '用户ip地区',
+`user_agent` text  null comment 'user-agent信息',
+`login_result` int(0) not null comment '登录结果：0成功 1失败 2 退出',
+`remark` varchar(2000)  null default null comment '备注',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree,
+index `customer_id`(`login_name`) using btree
+) comment = '用户登录日志';
