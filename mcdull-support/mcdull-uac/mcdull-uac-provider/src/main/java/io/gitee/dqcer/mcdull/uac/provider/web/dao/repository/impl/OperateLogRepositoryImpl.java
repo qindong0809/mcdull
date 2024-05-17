@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.OperateLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ChangeLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.OperateLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.OperateLogMapper;
@@ -27,10 +28,10 @@ public class OperateLogRepositoryImpl extends ServiceImpl<OperateLogMapper, Oper
      * 按条件分页查询
      *
      * @param param 参数
-     * @return {@link Page< ChangeLogEntity >}
+     * @return {@link Page< OperateLogEntity >}
      */
     @Override
-    public Page<OperateLogEntity> selectPage(ChangeLogQueryDTO param) {
+    public Page<OperateLogEntity> selectPage(OperateLogQueryDTO param) {
         LambdaQueryWrapper<OperateLogEntity> lambda = Wrappers.lambdaQuery();
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);

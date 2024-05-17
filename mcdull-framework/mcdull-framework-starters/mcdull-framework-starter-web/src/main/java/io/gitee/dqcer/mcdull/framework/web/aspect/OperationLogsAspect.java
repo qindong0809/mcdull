@@ -18,9 +18,11 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +41,7 @@ public class OperationLogsAspect {
 
     private static final Logger log = LoggerFactory.getLogger(OperationLogsAspect.class);
 
-    @Value("${log.enable:false}")
+    @Value("${log.enable:true}")
     private Boolean logEnable;
 
     /**
@@ -98,9 +100,7 @@ public class OperationLogsAspect {
             String value = request.getHeader(key);
             headers.put(key, value);
         }
-
-        Map<String, String> params = new HashMap<>(16);
-
+        List<Object> params = new ArrayList<>();
         for (Object arg : args) {
             if (ObjUtil.isNull(arg)) {
                 continue;
@@ -114,17 +114,18 @@ public class OperationLogsAspect {
             if (arg instanceof InputStreamSource) {
                 continue;
             }
-            String string = JSONUtil.toJsonStr(arg);
-            params.put(arg.getClass().getName(), string);
+            if (arg instanceof ModelAndView || arg instanceof BindResult) {
+                continue;
+            }
+            params.add(arg);
         }
 
         LogOperationDTO entity = new LogOperationDTO();
-        // FIXME: 2024/4/27 userId int类型是否一直 
         entity.setUserId(UserContextHolder.userId());
         entity.setClientIp(IpUtil.getIpAddr(request));
         entity.setUserAgent(getUserAgent(request));
         entity.setHeaders(JSONUtil.toJsonStr(headers));
-        entity.setParameterMap(JSONUtil.toJsonStr(params).replaceAll("\\\\", ""));
+        entity.setParameterMap(JSONUtil.toJsonStr(params));
         entity.setPath(request.getRequestURI());
         entity.setMethod(request.getMethod());
         entity.setCreatedTime(UserContextHolder.getSession().getNow());

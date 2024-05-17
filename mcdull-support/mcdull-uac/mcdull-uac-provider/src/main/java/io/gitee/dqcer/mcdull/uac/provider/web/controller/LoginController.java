@@ -31,7 +31,7 @@ import java.util.List;
  * @since 2022/12/26
  */
 @RestController
-@Tag(name = "Auth API")
+@Tag(name = "登录认证")
 public class LoginController implements AuthServiceApi {
 
     @Resource
@@ -39,26 +39,26 @@ public class LoginController implements AuthServiceApi {
     @Resource
     private ICaptchaService captchaService;
 
-    @Operation(summary = "Captcha")
+    @Operation(summary = "验证码")
     @GetMapping("/login/getCaptcha")
     @SaIgnore
     public Result<CaptchaVO> getCaptcha() {
         return Result.success(captchaService.get());
     }
 
-    @Operation(summary = "Login")
+    @Operation(summary = "登录")
     @PostMapping("login")
     public Result<LogonVO> login(@RequestBody @Valid LoginDTO dto) {
         return Result.success(loginService.login(dto));
     }
 
     @GetMapping("/current/user-info")
-    @Operation(summary = "Current User Info", description = "角色、权限、个人信息")
+    @Operation(summary = "登录人信息", description = "角色、权限、个人信息")
     public Result<LogonVO> getCurrentUserInfo() {
         return Result.success(loginService.getCurrentUserInfo());
     }
 
-    @Operation(summary = "logout")
+    @Operation(summary = "注销")
     @GetMapping("/login/logout")
     public Result<Boolean> logout() {
         loginService.logout();

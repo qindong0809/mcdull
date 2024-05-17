@@ -22,20 +22,20 @@ import javax.validation.Valid;
 * @since 2024-04-29
 */
 @RestController
-@Tag(name = "Feedback API")
+@Tag(name = "意见反馈")
 @RequestMapping
 public class FeedbackController {
 
     @Resource
     private IFeedbackService feedbackService;
 
-    @Operation(summary = "意见反馈-分页查询")
+    @Operation(summary = "分页查询")
     @PostMapping("/feedback/query")
     public Result<PagedVO<FeedbackVO>> query(@RequestBody @Valid FeedbackQueryDTO dto) {
         return Result.success(feedbackService.query(dto));
     }
 
-    @Operation(summary = "意见反馈-新增")
+    @Operation(summary = "新增")
     @PostMapping("/feedback/add")
     public Result<Boolean> add(@RequestBody @Valid FeedbackAddDTO dto) {
         feedbackService.add(dto);

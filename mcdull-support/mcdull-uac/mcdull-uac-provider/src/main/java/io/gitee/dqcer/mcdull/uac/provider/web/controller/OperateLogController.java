@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 * @since 2024-04-29
 */
 @RestController
-@Tag(name = "Login Log API")
+@Tag(name = "请求监控")
 @RequestMapping
 public class OperateLogController {
 
@@ -30,14 +30,14 @@ public class OperateLogController {
     @PostMapping("/operateLog/page/query")
     @SaCheckPermission("support:operateLog:query")
     public Result<PagedVO<OperateLogVO>> queryByPage(@RequestBody OperateLogQueryDTO dto) {
-        return operateLogService.queryByPage(dto);
+        return Result.success(operateLogService.queryByPage(dto));
     }
 
     @Operation(summary = "详情")
     @GetMapping("/operateLog/detail/{operateLogId}")
     @SaCheckPermission("support:operateLog:detail")
     public Result<OperateLogVO> detail(@PathVariable Long operateLogId) {
-        return operateLogService.detail(operateLogId);
+        return Result.success(operateLogService.detail(operateLogId));
     }
 
 }

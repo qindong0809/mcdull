@@ -27,14 +27,14 @@ import java.io.IOException;
 * @since 2024-04-29
 */
 @RestController
-@Tag(name = "File API")
+@Tag(name = "文件管理")
 @RequestMapping
 public class FileController {
 
     @Resource
     private IFileService fileService;
 
-    @Operation(summary = "Query Page")
+    @Operation(summary = "分页查询")
     @PostMapping("/file/queryPage")
     @SaCheckPermission("support:file:query")
     public Result<PagedVO<FileVO>> queryPage(@RequestBody @Valid FileQueryDTO dto) {
@@ -42,21 +42,21 @@ public class FileController {
     }
 
 
-    @Operation(summary = "Upload File")
+    @Operation(summary = "上传")
     @PostMapping("/file/upload")
     public Result<FileUploadVO> upload(@RequestParam MultipartFile file, @RequestParam Integer folder) {
         return Result.success(fileService.fileUpload(file, folder));
     }
 
-    @Operation(summary = "File Url")
+    @Operation(summary = "获取URL")
     @GetMapping("/file/getFileUrl")
     public Result<String> getUrl(@RequestParam String fileKey) {
         return Result.success(fileService.getFileUrl(fileKey));
     }
 
-    @Operation(summary = "Download File")
+    @Operation(summary = "下载")
     @GetMapping("/file/downLoad")
-    public void downLoad(@RequestParam String fileKey, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void downLoad(@RequestParam String fileKey, HttpServletResponse response) throws IOException {
         String userAgent = null;
         FileDownloadVO fileDownloadVO = fileService.getDownloadFile(fileKey, userAgent);
         // 设置下载消息头

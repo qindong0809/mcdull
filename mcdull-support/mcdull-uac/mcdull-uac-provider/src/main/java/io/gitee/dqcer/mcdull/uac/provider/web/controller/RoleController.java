@@ -22,7 +22,7 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/26
  */
-@Tag(name = "Role API")
+@Tag(name = "角色管理")
 @RestController
 public class RoleController {
 

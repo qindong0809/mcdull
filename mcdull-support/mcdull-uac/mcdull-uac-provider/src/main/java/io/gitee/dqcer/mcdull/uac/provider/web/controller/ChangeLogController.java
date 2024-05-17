@@ -21,7 +21,7 @@ import java.util.List;
 * @since 2024-04-29
 */
 @RestController
-@Tag(name = "Change Log API")
+@Tag(name = "更新日志")
 @RequestMapping
 public class ChangeLogController {
 

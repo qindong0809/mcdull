@@ -26,21 +26,21 @@ import java.util.List;
 * @since 2024-04-29
 */
 @RestController
-@Tag(name = "Config API")
+@Tag(name = "系统配置")
 @RequestMapping
 public class ConfigController {
 
     @Resource
     private IConfigService configService;
 
-    @Operation(summary = "Query")
+    @Operation(summary = "分页查询")
     @PostMapping("/config/query")
     @SaCheckPermission("support:config:query")
     public Result<PagedVO<ConfigVO>> query(@RequestBody @Valid ConfigQueryDTO queryDTO) {
         return Result.success(configService.queryPage(queryDTO));
     }
 
-    @Operation(summary = "Add")
+    @Operation(summary = "添加")
     @PostMapping("/config/add")
     @SaCheckPermission("support:config:add")
     public Result<Boolean> add(@RequestBody @Valid ConfigAddDTO configAddDTO) {
@@ -48,7 +48,7 @@ public class ConfigController {
         return Result.success(true);
     }
 
-    @Operation(summary = "Update")
+    @Operation(summary = "更新")
     @PostMapping("/config/update")
     @SaCheckPermission("support:config:update")
     public Result<Boolean> update(@RequestBody @Valid ConfigUpdateDTO updateDTO) {
@@ -56,7 +56,7 @@ public class ConfigController {
         return Result.success(true);
     }
 
-    @Operation(summary = "Delete")
+    @Operation(summary = "删除")
     @PostMapping("/config/delete")
     @SaCheckPermission("support:config:delete")
     public Result<Boolean> delete(@RequestBody List<Long> configIdList) {

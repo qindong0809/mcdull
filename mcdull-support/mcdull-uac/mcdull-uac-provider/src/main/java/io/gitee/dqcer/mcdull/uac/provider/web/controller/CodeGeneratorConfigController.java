@@ -26,7 +26,7 @@ import java.util.List;
 * @since 2024-04-29
 */
 @RestController
-@Tag(name = "Code Generator Config API")
+@Tag(name = "代码生成")
 @RequestMapping
 public class CodeGeneratorConfigController {
     @Resource
@@ -41,7 +41,7 @@ public class CodeGeneratorConfigController {
         return Result.success(codeGeneratorService.getTableColumns(table));
     }
 
-    @Operation(summary = "查询数据库的表")
+    @Operation(summary = "查询数据库表")
     @PostMapping("/codeGenerator/table/queryTableList")
     @ResponseBody
     public Result<PagedVO<TableVO>> queryTableList(@RequestBody @Valid TableQueryForm tableQueryForm) {
@@ -50,14 +50,14 @@ public class CodeGeneratorConfigController {
 
     // ------------------- 配置 -------------------
 
-    @Operation(summary = "获取表的配置信息")
+    @Operation(summary = "获取配置")
     @GetMapping("/codeGenerator/table/getConfig/{table}")
     @ResponseBody
     public Result<TableConfigVO> getTableConfig(@PathVariable String table) {
         return Result.success(codeGeneratorService.getTableConfig(table));
     }
 
-    @Operation(summary = "更新配置信息")
+    @Operation(summary = "更新配置")
     @PostMapping("/codeGenerator/table/updateConfig")
     @ResponseBody
     public Result<Boolean> updateConfig(@RequestBody @Valid CodeGeneratorConfigForm form) {
@@ -67,14 +67,14 @@ public class CodeGeneratorConfigController {
 
     // ------------------- 生成 -------------------
 
-    @Operation(summary = "Preview")
+    @Operation(summary = "预览")
     @PostMapping("/codeGenerator/code/preview")
     @ResponseBody
     public Result<String> preview(@RequestBody @Valid CodeGeneratorPreviewForm form) {
         return Result.success(codeGeneratorService.preview(form));
     }
 
-    @Operation(summary = "Download")
+    @Operation(summary = "下载")
     @GetMapping(value = "/codeGenerator/code/download/{tableName}", produces = "application/octet-stream")
     public void download(@PathVariable String tableName, HttpServletResponse response) throws IOException {
         byte[] dataStream = codeGeneratorService.download(tableName);

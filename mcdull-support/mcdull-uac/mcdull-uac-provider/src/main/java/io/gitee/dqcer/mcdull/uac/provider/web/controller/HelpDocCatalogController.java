@@ -19,34 +19,34 @@ import java.util.List;
  *
  * @author dqcer
  */
-@Tag(name = "Help Doc Catalog")
+@Tag(name = "帮助文档目录")
 @RestController
 public class HelpDocCatalogController extends BasicController {
 
     @Resource
     private IHelpDocCatalogService helpDocCatalogService;
 
-    @Operation(summary = "帮助文档目录-获取全部")
+    @Operation(summary = "获取全部")
     @GetMapping("/helpDoc/helpDocCatalog/getAll")
     public Result<List<HelpDocCatalogVO>> getAll() {
         return Result.success(helpDocCatalogService.getAll());
     }
 
-    @Operation(summary = "帮助文档目录-添加")
+    @Operation(summary = "添加")
     @PostMapping("/helpDoc/helpDocCatalog/add")
     public Result<Boolean> addHelpDocCatalog(@RequestBody @Valid HelpDocCatalogAddDTO helpDocCatalogAddDTO) {
         helpDocCatalogService.add(helpDocCatalogAddDTO);
         return Result.success(true);
     }
 
-    @Operation(summary = "帮助文档目录-更新")
+    @Operation(summary = "更新")
     @PostMapping("/helpDoc/helpDocCatalog/update")
     public Result<Boolean> updateHelpDocCatalog(@RequestBody @Valid HelpDocCatalogUpdateDTO helpDocCatalogUpdateForm) {
         helpDocCatalogService.update(helpDocCatalogUpdateForm);
         return Result.success(true);
     }
 
-    @Operation(summary = "帮助文档目录-删除")
+    @Operation(summary = "删除")
     @GetMapping("/helpDoc/helpDocCatalog/delete/{helpDocCatalogId}")
     public Result<Boolean> deleteHelpDocCatalog(@PathVariable Long helpDocCatalogId) {
         helpDocCatalogService.delete(helpDocCatalogId);

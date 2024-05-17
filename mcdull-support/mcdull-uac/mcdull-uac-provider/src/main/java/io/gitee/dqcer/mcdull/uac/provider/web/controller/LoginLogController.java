@@ -26,7 +26,7 @@ import java.util.List;
 * @since 2024-04-29
 */
 @RestController
-@Tag(name = "Login Log API")
+@Tag(name = "登录日志")
 @RequestMapping
 public class LoginLogController {
 

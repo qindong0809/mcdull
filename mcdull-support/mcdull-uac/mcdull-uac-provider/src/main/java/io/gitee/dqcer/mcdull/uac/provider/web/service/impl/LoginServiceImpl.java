@@ -20,6 +20,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginDeviceEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
+import io.gitee.dqcer.mcdull.uac.provider.util.Ip2RegionUtil;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,8 +76,9 @@ public class LoginServiceImpl implements ILoginService {
     private void saveLoginLog(String loginName, LoginLogResultTypeEnum resultTypeEnum, String remark) {
         LoginLogEntity log = new LoginLogEntity();
         log.setLoginName(loginName);
-        log.setLoginIp(IpUtil.getIpAddr(ServletUtil.getRequest()));
-        log.setLoginIpRegion("localhost");
+        String ipAddr = IpUtil.getIpAddr(ServletUtil.getRequest());
+        log.setLoginIp(ipAddr);
+        log.setLoginIpRegion(Ip2RegionUtil.getRegion(ipAddr));
         log.setLoginResult(resultTypeEnum.getCode());
         log.setUserAgent(getUserAgent());
         log.setRemark(remark);

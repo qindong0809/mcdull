@@ -28,21 +28,21 @@ import java.util.List;
  *
  * @author dqcer
  */
-@Tag(name = "Help Doc")
+@Tag(name = "帮助文档")
 @RestController
 public class HelpDocController extends BasicController {
 
     @Resource
     private IHelpDocService helpDocService;
 
-    @Operation(summary = "【用户】帮助文档-查看详情")
+    @Operation(summary = "【用户】-查看详情")
     @GetMapping("/helpDoc/user/view/{helpDocId}")
 //    @RepeatSubmit
     public Result<HelpDocDetailVO> view(@PathVariable Long helpDocId) {
         return Result.success(helpDocService.view(helpDocId));
     }
 
-    @Operation(summary = "【用户】帮助文档-查询全部")
+    @Operation(summary = "【用户】-查询全部")
     @GetMapping("/helpDoc/user/queryAllHelpDocList")
 //    @RepeatSubmit
     public Result<List<HelpDocVO>> queryAllHelpDocList() {
@@ -50,28 +50,28 @@ public class HelpDocController extends BasicController {
     }
 
 
-    @Operation(summary = "【用户】帮助文档-查询 查看记录")
+    @Operation(summary = "【用户】-查询 查看记录")
     @PostMapping("/helpDoc/user/queryViewRecord")
 //    @RepeatSubmit
     public Result<PagedVO<HelpDocViewRecordVO>> queryViewRecord(@RequestBody @Valid HelpDocViewRecordQueryDTO dto) {
         return Result.success(helpDocService.queryViewRecord(dto));
     }
 
-    @Operation(summary = "【管理】帮助文档-分页查询")
+    @Operation(summary = "【管理】-分页查询")
     @PostMapping("/helpDoc/query")
     @SaCheckPermission("support:helpDoc:query")
     public Result<PagedVO<HelpDocVO>> query(@RequestBody @Valid HelpDocQueryDTO queryForm) {
         return Result.success(helpDocService.query(queryForm));
     }
 
-    @Operation(summary = "【管理】帮助文档-获取详情")
+    @Operation(summary = "【管理】-获取详情")
     @GetMapping("/helpDoc/getDetail/{helpDocId}")
     @SaCheckPermission("support:helpDoc:add")
     public Result<HelpDocDetailVO> getDetail(@PathVariable Long helpDocId) {
         return Result.success(helpDocService.getDetail(helpDocId));
     }
 
-    @Operation(summary = "【管理】帮助文档-添加")
+    @Operation(summary = "【管理】-添加")
     @PostMapping("/helpDoc/add")
 //    @RepeatSubmit
     public Result<Boolean> add(@RequestBody @Valid HelpDocAddDTO addForm) {
@@ -79,7 +79,7 @@ public class HelpDocController extends BasicController {
          return Result.success(true);
     }
 
-    @Operation(summary = "【管理】帮助文档-更新")
+    @Operation(summary = "【管理】-更新")
     @PostMapping("/helpDoc/update")
 //    @RepeatSubmit
     public Result<Boolean> update(@RequestBody @Valid HelpDocUpdateDTO updateForm) {
@@ -87,14 +87,14 @@ public class HelpDocController extends BasicController {
         return Result.success(true);
     }
 
-    @Operation(summary = "【管理】帮助文档-删除")
+    @Operation(summary = "【管理】-删除")
     @GetMapping("/helpDoc/delete/{helpDocId}")
     public Result<Boolean> delete(@PathVariable Long helpDocId) {
         helpDocService.delete(helpDocId);
         return Result.success(true);
     }
 
-    @Operation(summary = "【管理】帮助文档-根据关联id查询")
+    @Operation(summary = "【管理】-根据关联id查询")
     @GetMapping("/helpDoc/queryHelpDocByRelationId/{relationId}")
     public Result<List<HelpDocVO>> queryHelpDocByRelationId(@PathVariable Long relationId) {
         return Result.success(helpDocService.queryHelpDocByRelationId(relationId));

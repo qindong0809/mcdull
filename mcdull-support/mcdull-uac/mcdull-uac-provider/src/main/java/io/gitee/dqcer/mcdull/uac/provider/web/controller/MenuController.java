@@ -24,7 +24,7 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/26
  */
-@Tag(name = "Menu API")
+@Tag(name = "菜单管理")
 @RequestMapping("menu")
 @RestController
 public class MenuController {
