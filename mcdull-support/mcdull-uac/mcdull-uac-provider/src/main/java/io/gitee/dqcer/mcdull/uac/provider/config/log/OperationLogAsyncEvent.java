@@ -1,22 +1,20 @@
 package io.gitee.dqcer.mcdull.uac.provider.config.log;
 
 import io.gitee.dqcer.mcdull.framework.web.async.BaseAsyncEvent;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.OperateLogEntity;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
 /**
- * 简单的基本事件监听器
- *
  * @author dqcere
  * @since 2023/01/15 16:01:34
  */
 @Component
-public class OperationLogAsyncEvent extends BaseAsyncEvent<LoginLogEntity> {
+public class OperationLogAsyncEvent extends BaseAsyncEvent<OperateLogEntity> {
 
-//    @Resource
-//    private IOperationLog operationLog;
+    @Resource
+    private IOperationLog operationLog;
 
     /**
      * 执行
@@ -24,8 +22,8 @@ public class OperationLogAsyncEvent extends BaseAsyncEvent<LoginLogEntity> {
      * @param t t
      */
     @Override
-    protected void execute(LoginLogEntity t) {
-//        operationLog.save(t);
+    protected void execute(OperateLogEntity t) {
+        operationLog.save(t);
     }
 
 

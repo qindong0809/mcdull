@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.config.log;
 
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.OperateLogEntity;
 
 /**
  * 操作日志
@@ -15,5 +15,5 @@ public interface IOperationLog {
      *
      * @param dto dto
      */
-    void save(LoginLogEntity dto);
+    void save(OperateLogEntity dto);
 }

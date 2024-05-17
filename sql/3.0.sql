@@ -458,3 +458,25 @@ create table `sys_login_log`  (
 primary key (`id`) using btree,
 index `customer_id`(`login_name`) using btree
 ) comment = '用户登录日志';
+
+drop table if exists `sys_operate_log`;
+create table `sys_operate_log`  (
+`id` int(0) not null auto_increment comment '主键',
+`user_id` bigint(0) not null comment '用户id',
+`trace_id` varchar(50) null default null comment 'Trace ID',
+`time_taken` int(0) null default null comment '耗时(ms)',
+`module` varchar(50) null default null comment '操作模块',
+`content` varchar(500) null default null comment '操作内容',
+`url` varchar(100) null default null comment '请求路径',
+`method` varchar(100) null default null comment '请求方法',
+`param` varchar(2048) null comment '请求参数',
+`ip` varchar(255) null default null comment '请求ip',
+`ip_region` varchar(1000) null default null comment '请求ip地区',
+`user_agent` text null comment '请求user-agent',
+`success_flag` tinyint(0) null default null comment '请求结果 0失败 1成功',
+`fail_reason` longtext null comment '失败原因',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree
+) comment = '操作记录';

@@ -1,10 +1,14 @@
 package io.gitee.dqcer.mcdull.uac.provider.config.log;
 
 import cn.hutool.core.convert.Convert;
-import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsService;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.OperateLogEntity;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -32,34 +36,45 @@ public class SimpleOperationLogsAspect implements OperationLogsService {
      */
     @Override
     public boolean needInterceptor(HttpServletRequest request, Method method) {
-//        return method.isAnnotationPresent(OperationLog.class);
-        return method.isAnnotationPresent(Authorized.class);
+        Tag tag = AnnotationUtils.findAnnotation(method.getDeclaringClass(), Tag.class);
+        Operation operation = method.getAnnotation(Operation.class);
+        return ObjUtil.isAllNotEmpty(tag, operation);
     }
 
 
 
     @Override
     public void saveLog(LogOperationDTO dto, Method method) {
-        Authorized annotation = method.getAnnotation(Authorized.class);
-        LoginLogEntity logDO = of(dto);
-        asyncEvent.asyncEvent(logDO);
-
+        Tag tag = AnnotationUtils.findAnnotation(method.getDeclaringClass(), Tag.class);
+        Operation operation = method.getAnnotation(Operation.class);
+        if (ObjUtil.isAllNotEmpty(tag, operation)) {
+            OperateLogEntity entity = this.of(dto, tag.name(), operation.summary());
+            if (ObjUtil.isNotNull(entity)) {
+                asyncEvent.asyncEvent(entity);
+            }
+        }
     }
 
-    private static LoginLogEntity of(LogOperationDTO dto) {
-        LoginLogEntity logDO = new LoginLogEntity();
-//        logDO.setLoginName(Convert.toLong(dto.getUserId()));
-        logDO.setUserAgent(dto.getUserAgent());
-        logDO.setLoginIp(dto.getClientIp());
-        logDO.setLoginIpRegion(dto.getClientIp());
-//        logDO.setPath(dto.getPath());
-//        logDO.setHeaders(dto.getHeaders());
-//        logDO.setParameterMap(dto.getParameterMap());
-//        logDO.setTraceId(dto.getTraceId());
-//        logDO.setCreatedTime(dto.getCreatedTime());
-//        logDO.setTimeTaken(dto.getTimeTaken());
-//        logDO.setMethod(dto.getMethod());
-        return logDO;
 
+    private OperateLogEntity of(LogOperationDTO dto, String name, String summary) {
+        Integer userId = dto.getUserId();
+        if (ObjUtil.isNull(userId)) {
+            return null;
+        }
+        OperateLogEntity entity = new OperateLogEntity();
+        entity.setUserId(Convert.toLong(userId));
+        entity.setModule(name);
+        entity.setContent(summary);
+        entity.setUrl(dto.getPath());
+        entity.setMethod(dto.getMethod());
+        entity.setParam(dto.getParameterMap());
+        entity.setIp(dto.getClientIp());
+        entity.setIpRegion("");
+        entity.setUserAgent(dto.getUserAgent());
+        entity.setSuccessFlag(true);
+        entity.setFailReason(StrUtil.EMPTY);
+        entity.setTraceId(dto.getTraceId());
+        entity.setTimeTaken(Convert.toInt(dto.getTimeTaken()));
+        return entity;
     }
 }
