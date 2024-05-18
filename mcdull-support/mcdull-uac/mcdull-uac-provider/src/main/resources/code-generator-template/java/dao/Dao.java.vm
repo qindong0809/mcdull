@@ -15,9 +15,6 @@ import org.springframework.stereotype.Component;
  * @author ${basic.backendAuthor}
  * @since ${basic.backendDate}
  */
-
-@Mapper
-@Component
 public interface ${name.upperCamel}Dao extends BaseMapper<${name.upperCamel}Entity> {
 
     /**

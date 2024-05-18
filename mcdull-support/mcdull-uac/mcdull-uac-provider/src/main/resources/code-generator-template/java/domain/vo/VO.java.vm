@@ -1,5 +1,6 @@
 package ${packageName};
 
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 #foreach ($importClass in $importPackageList)
 $importClass
 #end
@@ -12,7 +13,7 @@ $importClass
  */
 
 @Data
-public class ${name.upperCamel}VO {
+public class ${name.upperCamel}VO implements VO {
 
 #foreach ($field in $fields)
 

@@ -91,7 +91,7 @@ public class VOVariableService extends CodeGenerateBaseVariableService {
             if (isFile(field.getColumnName(), form)) {
                 finalFieldMap.put("file", "\n    @JsonDeserialize(using = FileKeyVoDeserializer.class)");
                 packageList.add("import com.fasterxml.jackson.databind.annotation.JsonDeserialize;");
-                packageList.add("import net.lab1024.sa.base.common.json.deserializer.FileKeyVoDeserializer;");
+                packageList.add("import io.gitee.dqcer.mcdull.uac.provider.config.FileKeyVoDeserializer;");
             }
 
             packageList.add(getJavaPackageName(codeField.getJavaType()));

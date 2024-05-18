@@ -1,5 +1,6 @@
 package ${packageName};
 
+import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 #foreach ($importClass in $importPackageList)
 $importClass
 #end
@@ -12,7 +13,7 @@ $importClass
  */
 
 @Data
-public class ${name.upperCamel}UpdateForm {
+public class ${name.upperCamel}UpdateForm implements DTO {
 #foreach ($field in $fields)
 
 #if($field.isEnum)

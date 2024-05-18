@@ -3,8 +3,8 @@ package ${packageName};
 #foreach ($importClass in $importPackageList)
 $importClass
 #end
-import net.lab1024.sa.base.common.domain.ResponseDTO;
-import net.lab1024.sa.base.common.domain.PageResult;
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,7 +51,7 @@ public class ${name.upperCamel}Controller {
     #if($deleteInfo.deleteEnum == "Batch" || $deleteInfo.deleteEnum == "SingleAndBatch")
     @Operation(summary = "Batch Delete")
     @PostMapping("/${name.lowerCamel}/batchDelete")
-    public Result<Boolean> batchDelete(@RequestBody ValidateList<${primaryKeyJavaType}> idList) {
+    public Result<Boolean> batchDelete(@RequestBody List<${primaryKeyJavaType}> idList) {
         ${name.lowerCamel}Service.batchDelete(idList);
         return Result.success(true);
     }

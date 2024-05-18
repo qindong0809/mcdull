@@ -6,10 +6,11 @@ $importClass
 import net.lab1024.sa.base.common.util.SmartBeanUtil;
 import net.lab1024.sa.base.common.util.SmartPageUtil;
 import net.lab1024.sa.base.common.domain.ResponseDTO;
-import net.lab1024.sa.base.common.domain.PageResult;
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -34,28 +35,24 @@ public class ${name.upperCamel}Service {
     }
 
 #if($insertAndUpdate.isSupportInsertAndUpdate)
-    public ResponseDTO<String> add(${name.upperCamel}AddForm addForm) {
+    @Transactional(rollbackFor = Exception.class)
+    public void add(${name.upperCamel}AddForm addForm) {
         ${name.upperCamel}Entity ${name.lowerCamel}Entity = SmartBeanUtil.copy(addForm, ${name.upperCamel}Entity.class);
         ${name.lowerCamel}Dao.insert(${name.lowerCamel}Entity);
-        return ResponseDTO.ok();
     }
 
 
-    public ResponseDTO<String> update(${name.upperCamel}UpdateForm updateForm) {
+    @Transactional(rollbackFor = Exception.class)
+    public void update(${name.upperCamel}UpdateForm updateForm) {
         ${name.upperCamel}Entity ${name.lowerCamel}Entity = SmartBeanUtil.copy(updateForm, ${name.upperCamel}Entity.class);
         ${name.lowerCamel}Dao.updateById(${name.lowerCamel}Entity);
-        return ResponseDTO.ok();
     }
 #end
 
 #if($deleteInfo.isSupportDelete)
     #if($deleteInfo.deleteEnum == "BATCH" || $deleteInfo.deleteEnum == "SingleAndBatch")
-
-    public ResponseDTO<String> batchDelete(List<${primaryKeyJavaType}> idList) {
-        if (CollectionUtils.isEmpty(idList)){
-            return ResponseDTO.ok();
-        }
-
+    @Transactional(rollbackFor = Exception.class)
+    public void batchDelete(List<${primaryKeyJavaType}> idList) {
 ### 真删除 or 假删除
 #if(!${deleteInfo.isPhysicallyDeleted})
         ${name.lowerCamel}Dao.batchUpdateDeleted(idList, true);
@@ -67,11 +64,8 @@ public class ${name.upperCamel}Service {
     #end
 
     #if($deleteInfo.deleteEnum == "Single" || $deleteInfo.deleteEnum == "SingleAndBatch")
-    public ResponseDTO<String> delete(${primaryKeyJavaType} ${primaryKeyFieldName}) {
-        if (null == ${primaryKeyFieldName}){
-            return ResponseDTO.ok();
-        }
-
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(${primaryKeyJavaType} ${primaryKeyFieldName}) {
 ### 真删除 or 假删除
 #if(!${deleteInfo.isPhysicallyDeleted})
         ${name.lowerCamel}Dao.updateDeleted(${primaryKeyFieldName},true);
@@ -79,7 +73,6 @@ public class ${name.upperCamel}Service {
 #if(${deleteInfo.isPhysicallyDeleted})
         ${name.lowerCamel}Dao.deleteById(${primaryKeyFieldName});
 #end
-        return ResponseDTO.ok();
     }
     #end
 #end

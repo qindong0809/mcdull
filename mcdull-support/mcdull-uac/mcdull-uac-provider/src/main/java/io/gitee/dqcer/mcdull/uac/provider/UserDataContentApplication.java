@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserDataContentApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(UserDataContentApplication.class, args);
+//        SpringApplication.run(UserDataContentApplication.class, args);
         SpringApplication application = new SpringApplication(UserDataContentApplication.class);
         application.addListeners(new Ip2RegionListener());
         application.run(args);
