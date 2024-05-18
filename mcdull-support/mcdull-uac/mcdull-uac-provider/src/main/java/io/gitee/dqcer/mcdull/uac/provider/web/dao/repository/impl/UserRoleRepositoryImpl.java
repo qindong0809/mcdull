@@ -76,16 +76,11 @@ public class UserRoleRepositoryImpl extends ServiceImpl<RoleUserMapper, RoleUser
         if (ObjUtil.isNull(roleIds)) {
             return;
         }
-        List<RoleUserEntity> entities = new ArrayList<>();
         for (Long roleId : roleIds) {
             RoleUserEntity entity = new RoleUserEntity();
             entity.setRoleId(roleId);
             entity.setUserId(userId);
-            entities.add(entity);
-        }
-        boolean saveBatch = saveBatch(entities);
-        if (!saveBatch) {
-            throw new DatabaseRowException(CodeEnum.DB_ERROR);
+            baseMapper.insert(entity);
         }
     }
 

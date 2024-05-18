@@ -20,10 +20,11 @@ public interface IUserRepository extends IService<UserEntity> {
     /**
      * 分页查询
      *
-     * @param dto dto
+     * @param dto        dto
+     * @param deptIdList
      * @return {@link Page}<{@link UserEntity}>
      */
-    Page<UserEntity> selectPage(UserListDTO dto);
+    Page<UserEntity> selectPage(UserListDTO dto, List<Long> deptIdList);
 
     /**
      * 插入

@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,6 +12,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.DepartmentMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,5 +51,26 @@ public class DepartmentRepositoryImpl extends ServiceImpl<DepartmentMapper, Depa
     @Override
     public List<DepartmentEntity> all() {
         return baseMapper.selectList(null);
+    }
+
+
+    @Override
+    public List<DepartmentEntity> getTreeList(Long parentDeptId) {
+        return this.getChildNodeByParentId(parentDeptId);
+    }
+
+    private List<DepartmentEntity> getChildNodeByParentId(Long parentId) {
+        List<DepartmentEntity> result = new ArrayList<>();
+        List<DepartmentEntity> list = this.listByParentId(parentId);
+        if (CollUtil.isNotEmpty(list)) {
+            result.addAll(list);
+            for (DepartmentEntity entity : list) {
+                List<DepartmentEntity> childNodeList = getChildNodeByParentId(entity.getId());
+                if (CollUtil.isNotEmpty(childNodeList)) {
+                    result.addAll(childNodeList);
+                }
+            }
+        }
+        return result;
     }
 }

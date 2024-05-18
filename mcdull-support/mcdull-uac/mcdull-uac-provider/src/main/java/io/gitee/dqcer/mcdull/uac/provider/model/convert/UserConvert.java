@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.convert;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
@@ -24,15 +25,19 @@ public class UserConvert {
      */
     public static UserVO entityToVO(UserEntity entity) {
         UserVO userVO = new UserVO();
-        userVO.setEmployeeId(entity.getId());
+        Long userId = entity.getId();
+        userVO.setEmployeeId(Convert.toInt(userId));
         userVO.setLoginName(entity.getLoginName());
         userVO.setLoginPwd(entity.getLoginPwd());
         userVO.setActualName(entity.getActualName());
         userVO.setGender(entity.getGender());
         userVO.setPhone(entity.getPhone());
-        userVO.setDepartmentId(entity.getDepartmentId());
+        Long departmentId = entity.getDepartmentId();
+        userVO.setDepartmentId(Convert.toInt(departmentId));
         userVO.setAdministratorFlag(entity.getAdministratorFlag());
         userVO.setRemark(entity.getRemark());
+        userVO.setCreatedTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
+        userVO.setUpdatedTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
         return userVO;
     }
 
@@ -48,13 +53,15 @@ public class UserConvert {
     }
 
     public static UserEntity updateDtoToEntity(UserUpdateDTO dto) {
-        UserEntity entity = new UserEntity();
-        entity.setLoginName(dto.getLoginName());
-        entity.setGender(dto.getGender());
-        entity.setPhone(dto.getPhone());
-        entity.setDepartmentId(dto.getDepartmentId());
-        return entity;
-
+        UserEntity userEntity = new UserEntity();
+        userEntity.setLoginName(dto.getLoginName());
+        userEntity.setActualName(dto.getActualName());
+        userEntity.setGender(dto.getGender());
+        userEntity.setPhone(dto.getPhone());
+        userEntity.setDepartmentId(dto.getDepartmentId());
+        userEntity.setInactive(dto.getDisabledFlag());
+        userEntity.setId(dto.getEmployeeId());
+        return userEntity;
     }
 
     public static UserAllVO entityToAllVO(UserEntity userEntity) {

@@ -34,7 +34,7 @@ public class TableColumnController extends BasicController {
 
     @Operation(summary = "恢复默认（删除） ")
     @GetMapping("/tableColumn/delete/{tableId}")
-    @RedisLock(key = "'lock:uac:user:' + #dto.tableId", timeout = 3)
+    @RedisLock(key = "'lock:uac:user:' + #tableId", timeout = 3)
     public Result<Boolean> deleteTableColumn(@PathVariable Integer tableId) {
         tableColumnService.deleteTableColumn(tableId);
         return Result.success(true);

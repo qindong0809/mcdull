@@ -163,6 +163,7 @@ public class DepartmentServiceImpl extends BasicServiceImpl<IDepartmentRepositor
     }
 
 
+
     public static List<DepartmentTreeVO> convertTreeSelect(List<Tree<Integer>> list) {
         List<DepartmentTreeVO> voList = new ArrayList<>();
         for (Tree<Integer> longTree : list) {

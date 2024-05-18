@@ -222,8 +222,7 @@ create table `sys_role_user`  (
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
-primary key (`id`) using btree,
-unique index `uk_role_employee`(`role_id`, `user_id`) using btree
+primary key (`id`) using btree
 ) comment = '角色用户';
 
 drop table if exists `sys_role_data_scope`;

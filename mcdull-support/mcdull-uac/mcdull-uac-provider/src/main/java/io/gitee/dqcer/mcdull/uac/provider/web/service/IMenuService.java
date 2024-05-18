@@ -1,12 +1,11 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
-import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuInsertDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.MenuTreeVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.MenuVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.PermissionRouterVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleMenuTreeVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleMenuVO;
 
@@ -25,11 +24,11 @@ public interface IMenuService {
 
     List<MenuVO> list(MenuListDTO dto);
 
-    boolean insert(MenuInsertDTO dto);
+    void insert(MenuAddDTO dto);
 
-    boolean update(Long id, MenuUpdateDTO dto);
+    void update(MenuUpdateDTO dto);
 
-    boolean delete(Long id, ReasonDTO dto);
+    void delete(List<Long> menuIdList);
 
     List<RoleMenuVO> roleMenuList();
 
@@ -38,4 +37,6 @@ public interface IMenuService {
     List<MenuVO> getList(Long userId, boolean administratorFlag);
 
     RoleMenuTreeVO getTreeRoleId(Long roleId);
+
+    List<MenuTreeVO> queryMenuTree(Boolean onlyMenu);
 }

@@ -29,7 +29,7 @@ public class MenuVO implements VO {
 
     private String component;
 
-    private String permsType;
+    private Integer permsType;
 
     private String apiPerms;
 

@@ -36,4 +36,6 @@ public interface IMenuRepository extends IService<MenuEntity> {
     boolean delete(Long id, String reason);
 
     Map<Long, List<MenuEntity>> getMenuListMap(Map<Long, List<Long>> menuListMap);
+
+    List<MenuEntity> listOnlyMenu(Boolean onlyMenu);
 }

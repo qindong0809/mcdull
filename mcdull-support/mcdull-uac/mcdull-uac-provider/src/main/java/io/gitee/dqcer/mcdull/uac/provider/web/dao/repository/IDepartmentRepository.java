@@ -19,5 +19,7 @@ public interface IDepartmentRepository extends IService<DepartmentEntity> {
     List<DepartmentEntity> listByParentId(Long parentId);
 
     List<DepartmentEntity> all();
+
+    List<DepartmentEntity> getTreeList(Long departmentId);
 }
 

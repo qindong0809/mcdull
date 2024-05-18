@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -164,6 +165,16 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuEntity> impl
             }
         }
         return Collections.emptyMap();
+    }
+
+    @Override
+    public List<MenuEntity> listOnlyMenu(Boolean onlyMenu) {
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        if (BooleanUtil.isTrue(onlyMenu)) {
+            query.in(MenuEntity::getMenuType, ListUtil.of(MenuTypeEnum.MENU.getCode(), MenuTypeEnum.CATALOG.getCode()));
+        }
+        query.eq(BaseEntity::getInactive, false);
+        return baseMapper.selectList(query);
     }
 
     private List<MenuEntity> getMenuList(Map<Long, List<Long>> menuListMap) {

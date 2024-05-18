@@ -18,7 +18,6 @@ import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
-import io.gitee.dqcer.mcdull.framework.base.vo.BaseVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
@@ -31,10 +30,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserRoleService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,7 +103,16 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     @Override
     @Transactional(readOnly = true)
     public PagedVO<UserVO> listByPage(UserListDTO dto) {
-        Page<UserEntity> entityPage = baseRepository.selectPage(dto);
+        Long departmentId = dto.getDepartmentId();
+        List<Long> deptIdList = new ArrayList<>();
+        if (ObjUtil.isNotNull(departmentId)) {
+           List<DepartmentEntity> entityList = departmentRepository.getTreeList(departmentId);
+            if (CollUtil.isNotEmpty(entityList)) {
+                deptIdList = entityList.stream().map(BaseEntity::getId).collect(Collectors.toList());
+            }
+            deptIdList.add(departmentId);
+        }
+        Page<UserEntity> entityPage = baseRepository.selectPage(dto, deptIdList);
         List<UserVO> voList = new ArrayList<>();
         List<UserEntity> userList = entityPage.getRecords();
         if (entityPage.getTotal() == GlobalConstant.Number.NUMBER_0) {
@@ -117,14 +122,15 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         return PageUtil.toPage(voList, entityPage);
     }
 
-    private void setRoleListFieldValue(Map<Long, List<RoleEntity>> roleListMap, UserVO vo) {
-//        Long id = vo.getEmployeeId();
-//        List<RoleEntity> list = roleListMap.getOrDefault(id, ListUtil.empty());
-//        if (CollUtil.isNotEmpty(list)) {
-//            List<BaseVO<Long, String>> roleList = list.stream()
-//                    .map(i -> new BaseVO<>(i.getId(), i.getRoleName())).collect(Collectors.toList());
-//            vo.setRoleList(roleList);
-//        }
+    private void setRoleListFieldValue(Map<Long, List<RoleEntity>> roleListMap, UserVO vo, Long userId ) {
+        List<RoleEntity> list = roleListMap.getOrDefault(userId, ListUtil.empty());
+        if (CollUtil.isNotEmpty(list)) {
+            List<Long> collect = list.stream().map(IdEntity::getId).collect(Collectors.toList());
+            List<Integer> roleIdLis = new ArrayList<>();
+            collect.forEach(r -> roleIdLis.add(Convert.toInt(r)));
+            vo.setRoleIdList(roleIdLis);
+            vo.setRoleNameList(list.stream().map(RoleEntity::getRoleName).collect(Collectors.toList()));
+        }
     }
 
     private void setUserFieldValue(Map<Long, UserEntity> userMap, UserVO vo) {
@@ -398,17 +404,31 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         if (CollUtil.isNotEmpty(list)) {
             userMap = list.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
         }
-
         List<Long> userIdList = userList.stream().map(IdEntity::getId).collect(Collectors.toList());
         Map<Long, List<RoleEntity>> roleListMap = roleService.getRoleMap(userIdList);
+
+
+        Set<Long> depIdSet = userList.stream().map(UserEntity::getDepartmentId).collect(Collectors.toSet());
+        List<DepartmentEntity> departmentEntities = departmentRepository.listByIds(new ArrayList(depIdSet));
+        Map<Long, DepartmentEntity> deptMap = departmentEntities.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
 
         for (UserEntity entity : userList) {
             UserVO vo = UserConvert.entityToVO(entity);
             this.setUserFieldValue(userMap, vo);
-            this.setRoleListFieldValue(roleListMap, vo);
+            this.setRoleListFieldValue(roleListMap, vo, entity.getId());
+            this.setDeptFieldValue(deptMap, entity.getDepartmentId(),vo);
             voList.add(vo);
         }
         return voList;
+    }
+
+    private void setDeptFieldValue(Map<Long, DepartmentEntity> deptMap, Long departmentId, UserVO vo) {
+        if (ObjUtil.isNotNull(departmentId)) {
+            DepartmentEntity departmentEntity = deptMap.get(departmentId);
+            if (ObjUtil.isNotNull(departmentEntity)) {
+                vo.setDepartmentName(departmentEntity.getName());
+            }
+        }
     }
 
 

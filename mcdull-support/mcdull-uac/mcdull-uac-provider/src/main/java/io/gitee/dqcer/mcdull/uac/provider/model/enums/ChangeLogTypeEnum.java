@@ -30,16 +30,7 @@ public enum ChangeLogTypeEnum implements IEnum<Integer> {
     }
 
     public static ChangeLogTypeEnum toEnum(Integer code) {
-        switch (code) {
-            case 1:
-                return ChangeLogTypeEnum.MAJOR_UPDATE;
-            case 2:
-                return ChangeLogTypeEnum.FUNCTION_UPDATE;
-            case 3:
-                return ChangeLogTypeEnum.BUG_FIX;
-            default:
-                throw new IllegalArgumentException("invalid value , only [1, 2, 3] is allowed");
-        }
+        return IEnum.getByCode(ChangeLogTypeEnum.class, code);
     }
 
 }

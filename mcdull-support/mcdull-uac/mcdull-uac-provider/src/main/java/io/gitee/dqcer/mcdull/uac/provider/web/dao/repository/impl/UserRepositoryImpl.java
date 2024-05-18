@@ -25,23 +25,14 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 用户 数据库操作实现层
- *
  * @author dqcer
  * @since 2022/12/25
  */
 @Service
 public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> implements IUserRepository {
 
-    /**
-     * 分页查询
-     *
-     * @param dto dto
-     * @return {@link Page}<{@link UserEntity}>
-     */
-
     @Override
-    public Page<UserEntity> selectPage(UserListDTO dto) {
+    public Page<UserEntity> selectPage(UserListDTO dto, List<Long> deptIdList) {
         LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
         String keyword = dto.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
@@ -49,9 +40,8 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
                     .or().like(UserEntity::getPhone, keyword)
             );
         }
-        Long departmentId = dto.getDepartmentId();
-        if (ObjUtil.isNotNull(departmentId)) {
-            query.eq(UserEntity::getDepartmentId, departmentId);
+        if (CollUtil.isNotEmpty(deptIdList)) {
+            query.in(UserEntity::getDepartmentId, deptIdList);
         }
         Boolean disabledFlag = dto.getDisabledFlag();
         if (ObjUtil.isNotNull(disabledFlag)) {

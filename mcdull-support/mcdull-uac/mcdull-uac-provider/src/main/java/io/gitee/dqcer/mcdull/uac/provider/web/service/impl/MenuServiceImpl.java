@@ -15,7 +15,7 @@ import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.MenuConvert;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuInsertDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
@@ -82,9 +82,8 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean insert(MenuInsertDTO dto) {
+    public void insert(MenuAddDTO dto) {
         Long parentId = dto.getParentId();
-
         List<MenuEntity> childList = baseRepository.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
             boolean anyMatch = childList.stream().anyMatch(i -> i.getMenuName().equals(dto.getMenuName()));
@@ -93,12 +92,17 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
             }
         }
         MenuEntity menu = this.convertToEntity(dto);
-        return baseRepository.save(menu);
+        baseRepository.save(menu);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean update(Long id, MenuUpdateDTO dto) {
+    public void update(MenuUpdateDTO dto) {
+        Long id = dto.getMenuId();
+        MenuEntity entity = baseRepository.getById(id);
+        if (ObjUtil.isNull(entity)) {
+            this.throwDataNotExistException(id);
+        }
         Long parentId = dto.getParentId();
         List<MenuEntity> childList = baseRepository.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
@@ -108,15 +112,18 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
                 throw new BusinessException(I18nConstants.NAME_DUPLICATED);
             }
         }
-        MenuEntity menu = this.convertToEntity(dto);
-        menu.setId(id);
-        return baseRepository.updateById(menu);
+        MenuEntity menu = this.setUpdateField(dto, entity);
+        baseRepository.updateById(menu);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean delete(Long id, ReasonDTO dto) {
-        return baseRepository.delete(id, dto.getReason());
+    public void delete(List<Long> menuIdList) {
+        List<MenuEntity> entityList = baseRepository.listByIds(menuIdList);
+        if (entityList.size() != menuIdList.size()) {
+            this.throwDataNotExistException(menuIdList);
+        }
+        baseRepository.removeBatchByIds(menuIdList);
     }
 
     @Override
@@ -153,44 +160,44 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         return roleMenuVO;
     }
 
-    private MenuEntity convertToEntity(MenuUpdateDTO dto) {
-        MenuEntity entity = new MenuEntity();
-        entity.setMenuName(dto.getMenuName());
-        entity.setMenuType(dto.getMenuType());
-        entity.setParentId(dto.getParentId());
-        entity.setSort(dto.getSort());
-        entity.setPath(dto.getPath());
-        entity.setComponent(dto.getComponent());
-        entity.setPermsType(dto.getPermsType());
-        entity.setApiPerms(dto.getApiPerms());
-        entity.setWebPerms(dto.getWebPerms());
-        entity.setIcon(dto.getIcon());
-        entity.setContextMenuId(dto.getContextMenuId());
-        entity.setFrameFlag(dto.getFrameFlag());
-        entity.setFrameUrl(dto.getFrameUrl());
-        entity.setCacheFlag(dto.getCacheFlag());
-        entity.setVisibleFlag(dto.getVisibleFlag());
-        return entity;
+    private MenuEntity setUpdateField(MenuUpdateDTO dto, MenuEntity menuEntity) {
+        menuEntity.setMenuName(dto.getMenuName());
+        menuEntity.setMenuType(dto.getMenuType());
+        menuEntity.setParentId(dto.getParentId());
+        menuEntity.setSort(dto.getSort());
+        menuEntity.setPath(dto.getPath());
+        menuEntity.setComponent(dto.getComponent());
+        menuEntity.setPermsType(dto.getPermsType());
+        menuEntity.setApiPerms(dto.getApiPerms());
+        menuEntity.setWebPerms(dto.getWebPerms());
+        menuEntity.setIcon(dto.getIcon());
+        menuEntity.setContextMenuId(dto.getContextMenuId());
+        menuEntity.setFrameFlag(dto.getFrameFlag());
+        menuEntity.setFrameUrl(dto.getFrameUrl());
+        menuEntity.setCacheFlag(dto.getCacheFlag());
+        menuEntity.setVisibleFlag(dto.getVisibleFlag());
+        return menuEntity;
     }
 
-    private MenuEntity convertToEntity(MenuInsertDTO dto) {
-        MenuEntity entity = new MenuEntity();
-        entity.setMenuName(dto.getMenuName());
-        entity.setMenuType(dto.getMenuType());
-        entity.setParentId(dto.getParentId());
-        entity.setSort(dto.getSort());
-        entity.setPath(dto.getPath());
-        entity.setComponent(dto.getComponent());
-        entity.setPermsType(dto.getPermsType());
-        entity.setApiPerms(dto.getApiPerms());
-        entity.setWebPerms(dto.getWebPerms());
-        entity.setIcon(dto.getIcon());
-        entity.setContextMenuId(dto.getContextMenuId());
-        entity.setFrameFlag(dto.getFrameFlag());
-        entity.setFrameUrl(dto.getFrameUrl());
-        entity.setCacheFlag(dto.getCacheFlag());
-        entity.setVisibleFlag(dto.getVisibleFlag());
-        return entity;
+    private MenuEntity convertToEntity(MenuAddDTO dto) {
+        MenuEntity menuEntity = new MenuEntity();
+        menuEntity.setMenuName(dto.getMenuName());
+        menuEntity.setMenuType(dto.getMenuType());
+        menuEntity.setParentId(dto.getParentId());
+        menuEntity.setSort(dto.getSort());
+        menuEntity.setPath(dto.getPath());
+        menuEntity.setComponent(dto.getComponent());
+        menuEntity.setPermsType(dto.getPermsType());
+        menuEntity.setApiPerms(dto.getApiPerms());
+        menuEntity.setWebPerms(dto.getWebPerms());
+        menuEntity.setIcon(dto.getIcon());
+        menuEntity.setContextMenuId(dto.getContextMenuId());
+        menuEntity.setFrameFlag(dto.getFrameFlag());
+        menuEntity.setFrameUrl(dto.getFrameUrl());
+        menuEntity.setCacheFlag(dto.getCacheFlag());
+        menuEntity.setVisibleFlag(dto.getVisibleFlag());
+        return menuEntity;
+
     }
 
     private List<Tree<Long>> getTrees(List<MenuEntity> menuList) {
@@ -350,5 +357,53 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         }
 
         return null;
+    }
+
+    @Override
+    public List<MenuTreeVO> queryMenuTree(Boolean onlyMenu) {
+        List<MenuEntity> list = baseRepository.listOnlyMenu(onlyMenu);
+        List<Tree<Long>> integerTree = this.getTrees(list);
+        return this.convertMenuTreeVO(integerTree);
+    }
+
+    public List<MenuTreeVO> convertMenuTreeVO(List<Tree<Long>> treeList) {
+        if (CollUtil.isEmpty(treeList)) {
+            return Collections.emptyList();
+        }
+        List<MenuTreeVO> list = new ArrayList<>();
+        for (Tree<Long> tree : treeList) {
+            MenuTreeVO vo = this.convertTreeVO(tree);
+            if (ObjUtil.isNotNull(vo)) {
+                list.add(vo);
+            }
+        }
+        return list;
+    }
+
+    private MenuTreeVO convertTreeVO(Tree<Long> tree) {
+        if (ObjUtil.isNull(tree)) {
+            return null;
+        }
+        MenuTreeVO routerVO = new MenuTreeVO();
+        routerVO.setMenuId(Convert.toInt(tree.getId()));
+        routerVO.setParentId(Convert.toInt(tree.getParentId()));
+        routerVO.setMenuName(String.valueOf(tree.getName()));
+        routerVO.setMenuType(Convert.toInt(tree.get("menuType")));
+        routerVO.setContextMenuId(Convert.toInt(tree.get("contextMenuId")));
+        List<Tree<Long>> children = tree.getChildren();
+        if (CollUtil.isNotEmpty(children)) {
+            List<MenuTreeVO> childVOList = new ArrayList<>();
+
+            for (Tree<Long> childTree : children) {
+                MenuTreeVO childVO = this.convertTreeVO(childTree);
+                if (ObjUtil.isNotNull(childVO)) {
+                    childVOList.add(childVO);
+                }
+            }
+            if (CollUtil.isNotEmpty(childVOList)) {
+                routerVO.setChildren(childVOList);
+            }
+        }
+        return routerVO;
     }
 }

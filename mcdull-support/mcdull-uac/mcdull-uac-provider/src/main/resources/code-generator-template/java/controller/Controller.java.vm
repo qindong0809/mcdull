@@ -27,21 +27,23 @@ public class ${name.upperCamel}Controller {
 
     @Operation(summary = "Query page")
     @PostMapping("/${name.lowerCamel}/queryPage")
-    public ResponseDTO<PageResult<${name.upperCamel}VO>> queryPage(@RequestBody @Valid ${name.upperCamel}QueryForm queryForm) {
-        return ResponseDTO.ok(${name.lowerCamel}Service.queryPage(queryForm));
+    public Result<PagedVO<${name.upperCamel}VO>> queryPage(@RequestBody @Valid ${name.upperCamel}QueryForm queryForm) {
+        return Result.success(${name.lowerCamel}Service.queryPage(queryForm));
     }
 
 #if($insertAndUpdate.isSupportInsertAndUpdate)
     @Operation(summary = "Add")
     @PostMapping("/${name.lowerCamel}/add")
-    public ResponseDTO<String> add(@RequestBody @Valid ${name.upperCamel}AddForm addForm) {
-        return ${name.lowerCamel}Service.add(addForm);
+    public Result<Boolean> add(@RequestBody @Valid ${name.upperCamel}AddForm dto) {
+        ${name.lowerCamel}Service.add(dto);
+        return Result.success(true);
     }
 
     @Operation(summary = "Update")
     @PostMapping("/${name.lowerCamel}/update")
-    public ResponseDTO<String> update(@RequestBody @Valid ${name.upperCamel}UpdateForm updateForm) {
-        return ${name.lowerCamel}Service.update(updateForm);
+    public Result<Boolean> update(@RequestBody @Valid ${name.upperCamel}UpdateForm dto) {
+        ${name.lowerCamel}Service.update(dto);
+        return Result.success(true);
     }
 #end
 
@@ -49,16 +51,18 @@ public class ${name.upperCamel}Controller {
     #if($deleteInfo.deleteEnum == "Batch" || $deleteInfo.deleteEnum == "SingleAndBatch")
     @Operation(summary = "Batch Delete")
     @PostMapping("/${name.lowerCamel}/batchDelete")
-    public ResponseDTO<String> batchDelete(@RequestBody ValidateList<${primaryKeyJavaType}> idList) {
-        return ${name.lowerCamel}Service.batchDelete(idList);
+    public Result<Boolean> batchDelete(@RequestBody ValidateList<${primaryKeyJavaType}> idList) {
+        ${name.lowerCamel}Service.batchDelete(idList);
+        return Result.success(true);
     }
     #end
 
     #if($deleteInfo.deleteEnum == "Single" || $deleteInfo.deleteEnum == "SingleAndBatch")
     @Operation(summary = "Single Delete")
     @GetMapping("/${name.lowerCamel}/delete/{${primaryKeyFieldName}}")
-    public ResponseDTO<String> batchDelete(@PathVariable ${primaryKeyJavaType} ${primaryKeyFieldName}) {
-        return ${name.lowerCamel}Service.delete(${primaryKeyFieldName});
+    public Result<Boolean> batchDelete(@PathVariable ${primaryKeyJavaType} ${primaryKeyFieldName}) {
+        ${name.lowerCamel}Service.delete(${primaryKeyFieldName});
+        return Result.success(true);
     }
     #end
 #end
