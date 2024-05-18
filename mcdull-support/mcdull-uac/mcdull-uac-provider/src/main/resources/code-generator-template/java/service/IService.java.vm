@@ -1,0 +1,28 @@
+package ${packageName};
+
+#foreach ($importClass in $importPackageList)
+$importClass
+#end
+
+
+/**
+ * ${basic.description} 业务接口类
+ *
+ * @author ${basic.backendAuthor}
+ * @since ${basic.backendDate}
+ */
+
+public interface I${name.upperCamel}Service {
+
+    void insert(${name.upperCamel}AddDTO dto);
+
+    void update(${name.upperCamel}UpdateDTO dto);
+
+    ${name.upperCamel}VO detail(Integer id);
+
+    void deleteById(Integer id);
+
+    List<${name.upperCamel}VO>> queryByIds(List<Integer> ids);
+
+    PagedVO<${name.upperCamel}VO>> listByPage(${name.upperCamel}QueryDTO dto);
+}

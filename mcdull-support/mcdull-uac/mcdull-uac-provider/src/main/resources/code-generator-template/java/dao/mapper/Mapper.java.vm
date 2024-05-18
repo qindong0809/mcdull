@@ -1,0 +1,20 @@
+package ${packageName};
+
+#foreach ($importClass in $importPackageList)
+$importClass
+#end
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
+
+/**
+ * ${basic.description} Dao
+ *
+ * @author ${basic.backendAuthor}
+ * @since ${basic.backendDate}
+ */
+public interface ${name.upperCamel}Mapper extends BaseMapper<${name.upperCamel}Entity> {
+
+}

@@ -1,0 +1,116 @@
+package ${packageName};
+
+#foreach ($importClass in $importPackageList)
+$importClass
+#end
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+
+/**
+ * ${basic.description} Service
+ *
+ * @author ${basic.backendAuthor}
+ * @since ${basic.backendDate}
+ */
+
+@Service
+public class ${name.upperCamel}ServiceImpl
+        extends BasicServiceImpl<I${name.upperCamel}Repository> implements ${name.upperCamel}Service {
+
+    public PagedVO<${name.upperCamel}VO> queryPage(${name.upperCamel}QueryDTO dto) {
+        List<${name.upperCamel}VO> voList = new ArrayList<>();
+        List<${name.upperCamel}Entity> list = baseRepository.queryPage(queryForm);
+        List<LoginLogEntity> recordList = entityPage.getRecords();
+        if (CollUtil.isNotEmpty(recordList)) {
+            for (${name.upperCamel}Entity entity : recordList) {
+                ${name.upperCamel}VO vo = this.convertToVO(entity);
+                voList.add(vo);
+            }
+        }
+        return PageUtil.toPage(voList, entityPage);
+    }
+
+    private ${name.upperCamel}VO convertToVO(${name.upperCamel}Entity item){
+        ${name.upperCamel}VO vo = new ${name.upperCamel}VO();
+        #foreach($field in $fields)
+            #if($field.propertyType == "boolean")
+                #set($getprefix = "is")
+            #else
+                #set($getprefix = "get")
+            #end
+        vo.set${field.fieldName}(item.${getprefix}${field.fieldName}());
+        #end
+        return vo;
+    }
+
+    private void setUpdateFieldValue(${name.upperCamel}UpdateDTO item, ${name.upperCamel}Entity entity){
+        #foreach($field in $fields)
+            #if($field.propertyType == "boolean")
+                #set($getprefix = "is")
+            #else
+                #set($getprefix = "get")
+            #end
+        entity.set${field.fieldName}(item.${getprefix}${field.fieldName}());
+        #end
+    }
+
+    private ${name.upperCamel}Entity convertToEntity(${name.upperCamel}AddDTO item){
+            ${name.upperCamel}Entity entity = new ${name.upperCamel}Entity();
+        #foreach($field in $fields)
+            #if($field.propertyType == "boolean")
+                #set($getprefix = "is")
+            #else
+                #set($getprefix = "get")
+            #end
+        entity.set${field.fieldName}(item.${getprefix}${field.fieldName}());
+        #end
+        return entity;
+    }
+
+#if($insertAndUpdate.isSupportInsertAndUpdate)
+    @Transactional(rollbackFor = Exception.class)
+    public void add(${name.upperCamel}AddDTO dto) {
+        ${name.upperCamel}Entity entity = this.convertToEntity(dto);
+        baseRepository.insert(${name.lowerCamel}Entity);
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    public void update(${name.upperCamel}UpdateForm dto) {
+        Long id = dto.getId();
+        ${name.upperCamel}Entity entity = baseRepository.getById(id);
+        if (ObjUtil.isNull(entity)) {
+            this.throwDataNotExistException(id);
+        }
+        this.setUpdateFieldValue(dto, entity);
+        baseRepository.updateById(${name.lowerCamel}Entity);
+    }
+#end
+
+#if($deleteInfo.isSupportDelete)
+    #if($deleteInfo.deleteEnum == "BATCH" || $deleteInfo.deleteEnum == "SingleAndBatch")
+    @Transactional(rollbackFor = Exception.class)
+    public void batchDelete(List<${primaryKeyJavaType}> idList) {
+        List<${name.upperCamel}Entity> entityList = baseRepository.queryListByIds(idList);
+        if (entityList.size() != idList.size()) {
+            this.throwDataNotExistException(idList);
+        }
+        baseRepository.removeBatchByIds(idList);
+    }
+    #end
+
+    #if($deleteInfo.deleteEnum == "Single" || $deleteInfo.deleteEnum == "SingleAndBatch")
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(${primaryKeyJavaType} ${primaryKeyFieldName}) {
+        ${name.upperCamel}Entity entity = baseRepository.getById(${primaryKeyFieldName});
+        if (ObjUtil.isNull(entity)) {
+            this.throwDataNotExistException(${primaryKeyFieldName});
+        }
+        baseRepository.removeById(${primaryKeyFieldName});
+    }
+    #end
+#end
+}

@@ -13,7 +13,7 @@ $importClass
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ${name.upperCamel}QueryForm extends PagedDTO {
+public class ${name.upperCamel}QueryDTO extends PagedDTO {
 #foreach ($field in $fields)
 
 #if($field.isEnum)

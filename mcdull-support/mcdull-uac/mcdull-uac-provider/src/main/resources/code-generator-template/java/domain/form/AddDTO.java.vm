@@ -13,7 +13,7 @@ $importClass
  */
 
 @Data
-public class ${name.upperCamel}AddForm implements DTO {
+public class ${name.upperCamel}AddDTO implements DTO {
 #foreach ($field in $fields)
 
 #if($field.isEnum)

@@ -13,10 +13,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.CodeGeneratorConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.util.CodeGeneratorTool;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.CodeGenerateBaseVariableService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.backend.ControllerVariableService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.backend.DaoVariableService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.backend.ManagerVariableService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.backend.ServiceVariableService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.backend.*;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.backend.domain.*;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.front.ApiVariableService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.front.ConstVariableService;
@@ -59,9 +56,12 @@ public class CodeGeneratorTemplateService {
         map.put("java/domain/form/QueryForm.java", new QueryFormVariableService());
         map.put("java/domain/vo/VO.java", new VOVariableService());
         map.put("java/controller/Controller.java", new ControllerVariableService());
-        map.put("java/service/Service.java", new ServiceVariableService());
-        map.put("java/manager/Manager.java", new ManagerVariableService());
-        map.put("java/dao/Dao.java", new DaoVariableService());
+        map.put("java/service/impl/ServiceImpl.java", new ServiceVariableService());
+        map.put("java/service/IService.java", new ServiceVariableService());
+        map.put("java/dao/repository/impl/RepositoryImpl.java", new RepositoryImplVariableService());
+        map.put("java/dao/repository/IRepository.java", new RepositoryVariableService());
+//        map.put("java/manager/Manager.java", new ManagerVariableService());
+        map.put("java/dao/mapper/Mapper.java", new DaoVariableService());
         map.put("java/mapper/Mapper.xml", new MapperVariableService());
         // 前端
         map.put("js/api.js", new ApiVariableService());

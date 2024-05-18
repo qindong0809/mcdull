@@ -10,22 +10,44 @@ $importClass
  * @author ${basic.backendAuthor}
  * @since ${basic.backendDate}
  */
+#set($hasInactive = false)
+#set($hasCreBy = false)
+#set($hasUpdaBy = false)
+#set($id = false)
+#set($createdTime = false)
+#set($updatedTime = false)
+#set($delFlag = false)
 
+#foreach($field in $fields)
+    #if($field.fieldName == "inactive")
+        #set($hasInactive = true)
+    #elseif($field.fieldName == "createdBy")
+        #set($hasCreBy = true)
+    #elseif($field.fieldName == "updatedBy")
+        #set($hasUpdaBy = true)
+    #elseif($field.fieldName == "id")
+        #set($id = true)
+    #elseif($field.fieldName == "createdTime")
+        #set($createdTime = true)
+    #elseif($field.fieldName == "updatedTime")
+        #set($updatedTime = true)
+    #elseif($field.fieldName == "delFlag")
+        #set($delFlag = true)
+    #end
+#end
 @Data
 @TableName("${tableName}")
-public class ${name.upperCamel}Entity {
-#foreach ($field in $fields)
+##public class ${name.upperCamel}Entity #if($hasSpecialField)extends BaseEntity<Integer>#else extends RelEntity<Integer> #end {
+public class ${name.upperCamel}Entity #if($hasInactive && $hasCreBy && $hasUpdaBy && $id && $createdTime && $updatedTime && $delFlag)extends BaseEntity<Integer>#else extends RelEntity<Integer>#end {
 
+#foreach ($field in $fields)
+    #if(!$field.primaryKeyFlag && $field.fieldName != "id" && $field.fieldName != "createdTime" && $field.fieldName != "updatedTime" && $field.fieldName != "delFlag")
+        #if(!$field.primaryKeyFlag && $field.fieldName != "id" && $field.fieldName != "createdTime" && $field.fieldName != "updatedTime" && $field.fieldName != "delFlag" && $field.fieldName != "createdBy" && $field.fieldName != "updatedBy" && $field.fieldName != "inactive")
     /**
      * $field.label
      */
-#if($field.primaryKeyFlag && $field.autoIncreaseFlag)
-    @TableId(type = IdType.AUTO)
-#end
-#if($field.primaryKeyFlag && !$field.autoIncreaseFlag)
-    @TableId
-#end
     private $field.javaType $field.fieldName;
+        #end
+    #end
 #end
-
 }
