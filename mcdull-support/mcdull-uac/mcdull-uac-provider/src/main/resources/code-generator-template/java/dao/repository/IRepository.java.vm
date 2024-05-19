@@ -20,13 +20,6 @@ public interface I${name.upperCamel}Repository extends IService<${name.upperCame
 
     List<${name.upperCamel}Entity> queryListByIds(List<Integer> idList);
 
-    Page<${name.upperCamel}Entity> selectPage($cfg.dtoName param);
+    Page<${name.upperCamel}Entity> selectPage(${name.upperCamel}QueryDTO dto);
 
-    ${name.upperCamel}Entity getById(Long id);
-
-    Integer insert(${name.upperCamel}Entity entity);
-
-    void deleteBatchByIds(List<Integer> ids);
-
-    boolean exist(${name.upperCamel}Entity entity);
 }

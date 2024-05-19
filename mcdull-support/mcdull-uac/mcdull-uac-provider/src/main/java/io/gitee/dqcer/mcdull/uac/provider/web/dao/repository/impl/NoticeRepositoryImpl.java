@@ -1,17 +1,16 @@
-package ${packageName};
-
-#foreach ($importClass in $importPackageList)
-$importClass
-#end
+package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeEntity;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.NoticeMapper;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.INoticeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,22 +18,21 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 
-
 /**
- * ${basic.description} 数据库操作封装实现层
- *
- * @author ${basic.backendAuthor}
- * @since ${basic.backendDate}
- */
+* 系统配置 数据库操作封装实现层
+*
+* @author dqcer
+* @since 2024-04-29
+*/
 @Service
-public class ${name.upperCamel}RepositoryImpl extends
-        ServiceImpl<${name.upperCamel}Mapper, ${name.upperCamel}Entity> implements I${name.upperCamel}Repository{
+public class NoticeRepositoryImpl extends
+        ServiceImpl<NoticeMapper, NoticeEntity> implements INoticeRepository {
 
     @Override
-    public List<${name.upperCamel}Entity> queryListByIds(List<Integer> idList) {
-        LambdaQueryWrapper<${name.upperCamel}Entity> wrapper = Wrappers.lambdaQuery();
-        wrapper.in(${name.upperCamel}Entity::getId, idList);
-        List<${name.upperCamel}Entity> list =  baseMapper.selectList(wrapper);
+    public List<NoticeEntity> queryListByIds(List<Integer> idList) {
+        LambdaQueryWrapper<NoticeEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(NoticeEntity::getId, idList);
+        List<NoticeEntity> list =  baseMapper.selectList(wrapper);
         if (ObjUtil.isNotNull(list)) {
             return list;
         }
@@ -44,8 +42,8 @@ public class ${name.upperCamel}RepositoryImpl extends
 
 
     @Override
-    public Page<${name.upperCamel}Entity> selectPage(${name.upperCamel}QueryDTO param) {
-        LambdaQueryWrapper<${name.upperCamel}Entity> lambda = Wrappers.lambdaQuery();
+    public Page<NoticeEntity> selectPage(NoticeQueryDTO param) {
+        LambdaQueryWrapper<NoticeEntity> lambda = Wrappers.lambdaQuery();
         String keyword = param.getKeyword();
         if (ObjUtil.isNotNull(keyword)) {
             // TODO 组装查询条件
@@ -53,5 +51,4 @@ public class ${name.upperCamel}RepositoryImpl extends
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
-
 }

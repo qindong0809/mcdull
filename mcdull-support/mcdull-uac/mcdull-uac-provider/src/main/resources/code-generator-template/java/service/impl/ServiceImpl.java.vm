@@ -3,7 +3,10 @@ package ${packageName};
 #foreach ($importClass in $importPackageList)
 $importClass
 #end
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,12 +21,12 @@ import javax.annotation.Resource;
 
 @Service
 public class ${name.upperCamel}ServiceImpl
-        extends BasicServiceImpl<I${name.upperCamel}Repository> implements ${name.upperCamel}Service {
+        extends BasicServiceImpl<I${name.upperCamel}Repository> implements I${name.upperCamel}Service {
 
     public PagedVO<${name.upperCamel}VO> queryPage(${name.upperCamel}QueryDTO dto) {
         List<${name.upperCamel}VO> voList = new ArrayList<>();
-        List<${name.upperCamel}Entity> list = baseRepository.queryPage(queryForm);
-        List<LoginLogEntity> recordList = entityPage.getRecords();
+        Page<${name.upperCamel}Entity> entityPage = baseRepository.selectPage(dto);
+        List<${name.upperCamel}Entity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
             for (${name.upperCamel}Entity entity : recordList) {
                 ${name.upperCamel}VO vo = this.convertToVO(entity);
@@ -41,7 +44,8 @@ public class ${name.upperCamel}ServiceImpl
             #else
                 #set($getprefix = "get")
             #end
-        vo.set${field.fieldName}(item.${getprefix}${field.fieldName}());
+        #set($capitalizedName = $field.fieldName.substring(0,1).toUpperCase() + $field.fieldName.substring(1))
+        vo.set${capitalizedName}(item.${getprefix}${capitalizedName}());
         #end
         return vo;
     }
@@ -53,7 +57,8 @@ public class ${name.upperCamel}ServiceImpl
             #else
                 #set($getprefix = "get")
             #end
-        entity.set${field.fieldName}(item.${getprefix}${field.fieldName}());
+        #set($capitalizedName = $field.fieldName.substring(0,1).toUpperCase() + $field.fieldName.substring(1))
+        entity.set${capitalizedName}(item.${getprefix}${capitalizedName}());
         #end
     }
 
@@ -65,30 +70,39 @@ public class ${name.upperCamel}ServiceImpl
             #else
                 #set($getprefix = "get")
             #end
-        entity.set${field.fieldName}(item.${getprefix}${field.fieldName}());
+        #set($capitalizedName = $field.fieldName.substring(0,1).toUpperCase() + $field.fieldName.substring(1))
+        entity.set${capitalizedName}(item.${getprefix}${capitalizedName}());
         #end
         return entity;
     }
 
 #if($insertAndUpdate.isSupportInsertAndUpdate)
     @Transactional(rollbackFor = Exception.class)
-    public void add(${name.upperCamel}AddDTO dto) {
+    public void insert(${name.upperCamel}AddDTO dto) {
         ${name.upperCamel}Entity entity = this.convertToEntity(dto);
-        baseRepository.insert(${name.lowerCamel}Entity);
+        baseRepository.save(entity);
     }
 
 
     @Transactional(rollbackFor = Exception.class)
-    public void update(${name.upperCamel}UpdateForm dto) {
+    public void update(${name.upperCamel}UpdateDTO dto) {
         Long id = dto.getId();
         ${name.upperCamel}Entity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
         }
         this.setUpdateFieldValue(dto, entity);
-        baseRepository.updateById(${name.lowerCamel}Entity);
+        baseRepository.updateById(entity);
     }
 #end
+    @Override
+    public ${name.upperCamel}VO detail(Integer id) {
+        ${name.upperCamel}Entity entity = baseRepository.getById(id);
+        if (ObjUtil.isNull(entity)) {
+            this.throwDataNotExistException(id);
+        }
+        return this.convertToVO(entity);
+    }
 
 #if($deleteInfo.isSupportDelete)
     #if($deleteInfo.deleteEnum == "BATCH" || $deleteInfo.deleteEnum == "SingleAndBatch")

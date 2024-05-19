@@ -479,3 +479,29 @@ create table `sys_operate_log`  (
 `updated_time` datetime default null comment '更新时间',
 primary key (`id`) using btree
 ) comment = '操作记录';
+
+
+drop table if exists `sys_notice`;
+create table `sys_notice`  (
+`id` int(0) not null auto_increment comment '主键',
+`notice_type_id` int(0) not null comment '类型1公告 2动态',
+`title` varchar(200) not null comment '标题',
+`all_visible_flag` tinyint(1) not null comment '是否全部可见',
+`scheduled_publish_flag` tinyint(1) not null comment '是否定时发布',
+`publish_time` datetime(0) not null comment '发布时间',
+`content_text` text not null comment '文本内容',
+`content_html` text not null comment 'html内容',
+`attachment` varchar(1000) null default null comment '附件',
+`page_view_count` int(0) not null default 0 comment '页面浏览量pv',
+`user_view_count` int(0) not null default 0 comment '用户浏览量uv',
+`source` varchar(1000) null default null comment '来源',
+`author` varchar(1000) null default null comment '作者',
+`document_number` varchar(1000) null default null comment '文号',
+`created_by` bigint(20) not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` bigint(20) default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+primary key (`id`) using btree
+) comment = '通知';

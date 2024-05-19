@@ -51,9 +51,9 @@ public class CodeGeneratorTemplateService {
     public void init() {
         // 后端
         map.put("java/domain/entity/Entity.java", new EntityVariableService());
-        map.put("java/domain/form/AddForm.java", new AddFormVariableService());
-        map.put("java/domain/form/UpdateForm.java", new UpdateFormVariableService());
-        map.put("java/domain/form/QueryForm.java", new QueryFormVariableService());
+        map.put("java/domain/form/AddDTO.java", new AddFormVariableService());
+        map.put("java/domain/form/UpdateDTO.java", new UpdateFormVariableService());
+        map.put("java/domain/form/QueryDTO.java", new QueryFormVariableService());
         map.put("java/domain/vo/VO.java", new VOVariableService());
         map.put("java/controller/Controller.java", new ControllerVariableService());
         map.put("java/service/impl/ServiceImpl.java", new ServiceVariableService());

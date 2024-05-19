@@ -20,9 +20,7 @@ public interface I${name.upperCamel}Service {
 
     ${name.upperCamel}VO detail(Integer id);
 
-    void deleteById(Integer id);
+    void batchDelete(List<Integer> idList);
 
-    List<${name.upperCamel}VO>> queryByIds(List<Integer> ids);
-
-    PagedVO<${name.upperCamel}VO>> listByPage(${name.upperCamel}QueryDTO dto);
+    PagedVO<${name.upperCamel}VO>> queryPage(${name.upperCamel}QueryDTO dto);
 }

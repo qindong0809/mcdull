@@ -23,7 +23,7 @@ import javax.validation.Valid;
 public class ${name.upperCamel}Controller {
 
     @Resource
-    private ${name.upperCamel}Service ${name.lowerCamel}Service;
+    private I${name.upperCamel}Service ${name.lowerCamel}Service;
 
     @Operation(summary = "分页")
     @PostMapping("/${name.lowerCamel}/queryPage")
@@ -35,7 +35,7 @@ public class ${name.upperCamel}Controller {
     @Operation(summary = "添加")
     @PostMapping("/${name.lowerCamel}/add")
     public Result<Boolean> add(@RequestBody @Valid ${name.upperCamel}AddDTO dto) {
-        ${name.lowerCamel}Service.add(dto);
+        ${name.lowerCamel}Service.insert(dto);
         return Result.success(true);
     }
 
@@ -61,7 +61,7 @@ public class ${name.upperCamel}Controller {
     @Operation(summary = "删除")
     @GetMapping("/${name.lowerCamel}/delete/{${primaryKeyFieldName}}")
     public Result<Boolean> batchDelete(@PathVariable ${primaryKeyJavaType} ${primaryKeyFieldName}) {
-        ${name.lowerCamel}Service.delete(${primaryKeyFieldName});
+        ${name.lowerCamel}Service.batchDelete(ListUtil.of(${primaryKeyFieldName}));
         return Result.success(true);
     }
     #end
