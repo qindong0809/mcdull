@@ -68,12 +68,9 @@ public class NoticeServiceImpl
         entity.setContentText(item.getContentText());
         entity.setContentHtml(item.getContentHtml());
         entity.setAttachment(item.getAttachment());
-        entity.setPageViewCount(item.getPageViewCount());
-        entity.setUserViewCount(item.getUserViewCount());
         entity.setSource(item.getSource());
         entity.setAuthor(item.getAuthor());
         entity.setDocumentNumber(item.getDocumentNumber());
-        entity.setInactive(item.getInactive());
     }
 
     private NoticeEntity convertToEntity(NoticeAddDTO item){
@@ -86,8 +83,9 @@ public class NoticeServiceImpl
         entity.setContentText(item.getContentText());
         entity.setContentHtml(item.getContentHtml());
         entity.setAttachment(item.getAttachment());
-        entity.setPageViewCount(item.getPageViewCount());
-        entity.setUserViewCount(item.getUserViewCount());
+        entity.setPageViewCount(0);
+        entity.setUserViewCount(0);
+        entity.setInactive(false);
         entity.setSource(item.getSource());
         entity.setAuthor(item.getAuthor());
         entity.setDocumentNumber(item.getDocumentNumber());

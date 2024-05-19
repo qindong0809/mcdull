@@ -11,7 +11,7 @@ import lombok.Data;
 public class NoticeTypeVO {
 
     @Schema(description = "通知类型id")
-    private Long noticeTypeId;
+    private Integer noticeTypeId;
 
     @Schema(description = "通知类型-名称")
     private String noticeTypeName;

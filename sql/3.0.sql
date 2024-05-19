@@ -505,3 +505,19 @@ create table `sys_notice`  (
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 primary key (`id`) using btree
 ) comment = '通知';
+
+drop table if exists `sys_notice_type`;
+create table `sys_notice_type`  (
+`id` int(0) not null auto_increment comment '通知类型',
+`notice_type_name` varchar(1000) not null comment '类型名称',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree
+) comment = '通知类型';
+
+-- ----------------------------
+-- records of t_notice_type
+-- ----------------------------
+insert into `sys_notice_type` values (1, '公告', 0, sysdate(), sysdate());
+insert into `sys_notice_type` values (2, '通知', 0, sysdate(), sysdate());
