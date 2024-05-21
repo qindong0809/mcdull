@@ -521,3 +521,35 @@ primary key (`id`) using btree
 -- ----------------------------
 insert into `sys_notice_type` values (1, '公告', 0, sysdate(), sysdate());
 insert into `sys_notice_type` values (2, '通知', 0, sysdate(), sysdate());
+
+
+drop table if exists `t_oa_enterprise`;
+create table `t_oa_enterprise`  (
+`enterprise_id` bigint(0) not null auto_increment comment '企业id',
+`enterprise_name` varchar(255) not null comment '企业名称',
+`enterprise_logo` varchar(255) null default null comment '企业logo',
+`type` int(0) not null default 1 comment '类型（1:有限公司;2:合伙公司）',
+`unified_social_credit_code` varchar(255) not null comment '统一社会信用代码',
+`contact` varchar(100) not null comment '联系人',
+`contact_phone` varchar(100) not null comment '联系人电话',
+`email` varchar(100) null default null comment '邮箱',
+`province` varchar(100) null default null comment '省份',
+`province_name` varchar(100) null default null comment '省份名称',
+`city` varchar(100) null default null comment '市',
+`city_name` varchar(100) null default null comment '城市名称',
+`district` varchar(100) null default null comment '区县',
+`district_name` varchar(100) null default null comment '区县名称',
+`address` varchar(255) null default null comment '详细地址',
+`business_license` varchar(255) null default null comment '营业执照',
+`created_by` bigint(20) not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` bigint(20) default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+primary key (`enterprise_id`) using btree
+) comment = 'oa企业模块' ;
+
+
+insert into `t_oa_enterprise` values (1, '区块链实验室', '', 1, 'block', 'kk', '18637922222', null, '410000', '河南省', '410300', '洛阳市', '410311', '洛龙区', '区块链大楼', 'public/common/852b7e19bef94af39c1a6156edf47cfb_20221022170332_jpg', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `t_oa_enterprise` values (2, '创新实验室', '', 2, '创新', 'xx', '18637921111', 'xxx@163.com', '410000', '河南省', '410300', '洛阳市', '410311', '洛龙区', '1024大楼', 'public/common/59b1ca99b7fe45d78678e6295798a699_20231201200459.jpg', 0, sysdate(), 0, sysdate(), 0, 0);

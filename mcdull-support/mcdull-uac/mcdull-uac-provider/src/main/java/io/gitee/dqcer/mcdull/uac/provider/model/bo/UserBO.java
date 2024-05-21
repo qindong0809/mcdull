@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.bo;
 
+import io.gitee.dqcer.mcdull.framework.base.support.BO;
 import io.gitee.dqcer.mcdull.framework.swagger.SchemaEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.GenderEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.UserTypeEnum;
@@ -7,9 +8,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 用户bo
+ *
+ * @author dqcer
+ * @since 2024/05/20
+ */
 @Setter
 @Getter
-public class UserBO {
+public class UserBO implements BO {
 
     @Schema(description = "员工id")
     private Long employeeId;

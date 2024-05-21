@@ -25,6 +25,11 @@ public class KeyValueBO<K, V> implements KeyValue<K, V>, BO {
      */
     protected V value;
 
+    public KeyValueBO(K key, V value) {
+        this.key = key;
+        this.value = value;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", KeyValueBO.class.getSimpleName() + "[", "]")

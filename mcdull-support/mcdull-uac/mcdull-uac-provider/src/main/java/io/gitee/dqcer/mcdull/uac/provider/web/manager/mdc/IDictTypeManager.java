@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc;
 
+import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RemoteDictTypeVO;
 
@@ -20,7 +21,7 @@ public interface IDictTypeManager {
      * @param code       代码
      * @return {@link RemoteDictTypeVO}
      */
-    RemoteDictTypeVO dictVO(String selectType, String code);
+    KeyValueBO<String, String> dictVO(String selectType, String code);
 
 
     /**
