@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -10,12 +12,16 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeUpdateFormVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.INoticeRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.INoticeService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +35,9 @@ import java.util.List;
 public class NoticeServiceImpl
         extends BasicServiceImpl<INoticeRepository> implements INoticeService {
 
+    @Resource
+    private IUserService userService;
+
     @Override
     public PagedVO<NoticeVO> queryPage(NoticeQueryDTO dto) {
         List<NoticeVO> voList = new ArrayList<>();
@@ -41,6 +50,40 @@ public class NoticeServiceImpl
             }
         }
         return PageUtil.toPage(voList, entityPage);
+    }
+
+    @Override
+    public NoticeUpdateFormVO getUpdateFormVO(Integer noticeId) {
+        NoticeEntity detail = baseRepository.getById(noticeId);
+        if (ObjUtil.isNull(detail)) {
+            this.throwDataNotExistException(noticeId);
+        }
+        NoticeUpdateFormVO vo = new NoticeUpdateFormVO();
+        vo.setNoticeId(detail.getId());
+        vo.setNoticeTypeId(detail.getNoticeTypeId());
+        vo.setTitle(detail.getTitle());
+        vo.setAllVisibleFlag(detail.getAllVisibleFlag());
+        vo.setScheduledPublishFlag(detail.getScheduledPublishFlag());
+        vo.setPublishTime(detail.getPublishTime());
+        vo.setPublishFlag(detail.getScheduledPublishFlag());
+        vo.setContentHtml(detail.getContentHtml());
+        vo.setSource(detail.getSource());
+        vo.setDocumentNumber(detail.getDocumentNumber());
+        vo.setPageViewCount(detail.getPageViewCount());
+        vo.setUserViewCount(detail.getUserViewCount());
+        // TODO: 2024/5/21
+//            vo.setAttachment(detail.getAttachment());
+        vo.setAuthor(detail.getAuthor());
+        // TODO: 2024/5/21
+        vo.setVisibleRangeList(new ArrayList<>());
+
+        Integer createdBy = detail.getCreatedBy();
+        UserEntity user = userService.get(Convert.toLong(createdBy));
+        if (ObjUtil.isNotNull(user)) {
+            vo.setCreateUserName(user.getActualName());
+        }
+        vo.setCreateTime(LocalDateTimeUtil.of(detail.getCreatedTime()));
+        return vo;
     }
 
     private NoticeVO convertToVO(NoticeEntity item){

@@ -128,6 +128,9 @@ public class FileServiceImpl extends BasicServiceImpl<IFileRepository> implement
         List<FileVO> list = new ArrayList<>();
         for (String fileKey : fileKeyList) {
             FileEntity entity = baseRepository.getByFileKey(fileKey);
+            if (ObjectUtil.isNull(entity)) {
+                continue;
+            }
             FileVO fileVO = FileConvert.convertToEntity(entity);
             String fileUrl = this.getFileUrl(fileKey);
             fileVO.setFileUrl(fileUrl);

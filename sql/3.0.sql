@@ -523,9 +523,9 @@ insert into `sys_notice_type` values (1, '公告', 0, sysdate(), sysdate());
 insert into `sys_notice_type` values (2, '通知', 0, sysdate(), sysdate());
 
 
-drop table if exists `t_oa_enterprise`;
-create table `t_oa_enterprise`  (
-`enterprise_id` bigint(0) not null auto_increment comment '企业id',
+drop table if exists `sys_oa_enterprise`;
+create table `sys_oa_enterprise`  (
+`id` bigint(0) not null auto_increment comment '企业id',
 `enterprise_name` varchar(255) not null comment '企业名称',
 `enterprise_logo` varchar(255) null default null comment '企业logo',
 `type` int(0) not null default 1 comment '类型（1:有限公司;2:合伙公司）',
@@ -547,9 +547,9 @@ create table `t_oa_enterprise`  (
 `updated_time` datetime default null comment '更新时间',
 `inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
-primary key (`enterprise_id`) using btree
+primary key (`id`) using btree
 ) comment = 'oa企业模块' ;
 
 
-insert into `t_oa_enterprise` values (1, '区块链实验室', '', 1, 'block', 'kk', '18637922222', null, '410000', '河南省', '410300', '洛阳市', '410311', '洛龙区', '区块链大楼', 'public/common/852b7e19bef94af39c1a6156edf47cfb_20221022170332_jpg', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `t_oa_enterprise` values (2, '创新实验室', '', 2, '创新', 'xx', '18637921111', 'xxx@163.com', '410000', '河南省', '410300', '洛阳市', '410311', '洛龙区', '1024大楼', 'public/common/59b1ca99b7fe45d78678e6295798a699_20231201200459.jpg', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_oa_enterprise` values (1, '区块链实验室', '', 1, 'block', 'kk', '18637922222', null, '410000', '河南省', '410300', '洛阳市', '410311', '洛龙区', '区块链大楼', 'public/common/852b7e19bef94af39c1a6156edf47cfb_20221022170332_jpg', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_oa_enterprise` values (2, '创新实验室', '', 2, '创新', 'xx', '18637921111', 'xxx@163.com', '410000', '河南省', '410300', '洛阳市', '410311', '洛龙区', '1024大楼', 'public/common/59b1ca99b7fe45d78678e6295798a699_20231201200459.jpg', 0, sysdate(), 0, sysdate(), 0, 0);

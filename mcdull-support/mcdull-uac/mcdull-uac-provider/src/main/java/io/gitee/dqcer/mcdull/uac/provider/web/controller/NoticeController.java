@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.ListUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeAddDTO;
@@ -7,6 +8,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeUpdateDTO;
 import java.util.List;
 
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeUpdateFormVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.INoticeService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +47,16 @@ public class NoticeController {
         return Result.success(true);
     }
 
+
+    @Operation(summary = "更新详情")
+    @GetMapping("/notice/getUpdateVO/{noticeId}")
+    @SaCheckPermission("oa:notice:update")
+    public Result<NoticeUpdateFormVO> getUpdateFormVO(@PathVariable Integer noticeId) {
+        return Result.success(noticeService.getUpdateFormVO(noticeId));
+    }
+
     @Operation(summary = "更新")
+    @SaCheckPermission("oa:notice:update")
     @PostMapping("/notice/update")
     public Result<Boolean> update(@RequestBody @Valid NoticeUpdateDTO dto) {
         noticeService.update(dto);
