@@ -2,10 +2,8 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
-import com.google.common.collect.Lists;
 import io.gitee.dqcer.mcdull.framework.base.engine.CompareBean;
 import io.gitee.dqcer.mcdull.framework.base.engine.DomainEngine;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DataScopeBO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleDataScopeUpdateDTO;
@@ -96,7 +94,7 @@ public class RoleDataScopeServiceImpl extends BasicServiceImpl<IRoleDataScopeRep
      * 获取当前系统存在的数据可见范围
      */
     public List<DataScopeViewTypeVO> getViewType() {
-        List<DataScopeViewTypeVO> viewTypeList = Lists.newArrayList();
+        List<DataScopeViewTypeVO> viewTypeList = new ArrayList<>();
         DataScopeViewTypeEnum[] enums = DataScopeViewTypeEnum.class.getEnumConstants();
         DataScopeViewTypeVO dataScopeViewTypeDTO;
         for (DataScopeViewTypeEnum viewTypeEnum : enums) {
@@ -114,7 +112,7 @@ public class RoleDataScopeServiceImpl extends BasicServiceImpl<IRoleDataScopeRep
     }
 
     public List<DataScopeBO> getDataScopeType() {
-        List<DataScopeBO> dataScopeTypeList = Lists.newArrayList();
+        List<DataScopeBO> dataScopeTypeList = new ArrayList<>();
 
         DataScopeTypeEnum[] enums = DataScopeTypeEnum.class.getEnumConstants();
         DataScopeBO dataScopeDTO;

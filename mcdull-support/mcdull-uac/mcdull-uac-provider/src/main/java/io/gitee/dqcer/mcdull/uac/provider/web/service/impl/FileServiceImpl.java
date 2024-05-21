@@ -1,9 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.common.collect.Lists;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
@@ -57,10 +57,10 @@ public class FileServiceImpl extends BasicServiceImpl<IFileRepository> implement
             throw new BusinessException("上传文件类型错误");
         }
 
-        long size = file.getSize();
-        if (null == file || size == 0) {
+        if (null == file || file.getSize() == 0) {
             throw new BusinessException("上传文件不能为空");
         }
+        long size = file.getSize();
 
         // 校验文件名称
         String originalFilename = file.getOriginalFilename();
@@ -98,7 +98,7 @@ public class FileServiceImpl extends BasicServiceImpl<IFileRepository> implement
     @Override
     public String getFileUrl(String fileKeyList) {
         List<String> fileKeyArray = StrUtil.split(fileKeyList, StrUtil.C_COMMA);
-        List<String> fileUrlList = Lists.newArrayListWithCapacity(fileKeyArray.size());
+        List<String> fileUrlList = new ArrayList<>(fileKeyArray.size());
         for (String fileKey : fileKeyArray) {
             String fileUrl = fileStorageService.getFileUrl(fileKey);
             fileUrlList.add(fileUrl);
@@ -109,7 +109,7 @@ public class FileServiceImpl extends BasicServiceImpl<IFileRepository> implement
     @Override
     public FileDownloadVO getDownloadFile(String fileKey, String userAgent) {
         FileEntity fileEntity = baseRepository.getByFileKey(fileKey);
-        if (fileEntity == null) {
+        if (ObjectUtil.isNull(fileEntity)) {
            this.throwDataExistException(fileKey);
         }
 

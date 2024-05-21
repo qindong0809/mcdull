@@ -177,6 +177,7 @@ public class CodeGeneratorTemplateService {
         variablesMap.put("tableName", tableName);
 
         //名词的大写开头和小写开头
+
         HashMap<String, String> names = new HashMap<>();
         names.put("lowerCamel", CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, basic.getModuleName()));
         names.put("upperCamel", CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_CAMEL, basic.getModuleName()));

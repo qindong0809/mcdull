@@ -1,28 +1,21 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
-import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
-import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.uac.client.api.AuthServiceApi;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.CaptchaVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.PermissionRouterVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.ICaptchaService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 登录控制器
@@ -32,7 +25,7 @@ import java.util.List;
  */
 @RestController
 @Tag(name = "登录认证")
-public class LoginController implements AuthServiceApi {
+public class LoginController {
 
     @Resource
     private ILoginService loginService;
@@ -65,21 +58,4 @@ public class LoginController implements AuthServiceApi {
         return Result.success(true);
     }
 
-
-    @UnAuthorize
-    @Override
-    public Result<Integer> tokenValid(String token, String traceId) {
-        StpUtil.checkLogin();
-        return Result.success(StpUtil.getLoginIdAsInt());
-    }
-
-    @Override
-    public Result<List<String>> getPermissionList(Long userId) {
-        return Result.success(loginService.getPermissionList(userId));
-    }
-
-    @Override
-    public Result<List<String>> getRoleList(Long userId) {
-        return Result.success(loginService.getRoleList(userId));
-    }
 }

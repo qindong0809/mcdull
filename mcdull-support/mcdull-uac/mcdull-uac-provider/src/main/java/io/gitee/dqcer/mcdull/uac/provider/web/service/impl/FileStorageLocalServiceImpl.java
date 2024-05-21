@@ -2,6 +2,8 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
@@ -11,8 +13,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileMetadataVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileUploadVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileStorageService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -84,7 +84,8 @@ public class FileStorageLocalServiceImpl implements IFileStorageService {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         String time = LocalDateTimeUtil.format(LocalDateTime.now(), DatePattern.PURE_DATETIME_FORMATTER);
         String newFileName = uuid + "_" + time;
-        String fileType = FilenameUtils.getExtension(originalFileName);
+//        String fileType = FilenameUtils.getExtension(originalFileName);
+        String fileType = FileNameUtil.extName(originalFileName);
         if (StrUtil.isNotEmpty(fileType)) {
             newFileName = newFileName + "." + fileType;
         }
@@ -98,7 +99,8 @@ public class FileStorageLocalServiceImpl implements IFileStorageService {
             fileUploadVO.setFileName(newFileName);
             fileUploadVO.setFileKey(fileKey);
 //            fileUploadVO.setFileSize(multipartFile.getSize());
-            fileUploadVO.setFileType(FilenameUtils.getExtension(originalFileName));
+//            fileUploadVO.setFileType(FilenameUtils.getExtension(originalFileName));
+            fileUploadVO.setFileType(FileNameUtil.extName(originalFileName));
         } catch (IOException e) {
             if (fileTemp.exists() && fileTemp.isFile()) {
                 fileTemp.delete();
@@ -133,7 +135,8 @@ public class FileStorageLocalServiceImpl implements IFileStorageService {
             FileMetadataVO fileMetadataDTO = new FileMetadataVO();
             fileMetadataDTO.setFileName(localFile.getName());
             fileMetadataDTO.setFileSize(localFile.length());
-            fileMetadataDTO.setFileFormat(FilenameUtils.getExtension(localFile.getName()));
+//            fileMetadataDTO.setFileFormat(FilenameUtils.getExtension(localFile.getName()));
+            fileMetadataDTO.setFileFormat(FileNameUtil.extName(localFile.getName()));
             fileDownloadVO.setMetadata(fileMetadataDTO);
 
             return fileDownloadVO;
@@ -156,10 +159,11 @@ public class FileStorageLocalServiceImpl implements IFileStorageService {
     public void delete(String fileKey) {
         String filePath = uploadPath + fileKey;
         File localFile = new File(filePath);
-        try {
-            FileUtils.forceDelete(localFile);
-        } catch (IOException e) {
-            LogHelp.error(log, "删除本地文件失败：{}", filePath, e);
+//            FileUtils.forceDelete(localFile);
+        boolean del = FileUtil.del(localFile);
+        if (!del) {
+            LogHelp.error(log, "删除本地文件失败：{}", filePath);
         }
+
     }
 }

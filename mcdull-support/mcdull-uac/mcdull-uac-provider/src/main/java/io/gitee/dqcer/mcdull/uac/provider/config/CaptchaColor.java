@@ -1,8 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.config;
 
-import com.google.common.collect.Lists;
-
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -14,7 +13,7 @@ public class CaptchaColor {
 
     public static Color getColor() {
 
-        List<Color> colors = Lists.newArrayList();
+        List<Color> colors = new ArrayList<>();
         colors.add(new Color(0, 135, 255));
         colors.add(new Color(51, 153, 51));
         colors.add(new Color(255, 102, 102));
