@@ -23,5 +23,5 @@ public class NoticeVisibleRangeDTO {
 
     @Schema(description = "员工/部门id")
     @NotNull(message = "员工/部门id不能为空")
-    private Long dataId;
+    private Integer dataId;
 }

@@ -16,7 +16,7 @@ import java.util.List;
 public class UserAllVO {
 
     @Schema(description = "主键id")
-    private Long employeeId;
+    private Integer employeeId;
 
     @Schema(description = "登录账号")
     private String loginName;
@@ -31,7 +31,7 @@ public class UserAllVO {
     private String phone;
 
     @Schema(description = "部门id")
-    private Long departmentId;
+    private Integer departmentId;
 
     @Schema(description = "是否被禁用")
     private Boolean disabledFlag;
@@ -46,7 +46,7 @@ public class UserAllVO {
     private LocalDateTime createTime;
 
     @Schema(description = "角色列表")
-    private List<Long> roleIdList;
+    private List<Integer> roleIdList;
 
     @Schema(description = "角色名称列表")
     private List<String> roleNameList;

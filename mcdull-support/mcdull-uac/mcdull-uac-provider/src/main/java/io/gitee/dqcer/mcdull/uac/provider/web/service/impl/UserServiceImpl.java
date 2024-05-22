@@ -344,7 +344,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
             for (UserEntity userEntity : list) {
                 UserAllVO vo = UserConvert.entityToAllVO(userEntity);
-                Long departmentId = vo.getDepartmentId();
+                Long departmentId = userEntity.getDepartmentId();
                 if (ObjUtil.isNotNull(departmentId)) {
                     DepartmentEntity departmentEntity = map.get(departmentId);
                     if (ObjUtil.isNotNull(departmentEntity)) {
@@ -352,9 +352,9 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
                     }
                 }
                 if (MapUtil.isNotEmpty(roleMap)) {
-                    List<RoleEntity> roleEntities = roleMap.get(vo.getEmployeeId());
+                    List<RoleEntity> roleEntities = roleMap.get(userEntity.getId());
                     if (CollUtil.isNotEmpty(roleEntities)) {
-                        vo.setRoleIdList(roleEntities.stream().map(IdEntity::getId).collect(Collectors.toList()));
+                        vo.setRoleIdList(roleEntities.stream().map(i->Convert.toInt(i.getId())).collect(Collectors.toList()));
                         vo.setRoleNameList(roleEntities.stream().map(RoleEntity::getRoleName).collect(Collectors.toList()));
                     }
                 }

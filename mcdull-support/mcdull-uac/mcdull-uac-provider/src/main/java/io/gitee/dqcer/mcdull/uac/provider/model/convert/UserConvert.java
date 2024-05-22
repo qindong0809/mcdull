@@ -66,12 +66,12 @@ public class UserConvert {
 
     public static UserAllVO entityToAllVO(UserEntity userEntity) {
         UserAllVO userAllVO = new UserAllVO();
-        userAllVO.setEmployeeId(userEntity.getId());
+        userAllVO.setEmployeeId(Convert.toInt(userEntity.getId()));
         userAllVO.setLoginName(userEntity.getLoginName());
         userAllVO.setGender(userEntity.getGender());
         userAllVO.setActualName(userEntity.getActualName());
         userAllVO.setPhone(userEntity.getPhone());
-        userAllVO.setDepartmentId(userEntity.getDepartmentId());
+        userAllVO.setDepartmentId(Convert.toInt(userEntity.getDepartmentId()));
         userAllVO.setDisabledFlag(userEntity.getInactive());
         userAllVO.setAdministratorFlag(userEntity.getAdministratorFlag());
         userAllVO.setCreateTime(LocalDateTimeUtil.of(userEntity.getCreatedTime()));

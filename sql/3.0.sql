@@ -516,6 +516,18 @@ create table `sys_notice_type`  (
 primary key (`id`) using btree
 ) comment = '通知类型';
 
+drop table if exists `sys_notice_visible_range`;
+create table `sys_notice_visible_range`  (
+`id` int(0) not null auto_increment comment '主键',
+`notice_id` bigint(0) not null comment '通知id',
+`data_type` tinyint(0) not null comment '数据类型1员工 2部门',
+`data_id` bigint(0) not null comment '员工or部门id',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree
+) comment = '通知可见范围';
+
 -- ----------------------------
 -- records of t_notice_type
 -- ----------------------------
@@ -553,3 +565,4 @@ primary key (`id`) using btree
 
 insert into `sys_oa_enterprise` values (1, '区块链实验室', '', 1, 'block', 'kk', '18637922222', null, '410000', '河南省', '410300', '洛阳市', '410311', '洛龙区', '区块链大楼', 'public/common/852b7e19bef94af39c1a6156edf47cfb_20221022170332_jpg', 0, sysdate(), 0, sysdate(), 0, 0);
 insert into `sys_oa_enterprise` values (2, '创新实验室', '', 2, '创新', 'xx', '18637921111', 'xxx@163.com', '410000', '河南省', '410300', '洛阳市', '410311', '洛龙区', '1024大楼', 'public/common/59b1ca99b7fe45d78678e6295798a699_20231201200459.jpg', 0, sysdate(), 0, sysdate(), 0, 0);
+

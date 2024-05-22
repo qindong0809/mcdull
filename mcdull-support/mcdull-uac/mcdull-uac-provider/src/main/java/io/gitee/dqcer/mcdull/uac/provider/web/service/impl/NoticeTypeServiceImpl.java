@@ -13,7 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -82,5 +85,15 @@ public class NoticeTypeServiceImpl
             this.throwDataNotExistException(id);
         }
         baseRepository.removeById(id);
+    }
+
+    @Override
+    public Map<Integer, String> getMap(List<Integer> idList) {
+        List<NoticeTypeEntity> list = baseRepository.listByIds(idList);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.stream().collect(
+                    Collectors.toMap(NoticeTypeEntity::getId, NoticeTypeEntity::getNoticeTypeName));
+        }
+        return Collections.emptyMap();
     }
 }

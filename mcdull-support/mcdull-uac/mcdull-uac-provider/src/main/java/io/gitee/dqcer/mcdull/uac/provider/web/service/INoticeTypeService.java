@@ -1,13 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
-import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogAddDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeTypeVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 *
@@ -23,4 +19,6 @@ public interface INoticeTypeService {
     void update(Integer id, String name);
 
     void delete(Integer id);
+
+    Map<Integer, String> getMap(List<Integer> idList);
 }
