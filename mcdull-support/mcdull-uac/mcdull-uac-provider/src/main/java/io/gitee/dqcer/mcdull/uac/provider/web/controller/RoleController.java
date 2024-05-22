@@ -45,7 +45,7 @@ public class RoleController {
         return Result.success(roleService.all());
     }
 
-    @Operation(summary = "添加角色 @author 卓大")
+    @Operation(summary = "添加角色")
     @PostMapping("/role/add")
     @SaCheckPermission("system:role:add")
     public Result<Boolean> addRole(@Valid @RequestBody RoleAddDTO dto) {
@@ -53,7 +53,7 @@ public class RoleController {
         return Result.success(true);
     }
 
-    @Operation(summary = "删除角色 @author 卓大")
+    @Operation(summary = "删除角色")
     @GetMapping("/role/delete/{roleId}")
     @SaCheckPermission("system:role:delete")
     public Result<Boolean> deleteRole(@PathVariable Long roleId) {
@@ -69,7 +69,7 @@ public class RoleController {
         return Result.success(true);
     }
 
-    @Operation(summary = "获取角色数据 @author 卓大")
+    @Operation(summary = "获取角色数据")
     @GetMapping("/role/get/{roleId}")
     public Result<RoleVO> getRole(@PathVariable("roleId") Long roleId) {
         return Result.success(roleService.detail(roleId));
