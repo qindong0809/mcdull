@@ -12,6 +12,10 @@ spring:
         url: http://localhost:9000
   jmx:
     enabled: true
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=10m
 logging:
   file:
     path: /var/log

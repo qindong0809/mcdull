@@ -75,6 +75,11 @@
             </dependency>
             <dependency>
                 <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-framework-starter-monitor</artifactId>
+                <version>${mcdull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.gitee.dqcer</groupId>
                 <artifactId>mcdull-framework-starter-redis</artifactId>
                 <version>${mcdull.version}</version>
             </dependency>

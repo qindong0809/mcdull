@@ -21,6 +21,7 @@
         <module>mcdull-framework-starter-oss</module>
         <module>mcdull-framework-starter-security</module>
         <module>mcdull-framework-starter-swagger</module>
+        <module>mcdull-framework-starter-monitor</module>
     </modules>
 
     <artifactId>mcdull-framework-starters</artifactId>
