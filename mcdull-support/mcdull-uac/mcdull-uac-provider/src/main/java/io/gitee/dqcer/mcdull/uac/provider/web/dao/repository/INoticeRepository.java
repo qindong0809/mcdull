@@ -2,8 +2,10 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeEmployeeQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeUserVO;
 
 import java.util.List;
 
@@ -17,4 +19,10 @@ public interface INoticeRepository extends IService<NoticeEntity> {
     List<NoticeEntity> queryListByIds(List<Integer> idList);
 
     Page<NoticeEntity> selectPage(NoticeQueryDTO param);
+
+    Page<NoticeUserVO> queryEmployeeNotViewNotice(NoticeEmployeeQueryDTO dto, Long userId,
+                                                  List<Long> deptIdList,
+                                                  Boolean administratorFlag,
+                                                  Integer deptCode,
+                                                  Integer userCode);
 }

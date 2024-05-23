@@ -16,7 +16,7 @@ public class NoticeVisibleRangeVO {
     private Integer dataType;
 
     @Schema(description = "员工/部门id")
-    private Long dataId;
+    private Integer dataId;
 
     @Schema(description = "员工/部门 名称")
     private String dataName;

@@ -7,8 +7,11 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
+import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeEmployeeQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeUserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.NoticeMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.INoticeRepository;
 import org.slf4j.Logger;
@@ -50,5 +53,16 @@ public class NoticeRepositoryImpl extends
         }
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
+    }
+
+    @Override
+    public Page<NoticeUserVO> queryEmployeeNotViewNotice(NoticeEmployeeQueryDTO dto,
+                                                         Long userId,
+                                                         List<Long> deptIdList,
+                                                         Boolean administratorFlag,
+                                                         Integer deptCode,
+                                                         Integer userCode) {
+        Page<?> page = new Page<>(dto.getPageNum(), dto.getPageSize());
+        return baseMapper.queryEmployeeNotViewNotice(page, dto, userId, deptIdList, administratorFlag, deptCode, userCode);
     }
 }

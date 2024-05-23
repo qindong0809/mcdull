@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -162,6 +163,33 @@ public class DepartmentServiceImpl extends BasicServiceImpl<IDepartmentRepositor
         return Collections.emptyList();
     }
 
+    @Override
+    public Map<Long, String> getNameMap(List<Long> idList) {
+        List<DepartmentEntity> list = baseRepository.listByIds(idList);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.stream().collect(Collectors.toMap(DepartmentEntity::getId, DepartmentEntity::getName));
+        }
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public List<Long> getChildrenIdList(Long departmentId) {
+        List<Long> voList = new ArrayList<>();
+        List<DepartmentEntity> list = baseRepository.listByParentId(departmentId);
+        if (CollUtil.isNotEmpty(list)) {
+            List<Long> idList = list.stream().map(DepartmentEntity::getId).collect(Collectors.toList());
+            voList.addAll(idList);
+            for (Long id : idList) {
+                List<Long> childrenIdList = this.getChildrenIdList(id);
+                if (CollUtil.isNotEmpty(childrenIdList)) {
+                    voList.addAll(childrenIdList);
+                }
+            }
+        }
+        return voList;
+    }
+
+
 
 
     public static List<DepartmentTreeVO> convertTreeSelect(List<Tree<Integer>> list) {
@@ -209,14 +237,4 @@ public class DepartmentServiceImpl extends BasicServiceImpl<IDepartmentRepositor
         return vo;
 
     }
-
-    private Integer getStatus(Boolean inactive) {
-        return BooleanUtil.toInteger(!inactive);
-    }
-
-    private Boolean getInactive(Integer status) {
-        return !BooleanUtil.toBooleanObject(Convert.toStr(status));
-    }
-
-
 }

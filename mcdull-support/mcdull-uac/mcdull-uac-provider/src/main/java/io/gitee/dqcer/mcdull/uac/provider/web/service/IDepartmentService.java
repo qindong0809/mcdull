@@ -1,15 +1,13 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
-import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentTreeVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentVO;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author dqcer
@@ -29,4 +27,7 @@ public interface IDepartmentService {
 
     List<DepartmentTreeVO> departmentTree();
 
+    Map<Long, String> getNameMap(List<Long> idList);
+
+    List<Long> getChildrenIdList(Long departmentId);
 }

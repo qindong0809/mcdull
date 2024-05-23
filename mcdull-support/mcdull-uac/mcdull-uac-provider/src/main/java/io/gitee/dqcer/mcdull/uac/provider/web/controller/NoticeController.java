@@ -4,11 +4,14 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.ListUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeAddDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeEmployeeQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeUpdateDTO;
 import java.util.List;
 
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeDetailVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeUpdateFormVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeUserVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.INoticeService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -75,6 +79,18 @@ public class NoticeController {
     public Result<Boolean> batchDelete(@PathVariable Integer id) {
         noticeService.batchDelete(ListUtil.of(id));
         return Result.success(true);
+    }
+
+    @Operation(summary = "【员工】通知公告-查看详情")
+    @GetMapping("/notice/employee/view/{noticeId}")
+    public Result<NoticeDetailVO> view(@PathVariable Long noticeId) {
+        return Result.success(noticeService.view(noticeId));
+    }
+
+    @Operation(summary = "【员工】通知公告-查询全部/未读")
+    @PostMapping("notice/employee/query")
+    public Result<PagedVO<NoticeUserVO>> queryUserNotice(@RequestBody @Valid NoticeEmployeeQueryDTO dto) {
+        return Result.success(noticeService.queryUserNotice(dto));
     }
 
 }

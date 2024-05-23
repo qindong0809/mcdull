@@ -1,38 +1,35 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
 import io.gitee.dqcer.mcdull.framework.base.engine.CompareBean;
 import io.gitee.dqcer.mcdull.framework.base.engine.DomainEngine;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeVisibleRangeEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDataScopeEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeUpdateFormVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.*;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.NoticeVisitbleRangeDataTypeEnum;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.INoticeRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.INoticeService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.INoticeTypeService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.INoticeVisibleRangeService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -53,6 +50,12 @@ public class NoticeServiceImpl
 
     @Resource
     private INoticeVisibleRangeService noticeVisibleRangeService;
+
+    @Resource
+    private IDepartmentService departmentService;
+
+    @Resource
+    private INoticeViewRecordService noticeViewRecordService;
 
     @Override
     public PagedVO<NoticeVO> queryPage(NoticeQueryDTO dto) {
@@ -107,8 +110,6 @@ public class NoticeServiceImpl
         // TODO: 2024/5/21
 //            vo.setAttachment(detail.getAttachment());
         vo.setAuthor(detail.getAuthor());
-        // TODO: 2024/5/21
-        vo.setVisibleRangeList(new ArrayList<>());
 
         Integer createdBy = detail.getCreatedBy();
         UserEntity user = userService.get(Convert.toLong(createdBy));
@@ -116,7 +117,136 @@ public class NoticeServiceImpl
             vo.setCreateUserName(user.getActualName());
         }
         vo.setCreateTime(LocalDateTimeUtil.of(detail.getCreatedTime()));
+
+        Boolean allVisibleFlag = vo.getAllVisibleFlag();
+        if (BooleanUtil.isFalse(allVisibleFlag)) {
+            List<NoticeVisibleRangeEntity> dbList =
+                    noticeVisibleRangeService.getListByNoticeId(Convert.toLong(noticeId));
+
+            Set<Integer> userIdSet = dbList.stream()
+                    .filter(i -> i.getDataType().equals(NoticeVisitbleRangeDataTypeEnum.EMPLOYEE.getCode()))
+                    .map(NoticeVisibleRangeEntity::getDataId)
+                    .collect(Collectors.toSet());
+            Map<Long, String> userMap = MapUtil.newHashMap();
+            if (CollUtil.isNotEmpty(userIdSet)) {
+                List<Long> userList = Convert.toList(Long.class, userIdSet);
+                userMap = userService.getNameMap(new ArrayList<>(userList));
+            }
+
+            Set<Integer> deptIdSet = dbList.stream()
+                    .filter(i -> i.getDataType().equals(NoticeVisitbleRangeDataTypeEnum.DEPARTMENT.getCode()))
+                    .map(NoticeVisibleRangeEntity::getDataId)
+                    .collect(Collectors.toSet());
+            Map<Long, String> deptMap = MapUtil.newHashMap();
+            if (CollUtil.isNotEmpty(deptIdSet)) {
+                List<Long> deptList = Convert.toList(Long.class, deptIdSet);
+                deptMap = departmentService.getNameMap(new ArrayList<>(deptList));
+            }
+
+            List<NoticeVisibleRangeVO> visibleRangeList = new ArrayList<>();
+            for (NoticeVisibleRangeEntity item : dbList) {
+                NoticeVisibleRangeVO rangeVO = new NoticeVisibleRangeVO();
+                Integer dataId = item.getDataId();
+                Integer dataType = item.getDataType();
+                if (NoticeVisitbleRangeDataTypeEnum.EMPLOYEE.getCode().equals(dataType)) {
+                    rangeVO.setDataName(userMap.get(Convert.toLong(dataId)));
+                } else if (NoticeVisitbleRangeDataTypeEnum.DEPARTMENT.getCode().equals(dataType)) {
+                    rangeVO.setDataName(deptMap.get(Convert.toLong(dataId)));
+                }
+                rangeVO.setDataType(dataType);
+                rangeVO.setDataId(dataId);
+                visibleRangeList.add(rangeVO);
+            }
+            vo.setVisibleRangeList(visibleRangeList);
+        }
         return vo;
+    }
+
+    @Override
+    public PagedVO<NoticeUserVO> queryUserNotice(NoticeEmployeeQueryDTO dto) {
+
+        Long userId = UserContextHolder.userIdLong();
+
+        List<Long> deptIdList = new ArrayList<>();
+        UserEntity employeeEntity = userService.get(userId);
+        Long departmentId = employeeEntity.getDepartmentId();
+        if (departmentId != null) {
+            deptIdList = departmentService.getChildrenIdList(departmentId);
+            deptIdList.add(departmentId);
+        }
+
+        if (BooleanUtil.isTrue(dto.getNotViewFlag())) {
+            Page<NoticeUserVO>  voPage = baseRepository.queryEmployeeNotViewNotice(dto, userId, deptIdList,
+                    employeeEntity.getAdministratorFlag(),
+                    NoticeVisitbleRangeDataTypeEnum.DEPARTMENT.getCode(),
+                    NoticeVisitbleRangeDataTypeEnum.EMPLOYEE.getCode());
+            List<NoticeUserVO> records = voPage.getRecords();
+            if (CollUtil.isNotEmpty(records)) {
+                records.forEach(notice -> notice.setPublishDate(notice.getPublishTime().toLocalDate()));
+            }
+            return PageUtil.toPage(records, voPage);
+        }
+        return null;
+    }
+
+    @Override
+    public NoticeDetailVO view(Long noticeId) {
+        NoticeEntity entity = baseRepository.getById(noticeId);
+        if (ObjUtil.isNull(entity)) {
+            this.throwDataNotExistException(noticeId);
+        }
+        // TODO: 2024/5/23 对不起，您没有权限查看内容
+
+        Long userId = UserContextHolder.userIdLong();
+        NoticeViewRecordEntity viewRecordEntity = noticeViewRecordService.getByUserIdAndNoticeId(userId, noticeId);
+        String ipAddr = IpUtil.getIpAddr(ServletUtil.getRequest());
+        if (ObjUtil.isNull(viewRecordEntity)) {
+            NoticeViewRecordEntity newEntity = new NoticeViewRecordEntity();
+            newEntity.setFirstIp(ipAddr);
+            newEntity.setFirstUserAgent("");
+            newEntity.setLastIp(ipAddr);
+            newEntity.setLastUserAgent("");
+            newEntity.setUserId(userId);
+            newEntity.setNoticeId(noticeId);
+            newEntity.setId(noticeId);
+            newEntity.setPageViewCount(1);
+            noticeViewRecordService.save(newEntity);
+        } else {
+            viewRecordEntity.setPageViewCount(viewRecordEntity.getPageViewCount() + 1);
+            viewRecordEntity.setLastIp(ipAddr);
+            // TODO: 2024/5/23
+            viewRecordEntity.setLastUserAgent("");
+            noticeViewRecordService.update(viewRecordEntity);
+        }
+
+        NoticeDetailVO vo = this.convertToDetailVo(entity);
+        Integer noticeTypeId = vo.getNoticeTypeId();
+        Map<Integer, String> noticeTypeMap = noticeTypeService.getMap(ListUtil.of(noticeTypeId));
+        if (MapUtil.isNotEmpty(noticeTypeMap)) {
+            vo.setNoticeTypeName(noticeTypeMap.get(noticeTypeId));
+        }
+        return vo;
+    }
+
+    private NoticeDetailVO convertToDetailVo(NoticeEntity entity) {
+        NoticeDetailVO noticeDetailVO = new NoticeDetailVO();
+        noticeDetailVO.setNoticeId(entity.getId());
+        noticeDetailVO.setTitle(entity.getTitle());
+        noticeDetailVO.setNoticeTypeId(entity.getNoticeTypeId());
+        noticeDetailVO.setAllVisibleFlag(entity.getAllVisibleFlag());
+        noticeDetailVO.setScheduledPublishFlag(entity.getScheduledPublishFlag());
+        noticeDetailVO.setContentText(entity.getContentText());
+        noticeDetailVO.setContentHtml(entity.getContentHtml());
+        noticeDetailVO.setAttachment(entity.getAttachment());
+        noticeDetailVO.setPublishTime(entity.getPublishTime());
+        noticeDetailVO.setAuthor(entity.getAuthor());
+        noticeDetailVO.setSource(entity.getSource());
+        noticeDetailVO.setDocumentNumber(entity.getDocumentNumber());
+        noticeDetailVO.setPageViewCount(entity.getPageViewCount());
+        noticeDetailVO.setUserViewCount(entity.getUserViewCount());
+        noticeDetailVO.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
+        noticeDetailVO.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
+        return noticeDetailVO;
     }
 
     private NoticeVO convertToVO(NoticeEntity item){
