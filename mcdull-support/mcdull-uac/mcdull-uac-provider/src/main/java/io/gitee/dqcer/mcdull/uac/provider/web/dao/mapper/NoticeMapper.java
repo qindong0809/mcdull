@@ -16,4 +16,6 @@ import java.util.List;
 public interface NoticeMapper extends BaseMapper<NoticeEntity> {
 
     Page<NoticeUserVO> queryEmployeeNotViewNotice(@Param("page") Page<?> page, @Param("query") NoticeEmployeeQueryDTO dto, @Param("userId") Long userId, @Param("deptIdList") List<Long> deptIdList, @Param("administratorFlag") Boolean administratorFlag, @Param("deptCode") Integer deptCode, @Param("userCode") Integer userCode);
+    Page<NoticeUserVO> queryEmployeeNotice(@Param("page") Page<?> page, @Param("query") NoticeEmployeeQueryDTO dto, @Param("userId") Long userId, @Param("deptIdList") List<Long> deptIdList, @Param("administratorFlag") Boolean administratorFlag, @Param("deptCode") Integer deptCode, @Param("userCode") Integer userCode);
+
 }

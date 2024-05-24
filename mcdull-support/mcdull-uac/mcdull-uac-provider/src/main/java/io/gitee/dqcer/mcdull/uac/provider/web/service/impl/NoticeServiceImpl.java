@@ -8,7 +8,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.common.collect.Lists;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.engine.CompareBean;
 import io.gitee.dqcer.mcdull.framework.base.engine.DomainEngine;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -168,16 +169,15 @@ public class NoticeServiceImpl
         Long userId = UserContextHolder.userIdLong();
 
         List<Long> deptIdList = new ArrayList<>();
-        UserEntity employeeEntity = userService.get(userId);
-        Long departmentId = employeeEntity.getDepartmentId();
+        UserEntity userEntity = userService.get(userId);
+        Long departmentId = userEntity.getDepartmentId();
         if (departmentId != null) {
             deptIdList = departmentService.getChildrenIdList(departmentId);
             deptIdList.add(departmentId);
         }
-
         if (BooleanUtil.isTrue(dto.getNotViewFlag())) {
-            Page<NoticeUserVO>  voPage = baseRepository.queryEmployeeNotViewNotice(dto, userId, deptIdList,
-                    employeeEntity.getAdministratorFlag(),
+            Page<NoticeUserVO> voPage = baseRepository.queryEmployeeNotViewNotice(dto, userId, deptIdList,
+                    userEntity.getAdministratorFlag(),
                     NoticeVisitbleRangeDataTypeEnum.DEPARTMENT.getCode(),
                     NoticeVisitbleRangeDataTypeEnum.EMPLOYEE.getCode());
             List<NoticeUserVO> records = voPage.getRecords();
@@ -186,7 +186,68 @@ public class NoticeServiceImpl
             }
             return PageUtil.toPage(records, voPage);
         }
-        return null;
+        List<NoticeEntity> noticeEntityList = this.getNoticeEntities(userId, userEntity.getAdministratorFlag());
+        List<NoticeUserVO> voAllList = new ArrayList<>();
+        noticeEntityList = this.filter(dto, noticeEntityList);
+        if (CollUtil.isNotEmpty(noticeEntityList)) {
+            Set<Integer> typeIdSet = noticeEntityList.stream().map(NoticeEntity::getNoticeTypeId).collect(Collectors.toSet());
+            Map<Integer, String> noticeTypeMap = noticeTypeService.getMap(new ArrayList<>(typeIdSet));
+            for (NoticeEntity notice : noticeEntityList) {
+                NoticeUserVO noticeUserVO = this.convertToNoticeUserVO(notice);
+                if (BooleanUtil.isTrue(notice.getScheduledPublishFlag())) {
+                    noticeUserVO.setPublishDate(notice.getPublishTime().toLocalDate());
+                }
+                noticeUserVO.setNoticeTypeName(noticeTypeMap.get(notice.getNoticeTypeId()));
+                NoticeViewRecordEntity viewRecord = noticeViewRecordService.getByUserIdAndNoticeId(userId, Convert.toLong(notice.getId()));
+                Integer pv = GlobalConstant.Number.NUMBER_0;
+                if (ObjUtil.isNotNull(viewRecord)) {
+                    pv = viewRecord.getPageViewCount();
+                }
+                noticeUserVO.setViewFlag(pv > GlobalConstant.Number.NUMBER_0);
+                voAllList.add(noticeUserVO);
+            }
+        }
+        return  PageUtil.of(voAllList, Convert.toInt(dto.getPageSize()), Convert.toInt(dto.getPageNum()));
+    }
+
+    private List<NoticeEntity> filter(NoticeEmployeeQueryDTO dto, List<NoticeEntity> noticeEntityList) {
+        Long noticeTypeId = dto.getNoticeTypeId();
+        if (ObjUtil.isNotNull(noticeTypeId)) {
+            return noticeEntityList.stream().filter(i->i.getNoticeTypeId().equals(Convert.toInt(noticeTypeId))).collect(Collectors.toList());
+        }
+        return noticeEntityList;
+    }
+
+    private NoticeUserVO convertToNoticeUserVO(NoticeEntity entity) {
+        NoticeUserVO noticeUserVO = new NoticeUserVO();
+        noticeUserVO.setPublishDate(LocalDate.from(LocalDateTimeUtil.of(entity.getPublishTime())));
+        noticeUserVO.setNoticeId(entity.getId());
+        noticeUserVO.setTitle(entity.getTitle());
+        noticeUserVO.setNoticeTypeId(entity.getNoticeTypeId());
+        noticeUserVO.setAllVisibleFlag(entity.getAllVisibleFlag());
+        noticeUserVO.setScheduledPublishFlag(entity.getScheduledPublishFlag());
+        noticeUserVO.setPublishFlag(entity.getScheduledPublishFlag());
+        noticeUserVO.setPublishTime(entity.getPublishTime());
+        noticeUserVO.setAuthor(entity.getAuthor());
+        noticeUserVO.setSource(entity.getSource());
+        noticeUserVO.setDocumentNumber(entity.getDocumentNumber());
+        noticeUserVO.setPageViewCount(entity.getPageViewCount());
+        noticeUserVO.setUserViewCount(entity.getUserViewCount());
+        noticeUserVO.setDeletedFlag(entity.getDelFlag());
+        noticeUserVO.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
+        noticeUserVO.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
+        return noticeUserVO;
+    }
+
+    private List<NoticeEntity> getNoticeEntities(Long userId, Boolean administratorFlag) {
+        if (BooleanUtil.isTrue(administratorFlag)) {
+            List<Long> noticeIdList = noticeViewRecordService.getByUserId(userId);
+            if (CollUtil.isEmpty(noticeIdList)) {
+                return Collections.emptyList();
+            }
+            return baseRepository.queryListByIds(Convert.toList(Integer.class, noticeIdList));
+        }
+        return baseRepository.list();
     }
 
     @Override

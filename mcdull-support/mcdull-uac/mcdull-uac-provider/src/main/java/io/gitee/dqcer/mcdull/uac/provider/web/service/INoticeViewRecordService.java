@@ -17,4 +17,6 @@ public interface INoticeViewRecordService {
     void save(NoticeViewRecordEntity newEntity);
 
     void update(NoticeViewRecordEntity entity);
+
+    List<Long> getByUserId(Long userId);
 }

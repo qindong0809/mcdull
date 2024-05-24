@@ -59,4 +59,7 @@
         ) t where viewFlag = 0
         order by t.publish_time desc
     </select>
+    <select id="queryEmployeeNotice" resultType="io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeUserVO">
+
+    </select>
 </mapper>

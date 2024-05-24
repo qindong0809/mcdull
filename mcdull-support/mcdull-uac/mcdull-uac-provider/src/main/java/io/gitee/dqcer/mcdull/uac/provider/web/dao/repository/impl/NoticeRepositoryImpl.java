@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -47,9 +48,19 @@ public class NoticeRepositoryImpl extends
     @Override
     public Page<NoticeEntity> selectPage(NoticeQueryDTO param) {
         LambdaQueryWrapper<NoticeEntity> lambda = Wrappers.lambdaQuery();
-        String keyword = param.getKeyword();
-        if (ObjUtil.isNotNull(keyword)) {
-            // TODO 组装查询条件
+        Long noticeTypeId = param.getNoticeTypeId();
+        if (ObjUtil.isNotNull(noticeTypeId)) {
+            lambda.eq(NoticeEntity::getNoticeTypeId, noticeTypeId);
+        }
+        String documentNumber = param.getDocumentNumber();
+        if (ObjUtil.isNotEmpty(documentNumber)) {
+            lambda.like(NoticeEntity::getDocumentNumber, documentNumber);
+        }
+        String keywords = param.getKeywords();
+        if (StrUtil.isNotBlank(keywords)) {
+            lambda.and(i -> i.like(NoticeEntity::getAuthor, keywords)
+                    .or().like(NoticeEntity::getSource, keywords)
+                    .or().like(NoticeEntity::getTitle, keywords));
         }
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
@@ -64,5 +75,16 @@ public class NoticeRepositoryImpl extends
                                                          Integer userCode) {
         Page<?> page = new Page<>(dto.getPageNum(), dto.getPageSize());
         return baseMapper.queryEmployeeNotViewNotice(page, dto, userId, deptIdList, administratorFlag, deptCode, userCode);
+    }
+
+    @Override
+    public Page<NoticeUserVO> queryEmployeeNotice(NoticeEmployeeQueryDTO dto,
+                                                  Long userId,
+                                                  List<Long> deptIdList,
+                                                  Boolean administratorFlag,
+                                                  Integer deptCode,
+                                                  Integer userCode) {
+        Page<?> page = new Page<>(dto.getPageNum(), dto.getPageSize());
+        return baseMapper.queryEmployeeNotice(page, dto, userId, deptIdList, administratorFlag, deptCode, userCode);
     }
 }

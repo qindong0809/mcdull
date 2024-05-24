@@ -8,6 +8,8 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.NoticeViewRecordMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.INoticeViewRecordRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
 * @author dqcer
 * @since 2024-04-29
@@ -23,5 +25,12 @@ public class NoticeViewRecordRepositoryImpl extends
         query.eq(NoticeViewRecordEntity::getNoticeId, noticeId);
         query.eq(NoticeViewRecordEntity::getUserId, userId);
         return baseMapper.selectOne(query);
+    }
+
+    @Override
+    public List<NoticeViewRecordEntity> getByUserId(Long userId) {
+        LambdaQueryWrapper<NoticeViewRecordEntity> query = Wrappers.lambdaQuery();
+        query.eq(NoticeViewRecordEntity::getUserId, userId);
+        return baseMapper.selectList(query);
     }
 }

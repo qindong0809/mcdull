@@ -3,6 +3,8 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeViewRecordEntity;
 
+import java.util.List;
+
 /**
 *
 * @author dqcer
@@ -11,4 +13,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeViewRecordEntity;
 public interface INoticeViewRecordRepository extends IService<NoticeViewRecordEntity> {
 
     NoticeViewRecordEntity getByUserIdAndNoticeId(Long userId, Long noticeId);
+
+    List<NoticeViewRecordEntity> getByUserId(Long userId);
 }

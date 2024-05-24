@@ -41,4 +41,8 @@ public class PageUtil {
         return new PagedVO<>(Collections.emptyList(), 0,
                 Convert.toInt(iPage.getPageSize()), Convert.toInt(iPage.getPageNum()));
     }
+
+    public static <T> PagedVO<T> of(List<T> list, Integer pageSize, Integer pageNum) {
+        return new PagedVO<>(list, list.size(), pageSize, pageNum);
+    }
 }

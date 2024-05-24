@@ -25,4 +25,11 @@ public interface INoticeRepository extends IService<NoticeEntity> {
                                                   Boolean administratorFlag,
                                                   Integer deptCode,
                                                   Integer userCode);
+
+    Page<NoticeUserVO> queryEmployeeNotice(NoticeEmployeeQueryDTO dto,
+                                           Long userId,
+                                           List<Long> deptIdList,
+                                           Boolean administratorFlag,
+                                           Integer deptCode,
+                                           Integer userCode);
 }
