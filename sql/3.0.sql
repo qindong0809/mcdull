@@ -201,6 +201,9 @@ INSERT INTO `sys_menu` VALUES (215, '接口加解密', 2, 213, 3, '/support/api-
 INSERT INTO `sys_menu` VALUES (216, '导出', 3, 47, NULL, NULL, NULL, 1, 'goods:exportGoods', 'goods:exportGoods', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, '2023-12-01 19:34:03', NULL, '2023-12-01 19:34:03');
 INSERT INTO `sys_menu` VALUES (217, '导入', 3, 47, 3, NULL, NULL, 1, 'goods:importGoods', 'goods:importGoods', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, '2023-12-01 19:34:22', NULL, '2023-12-01 19:34:22');
 INSERT INTO `sys_menu` VALUES (218, '文档中心', 1, 0, 4, NULL, NULL, 1, NULL, NULL, 'FileSearchOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, '2023-12-01 19:37:28', 1, '2023-12-01 19:37:51');
+INSERT INTO `sys_menu` VALUES (221, '会话信息', 2, 111, 1, '/support/session/session-list', '/support/session/session-list.vue', 1, 'system:monitor:session_read', 'system:monitor:session_read', 'DashboardOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (223, '强退', 3, 221, NULL, NULL, NULL, 1, 'system:monitor:session_kickout', 'system:monitor:session_kickout', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (222, '查询', 3, 221, NULL, NULL, NULL, 1, 'system:monitor:session_read', 'system:monitor:session_read', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 
 
 drop table if exists `sys_role_menu`;

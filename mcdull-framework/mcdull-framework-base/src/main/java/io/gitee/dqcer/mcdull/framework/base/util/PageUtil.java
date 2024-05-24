@@ -37,12 +37,16 @@ public class PageUtil {
                 Convert.toInt(iPage.getSize()), Convert.toInt(iPage.getCurrent()));
     }
 
-    public static <T> PagedVO<T> empty(Paged iPage) {
+    public static <T, D extends PagedDTO> PagedVO<T> empty(D iPage) {
         return new PagedVO<>(Collections.emptyList(), 0,
                 Convert.toInt(iPage.getPageSize()), Convert.toInt(iPage.getPageNum()));
     }
 
     public static <T> PagedVO<T> of(List<T> list, Integer pageSize, Integer pageNum) {
         return new PagedVO<>(list, list.size(), pageSize, pageNum);
+    }
+
+    public static <T, D extends PagedDTO> PagedVO<T> of(List<T> list, D dto) {
+        return new PagedVO<>(list, list.size(), dto.getPageSize(), dto.getPageNum());
     }
 }
