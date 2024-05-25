@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("sys_dict_key")
-public class DictKeyEntity extends RelEntity<Long> {
+public class DictKeyEntity extends RelEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 

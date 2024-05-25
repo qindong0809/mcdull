@@ -25,7 +25,7 @@ public class HelpDocAddDTO implements DTO {
 
     @Schema(description = "分类")
     @NotNull(message = "分类不能为空")
-    private Long helpDocCatalogId;
+    private Integer helpDocCatalogId;
 
     @Schema(description = "纯文本内容")
     @NotNull(message = "文本内容不能为空")

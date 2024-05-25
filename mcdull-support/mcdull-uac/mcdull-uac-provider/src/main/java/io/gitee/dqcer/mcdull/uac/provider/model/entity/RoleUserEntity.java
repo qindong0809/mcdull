@@ -14,12 +14,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("sys_role_user")
-public class RoleUserEntity extends RelEntity<Long> {
+public class RoleUserEntity extends RelEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 
-    private Long userId;
+    private Integer userId;
 
-    private Long roleId;
+    private Integer roleId;
 
 }

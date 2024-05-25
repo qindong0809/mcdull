@@ -66,7 +66,7 @@ public class NoticeAddDTO implements DTO {
     private String documentNumber;
 
     @Schema(hidden = true)
-    private Long createUserId;
+    private Integer createUserId;
 
     @Schema(description = "可见范围设置|可选")
     @Valid

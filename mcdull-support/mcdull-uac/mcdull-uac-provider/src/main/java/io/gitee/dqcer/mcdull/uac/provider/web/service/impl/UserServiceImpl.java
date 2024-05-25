@@ -103,8 +103,8 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     @Override
     @Transactional(readOnly = true)
     public PagedVO<UserVO> listByPage(UserListDTO dto) {
-        Long departmentId = dto.getDepartmentId();
-        List<Long> deptIdList = new ArrayList<>();
+        Integer departmentId = dto.getDepartmentId();
+        List<Integer> deptIdList = new ArrayList<>();
         if (ObjUtil.isNotNull(departmentId)) {
            List<DepartmentEntity> entityList = departmentRepository.getTreeList(departmentId);
             if (CollUtil.isNotEmpty(entityList)) {
@@ -122,10 +122,10 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         return PageUtil.toPage(voList, entityPage);
     }
 
-    private void setRoleListFieldValue(Map<Long, List<RoleEntity>> roleListMap, UserVO vo, Long userId ) {
+    private void setRoleListFieldValue(Map<Integer, List<RoleEntity>> roleListMap, UserVO vo, Integer userId ) {
         List<RoleEntity> list = roleListMap.getOrDefault(userId, ListUtil.empty());
         if (CollUtil.isNotEmpty(list)) {
-            List<Long> collect = list.stream().map(IdEntity::getId).collect(Collectors.toList());
+            List<Integer> collect = list.stream().map(IdEntity::getId).collect(Collectors.toList());
             List<Integer> roleIdLis = new ArrayList<>();
             collect.forEach(r -> roleIdLis.add(Convert.toInt(r)));
             vo.setRoleIdList(roleIdLis);
@@ -133,7 +133,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         }
     }
 
-    private void setUserFieldValue(Map<Long, UserEntity> userMap, UserVO vo) {
+    private void setUserFieldValue(Map<Integer, UserEntity> userMap, UserVO vo) {
         Integer createdBy = vo.getCreatedBy();
 //        if (ObjUtil.isNotNull(createdBy)) {
 //            vo.setCreatedByStr(userMap.getOrDefault(createdBy, new UserEntity()).getUsername());
@@ -146,9 +146,9 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long insert(UserAddDTO dto) {
+    public Integer insert(UserAddDTO dto) {
         this.checkParam(dto);
-        Long id = this.buildEntityAndInsert(dto);
+        Integer id = this.buildEntityAndInsert(dto);
         userRoleService.batchUserListByRoleId(id, dto.getRoleIdList());
         return id;
     }
@@ -169,7 +169,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         }
     }
 
-    private Long buildEntityAndInsert(UserAddDTO dto) {
+    private Integer buildEntityAndInsert(UserAddDTO dto) {
         UserEntity entity = UserConvert.insertDtoToEntity(dto);
         entity.setLoginPwd("a29c57c6894dee6e8251510d58c07078ee3f49bf");
         entity.setAdministratorFlag(false);
@@ -178,7 +178,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void toggleActive(Long id) {
+    public void toggleActive(Integer id) {
         UserEntity dbData = baseRepository.getById(id);
         if (null == dbData) {
             log.warn("数据不存在 id:{}", id);
@@ -199,7 +199,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean delete(List<Long> idList) {
+    public boolean delete(List<Integer> idList) {
         List<UserEntity> userEntities = baseRepository.listByIds(idList);
         if (userEntities.size() != idList.size()) {
             this.throwDataNotExistException(idList);
@@ -216,7 +216,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long updatePassword(Long id, UserUpdatePasswordDTO dto) {
+    public Integer updatePassword(Integer id, UserUpdatePasswordDTO dto) {
         UserEntity entity = baseRepository.getById(id);
         if (entity == null) {
             this.throwDataNotExistException(id);
@@ -232,7 +232,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long update(Long id, UserUpdateDTO dto) {
+    public Integer update(Integer id, UserUpdateDTO dto) {
         this.checkParamThrowException(id, dto);
         UserEntity updateDO = UserConvert.updateDtoToEntity(dto);
         updateDO.setId(id);
@@ -241,7 +241,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         return updateDO.getId();
     }
 
-    private void checkParamThrowException(Long id, UserUpdateDTO dto) {
+    private void checkParamThrowException(Integer id, UserUpdateDTO dto) {
         UserEntity entity = baseRepository.getById(id);
         if (entity == null) {
             log.warn("数据不存在 id:{}", id);
@@ -263,8 +263,8 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     }
 
     @Override
-    public List<UserPowerVO> getResourceModuleList(Long userId) {
-        Map<Long, List<RoleEntity>> roleListMap = roleService.getRoleMap(ListUtil.of(userId));
+    public List<UserPowerVO> getResourceModuleList(Integer userId) {
+        Map<Integer, List<RoleEntity>> roleListMap = roleService.getRoleMap(ListUtil.of(userId));
         List<RoleEntity> roleDOList = roleListMap.get(userId);
         if (CollUtil.isEmpty(roleDOList)) {
             log.warn("userId: {} 查无角色权限", userId);
@@ -277,8 +277,8 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
             return vo;
         }).collect(Collectors.toList());
 
-        Set<Long> roleSet = vos.stream().map(UserPowerVO::getRoleId).collect(Collectors.toSet());
-        Map<Long, List<String>> keyRoleIdValueMenuCode = menuService.getMenuCodeListMap(new ArrayList<>(roleSet));
+        Set<Integer> roleSet = vos.stream().map(UserPowerVO::getRoleId).collect(Collectors.toSet());
+        Map<Integer, List<String>> keyRoleIdValueMenuCode = menuService.getMenuCodeListMap(new ArrayList<>(roleSet));
         for (UserPowerVO vo : vos) {
             String code = vo.getCode();
             if (ObjectUtil.equals(GlobalConstant.SUPER_ADMIN_ROLE, code)) {
@@ -297,19 +297,19 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     }
 
     @Override
-    public Map<Long, UserEntity> getEntityMap(List<Long> userIdList) {
+    public Map<Integer, UserEntity> getEntityMap(List<Integer> userIdList) {
         List<UserEntity> list = this.list(userIdList);
         return list.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
     }
 
     @Override
-    public Map<Long, String> getNameMap(List<Long> userIdList) {
+    public Map<Integer, String> getNameMap(List<Integer> userIdList) {
         List<UserEntity> list = this.list(userIdList);
         return list.stream().collect(Collectors.toMap(IdEntity::getId, UserEntity::getLoginName));
     }
 
     @Override
-    public UserEntity get(Long userId) {
+    public UserEntity get(Integer userId) {
         if (ObjUtil.isNotNull(userId)) {
             List<UserEntity> list = this.list(ListUtil.of(userId));
             if (CollUtil.isNotEmpty(list)) {
@@ -323,7 +323,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     @Override
     public String resetPassword(Integer userId) {
         String newPassword = RandomUtil.genAz09(5);
-        baseRepository.update(Convert.toLong(userId), newPassword);
+        baseRepository.update(userId, newPassword);
         return newPassword;
     }
 
@@ -332,19 +332,19 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         List<UserAllVO> voList = new ArrayList<>();
         List<UserEntity> list = baseRepository.list();
         if (CollUtil.isNotEmpty(list)) {
-            Set<Long> deptIdSet = list.stream().map(UserEntity::getDepartmentId).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+            Set<Integer> deptIdSet = list.stream().map(UserEntity::getDepartmentId).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
             List<DepartmentEntity> departmentEntities = departmentRepository.listByIds(new ArrayList<>(deptIdSet));
-            Map<Long, DepartmentEntity> map = new HashMap<>();
+            Map<Integer, DepartmentEntity> map = new HashMap<>();
             if (CollUtil.isNotEmpty(departmentEntities)) {
                map = departmentEntities.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
             }
-            List<Long> userIdList = list.stream().map(IdEntity::getId).collect(Collectors.toList());
+            List<Integer> userIdList = list.stream().map(IdEntity::getId).collect(Collectors.toList());
 
-            Map<Long, List<RoleEntity>> roleMap = roleService.getRoleMap(userIdList);
+            Map<Integer, List<RoleEntity>> roleMap = roleService.getRoleMap(userIdList);
 
             for (UserEntity userEntity : list) {
                 UserAllVO vo = UserConvert.entityToAllVO(userEntity);
-                Long departmentId = userEntity.getDepartmentId();
+                Integer departmentId = userEntity.getDepartmentId();
                 if (ObjUtil.isNotNull(departmentId)) {
                     DepartmentEntity departmentEntity = map.get(departmentId);
                     if (ObjUtil.isNotNull(departmentEntity)) {
@@ -367,19 +367,19 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void batchUpdateDepartment(UserBatchUpdateDepartmentDTO dto) {
-        List<Long> list = dto.getEmployeeIdList();
+        List<Integer> list = dto.getEmployeeIdList();
         List<UserEntity> userEntities = baseRepository.listByIds(list);
         if (list.size() != userEntities.size()) {
             this.throwDataNotExistException(list);
         }
-        Long departmentId = dto.getDepartmentId();
+        Integer departmentId = dto.getDepartmentId();
         userEntities.forEach(i -> i.setDepartmentId(departmentId));
         baseRepository.updateBatchById(userEntities);
     }
 
     @Override
     public PagedVO<UserVO> query(RoleUserQueryDTO dto) {
-        List<Long> idList = userRoleService.getUserId(dto.getRoleId());
+        List<Integer> idList = userRoleService.getUserId(dto.getRoleId());
         if (CollUtil.isEmpty(idList)) {
             return PageUtil.empty(dto);
         }
@@ -400,17 +400,17 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
                 .filter(ObjUtil::isNotNull).collect(Collectors.toSet());
         createdBySet.addAll(updatedBySet);
         List<UserEntity> list = baseRepository.listByIds(createdBySet);
-        Map<Long, UserEntity> userMap = new HashMap<>(list.size());
+        Map<Integer, UserEntity> userMap = new HashMap<>(list.size());
         if (CollUtil.isNotEmpty(list)) {
             userMap = list.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
         }
-        List<Long> userIdList = userList.stream().map(IdEntity::getId).collect(Collectors.toList());
-        Map<Long, List<RoleEntity>> roleListMap = roleService.getRoleMap(userIdList);
+        List<Integer> userIdList = userList.stream().map(IdEntity::getId).collect(Collectors.toList());
+        Map<Integer, List<RoleEntity>> roleListMap = roleService.getRoleMap(userIdList);
 
 
-        Set<Long> depIdSet = userList.stream().map(UserEntity::getDepartmentId).collect(Collectors.toSet());
+        Set<Integer> depIdSet = userList.stream().map(UserEntity::getDepartmentId).collect(Collectors.toSet());
         List<DepartmentEntity> departmentEntities = departmentRepository.listByIds(new ArrayList(depIdSet));
-        Map<Long, DepartmentEntity> deptMap = departmentEntities.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+        Map<Integer, DepartmentEntity> deptMap = departmentEntities.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
 
         for (UserEntity entity : userList) {
             UserVO vo = UserConvert.entityToVO(entity);
@@ -422,7 +422,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         return voList;
     }
 
-    private void setDeptFieldValue(Map<Long, DepartmentEntity> deptMap, Long departmentId, UserVO vo) {
+    private void setDeptFieldValue(Map<Integer, DepartmentEntity> deptMap, Integer departmentId, UserVO vo) {
         if (ObjUtil.isNotNull(departmentId)) {
             DepartmentEntity departmentEntity = deptMap.get(departmentId);
             if (ObjUtil.isNotNull(departmentEntity)) {
@@ -433,8 +433,8 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
 
     @Override
-    public List<UserVO> getAllByRoleId(Long roleId) {
-        List<Long> idList = userRoleService.getUserId(roleId);
+    public List<UserVO> getAllByRoleId(Integer roleId) {
+        List<Integer> idList = userRoleService.getUserId(roleId);
         if (CollUtil.isEmpty(idList)) {
             return Collections.emptyList();
         }
@@ -452,11 +452,11 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     }
 
     @Override
-    public List<UserEntity> listByDeptList(List<Long> deptIdList) {
+    public List<UserEntity> listByDeptList(List<Integer> deptIdList) {
         return baseRepository.listByDeptList(deptIdList);
     }
 
-    private List<UserEntity> list(List<Long> userIdList) {
+    private List<UserEntity> list(List<Integer> userIdList) {
         if (CollUtil.isNotEmpty(userIdList)) {
             List<UserEntity> userList = baseRepository.listByIds(userIdList);
             return CollUtil.emptyIfNull(userList);

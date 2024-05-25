@@ -33,5 +33,5 @@ public interface INoticeService {
 
     PagedVO<NoticeUserVO> queryUserNotice(NoticeEmployeeQueryDTO dto);
 
-    NoticeDetailVO view(Long noticeId);
+    NoticeDetailVO view(Integer noticeId);
 }

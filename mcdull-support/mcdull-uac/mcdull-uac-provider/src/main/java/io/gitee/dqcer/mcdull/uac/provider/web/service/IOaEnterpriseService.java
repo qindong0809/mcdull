@@ -21,5 +21,5 @@ public interface IOaEnterpriseService {
 
     void update(EnterpriseUpdateDTO dto);
 
-    void delete(Long enterpriseId);
+    void delete(Integer enterpriseId);
 }

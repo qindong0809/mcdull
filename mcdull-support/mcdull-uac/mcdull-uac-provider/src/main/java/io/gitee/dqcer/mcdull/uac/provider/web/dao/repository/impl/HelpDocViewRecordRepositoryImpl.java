@@ -30,11 +30,11 @@ public class HelpDocViewRecordRepositoryImpl
     @Override
     public Page<HelpDocViewRecordEntity> selectPage(HelpDocViewRecordQueryDTO dto) {
         LambdaQueryWrapper<HelpDocViewRecordEntity> lambda = new QueryWrapper<HelpDocViewRecordEntity>().lambda();
-        Long helpDocId = dto.getHelpDocId();
+        Integer helpDocId = dto.getHelpDocId();
         if (ObjUtil.isNotNull(helpDocId)) {
             lambda.eq(HelpDocViewRecordEntity::getHelpDocId, helpDocId);
         }
-        Long userId = dto.getUserId();
+        Integer userId = dto.getUserId();
         if (ObjUtil.isNotNull(userId)) {
             lambda.eq(HelpDocViewRecordEntity::getUserId, userId);
         }

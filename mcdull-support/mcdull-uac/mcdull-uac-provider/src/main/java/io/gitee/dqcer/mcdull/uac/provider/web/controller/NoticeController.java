@@ -83,7 +83,7 @@ public class NoticeController {
 
     @Operation(summary = "【员工】通知公告-查看详情")
     @GetMapping("/notice/employee/view/{noticeId}")
-    public Result<NoticeDetailVO> view(@PathVariable Long noticeId) {
+    public Result<NoticeDetailVO> view(@PathVariable Integer noticeId) {
         return Result.success(noticeService.view(noticeId));
     }
 

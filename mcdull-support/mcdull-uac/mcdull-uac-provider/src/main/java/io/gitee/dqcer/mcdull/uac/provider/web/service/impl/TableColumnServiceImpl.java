@@ -26,13 +26,14 @@ import java.util.stream.Collectors;
 * @since 2024-04-29
 */
 @Service
-public class TableColumnServiceImpl extends BasicServiceImpl<ITableColumnRepository> implements ITableColumnService {
+public class TableColumnServiceImpl
+        extends BasicServiceImpl<ITableColumnRepository> implements ITableColumnService {
 
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateTableColumns(TableColumnUpdateDTO dto) {
-        Long userId = UserContextHolder.userIdLong();
+        Integer userId = UserContextHolder.userId();
         String string = JSONUtil.parseArray(dto.getColumnList()).toString();
         List<TableColumnEntity> list = baseRepository.selectList(userId);
         if (CollUtil.isNotEmpty(list)) {
@@ -56,7 +57,7 @@ public class TableColumnServiceImpl extends BasicServiceImpl<ITableColumnReposit
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteTableColumn(Integer tableId) {
-        Long userId = UserContextHolder.userIdLong();
+        Integer userId = UserContextHolder.userId();
         List<TableColumnEntity> list = baseRepository.selectList(userId);
         if (CollUtil.isNotEmpty(list)) {
             Map<Integer, TableColumnEntity> map = list.stream().collect(Collectors.toMap(TableColumnEntity::getTableId,
@@ -72,7 +73,7 @@ public class TableColumnServiceImpl extends BasicServiceImpl<ITableColumnReposit
 
     @Override
     public String getTableColumns(Integer tableId) {
-        Long userId = UserContextHolder.userIdLong();
+        Integer userId = UserContextHolder.userId();
         List<TableColumnEntity> list = baseRepository.selectList(userId);
         if (CollUtil.isNotEmpty(list)) {
             Map<Integer, TableColumnEntity> map = list.stream().collect(Collectors.toMap(TableColumnEntity::getTableId,

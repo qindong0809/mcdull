@@ -68,7 +68,7 @@ public class DictValueServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(DictValueUpdateDTO dto) {
-        Long id = dto.getDictValueId();
+        Integer id = dto.getDictValueId();
         String valueName = dto.getValueName();
         String valueCode = dto.getValueCode();
         List<DictValueEntity> entityList = baseRepository.getListByDictKeyId(dto.getDictKeyId());
@@ -79,12 +79,12 @@ public class DictValueServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void delete(List<Long> idList) {
+    public void delete(List<Integer> idList) {
         DictValueEntity entity = baseRepository.getById(idList.get(0));
         if (ObjUtil.isNotNull(entity)) {
             List<DictValueEntity> list = baseRepository.getListByDictKeyId(entity.getDictKeyId());
             if (CollUtil.isNotEmpty(list)) {
-                List<Long> collect = list.stream().map(IdEntity::getId).collect(Collectors.toList());
+                List<Integer> collect = list.stream().map(IdEntity::getId).collect(Collectors.toList());
                 if (!CollUtil.containsAll(collect, idList)) {
                     throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
                 }

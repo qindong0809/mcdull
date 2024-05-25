@@ -22,7 +22,7 @@ public class DictValueQueryDTO extends PagedDTO {
 
     @Schema(description = "dictKeyId")
     @NotNull(message = "dictKeyId不能为空")
-    private Long dictKeyId;
+    private Integer dictKeyId;
 
     @Schema(description = "搜索词")
     private String searchWord;

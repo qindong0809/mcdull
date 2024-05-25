@@ -27,7 +27,7 @@ public class DepartmentRepositoryImpl extends ServiceImpl<DepartmentMapper, Depa
 
 
     @Override
-    public Long insert(DepartmentEntity entity) {
+    public Integer insert(DepartmentEntity entity) {
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {
             throw new BusinessException(CodeEnum.DB_ERROR);
@@ -37,12 +37,12 @@ public class DepartmentRepositoryImpl extends ServiceImpl<DepartmentMapper, Depa
 
 
     @Override
-    public boolean delete(Long id, String reason) {
+    public boolean delete(Integer id, String reason) {
         return removeById(id);
     }
 
     @Override
-    public List<DepartmentEntity> listByParentId(Long parentId) {
+    public List<DepartmentEntity> listByParentId(Integer parentId) {
         LambdaQueryWrapper<DepartmentEntity> query = Wrappers.lambdaQuery();
         query.eq(DepartmentEntity::getParentId, parentId);
         return baseMapper.selectList(query);
@@ -55,11 +55,11 @@ public class DepartmentRepositoryImpl extends ServiceImpl<DepartmentMapper, Depa
 
 
     @Override
-    public List<DepartmentEntity> getTreeList(Long parentDeptId) {
+    public List<DepartmentEntity> getTreeList(Integer parentDeptId) {
         return this.getChildNodeByParentId(parentDeptId);
     }
 
-    private List<DepartmentEntity> getChildNodeByParentId(Long parentId) {
+    private List<DepartmentEntity> getChildNodeByParentId(Integer parentId) {
         List<DepartmentEntity> result = new ArrayList<>();
         List<DepartmentEntity> list = this.listByParentId(parentId);
         if (CollUtil.isNotEmpty(list)) {

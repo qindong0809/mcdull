@@ -25,7 +25,7 @@ public class RoleDataScopeRepositoryImpl extends ServiceImpl<RoleDataScopeMapper
     private static final Logger log = LoggerFactory.getLogger(RoleDataScopeRepositoryImpl.class);
 
     @Override
-    public List<RoleDataScopeEntity> getListByRole(Long roleId) {
+    public List<RoleDataScopeEntity> getListByRole(Integer roleId) {
         LambdaQueryWrapper<RoleDataScopeEntity> query = Wrappers.lambdaQuery();
         query.eq(RoleDataScopeEntity::getRoleId, roleId);
         return baseMapper.selectList(query);

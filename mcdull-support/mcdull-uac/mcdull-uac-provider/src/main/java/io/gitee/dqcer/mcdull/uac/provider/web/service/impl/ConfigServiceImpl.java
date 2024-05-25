@@ -55,7 +55,7 @@ public class ConfigServiceImpl extends BasicServiceImpl<IConfigRepository> imple
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(ConfigUpdateDTO dto) {
-        Long configId = dto.getConfigId();
+        Integer configId = dto.getConfigId();
         ConfigEntity configEntity = baseRepository.getById(configId);
         if (ObjUtil.isNull(configEntity)) {
             this.throwDataNotExistException(configId);
@@ -73,7 +73,7 @@ public class ConfigServiceImpl extends BasicServiceImpl<IConfigRepository> imple
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void delete(List<Long> idList) {
+    public void delete(List<Integer> idList) {
         List<ConfigEntity> entityList = baseRepository.listByIds(idList);
         if (CollUtil.isEmpty(entityList)) {
             entityList = new LinkedList<>();

@@ -17,7 +17,7 @@ import java.util.Date;
 @Getter
 @Setter
 @TableName("sys_change_log")
-public class ChangeLogEntity extends RelEntity<Long> {
+public class ChangeLogEntity extends RelEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 

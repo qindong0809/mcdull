@@ -24,7 +24,7 @@ public interface IUserRepository extends IService<UserEntity> {
      * @param deptIdList
      * @return {@link Page}<{@link UserEntity}>
      */
-    Page<UserEntity> selectPage(UserListDTO dto, List<Long> deptIdList);
+    Page<UserEntity> selectPage(UserListDTO dto, List<Integer> deptIdList);
 
     /**
      * 插入
@@ -32,7 +32,7 @@ public interface IUserRepository extends IService<UserEntity> {
      * @param entity 实体
      * @return {@link Long}
      */
-    Long insert(UserEntity entity);
+    Integer insert(UserEntity entity);
 
     /**
      * 单个根据账户名称
@@ -49,13 +49,13 @@ public interface IUserRepository extends IService<UserEntity> {
      * @param inactive 不活跃
      * @return boolean
      */
-    boolean update(Long id, boolean inactive);
+    boolean update(Integer id, boolean inactive);
 
-    boolean update(Long id, String password);
+    boolean update(Integer id, String password);
 
-    Page<UserEntity> selectPageByRoleId(List<Long> userIdList, RoleUserQueryDTO dto);
+    Page<UserEntity> selectPageByRoleId(List<Integer> userIdList, RoleUserQueryDTO dto);
 
-    Page<UserEntity> selectPageByRoleId(List<Long> userIdList, PagedDTO dto);
+    Page<UserEntity> selectPageByRoleId(List<Integer> userIdList, PagedDTO dto);
 
-    List<UserEntity> listByDeptList(List<Long> deptIdList);
+    List<UserEntity> listByDeptList(List<Integer> deptIdList);
 }

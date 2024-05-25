@@ -18,19 +18,19 @@ public interface IUserService {
 
     PagedVO<UserVO> listByPage(UserListDTO dto);
 
-    Long insert(UserAddDTO dto);
+    Integer insert(UserAddDTO dto);
 
     UserEntity get(String username);
 
-    void toggleActive(Long id);
+    void toggleActive(Integer id);
 
-    boolean delete(List<Long> id);
+    boolean delete(List<Integer> id);
 
-    Long updatePassword(Long id, UserUpdatePasswordDTO dto);
+    Integer updatePassword(Integer id, UserUpdatePasswordDTO dto);
 
-    Long update(Long id, UserUpdateDTO dto);
+    Integer update(Integer id, UserUpdateDTO dto);
 
-    List<UserPowerVO> getResourceModuleList(Long userId);
+    List<UserPowerVO> getResourceModuleList(Integer userId);
 
     /**
      * userid、entity
@@ -38,7 +38,7 @@ public interface IUserService {
      * @param userIdList 用户id列表
      * @return {@link Map}<{@link Long}, {@link UserEntity}>
      */
-    Map<Long, UserEntity> getEntityMap(List<Long> userIdList);
+    Map<Integer, UserEntity> getEntityMap(List<Integer> userIdList);
 
     /**
      * userid、username
@@ -46,7 +46,7 @@ public interface IUserService {
      * @param userIdList 用户id列表
      * @return {@link Map}<{@link Long}, {@link String}>
      */
-    Map<Long, String> getNameMap(List<Long> userIdList);
+    Map<Integer, String> getNameMap(List<Integer> userIdList);
 
     /**
      * get
@@ -54,7 +54,7 @@ public interface IUserService {
      * @param userId 用户id
      * @return {@link UserVO}
      */
-    UserEntity get(Long userId);
+    UserEntity get(Integer userId);
 
     String resetPassword(Integer userId);
 
@@ -64,9 +64,9 @@ public interface IUserService {
 
     PagedVO<UserVO> query(RoleUserQueryDTO dto);
 
-    List<UserVO> getAllByRoleId(Long roleId);
+    List<UserVO> getAllByRoleId(Integer roleId);
 
     void addUserListByRole(RoleUserUpdateDTO dto);
 
-    List<UserEntity> listByDeptList(List<Long> deptIdList);
+    List<UserEntity> listByDeptList(List<Integer> deptIdList);
 }

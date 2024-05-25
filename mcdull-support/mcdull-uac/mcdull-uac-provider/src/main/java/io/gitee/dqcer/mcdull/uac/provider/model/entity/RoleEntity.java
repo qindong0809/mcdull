@@ -14,7 +14,7 @@ import lombok.Setter;
 @TableName("sys_role")
 @Getter
 @Setter
-public class RoleEntity extends BaseEntity<Long> {
+public class RoleEntity extends BaseEntity<Integer> {
 
     private String roleName;
 

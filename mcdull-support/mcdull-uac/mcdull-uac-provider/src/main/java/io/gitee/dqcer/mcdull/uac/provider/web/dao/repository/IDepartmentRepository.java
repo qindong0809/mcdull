@@ -12,14 +12,14 @@ import java.util.List;
 public interface IDepartmentRepository extends IService<DepartmentEntity> {
 
 
-    Long insert(DepartmentEntity entity);
+    Integer insert(DepartmentEntity entity);
 
-    boolean delete(Long id, String reason);
+    boolean delete(Integer id, String reason);
 
-    List<DepartmentEntity> listByParentId(Long parentId);
+    List<DepartmentEntity> listByParentId(Integer parentId);
 
     List<DepartmentEntity> all();
 
-    List<DepartmentEntity> getTreeList(Long departmentId);
+    List<DepartmentEntity> getTreeList(Integer departmentId);
 }
 

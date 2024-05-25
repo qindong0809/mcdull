@@ -15,5 +15,5 @@ public interface IOperateLogService extends IOperationLog {
 
     PagedVO<OperateLogVO> queryByPage(OperateLogQueryDTO dto);
 
-    OperateLogVO detail(Long operateLogId);
+    OperateLogVO detail(Integer operateLogId);
 }

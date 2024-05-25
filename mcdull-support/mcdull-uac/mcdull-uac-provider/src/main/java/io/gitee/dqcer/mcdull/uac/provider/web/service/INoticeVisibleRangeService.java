@@ -13,7 +13,7 @@ public interface INoticeVisibleRangeService {
 
     void batchInsert(List<NoticeVisibleRangeEntity> list);
 
-    List<NoticeVisibleRangeEntity> getListByNoticeId(Long noticeId);
+    List<NoticeVisibleRangeEntity> getListByNoticeId(Integer noticeId);
 
     void update(List<NoticeVisibleRangeEntity> insertList,
                 List<NoticeVisibleRangeEntity> updateList,

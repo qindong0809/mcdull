@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 public class HelpDocVO implements VO {
 
     @Schema(description = "id")
-    private Long helpDocId;
+    private Integer helpDocId;
 
     @Schema(description = "标题")
     private String title;
 
     @Schema(description = "分类")
-    private Long helpDocCatalogId;
+    private Integer helpDocCatalogId;
 
     @Schema(description = "分类名称")
     private String helpDocCatalogName;

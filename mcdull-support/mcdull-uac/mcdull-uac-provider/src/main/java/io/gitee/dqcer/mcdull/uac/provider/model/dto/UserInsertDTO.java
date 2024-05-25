@@ -26,7 +26,7 @@ public class UserInsertDTO implements DTO {
 
     private String phone;
 
-    private Long departmentId;
+    private Integer departmentId;
 
     private Boolean administratorFlag;
 

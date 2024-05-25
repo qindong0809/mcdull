@@ -33,12 +33,6 @@ public class UserController {
     @Resource
     private IUserService userService;
 
-    /**
-     * 列表
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link List}<{@link UserVO}>>
-     */
     @Authorized("sys:user:view")
     @Operation(summary = "Query Page", description = "")
     @GetMapping("user/list")
@@ -52,7 +46,7 @@ public class UserController {
     @Operation(summary = "Update Current User Password")
     @PostMapping("/update/password")
     public Result<Boolean> updatePassword(@Valid @RequestBody UserUpdatePasswordDTO dto) {
-        userService.updatePassword(UserContextHolder.userIdLong(), dto);
+        userService.updatePassword(UserContextHolder.userId(), dto);
         return Result.success(true);
     }
 
@@ -60,7 +54,7 @@ public class UserController {
     @RedisLock(key = "'lock:uac:user:' + #dto.loginName + '-' + #dto.actualName", timeout = 3)
     @PostMapping("/user/add")
     @SaCheckPermission("system:employee:add")
-    public Result<Long> insert(@Valid @RequestBody UserAddDTO dto) {
+    public Result<Integer> insert(@Valid @RequestBody UserAddDTO dto) {
         return Result.success(userService.insert(dto));
     }
 
@@ -72,7 +66,7 @@ public class UserController {
 
     @Operation(summary = "获取某个角色下的所有员工列表(无分页)")
     @GetMapping("/role/employee/getAllEmployeeByRoleId/{roleId}")
-    public Result<List<UserVO>> getAllRoleId(@PathVariable Long roleId) {
+    public Result<List<UserVO>> getAllRoleId(@PathVariable Integer roleId) {
         return Result.success(userService.getAllByRoleId(roleId));
     }
 
@@ -87,7 +81,7 @@ public class UserController {
     @Operation(summary = "更新员工禁用/启用状态")
     @GetMapping("/employee/update/disabled/{userId}")
     @SaCheckPermission("system:employee:disabled")
-    public Result<Boolean> updateDisableFlag(@PathVariable Long userId) {
+    public Result<Boolean> updateDisableFlag(@PathVariable Integer userId) {
         userService.toggleActive(userId);
         return Result.success(true);
     }
@@ -95,7 +89,7 @@ public class UserController {
     @Operation(summary = "批量删除员工")
     @PostMapping("/employee/update/batch/delete")
     @SaCheckPermission("system:employee:delete")
-    public Result<Boolean> batchUpdateDeleteFlag(@RequestBody List<Long> userIdList) {
+    public Result<Boolean> batchUpdateDeleteFlag(@RequestBody List<Integer> userIdList) {
         userService.delete(userIdList);
         return Result.success(true);
     }
@@ -103,13 +97,13 @@ public class UserController {
     @Operation(summary = "更新数据", description = "")
     @PostMapping("/user/update")
     @SaCheckPermission("system:employee:update")
-    public Result<Long> update(@RequestBody @Validated UserUpdateDTO dto){
+    public Result<Integer> update(@RequestBody @Validated UserUpdateDTO dto){
         return Result.success(userService.update(dto.getEmployeeId(), dto));
     }
 
     @Operation(summary = "修改密码", description = "")
     @PostMapping("user/{id}/update-password")
-    public Result<Long> updatePassword(@PathVariable("id") Long id,
+    public Result<Integer> updatePassword(@PathVariable("id") Integer id,
                                        @RequestBody UserUpdatePasswordDTO dto){
         return Result.success(userService.updatePassword(id, dto));
     }

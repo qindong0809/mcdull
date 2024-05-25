@@ -39,7 +39,8 @@ import java.util.stream.Collectors;
  * @since  2022/11/27
  */
 @Service
-public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implements IRoleService {
+public class RoleServiceImpl
+        extends BasicServiceImpl<IRoleRepository> implements IRoleService {
 
     @Resource
     private IUserRoleService userRoleService;
@@ -60,7 +61,7 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
     }
 
     @Override
-    public RoleVO detail(Long id) {
+    public RoleVO detail(Integer id) {
         RoleEntity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
@@ -84,7 +85,7 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
+    public void delete(Integer id) {
         RoleEntity dbData = baseRepository.getById(id);
         if (null == dbData) {
             this.throwDataNotExistException(id);
@@ -93,8 +94,8 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
     }
 
     @Override
-    public Map<Long, List<RoleEntity>> getRoleMap(List<Long> userIdList) {
-        Map<Long, List<Long>> userRoleMap = userRoleService.getRoleIdListMap(userIdList);
+    public Map<Integer, List<RoleEntity>> getRoleMap(List<Integer> userIdList) {
+        Map<Integer, List<Integer>> userRoleMap = userRoleService.getRoleIdListMap(userIdList);
         if (CollUtil.isNotEmpty(userRoleMap)) {
             return baseRepository.roleListMap(userRoleMap);
         }
@@ -103,7 +104,7 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean update(Long id, RoleUpdateDTO dto) {
+    public boolean update(Integer id, RoleUpdateDTO dto) {
         LambdaQueryWrapper<RoleEntity> query = Wrappers.lambdaQuery();
         query.eq(RoleEntity::getRoleName, dto.getRoleName());
         query.last(GlobalConstant.Database.SQL_LIMIT_1);
@@ -123,13 +124,13 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean delete(Long id, ReasonDTO dto) {
+    public boolean delete(Integer id, ReasonDTO dto) {
         return baseRepository.delete(id, dto.getReason());
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean toggleStatus(Long id, ReasonDTO dto) {
+    public boolean toggleStatus(Integer id, ReasonDTO dto) {
         RoleEntity role = baseRepository.getById(id);
         if (ObjUtil.isNull(role)) {
             throw new BusinessException(I18nConstants.DATA_NEED_REFRESH);
@@ -139,26 +140,26 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean insertPermission(Long id, RolePermissionInsertDTO dto) {
+    public boolean insertPermission(Integer id, RolePermissionInsertDTO dto) {
         return roleMenuService.deleteAndInsert(id, dto.getMenuIdList());
     }
 
     @Override
-    public Map<Long, List<RoleEntity>> getRoleMapByMenuId(List<Long> menuIdList) {
-        Map<Long, List<RoleEntity>> map = MapUtil.newHashMap();
-        Map<Long, List<Long>> roleIdMap = roleMenuService.getRoleIdMap(menuIdList);
+    public Map<Integer, List<RoleEntity>> getRoleMapByMenuId(List<Integer> menuIdList) {
+        Map<Integer, List<RoleEntity>> map = MapUtil.newHashMap();
+        Map<Integer, List<Integer>> roleIdMap = roleMenuService.getRoleIdMap(menuIdList);
         if (MapUtil.isNotEmpty(roleIdMap)) {
-            Set<Long> roleIdSet = roleIdMap.values().stream().flatMap(Collection::stream)
+            Set<Integer> roleIdSet = roleIdMap.values().stream().flatMap(Collection::stream)
                     .collect(Collectors.toSet());
             List<RoleEntity> listByIds = baseRepository.listByIds(new ArrayList<>(roleIdSet));
             if (CollUtil.isNotEmpty(listByIds)) {
-                Map<Long, RoleEntity> roleMap = listByIds.stream()
+                Map<Integer, RoleEntity> roleMap = listByIds.stream()
                         .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
-                for (Map.Entry<Long, List<Long>> entry : roleIdMap.entrySet()) {
-                    Long menuId = entry.getKey();
-                    List<Long> value = entry.getValue();
+                for (Map.Entry<Integer, List<Integer>> entry : roleIdMap.entrySet()) {
+                    Integer menuId = entry.getKey();
+                    List<Integer> value = entry.getValue();
                     List<RoleEntity> roleList = new ArrayList<>();
-                    for (Long roleId : value) {
+                    for (Integer roleId : value) {
                         RoleEntity role = roleMap.get(roleId);
                         if (ObjUtil.isNotNull(role)) {
                             roleList.add(role);
@@ -187,7 +188,7 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
     }
 
     @Override
-    public RoleVO get(Long roleId) {
+    public RoleVO get(Integer roleId) {
         RoleEntity entity = baseRepository.getById(roleId);
         if (ObjUtil.isNotNull(entity)) {
             return RoleConvert.entityToVO(entity);
@@ -198,7 +199,7 @@ public class RoleServiceImpl extends BasicServiceImpl<IRoleRepository> implement
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateRole(RoleUpdateDTO dto) {
-        Long roleId = dto.getRoleId();
+        Integer roleId = dto.getRoleId();
         RoleEntity entity = baseRepository.getById(roleId);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(roleId);

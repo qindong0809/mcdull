@@ -46,7 +46,7 @@ public class ChangeLogController {
     @Operation(summary = "批量删除")
     @PostMapping("/changeLog/batchDelete")
     @SaCheckPermission("support:changeLog:batchDelete")
-    public Result<Boolean> batchDelete(@RequestBody List<Long> idList) {
+    public Result<Boolean> batchDelete(@RequestBody List<Integer> idList) {
         changeLogService.batchDelete(idList);
         return Result.success(true);
     }
@@ -54,7 +54,7 @@ public class ChangeLogController {
     @Operation(summary = "单个删除")
     @GetMapping("/changeLog/delete/{changeLogId}")
     @SaCheckPermission("support:changeLog:delete")
-    public Result<Boolean> batchDelete(@PathVariable Long changeLogId) {
+    public Result<Boolean> batchDelete(@PathVariable Integer changeLogId) {
         changeLogService.batchDelete(ListUtil.of(changeLogId));
         return Result.success(true);
     }
@@ -68,7 +68,7 @@ public class ChangeLogController {
 
     @Operation(summary = "变更内容详情")
     @GetMapping("/changeLog/getDetail/{changeLogId}")
-    public Result<ChangeLogVO> getDetail(@PathVariable Long changeLogId) {
+    public Result<ChangeLogVO> getDetail(@PathVariable Integer changeLogId) {
         return Result.success(changeLogService.getById(changeLogId));
     }
 

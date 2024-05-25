@@ -17,10 +17,10 @@ public class HelpDocViewRecordQueryDTO extends PagedDTO {
 
     @Schema(description = "帮助文档id")
     @NotNull(message = "帮助文档id不能为空")
-    private Long helpDocId;
+    private Integer helpDocId;
 
     @Schema(description = "用户id")
-    private Long userId;
+    private Integer userId;
 
     @Schema(description = "关键字")
     private String keywords;

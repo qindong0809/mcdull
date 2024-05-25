@@ -23,7 +23,7 @@ public class DictValueAddDTO implements DTO {
 
     @Schema(description = "dictKeyId")
     @NotNull(message = "dictKeyId不能为空")
-    private Long dictKeyId;
+    private Integer dictKeyId;
 
     @Schema(description = "编码")
     @NotBlank(message = "编码不能为空")

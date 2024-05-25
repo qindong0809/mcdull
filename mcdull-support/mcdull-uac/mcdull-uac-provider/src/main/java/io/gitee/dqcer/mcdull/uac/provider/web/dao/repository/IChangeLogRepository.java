@@ -23,7 +23,7 @@ public interface IChangeLogRepository extends IService<ChangeLogEntity>  {
     * @param idList id列表
     * @return {@link List< ChangeLogEntity >}
     */
-    List<ChangeLogEntity> queryListByIds(List<Long> idList);
+    List<ChangeLogEntity> queryListByIds(List<Integer> idList);
 
    /**
     * 按条件分页查询
@@ -39,22 +39,21 @@ public interface IChangeLogRepository extends IService<ChangeLogEntity>  {
      * @param id 主键
      * @return {@link ConfigEntity}
      */
-    ChangeLogEntity getById(Long id);
+    ChangeLogEntity getById(Integer id);
 
     /**
      * 插入数据
      *
      * @param entity 实体对象
-     * @return Long id
      */
-    Long insert(ChangeLogEntity entity);
+    void insert(ChangeLogEntity entity);
 
     /**
      * 批量删除
      *
      * @param ids 主键集
      */
-    void deleteBatchByIds(List<Long> ids);
+    void deleteBatchByIds(List<Integer> ids);
 
     /**
      * 是否存在

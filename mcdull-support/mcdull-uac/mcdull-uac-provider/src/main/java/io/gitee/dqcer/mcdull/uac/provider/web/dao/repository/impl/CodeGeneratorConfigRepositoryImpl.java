@@ -41,7 +41,7 @@ public class CodeGeneratorConfigRepositoryImpl extends ServiceImpl<CodeGenerator
      * @return {@link List< CodeGeneratorConfigEntity >}
      */
     @Override
-    public List<CodeGeneratorConfigEntity> queryListByIds(List<Long> idList) {
+    public List<CodeGeneratorConfigEntity> queryListByIds(List<Integer> idList) {
         LambdaQueryWrapper<CodeGeneratorConfigEntity> wrapper = Wrappers.lambdaQuery();
         wrapper.in(CodeGeneratorConfigEntity::getId, idList);
         List<CodeGeneratorConfigEntity> list =  baseMapper.selectList(wrapper);
@@ -75,7 +75,7 @@ public class CodeGeneratorConfigRepositoryImpl extends ServiceImpl<CodeGenerator
      * @return {@link CodeGeneratorConfigEntity}
      */
     @Override
-    public CodeGeneratorConfigEntity getById(Long id) {
+    public CodeGeneratorConfigEntity getById(Integer id) {
         return baseMapper.selectById(id);
     }
 
@@ -83,16 +83,15 @@ public class CodeGeneratorConfigRepositoryImpl extends ServiceImpl<CodeGenerator
      * 插入数据
      *
      * @param entity 实体对象
-     * @return Long id
+     * @return Integer id
      */
     @Override
-    public Long insert(CodeGeneratorConfigEntity entity) {
+    public void insert(CodeGeneratorConfigEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
-        return entity.getId();
     }
 
     /**
@@ -134,7 +133,7 @@ public class CodeGeneratorConfigRepositoryImpl extends ServiceImpl<CodeGenerator
     * @param ids id集
     */
     @Override
-    public void deleteBatchByIds(List<Long> ids) {
+    public void deleteBatchByIds(List<Integer> ids) {
         int rowSize = baseMapper.deleteBatchIds(ids);
         if (rowSize != ids.size()) {
             log.error("数据插入失败 actual: {}, plan: {}, ids: {}", rowSize, ids.size(), ids);

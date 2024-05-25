@@ -14,11 +14,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("sys_operate_log")
-public class OperateLogEntity extends RelEntity<Long> {
+public class OperateLogEntity extends RelEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 
-    private Long userId;
+    private Integer userId;
 
     private String traceId;
 

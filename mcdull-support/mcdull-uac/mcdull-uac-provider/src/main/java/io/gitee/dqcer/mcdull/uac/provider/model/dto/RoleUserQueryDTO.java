@@ -17,5 +17,5 @@ public class RoleUserQueryDTO extends PagedDTO {
     private String keywords;
 
     @Schema(description = "角色id")
-    private Long roleId;
+    private Integer roleId;
 }

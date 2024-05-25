@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class NoticeQueryDTO extends PagedDTO {
 
     @Schema(description = "分类")
-    private Long noticeTypeId;
+    private Integer noticeTypeId;
 
     @Schema(description = "标题、作者、来源")
     private String keywords;
@@ -25,7 +25,7 @@ public class NoticeQueryDTO extends PagedDTO {
     private String documentNumber;
 
     @Schema(description = "创建人")
-    private Long createUserId;
+    private Integer createUserId;
 
     @Schema(description = "删除标识")
     private Boolean deletedFlag;

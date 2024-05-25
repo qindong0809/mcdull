@@ -86,7 +86,7 @@ public class ${name.upperCamel}ServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     public void update(${name.upperCamel}UpdateDTO dto) {
-        Long id = dto.getId();
+        Integer id = dto.getId();
         ${name.upperCamel}Entity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);

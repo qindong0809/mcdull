@@ -16,6 +16,6 @@ public class HelpDocUpdateDTO extends HelpDocAddDTO {
 
     @Schema(description = "id")
     @NotNull(message = "通知id不能为空")
-    private Long helpDocId;
+    private Integer helpDocId;
 
 }

@@ -17,27 +17,27 @@ import java.util.Map;
 public interface IRoleService {
     PagedVO<RoleVO> listByPage(RolePageDTO dto);
 
-    RoleVO detail(Long id);
+    RoleVO detail(Integer id);
 
     void insert(RoleAddDTO dto);
 
-    void delete(Long id);
+    void delete(Integer id);
 
-    Map<Long, List<RoleEntity>> getRoleMap(List<Long> userIdList);
+    Map<Integer, List<RoleEntity>> getRoleMap(List<Integer> userIdList);
 
-    boolean update(Long id, RoleUpdateDTO dto);
+    boolean update(Integer id, RoleUpdateDTO dto);
 
-    boolean delete(Long id, ReasonDTO dto);
+    boolean delete(Integer id, ReasonDTO dto);
 
-    boolean toggleStatus(Long id, ReasonDTO dto);
+    boolean toggleStatus(Integer id, ReasonDTO dto);
 
-    boolean insertPermission(Long id, RolePermissionInsertDTO dto);
+    boolean insertPermission(Integer id, RolePermissionInsertDTO dto);
 
-    Map<Long, List<RoleEntity>> getRoleMapByMenuId(List<Long> menuIdList);
+    Map<Integer, List<RoleEntity>> getRoleMapByMenuId(List<Integer> menuIdList);
 
     List<RoleVO> all();
 
-    RoleVO get(Long roleId);
+    RoleVO get(Integer roleId);
 
     void updateRole(RoleUpdateDTO dto);
 

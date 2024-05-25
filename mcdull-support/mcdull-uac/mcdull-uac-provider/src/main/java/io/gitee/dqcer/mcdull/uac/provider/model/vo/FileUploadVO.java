@@ -11,7 +11,7 @@ import lombok.Data;
 public class FileUploadVO {
 
     @Schema(description = "文件id")
-    private Long fileId;
+    private Integer fileId;
 
     @Schema(description = "文件名称")
     private String fileName;
@@ -23,7 +23,7 @@ public class FileUploadVO {
     private String fileKey;
 
     @Schema(description = "文件大小")
-    private Long fileSize;
+    private Integer fileSize;
 
     @Schema(description = "文件类型")
     private String fileType;

@@ -25,14 +25,14 @@ public class UserConvert {
      */
     public static UserVO entityToVO(UserEntity entity) {
         UserVO userVO = new UserVO();
-        Long userId = entity.getId();
+        Integer userId = entity.getId();
         userVO.setEmployeeId(Convert.toInt(userId));
         userVO.setLoginName(entity.getLoginName());
         userVO.setLoginPwd(entity.getLoginPwd());
         userVO.setActualName(entity.getActualName());
         userVO.setGender(entity.getGender());
         userVO.setPhone(entity.getPhone());
-        Long departmentId = entity.getDepartmentId();
+        Integer departmentId = entity.getDepartmentId();
         userVO.setDepartmentId(Convert.toInt(departmentId));
         userVO.setAdministratorFlag(entity.getAdministratorFlag());
         userVO.setRemark(entity.getRemark());

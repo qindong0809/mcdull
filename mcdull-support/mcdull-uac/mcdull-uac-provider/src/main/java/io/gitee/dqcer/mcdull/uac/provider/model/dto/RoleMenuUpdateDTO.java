@@ -18,13 +18,13 @@ public class RoleMenuUpdateDTO implements DTO {
      */
     @Schema(description = "角色id")
     @NotNull(message = "角色id不能为空")
-    private Long roleId;
+    private Integer roleId;
 
     /**
      * 菜单ID 集合
      */
     @Schema(description = "菜单ID集合")
     @NotNull(message = "菜单ID不能为空")
-    private List<Long> menuIdList;
+    private List<Integer> menuIdList;
 
 }

@@ -85,7 +85,7 @@ public class EnterpriseAddDTO {
     private Boolean disabledFlag;
 
     @Schema(description = "创建人", hidden = true)
-    private Long createUserId;
+    private Integer createUserId;
 
     @Schema(description = "创建人", hidden = true)
     private String createUserName;

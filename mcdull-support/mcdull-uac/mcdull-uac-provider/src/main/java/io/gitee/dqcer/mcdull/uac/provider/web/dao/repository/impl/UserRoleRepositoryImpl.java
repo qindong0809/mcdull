@@ -27,19 +27,18 @@ public class UserRoleRepositoryImpl extends ServiceImpl<RoleUserMapper, RoleUser
 
     /**
      * 优化一下方法
-     * {@link #insert(Long, List)}
      * @param userId
      * @param roleIds
      */
-    public void dd(Long userId, List<Long> roleIds) {
+    public void dd(Integer userId, List<Integer> roleIds) {
         List<RoleUserEntity> roleUserEntities = baseMapper.selectList(
                 Wrappers.<RoleUserEntity>lambdaQuery().eq(RoleUserEntity::getUserId, userId));
         if (CollUtil.isNotEmpty(roleUserEntities)) {
-            List<Long> roleIdList = roleUserEntities.stream().map(RoleUserEntity::getRoleId).collect(Collectors.toList());
-            List<Long> collect = roleIds.stream().filter(roleId -> !roleIdList.contains(roleId)).collect(Collectors.toList());
+            List<Integer> roleIdList = roleUserEntities.stream().map(RoleUserEntity::getRoleId).collect(Collectors.toList());
+            List<Integer> collect = roleIds.stream().filter(roleId -> !roleIdList.contains(roleId)).collect(Collectors.toList());
             if (CollUtil.isNotEmpty(collect)) {
                 List<RoleUserEntity> entities = new ArrayList<>();
-                for (Long roleId :collect) {
+                for (Integer roleId :collect) {
                 }
             }
         }
@@ -48,7 +47,7 @@ public class UserRoleRepositoryImpl extends ServiceImpl<RoleUserMapper, RoleUser
 
         if (CollUtil.isEmpty(roleUserEntities)) {
             List<RoleUserEntity> entities = new ArrayList<>();
-            for (Long roleId : roleIds) {
+            for (Integer roleId : roleIds) {
                 RoleUserEntity entity = new RoleUserEntity();
                 entity.setRoleId(roleId);
                 entity.setUserId(userId);
@@ -69,14 +68,14 @@ public class UserRoleRepositoryImpl extends ServiceImpl<RoleUserMapper, RoleUser
      * @param roleIds 角色id
      */
     @Override
-    public void insert(Long userId, List<Long> roleIds) {
+    public void insert(Integer userId, List<Integer> roleIds) {
         LambdaQueryWrapper<RoleUserEntity> query = Wrappers.lambdaQuery();
         query.eq(RoleUserEntity::getUserId, userId);
         baseMapper.delete(query);
         if (ObjUtil.isNull(roleIds)) {
             return;
         }
-        for (Long roleId : roleIds) {
+        for (Integer roleId : roleIds) {
             RoleUserEntity entity = new RoleUserEntity();
             entity.setRoleId(roleId);
             entity.setUserId(userId);
@@ -85,14 +84,14 @@ public class UserRoleRepositoryImpl extends ServiceImpl<RoleUserMapper, RoleUser
     }
 
     @Override
-    public Map<Long, List<Long>> roleIdListMap(Collection<Long> userCollection) {
+    public Map<Integer, List<Integer>> roleIdListMap(Collection<Integer> userCollection) {
         List<RoleUserEntity> list = this.list(ListUtil.toList(userCollection));
         return list.stream().collect(Collectors.groupingBy(RoleUserEntity::getUserId,
                 Collectors.mapping(RoleUserEntity::getRoleId, Collectors.toList())));
     }
 
     @Override
-    public List<RoleUserEntity> list(List<Long> userIdList) {
+    public List<RoleUserEntity> list(List<Integer> userIdList) {
         if (CollUtil.isEmpty(userIdList)) {
             throw new IllegalArgumentException("'userIdList' is null");
         }
@@ -102,7 +101,7 @@ public class UserRoleRepositoryImpl extends ServiceImpl<RoleUserMapper, RoleUser
     }
 
     @Override
-    public List<Long> listByRole(Long roleId) {
+    public List<Integer> listByRole(Integer roleId) {
         if (ObjUtil.isNotNull(roleId)) {
             LambdaQueryWrapper<RoleUserEntity> query = Wrappers.lambdaQuery();
             query.in(RoleUserEntity::getRoleId, roleId);
@@ -115,9 +114,9 @@ public class UserRoleRepositoryImpl extends ServiceImpl<RoleUserMapper, RoleUser
     }
 
     @Override
-    public void insert(List<Long> userIdList, Long roleId) {
+    public void insert(List<Integer> userIdList, Integer roleId) {
         List<RoleUserEntity> entities = new ArrayList<>();
-        for (Long userId : userIdList) {
+        for (Integer userId : userIdList) {
             RoleUserEntity entity = new RoleUserEntity();
             entity.setRoleId(roleId);
             entity.setUserId(userId);
@@ -130,7 +129,7 @@ public class UserRoleRepositoryImpl extends ServiceImpl<RoleUserMapper, RoleUser
     }
 
     @Override
-    public List<RoleUserEntity> list(List<Long> userIdList, Long roleId) {
+    public List<RoleUserEntity> list(List<Integer> userIdList, Integer roleId) {
         LambdaQueryWrapper<RoleUserEntity> query = Wrappers.lambdaQuery();
         query.in(RoleUserEntity::getUserId, userIdList);
         query.eq(RoleUserEntity::getRoleId, roleId);

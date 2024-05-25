@@ -16,5 +16,5 @@ public class MenuUpdateDTO extends MenuBaseForm {
 
     @Schema(description = "菜单ID")
     @NotNull(message = "菜单ID不能为空")
-    private Long menuId;
+    private Integer menuId;
 }

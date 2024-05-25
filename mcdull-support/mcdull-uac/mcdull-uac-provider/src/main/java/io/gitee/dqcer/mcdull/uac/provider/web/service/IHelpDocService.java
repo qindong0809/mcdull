@@ -19,7 +19,7 @@ import java.util.List;
 public interface IHelpDocService {
 
 
-    HelpDocDetailVO view(Long helpDocId);
+    HelpDocDetailVO view(Integer helpDocId);
 
     List<HelpDocVO> queryAllHelpDocList();
 
@@ -27,13 +27,13 @@ public interface IHelpDocService {
 
     PagedVO<HelpDocVO> query(HelpDocQueryDTO dto);
 
-    HelpDocDetailVO getDetail(Long helpDocId);
+    HelpDocDetailVO getDetail(Integer helpDocId);
 
     void add(HelpDocAddDTO dto);
 
     void update(HelpDocUpdateDTO dto);
 
-    void delete(Long helpDocId);
+    void delete(Integer helpDocId);
 
-    List<HelpDocVO> queryHelpDocByRelationId(Long relationId);
+    List<HelpDocVO> queryHelpDocByRelationId(Integer relationId);
 }

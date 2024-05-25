@@ -29,7 +29,7 @@ public interface ILoginService {
      * @param userId 用户id
      * @return {@link List}<{@link String}>
      */
-    List<String> getPermissionList(Long userId);
+    List<String> getPermissionList(Integer userId);
 
     /**
      * 获取角色列表
@@ -37,7 +37,7 @@ public interface ILoginService {
      * @param userId 用户id
      * @return {@link List}<{@link String}>
      */
-    List<String> getRoleList(Long userId);
+    List<String> getRoleList(Integer userId);
 
     /**
      * 获取当前用户信息

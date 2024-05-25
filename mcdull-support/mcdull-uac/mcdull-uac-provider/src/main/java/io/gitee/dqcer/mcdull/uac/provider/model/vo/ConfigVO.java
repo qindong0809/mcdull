@@ -22,7 +22,7 @@ public class ConfigVO implements VO {
     /**
      * 主键
      */
-    private Long configId;
+    private Integer configId;
 
     /**
      * 参数名字

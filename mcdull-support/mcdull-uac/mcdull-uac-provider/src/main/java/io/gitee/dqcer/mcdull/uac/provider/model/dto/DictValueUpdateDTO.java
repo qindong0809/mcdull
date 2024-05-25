@@ -19,5 +19,5 @@ public class DictValueUpdateDTO extends DictValueAddDTO {
 
     @Schema(description = "valueId")
     @NotNull(message = "valueId不能为空")
-    private Long dictValueId;
+    private Integer dictValueId;
 }

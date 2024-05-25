@@ -13,5 +13,5 @@ import java.util.List;
 */
 public interface IHelpDocRelationRepository extends IService<HelpDocRelationEntity>  {
 
-    List<HelpDocRelationEntity> listByRelationId(Long relationId);
+    List<HelpDocRelationEntity> listByRelationId(Integer relationId);
 }

@@ -17,7 +17,7 @@ public class FileMetadataVO {
     /**
      * 文件大小/字节
      */
-    private Long fileSize;
+    private Integer fileSize;
 
     /**
      * 文件格式

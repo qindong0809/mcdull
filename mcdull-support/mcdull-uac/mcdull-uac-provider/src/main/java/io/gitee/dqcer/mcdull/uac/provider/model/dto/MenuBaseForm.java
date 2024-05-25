@@ -27,7 +27,7 @@ public class MenuBaseForm {
 
     @Schema(description = "父菜单ID 无上级可传0")
     @NotNull(message = "父菜单ID不能为空")
-    private Long parentId;
+    private Integer parentId;
 
     @Schema(description = "显示顺序")
     private Integer sort;
@@ -70,5 +70,5 @@ public class MenuBaseForm {
     private String icon;
 
     @Schema(description = "功能点关联菜单ID")
-    private Long contextMenuId;
+    private Integer contextMenuId;
 }

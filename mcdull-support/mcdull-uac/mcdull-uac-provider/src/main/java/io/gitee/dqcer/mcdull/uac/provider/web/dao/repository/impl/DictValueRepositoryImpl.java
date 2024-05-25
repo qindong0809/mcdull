@@ -42,7 +42,7 @@ public class DictValueRepositoryImpl extends ServiceImpl<DictValueMapper, DictVa
 
 
     @Override
-    public List<DictValueEntity> getListByDictKeyId(Long dictKeyId) {
+    public List<DictValueEntity> getListByDictKeyId(Integer dictKeyId) {
         if (ObjUtil.isNotNull(dictKeyId)) {
             LambdaQueryWrapper<DictValueEntity> wrapper = Wrappers.lambdaQuery(DictValueEntity.class)
                     .eq(DictValueEntity::getDictKeyId, dictKeyId);
@@ -60,7 +60,7 @@ public class DictValueRepositoryImpl extends ServiceImpl<DictValueMapper, DictVa
                     .or().like(DictValueEntity::getValueCode, keyword)
             );
         }
-        Long dictKeyId = dto.getDictKeyId();
+        Integer dictKeyId = dto.getDictKeyId();
         if (ObjUtil.isNotNull(dictKeyId)) {
             query.eq(DictValueEntity::getDictKeyId, dictKeyId);
         }

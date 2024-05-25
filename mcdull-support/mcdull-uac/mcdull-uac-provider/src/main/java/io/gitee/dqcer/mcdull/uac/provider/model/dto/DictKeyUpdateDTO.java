@@ -20,5 +20,5 @@ public class DictKeyUpdateDTO extends DictKeyAddDTO {
 
     @Schema(description = "keyId")
     @NotNull(message = "keyId不能为空")
-    private Long dictKeyId;
+    private Integer dictKeyId;
 }

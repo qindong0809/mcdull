@@ -55,11 +55,11 @@ public class OperateLogServiceImpl extends BasicServiceImpl<IOperateLogRepositor
         List<OperateLogVO> voList = new ArrayList<>();
         List<OperateLogEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
-            Set<Long> userIdSet = records.stream().map(OperateLogEntity::getUserId).collect(Collectors.toSet());
-            Map<Long, UserEntity> userMap = userService.getEntityMap(new ArrayList<>(userIdSet));
+            Set<Integer> userIdSet = records.stream().map(OperateLogEntity::getUserId).collect(Collectors.toSet());
+            Map<Integer, UserEntity> userMap = userService.getEntityMap(new ArrayList<>(userIdSet));
             for (OperateLogEntity entity : records) {
                 OperateLogVO vo = this.convertToLogVO(entity);
-                Long operateUserId = vo.getOperateUserId();
+                Integer operateUserId = vo.getOperateUserId();
                 UserEntity user = userMap.get(operateUserId);
                 if (ObjUtil.isNotNull(user)) {
                     vo.setOperateUserName(user.getActualName());
@@ -93,7 +93,7 @@ public class OperateLogServiceImpl extends BasicServiceImpl<IOperateLogRepositor
     }
 
     @Override
-    public OperateLogVO detail(Long operateLogId) {
+    public OperateLogVO detail(Integer operateLogId) {
         OperateLogEntity entity = baseRepository.getById(operateLogId);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(operateLogId);

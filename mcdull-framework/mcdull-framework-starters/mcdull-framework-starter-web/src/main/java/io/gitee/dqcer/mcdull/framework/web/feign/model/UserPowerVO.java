@@ -17,7 +17,7 @@ public class UserPowerVO implements VO {
     /**
      * 角色id
      */
-    private Long roleId;
+    private Integer roleId;
 
 
     /**
@@ -40,11 +40,11 @@ public class UserPowerVO implements VO {
         return sb.toString();
     }
 
-    public Long getRoleId() {
+    public Integer getRoleId() {
         return roleId;
     }
 
-    public UserPowerVO setRoleId(Long roleId) {
+    public UserPowerVO setRoleId(Integer roleId) {
         this.roleId = roleId;
         return this;
     }

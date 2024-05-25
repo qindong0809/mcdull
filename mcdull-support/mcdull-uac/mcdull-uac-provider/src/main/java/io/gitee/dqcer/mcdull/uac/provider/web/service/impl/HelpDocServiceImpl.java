@@ -55,7 +55,7 @@ public class HelpDocServiceImpl extends BasicServiceImpl<IHelpDocRepository> imp
     private IHelpDocRelationRepository helpDocRelationRepository;
 
     @Override
-    public HelpDocDetailVO view(Long helpDocId) {
+    public HelpDocDetailVO view(Integer helpDocId) {
         HelpDocEntity entity = baseRepository.getById(helpDocId);
         if (entity != null) {
             return this.convert(entity);
@@ -100,8 +100,8 @@ public class HelpDocServiceImpl extends BasicServiceImpl<IHelpDocRepository> imp
         List<HelpDocViewRecordVO> voList = new ArrayList<>();
         List<HelpDocViewRecordEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
-            Set<Long> userIdSet = records.stream().map(HelpDocViewRecordEntity::getUserId).collect(Collectors.toSet());
-            Map<Long, UserEntity> userMap = userService.getEntityMap(new ArrayList<>(userIdSet));
+            Set<Integer> userIdSet = records.stream().map(HelpDocViewRecordEntity::getUserId).collect(Collectors.toSet());
+            Map<Integer, UserEntity> userMap = userService.getEntityMap(new ArrayList<>(userIdSet));
             for (HelpDocViewRecordEntity entity : records) {
                 HelpDocViewRecordVO vo = this.convertRecord(entity);
                 if (MapUtil.isNotEmpty(userMap)) {
@@ -122,9 +122,9 @@ public class HelpDocServiceImpl extends BasicServiceImpl<IHelpDocRepository> imp
         List<HelpDocVO> voList = new ArrayList<>();
         List<HelpDocEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
-            Set<Long> catalogIdSet = records.stream().map(HelpDocEntity::getHelpDocCatalogId).collect(Collectors.toSet());
+            Set<Integer> catalogIdSet = records.stream().map(HelpDocEntity::getHelpDocCatalogId).collect(Collectors.toSet());
             List<HelpDocCatalogEntity> catalogEntityList = helpDocCatalogRepository.queryListByIds(new ArrayList<>(catalogIdSet));
-            Map<Long, HelpDocCatalogEntity> catalogEntityMap = new HashMap<>();
+            Map<Integer, HelpDocCatalogEntity> catalogEntityMap = new HashMap<>();
             if (CollUtil.isNotEmpty(catalogEntityList)) {
                 catalogEntityMap = catalogEntityList.stream().collect(Collectors.toMap(HelpDocCatalogEntity::getId,
                         Function.identity()));
@@ -147,7 +147,7 @@ public class HelpDocServiceImpl extends BasicServiceImpl<IHelpDocRepository> imp
     }
 
     @Override
-    public HelpDocDetailVO getDetail(Long helpDocId) {
+    public HelpDocDetailVO getDetail(Integer helpDocId) {
         HelpDocEntity entity = baseRepository.getById(helpDocId);
         if (entity != null) {
             return this.convert(entity);
@@ -158,7 +158,7 @@ public class HelpDocServiceImpl extends BasicServiceImpl<IHelpDocRepository> imp
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void add(HelpDocAddDTO dto) {
-        Long helpDocCatalogId = dto.getHelpDocCatalogId();
+        Integer helpDocCatalogId = dto.getHelpDocCatalogId();
         List<HelpDocEntity> list = baseRepository.listByCatalogId(helpDocCatalogId);
         if (CollUtil.isNotEmpty(list)) {
             this.validNameExist(null, dto.getTitle(), list, entity -> entity.getTitle().equals(dto.getTitle()));
@@ -179,13 +179,13 @@ public class HelpDocServiceImpl extends BasicServiceImpl<IHelpDocRepository> imp
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(HelpDocUpdateDTO dto) {
-        Long helpDocId = dto.getHelpDocId();
+        Integer helpDocId = dto.getHelpDocId();
         HelpDocEntity docEntity = baseRepository.getById(helpDocId);
         if (ObjUtil.isNull(docEntity)) {
             this.throwDataNotExistException(helpDocId);
         }
 
-        Long helpDocCatalogId = dto.getHelpDocCatalogId();
+        Integer helpDocCatalogId = dto.getHelpDocCatalogId();
         List<HelpDocEntity> list = baseRepository.listByCatalogId(helpDocCatalogId);
         if (CollUtil.isNotEmpty(list)) {
             this.validNameExist(helpDocId, dto.getTitle(), list,
@@ -203,7 +203,7 @@ public class HelpDocServiceImpl extends BasicServiceImpl<IHelpDocRepository> imp
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void delete(Long helpDocId) {
+    public void delete(Integer helpDocId) {
         HelpDocEntity entity = baseRepository.getById(helpDocId);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(helpDocId);
@@ -212,13 +212,13 @@ public class HelpDocServiceImpl extends BasicServiceImpl<IHelpDocRepository> imp
     }
 
     @Override
-    public List<HelpDocVO> queryHelpDocByRelationId(Long relationId) {
+    public List<HelpDocVO> queryHelpDocByRelationId(Integer relationId) {
         List<HelpDocRelationEntity> list = helpDocRelationRepository.listByRelationId(relationId);
         if (CollUtil.isNotEmpty(list)) {
-            Set<Long> set = list.stream().map(HelpDocRelationEntity::getHelpDocId).collect(Collectors.toSet());
+            Set<Integer> set = list.stream().map(HelpDocRelationEntity::getHelpDocId).collect(Collectors.toSet());
             List<HelpDocEntity> docEntityList = baseRepository.queryListByIds(new ArrayList<>(set));
             if (CollUtil.isNotEmpty(docEntityList)) {
-                Map<Long, HelpDocEntity> entityMap = docEntityList.stream().collect(Collectors.toMap(IdEntity::getId,
+                Map<Integer, HelpDocEntity> entityMap = docEntityList.stream().collect(Collectors.toMap(IdEntity::getId,
                         Function.identity()));
                 List<HelpDocVO> voList = new ArrayList<>();
                 for (HelpDocRelationEntity relation : list) {
@@ -226,7 +226,7 @@ public class HelpDocServiceImpl extends BasicServiceImpl<IHelpDocRepository> imp
                     if (MapUtil.isNotEmpty(entityMap)) {
                         HelpDocEntity entity = entityMap.get(relation.getHelpDocId());
                         if (ObjUtil.isNotNull(entity)) {
-                            Long helpDocCatalogId = entity.getHelpDocCatalogId();
+                            Integer helpDocCatalogId = entity.getHelpDocCatalogId();
                             HelpDocCatalogEntity helpDocCatalog = helpDocCatalogRepository.getById(helpDocCatalogId);
                             if (ObjUtil.isNotNull(helpDocCatalog)) {
                                 vo.setHelpDocCatalogName(helpDocCatalog.getName());

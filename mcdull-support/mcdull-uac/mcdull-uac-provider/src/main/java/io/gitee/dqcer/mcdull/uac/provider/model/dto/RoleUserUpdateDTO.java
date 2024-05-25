@@ -17,10 +17,10 @@ public class RoleUserUpdateDTO implements DTO {
 
     @Schema(description = "角色id")
     @NotNull(message = "角色id不能为空")
-    protected Long roleId;
+    protected Integer roleId;
 
     @Schema(description = "员工id集合")
     @NotEmpty(message = "员工id不能为空")
-    protected List<Long> employeeIdList;
+    protected List<Integer> employeeIdList;
 
 }

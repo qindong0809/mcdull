@@ -14,10 +14,10 @@ import lombok.Setter;
 @TableName("sys_role_menu")
 @Getter
 @Setter
-public class RoleMenuEntity extends RelEntity<Long> {
+public class RoleMenuEntity extends RelEntity<Integer> {
 
-    private Long menuId;
+    private Integer menuId;
 
-    private Long roleId;
+    private Integer roleId;
 
 }

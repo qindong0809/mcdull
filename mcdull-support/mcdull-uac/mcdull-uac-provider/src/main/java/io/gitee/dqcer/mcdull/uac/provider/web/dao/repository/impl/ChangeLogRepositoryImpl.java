@@ -29,7 +29,8 @@ import java.util.List;
 * @since 2024-04-29
 */
 @Service
-public class ChangeLogRepositoryImpl extends ServiceImpl<ChangeLogMapper, ChangeLogEntity>  implements IChangeLogRepository {
+public class ChangeLogRepositoryImpl
+        extends ServiceImpl<ChangeLogMapper, ChangeLogEntity>  implements IChangeLogRepository {
 
     private static final Logger log = LoggerFactory.getLogger(ChangeLogRepositoryImpl.class);
 
@@ -40,7 +41,7 @@ public class ChangeLogRepositoryImpl extends ServiceImpl<ChangeLogMapper, Change
      * @return {@link List< ChangeLogEntity >}
      */
     @Override
-    public List<ChangeLogEntity> queryListByIds(List<Long> idList) {
+    public List<ChangeLogEntity> queryListByIds(List<Integer> idList) {
         LambdaQueryWrapper<ChangeLogEntity> wrapper = Wrappers.lambdaQuery();
         wrapper.in(ChangeLogEntity::getId, idList);
         List<ChangeLogEntity> list =  baseMapper.selectList(wrapper);
@@ -74,7 +75,7 @@ public class ChangeLogRepositoryImpl extends ServiceImpl<ChangeLogMapper, Change
      * @return {@link ChangeLogEntity}
      */
     @Override
-    public ChangeLogEntity getById(Long id) {
+    public ChangeLogEntity getById(Integer id) {
         return baseMapper.selectById(id);
     }
 
@@ -82,16 +83,15 @@ public class ChangeLogRepositoryImpl extends ServiceImpl<ChangeLogMapper, Change
      * 插入数据
      *
      * @param entity 实体对象
-     * @return Long id
+     * @return Integer id
      */
     @Override
-    public Long insert(ChangeLogEntity entity) {
+    public void insert(ChangeLogEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
-        return entity.getId();
     }
 
     /**
@@ -111,7 +111,7 @@ public class ChangeLogRepositoryImpl extends ServiceImpl<ChangeLogMapper, Change
     * @param ids id集
     */
     @Override
-    public void deleteBatchByIds(List<Long> ids) {
+    public void deleteBatchByIds(List<Integer> ids) {
         int rowSize = baseMapper.deleteBatchIds(ids);
         if (rowSize != ids.size()) {
             log.error("数据插入失败 actual: {}, plan: {}, ids: {}", rowSize, ids.size(), ids);

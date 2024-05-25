@@ -20,15 +20,15 @@ public interface INoticeRepository extends IService<NoticeEntity> {
 
     Page<NoticeEntity> selectPage(NoticeQueryDTO param);
 
-    Page<NoticeUserVO> queryEmployeeNotViewNotice(NoticeEmployeeQueryDTO dto, Long userId,
-                                                  List<Long> deptIdList,
+    Page<NoticeUserVO> queryEmployeeNotViewNotice(NoticeEmployeeQueryDTO dto, Integer userId,
+                                                  List<Integer> deptIdList,
                                                   Boolean administratorFlag,
                                                   Integer deptCode,
                                                   Integer userCode);
 
     Page<NoticeUserVO> queryEmployeeNotice(NoticeEmployeeQueryDTO dto,
-                                           Long userId,
-                                           List<Long> deptIdList,
+                                           Integer userId,
+                                           List<Integer> deptIdList,
                                            Boolean administratorFlag,
                                            Integer deptCode,
                                            Integer userCode);

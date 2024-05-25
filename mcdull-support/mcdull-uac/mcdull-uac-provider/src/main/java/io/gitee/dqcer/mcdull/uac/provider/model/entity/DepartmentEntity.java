@@ -14,13 +14,13 @@ import lombok.Setter;
 @TableName("sys_department")
 @Getter
 @Setter
-public class DepartmentEntity extends BaseEntity<Long> {
+public class DepartmentEntity extends BaseEntity<Integer> {
 
     private String name;
 
-    private Long managerId;
+    private Integer managerId;
 
-    private Long parentId;
+    private Integer parentId;
 
     private Integer sort;
 }

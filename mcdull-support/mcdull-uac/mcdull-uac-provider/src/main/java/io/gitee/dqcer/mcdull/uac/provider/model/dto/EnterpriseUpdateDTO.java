@@ -14,5 +14,5 @@ public class EnterpriseUpdateDTO extends EnterpriseAddDTO {
 
     @Schema(description = "企业ID")
     @NotNull(message = "企业ID不能为空")
-    private Long enterpriseId;
+    private Integer enterpriseId;
 }

@@ -141,7 +141,7 @@ public class LoginServiceImpl implements ILoginService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void logout() {
-        Long userId = UserContextHolder.userIdLong();
+        Integer userId = UserContextHolder.userId();
         UserEntity user = userService.get(userId);
         StpUtil.logout(userId);
         if (ObjUtil.isNotNull(user)) {
@@ -150,8 +150,8 @@ public class LoginServiceImpl implements ILoginService {
     }
 
     @Override
-    public List<String> getPermissionList(Long userId) {
-        Map<Long, UserEntity> entityMap = userService.getEntityMap(ListUtil.of(userId));
+    public List<String> getPermissionList(Integer userId) {
+        Map<Integer, UserEntity> entityMap = userService.getEntityMap(ListUtil.of(userId));
         if (MapUtil.isNotEmpty(entityMap)) {
             UserEntity userDO = entityMap.get(userId);
             if (ObjUtil.isNotNull(userDO)) {
@@ -173,7 +173,7 @@ public class LoginServiceImpl implements ILoginService {
 
 
     @Override
-    public List<String> getRoleList(Long userId) {
+    public List<String> getRoleList(Integer userId) {
         List<UserPowerVO> userPowerVOList = userService.getResourceModuleList(userId);
         Set<String> set = new HashSet<>();
         if (CollUtil.isNotEmpty(userPowerVOList)) {
@@ -184,7 +184,7 @@ public class LoginServiceImpl implements ILoginService {
 
     @Override
     public LogonVO getCurrentUserInfo() {
-        Long userId = UserContextHolder.userIdLong();
+        Integer userId = UserContextHolder.userId();
         UserEntity userEntity = userService.get(userId);
         if (ObjUtil.isNotNull(userEntity)) {
             LogonVO vo = this.buildLogonVo(userEntity);

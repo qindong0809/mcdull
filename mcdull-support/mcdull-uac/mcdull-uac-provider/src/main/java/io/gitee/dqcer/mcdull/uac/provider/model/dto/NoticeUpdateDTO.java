@@ -16,5 +16,5 @@ public class NoticeUpdateDTO extends NoticeAddDTO {
 
     @Schema(description = "id")
     @NotNull(message = "通知id不能为空")
-    private Long noticeId;
+    private Integer noticeId;
 }

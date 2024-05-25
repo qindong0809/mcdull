@@ -30,11 +30,11 @@ public interface IRoleRepository extends IService<RoleEntity> {
      * @param entity 实体
      * @return {@link Long}
      */
-    Long insert(RoleEntity entity);
+    Integer insert(RoleEntity entity);
 
-    Map<Long, List<RoleEntity>> roleListMap(Map<Long, List<Long>> userRoleMap);
+    Map<Integer, List<RoleEntity>> roleListMap(Map<Integer, List<Integer>> userRoleMap);
 
-    boolean delete(Long id, String reason);
+    boolean delete(Integer id, String reason);
 
-    boolean toggleStatus(Long id, boolean inactive);
+    boolean toggleStatus(Integer id, boolean inactive);
 }

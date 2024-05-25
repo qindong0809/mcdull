@@ -46,7 +46,7 @@ public interface ILoginLogRepository extends IService<LoginLogEntity>  {
      * 插入数据
      *
      * @param entity 实体对象
-     * @return Long id
+     * @return Integer id
      */
     Integer insert(LoginLogEntity entity);
 

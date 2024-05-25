@@ -81,7 +81,7 @@ public class LoginLogRepositoryImpl extends ServiceImpl<LoginLogMapper, LoginLog
      * 插入数据
      *
      * @param entity 实体对象
-     * @return Long id
+     * @return Integer id
      */
     @Override
     public Integer insert(LoginLogEntity entity) {

@@ -21,7 +21,7 @@ public interface IUserRoleRepository extends IService<RoleUserEntity> {
      * @param id      id
      * @param roleIds 角色id
      */
-    void insert(Long id, List<Long> roleIds);
+    void insert(Integer id, List<Integer> roleIds);
 
     /**
      * 角色map
@@ -29,7 +29,7 @@ public interface IUserRoleRepository extends IService<RoleUserEntity> {
      * @param userCollection 用户集合
      * @return {@link Map}<{@link Long}, {@link List}<{@link Long}>>
      */
-    Map<Long, List<Long>> roleIdListMap(Collection<Long> userCollection);
+    Map<Integer, List<Integer>> roleIdListMap(Collection<Integer> userCollection);
 
     /**
      * 列表
@@ -37,11 +37,11 @@ public interface IUserRoleRepository extends IService<RoleUserEntity> {
      * @param userIdList 用户id列表
      * @return {@link List}<{@link RoleUserEntity}>
      */
-    List<RoleUserEntity> list(List<Long> userIdList);
+    List<RoleUserEntity> list(List<Integer> userIdList);
 
-    List<Long> listByRole(Long roleId);
+    List<Integer> listByRole(Integer roleId);
 
-    void insert(List<Long> userIdList, Long roleId);
+    void insert(List<Integer> userIdList, Integer roleId);
 
-    List<RoleUserEntity> list(List<Long> userIdList, Long roleId);
+    List<RoleUserEntity> list(List<Integer> userIdList, Integer roleId);
 }

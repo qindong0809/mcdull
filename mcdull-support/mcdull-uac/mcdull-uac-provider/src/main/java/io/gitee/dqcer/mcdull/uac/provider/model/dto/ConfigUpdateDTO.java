@@ -17,5 +17,5 @@ public class ConfigUpdateDTO extends ConfigAddDTO {
 
     @Schema(description = "configId")
     @NotNull(message = "configId不能为空")
-    private Long configId;
+    private Integer configId;
 }

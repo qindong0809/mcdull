@@ -59,7 +59,7 @@ public class ConfigController {
     @Operation(summary = "删除")
     @PostMapping("/config/delete")
     @SaCheckPermission("support:config:delete")
-    public Result<Boolean> delete(@RequestBody List<Long> configIdList) {
+    public Result<Boolean> delete(@RequestBody List<Integer> configIdList) {
         configService.delete(configIdList);
         return Result.success(true);
     }

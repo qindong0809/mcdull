@@ -21,7 +21,7 @@ public interface IHelpDocRepository extends IService<HelpDocEntity>  {
     * @param idList id列表
     * @return {@link List< HelpDocEntity >}
     */
-    List<HelpDocEntity> queryListByIds(List<Long> idList);
+    List<HelpDocEntity> queryListByIds(List<Integer> idList);
 
    /**
     * 按条件分页查询
@@ -37,22 +37,22 @@ public interface IHelpDocRepository extends IService<HelpDocEntity>  {
      * @param id 主键
      * @return {@link HelpDocEntity}
      */
-    HelpDocEntity getById(Long id);
+    HelpDocEntity getById(Integer id);
 
     /**
      * 插入数据
      *
      * @param entity 实体对象
-     * @return Long id
+     * @return Integer id
      */
-    Long insert(HelpDocEntity entity);
+    Integer insert(HelpDocEntity entity);
 
     /**
      * 批量删除
      *
      * @param ids 主键集
      */
-    void deleteBatchByIds(List<Long> ids);
+    void deleteBatchByIds(List<Integer> ids);
 
     /**
      * 是否存在
@@ -62,7 +62,7 @@ public interface IHelpDocRepository extends IService<HelpDocEntity>  {
      */
     boolean exist(HelpDocEntity entity);
 
-   List<HelpDocEntity> selectList(Long userId);
+   List<HelpDocEntity> selectList(Integer userId);
 
-    List<HelpDocEntity> listByCatalogId(Long helpDocCatalogId);
+    List<HelpDocEntity> listByCatalogId(Integer helpDocCatalogId);
 }

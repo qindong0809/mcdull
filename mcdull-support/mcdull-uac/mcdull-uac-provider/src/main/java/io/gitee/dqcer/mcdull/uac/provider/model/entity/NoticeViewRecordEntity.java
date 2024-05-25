@@ -16,12 +16,12 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @TableName("sys_notice_view_record")
-public class NoticeViewRecordEntity extends RelEntity<Long> {
+public class NoticeViewRecordEntity extends RelEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 
-    private Long noticeId;
-    private Long userId;
+    private Integer noticeId;
+    private Integer userId;
     private Integer pageViewCount;
     private String firstIp;
     private String firstUserAgent;

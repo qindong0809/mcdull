@@ -15,5 +15,5 @@ public interface ISessionService {
 
     PagedVO<SessionVO> queryPage(SessionQueryDTO dto);
 
-    void batchKickout(List<Long> loginIdList);
+    void batchKickout(List<Integer> loginIdList);
 }

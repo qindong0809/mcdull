@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("sys_menu")
-public class MenuEntity extends BaseEntity<Long> {
+public class MenuEntity extends BaseEntity<Integer> {
 
     private String menuName;
 
@@ -24,7 +24,7 @@ public class MenuEntity extends BaseEntity<Long> {
      */
     private Integer menuType;
 
-    private Long parentId;
+    private Integer parentId;
 
     private Integer sort;
 
@@ -40,7 +40,7 @@ public class MenuEntity extends BaseEntity<Long> {
 
     private String icon;
 
-    private Long contextMenuId;
+    private Integer contextMenuId;
 
     private Boolean frameFlag;
 

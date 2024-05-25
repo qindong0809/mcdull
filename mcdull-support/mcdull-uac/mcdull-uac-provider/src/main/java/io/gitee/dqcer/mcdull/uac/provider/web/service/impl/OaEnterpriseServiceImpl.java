@@ -45,16 +45,12 @@ public class OaEnterpriseServiceImpl
         List<OaEnterpriseEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
             Set<Integer> userIdSet = recordList.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
-            List<Long> userIdList = new ArrayList<>();
-            for (Integer userId : userIdSet) {
-                userIdList.add(Convert.toLong(userId));
-            }
-            Map<Long, String> nameMap = userService.getNameMap(new ArrayList<>(userIdList));
+            Map<Integer, String> nameMap = userService.getNameMap(new ArrayList<>(userIdSet));
             for (OaEnterpriseEntity entity : recordList) {
                 EnterpriseVO vo = this.convertToVO(entity);
                 Integer createdBy = entity.getCreatedBy();
                 if (ObjUtil.isNotNull(createdBy)) {
-                    vo.setCreateUserName(nameMap.get(Convert.toLong(createdBy)));
+                    vo.setCreateUserName(nameMap.get(createdBy));
                 }
                 voList.add(vo);
             }
@@ -77,7 +73,7 @@ public class OaEnterpriseServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(EnterpriseUpdateDTO dto) {
-        Long enterpriseId = dto.getEnterpriseId();
+        Integer enterpriseId = dto.getEnterpriseId();
         OaEnterpriseEntity entity = baseRepository.getById(enterpriseId);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(enterpriseId);
@@ -109,7 +105,7 @@ public class OaEnterpriseServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void delete(Long enterpriseId) {
+    public void delete(Integer enterpriseId) {
         OaEnterpriseEntity entity = baseRepository.getById(enterpriseId);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(enterpriseId);

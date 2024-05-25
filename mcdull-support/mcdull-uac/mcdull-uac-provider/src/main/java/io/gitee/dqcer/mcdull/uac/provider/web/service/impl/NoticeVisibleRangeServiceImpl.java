@@ -29,7 +29,7 @@ public class NoticeVisibleRangeServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public List<NoticeVisibleRangeEntity> getListByNoticeId(Long noticeId) {
+    public List<NoticeVisibleRangeEntity> getListByNoticeId(Integer noticeId) {
         NoticeVisibleRangeEntity entity = new NoticeVisibleRangeEntity();
         entity.setNoticeId(Convert.toInt(noticeId));
         return baseRepository.list(entity);

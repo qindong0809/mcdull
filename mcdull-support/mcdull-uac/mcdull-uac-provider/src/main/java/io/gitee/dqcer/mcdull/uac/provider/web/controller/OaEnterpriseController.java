@@ -55,7 +55,7 @@ public class OaEnterpriseController {
     @Operation(summary = "删除")
     @GetMapping("/oa/enterprise/delete/{enterpriseId}")
     @SaCheckPermission("oa:enterprise:delete")
-    public Result<Boolean> deleteEnterprise(@PathVariable Long enterpriseId) {
+    public Result<Boolean> deleteEnterprise(@PathVariable Integer enterpriseId) {
         enterpriseService.delete(enterpriseId);
         return Result.success(true);
     }

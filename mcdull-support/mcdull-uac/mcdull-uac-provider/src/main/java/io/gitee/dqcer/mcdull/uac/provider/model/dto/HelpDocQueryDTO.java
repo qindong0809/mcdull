@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class HelpDocQueryDTO extends PagedDTO {
 
     @Schema(description = "分类")
-    private Long helpDocCatalogId;
+    private Integer helpDocCatalogId;
 
     @Schema(description = "标题")
     private String keywords;

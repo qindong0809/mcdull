@@ -20,7 +20,7 @@ public class NoticeViewRecordRepositoryImpl extends
 
 
     @Override
-    public NoticeViewRecordEntity getByUserIdAndNoticeId(Long userId, Long noticeId) {
+    public NoticeViewRecordEntity getByUserIdAndNoticeId(Integer userId, Integer noticeId) {
         LambdaQueryWrapper<NoticeViewRecordEntity> query = Wrappers.lambdaQuery();
         query.eq(NoticeViewRecordEntity::getNoticeId, noticeId);
         query.eq(NoticeViewRecordEntity::getUserId, userId);
@@ -28,7 +28,7 @@ public class NoticeViewRecordRepositoryImpl extends
     }
 
     @Override
-    public List<NoticeViewRecordEntity> getByUserId(Long userId) {
+    public List<NoticeViewRecordEntity> getByUserId(Integer userId) {
         LambdaQueryWrapper<NoticeViewRecordEntity> query = Wrappers.lambdaQuery();
         query.eq(NoticeViewRecordEntity::getUserId, userId);
         return baseMapper.selectList(query);

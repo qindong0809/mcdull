@@ -18,7 +18,7 @@ public class DepartmentVO implements VO {
 
     private String name;
 
-    private Long managerId;
+    private Integer managerId;
 
     private Integer parentId;
 

@@ -16,9 +16,9 @@ public class DeptInsertDTO implements DTO {
 
     private String name;
 
-    private Long managerId;
+    private Integer managerId;
 
-    private Long parentId;
+    private Integer parentId;
 
     private Integer sort;
 }

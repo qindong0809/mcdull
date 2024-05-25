@@ -37,7 +37,7 @@ public class SessionController {
     @Operation(summary = "批量强退")
     @GetMapping("/session/batchKickout")
     @SaCheckPermission("system:monitor:session_kickout")
-    public Result<Boolean> batchDeleteMenu(@RequestParam("loginIdList") List<Long> loginIdList) {
+    public Result<Boolean> batchDeleteMenu(@RequestParam("loginIdList") List<Integer> loginIdList) {
         sessionService.batchKickout(loginIdList);
         return Result.success(true);
     }

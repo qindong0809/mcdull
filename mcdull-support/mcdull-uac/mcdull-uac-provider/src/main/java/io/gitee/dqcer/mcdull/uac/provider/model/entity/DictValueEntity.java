@@ -14,11 +14,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("sys_dict_value")
-public class DictValueEntity extends RelEntity<Long> {
+public class DictValueEntity extends RelEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 
-    private Long dictKeyId;
+    private Integer dictKeyId;
 
     private String valueCode;
 

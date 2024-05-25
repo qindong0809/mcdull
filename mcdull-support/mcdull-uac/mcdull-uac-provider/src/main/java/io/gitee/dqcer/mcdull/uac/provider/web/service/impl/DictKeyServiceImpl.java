@@ -65,12 +65,12 @@ public class DictKeyServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void delete(List<Long> idList) {
+    public void delete(List<Integer> idList) {
         List<DictKeyEntity> listAll = baseRepository.getListAll();
         if (CollUtil.isNotEmpty(listAll)) {
-            List<Long> dbIdList = listAll.stream().map(IdEntity::getId).collect(Collectors.toList());
+            List<Integer> dbIdList = listAll.stream().map(IdEntity::getId).collect(Collectors.toList());
             if (CollUtil.isNotEmpty(dbIdList)) {
-                for (Long id : idList) {
+                for (Integer id : idList) {
                     if (!dbIdList.contains(id)) {
                         this.throwDataNotExistException(id);
                     }
@@ -83,7 +83,7 @@ public class DictKeyServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(DictKeyUpdateDTO dto) {
-        Long dictKeyId = dto.getDictKeyId();
+        Integer dictKeyId = dto.getDictKeyId();
         String keyCode = dto.getKeyCode();
         String keyName = dto.getKeyName();
         List<DictKeyEntity> listAll = baseRepository.getListAll();

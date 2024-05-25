@@ -20,5 +20,5 @@ public class HelpDocRelationDTO implements DTO {
 
     @Schema(description = "关联id")
     @NotNull(message = "关联id不能为空")
-    private Long relationId;
+    private Integer relationId;
 }

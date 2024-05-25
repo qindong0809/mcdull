@@ -18,7 +18,7 @@ public interface IDictValueRepository extends IService<DictValueEntity> {
 
     void insert(DictValueEntity entity);
 
-    List<DictValueEntity> getListByDictKeyId(Long dictKeyId);
+    List<DictValueEntity> getListByDictKeyId(Integer dictKeyId);
 
     Page<DictValueEntity> selectPage(DictValueQueryDTO dto);
 

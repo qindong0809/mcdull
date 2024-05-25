@@ -19,5 +19,5 @@ public class CaptchaVO {
     private String captchaBase64Image;
 
     @Schema(description = "过期时间（秒）")
-    private Long expireSeconds;
+    private Integer expireSeconds;
 }

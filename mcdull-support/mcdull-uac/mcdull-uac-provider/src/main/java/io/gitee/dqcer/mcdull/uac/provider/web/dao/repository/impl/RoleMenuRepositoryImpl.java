@@ -22,11 +22,12 @@ import java.util.stream.Collectors;
  * @since 2023/12/01
  */
 @Service
-public class RoleMenuRepositoryImpl extends ServiceImpl<RoleMenuMapper, RoleMenuEntity> implements IRoleMenuRepository {
+public class RoleMenuRepositoryImpl
+        extends ServiceImpl<RoleMenuMapper, RoleMenuEntity> implements IRoleMenuRepository {
 
 
     @Override
-    public Map<Long, List<Long>> menuIdListMap(Collection<Long> roleIdCollection) {
+    public Map<Integer, List<Integer>> menuIdListMap(Collection<Integer> roleIdCollection) {
         if (ObjectUtil.isNull(roleIdCollection)) {
             throw new IllegalArgumentException("'roleIdCollection' is null");
         }
@@ -38,16 +39,16 @@ public class RoleMenuRepositoryImpl extends ServiceImpl<RoleMenuMapper, RoleMenu
     }
 
     @Override
-    public List<RoleMenuEntity> listByRoleId(Long roleId) {
+    public List<RoleMenuEntity> listByRoleId(Integer roleId) {
         LambdaQueryWrapper<RoleMenuEntity> query = Wrappers.lambdaQuery();
         query.eq(RoleMenuEntity::getRoleId, roleId);
         return baseMapper.selectList(query);
     }
 
     @Override
-    public void insert(Long roleId, List<Long> menuIdList) {
+    public void insert(Integer roleId, List<Integer> menuIdList) {
         List<RoleMenuEntity> list = new ArrayList<>();
-        for (Long menuId : menuIdList) {
+        for (Integer menuId : menuIdList) {
             RoleMenuEntity roleMenu = new RoleMenuEntity();
             roleMenu.setMenuId(menuId);
             roleMenu.setRoleId(roleId);
@@ -60,7 +61,7 @@ public class RoleMenuRepositoryImpl extends ServiceImpl<RoleMenuMapper, RoleMenu
     }
 
     @Override
-    public Map<Long, List<Long>> listByMenuIdList(List<Long> menuIdList) {
+    public Map<Integer, List<Integer>> listByMenuIdList(List<Integer> menuIdList) {
         if (ObjectUtil.isNull(menuIdList)) {
             throw new IllegalArgumentException("'menuIdList' is null");
         }

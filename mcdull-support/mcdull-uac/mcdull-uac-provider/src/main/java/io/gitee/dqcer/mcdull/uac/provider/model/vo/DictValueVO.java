@@ -13,9 +13,9 @@ import lombok.Data;
 @Data
 public class DictValueVO implements VO {
 
-    private Long dictValueId;
+    private Integer dictValueId;
 
-    private Long dictKeyId;
+    private Integer dictKeyId;
 
     private String valueCode;
 

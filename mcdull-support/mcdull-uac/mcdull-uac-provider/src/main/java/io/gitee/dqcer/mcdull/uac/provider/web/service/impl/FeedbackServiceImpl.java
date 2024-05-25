@@ -33,7 +33,8 @@ import java.util.stream.Collectors;
 * @since 2024-04-29
 */
 @Service
-public class FeedbackServiceImpl extends BasicServiceImpl<IFeedbackRepository> implements IFeedbackService {
+public class FeedbackServiceImpl
+        extends BasicServiceImpl<IFeedbackRepository> implements IFeedbackService {
 
     @Resource
     private IUserService userService;
@@ -44,8 +45,8 @@ public class FeedbackServiceImpl extends BasicServiceImpl<IFeedbackRepository> i
         List<FeedbackVO> voList = new ArrayList<>();
         List<FeedbackEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
-            Set<Long> userIdSet = records.stream().map(FeedbackEntity::getUserId).collect(Collectors.toSet());
-            Map<Long, UserEntity> userEntityMap = userService.getEntityMap(new ArrayList<>(userIdSet));
+            Set<Integer> userIdSet = records.stream().map(FeedbackEntity::getUserId).collect(Collectors.toSet());
+            Map<Integer, UserEntity> userEntityMap = userService.getEntityMap(new ArrayList<>(userIdSet));
             for (FeedbackEntity entity : records) {
                 FeedbackVO feedbackVO = this.convertToConfigVO(entity);
                 UserEntity userEntity = userEntityMap.get(entity.getUserId());
@@ -72,7 +73,7 @@ public class FeedbackServiceImpl extends BasicServiceImpl<IFeedbackRepository> i
     @Override
     public void add(FeedbackAddDTO dto) {
         FeedbackEntity entity = this.convertToEntity(dto);
-        entity.setUserId(UserContextHolder.userIdLong());
+        entity.setUserId(UserContextHolder.userId());
         baseRepository.insert(entity);
     }
 

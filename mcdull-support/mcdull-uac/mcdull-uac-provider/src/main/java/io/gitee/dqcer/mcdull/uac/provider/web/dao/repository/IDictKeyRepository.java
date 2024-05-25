@@ -22,6 +22,6 @@ public interface IDictKeyRepository extends IService<DictKeyEntity> {
 
     void insert(String keyCode, String keyName, String remark);
 
-    void update(Long dictKeyId, String keyCode, String keyName, String remark);
+    void update(Integer dictKeyId, String keyCode, String keyName, String remark);
 }
 

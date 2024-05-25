@@ -1,6 +1,6 @@
 drop table if exists `sys_user`;
 create table if not exists `sys_user` (
-`id` bigint(20) not null auto_increment comment '主键',
+`id` int not null auto_increment comment '主键',
 `login_name` varchar(30)  not null comment '登录帐号',
 `login_pwd` varchar(50)  not null comment '登录密码',
 `actual_name` varchar(30)  not null comment '员工名称',
@@ -9,47 +9,52 @@ create table if not exists `sys_user` (
 `department_id` int(0) not null comment '部门id',
 `administrator_flag` tinyint(0) not null default 0 comment '是否为超级管理员: 0 不是，1是',
 `remark` varchar(200)  null default null comment '备注',
-`created_by` bigint(20) not null comment '创建人',
+`created_by` int not null comment '创建人',
 `created_time` datetime not null comment '创建时间',
-`updated_by` bigint(20) default null comment '更新人',
+`updated_by` int default null comment '更新人',
 `updated_time` datetime default null comment '更新时间',
 `inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 primary key (`id`)
 )  comment='用户';
 
-insert into `sys_user` values(1, 'admin', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', 'Terry', 0, '13800000000', 1, 1, '超级管理员', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(2, 'user', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', 'mcdull', 0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(3, 'user1', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', 'mcdull1', 0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(1, 'admin', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', 'Terry',   0, '13800000000', 1, 1, '超级管理员', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(2, 'dev',  'a29c57c6894dee6e8251510d58c07078ee3f49bf', '王大锤',      0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(3, 'test', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '王强',      0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(4, 'zhaoming', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '赵敏',      0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(5, 'qiangang', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '钱刚',      0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(6, 'sunli', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '孙丽',      0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
 
 drop table if exists `sys_role`;
 create table `sys_role`  (
-`id` bigint(0) not null auto_increment comment '主键',
+`id` int not null auto_increment comment '主键',
 `role_name` varchar(20)  not null comment '角色名称',
 `role_code` varchar(500)  null default null comment '角色编码',
 `remark` varchar(200)  null default null comment '角色描述',
-`created_by` bigint(20) not null comment '创建人',
+`created_by` int not null comment '创建人',
 `created_time` datetime not null comment '创建时间',
-`updated_by` bigint(20) default null comment '更新人',
+`updated_by` int default null comment '更新人',
 `updated_time` datetime default null comment '更新时间',
 `inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 primary key (`id`) using btree
 ) comment = '角色表';
 
-insert into `sys_role` values(1, '超管', 'super_admin', '只读角色', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_role` values(2, '管理员', 'admin', '管理员', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_role` values(1, '系统管理员', 'sys_admin',    '管理员',   0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_role` values(3, '运维管理员', 'devops_admin', '管理员',   0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_role` values(4, 'HR',        'hr',          '人事',     0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_role` values(5, '访客',      'visitor',      '只读',     0, sysdate(), 0, sysdate(), 0, 0);
 
 drop table if exists `sys_department`;
 create table `sys_department`  (
-`id` bigint(0) not null auto_increment comment '部门主键id',
+`id` int not null auto_increment comment '部门主键id',
 `name` varchar(50) not null comment '部门名称',
-`manager_id` bigint(0) null default null comment '部门负责人id',
-`parent_id` bigint(0) not null default 0 comment '部门的父级id',
+`manager_id` int null default null comment '部门负责人id',
+`parent_id` int not null default 0 comment '部门的父级id',
 `sort` int(0) not null comment '部门排序',
-`created_by` bigint(20) not null comment '创建人',
+`created_by` int not null comment '创建人',
 `created_time` datetime not null comment '创建时间',
-`updated_by` bigint(20) default null comment '更新人',
+`updated_by` int default null comment '更新人',
 `updated_time` datetime default null comment '更新时间',
 `inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
@@ -57,18 +62,23 @@ primary key (`id`) using btree,
 index `parent_id`(`parent_id`) using btree
 ) comment = '部门';
 
-insert into `sys_department` values(1, 'R&D', 1, 0, 1, 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_department` values(2, '测试部', 2, 1, 2, 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_department` values(3, '财务部', 3, 1, 3, 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_department` values(4, '销售部', 4, 1, 4, 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_department` values(5, '研发部', 5, 1, 5, 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_department` values(1, 'xx集团', 1, 0, 1, 0, sysdate(), 0, sysdate(), 0, 0);
+
+insert into `sys_department` values(2, '研发部', 1, 1, 1, 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_department` values(3, '总经办',    1, 1, 2, 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_department` values(4, '财务部',    1, 1, 3, 0, sysdate(), 0, sysdate(), 0, 0);
+
+insert into `sys_department` values(5, '物资部',    2, 3, 2, 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_department` values(6, '营销中心',    3, 3, 3, 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_department` values(7, '行政部',    4, 3, 4, 0, sysdate(), 0, sysdate(), 0, 0);
+
 
 drop table if exists `sys_menu`;
 create table `sys_menu`  (
-`id` bigint(0) not null auto_increment comment '菜单id',
+`id` int not null auto_increment comment '菜单id',
 `menu_name` varchar(200)  not null comment '菜单名称',
 `menu_type` int(0) not null comment '类型 1/目录 2/菜单 3/功能',
-`parent_id` bigint(0) not null comment '父菜单id',
+`parent_id` int not null comment '父菜单id',
 `sort` int(0) null default null comment '显示顺序',
 `path` varchar(255)  null default null comment '路由地址',
 `component` varchar(255)  null default null comment '组件路径',
@@ -76,16 +86,16 @@ create table `sys_menu`  (
 `api_perms` text  null comment '后端权限字符串',
 `web_perms` text  null comment '前端权限字符串',
 `icon` varchar(100)  null default null comment '菜单图标',
-`context_menu_id` bigint(0) null default null comment '功能点关联菜单id',
+`context_menu_id` int null default null comment '功能点关联菜单id',
 `frame_flag` tinyint(1) not null default 0 comment '是否为外链',
 `frame_url` text  null comment '外链地址',
 `cache_flag` tinyint(1) not null default 0 comment '是否缓存',
 `visible_flag` tinyint(1) not null default 1 comment '显示状态',
 `inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
-`created_by` bigint(20) not null comment '创建人',
+`created_by` int not null comment '创建人',
 `created_time` datetime not null comment '创建时间',
-`updated_by` bigint(20) default null comment '更新人',
+`updated_by` int default null comment '更新人',
 `updated_time` datetime default null comment '更新时间',
 primary key (`id`) using btree
 )comment = '菜单表';
@@ -124,7 +134,6 @@ INSERT INTO `sys_menu` VALUES (106, '编辑', 3, 26, NULL, NULL, NULL, 1, 'syste
 INSERT INTO `sys_menu` VALUES (109, '参数配置', 2, 50, 3, '/config/config-list', '/support/config/config-list.vue', NULL, NULL, NULL, 'AntDesignOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, '2022-05-27 13:34:41', 1, '2022-06-23 16:24:16');
 INSERT INTO `sys_menu` VALUES (110, '数据字典', 2, 50, 4, '/setting/dict', '/support/dict/index.vue', NULL, NULL, NULL, 'BarcodeOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, '2022-05-27 17:53:00', 1, '2022-05-27 18:09:14');
 INSERT INTO `sys_menu` VALUES (111, '监控服务', 1, 0, 100, '/monitor', NULL, NULL, NULL, NULL, 'BarChartOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, '2022-06-17 11:13:23', 1, '2023-11-28 17:43:56');
-INSERT INTO `sys_menu` VALUES (113, '查询', 3, 112, NULL, NULL, NULL, NULL, NULL, 'ad', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, '2022-06-17 11:31:36', NULL, '2022-06-17 11:31:36');
 INSERT INTO `sys_menu` VALUES (114, '运维工具', 1, 0, 200, NULL, NULL, NULL, NULL, NULL, 'NodeCollapseOutlined', NULL, 0, NULL, 0, 1, 0, 1, 1, '2022-06-20 10:09:16', 1, '2023-12-01 19:36:18');
 INSERT INTO `sys_menu` VALUES (117, 'Reload', 2, 50, 12, '/hook', '/support/reload/reload-list.vue', NULL, NULL, NULL, 'ReloadOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, '2022-06-20 10:16:49', 1, '2023-12-01 19:39:17');
 INSERT INTO `sys_menu` VALUES (122, '数据库监控', 2, 111, 4, '/support/druid/index', NULL, NULL, NULL, NULL, 'ConsoleSqlOutlined', NULL, 1, 'http://mcdull.io:8090/druid', 1, 1, 0, 0, 1, '2022-06-20 14:49:33', 1, '2023-02-16 19:15:58');
@@ -208,9 +217,9 @@ INSERT INTO `sys_menu` VALUES (222, '查询', 3, 221, NULL, NULL, NULL, 1, 'syst
 
 drop table if exists `sys_role_menu`;
 create table `sys_role_menu`  (
-`id` bigint(0) not null auto_increment comment '主键id',
-`role_id` bigint(0) not null comment '角色id',
-`menu_id` bigint(0) not null comment '菜单id',
+`id` int not null auto_increment comment '主键id',
+`role_id` int not null comment '角色id',
+`menu_id` int not null comment '菜单id',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
@@ -219,9 +228,9 @@ primary key (`id`) using btree
 
 drop table if exists `sys_role_user`;
 create table `sys_role_user`  (
-`id` bigint(0) not null auto_increment,
-`role_id` bigint(0) not null comment '角色id',
-`user_id` bigint(0) not null comment '员工id',
+`id` int not null auto_increment,
+`role_id` int not null comment '角色id',
+`user_id` int not null comment '员工id',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
@@ -233,7 +242,7 @@ create table `sys_role_data_scope`  (
 `id` int not null auto_increment,
 `data_scope_type` int(0) not null comment '数据范围id',
 `view_type` int(0) not null comment '数据范围类型',
-`role_id` bigint(0) not null comment '角色id',
+`role_id` int not null comment '角色id',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
@@ -242,7 +251,7 @@ primary key (`id`) using btree
 
 drop table if exists `sys_dict_key`;
 create table `sys_dict_key`  (
-`id` bigint(0) not null auto_increment,
+`id` int not null auto_increment,
 `key_code` varchar(50) not null comment '编码',
 `key_name` varchar(50) not null comment '名称',
 `remark` varchar(500)  null default null comment '备注',
@@ -255,8 +264,8 @@ INSERT INTO `sys_dict_key` VALUES (1, 'GODOS_PLACE', '商品产地', '商品产�
 
 drop table if exists `sys_dict_value`;
 create table `sys_dict_value`  (
-`id` bigint(0) not null auto_increment,
-`dict_key_id` bigint(0) not null,
+`id` int not null auto_increment,
+`dict_key_id` int not null,
 `value_code` varchar(50)  not null comment '编码',
 `value_name` varchar(50)  not null comment '名称',
 `remark` varchar(500)  null default null comment '备注',
@@ -268,13 +277,13 @@ primary key (`id`) using btree
 )comment = '字典的值';
 
 
-insert into `sys_dict_value` values (1, 1, 'luo_yang', '洛阳', '', 1, 0, sysdate(), sysdate());
+insert into `sys_dict_value` values (1, 1, 'luo_yang',  '洛阳', '', 1, 0, sysdate(), sysdate());
 insert into `sys_dict_value` values (2, 1, 'zheng_zhou', '郑州', '', 2, 0, sysdate(), sysdate());
 insert into `sys_dict_value` values (3, 1, 'bei_jing', '北京', '', 3, 0, sysdate(), sysdate());
 
 drop table if exists `sys_config`;
 create table `sys_config`  (
-`id` bigint(0) not null auto_increment comment '主键',
+`id` int not null auto_increment comment '主键',
 `config_name` varchar(255)  not null comment '参数名字',
 `config_key` varchar(255)  not null comment '参数key',
 `config_value` text  not null comment '参数值',
@@ -289,14 +298,14 @@ insert into `sys_config` values (1, '万能密码', 'super_password', '1024lab',
 
 drop table if exists `sys_file`;
 create table `sys_file`  (
-`id` bigint(0) not null auto_increment comment '主键id',
+`id` int not null auto_increment comment '主键id',
 `folder_type` tinyint unsigned not null comment '文件夹类型',
 `file_name` varchar(100) null default null comment '文件名称',
 `file_size` int(0) null default null comment '文件大小',
 `file_key` varchar(200)  not null comment '文件key，用于文件下载',
 `file_type` varchar(50)  not null comment '文件类型',
-`created_by` bigint(20) not null comment '创建人',
-`updated_by` bigint(20) default null comment '更新人',
+`created_by` int not null comment '创建人',
+`updated_by` int default null comment '更新人',
 `inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
@@ -309,8 +318,8 @@ index `module_type`(`folder_type`) using btree
 
 drop table if exists `sys_table_column`;
 create table `sys_table_column`  (
-`id` bigint(0) not null auto_increment,
-`user_id` bigint(0) not null comment '用户id',
+`id` int not null auto_increment,
+`user_id` int not null comment '用户id',
 `table_id` int(0) not null comment '表格id',
 `columns` text null comment '具体的表格列，存入的json',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
@@ -322,10 +331,10 @@ unique index `uni_employee_table`(`user_id`, `table_id`) using btree
 
 drop table if exists `sys_help_doc_catalog`;
 create table `sys_help_doc_catalog`  (
-`id` bigint(0) not null auto_increment comment '帮助文档目录',
+`id` int not null auto_increment comment '帮助文档目录',
 `name` varchar(1000) not null comment '名称',
 `sort` int(0) not null default 0 comment '排序字段',
-`parent_id` bigint(0) not null comment '父级id',
+`parent_id` int not null comment '父级id',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
@@ -339,15 +348,15 @@ insert into `sys_help_doc_catalog` values (11, '进销存', 0, 0, 0, sysdate(), 
 
 DROP TABLE IF EXISTS `sys_help_doc`;
 create table `sys_help_doc`  (
-`id` bigint(0) not null auto_increment,
-`help_doc_catalog_id` bigint(0) not null comment '类型1公告 2动态',
+`id` int not null auto_increment,
+`help_doc_catalog_id` int not null comment '类型1公告 2动态',
 `title` varchar(200)  not null comment '标题',
 `content_text` text  not null comment '文本内容',
 `content_html` text  not null comment 'html内容',
 `attachment` varchar(1000)  null default null comment '附件',
 `sort` int(0) not null default 0 comment '排序',
-`page_view_count` int(0) not null default 0 comment '页面浏览量，传说中的pv',
-`user_view_count` int(0) not null default 0 comment '用户浏览量，传说中的uv',
+`page_view_count` int(0) not null default 0 comment '页面浏览量pv',
+`user_view_count` int(0) not null default 0 comment '用户浏览量uv',
 `author` varchar(1000)  null default null comment '作者',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
@@ -361,10 +370,10 @@ insert into `sys_help_doc` values (33, 6, '谁有权限查看企业信息', '纳
 
 drop table if exists `sys_help_doc_relation`;
 create table `sys_help_doc_relation`  (
-`id` bigint(0) not null auto_increment,
-`relation_id` bigint(0) not null comment '关联id',
+`id` int not null auto_increment,
+`relation_id` int not null comment '关联id',
 `relation_name` varchar(255) null default null comment '关联名称',
-`help_doc_id` bigint(0) not null comment '文档id',
+`help_doc_id` int not null comment '文档id',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
@@ -379,9 +388,9 @@ insert into `sys_help_doc_relation` values (2, 0, '首页', 33,  0, sysdate(), s
 
 drop table if exists `sys_help_doc_view_record`;
 create table `sys_help_doc_view_record`  (
-`id` bigint(0) not null auto_increment,
-`help_doc_id` bigint(0) not null comment 'help doc id',
-`user_id` bigint(0) not null comment '用户id',
+`id` int not null auto_increment,
+`help_doc_id` int not null comment 'help doc id',
+`user_id` int not null comment '用户id',
 `page_view_count` int(0) null default 0 comment '查看次数',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
@@ -398,7 +407,7 @@ insert into `sys_help_doc_view_record` values (4, 34, 1,  5,  0, sysdate(), sysd
 
 drop table if exists `sys_change_log`;
 create table `sys_change_log`  (
-`id` bigint(0) not null auto_increment comment '更新日志id',
+`id` int not null auto_increment comment '更新日志id',
 `version` varchar(255) not null comment '版本',
 `type` int(0) not null comment '更新类型:[1:特大版本功能更新;2:功能更新;3:bug修复]',
 `publish_author` varchar(255) not null comment '发布人',
@@ -412,15 +421,16 @@ primary key (`id`) using btree,
 unique index `version_unique`(`version`) using btree
 ) comment = '系统更新日志';
 
-insert into `sys_change_log` values (2, 'v1.1.0', 2, '卓大', '2020-05-09', 'smartadmin中后台系统 v1.1.0 版本（20200422）正式更新上线，更新内容如下：\n\n1.【新增】增加员工姓名查询\n\n2.【新增】增加文件预览组件\n\n3.【新增】新增四级菜单\n', 'http://smartadmin.1024lab.net/views/1.x/base/about.html', 0, sysdate(), sysdate());
-
+insert into `sys_change_log` values (1, 'v1.0.0', 1, '王大锤', sysdate(), 'v1.0.0 版本正式上线，内容如下：\n\n1.【新增】增加员工姓名查询\n\n2.【新增】增加文件预览组件\n\n3.【新增】新增四级菜单\n', '', 0, sysdate(), sysdate());
+insert into `sys_change_log` values (2, 'v1.0.1', 2, '王大锤', sysdate(), 'v1.0.1 版本正式更新上线，更新内容如下：\n\n1.【新增】增加员工姓名查询\n\n2.【新增】增加文件预览组件\n\n3.【新增】新增四级菜单\n', '', 0, sysdate(), sysdate());
+insert into `sys_change_log` values (3, 'v1.0.2', 3, '王大锤', sysdate(), 'v1.0.2 版本bug修复，更新内容如下：\n\n1.【新增】增加员工姓名查询\n\n2.【新增】增加文件预览组件\n\n3.【新增】新增四级菜单\n', '', 0, sysdate(), sysdate());
 
 drop table if exists `sys_feedback`;
 create table `sys_feedback`  (
-`id` bigint(0) not null auto_increment comment '主键',
+`id` int not null auto_increment comment '主键',
 `feedback_content` text  null comment '反馈内容',
 `feedback_attachment` varchar(500)  null default null comment '反馈图片',
-`user_id` bigint(0) not null comment '创建人id',
+`user_id` int not null comment '创建人id',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
@@ -429,7 +439,7 @@ primary key (`id`) using btree
 
 drop table if exists `sys_code_generator_config`;
 create table `sys_code_generator_config`  (
-`id` bigint(0) not null auto_increment comment '主键',
+`id` int not null auto_increment comment '主键',
 `table_name` varchar(255) not null comment '表名',
 `basic` text null comment '基础命名信息',
 `fields` text null comment '字段列表',
@@ -464,7 +474,7 @@ index `customer_id`(`login_name`) using btree
 drop table if exists `sys_operate_log`;
 create table `sys_operate_log`  (
 `id` int(0) not null auto_increment comment '主键',
-`user_id` bigint(0) not null comment '用户id',
+`user_id` int not null comment '用户id',
 `trace_id` varchar(50) null default null comment 'Trace ID',
 `time_taken` int(0) null default null comment '耗时(ms)',
 `module` varchar(50) null default null comment '操作模块',
@@ -500,9 +510,9 @@ create table `sys_notice`  (
 `source` varchar(1000) null default null comment '来源',
 `author` varchar(1000) null default null comment '作者',
 `document_number` varchar(1000) null default null comment '文号',
-`created_by` bigint(20) not null comment '创建人',
+`created_by` int not null comment '创建人',
 `created_time` datetime not null comment '创建时间',
-`updated_by` bigint(20) default null comment '更新人',
+`updated_by` int default null comment '更新人',
 `updated_time` datetime default null comment '更新时间',
 `inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
@@ -522,27 +532,24 @@ primary key (`id`) using btree
 drop table if exists `sys_notice_visible_range`;
 create table `sys_notice_visible_range`  (
 `id` int(0) not null auto_increment comment '主键',
-`notice_id` bigint(0) not null comment '通知id',
+`notice_id` int not null comment '通知id',
 `data_type` tinyint(0) not null comment '数据类型1员工 2部门',
-`data_id` bigint(0) not null comment '员工or部门id',
+`data_id` int not null comment '员工or部门id',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
 primary key (`id`) using btree
 ) comment = '通知可见范围';
 
--- ----------------------------
--- records of t_notice_type
--- ----------------------------
 insert into `sys_notice_type` values (1, '公告', 0, sysdate(), sysdate());
 insert into `sys_notice_type` values (2, '通知', 0, sysdate(), sysdate());
 
 
 drop table if exists `sys_notice_view_record`;
 create table `sys_notice_view_record`  (
-`id` bigint(0) not null auto_increment comment '主键',
-`notice_id` bigint(0) not null comment '通知公告id',
-`user_id` bigint(0) not null comment '员工id',
+`id` int not null auto_increment comment '主键',
+`notice_id` int not null comment '通知公告id',
+`user_id` int not null comment '员工id',
 `page_view_count` int(0) null default 0 comment '查看次数',
 `first_ip` varchar(255)  null default null comment '首次ip',
 `first_user_agent` varchar(1000) null default null comment '首次用户设备等标识',
@@ -557,7 +564,7 @@ primary key (`id`) using btree
 
 drop table if exists `sys_oa_enterprise`;
 create table `sys_oa_enterprise`  (
-`id` bigint(0) not null auto_increment comment '企业id',
+`id` int not null auto_increment comment '企业id',
 `enterprise_name` varchar(255) not null comment '企业名称',
 `enterprise_logo` varchar(255) null default null comment '企业logo',
 `type` int(0) not null default 1 comment '类型（1:有限公司;2:合伙公司）',
@@ -573,16 +580,15 @@ create table `sys_oa_enterprise`  (
 `district_name` varchar(100) null default null comment '区县名称',
 `address` varchar(255) null default null comment '详细地址',
 `business_license` varchar(255) null default null comment '营业执照',
-`created_by` bigint(20) not null comment '创建人',
+`created_by` int not null comment '创建人',
 `created_time` datetime not null comment '创建时间',
-`updated_by` bigint(20) default null comment '更新人',
+`updated_by` int default null comment '更新人',
 `updated_time` datetime default null comment '更新时间',
 `inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 primary key (`id`) using btree
 ) comment = 'oa企业模块' ;
 
-
-insert into `sys_oa_enterprise` values (1, '区块链实验室', '', 1, 'block', 'kk', '18637922222', null, '410000', '河南省', '410300', '洛阳市', '410311', '洛龙区', '区块链大楼', 'public/common/852b7e19bef94af39c1a6156edf47cfb_20221022170332_jpg', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_oa_enterprise` values (2, '创新实验室', '', 2, '创新', 'xx', '18637921111', 'xxx@163.com', '410000', '河南省', '410300', '洛阳市', '410311', '洛龙区', '1024大楼', 'public/common/59b1ca99b7fe45d78678e6295798a699_20231201200459.jpg', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_oa_enterprise` values (1, '区块链实验室', '', 1, 'block', 'kk', '18637922222', null, '410000', '河南省', '410300', '洛阳市', '410311', '洛龙区', '区块链大楼', null, 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_oa_enterprise` values (2, '创新实验室', '', 2, '创新', 'xx', '18637921111', 'xxx@163.com', '410000', '河南省', '410300', '洛阳市', '410311', '洛龙区', '1024大楼', null, 0, sysdate(), 0, sysdate(), 0, 0);
 

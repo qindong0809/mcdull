@@ -56,7 +56,7 @@ public class RoleController {
     @Operation(summary = "删除角色")
     @GetMapping("/role/delete/{roleId}")
     @SaCheckPermission("system:role:delete")
-    public Result<Boolean> deleteRole(@PathVariable Long roleId) {
+    public Result<Boolean> deleteRole(@PathVariable Integer roleId) {
         roleService.delete(roleId);
         return Result.success(true);
     }
@@ -71,7 +71,7 @@ public class RoleController {
 
     @Operation(summary = "获取角色数据")
     @GetMapping("/role/get/{roleId}")
-    public Result<RoleVO> getRole(@PathVariable("roleId") Long roleId) {
+    public Result<RoleVO> getRole(@PathVariable("roleId") Integer roleId) {
         return Result.success(roleService.detail(roleId));
     }
 
@@ -84,7 +84,7 @@ public class RoleController {
     }
 
     @PutMapping("{id}/permission")
-    public Result<Boolean> insertPermission(@PathVariable("id") Long id, @RequestBody RolePermissionInsertDTO dto) {
+    public Result<Boolean> insertPermission(@PathVariable("id") Integer id, @RequestBody RolePermissionInsertDTO dto) {
         return Result.success(roleService.insertPermission(id, dto));
     }
 

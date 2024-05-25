@@ -48,10 +48,12 @@ public class SimpleOperationLogsAspect implements OperationLogsService {
     public void saveLog(LogOperationDTO dto, Method method) {
         Tag tag = AnnotationUtils.findAnnotation(method.getDeclaringClass(), Tag.class);
         Operation operation = method.getAnnotation(Operation.class);
-        if (ObjUtil.isAllNotEmpty(tag, operation)) {
-            OperateLogEntity entity = this.of(dto, tag.name(), operation.summary());
-            if (ObjUtil.isNotNull(entity)) {
-                asyncEvent.asyncEvent(entity);
+        if (ObjUtil.isNotNull(tag)) {
+            if (ObjUtil.isNotNull(operation)) {
+                OperateLogEntity entity = this.of(dto, tag.name(), operation.summary());
+                if (ObjUtil.isNotNull(entity)) {
+                    asyncEvent.asyncEvent(entity);
+                }
             }
         }
     }
@@ -63,7 +65,7 @@ public class SimpleOperationLogsAspect implements OperationLogsService {
             return null;
         }
         OperateLogEntity entity = new OperateLogEntity();
-        entity.setUserId(Convert.toLong(userId));
+        entity.setUserId(userId);
         entity.setModule(name);
         entity.setContent(summary);
         entity.setUrl(dto.getPath());

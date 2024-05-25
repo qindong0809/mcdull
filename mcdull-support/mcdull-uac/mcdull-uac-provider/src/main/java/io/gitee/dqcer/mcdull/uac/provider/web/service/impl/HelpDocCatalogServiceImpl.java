@@ -69,7 +69,7 @@ public class HelpDocCatalogServiceImpl extends BasicServiceImpl<IHelpDocCatalogR
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(HelpDocCatalogUpdateDTO dto) {
-        Long helpDocCatalogId = dto.getHelpDocCatalogId();
+        Integer helpDocCatalogId = dto.getHelpDocCatalogId();
         HelpDocCatalogEntity helpDocCatalog = baseRepository.getById(helpDocCatalogId);
         if (ObjUtil.isNull(helpDocCatalog)) {
             this.throwDataNotExistException(helpDocCatalogId);
@@ -86,7 +86,7 @@ public class HelpDocCatalogServiceImpl extends BasicServiceImpl<IHelpDocCatalogR
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void delete(Long helpDocCatalogId) {
+    public void delete(Integer helpDocCatalogId) {
         HelpDocCatalogEntity helpDocCatalog = baseRepository.getById(helpDocCatalogId);
         if (ObjUtil.isNull(helpDocCatalog)) {
             this.throwDataNotExistException(helpDocCatalogId);

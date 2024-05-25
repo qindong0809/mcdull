@@ -17,7 +17,7 @@ public class NoticeEmployeeQueryDTO extends PagedDTO {
     private String keywords;
 
     @Schema(description = "分类")
-    private Long noticeTypeId;
+    private Integer noticeTypeId;
 
     @Schema(description = "发布-开始时间")
     private LocalDate publishTimeBegin;

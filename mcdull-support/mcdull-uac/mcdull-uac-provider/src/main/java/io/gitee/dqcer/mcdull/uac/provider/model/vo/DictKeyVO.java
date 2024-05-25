@@ -15,7 +15,7 @@ import lombok.Data;
 public class DictKeyVO implements VO {
 
     @Schema
-    private Long dictKeyId;
+    private Integer dictKeyId;
 
     @Schema
     private String keyCode;

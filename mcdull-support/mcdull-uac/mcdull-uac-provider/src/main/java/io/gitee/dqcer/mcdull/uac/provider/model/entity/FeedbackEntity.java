@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("sys_feedback")
-public class FeedbackEntity extends RelEntity<Long> {
+public class FeedbackEntity extends RelEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 
@@ -21,6 +21,6 @@ public class FeedbackEntity extends RelEntity<Long> {
 
     private String feedbackAttachment;
 
-    private Long userId;
+    private Integer userId;
 
 }

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class HelpDocViewRecordVO implements VO  {
 
     @Schema(description = "ID")
-    private Long userId;
+    private Integer userId;
 
     @Schema(description = "姓名")
     private String userName;

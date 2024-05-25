@@ -39,7 +39,7 @@ public class FeedbackRepositoryImpl extends ServiceImpl<FeedbackMapper, Feedback
      * @return {@link List< FeedbackEntity >}
      */
     @Override
-    public List<FeedbackEntity> queryListByIds(List<Long> idList) {
+    public List<FeedbackEntity> queryListByIds(List<Integer> idList) {
         LambdaQueryWrapper<FeedbackEntity> wrapper = Wrappers.lambdaQuery();
         wrapper.in(FeedbackEntity::getId, idList);
         List<FeedbackEntity> list =  baseMapper.selectList(wrapper);
@@ -73,7 +73,7 @@ public class FeedbackRepositoryImpl extends ServiceImpl<FeedbackMapper, Feedback
      * @return {@link FeedbackEntity}
      */
     @Override
-    public FeedbackEntity getById(Long id) {
+    public FeedbackEntity getById(Integer id) {
         return baseMapper.selectById(id);
     }
 
@@ -81,10 +81,10 @@ public class FeedbackRepositoryImpl extends ServiceImpl<FeedbackMapper, Feedback
      * 插入数据
      *
      * @param entity 实体对象
-     * @return Long id
+     * @return Integer id
      */
     @Override
-    public Long insert(FeedbackEntity entity) {
+    public Integer insert(FeedbackEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
@@ -110,7 +110,7 @@ public class FeedbackRepositoryImpl extends ServiceImpl<FeedbackMapper, Feedback
     * @param ids id集
     */
     @Override
-    public void deleteBatchByIds(List<Long> ids) {
+    public void deleteBatchByIds(List<Integer> ids) {
         int rowSize = baseMapper.deleteBatchIds(ids);
         if (rowSize != ids.size()) {
             log.error("数据插入失败 actual: {}, plan: {}, ids: {}", rowSize, ids.size(), ids);

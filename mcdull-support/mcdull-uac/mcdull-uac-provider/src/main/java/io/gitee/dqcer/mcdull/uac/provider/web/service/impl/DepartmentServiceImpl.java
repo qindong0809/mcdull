@@ -67,7 +67,7 @@ public class DepartmentServiceImpl extends BasicServiceImpl<IDepartmentRepositor
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean insert(DeptInsertDTO dto) {
-        Long parentId = dto.getParentId();
+        Integer parentId = dto.getParentId();
         List<DepartmentEntity> childList = baseRepository.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
             boolean anyMatch = childList.stream().anyMatch(i -> i.getName().equals(dto.getName()));
@@ -91,12 +91,12 @@ public class DepartmentServiceImpl extends BasicServiceImpl<IDepartmentRepositor
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean update(Long id, DeptUpdateDTO dto) {
+    public boolean update(Integer id, DeptUpdateDTO dto) {
         DepartmentEntity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
         }
-        Long parentId = dto.getParentId();
+        Integer parentId = dto.getParentId();
         List<DepartmentEntity> childList = baseRepository.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
             this.validNameExist(id, dto.getName(), childList,
@@ -115,11 +115,11 @@ public class DepartmentServiceImpl extends BasicServiceImpl<IDepartmentRepositor
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(Integer id) {
         List<DepartmentEntity> all = baseRepository.list();
         List<DepartmentEntity> currentList = this.getChildNodeByParentId(all, id);
         if (CollUtil.isNotEmpty(currentList)) {
-            List<Long> deptIdList = currentList.stream().map(DepartmentEntity::getId).collect(Collectors.toList());
+            List<Integer> deptIdList = currentList.stream().map(DepartmentEntity::getId).collect(Collectors.toList());
             List<UserEntity> userList =userService.listByDeptList(deptIdList);
             if (CollUtil.isNotEmpty(userList)) {
                 throw new BusinessException("dept.has.user");
@@ -128,7 +128,7 @@ public class DepartmentServiceImpl extends BasicServiceImpl<IDepartmentRepositor
         return baseRepository.removeById(id);
     }
 
-    private List<DepartmentEntity> getChildNodeByParentId(List<DepartmentEntity> all, Long parentId) {
+    private List<DepartmentEntity> getChildNodeByParentId(List<DepartmentEntity> all, Integer parentId) {
         List<DepartmentEntity> list = all.stream()
                 .filter(i->i.getParentId().equals(parentId)).collect(Collectors.toList());
         if (CollUtil.isNotEmpty(list)) {
@@ -164,7 +164,7 @@ public class DepartmentServiceImpl extends BasicServiceImpl<IDepartmentRepositor
     }
 
     @Override
-    public Map<Long, String> getNameMap(List<Long> idList) {
+    public Map<Integer, String> getNameMap(List<Integer> idList) {
         List<DepartmentEntity> list = baseRepository.listByIds(idList);
         if (CollUtil.isNotEmpty(list)) {
             return list.stream().collect(Collectors.toMap(DepartmentEntity::getId, DepartmentEntity::getName));
@@ -173,14 +173,14 @@ public class DepartmentServiceImpl extends BasicServiceImpl<IDepartmentRepositor
     }
 
     @Override
-    public List<Long> getChildrenIdList(Long departmentId) {
-        List<Long> voList = new ArrayList<>();
+    public List<Integer> getChildrenIdList(Integer departmentId) {
+        List<Integer> voList = new ArrayList<>();
         List<DepartmentEntity> list = baseRepository.listByParentId(departmentId);
         if (CollUtil.isNotEmpty(list)) {
-            List<Long> idList = list.stream().map(DepartmentEntity::getId).collect(Collectors.toList());
+            List<Integer> idList = list.stream().map(DepartmentEntity::getId).collect(Collectors.toList());
             voList.addAll(idList);
-            for (Long id : idList) {
-                List<Long> childrenIdList = this.getChildrenIdList(id);
+            for (Integer id : idList) {
+                List<Integer> childrenIdList = this.getChildrenIdList(id);
                 if (CollUtil.isNotEmpty(childrenIdList)) {
                     voList.addAll(childrenIdList);
                 }

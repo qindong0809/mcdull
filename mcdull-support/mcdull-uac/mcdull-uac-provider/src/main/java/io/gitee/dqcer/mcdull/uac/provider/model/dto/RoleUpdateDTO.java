@@ -21,6 +21,6 @@ public class RoleUpdateDTO extends RoleAddDTO {
      */
     @Schema(description = "角色id")
     @NotNull(message = "角色id不能为空")
-    protected Long roleId;
+    protected Integer roleId;
    
 }

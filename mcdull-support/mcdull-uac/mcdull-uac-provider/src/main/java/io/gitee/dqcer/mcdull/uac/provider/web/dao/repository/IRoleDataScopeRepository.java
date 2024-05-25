@@ -12,7 +12,7 @@ import java.util.List;
 */
 public interface IRoleDataScopeRepository extends IService<RoleDataScopeEntity>  {
 
-    List<RoleDataScopeEntity> getListByRole(Long roleId);
+    List<RoleDataScopeEntity> getListByRole(Integer roleId);
 
     void update(List<RoleDataScopeEntity> insertList,
                 List<RoleDataScopeEntity> updateList, List<RoleDataScopeEntity> removeList);

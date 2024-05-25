@@ -73,7 +73,7 @@ public class DictKeyRepositoryImpl extends ServiceImpl<DictKeyMapper, DictKeyEnt
     }
 
     @Override
-    public void update(Long dictKeyId, String keyCode, String keyName, String remark) {
+    public void update(Integer dictKeyId, String keyCode, String keyName, String remark) {
         DictKeyEntity entity = new DictKeyEntity();
         entity.setId(dictKeyId);
         entity.setKeyCode(keyCode);

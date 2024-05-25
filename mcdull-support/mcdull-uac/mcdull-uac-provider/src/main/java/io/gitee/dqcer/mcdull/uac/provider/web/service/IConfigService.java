@@ -23,5 +23,5 @@ public interface IConfigService {
 
     void update(ConfigUpdateDTO dto);
 
-    void delete(List<Long> idList);
+    void delete(List<Integer> idList);
 }

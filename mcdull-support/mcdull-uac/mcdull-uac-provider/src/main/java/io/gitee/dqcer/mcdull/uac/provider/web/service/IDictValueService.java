@@ -43,7 +43,7 @@ public interface IDictValueService {
      *
      * @param idList id列表
      */
-    void delete(List<Long> idList);
+    void delete(List<Integer> idList);
 
     /**
      * key code

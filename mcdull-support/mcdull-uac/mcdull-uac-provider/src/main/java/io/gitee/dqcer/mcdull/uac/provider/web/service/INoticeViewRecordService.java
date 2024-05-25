@@ -12,11 +12,11 @@ import java.util.List;
 */
 public interface INoticeViewRecordService {
 
-    NoticeViewRecordEntity getByUserIdAndNoticeId(Long userId, Long noticeId);
+    NoticeViewRecordEntity getByUserIdAndNoticeId(Integer userId, Integer noticeId);
 
     void save(NoticeViewRecordEntity newEntity);
 
     void update(NoticeViewRecordEntity entity);
 
-    List<Long> getByUserId(Long userId);
+    List<Integer> getByUserId(Integer userId);
 }

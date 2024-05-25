@@ -1,19 +1,14 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.dev33.satoken.session.SaSession;
-import cn.dev33.satoken.session.TokenSign;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjUtil;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.SessionQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.ChangeLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.SessionVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ISessionService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
@@ -51,7 +46,7 @@ public class SessionServiceImpl implements ISessionService {
                 vo.setId(session.getId());
                 vo.setLoginId(Convert.toInt(loginId.toString()));
                 vo.setCreateTime(LocalDateTimeUtil.of(session.getCreateTime()));
-                UserEntity user = userService.get(Convert.toLong(vo.getLoginId()));
+                UserEntity user = userService.get(vo.getLoginId());
                 if (ObjUtil.isNotNull(user)) {
                     vo.setActualName(user.getActualName());
                     vo.setLoginName(user.getLoginName());
@@ -63,8 +58,8 @@ public class SessionServiceImpl implements ISessionService {
     }
 
     @Override
-    public void batchKickout(List<Long> loginIdList) {
-        for (Long userId : loginIdList) {
+    public void batchKickout(List<Integer> loginIdList) {
+        for (Integer userId : loginIdList) {
             StpUtil.kickout(userId);
         }
     }

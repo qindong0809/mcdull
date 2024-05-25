@@ -23,19 +23,19 @@ public interface IMenuRepository extends IService<MenuEntity> {
 
     List<MenuEntity> allList();
 
-    Map<Long, List<String>> menuCodeListMap(Map<Long, List<Long>> menuListMap);
+    Map<Integer, List<String>> menuCodeListMap(Map<Integer, List<Integer>> menuListMap);
 
-    List<MenuEntity> list(Collection<Long> collection);
+    List<MenuEntity> list(Collection<Integer> collection);
 
     List<MenuEntity> all();
 
     List<MenuEntity> allAndButton();
 
-    List<MenuEntity> listByParentId(Long parentId);
+    List<MenuEntity> listByParentId(Integer parentId);
 
-    boolean delete(Long id, String reason);
+    boolean delete(Integer id, String reason);
 
-    Map<Long, List<MenuEntity>> getMenuListMap(Map<Long, List<Long>> menuListMap);
+    Map<Integer, List<MenuEntity>> getMenuListMap(Map<Integer, List<Integer>> menuListMap);
 
     List<MenuEntity> listOnlyMenu(Boolean onlyMenu);
 }

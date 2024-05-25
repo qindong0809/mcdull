@@ -21,7 +21,7 @@ public class ChangeLogUpdateDTO implements DTO {
 
     @Schema(description = "更新日志id")
     @NotNull(message = "更新日志id 不能为空")
-    private Long changeLogId;
+    private Integer changeLogId;
 
     @Schema(description = "版本")
     @NotBlank(message = "版本 不能为空")

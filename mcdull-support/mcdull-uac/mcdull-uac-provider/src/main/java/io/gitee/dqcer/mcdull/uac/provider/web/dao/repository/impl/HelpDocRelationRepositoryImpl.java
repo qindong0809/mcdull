@@ -25,7 +25,7 @@ public class HelpDocRelationRepositoryImpl
     private static final Logger log = LoggerFactory.getLogger(HelpDocRelationRepositoryImpl.class);
 
     @Override
-    public List<HelpDocRelationEntity> listByRelationId(Long relationId) {
+    public List<HelpDocRelationEntity> listByRelationId(Integer relationId) {
         LambdaQueryWrapper<HelpDocRelationEntity> query = Wrappers.lambdaQuery();
         query.eq(HelpDocRelationEntity::getRelationId, relationId);
         return baseMapper.selectList(query);

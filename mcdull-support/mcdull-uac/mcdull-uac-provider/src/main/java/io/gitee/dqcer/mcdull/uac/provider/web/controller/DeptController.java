@@ -59,7 +59,7 @@ public class DeptController {
     @Operation(summary = "Delete ")
     @DeleteMapping("delete/{departmentId}")
     @SaCheckPermission("system:department:delete")
-    public Result<Boolean> deleteDepartment(@PathVariable Long departmentId) {
+    public Result<Boolean> deleteDepartment(@PathVariable Integer departmentId) {
         return Result.success(deptService.delete(departmentId));
     }
 

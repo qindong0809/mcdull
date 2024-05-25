@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface IRoleDataScopeService {
 
-    List<RoleDataScopeVO> getListByRole(Long roleId);
+    List<RoleDataScopeVO> getListByRole(Integer roleId);
 
     void updateByRoleId(RoleDataScopeUpdateDTO dto);
 

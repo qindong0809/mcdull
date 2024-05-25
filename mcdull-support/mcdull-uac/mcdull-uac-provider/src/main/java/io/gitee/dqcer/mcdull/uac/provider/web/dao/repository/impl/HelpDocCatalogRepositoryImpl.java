@@ -40,7 +40,7 @@ public class HelpDocCatalogRepositoryImpl
      * @return {@link List< ConfigEntity >}
      */
     @Override
-    public List<HelpDocCatalogEntity> queryListByIds(List<Long> idList) {
+    public List<HelpDocCatalogEntity> queryListByIds(List<Integer> idList) {
         LambdaQueryWrapper<HelpDocCatalogEntity> wrapper = Wrappers.lambdaQuery();
         wrapper.in(HelpDocCatalogEntity::getId, idList);
         List<HelpDocCatalogEntity> list =  baseMapper.selectList(wrapper);
@@ -74,7 +74,7 @@ public class HelpDocCatalogRepositoryImpl
      * @return {@link ConfigEntity}
      */
     @Override
-    public HelpDocCatalogEntity getById(Long id) {
+    public HelpDocCatalogEntity getById(Integer id) {
         return baseMapper.selectById(id);
     }
 
@@ -82,10 +82,10 @@ public class HelpDocCatalogRepositoryImpl
      * 插入数据
      *
      * @param entity 实体对象
-     * @return Long id
+     * @return Integer id
      */
     @Override
-    public Long insert(HelpDocCatalogEntity entity) {
+    public Integer insert(HelpDocCatalogEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
@@ -106,13 +106,13 @@ public class HelpDocCatalogRepositoryImpl
     }
 
     @Override
-    public List<HelpDocCatalogEntity> selectList(Long userId) {
+    public List<HelpDocCatalogEntity> selectList(Integer userId) {
         LambdaQueryWrapper<HelpDocCatalogEntity> query = Wrappers.lambdaQuery();
         return baseMapper.selectList(query);
     }
 
     @Override
-    public List<HelpDocCatalogEntity> list(Long parentId) {
+    public List<HelpDocCatalogEntity> list(Integer parentId) {
         if (ObjUtil.isNotNull(parentId)) {
             LambdaQueryWrapper<HelpDocCatalogEntity> query = Wrappers.lambdaQuery();
             query.eq(HelpDocCatalogEntity::getParentId, parentId);
@@ -127,7 +127,7 @@ public class HelpDocCatalogRepositoryImpl
     * @param ids id集
     */
     @Override
-    public void deleteBatchByIds(List<Long> ids) {
+    public void deleteBatchByIds(List<Integer> ids) {
         int rowSize = baseMapper.deleteBatchIds(ids);
         if (rowSize != ids.size()) {
             log.error("数据插入失败 actual: {}, plan: {}, ids: {}", rowSize, ids.size(), ids);

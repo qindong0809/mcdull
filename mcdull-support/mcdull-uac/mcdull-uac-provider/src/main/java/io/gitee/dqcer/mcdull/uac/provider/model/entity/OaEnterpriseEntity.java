@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @TableName("sys_oa_enterprise")
-public class OaEnterpriseEntity extends BaseEntity<Long> {
+public class OaEnterpriseEntity extends BaseEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 

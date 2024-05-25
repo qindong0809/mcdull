@@ -43,7 +43,7 @@ public class HelpDocRepositoryImpl
      * @return {@link List< ConfigEntity >}
      */
     @Override
-    public List<HelpDocEntity> queryListByIds(List<Long> idList) {
+    public List<HelpDocEntity> queryListByIds(List<Integer> idList) {
         LambdaQueryWrapper<HelpDocEntity> wrapper = Wrappers.lambdaQuery();
         wrapper.in(HelpDocEntity::getId, idList);
         List<HelpDocEntity> list =  baseMapper.selectList(wrapper);
@@ -62,7 +62,7 @@ public class HelpDocRepositoryImpl
     @Override
     public Page<HelpDocEntity> selectPage(HelpDocQueryDTO param) {
         LambdaQueryWrapper<HelpDocEntity> lambda = new QueryWrapper<HelpDocEntity>().lambda();
-        Long helpDocCatalogId = param.getHelpDocCatalogId();
+        Integer helpDocCatalogId = param.getHelpDocCatalogId();
         if (ObjUtil.isNotNull(helpDocCatalogId)) {
             lambda.eq(HelpDocEntity::getHelpDocCatalogId, helpDocCatalogId);
         }
@@ -81,7 +81,7 @@ public class HelpDocRepositoryImpl
      * @return {@link ConfigEntity}
      */
     @Override
-    public HelpDocEntity getById(Long id) {
+    public HelpDocEntity getById(Integer id) {
         return baseMapper.selectById(id);
     }
 
@@ -89,10 +89,10 @@ public class HelpDocRepositoryImpl
      * 插入数据
      *
      * @param entity 实体对象
-     * @return Long id
+     * @return Integer id
      */
     @Override
-    public Long insert(HelpDocEntity entity) {
+    public Integer insert(HelpDocEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
@@ -113,13 +113,13 @@ public class HelpDocRepositoryImpl
     }
 
     @Override
-    public List<HelpDocEntity> selectList(Long userId) {
+    public List<HelpDocEntity> selectList(Integer userId) {
         LambdaQueryWrapper<HelpDocEntity> query = Wrappers.lambdaQuery();
         return baseMapper.selectList(query);
     }
 
     @Override
-    public List<HelpDocEntity> listByCatalogId(Long helpDocCatalogId) {
+    public List<HelpDocEntity> listByCatalogId(Integer helpDocCatalogId) {
         LambdaQueryWrapper<HelpDocEntity> query = Wrappers.lambdaQuery();
         query.eq(HelpDocEntity::getHelpDocCatalogId, helpDocCatalogId);
         return baseMapper.selectList(query);
@@ -131,7 +131,7 @@ public class HelpDocRepositoryImpl
     * @param ids id集
     */
     @Override
-    public void deleteBatchByIds(List<Long> ids) {
+    public void deleteBatchByIds(List<Integer> ids) {
         int rowSize = baseMapper.deleteBatchIds(ids);
         if (rowSize != ids.size()) {
             log.error("数据插入失败 actual: {}, plan: {}, ids: {}", rowSize, ids.size(), ids);

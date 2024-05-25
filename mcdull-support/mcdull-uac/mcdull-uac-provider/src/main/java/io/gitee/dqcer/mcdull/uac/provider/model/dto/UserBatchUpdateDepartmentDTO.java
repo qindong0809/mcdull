@@ -19,9 +19,9 @@ public class UserBatchUpdateDepartmentDTO implements DTO {
     @Schema(description = "员工id")
     @NotEmpty(message = "员工id不能为空")
     @Size(max = 99, message = "一次最多调整99个员工")
-    private List<Long> employeeIdList;
+    private List<Integer> employeeIdList;
 
     @Schema(description = "部门ID")
     @NotNull(message = "部门ID不能为空")
-    private Long departmentId;
+    private Integer departmentId;
 }

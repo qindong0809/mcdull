@@ -7,11 +7,11 @@ import java.util.Map;
  * @author dqcer
  */
 public interface IUserRoleService {
-    void batchUserListByRoleId(Long userId, List<Long> roleList);
+    void batchUserListByRoleId(Integer userId, List<Integer> roleList);
 
-    void batchUserListByRoleId(List<Long> userIdList, Long roleId);
+    void batchUserListByRoleId(List<Integer> userIdList, Integer roleId);
 
-    Map<Long, List<Long>> getRoleIdListMap(List<Long> userIdList);
+    Map<Integer, List<Integer>> getRoleIdListMap(List<Integer> userIdList);
 
-    List<Long> getUserId(Long roleId);
+    List<Integer> getUserId(Integer roleId);
 }

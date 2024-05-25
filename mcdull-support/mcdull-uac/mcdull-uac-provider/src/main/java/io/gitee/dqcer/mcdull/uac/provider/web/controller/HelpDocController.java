@@ -38,7 +38,7 @@ public class HelpDocController extends BasicController {
     @Operation(summary = "【用户】-查看详情")
     @GetMapping("/helpDoc/user/view/{helpDocId}")
 //    @RepeatSubmit
-    public Result<HelpDocDetailVO> view(@PathVariable Long helpDocId) {
+    public Result<HelpDocDetailVO> view(@PathVariable Integer helpDocId) {
         return Result.success(helpDocService.view(helpDocId));
     }
 
@@ -67,7 +67,7 @@ public class HelpDocController extends BasicController {
     @Operation(summary = "【管理】-获取详情")
     @GetMapping("/helpDoc/getDetail/{helpDocId}")
     @SaCheckPermission("support:helpDoc:add")
-    public Result<HelpDocDetailVO> getDetail(@PathVariable Long helpDocId) {
+    public Result<HelpDocDetailVO> getDetail(@PathVariable Integer helpDocId) {
         return Result.success(helpDocService.getDetail(helpDocId));
     }
 
@@ -89,14 +89,14 @@ public class HelpDocController extends BasicController {
 
     @Operation(summary = "【管理】-删除")
     @GetMapping("/helpDoc/delete/{helpDocId}")
-    public Result<Boolean> delete(@PathVariable Long helpDocId) {
+    public Result<Boolean> delete(@PathVariable Integer helpDocId) {
         helpDocService.delete(helpDocId);
         return Result.success(true);
     }
 
     @Operation(summary = "【管理】-根据关联id查询")
     @GetMapping("/helpDoc/queryHelpDocByRelationId/{relationId}")
-    public Result<List<HelpDocVO>> queryHelpDocByRelationId(@PathVariable Long relationId) {
+    public Result<List<HelpDocVO>> queryHelpDocByRelationId(@PathVariable Integer relationId) {
         return Result.success(helpDocService.queryHelpDocByRelationId(relationId));
     }
 

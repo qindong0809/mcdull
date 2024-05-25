@@ -21,13 +21,13 @@ public interface IDepartmentService {
 
     boolean insert(DeptInsertDTO dto);
 
-    boolean update(Long id, DeptUpdateDTO dto);
+    boolean update(Integer id, DeptUpdateDTO dto);
 
-    boolean delete(Long id);
+    boolean delete(Integer id);
 
     List<DepartmentTreeVO> departmentTree();
 
-    Map<Long, String> getNameMap(List<Long> idList);
+    Map<Integer, String> getNameMap(List<Integer> idList);
 
-    List<Long> getChildrenIdList(Long departmentId);
+    List<Integer> getChildrenIdList(Integer departmentId);
 }

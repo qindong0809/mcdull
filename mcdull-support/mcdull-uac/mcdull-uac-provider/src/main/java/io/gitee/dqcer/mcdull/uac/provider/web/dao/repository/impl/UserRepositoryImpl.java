@@ -32,7 +32,7 @@ import java.util.List;
 public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> implements IUserRepository {
 
     @Override
-    public Page<UserEntity> selectPage(UserListDTO dto, List<Long> deptIdList) {
+    public Page<UserEntity> selectPage(UserListDTO dto, List<Integer> deptIdList) {
         LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
         String keyword = dto.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
@@ -58,7 +58,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
      * @return {@link Long}
      */
     @Override
-    public Long insert(UserEntity entity) {
+    public Integer insert(UserEntity entity) {
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {
             throw new BusinessException(CodeEnum.DB_ERROR);
@@ -85,7 +85,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
     }
 
     @Override
-    public boolean update(Long id, boolean inactive) {
+    public boolean update(Integer id, boolean inactive) {
         UserEntity entity = new UserEntity();
         entity.setId(id);
         entity.setInactive(inactive);
@@ -93,7 +93,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
     }
 
     @Override
-    public boolean update(Long id, String password) {
+    public boolean update(Integer id, String password) {
         UserEntity entity = new UserEntity();
         entity.setId(id);
         entity.setLoginPwd(password);
@@ -101,7 +101,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
     }
 
     @Override
-    public Page<UserEntity> selectPageByRoleId(List<Long> userIdList, RoleUserQueryDTO dto) {
+    public Page<UserEntity> selectPageByRoleId(List<Integer> userIdList, RoleUserQueryDTO dto) {
         LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
         String keyword = dto.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
@@ -125,7 +125,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
     }
 
     @Override
-    public Page<UserEntity> selectPageByRoleId(List<Long> userIdList, PagedDTO dto) {
+    public Page<UserEntity> selectPageByRoleId(List<Integer> userIdList, PagedDTO dto) {
         LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
         String keyword = dto.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
@@ -149,7 +149,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
     }
 
     @Override
-    public List<UserEntity> listByDeptList(List<Long> deptIdList) {
+    public List<UserEntity> listByDeptList(List<Integer> deptIdList) {
         if (CollUtil.isNotEmpty(deptIdList)) {
             LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
             query.in(UserEntity::getDepartmentId, deptIdList);

@@ -20,5 +20,5 @@ public class UserUpdateDTO extends UserAddDTO {
 
     @Schema(description = "员工id")
     @NotNull(message = "员工id不能为空")
-    private Long employeeId;
+    private Integer employeeId;
 }

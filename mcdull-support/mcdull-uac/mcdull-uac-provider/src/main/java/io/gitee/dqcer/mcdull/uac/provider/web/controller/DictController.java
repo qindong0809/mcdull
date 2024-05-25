@@ -58,7 +58,7 @@ public class DictController extends BasicController {
     @Operation(summary = "Key delete")
     @PostMapping("/dict/key/delete")
     @SaCheckPermission("support:dict:delete")
-    public Result<Boolean> keyDelete(@RequestBody List<Long> keyIdList) {
+    public Result<Boolean> keyDelete(@RequestBody List<Integer> keyIdList) {
         dictKeyService.delete(keyIdList);
         return Result.success(true);
     }
@@ -103,7 +103,7 @@ public class DictController extends BasicController {
 
     @Operation(summary = "Value delete")
     @PostMapping("/dict/value/delete")
-    public Result<Boolean> valueDelete(@RequestBody List<Long> valueIdList) {
+    public Result<Boolean> valueDelete(@RequestBody List<Integer> valueIdList) {
         dictValueService.delete(valueIdList);
         return Result.success(true);
     }

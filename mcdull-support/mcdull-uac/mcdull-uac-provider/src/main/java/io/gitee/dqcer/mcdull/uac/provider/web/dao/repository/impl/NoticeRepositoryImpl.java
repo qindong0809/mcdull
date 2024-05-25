@@ -45,7 +45,7 @@ public class NoticeRepositoryImpl extends
     @Override
     public Page<NoticeEntity> selectPage(NoticeQueryDTO param) {
         LambdaQueryWrapper<NoticeEntity> lambda = Wrappers.lambdaQuery();
-        Long noticeTypeId = param.getNoticeTypeId();
+        Integer noticeTypeId = param.getNoticeTypeId();
         if (ObjUtil.isNotNull(noticeTypeId)) {
             lambda.eq(NoticeEntity::getNoticeTypeId, noticeTypeId);
         }
@@ -65,8 +65,8 @@ public class NoticeRepositoryImpl extends
 
     @Override
     public Page<NoticeUserVO> queryEmployeeNotViewNotice(NoticeEmployeeQueryDTO dto,
-                                                         Long userId,
-                                                         List<Long> deptIdList,
+                                                         Integer userId,
+                                                         List<Integer> deptIdList,
                                                          Boolean administratorFlag,
                                                          Integer deptCode,
                                                          Integer userCode) {
@@ -76,8 +76,8 @@ public class NoticeRepositoryImpl extends
 
     @Override
     public Page<NoticeUserVO> queryEmployeeNotice(NoticeEmployeeQueryDTO dto,
-                                                  Long userId,
-                                                  List<Long> deptIdList,
+                                                  Integer userId,
+                                                  List<Integer> deptIdList,
                                                   Boolean administratorFlag,
                                                   Integer deptCode,
                                                   Integer userCode) {

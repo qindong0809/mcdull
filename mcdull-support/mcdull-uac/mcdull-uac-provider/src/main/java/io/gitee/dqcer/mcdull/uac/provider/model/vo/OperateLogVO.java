@@ -17,10 +17,10 @@ import java.time.LocalDateTime;
 public class OperateLogVO implements VO {
 
     @Schema(description = "主键")
-    private Long operateLogId;
+    private Integer operateLogId;
 
     @Schema(description = "用户id")
-    private Long operateUserId;
+    private Integer operateUserId;
 
     @SchemaEnum(value = UserTypeEnum.class, desc = "用户类型")
     private Integer operateUserType;

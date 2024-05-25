@@ -24,7 +24,7 @@ public class NoticeViewRecordServiceImpl
 
 
     @Override
-    public NoticeViewRecordEntity getByUserIdAndNoticeId(Long userId, Long noticeId) {
+    public NoticeViewRecordEntity getByUserIdAndNoticeId(Integer userId, Integer noticeId) {
         return baseRepository.getByUserIdAndNoticeId(userId, noticeId);
     }
 
@@ -41,7 +41,7 @@ public class NoticeViewRecordServiceImpl
     }
 
     @Override
-    public List<Long> getByUserId(Long userId) {
+    public List<Integer> getByUserId(Integer userId) {
         List<NoticeViewRecordEntity> list = baseRepository.getByUserId(userId);
         if (CollUtil.isNotEmpty(list)) {
             return list.stream().map(NoticeViewRecordEntity::getNoticeId).collect(Collectors.toList());

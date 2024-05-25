@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("sys_code_generator_config")
-public class CodeGeneratorConfigEntity extends RelEntity<Long> {
+public class CodeGeneratorConfigEntity extends RelEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 

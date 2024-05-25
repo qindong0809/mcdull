@@ -22,13 +22,13 @@ public class UserRoleServiceImpl extends BasicServiceImpl<IUserRoleRepository>  
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void batchUserListByRoleId(Long userId, List<Long> roleList) {
+    public void batchUserListByRoleId(Integer userId, List<Integer> roleList) {
         baseRepository.insert(userId, roleList);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void batchUserListByRoleId(List<Long> userIdList, Long roleId) {
+    public void batchUserListByRoleId(List<Integer> userIdList, Integer roleId) {
         List<RoleUserEntity> roleUserEntities = baseRepository.list(userIdList, roleId);
         if (CollUtil.isNotEmpty(roleUserEntities)) {
             this.throwDataExistException(StrUtil.format("roleId: {} userIdList: {}", roleId, userIdList));
@@ -37,7 +37,7 @@ public class UserRoleServiceImpl extends BasicServiceImpl<IUserRoleRepository>  
     }
 
     @Override
-    public Map<Long, List<Long>> getRoleIdListMap(List<Long> userIdList) {
+    public Map<Integer, List<Integer>> getRoleIdListMap(List<Integer> userIdList) {
         if (CollUtil.isNotEmpty(userIdList)) {
             return baseRepository.roleIdListMap(userIdList);
         }
@@ -45,7 +45,7 @@ public class UserRoleServiceImpl extends BasicServiceImpl<IUserRoleRepository>  
     }
 
     @Override
-    public List<Long> getUserId(Long roleId) {
+    public List<Integer> getUserId(Integer roleId) {
         return baseRepository.listByRole(roleId);
     }
 }

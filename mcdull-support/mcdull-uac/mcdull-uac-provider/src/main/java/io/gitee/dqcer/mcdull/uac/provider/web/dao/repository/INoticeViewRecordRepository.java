@@ -12,7 +12,7 @@ import java.util.List;
 */
 public interface INoticeViewRecordRepository extends IService<NoticeViewRecordEntity> {
 
-    NoticeViewRecordEntity getByUserIdAndNoticeId(Long userId, Long noticeId);
+    NoticeViewRecordEntity getByUserIdAndNoticeId(Integer userId, Integer noticeId);
 
-    List<NoticeViewRecordEntity> getByUserId(Long userId);
+    List<NoticeViewRecordEntity> getByUserId(Integer userId);
 }

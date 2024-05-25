@@ -21,5 +21,5 @@ public class RoleDataScopeEntity extends RelEntity<Integer> {
 
     private Integer viewType;
 
-    private Long roleId;
+    private Integer roleId;
 }

@@ -20,11 +20,11 @@ public interface IRoleMenuRepository extends IService<RoleMenuEntity> {
      * @param roleIdCollection 角色id集合
      * @return {@link Map}<{@link Long}, {@link List}<{@link Long}>>
      */
-    Map<Long, List<Long>> menuIdListMap(Collection<Long> roleIdCollection);
+    Map<Integer, List<Integer>> menuIdListMap(Collection<Integer> roleIdCollection);
 
-    List<RoleMenuEntity> listByRoleId(Long roleId);
+    List<RoleMenuEntity> listByRoleId(Integer roleId);
 
-    void insert(Long roleId, List<Long> menuIdList);
+    void insert(Integer roleId, List<Integer> menuIdList);
 
-    Map<Long, List<Long>> listByMenuIdList(List<Long> menuIdList);
+    Map<Integer, List<Integer>> listByMenuIdList(List<Integer> menuIdList);
 }

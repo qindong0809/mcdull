@@ -19,7 +19,10 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.*;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeViewRecordEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeVisibleRangeEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.NoticeVisitbleRangeDataTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.INoticeRepository;
@@ -70,16 +73,12 @@ public class NoticeServiceImpl
                     noticeTypeService.getMap(new ArrayList<>(typeIdSet));
             Set<Integer> userIdSet = recordList.stream()
                     .map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
-            List<Long> userList = new ArrayList<>();
-            for (Integer userId : userIdSet) {
-                userList.add(Convert.toLong(userId));
-            }
             LocalDateTime now = LocalDateTime.now();
 
-            Map<Long, String> nameMap = userService.getNameMap(new ArrayList<>(userList));
+            Map<Integer, String> nameMap = userService.getNameMap(new ArrayList<>(userIdSet));
             for (NoticeEntity entity : recordList) {
                 NoticeVO vo = this.convertToVO(entity);
-                vo.setCreateUserName(nameMap.get(Convert.toLong(entity.getCreatedBy())));
+                vo.setCreateUserName(nameMap.get(entity.getCreatedBy()));
                 vo.setNoticeTypeName(noticeTypeServiceMap.get(entity.getNoticeTypeId()));
                 vo.setPublishFlag(vo.getPublishTime().isBefore(now));
 
@@ -113,7 +112,7 @@ public class NoticeServiceImpl
         vo.setAuthor(detail.getAuthor());
 
         Integer createdBy = detail.getCreatedBy();
-        UserEntity user = userService.get(Convert.toLong(createdBy));
+        UserEntity user = userService.get(createdBy);
         if (ObjUtil.isNotNull(user)) {
             vo.setCreateUserName(user.getActualName());
         }
@@ -122,26 +121,24 @@ public class NoticeServiceImpl
         Boolean allVisibleFlag = vo.getAllVisibleFlag();
         if (BooleanUtil.isFalse(allVisibleFlag)) {
             List<NoticeVisibleRangeEntity> dbList =
-                    noticeVisibleRangeService.getListByNoticeId(Convert.toLong(noticeId));
+                    noticeVisibleRangeService.getListByNoticeId(noticeId);
 
             Set<Integer> userIdSet = dbList.stream()
                     .filter(i -> i.getDataType().equals(NoticeVisitbleRangeDataTypeEnum.EMPLOYEE.getCode()))
                     .map(NoticeVisibleRangeEntity::getDataId)
                     .collect(Collectors.toSet());
-            Map<Long, String> userMap = MapUtil.newHashMap();
+            Map<Integer, String> userMap = MapUtil.newHashMap();
             if (CollUtil.isNotEmpty(userIdSet)) {
-                List<Long> userList = Convert.toList(Long.class, userIdSet);
-                userMap = userService.getNameMap(new ArrayList<>(userList));
+                userMap = userService.getNameMap(new ArrayList<>(userIdSet));
             }
 
             Set<Integer> deptIdSet = dbList.stream()
                     .filter(i -> i.getDataType().equals(NoticeVisitbleRangeDataTypeEnum.DEPARTMENT.getCode()))
                     .map(NoticeVisibleRangeEntity::getDataId)
                     .collect(Collectors.toSet());
-            Map<Long, String> deptMap = MapUtil.newHashMap();
+            Map<Integer, String> deptMap = MapUtil.newHashMap();
             if (CollUtil.isNotEmpty(deptIdSet)) {
-                List<Long> deptList = Convert.toList(Long.class, deptIdSet);
-                deptMap = departmentService.getNameMap(new ArrayList<>(deptList));
+                deptMap = departmentService.getNameMap(new ArrayList<>(deptIdSet));
             }
 
             List<NoticeVisibleRangeVO> visibleRangeList = new ArrayList<>();
@@ -150,9 +147,9 @@ public class NoticeServiceImpl
                 Integer dataId = item.getDataId();
                 Integer dataType = item.getDataType();
                 if (NoticeVisitbleRangeDataTypeEnum.EMPLOYEE.getCode().equals(dataType)) {
-                    rangeVO.setDataName(userMap.get(Convert.toLong(dataId)));
+                    rangeVO.setDataName(userMap.get(dataId));
                 } else if (NoticeVisitbleRangeDataTypeEnum.DEPARTMENT.getCode().equals(dataType)) {
-                    rangeVO.setDataName(deptMap.get(Convert.toLong(dataId)));
+                    rangeVO.setDataName(deptMap.get(dataId));
                 }
                 rangeVO.setDataType(dataType);
                 rangeVO.setDataId(dataId);
@@ -166,11 +163,11 @@ public class NoticeServiceImpl
     @Override
     public PagedVO<NoticeUserVO> queryUserNotice(NoticeEmployeeQueryDTO dto) {
 
-        Long userId = UserContextHolder.userIdLong();
+        Integer userId = UserContextHolder.userId();
 
-        List<Long> deptIdList = new ArrayList<>();
+        List<Integer> deptIdList = new ArrayList<>();
         UserEntity userEntity = userService.get(userId);
-        Long departmentId = userEntity.getDepartmentId();
+        Integer departmentId = userEntity.getDepartmentId();
         if (departmentId != null) {
             deptIdList = departmentService.getChildrenIdList(departmentId);
             deptIdList.add(departmentId);
@@ -198,7 +195,7 @@ public class NoticeServiceImpl
                     noticeUserVO.setPublishDate(notice.getPublishTime().toLocalDate());
                 }
                 noticeUserVO.setNoticeTypeName(noticeTypeMap.get(notice.getNoticeTypeId()));
-                NoticeViewRecordEntity viewRecord = noticeViewRecordService.getByUserIdAndNoticeId(userId, Convert.toLong(notice.getId()));
+                NoticeViewRecordEntity viewRecord = noticeViewRecordService.getByUserIdAndNoticeId(userId, notice.getId());
                 Integer pv = GlobalConstant.Number.NUMBER_0;
                 if (ObjUtil.isNotNull(viewRecord)) {
                     pv = viewRecord.getPageViewCount();
@@ -211,7 +208,7 @@ public class NoticeServiceImpl
     }
 
     private List<NoticeEntity> filter(NoticeEmployeeQueryDTO dto, List<NoticeEntity> noticeEntityList) {
-        Long noticeTypeId = dto.getNoticeTypeId();
+        Integer noticeTypeId = dto.getNoticeTypeId();
         if (ObjUtil.isNotNull(noticeTypeId)) {
             return noticeEntityList.stream().filter(i->i.getNoticeTypeId().equals(Convert.toInt(noticeTypeId))).collect(Collectors.toList());
         }
@@ -239,9 +236,9 @@ public class NoticeServiceImpl
         return noticeUserVO;
     }
 
-    private List<NoticeEntity> getNoticeEntities(Long userId, Boolean administratorFlag) {
+    private List<NoticeEntity> getNoticeEntities(Integer userId, Boolean administratorFlag) {
         if (BooleanUtil.isTrue(administratorFlag)) {
-            List<Long> noticeIdList = noticeViewRecordService.getByUserId(userId);
+            List<Integer> noticeIdList = noticeViewRecordService.getByUserId(userId);
             if (CollUtil.isEmpty(noticeIdList)) {
                 return Collections.emptyList();
             }
@@ -251,14 +248,14 @@ public class NoticeServiceImpl
     }
 
     @Override
-    public NoticeDetailVO view(Long noticeId) {
+    public NoticeDetailVO view(Integer noticeId) {
         NoticeEntity entity = baseRepository.getById(noticeId);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(noticeId);
         }
         // TODO: 2024/5/23 对不起，您没有权限查看内容
 
-        Long userId = UserContextHolder.userIdLong();
+        Integer userId = UserContextHolder.userId();
         NoticeViewRecordEntity viewRecordEntity = noticeViewRecordService.getByUserIdAndNoticeId(userId, noticeId);
         String ipAddr = IpUtil.getIpAddr(ServletUtil.getRequest());
         if (ObjUtil.isNull(viewRecordEntity)) {
@@ -392,7 +389,7 @@ public class NoticeServiceImpl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(NoticeUpdateDTO dto) {
-        Long id = dto.getNoticeId();
+        Integer id = dto.getNoticeId();
         NoticeEntity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Data
 public class ChangeLogVO {
 
-    private Long changeLogId;
+    private Integer changeLogId;
 
     @Schema(description = "版本")
     private String version;

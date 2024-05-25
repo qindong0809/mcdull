@@ -21,7 +21,7 @@ public interface ITableColumnRepository extends IService<TableColumnEntity>  {
     * @param idList id列表
     * @return {@link List< TableColumnEntity >}
     */
-    List<TableColumnEntity> queryListByIds(List<Long> idList);
+    List<TableColumnEntity> queryListByIds(List<Integer> idList);
 
    /**
     * 按条件分页查询
@@ -37,22 +37,22 @@ public interface ITableColumnRepository extends IService<TableColumnEntity>  {
      * @param id 主键
      * @return {@link TableColumnEntity}
      */
-    TableColumnEntity getById(Long id);
+    TableColumnEntity getById(Integer id);
 
     /**
      * 插入数据
      *
      * @param entity 实体对象
-     * @return Long id
+     * @return Integer id
      */
-    Long insert(TableColumnEntity entity);
+    Integer insert(TableColumnEntity entity);
 
     /**
      * 批量删除
      *
      * @param ids 主键集
      */
-    void deleteBatchByIds(List<Long> ids);
+    void deleteBatchByIds(List<Integer> ids);
 
     /**
      * 是否存在
@@ -62,5 +62,5 @@ public interface ITableColumnRepository extends IService<TableColumnEntity>  {
      */
     boolean exist(TableColumnEntity entity);
 
-   List<TableColumnEntity> selectList(Long userId);
+   List<TableColumnEntity> selectList(Integer userId);
 }

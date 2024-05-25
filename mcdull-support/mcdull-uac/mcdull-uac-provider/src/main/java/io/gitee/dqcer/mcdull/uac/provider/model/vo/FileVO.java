@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class FileVO {
 
     @Schema(description = "主键")
-    private Long fileId;
+    private Integer fileId;
 
     @Schema(description = "存储文件夹类型")
     @SchemaEnum(FileFolderTypeEnum.class)
@@ -35,7 +35,7 @@ public class FileVO {
     private String fileKey;
 
     @Schema(description = "上传人")
-    private Long creatorId;
+    private Integer creatorId;
 
     @Schema(description = "上传人")
     private String creatorName;

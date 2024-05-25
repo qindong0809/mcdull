@@ -19,5 +19,5 @@ public interface IHelpDocCatalogService {
 
     void update(HelpDocCatalogUpdateDTO dto);
 
-    void delete(Long helpDocCatalogId);
+    void delete(Integer helpDocCatalogId);
 }

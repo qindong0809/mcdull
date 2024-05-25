@@ -56,7 +56,7 @@ public class CaptchaServiceImpl implements ICaptchaService {
         CaptchaVO captchaVO = new CaptchaVO();
         captchaVO.setCaptchaUuid(uuid);
         captchaVO.setCaptchaBase64Image("data:image/png;base64," + base64Code);
-        captchaVO.setExpireSeconds(Convert.toLong(EXPIRE_SECOND));
+        captchaVO.setExpireSeconds(EXPIRE_SECOND);
         if (!systemEnvironment.getProd()) {
             captchaVO.setCaptchaText(captchaText);
         }

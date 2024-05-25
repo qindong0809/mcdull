@@ -16,10 +16,11 @@ import java.util.Map;
  * @author dqcer
  */
 @Service
-public class RoleMenuServiceImpl extends BasicServiceImpl<IRoleMenuRepository> implements IRoleMenuService {
+public class RoleMenuServiceImpl
+        extends BasicServiceImpl<IRoleMenuRepository> implements IRoleMenuService {
 
     @Override
-    public Map<Long, List<Long>> getMenuIdListMap(List<Long> roleIdList) {
+    public Map<Integer, List<Integer>> getMenuIdListMap(List<Integer> roleIdList) {
         if (CollUtil.isNotEmpty(roleIdList)) {
             return baseRepository.menuIdListMap(roleIdList);
         }
@@ -27,7 +28,7 @@ public class RoleMenuServiceImpl extends BasicServiceImpl<IRoleMenuRepository> i
     }
 
     @Override
-    public boolean deleteAndInsert(Long roleId, List<Long> menuIdList) {
+    public boolean deleteAndInsert(Integer roleId, List<Integer> menuIdList) {
         List<RoleMenuEntity> list = baseRepository.listByRoleId(roleId);
         if (CollUtil.isNotEmpty(list)) {
             baseRepository.removeBatchByIds(list);
@@ -39,7 +40,7 @@ public class RoleMenuServiceImpl extends BasicServiceImpl<IRoleMenuRepository> i
     }
 
     @Override
-    public Map<Long, List<Long>> getRoleIdMap(List<Long> menuIdList) {
+    public Map<Integer, List<Integer>> getRoleIdMap(List<Integer> menuIdList) {
         if (CollUtil.isNotEmpty(menuIdList)) {
             return baseRepository.listByMenuIdList(menuIdList);
         }

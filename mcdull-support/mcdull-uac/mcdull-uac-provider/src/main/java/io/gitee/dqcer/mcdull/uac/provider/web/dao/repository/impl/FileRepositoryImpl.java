@@ -32,7 +32,8 @@ import java.util.List;
 * @since 2024-04-29
 */
 @Service
-public class FileRepositoryImpl extends ServiceImpl<FileMapper, FileEntity>  implements IFileRepository {
+public class FileRepositoryImpl
+        extends ServiceImpl<FileMapper, FileEntity>  implements IFileRepository {
 
     private static final Logger log = LoggerFactory.getLogger(FileRepositoryImpl.class);
 
@@ -43,7 +44,7 @@ public class FileRepositoryImpl extends ServiceImpl<FileMapper, FileEntity>  imp
      * @return {@link List< ConfigEntity >}
      */
     @Override
-    public List<FileEntity> queryListByIds(List<Long> idList) {
+    public List<FileEntity> queryListByIds(List<Integer> idList) {
         if (CollUtil.isNotEmpty(idList)) {
             LambdaQueryWrapper<FileEntity> wrapper = Wrappers.lambdaQuery();
             wrapper.in(FileEntity::getId, idList);
@@ -79,7 +80,7 @@ public class FileRepositoryImpl extends ServiceImpl<FileMapper, FileEntity>  imp
      * @return {@link ConfigEntity}
      */
     @Override
-    public FileEntity getById(Long id) {
+    public FileEntity getById(Integer id) {
         return baseMapper.selectById(id);
     }
 
@@ -87,10 +88,10 @@ public class FileRepositoryImpl extends ServiceImpl<FileMapper, FileEntity>  imp
      * 插入数据
      *
      * @param entity 实体对象
-     * @return Long id
+     * @return Integer id
      */
     @Override
-    public Long insert(FileEntity entity) {
+    public Integer insert(FileEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
@@ -138,7 +139,7 @@ public class FileRepositoryImpl extends ServiceImpl<FileMapper, FileEntity>  imp
     * @param ids id集
     */
     @Override
-    public void deleteBatchByIds(List<Long> ids) {
+    public void deleteBatchByIds(List<Integer> ids) {
         int rowSize = baseMapper.deleteBatchIds(ids);
         if (rowSize != ids.size()) {
             log.error("数据插入失败 actual: {}, plan: {}, ids: {}", rowSize, ids.size(), ids);

@@ -14,7 +14,7 @@ import lombok.Setter;
 @TableName("sys_user")
 @Getter
 @Setter
-public class UserEntity extends BaseEntity<Long> {
+public class UserEntity extends BaseEntity<Integer> {
 
     private String loginName;
 
@@ -26,7 +26,7 @@ public class UserEntity extends BaseEntity<Long> {
 
     private String phone;
 
-    private Long departmentId;
+    private Integer departmentId;
 
     private Boolean administratorFlag;
 

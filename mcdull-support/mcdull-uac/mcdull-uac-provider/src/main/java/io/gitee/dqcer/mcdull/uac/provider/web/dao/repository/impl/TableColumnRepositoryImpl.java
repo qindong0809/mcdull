@@ -40,7 +40,7 @@ public class TableColumnRepositoryImpl
      * @return {@link List< ConfigEntity >}
      */
     @Override
-    public List<TableColumnEntity> queryListByIds(List<Long> idList) {
+    public List<TableColumnEntity> queryListByIds(List<Integer> idList) {
         LambdaQueryWrapper<TableColumnEntity> wrapper = Wrappers.lambdaQuery();
         wrapper.in(TableColumnEntity::getId, idList);
         List<TableColumnEntity> list =  baseMapper.selectList(wrapper);
@@ -74,7 +74,7 @@ public class TableColumnRepositoryImpl
      * @return {@link ConfigEntity}
      */
     @Override
-    public TableColumnEntity getById(Long id) {
+    public TableColumnEntity getById(Integer id) {
         return baseMapper.selectById(id);
     }
 
@@ -82,10 +82,10 @@ public class TableColumnRepositoryImpl
      * 插入数据
      *
      * @param entity 实体对象
-     * @return Long id
+     * @return Integer id
      */
     @Override
-    public Long insert(TableColumnEntity entity) {
+    public Integer insert(TableColumnEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
@@ -106,7 +106,7 @@ public class TableColumnRepositoryImpl
     }
 
     @Override
-    public List<TableColumnEntity> selectList(Long userId) {
+    public List<TableColumnEntity> selectList(Integer userId) {
         LambdaQueryWrapper<TableColumnEntity> query = Wrappers.lambdaQuery();
         query.eq(TableColumnEntity::getUserId, userId);
         return baseMapper.selectList(query);
@@ -118,7 +118,7 @@ public class TableColumnRepositoryImpl
     * @param ids id集
     */
     @Override
-    public void deleteBatchByIds(List<Long> ids) {
+    public void deleteBatchByIds(List<Integer> ids) {
         int rowSize = baseMapper.deleteBatchIds(ids);
         if (rowSize != ids.size()) {
             log.error("数据插入失败 actual: {}, plan: {}, ids: {}", rowSize, ids.size(), ids);

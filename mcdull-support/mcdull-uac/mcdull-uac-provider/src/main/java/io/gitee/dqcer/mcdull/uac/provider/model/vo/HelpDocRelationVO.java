@@ -15,5 +15,5 @@ public class HelpDocRelationVO implements VO  {
     private String relationName;
 
     @Schema(description = "关联id")
-    private Long relationId;
+    private Integer relationId;
 }

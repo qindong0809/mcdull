@@ -24,7 +24,7 @@ public class MenuInsertDTO implements DTO {
      */
     private Integer menuType;
 
-    private Long parentId;
+    private Integer parentId;
 
     private Integer sort;
 
@@ -40,7 +40,7 @@ public class MenuInsertDTO implements DTO {
 
     private String icon;
 
-    private Long contextMenuId;
+    private Integer contextMenuId;
 
     private Boolean frameFlag;
 

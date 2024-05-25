@@ -19,9 +19,9 @@ public interface IChangeLogService {
 
     void update(ChangeLogUpdateDTO logUpdateForm);
 
-    void batchDelete(List<Long> idList);
+    void batchDelete(List<Integer> idList);
 
     PagedVO<ChangeLogVO> queryPage(ChangeLogQueryDTO dto);
 
-    ChangeLogVO getById(Long id);
+    ChangeLogVO getById(Integer id);
 }

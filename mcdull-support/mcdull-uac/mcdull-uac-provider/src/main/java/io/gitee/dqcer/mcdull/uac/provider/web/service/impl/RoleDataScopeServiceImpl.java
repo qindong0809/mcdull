@@ -30,7 +30,7 @@ import java.util.List;
 @Service
 public class RoleDataScopeServiceImpl extends BasicServiceImpl<IRoleDataScopeRepository> implements IRoleDataScopeService {
     @Override
-    public List<RoleDataScopeVO> getListByRole(Long roleId) {
+    public List<RoleDataScopeVO> getListByRole(Integer roleId) {
         List<RoleDataScopeVO> voList = new ArrayList<>();
         List<RoleDataScopeEntity> list = baseRepository.getListByRole(roleId);
         if (CollUtil.isNotEmpty(list)) {
@@ -48,7 +48,7 @@ public class RoleDataScopeServiceImpl extends BasicServiceImpl<IRoleDataScopeRep
     @Override
     public void updateByRoleId(RoleDataScopeUpdateDTO dto) {
         List<RoleDataScopeUpdateDTO.RoleUpdateDataScopeListFormItem> scopeItemList = dto.getDataScopeItemList();
-        Long roleId = dto.getRoleId();
+        Integer roleId = dto.getRoleId();
         List<RoleDataScopeEntity> dbList = baseRepository.getListByRole(roleId);
         List<RoleDataScopeEntity> tempList = new ArrayList<>();
         if (CollUtil.isNotEmpty(scopeItemList)) {

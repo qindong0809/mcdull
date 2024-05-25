@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class FeedbackVO {
 
     @Schema(description = "主键")
-    private Long feedbackId;
+    private Integer feedbackId;
 
     @Schema(description = "反馈内容")
     private String feedbackContent;
@@ -29,7 +29,7 @@ public class FeedbackVO {
     private String feedbackAttachment;
 
     @Schema(description = "创建人id")
-    private Long userId;
+    private Integer userId;
 
     @Schema(description = "创建人姓名")
     private String userName;

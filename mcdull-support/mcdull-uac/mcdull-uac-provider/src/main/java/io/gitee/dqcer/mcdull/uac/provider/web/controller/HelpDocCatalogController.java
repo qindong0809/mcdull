@@ -48,7 +48,7 @@ public class HelpDocCatalogController extends BasicController {
 
     @Operation(summary = "删除")
     @GetMapping("/helpDoc/helpDocCatalog/delete/{helpDocCatalogId}")
-    public Result<Boolean> deleteHelpDocCatalog(@PathVariable Long helpDocCatalogId) {
+    public Result<Boolean> deleteHelpDocCatalog(@PathVariable Integer helpDocCatalogId) {
         helpDocCatalogService.delete(helpDocCatalogId);
         return Result.success(true);
     }

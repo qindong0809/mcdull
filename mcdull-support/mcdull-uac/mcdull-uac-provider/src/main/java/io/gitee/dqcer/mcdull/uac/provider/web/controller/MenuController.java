@@ -60,21 +60,21 @@ public class MenuController {
     }
     @Operation(summary = "获取角色关联菜单权限")
     @GetMapping("/menu/{roleId}/tree")
-    public Result<RoleMenuTreeVO> getTreeRoleId(@PathVariable Long roleId) {
+    public Result<RoleMenuTreeVO> getTreeRoleId(@PathVariable Integer roleId) {
         return Result.success(menuService.getTreeRoleId(roleId));
     }
 
     @Operation(summary = "批量删除")
     @GetMapping("/menu/batchDelete")
     @SaCheckPermission("system:menu:batchDelete")
-    public Result<Boolean> batchDeleteMenu(@RequestParam("menuIdList") List<Long> menuIdList) {
+    public Result<Boolean> batchDeleteMenu(@RequestParam("menuIdList") List<Integer> menuIdList) {
         menuService.delete(menuIdList);
         return Result.success(true);
     }
 
 
 //    @PutMapping("{id}/update")
-//    public Result<Boolean> update(@PathVariable("id") Long id, @RequestBody @Validated MenuUpdateDTO dto){
+//    public Result<Boolean> update(@PathVariable("id") Integer id, @RequestBody @Validated MenuUpdateDTO dto){
 //        return Result.success(menuService.update(id, dto));
 //    }
 
@@ -85,7 +85,7 @@ public class MenuController {
 //     * @return {@link Result<Integer>}
 //     */
 //    @DeleteMapping("{id}")
-//    public Result<Boolean> delete(@PathVariable("id") Long id, @Validated ReasonDTO dto){
+//    public Result<Boolean> delete(@PathVariable("id") Integer id, @Validated ReasonDTO dto){
 //        return Result.success(menuService.delete(id, dto));
 //    }
 
@@ -95,7 +95,7 @@ public class MenuController {
 //    }
 //
 //    @GetMapping("{roleId}/role-menu-ids")
-//    public Result<List<Long>> roleMenuIdList(@PathVariable("roleId") Long roleId){
+//    public Result<List<Long>> roleMenuIdList(@PathVariable("roleId") Integer roleId){
 //        return Result.success(menuService.roleMenuIdList(roleId));
 //    }
 

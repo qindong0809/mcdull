@@ -45,7 +45,7 @@ public class ChangeLogServiceImpl extends BasicServiceImpl<IChangeLogRepository>
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(ChangeLogUpdateDTO dto) {
-        Long changeLogId = dto.getChangeLogId();
+        Integer changeLogId = dto.getChangeLogId();
         ChangeLogEntity logEntity = baseRepository.getById(changeLogId);
         if (ObjUtil.isNull(logEntity)) {
             this.throwDataNotExistException(changeLogId);
@@ -61,7 +61,7 @@ public class ChangeLogServiceImpl extends BasicServiceImpl<IChangeLogRepository>
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void batchDelete(List<Long> idList) {
+    public void batchDelete(List<Integer> idList) {
         List<ChangeLogEntity> entityList = baseRepository.queryListByIds(idList);
         if (entityList.size() != idList.size()) {
             this.throwDataNotExistException(idList);
@@ -80,7 +80,7 @@ public class ChangeLogServiceImpl extends BasicServiceImpl<IChangeLogRepository>
     }
 
     @Override
-    public ChangeLogVO getById(Long id) {
+    public ChangeLogVO getById(Integer id) {
         ChangeLogEntity logEntity = baseRepository.getById(id);
         if (ObjUtil.isNull(logEntity)) {
             this.throwDataNotExistException(id);

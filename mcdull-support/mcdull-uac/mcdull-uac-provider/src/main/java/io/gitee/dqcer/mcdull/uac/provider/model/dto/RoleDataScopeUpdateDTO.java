@@ -19,7 +19,7 @@ public class RoleDataScopeUpdateDTO implements DTO {
 
     @Schema(description = "角色id")
     @NotNull(message = "角色id不能为空")
-    private Long roleId;
+    private Integer roleId;
 
     @Schema(description = "设置信息")
     @Valid

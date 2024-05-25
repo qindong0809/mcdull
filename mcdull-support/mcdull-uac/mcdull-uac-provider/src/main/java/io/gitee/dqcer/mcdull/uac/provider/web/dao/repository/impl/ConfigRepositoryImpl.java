@@ -39,7 +39,7 @@ public class ConfigRepositoryImpl extends ServiceImpl<ConfigMapper, ConfigEntity
      * @return {@link List< ConfigEntity >}
      */
     @Override
-    public List<ConfigEntity> queryListByIds(List<Long> idList) {
+    public List<ConfigEntity> queryListByIds(List<Integer> idList) {
         LambdaQueryWrapper<ConfigEntity> wrapper = Wrappers.lambdaQuery();
         wrapper.in(ConfigEntity::getId, idList);
         List<ConfigEntity> list =  baseMapper.selectList(wrapper);
@@ -73,7 +73,7 @@ public class ConfigRepositoryImpl extends ServiceImpl<ConfigMapper, ConfigEntity
      * @return {@link ConfigEntity}
      */
     @Override
-    public ConfigEntity getById(Long id) {
+    public ConfigEntity getById(Integer id) {
         return baseMapper.selectById(id);
     }
 
@@ -81,10 +81,10 @@ public class ConfigRepositoryImpl extends ServiceImpl<ConfigMapper, ConfigEntity
      * 插入数据
      *
      * @param entity 实体对象
-     * @return Long id
+     * @return Integer id
      */
     @Override
-    public Long insert(ConfigEntity entity) {
+    public Integer insert(ConfigEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
             log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
@@ -110,7 +110,7 @@ public class ConfigRepositoryImpl extends ServiceImpl<ConfigMapper, ConfigEntity
     * @param ids id集
     */
     @Override
-    public void deleteBatchByIds(List<Long> ids) {
+    public void deleteBatchByIds(List<Integer> ids) {
         int rowSize = baseMapper.deleteBatchIds(ids);
         if (rowSize != ids.size()) {
             log.error("数据插入失败 actual: {}, plan: {}, ids: {}", rowSize, ids.size(), ids);

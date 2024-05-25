@@ -14,7 +14,7 @@ import lombok.Setter;
 @TableName("sys_file")
 @Getter
 @Setter
-public class FileEntity extends BaseEntity<Long> {
+public class FileEntity extends BaseEntity<Integer> {
 
     private Integer folderType;
 

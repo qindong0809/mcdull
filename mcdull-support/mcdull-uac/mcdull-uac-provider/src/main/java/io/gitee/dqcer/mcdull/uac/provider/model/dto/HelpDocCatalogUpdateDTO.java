@@ -14,5 +14,5 @@ public class HelpDocCatalogUpdateDTO extends HelpDocCatalogAddDTO {
 
     @Schema(description = "id")
     @NotNull(message = "id")
-    private Long helpDocCatalogId;
+    private Integer helpDocCatalogId;
 }

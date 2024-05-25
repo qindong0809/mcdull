@@ -26,14 +26,14 @@ public class UserListDTO extends PagedDTO {
     private String keyword;
 
     @Schema(description = "部门id")
-    private Long departmentId;
+    private Integer departmentId;
 
     @Schema(description = "是否禁用")
     private Boolean disabledFlag;
 
     @Schema(description = "员工id集合")
     @Size(max = 99, message = "最多查询99个员工")
-    private List<Long> employeeIdList;
+    private List<Integer> employeeIdList;
 
     @Schema(description = "删除标识", hidden = true)
     private Boolean deletedFlag;

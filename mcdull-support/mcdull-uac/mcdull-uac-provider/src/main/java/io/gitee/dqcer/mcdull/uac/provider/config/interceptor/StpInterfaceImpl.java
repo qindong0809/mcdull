@@ -33,13 +33,13 @@ public class StpInterfaceImpl extends AbstractUserDetailsService {
         if (administratorFlag) {
             return ListUtil.of("*:*:*");
         }
-        Long id = Convert.toLong(userId);
+        Integer id = Convert.toInt(userId);
         return loginService.getPermissionList(id);
     }
 
     @Override
     protected List<String> roleList(Object userId) {
-        Long id = Convert.toLong(userId);
+        Integer id = Convert.toInt(userId);
         return loginService.getRoleList(id);
     }
 

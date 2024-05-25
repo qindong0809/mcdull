@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.FileUtil;
@@ -134,7 +135,7 @@ public class FileStorageLocalServiceImpl implements IFileStorageService {
 
             FileMetadataVO fileMetadataDTO = new FileMetadataVO();
             fileMetadataDTO.setFileName(localFile.getName());
-            fileMetadataDTO.setFileSize(localFile.length());
+            fileMetadataDTO.setFileSize(Convert.toInt(localFile.length()));
 //            fileMetadataDTO.setFileFormat(FilenameUtils.getExtension(localFile.getName()));
             fileMetadataDTO.setFileFormat(FileNameUtil.extName(localFile.getName()));
             fileDownloadVO.setMetadata(fileMetadataDTO);

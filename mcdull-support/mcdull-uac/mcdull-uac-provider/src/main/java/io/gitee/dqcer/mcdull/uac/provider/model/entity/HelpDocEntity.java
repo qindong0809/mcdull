@@ -14,11 +14,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("sys_help_doc")
-public class HelpDocEntity extends RelEntity<Long> {
+public class HelpDocEntity extends RelEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 
-    private Long helpDocCatalogId;
+    private Integer helpDocCatalogId;
 
     private String title;
 

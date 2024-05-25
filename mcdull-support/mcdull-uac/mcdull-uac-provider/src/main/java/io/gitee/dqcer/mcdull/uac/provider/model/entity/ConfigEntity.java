@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("sys_config")
-public class ConfigEntity extends RelEntity<Long> {
+public class ConfigEntity extends RelEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 

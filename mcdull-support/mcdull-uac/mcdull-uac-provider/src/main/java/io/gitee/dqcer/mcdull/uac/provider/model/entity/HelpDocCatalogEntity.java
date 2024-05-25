@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("sys_help_doc_catalog")
-public class HelpDocCatalogEntity extends RelEntity<Long> {
+public class HelpDocCatalogEntity extends RelEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,5 +22,5 @@ public class HelpDocCatalogEntity extends RelEntity<Long> {
 
     private Integer sort;
 
-    private Long parentId;
+    private Integer parentId;
 }

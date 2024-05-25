@@ -16,9 +16,9 @@ import java.util.Map;
  * @author dqcer
  */
 public interface IMenuService {
-    Map<Long, List<String>> getMenuCodeListMap(List<Long> roleIdList);
+    Map<Integer, List<String>> getMenuCodeListMap(List<Integer> roleIdList);
 
-    Map<Long, List<MenuEntity>> getMenuListMap(List<Long> roleIdList);
+    Map<Integer, List<MenuEntity>> getMenuListMap(List<Integer> roleIdList);
 
     List<String> getAllCodeList();
 
@@ -28,15 +28,15 @@ public interface IMenuService {
 
     void update(MenuUpdateDTO dto);
 
-    void delete(List<Long> menuIdList);
+    void delete(List<Integer> menuIdList);
 
     List<RoleMenuVO> roleMenuList();
 
-    List<Long> roleMenuIdList(Long roleId);
+    List<Integer> roleMenuIdList(Integer roleId);
 
-    List<MenuVO> getList(Long userId, boolean administratorFlag);
+    List<MenuVO> getList(Integer userId, boolean administratorFlag);
 
-    RoleMenuTreeVO getTreeRoleId(Long roleId);
+    RoleMenuTreeVO getTreeRoleId(Integer roleId);
 
     List<MenuTreeVO> queryMenuTree(Boolean onlyMenu);
 }

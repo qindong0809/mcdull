@@ -10,7 +10,6 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
-import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
@@ -45,18 +44,18 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     private IRoleService roleService;
 
     @Override
-    public Map<Long, List<String>> getMenuCodeListMap(List<Long> roleIdList) {
+    public Map<Integer, List<String>> getMenuCodeListMap(List<Integer> roleIdList) {
         if (CollUtil.isNotEmpty(roleIdList)) {
-            Map<Long, List<Long>> menuListMap = roleMenuService.getMenuIdListMap(roleIdList);
+            Map<Integer, List<Integer>> menuListMap = roleMenuService.getMenuIdListMap(roleIdList);
             return baseRepository.menuCodeListMap(menuListMap);
         }
         return MapUtil.empty();
     }
 
     @Override
-    public Map<Long, List<MenuEntity>> getMenuListMap(List<Long> roleIdList) {
+    public Map<Integer, List<MenuEntity>> getMenuListMap(List<Integer> roleIdList) {
         if (CollUtil.isNotEmpty(roleIdList)) {
-            Map<Long, List<Long>> menuListMap = roleMenuService.getMenuIdListMap(roleIdList);
+            Map<Integer, List<Integer>> menuListMap = roleMenuService.getMenuIdListMap(roleIdList);
             return baseRepository.getMenuListMap(menuListMap);
         }
         return MapUtil.empty();
@@ -83,7 +82,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void insert(MenuAddDTO dto) {
-        Long parentId = dto.getParentId();
+        Integer parentId = dto.getParentId();
         List<MenuEntity> childList = baseRepository.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
             boolean anyMatch = childList.stream().anyMatch(i -> i.getMenuName().equals(dto.getMenuName()));
@@ -98,12 +97,12 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(MenuUpdateDTO dto) {
-        Long id = dto.getMenuId();
+        Integer id = dto.getMenuId();
         MenuEntity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
         }
-        Long parentId = dto.getParentId();
+        Integer parentId = dto.getParentId();
         List<MenuEntity> childList = baseRepository.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
             boolean anyMatch = childList.stream()
@@ -118,7 +117,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void delete(List<Long> menuIdList) {
+    public void delete(List<Integer> menuIdList) {
         List<MenuEntity> entityList = baseRepository.listByIds(menuIdList);
         if (entityList.size() != menuIdList.size()) {
             this.throwDataNotExistException(menuIdList);
@@ -140,10 +139,10 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     }
 
     @Override
-    public List<Long> roleMenuIdList(Long roleId) {
-        Map<Long, List<Long>> menuIdListMap = roleMenuService.getMenuIdListMap(ListUtil.of(roleId));
+    public List<Integer> roleMenuIdList(Integer roleId) {
+        Map<Integer, List<Integer>> menuIdListMap = roleMenuService.getMenuIdListMap(ListUtil.of(roleId));
         if (MapUtil.isNotEmpty(menuIdListMap)) {
-            List<Long> list = menuIdListMap.get(roleId);
+            List<Integer> list = menuIdListMap.get(roleId);
             if (CollUtil.isNotEmpty(list)) {
                 List<MenuEntity> menuList = baseRepository.listByIds(list);
                 if (CollUtil.isNotEmpty(menuList)) {
@@ -200,8 +199,8 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
 
     }
 
-    private List<Tree<Long>> getTrees(List<MenuEntity> menuList) {
-        return TreeUtil.build(menuList, 0L,
+    private List<Tree<Integer>> getTrees(List<MenuEntity> menuList) {
+        return TreeUtil.build(menuList, 0,
                 (menu, treeNode) -> {
                     treeNode.setName(StrUtil.upperFirst(menu.getPath()));
                     treeNode.setId(menu.getId());
@@ -213,12 +212,12 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     }
 
 
-    public List<MenuSimpleTreeVO> convertSimpleRouter(List<Tree<Long>> treeList) {
+    public List<MenuSimpleTreeVO> convertSimpleRouter(List<Tree<Integer>> treeList) {
         if (CollUtil.isEmpty(treeList)) {
             return Collections.emptyList();
         }
         List<MenuSimpleTreeVO> list = new ArrayList<>();
-        for (Tree<Long> tree : treeList) {
+        for (Tree<Integer> tree : treeList) {
             MenuSimpleTreeVO vo = this.convertSimpleTree(tree);
             if (ObjUtil.isNotNull(vo)) {
                 list.add(vo);
@@ -227,7 +226,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         return list;
     }
 
-    private MenuSimpleTreeVO convertSimpleTree(Tree<Long> tree) {
+    private MenuSimpleTreeVO convertSimpleTree(Tree<Integer> tree) {
         if (ObjUtil.isNull(tree)) {
             return null;
         }
@@ -237,11 +236,11 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         routerVO.setMenuName(String.valueOf(tree.getName()));
         routerVO.setMenuType(Convert.toInt(tree.get("menuType")));
         routerVO.setContextMenuId(Convert.toInt(tree.get("contextMenuId")));
-        List<Tree<Long>> children = tree.getChildren();
+        List<Tree<Integer>> children = tree.getChildren();
         if (CollUtil.isNotEmpty(children)) {
             List<MenuSimpleTreeVO> childVOList = new ArrayList<>();
 
-            for (Tree<Long> childTree : children) {
+            for (Tree<Integer> childTree : children) {
                 MenuSimpleTreeVO childVO = this.convertSimpleTree(childTree);
                 if (ObjUtil.isNotNull(childVO)) {
                     childVOList.add(childVO);
@@ -303,7 +302,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
 
 
     @Override
-    public List<MenuVO> getList(Long userId, boolean administratorFlag) {
+    public List<MenuVO> getList(Integer userId, boolean administratorFlag) {
         Set<MenuVO> list = new HashSet<>();
         if (administratorFlag) {
             baseRepository.allList().forEach(menuEntity -> {
@@ -312,13 +311,13 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
             });
             return new ArrayList<>(list);
         }
-        Map<Long, List<RoleEntity>> roleListMap = roleService.getRoleMap(ListUtil.of(userId));
+        Map<Integer, List<RoleEntity>> roleListMap = roleService.getRoleMap(ListUtil.of(userId));
         if (MapUtil.isNotEmpty(roleListMap)) {
-            List<Long> roleIdList = roleListMap.values().stream()
+            List<Integer> roleIdList = roleListMap.values().stream()
                     .flatMap(roleList -> roleList.stream().map(IdEntity::getId)).collect(Collectors.toList());
-            Map<Long, List<MenuEntity>> menuListMap = this.getMenuListMap(roleIdList);
+            Map<Integer, List<MenuEntity>> menuListMap = this.getMenuListMap(roleIdList);
             if (MapUtil.isNotEmpty(menuListMap)) {
-                for (Map.Entry<Long, List<MenuEntity>> entry : menuListMap.entrySet()) {
+                for (Map.Entry<Integer, List<MenuEntity>> entry : menuListMap.entrySet()) {
                     List<MenuEntity> menuList = entry.getValue();
                     if (CollUtil.isNotEmpty(menuList)) {
                         for (MenuEntity menuEntity : menuList) {
@@ -334,20 +333,20 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     }
 
     @Override
-    public RoleMenuTreeVO getTreeRoleId(Long roleId) {
+    public RoleMenuTreeVO getTreeRoleId(Integer roleId) {
         RoleVO vo = roleService.get(roleId);
         if (ObjUtil.isNotNull(vo)) {
             RoleMenuTreeVO treeVO = new RoleMenuTreeVO();
             treeVO.setRoleId(Convert.toInt(roleId));
             List<MenuEntity> entityList = baseRepository.allList();
             if (CollUtil.isNotEmpty(entityList)) {
-                List<Tree<Long>> integerTree = this.getTrees(entityList);
+                List<Tree<Integer>> integerTree = this.getTrees(entityList);
                 List<MenuSimpleTreeVO> menuList = this.convertSimpleRouter(integerTree);
                 treeVO.setMenuTreeList(menuList);
             }
-            Map<Long, List<Long>> menuIdListMap = roleMenuService.getMenuIdListMap(ListUtil.of(roleId));
+            Map<Integer, List<Integer>> menuIdListMap = roleMenuService.getMenuIdListMap(ListUtil.of(roleId));
             if (MapUtil.isNotEmpty(menuIdListMap)) {
-                List<Long> mendIdList = menuIdListMap.get(roleId);
+                List<Integer> mendIdList = menuIdListMap.get(roleId);
                 if (CollUtil.isNotEmpty(mendIdList)) {
                     List<Integer> idList = mendIdList.stream().map(Convert::toInt).collect(Collectors.toList());
                     treeVO.setSelectedMenuId(idList);
@@ -362,16 +361,16 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
     @Override
     public List<MenuTreeVO> queryMenuTree(Boolean onlyMenu) {
         List<MenuEntity> list = baseRepository.listOnlyMenu(onlyMenu);
-        List<Tree<Long>> integerTree = this.getTrees(list);
+        List<Tree<Integer>> integerTree = this.getTrees(list);
         return this.convertMenuTreeVO(integerTree);
     }
 
-    public List<MenuTreeVO> convertMenuTreeVO(List<Tree<Long>> treeList) {
+    public List<MenuTreeVO> convertMenuTreeVO(List<Tree<Integer>> treeList) {
         if (CollUtil.isEmpty(treeList)) {
             return Collections.emptyList();
         }
         List<MenuTreeVO> list = new ArrayList<>();
-        for (Tree<Long> tree : treeList) {
+        for (Tree<Integer> tree : treeList) {
             MenuTreeVO vo = this.convertTreeVO(tree);
             if (ObjUtil.isNotNull(vo)) {
                 list.add(vo);
@@ -380,7 +379,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         return list;
     }
 
-    private MenuTreeVO convertTreeVO(Tree<Long> tree) {
+    private MenuTreeVO convertTreeVO(Tree<Integer> tree) {
         if (ObjUtil.isNull(tree)) {
             return null;
         }
@@ -390,11 +389,11 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         routerVO.setMenuName(String.valueOf(tree.getName()));
         routerVO.setMenuType(Convert.toInt(tree.get("menuType")));
         routerVO.setContextMenuId(Convert.toInt(tree.get("contextMenuId")));
-        List<Tree<Long>> children = tree.getChildren();
+        List<Tree<Integer>> children = tree.getChildren();
         if (CollUtil.isNotEmpty(children)) {
             List<MenuTreeVO> childVOList = new ArrayList<>();
 
-            for (Tree<Long> childTree : children) {
+            for (Tree<Integer> childTree : children) {
                 MenuTreeVO childVO = this.convertTreeVO(childTree);
                 if (ObjUtil.isNotNull(childVO)) {
                     childVOList.add(childVO);

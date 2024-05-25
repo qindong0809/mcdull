@@ -49,7 +49,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleEntity> impl
     }
 
     @Override
-    public Long insert(RoleEntity entity) {
+    public Integer insert(RoleEntity entity) {
         int row = baseMapper.insert(entity);
         if (row == GlobalConstant.Database.ROW_0) {
             throw new BusinessException(CodeEnum.DB_ERROR);
@@ -58,10 +58,10 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleEntity> impl
     }
 
     @Override
-    public Map<Long, List<RoleEntity>> roleListMap(Map<Long, List<Long>> userRoleMap) {
-        Map<Long, List<RoleEntity>> resultMap = new HashMap<>(userRoleMap.size());
+    public Map<Integer, List<RoleEntity>> roleListMap(Map<Integer, List<Integer>> userRoleMap) {
+        Map<Integer, List<RoleEntity>> resultMap = new HashMap<>(userRoleMap.size());
         if (MapUtil.isNotEmpty(userRoleMap)) {
-            Set<Long> idList = userRoleMap.values().stream()
+            Set<Integer> idList = userRoleMap.values().stream()
                     .flatMap(Collection::stream).collect(Collectors.toSet());
 
             LambdaQueryWrapper<RoleEntity> query = Wrappers.lambdaQuery();
@@ -69,10 +69,10 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleEntity> impl
             query.in(RoleEntity::getId, idList);
             List<RoleEntity> list = baseMapper.selectList(query);
             if (CollUtil.isNotEmpty(list)) {
-                Map<Long, RoleEntity> map = list.stream()
+                Map<Integer, RoleEntity> map = list.stream()
                         .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
-                for (Map.Entry<Long, List<Long>> entry : userRoleMap.entrySet()) {
-                    List<Long> roleIdList = entry.getValue();
+                for (Map.Entry<Integer, List<Integer>> entry : userRoleMap.entrySet()) {
+                    List<Integer> roleIdList = entry.getValue();
                     List<RoleEntity> roleList = roleIdList.stream().map(map::get)
                             .filter(ObjUtil::isNotEmpty).collect(Collectors.toList());
                     if (CollUtil.isNotEmpty(roleList)) {
@@ -85,12 +85,12 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleEntity> impl
     }
 
     @Override
-    public boolean delete(Long id, String reason) {
+    public boolean delete(Integer id, String reason) {
         return removeById(id);
     }
 
     @Override
-    public boolean toggleStatus(Long id, boolean inactive) {
+    public boolean toggleStatus(Integer id, boolean inactive) {
         RoleEntity role = new RoleEntity();
         role.setId(id);
         role.setInactive(inactive);

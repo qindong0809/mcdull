@@ -20,7 +20,7 @@ public class HelpDocCatalogAddDTO implements DTO {
     private String name;
 
     @Schema(description = "父级")
-    private Long parentId;
+    private Integer parentId;
 
     @Schema(description = "排序")
     private Integer sort;
