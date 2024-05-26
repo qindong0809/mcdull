@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.NameValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.OperateLogQueryDTO;
@@ -11,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
 *
@@ -24,6 +27,18 @@ public class OperateLogController {
 
     @Resource
     private IOperateLogService operateLogService;
+
+    @Operation(summary = "home")
+    @PostMapping("/operateLog/home")
+    public Result<KeyValueVO<List<String>, List<Integer>>> home() {
+        return Result.success(operateLogService.home());
+    }
+
+    @Operation(summary = "pie-home")
+    @PostMapping("/operateLog/pie-home")
+    public Result<List<NameValueVO<String, Integer>>> pieHome() {
+        return Result.success(operateLogService.pieHome());
+    }
 
 
     @Operation(summary = "分页查询")

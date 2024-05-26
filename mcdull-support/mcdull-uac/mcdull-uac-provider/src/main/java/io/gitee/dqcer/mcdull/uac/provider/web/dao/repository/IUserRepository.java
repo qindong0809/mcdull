@@ -58,4 +58,6 @@ public interface IUserRepository extends IService<UserEntity> {
     Page<UserEntity> selectPageByRoleId(List<Integer> userIdList, PagedDTO dto);
 
     List<UserEntity> listByDeptList(List<Integer> deptIdList);
+
+    List<UserEntity> like(String userName);
 }

@@ -456,6 +456,11 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         return baseRepository.listByDeptList(deptIdList);
     }
 
+    @Override
+    public List<UserEntity> getLike(String userName) {
+        return baseRepository.like(userName);
+    }
+
     private List<UserEntity> list(List<Integer> userIdList) {
         if (CollUtil.isNotEmpty(userIdList)) {
             List<UserEntity> userList = baseRepository.listByIds(userIdList);

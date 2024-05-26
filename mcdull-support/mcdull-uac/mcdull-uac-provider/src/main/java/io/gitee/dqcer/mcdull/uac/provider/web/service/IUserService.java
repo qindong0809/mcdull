@@ -69,4 +69,6 @@ public interface IUserService {
     void addUserListByRole(RoleUserUpdateDTO dto);
 
     List<UserEntity> listByDeptList(List<Integer> deptIdList);
+
+    List<UserEntity> getLike(String userName);
 }

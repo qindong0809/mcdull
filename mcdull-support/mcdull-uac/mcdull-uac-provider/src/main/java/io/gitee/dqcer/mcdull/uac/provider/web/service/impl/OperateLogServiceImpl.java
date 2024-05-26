@@ -1,21 +1,20 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
+import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.NameValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.OperateLogQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.ChangeLogEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.OperateLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.LoginLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.OperateLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IOperateLogRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IOperateLogService;
@@ -25,10 +24,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -51,7 +47,16 @@ public class OperateLogServiceImpl extends BasicServiceImpl<IOperateLogRepositor
 
     @Override
     public PagedVO<OperateLogVO> queryByPage(OperateLogQueryDTO dto) {
-        Page<OperateLogEntity> entityPage = baseRepository.selectPage(dto);
+        String userName = dto.getUserName();
+        List<Integer> userIdList = new ArrayList<>();
+        if (StrUtil.isNotBlank(userName)) {
+            List<UserEntity> userList = userService.getLike(userName);
+            if (CollUtil.isEmpty(userList)) {
+                return PageUtil.empty(dto);
+            }
+            userIdList = userList.stream().map(IdEntity::getId).collect(Collectors.toList());
+        }
+        Page<OperateLogEntity> entityPage = baseRepository.selectPage(dto, userIdList);
         List<OperateLogVO> voList = new ArrayList<>();
         List<OperateLogEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
@@ -104,5 +109,35 @@ public class OperateLogServiceImpl extends BasicServiceImpl<IOperateLogRepositor
             vo.setOperateUserName(user.getActualName());
         }
         return vo;
+    }
+
+    @Override
+    public KeyValueVO<List<String>, List<Integer>> home() {
+        List<String> key = new ArrayList<>();
+        List<Integer> value = new ArrayList<>();
+        List<Map<String, Object>> list = baseRepository.home();
+        for (Map<String, Object> map : list) {
+            Object o = map.get("createdTime");
+            key.add(Convert.toStr(o));
+            Object count = map.get("count");
+            Integer anInt = Convert.toInt(count);
+            value.add(anInt);
+        }
+        return new KeyValueVO<>(key, value);
+    }
+
+    @Override
+    public List<NameValueVO<String, Integer>> pieHome() {
+        List<OperateLogEntity> list = baseRepository.list();
+        if (CollUtil.isNotEmpty(list)) {
+            List<NameValueVO<String, Integer>> voList = new ArrayList<>();
+            Map<String, Long> map = list.stream()
+                    .collect(Collectors.groupingBy(OperateLogEntity::getModule, Collectors.counting()));
+            for (Map.Entry<String, Long> entry : map.entrySet()) {
+                voList.add(new NameValueVO<>(entry.getKey(), Convert.toInt(entry.getValue())));
+            }
+            return voList;
+        }
+        return Collections.emptyList();
     }
 }

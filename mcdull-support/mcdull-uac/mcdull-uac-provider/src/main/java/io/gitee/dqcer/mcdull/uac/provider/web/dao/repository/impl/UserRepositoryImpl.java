@@ -158,6 +158,13 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
         return Collections.emptyList();
     }
 
+    @Override
+    public List<UserEntity> like(String userName) {
+        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+        query.like(UserEntity::getActualName, userName);
+        return baseMapper.selectList(query);
+    }
+
     public boolean update(UserEntity entity) {
         return this.updateById(entity);
     }

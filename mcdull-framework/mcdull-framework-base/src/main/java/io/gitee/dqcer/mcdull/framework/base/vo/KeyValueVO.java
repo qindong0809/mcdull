@@ -30,6 +30,7 @@ public class KeyValueVO<K, V> implements KeyValue<K, V> , VO {
         this.value = value;
     }
 
+
     @Override
     public String toString() {
         return new StringJoiner(", ", KeyValueVO.class.getSimpleName() + "[", "]")

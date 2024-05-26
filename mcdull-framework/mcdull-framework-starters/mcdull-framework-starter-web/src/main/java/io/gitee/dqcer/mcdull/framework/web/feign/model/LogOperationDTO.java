@@ -65,11 +65,13 @@ public class LogOperationDTO implements DTO {
      */
     private String traceId;
 
+    private Boolean successFlag;
+
     @Override
     public String toString() {
-        return "LogDTO{" +
+        return "LogOperationDTO{" +
                 "userAgent='" + userAgent + '\'' +
-                ", accountId=" + userId +
+                ", userId=" + userId +
                 ", tenantId=" + tenantId +
                 ", createdTime=" + createdTime +
                 ", clientIp='" + clientIp + '\'' +
@@ -79,6 +81,7 @@ public class LogOperationDTO implements DTO {
                 ", parameterMap='" + parameterMap + '\'' +
                 ", headers='" + headers + '\'' +
                 ", traceId='" + traceId + '\'' +
+                ", successFlag=" + successFlag +
                 '}';
     }
 
@@ -166,8 +169,15 @@ public class LogOperationDTO implements DTO {
         return traceId;
     }
 
-    public LogOperationDTO setTraceId(String traceId) {
+    public void setTraceId(String traceId) {
         this.traceId = traceId;
-        return this;
+    }
+
+    public Boolean getSuccessFlag() {
+        return successFlag;
+    }
+
+    public void setSuccessFlag(Boolean successFlag) {
+        this.successFlag = successFlag;
     }
 }

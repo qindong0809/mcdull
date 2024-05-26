@@ -25,4 +25,15 @@ public class OperateLogQueryDTO extends PagedDTO {
     @Schema(description = "请求结果 false失败 true成功")
     private Boolean successFlag;
 
+    @Schema(description = "请求路径")
+    private String url;
+
+    @Schema(description = "链路标识")
+    private String traceId;
+
+    @Schema(description = "操作模块")
+    private String module;
+
+    @Schema(description = "操作内容")
+    private String content;
 }

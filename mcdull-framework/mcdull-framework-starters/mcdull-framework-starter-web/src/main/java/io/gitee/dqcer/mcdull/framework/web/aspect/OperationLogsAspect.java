@@ -72,11 +72,16 @@ public class OperationLogsAspect {
         }
 
         long startTime = System.currentTimeMillis();
+        Boolean successFlag = true;
         try {
             return joinPoint.proceed();
+        } catch (Exception e) {
+            successFlag = false;
+            throw e;
         } finally {
             Object[] args = joinPoint.getArgs();
             LogOperationDTO entity = buildLog(request, args, startTime);
+            entity.setSuccessFlag(successFlag);
             LogHelp.debug(log, "Operation log dto: {}", entity);
             bean.saveLog(entity, method);
         }

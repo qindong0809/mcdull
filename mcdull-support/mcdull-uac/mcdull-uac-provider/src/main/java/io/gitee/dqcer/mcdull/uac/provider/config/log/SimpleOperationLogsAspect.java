@@ -75,10 +75,10 @@ public class SimpleOperationLogsAspect implements OperationLogsService {
         entity.setIp(clientIp);
         entity.setIpRegion(Ip2RegionUtil.getRegion(clientIp));
         entity.setUserAgent(dto.getUserAgent());
-        entity.setSuccessFlag(true);
         entity.setFailReason(StrUtil.EMPTY);
         entity.setTraceId(dto.getTraceId());
         entity.setTimeTaken(Convert.toInt(dto.getTimeTaken()));
+        entity.setSuccessFlag(dto.getSuccessFlag());
         return entity;
     }
 }
