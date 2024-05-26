@@ -64,7 +64,7 @@ public interface IFileRepository extends IService<FileEntity>  {
      */
     boolean exist(FileEntity entity);
 
-    Page<FileEntity> selectPage(FileQueryDTO dto);
+    Page<FileEntity> selectPage(FileQueryDTO dto, List<Integer> userIdList);
 
     FileEntity getByFileKey(String fileKey);
 }

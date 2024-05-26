@@ -2,12 +2,14 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
@@ -58,11 +60,11 @@ public class ConfigRepositoryImpl extends ServiceImpl<ConfigMapper, ConfigEntity
     @Override
     public Page<ConfigEntity> selectPage(ConfigQueryDTO param) {
         LambdaQueryWrapper<ConfigEntity> lambda = new QueryWrapper<ConfigEntity>().lambda();
-        String keyword = param.getKeyword();
-        if (ObjUtil.isNotNull(keyword)) {
-            lambda.like(ConfigEntity::getConfigKey, keyword);
+        String configKey = param.getConfigKey();
+        if (StrUtil.isNotBlank(configKey)) {
+            lambda.like(ConfigEntity::getConfigKey, configKey);
         }
-        lambda.orderByDesc(ListUtil.of(ConfigEntity::getCreatedTime, ConfigEntity::getUpdatedTime));
+        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 

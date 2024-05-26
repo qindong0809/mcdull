@@ -1,12 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.convert;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FileEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileVO;
-
-import java.time.LocalDateTime;
 
 /**
 * 系统配置 对象转换工具类
@@ -25,6 +21,7 @@ public class FileConvert {
         fileVO.setFileSize(item.getFileSize());
         fileVO.setFileType(item.getFileType());
         fileVO.setFileKey(item.getFileKey());
+        fileVO.setCreateTime(LocalDateTimeUtil.of(item.getCreatedTime()));
         return fileVO;
     }
 

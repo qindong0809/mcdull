@@ -305,7 +305,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     @Override
     public Map<Integer, String> getNameMap(List<Integer> userIdList) {
         List<UserEntity> list = this.list(userIdList);
-        return list.stream().collect(Collectors.toMap(IdEntity::getId, UserEntity::getLoginName));
+        return list.stream().collect(Collectors.toMap(IdEntity::getId, UserEntity::getActualName));
     }
 
     @Override
@@ -409,7 +409,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
 
         Set<Integer> depIdSet = userList.stream().map(UserEntity::getDepartmentId).collect(Collectors.toSet());
-        List<DepartmentEntity> departmentEntities = departmentRepository.listByIds(new ArrayList(depIdSet));
+        List<DepartmentEntity> departmentEntities = departmentRepository.listByIds(depIdSet);
         Map<Integer, DepartmentEntity> deptMap = departmentEntities.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
 
         for (UserEntity entity : userList) {

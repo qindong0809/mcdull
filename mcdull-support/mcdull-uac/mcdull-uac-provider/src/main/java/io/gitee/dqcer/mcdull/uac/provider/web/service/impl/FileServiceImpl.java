@@ -1,10 +1,13 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -13,6 +16,7 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.FileConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FileQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FileEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileDownloadVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileMetadataVO;
@@ -21,15 +25,15 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileStorageService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -38,14 +42,33 @@ public class FileServiceImpl extends BasicServiceImpl<IFileRepository> implement
     @Resource
     private IFileStorageService fileStorageService;
 
+    @Resource
+    private IUserService userService;
+
     @Override
     public PagedVO<FileVO> queryPage(FileQueryDTO dto) {
-        Page<FileEntity> entityPage = baseRepository.selectPage(dto);
+        String creatorName = dto.getCreatorName();
+        List<Integer> userIdList = new ArrayList<>();
+        if (StrUtil.isNotBlank(creatorName)) {
+            List<UserEntity> entityList = userService.getLike(creatorName);
+            if (CollUtil.isEmpty(entityList)) {
+                return PageUtil.empty(dto);
+            }
+            userIdList = entityList.stream().map(IdEntity::getId).collect(Collectors.toList());
+        }
+
+        Page<FileEntity> entityPage = baseRepository.selectPage(dto, userIdList);
         List<FileVO> voList = new ArrayList<>();
-        for (FileEntity entity : entityPage.getRecords()) {
-            FileVO fileVO = FileConvert.convertToEntity(entity);
-            fileVO.setFileUrl(fileStorageService.getFileUrl(entity.getFileKey()));
-            voList.add(fileVO);
+        List<FileEntity> records = entityPage.getRecords();
+        if (CollUtil.isNotEmpty(records)) {
+            Set<Integer> userIdSet = records.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
+            Map<Integer, String> userMap = userService.getNameMap(new ArrayList<>(userIdSet));
+            for (FileEntity entity : records) {
+                FileVO fileVO = FileConvert.convertToEntity(entity);
+                fileVO.setFileUrl(fileStorageService.getFileUrl(entity.getFileKey()));
+                fileVO.setCreatorName(userMap.get(entity.getCreatedBy()));
+                voList.add(fileVO);
+            }
         }
         return PageUtil.toPage(voList, entityPage);
     }

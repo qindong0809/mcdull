@@ -237,7 +237,7 @@ public class NoticeServiceImpl
     }
 
     private List<NoticeEntity> getNoticeEntities(Integer userId, Boolean administratorFlag) {
-        if (BooleanUtil.isTrue(administratorFlag)) {
+        if (BooleanUtil.isFalse(administratorFlag)) {
             List<Integer> noticeIdList = noticeViewRecordService.getByUserId(userId);
             if (CollUtil.isEmpty(noticeIdList)) {
                 return Collections.emptyList();

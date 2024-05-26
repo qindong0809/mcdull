@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -12,6 +13,7 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleUserQueryDTO;
@@ -38,6 +40,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
         if (StrUtil.isNotBlank(keyword)) {
             query.and(i-> i.like(UserEntity::getLoginName, keyword)
                     .or().like(UserEntity::getPhone, keyword)
+                    .or().like(UserEntity::getActualName, keyword)
             );
         }
         if (CollUtil.isNotEmpty(deptIdList)) {
@@ -47,7 +50,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
         if (ObjUtil.isNotNull(disabledFlag)) {
             query.eq(BaseEntity::getInactive, disabledFlag);
         }
-        query.orderByDesc(BaseEntity::getCreatedTime);
+        query.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 
@@ -113,7 +116,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
         if (CollUtil.isNotEmpty(userIdList)) {
             query.in(IdEntity::getId, userIdList);
         }
-        query.orderByDesc(BaseEntity::getCreatedTime);
+        query.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         Boolean notNeedPaged = dto.getNotNeedPaged();
         if (BooleanUtil.isTrue(notNeedPaged)) {
             List<UserEntity> userEntities = baseMapper.selectList(query);
@@ -137,7 +140,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
         if (CollUtil.isNotEmpty(userIdList)) {
             query.in(IdEntity::getId, userIdList);
         }
-        query.orderByDesc(BaseEntity::getCreatedTime);
+        query.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         Boolean notNeedPaged = dto.getNotNeedPaged();
         if (BooleanUtil.isTrue(notNeedPaged)) {
             List<UserEntity> userEntities = baseMapper.selectList(query);

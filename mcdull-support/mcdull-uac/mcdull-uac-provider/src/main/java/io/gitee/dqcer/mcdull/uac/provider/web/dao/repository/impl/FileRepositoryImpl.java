@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -10,6 +11,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
@@ -22,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,12 +41,6 @@ public class FileRepositoryImpl
 
     private static final Logger log = LoggerFactory.getLogger(FileRepositoryImpl.class);
 
-    /**
-     * 根据ID列表批量查询数据
-     *
-     * @param idList id列表
-     * @return {@link List< ConfigEntity >}
-     */
     @Override
     public List<FileEntity> queryListByIds(List<Integer> idList) {
         if (CollUtil.isNotEmpty(idList)) {
@@ -56,12 +54,6 @@ public class FileRepositoryImpl
         return Collections.emptyList();
     }
 
-    /**
-     * 按条件分页查询
-     *
-     * @param param 参数
-     * @return {@link Page< ConfigEntity >}
-     */
     @Override
     public Page<FileEntity> selectPage(ConfigQueryDTO param) {
         LambdaQueryWrapper<FileEntity> lambda = new QueryWrapper<FileEntity>().lambda();
@@ -69,7 +61,7 @@ public class FileRepositoryImpl
         if (ObjUtil.isNotNull(keyword)) {
             lambda.like(FileEntity::getFileName, keyword);
         }
-        lambda.orderByDesc(ListUtil.of(FileEntity::getCreatedTime, FileEntity::getUpdatedTime));
+        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 
@@ -112,13 +104,34 @@ public class FileRepositoryImpl
     }
 
     @Override
-    public Page<FileEntity> selectPage(FileQueryDTO dto) {
+    public Page<FileEntity> selectPage(FileQueryDTO dto, List<Integer> userIdList) {
         LambdaQueryWrapper<FileEntity> lambda = new QueryWrapper<FileEntity>().lambda();
-        String keyword = dto.getKeyword();
-        if (ObjUtil.isNotNull(keyword)) {
-            lambda.like(FileEntity::getFileName, keyword);
+        if (CollUtil.isNotEmpty(userIdList)) {
+            lambda.in(BaseEntity::getCreatedBy, userIdList);
         }
-        lambda.orderByDesc(ListUtil.of(FileEntity::getCreatedTime, FileEntity::getUpdatedTime));
+        Integer folderType = dto.getFolderType();
+        if (ObjUtil.isNotNull(folderType)) {
+            lambda.eq(FileEntity::getFolderType, folderType);
+        }
+        String fileName = dto.getFileName();
+        if (StrUtil.isNotBlank(fileName)) {
+            lambda.like(FileEntity::getFileName, fileName);
+        }
+        String fileKey = dto.getFileKey();
+        if (StrUtil.isNotBlank(fileKey)) {
+            lambda.like(FileEntity::getFileKey, fileKey);
+        }
+        LocalDate startDate = dto.getCreateTimeBegin();
+        LocalDate endDate = dto.getCreateTimeEnd();
+        if (ObjUtil.isAllNotEmpty(startDate, endDate)) {
+            lambda.between(RelEntity::getCreatedTime, startDate,
+                    LocalDateTimeUtil.endOfDay(endDate.atStartOfDay()));
+        }
+        String fileType = dto.getFileType();
+        if (StrUtil.isNotBlank(fileType)) {
+            lambda.like(FileEntity::getFileType, fileType);
+        }
+        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
     }
 
