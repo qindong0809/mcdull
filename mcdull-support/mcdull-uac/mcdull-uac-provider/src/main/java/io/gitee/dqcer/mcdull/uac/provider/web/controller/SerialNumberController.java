@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.SerialNumberGenerateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.SerialNumberRecordQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.SerialNumberRecordEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.SerialNumberVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ISerialNumberRecordService;
@@ -48,7 +49,8 @@ public class SerialNumberController {
     @Operation(summary = "获取生成记录")
     @PostMapping("/serialNumber/queryRecord")
     @SaCheckPermission("support:serialNumber:record")
-    public Result<PagedVO<SerialNumberRecordEntity>> queryRecord(@RequestBody @Valid SerialNumberRecordQueryForm queryForm) {
+    public Result<PagedVO<SerialNumberRecordEntity>> queryRecord(@RequestBody @Valid
+                                                                     SerialNumberRecordQueryDTO queryForm) {
         return Result.success(serialNumberRecordService.query(queryForm));
     }
 }

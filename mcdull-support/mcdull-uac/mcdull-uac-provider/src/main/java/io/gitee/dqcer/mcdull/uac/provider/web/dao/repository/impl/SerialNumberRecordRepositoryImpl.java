@@ -10,7 +10,7 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.SerialNumberRecordQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.SerialNumberRecordEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.SerialNumberRecordMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.ISerialNumberRecordRepository;
@@ -44,7 +44,7 @@ public class SerialNumberRecordRepositoryImpl
 
 
     @Override
-    public Page<SerialNumberRecordEntity> selectPage(ChangeLogQueryDTO param) {
+    public Page<SerialNumberRecordEntity> selectPage(SerialNumberRecordQueryDTO param) {
         LambdaQueryWrapper<SerialNumberRecordEntity> lambda = Wrappers.lambdaQuery();
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);

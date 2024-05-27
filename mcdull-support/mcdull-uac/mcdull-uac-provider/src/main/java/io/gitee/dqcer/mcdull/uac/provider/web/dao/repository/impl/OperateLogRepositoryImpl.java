@@ -72,8 +72,8 @@ public class OperateLogRepositoryImpl extends ServiceImpl<OperateLogMapper, Oper
     @Override
     public List<Map<String, Object>> home() {
         QueryWrapper<OperateLogEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("date_format(created_time, '%Y-%m-%d %H') as 'createdTime',count(1) as 'count'")
-                .groupBy("date_format(created_time, '%Y-%m-%d %H')");
+        queryWrapper.select("date_format(created_time, '%Y-%m-%d %H:%i:%s') as 'createdTime',count(1) as 'count'")
+                .groupBy("date_format(created_time, '%Y-%m-%d %H:%i:%s')");
         return this.listMaps(queryWrapper);
     }
 

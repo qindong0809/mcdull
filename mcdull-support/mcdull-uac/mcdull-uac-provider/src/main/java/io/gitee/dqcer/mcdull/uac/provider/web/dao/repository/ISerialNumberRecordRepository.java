@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.SerialNumberRecordQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.SerialNumberRecordEntity;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface ISerialNumberRecordRepository extends IService<SerialNumberReco
 
     List<SerialNumberRecordEntity> queryListByIds(List<Integer> idList);
 
-    Page<SerialNumberRecordEntity> selectPage(ChangeLogQueryDTO param);
+    Page<SerialNumberRecordEntity> selectPage(SerialNumberRecordQueryDTO param);
 
     SerialNumberRecordEntity getById(Integer id);
 

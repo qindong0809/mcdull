@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author dqcer
  */
-@Tag(name = "Dict API")
+@Tag(name = "数据字典")
 @RestController
 public class DictController extends BasicController {
 
@@ -34,20 +34,20 @@ public class DictController extends BasicController {
     private IDictValueService dictValueService;
 
 
-    @Operation(summary = "Query key all")
+    @Operation(summary = "查询全部")
     @GetMapping("/dict/key/queryAll")
     public Result<List<DictKeyVO>> getKeyAll() {
         return Result.success(dictKeyService.queryAll());
     }
 
-    @Operation(summary = "Query key paged list")
+    @Operation(summary = "分页列表")
     @PostMapping("/dict/key/query")
     public Result<PagedVO<DictKeyVO>> getKeyList(@Valid @RequestBody DictKeyQueryDTO queryDTO) {
         return Result.success(dictKeyService.getList(queryDTO));
     }
 
 
-    @Operation(summary = "Key add")
+    @Operation(summary = "添加字典")
     @PostMapping("/dict/key/add")
     @SaCheckPermission("support:dict:add")
     public Result<Boolean> keyAdd(@Valid @RequestBody DictKeyAddDTO keyAddDTO) {
@@ -55,7 +55,7 @@ public class DictController extends BasicController {
         return Result.success(true);
     }
 
-    @Operation(summary = "Key delete")
+    @Operation(summary = "删除字典")
     @PostMapping("/dict/key/delete")
     @SaCheckPermission("support:dict:delete")
     public Result<Boolean> keyDelete(@RequestBody List<Integer> keyIdList) {
@@ -63,7 +63,7 @@ public class DictController extends BasicController {
         return Result.success(true);
     }
 
-    @Operation(summary = "Key edit")
+    @Operation(summary = "编辑字典")
     @PostMapping("/dict/key/edit")
     @SaCheckPermission("support:dict:edit")
     public Result<Boolean> keyEdit(@Valid @RequestBody DictKeyUpdateDTO keyUpdateDTO) {
@@ -81,27 +81,27 @@ public class DictController extends BasicController {
         return null;
     }
 
-    @Operation(summary = "Query value paged list")
+    @Operation(summary = "字典值分页类别")
     @PostMapping("/dict/value/query")
     public Result<PagedVO<DictValueVO>> getList(@Valid @RequestBody DictValueQueryDTO queryDTO) {
         return Result.success(dictValueService.getList(queryDTO));
     }
 
-    @Operation(summary = "Value add")
+    @Operation(summary = "添加字典值")
     @PostMapping("/dict/value/add")
     public Result<Boolean> valueAdd(@Valid @RequestBody DictValueAddDTO valueAddDTO) {
         dictValueService.insert(valueAddDTO);
         return Result.success(true);
     }
 
-    @Operation(summary = "Value edit")
+    @Operation(summary = "编辑字典值")
     @PostMapping("/dict/value/edit")
     public Result<Boolean> valueEdit(@Valid @RequestBody DictValueUpdateDTO valueUpdateDTO) {
         dictValueService.update(valueUpdateDTO);
         return Result.success(true);
     }
 
-    @Operation(summary = "Value delete")
+    @Operation(summary = "删除字典值")
     @PostMapping("/dict/value/delete")
     public Result<Boolean> valueDelete(@RequestBody List<Integer> valueIdList) {
         dictValueService.delete(valueIdList);
