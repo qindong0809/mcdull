@@ -592,3 +592,40 @@ primary key (`id`) using btree
 insert into `sys_oa_enterprise` values (1, '区块链实验室', '', 1, 'block', 'kk', '18637922222', null, '410000', '河南省', '410300', '洛阳市', '410311', '洛龙区', '区块链大楼', null, 0, sysdate(), 0, sysdate(), 0, 0);
 insert into `sys_oa_enterprise` values (2, '创新实验室', '', 2, '创新', 'xx', '18637921111', 'xxx@163.com', '410000', '河南省', '410300', '洛阳市', '410311', '洛龙区', '1024大楼', null, 0, sysdate(), 0, sysdate(), 0, 0);
 
+drop table if exists `sys_serial_number`;
+create table `sys_serial_number`  (
+`id` int not null auto_increment comment '主键',
+`business_type` int c not null comment '业务类型1/意见反馈 2/',
+`format` varchar(50) c null default null comment '格式[yyyy]表示年,[mm]标识月,[dd]表示日,[nnn]表示三位数字',
+`rule_type` varchar(20) c not null comment '规则格式。none没有周期, year 年周期, month月周期, day日周期',
+`init_number` int not null comment '初始值',
+`step_random_range` int not null comment '步长随机数',
+`remark` varchar(255) c null default null comment '备注',
+`last_number` int null default null comment '上次产生的单号, 默认为空',
+`last_time` datetime(0) null default null comment '上次产生的单号时间',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree
+)comment = '单号生成器定义表';
+
+-- ----------------------------
+-- records of t_serial_number
+-- ----------------------------
+insert into `t_serial_number` values (1, 1, 'dk[yyyy][mm][dd]no[nnnnn]', 'day', 1000, 10, 'dk20201101no321', 1, sysdate(),  0, sysdate(), sysdate());
+insert into `t_serial_number` values (2, 2, 'ht[yyyy][mm][dd][nnnnn]-cx', 'none', 1, 1, '', 8, sysdate(),  0, sysdate(), sysdate());
+
+
+drop table if exists `sys_serial_number_record`;
+create table `sys_serial_number_record`  (
+`id` int not null auto_increment comment '主键',
+`serial_number_id` int(0) not null,
+`record_date` datetime not null comment '记录日期',
+`last_number` int not null default 0 comment '最后更新值',
+`last_time` datetime(0) not null comment '最后更新时间',
+`count` bigint(0) not null default 0 comment '更新次数',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree
+) comment = 'serial_number记录表';

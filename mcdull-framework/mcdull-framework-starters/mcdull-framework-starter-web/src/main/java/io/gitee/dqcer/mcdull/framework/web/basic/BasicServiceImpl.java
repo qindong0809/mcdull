@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.framework.web.basic;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
@@ -79,6 +80,14 @@ public abstract class BasicServiceImpl<R extends IService> {
     protected void throwSystemBusyException(String format, Object... objects) {
         LogHelp.error(log, "System busy. " + format, objects);
         throw new BusinessException(I18nConstants.SYSTEM_BUSY);
+    }
+
+    protected Object checkDataExistById(Serializable id) {
+        Object obj = baseRepository.getById(id);
+        if (ObjUtil.isNull(obj)) {
+            this.throwDataNotExistException(id);
+        }
+        return obj;
     }
 
 }
