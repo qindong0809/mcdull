@@ -1,15 +1,11 @@
-package io.gitee.dqcer.mcdull.uac.provider.config;
+package io.gitee.dqcer.mcdull.uac.provider.config.captcha;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
-import com.google.code.kaptcha.impl.NoNoise;
-import com.google.code.kaptcha.impl.ShadowGimpy;
 import com.google.code.kaptcha.util.Config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Properties;
-
-import static com.google.code.kaptcha.Constants.*;
 
 /**
  * 验证码配置

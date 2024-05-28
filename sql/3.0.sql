@@ -612,8 +612,8 @@ primary key (`id`) using btree
 -- ----------------------------
 -- records of t_serial_number
 -- ----------------------------
-insert into `sys_serial_number` values (1, 1, 'dk[yyyy][mm][dd]no[nnnnn]', 'day', 1000, 10, 'dk20201101no321', 1, sysdate(),  0, sysdate(), sysdate());
-insert into `sys_serial_number` values (2, 2, 'ht[yyyy][mm][dd][nnnnn]-cx', 'none', 1, 1, '', 8, sysdate(),  0, sysdate(), sysdate());
+insert into `sys_serial_number` values (1, 1, 'dk{yyyy}{mm}{dd}no{nnnnn}', 'day', 1000, 10, 'dk20201101no321', 1, sysdate(),  0, sysdate(), sysdate());
+insert into `sys_serial_number` values (2, 2, 'ht{yyyy}{mm}{dd}{nnnnn}-cx', 'none', 1, 1, '', 8, sysdate(),  0, sysdate(), sysdate());
 
 
 drop table if exists `sys_serial_number_record`;
@@ -623,7 +623,7 @@ create table `sys_serial_number_record`  (
 `record_date` datetime not null comment '记录日期',
 `last_number` int not null default 0 comment '最后更新值',
 `last_time` datetime(0) not null comment '最后更新时间',
-`count` bigint(0) not null default 0 comment '更新次数',
+`count` int(0) not null default 0 comment '更新次数',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',

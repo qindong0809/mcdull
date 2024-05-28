@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.uac.provider.config;
+package io.gitee.dqcer.mcdull.uac.provider.config.captcha;
 
 import java.awt.*;
 import java.util.ArrayList;

@@ -72,6 +72,14 @@ public class SerialNumberRecordRepositoryImpl
     }
 
     @Override
+    public List<SerialNumberRecordEntity> getListBySerialNumber(Integer serialNumberId) {
+        LambdaQueryWrapper<SerialNumberRecordEntity> query = Wrappers.lambdaQuery();
+        query.eq(SerialNumberRecordEntity::getSerialNumberId, serialNumberId);
+        query.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        return baseMapper.selectList(query);
+    }
+
+    @Override
     public void deleteBatchByIds(List<Integer> ids) {
         int rowSize = baseMapper.deleteBatchIds(ids);
         if (rowSize != ids.size()) {

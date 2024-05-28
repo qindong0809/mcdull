@@ -27,4 +27,6 @@ public interface ISerialNumberRecordRepository extends IService<SerialNumberReco
     void deleteBatchByIds(List<Integer> ids);
 
     boolean exist(SerialNumberRecordEntity entity);
+
+    List<SerialNumberRecordEntity> getListBySerialNumber(Integer serialNumberId);
 }

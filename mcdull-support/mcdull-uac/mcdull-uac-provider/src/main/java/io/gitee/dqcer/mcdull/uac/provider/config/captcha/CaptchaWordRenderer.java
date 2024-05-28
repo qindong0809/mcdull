@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.uac.provider.config;
+package io.gitee.dqcer.mcdull.uac.provider.config.captcha;
 
 import com.google.code.kaptcha.text.WordRenderer;
 import com.google.code.kaptcha.util.Configurable;
@@ -12,6 +12,8 @@ import java.util.Random;
 /**
  * 验证码字体生成
  *
+ * @author dqcer
+ * @since 2024/05/28
  */
 public class CaptchaWordRenderer extends Configurable implements WordRenderer {
 

@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.uac.provider.config;
+package io.gitee.dqcer.mcdull.uac.provider.config.captcha;
 
 import com.google.code.kaptcha.NoiseProducer;
 import com.google.code.kaptcha.util.Configurable;

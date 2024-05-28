@@ -20,19 +20,13 @@ public class SerialNumberRecordEntity extends RelEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer businessType;
+    private Integer serialNumberId;
 
-    private String format;
-
-    private String ruleType;
-
-    private Integer initNumber;
-
-    private Integer stepRandomRange;
-
-    private String remark;
+    private Date recordDate;
 
     private Integer lastNumber;
 
     private Date lastTime;
+
+    private Integer count;
 }
