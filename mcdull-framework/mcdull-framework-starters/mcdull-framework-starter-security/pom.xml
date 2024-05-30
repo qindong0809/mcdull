@@ -5,12 +5,12 @@
 	<parent>
 		<artifactId>mcdull-framework-starters</artifactId>
 		<groupId>io.gitee.dqcer</groupId>
-		<version>0.0.5-RELEASE</version>
+		<version>0.1.1-RELEASE</version>
 	</parent>
 
 	<groupId>io.gitee.dqcer</groupId>
 	<artifactId>mcdull-framework-starter-security</artifactId>
-	<version>0.0.5-RELEASE</version>
+	<version>0.1.1-RELEASE</version>
 
 	<name>mcdull-framework-starter-security</name>
 	<description>mcdull-framework-starter-security</description>

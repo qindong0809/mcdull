@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mcdull-mdc</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.0.5-RELEASE</version>
+        <version>0.1.1-RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -66,7 +66,7 @@
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-uac-client</artifactId>
-            <version>0.0.5-RELEASE</version>
+            <version>0.1.1-RELEASE</version>
         </dependency>
         <dependency>
             <groupId>io.gitee.dqcer</groupId>

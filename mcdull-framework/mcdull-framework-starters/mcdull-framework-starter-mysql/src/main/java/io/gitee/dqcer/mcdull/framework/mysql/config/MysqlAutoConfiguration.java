@@ -43,7 +43,7 @@ import java.util.Map;
  */
 @Configuration
 @EnableConfigurationProperties(DataSourceProperties.class)
-public class AutoConfiguration {
+public class MysqlAutoConfiguration {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 

@@ -6,11 +6,11 @@
     <parent>
         <artifactId>mcdull</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.0.5-RELEASE</version>
+        <version>0.1.1-RELEASE</version>
     </parent>
 
     <artifactId>mcdull-bussiness</artifactId>
-    <version>0.0.5-RELEASE</version>
+    <version>0.1.1-RELEASE</version>
     <name>mcdull-business</name>
     <packaging>pom</packaging>
 
@@ -22,6 +22,7 @@
     <modules>
 <!--        <module>mcdull-admin</module>-->
         <module>mcdull-business-common</module>
+        <module>mcdull-demo</module>
     </modules>
 
     <dependencyManagement>
@@ -29,7 +30,7 @@
             <dependency>
                 <groupId>io.gitee.dqcer</groupId>
                 <artifactId>mcdull-framework-dependencies</artifactId>
-                <version>0.0.5-RELEASE</version>
+                <version>0.1.1-RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

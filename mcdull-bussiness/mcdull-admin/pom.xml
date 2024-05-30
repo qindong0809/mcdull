@@ -5,10 +5,10 @@
     <parent>
         <artifactId>mcdull-bussiness</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.0.5-RELEASE</version>
+        <version>0.1.1-RELEASE</version>
     </parent>
     <artifactId>mcdull-admin</artifactId>
-    <version>0.1.0-RELEASE</version>
+    <version>0.1.1-RELEASE</version>
     <name>mcdull-admin</name>
 
     <dependencies>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-generator</artifactId>
-            <version>0.0.5-RELEASE</version>
+            <version>0.1.1-RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.itextpdf</groupId>

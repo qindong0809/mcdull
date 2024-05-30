@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.framework.redis.operation;
 
 
 import io.gitee.dqcer.mcdull.framework.redis.ICache;
-import io.gitee.dqcer.mcdull.framework.redis.config.SpringContextHolder;
 
 import javax.annotation.Resource;
 
@@ -18,6 +17,9 @@ public class CacheChannel implements ICache {
     @Resource
     private CaffeineCache caffeineCache;
 
+    @Resource
+    private RedissonCache redisCache;
+
 
     @Override
     public <T> T get(String key, Class<T> type) {
@@ -25,11 +27,10 @@ public class CacheChannel implements ICache {
         if (null != t) {
             return t;
         }
-        boolean local = SpringContextHolder.isLocal();
-        if (local) {
-            return null;
-        }
-        RedissonCache redisCache = SpringContextHolder.getBean(RedissonCache.class);
+//        boolean local = SpringContextHolder.isLocal();
+//        if (local) {
+//            return null;
+//        }
         t = redisCache.get(key, type);
         if (t == null) {
             return null;
@@ -41,14 +42,12 @@ public class CacheChannel implements ICache {
     @Override
     public <T> void put(String key, T value, long expire) {
         caffeineCache.put(key, value, expire);
-        RedissonCache redisCache = SpringContextHolder.getBean(RedissonCache.class);
         redisCache.put(key, value, expire);
     }
 
     @Override
     public void evict(String... keys) {
         caffeineCache.evict(keys);
-        RedissonCache redisCache = SpringContextHolder.getBean(RedissonCache.class);
         redisCache.evict(keys);
     }
 }

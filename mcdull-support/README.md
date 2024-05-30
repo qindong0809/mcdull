@@ -19,12 +19,12 @@
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-uac-client</artifactId>
-            <version>0.0.5-RELEASE</version>
+            <version>0.1.1-RELEASE</version>
         </dependency>
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-mdc-client</artifactId>
-            <version>0.0.5-RELEASE</version>
+            <version>0.1.1-RELEASE</version>
         </dependency>
 ```
 2、去掉跨域配置
