@@ -79,25 +79,31 @@ public class SerialNumberServiceImpl
         List<SerialNumberRecordEntity> list = serialNumberRecordService.getListBySerialNumber(entity.getId());
         List<Integer> resultList = new ArrayList<>();
         List<String> formatList = new ArrayList<>();
-        for (int i = 0; i < count-1; i++) {
+        for (int i = 0; i < count; i++) {
             int startIndex = format.indexOf("{n");
             int endIndex = format.indexOf("n}");
             if (startIndex > -1 && endIndex > -1 && startIndex < endIndex) {
                 String numberFormat = format.substring(startIndex + 1, endIndex + 1);
+                Integer lastNumber = 0;
                 if (CollUtil.isNotEmpty(list)) {
                     SerialNumberRecordEntity numberRecord = list.get(0);
-                    Integer lastNumber = numberRecord.getLastNumber();
-                    Integer stepRandomRange = entity.getStepRandomRange();
-                    int resultNumber = lastNumber + stepRandomRange;
-                    resultList.add(resultNumber);
-                    String pre = StrUtil.padPre(Convert.toStr(resultNumber), endIndex - startIndex, "0");
-                    String oneFormat = StrUtil.replace(format, numberFormat, pre);
-                    formatList.add(oneFormat);
+                    lastNumber = numberRecord.getLastNumber();
                 }
+                Integer stepRandomRange = entity.getStepRandomRange();
+                int resultNumber = lastNumber + stepRandomRange;
+                resultList.add(resultNumber);
+                String pre = StrUtil.padPre(Convert.toStr(resultNumber), endIndex - startIndex, "0");
+                String oneFormat = StrUtil.replace(format, numberFormat, pre);
+                formatList.add(oneFormat);
             }
         }
         if (CollUtil.isNotEmpty(resultList)) {
-            serialNumberRecordService.batchSave(list.get(0), resultList);
+            if (CollUtil.isNotEmpty(list)) {
+                serialNumberRecordService.batchSave(list.get(0), resultList);
+            } else {
+                serialNumberRecordService.batchSave(entity, resultList);
+            }
+
         }
         return formatList;
     }

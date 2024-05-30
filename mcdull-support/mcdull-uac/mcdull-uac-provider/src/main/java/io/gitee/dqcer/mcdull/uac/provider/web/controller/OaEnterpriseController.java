@@ -1,14 +1,12 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.hutool.core.collection.ListUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.EnterpriseAddDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.EnterpriseQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.EnterpriseUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.EnterpriseVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeUpdateFormVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.INoticeService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IOaEnterpriseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * @author dqcer
@@ -42,6 +39,13 @@ public class OaEnterpriseController {
     public Result<Boolean> add(@RequestBody @Valid EnterpriseAddDTO dto) {
          enterpriseService.add(dto);
          return Result.success(true);
+    }
+
+    @Operation(summary = "查询企业详情")
+    @GetMapping("/oa/enterprise/get/{enterpriseId}")
+    @SaCheckPermission("oa:enterprise:detail")
+    public Result<EnterpriseVO> getDetail(@PathVariable Integer enterpriseId) {
+        return Result.success(enterpriseService.getDetail(enterpriseId));
     }
 
     @Operation(summary = "编辑")

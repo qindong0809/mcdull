@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.SerialNumberRecordQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.SerialNumberEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.SerialNumberRecordEntity;
 
 import java.util.List;
@@ -17,4 +18,7 @@ public interface ISerialNumberRecordService {
     List<SerialNumberRecordEntity> getListBySerialNumber(Integer serialNumberId);
 
     void batchSave(SerialNumberRecordEntity oldRecord, List<Integer> resultList);
+
+    void batchSave(SerialNumberEntity entity, List<Integer> resultList);
+
 }

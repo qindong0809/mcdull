@@ -5,6 +5,7 @@ import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.SerialNumberRecordQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.SerialNumberEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.SerialNumberRecordEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.ISerialNumberRecordRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ISerialNumberRecordService;
@@ -46,6 +47,21 @@ public class SerialNumberRecordServiceImpl
             entity.setLastTime(new Date());
             entity.setRecordDate(new Date());
             entity.setCount(oldRecord.getCount() + i + 1);
+            list.add(entity);
+        }
+        baseRepository.saveBatch(list);
+    }
+
+    @Override
+    public void batchSave(SerialNumberEntity configEntity, List<Integer> resultList) {
+        List<SerialNumberRecordEntity> list = new ArrayList<>();
+        for (int i = 0; i < resultList.size(); i++) {
+            SerialNumberRecordEntity entity = new SerialNumberRecordEntity();
+            entity.setSerialNumberId(configEntity.getId());
+            entity.setLastNumber(resultList.get(i));
+            entity.setLastTime(new Date());
+            entity.setRecordDate(new Date());
+            entity.setCount(i + 1);
             list.add(entity);
         }
         baseRepository.saveBatch(list);

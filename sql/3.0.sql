@@ -481,7 +481,7 @@ create table `sys_operate_log`  (
 `content` varchar(500) null default null comment '操作内容',
 `url` varchar(100) null default null comment '请求路径',
 `method` varchar(100) null default null comment '请求方法',
-`param` varchar(2048) null comment '请求参数',
+`param` varchar(4096) null comment '请求参数',
 `ip` varchar(255) null default null comment '请求ip',
 `ip_region` varchar(1000) null default null comment '请求ip地区',
 `user_agent` text null comment '请求user-agent',

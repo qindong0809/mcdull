@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -111,6 +112,18 @@ public class OaEnterpriseServiceImpl
             this.throwDataNotExistException(enterpriseId);
         }
         baseRepository.removeById(entity);
+    }
+
+    @Override
+    public EnterpriseVO getDetail(Integer enterpriseId) {
+        OaEnterpriseEntity entity = baseRepository.getById(enterpriseId);
+        EnterpriseVO enterpriseVO = this.convertToVO(entity);
+        Integer createdBy = entity.getCreatedBy();
+        Map<Integer, String> nameMap = userService.getNameMap(ListUtil.of(createdBy));
+        if (ObjUtil.isNotNull(createdBy)) {
+            enterpriseVO.setCreateUserName(nameMap.get(createdBy));
+        }
+        return enterpriseVO;
     }
 
     private OaEnterpriseEntity convertToEntity(EnterpriseAddDTO dto) {
