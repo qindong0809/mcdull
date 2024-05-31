@@ -11,8 +11,30 @@
 
     <artifactId>mcdull-uac-provider</artifactId>
 
+    <properties>
+        <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
+        <jna.version>5.8.0</jna.version>
+    </properties>
+
 
     <dependencies>
+        <!-- linux的管理 -->
+        <dependency>
+            <groupId>ch.ethz.ganymed</groupId>
+            <artifactId>ganymed-ssh2</artifactId>
+            <version>build210</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+        </dependency>
+        <!-- 获取系统信息 -->
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>6.1.4</version>
+        </dependency>
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-framework-starter-monitor</artifactId>
@@ -112,6 +134,44 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.6.6</version>
+            </plugin>
+            <plugin>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+                <version>4.9.9</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- 检查的仓库根目录，${project.basedir}：项目根目录，即包含pom.xml文件的目录 -->
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <!-- false：扫描路径时不打印更多信息，默认值false，可以不配置 -->
+                    <verbose>false</verbose>
+                    <!-- 定义插件中所有时间格式，默认值：yyyy-MM-dd’T’HH:mm:ssZ -->
+                    <dateFormat>yyyy-MM-dd HH:mm:ss</dateFormat>
+                    <!-- git属性文件中各属性前缀，默认值git，可以不配置 -->
+                    <prefix>git</prefix>
+                    <!-- 生成git属性文件，默认false：不生成 -->
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <!-- 生成git属性文件路径及文件名，默认${project.build.outputDirectory}/git.properties -->
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    <!-- 生成git属性文件格式，默认值properties -->
+                    <format>json</format>
+                    <!-- 配置git-describe命令 -->
+                    <gitDescribe>
+                        <skip>false</skip>
+                        <always>false</always>
+                        <dirty>-dirty</dirty>
+                    </gitDescribe>
+                    <excludeProperties>
+                        <excludeProperty>git.remote.origin.url</excludeProperty>
+                        <excludeProperty>git.build.host</excludeProperty>
+                    </excludeProperties>
+                </configuration>
             </plugin>
         </plugins>
     </build>
