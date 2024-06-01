@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 @RestController
@@ -17,6 +18,7 @@ import java.util.Map;
 @RequestMapping
 public class ServerMonitorController {
 
+    @Resource
     private IServerMonitorService serviceMonitorService;
 
     @Operation(summary = "查询服务监控")

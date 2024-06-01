@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.config;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
@@ -13,6 +14,7 @@ import java.util.Properties;
  * @author dqcer
  * @since 2024/05/31
  */
+@Lazy
 @Component
 public class GitPropertiesComponent {
 

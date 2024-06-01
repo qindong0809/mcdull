@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.net.NetUtil;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IServerMonitorService;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
@@ -126,6 +125,7 @@ public class ServerMonitorServiceImpl implements IServerMonitorService {
     private Map<String,Object> getMemoryInfo(GlobalMemory memory) {
         Map<String,Object> memoryInfo = new LinkedHashMap<>();
         memoryInfo.put("total", FormatUtil.formatBytes(memory.getTotal()));
+        memoryInfo.put("totalNum", FormatUtil.formatBytes(memory.getTotal()));
         memoryInfo.put("available", FormatUtil.formatBytes(memory.getAvailable()));
         memoryInfo.put("used", FormatUtil.formatBytes(memory.getTotal() - memory.getAvailable()));
         memoryInfo.put("usageRate", df.format((memory.getTotal() - memory.getAvailable())/(double)memory.getTotal() * 100));
@@ -174,7 +174,8 @@ public class ServerMonitorServiceImpl implements IServerMonitorService {
         // 系统信息
         systemInfo.put("os", os.toString());
         systemInfo.put("day", formatBetween);
-        systemInfo.put("ip", NetUtil.localIps().toString());
+//        systemInfo.put("ip", NetUtil.localIps().toString());
+        systemInfo.put("ip", "127.0.0.1");
 
         return systemInfo;
     }
