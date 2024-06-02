@@ -174,7 +174,7 @@ public class ServerMonitorServiceImpl implements IServerMonitorService {
         // 系统信息
         systemInfo.put("os", os.toString());
         systemInfo.put("day", formatBetween);
-        // FIXME: 2024/6/2 
+        // FIXME: 2024/6/2
 //        systemInfo.put("ip", NetUtil.localIps().toString());
         systemInfo.put("ip", "127.0.0.1");
 

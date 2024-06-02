@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 
 /**
@@ -106,11 +105,8 @@ public class ChangeLogServiceImpl extends BasicServiceImpl<IChangeLogRepository>
             voList.sort((o1, o2) -> o2.getPublicDate().compareTo(o1.getPublicDate()));
             changeLogAndVersion.setList(voList);
         }
-
-        Properties version = versionService.getVersion();
-        if (ObjUtil.isNotNull(version)) {
-            changeLogAndVersion.setGitVersion(version);
-        }
+        changeLogAndVersion.setGitVersion(versionService.getGitCurrentCommitInfo());
+        changeLogAndVersion.setJarVersion(versionService.getJarCurrentBuildInfo());
         return changeLogAndVersion;
     }
 

@@ -18,4 +18,6 @@ public class ChangeLogAndVersionVO implements VO {
 
     private Properties gitVersion;
 
+    private Properties jarVersion;
+
 }

@@ -23,19 +23,16 @@ import java.util.Properties;
 public class VersionServiceImpl implements IVersionService {
 
     public static final String GIT_PROPERTIES = "git.properties";
+    public static final String JAR_BUILD_PROPERTIES = "META-INF/build-info.properties";
 
     @Override
-    public Properties getVersion() {
-        Properties properties = new Properties();
-        try (InputStream inputStream = ResourceUtil.getStream(GIT_PROPERTIES)) {
-            if (inputStream != null) {
-                properties.load(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-            } else {
-                LogHelp.error(log, "无法获取资源流", GIT_PROPERTIES);
-            }
-        } catch (Exception e) {
-            LogHelp.error(log, "获取版本信息失败", e);
-        }
+    public Properties getJarCurrentBuildInfo() {
+        return this.getProperties(JAR_BUILD_PROPERTIES);
+    }
+
+    @Override
+    public Properties getGitCurrentCommitInfo() {
+        Properties properties = this.getProperties(GIT_PROPERTIES);
         Enumeration<?> enumeration = properties.propertyNames();
         while (enumeration.hasMoreElements()) {
             String key = (String) enumeration.nextElement();
@@ -44,6 +41,20 @@ public class VersionServiceImpl implements IVersionService {
         }
         return this.gitCommitProperties(properties);
     }
+    private Properties getProperties(String resourceName) {
+        Properties properties = new Properties();
+        try (InputStream inputStream = ResourceUtil.getStream(resourceName)) {
+            if (inputStream != null) {
+                properties.load(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            } else {
+                LogHelp.error(log, "无法获取资源流", resourceName);
+            }
+        } catch (Exception e) {
+            LogHelp.error(log, "获取版本信息失败", e);
+        }
+        return properties;
+    }
+
 
     private Properties gitCommitProperties(Properties properties) {
         Properties gitProperties = new Properties();
@@ -51,13 +62,19 @@ public class VersionServiceImpl implements IVersionService {
             String key = (String) k;
             if (key.startsWith("\"git.commit")) {
                 String value = (String) v;
-                if (value.startsWith("\"")) {
-                    value = StrUtil.replaceFirst(value, "\"", "");
-                    value = StrUtil.replaceLast(value, "\"", "");
-                }
+                value = replaceFirstAndLast(value);
+                key = replaceFirstAndLast(key);
                 gitProperties.put(key, value);
             }
         });
         return gitProperties;
+    }
+
+    private static String replaceFirstAndLast(String str) {
+        if (str.startsWith("\"")) {
+            str = StrUtil.replaceFirst(str, "\"", "");
+            str = StrUtil.replaceLast(str, "\"", "");
+        }
+        return str;
     }
 }

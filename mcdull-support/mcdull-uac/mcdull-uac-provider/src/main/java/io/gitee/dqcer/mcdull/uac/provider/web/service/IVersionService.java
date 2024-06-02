@@ -9,5 +9,7 @@ import java.util.Properties;
  */
 public interface IVersionService {
 
-    Properties getVersion();
+    Properties getJarCurrentBuildInfo();
+
+    Properties getGitCurrentCommitInfo();
 }
