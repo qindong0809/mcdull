@@ -4,7 +4,10 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.ListUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogAddDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogUpdateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogAndVersionVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IChangeLogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -63,6 +66,12 @@ public class ChangeLogController {
     @PostMapping("/changeLog/queryPage")
     public Result<PagedVO<ChangeLogVO>> queryPage(@RequestBody @Valid ChangeLogQueryDTO queryForm) {
         return Result.success(changeLogService.queryPage(queryForm));
+    }
+
+    @Operation(summary = "查询全部和版本信息")
+    @PostMapping("/changeLog-version")
+    public Result<ChangeLogAndVersionVO> getChangeLogAndVersion() {
+        return Result.success(changeLogService.getChangeLogAndVersion());
     }
 
 

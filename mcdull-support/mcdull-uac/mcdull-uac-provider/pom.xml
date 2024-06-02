@@ -141,6 +141,8 @@
                 <version>4.9.9</version>
                 <executions>
                     <execution>
+                        <id>get-the-git-infos</id>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>revision</goal>
                         </goals>
@@ -150,7 +152,7 @@
                     <!-- 检查的仓库根目录，${project.basedir}：项目根目录，即包含pom.xml文件的目录 -->
                     <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
                     <!-- false：扫描路径时不打印更多信息，默认值false，可以不配置 -->
-                    <verbose>false</verbose>
+                    <verbose>true</verbose>
                     <!-- 定义插件中所有时间格式，默认值：yyyy-MM-dd’T’HH:mm:ssZ -->
                     <dateFormat>yyyy-MM-dd HH:mm:ss</dateFormat>
                     <!-- git属性文件中各属性前缀，默认值git，可以不配置 -->

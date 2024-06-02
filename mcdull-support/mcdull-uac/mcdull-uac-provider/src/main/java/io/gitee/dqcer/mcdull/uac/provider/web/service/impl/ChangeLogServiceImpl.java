@@ -11,23 +11,29 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ChangeLogEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogAndVersionVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IChangeLogRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IChangeLogService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IVersionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class ChangeLogServiceImpl extends BasicServiceImpl<IChangeLogRepository> implements IChangeLogService {
+
+    @Resource
+    private IVersionService versionService;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -86,6 +92,26 @@ public class ChangeLogServiceImpl extends BasicServiceImpl<IChangeLogRepository>
             this.throwDataNotExistException(id);
         }
         return this.convertToConfigVO(logEntity);
+    }
+
+    @Override
+    public ChangeLogAndVersionVO getChangeLogAndVersion() {
+        ChangeLogAndVersionVO changeLogAndVersion = new ChangeLogAndVersionVO();
+        List<ChangeLogEntity> list = baseRepository.list();
+        if (CollUtil.isNotEmpty(list)) {
+            List<ChangeLogVO> voList = new ArrayList<>();
+            for (ChangeLogEntity entity : list) {
+                voList.add(this.convertToConfigVO(entity));
+            }
+            voList.sort((o1, o2) -> o2.getPublicDate().compareTo(o1.getPublicDate()));
+            changeLogAndVersion.setList(voList);
+        }
+
+        Properties version = versionService.getVersion();
+        if (ObjUtil.isNotNull(version)) {
+            changeLogAndVersion.setGitVersion(version);
+        }
+        return changeLogAndVersion;
     }
 
     private ChangeLogVO convertToConfigVO(ChangeLogEntity entity) {
