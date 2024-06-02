@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptListDTO;
@@ -22,7 +21,7 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/26
  */
-@Tag(name = "Dept API")
+@Tag(name = "部门员工")
 @RequestMapping("dept")
 @RestController
 public class DeptController {

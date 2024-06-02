@@ -20,7 +20,7 @@ import java.util.List;
  * @author dqcer
  * @since 2024/05/13
  */
-@Tag(name = "Role Data Scope API")
+@Tag(name = "角色数据权限")
 @RestController
 public class RoleDataScopeController {
 

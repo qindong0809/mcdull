@@ -17,7 +17,7 @@ import javax.validation.Valid;
  *
  * @author dqcer
  */
-@Tag(name = "Table Column")
+@Tag(name = "个性化表格列设置")
 @RestController
 public class TableColumnController extends BasicController {
 
