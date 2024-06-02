@@ -170,10 +170,11 @@ public class ServerMonitorServiceImpl implements IServerMonitorService {
         long time = ManagementFactory.getRuntimeMXBean().getStartTime();
         Date date = new Date(time);
         // 计算项目运行时间
-        String formatBetween = DateUtil.formatBetween(date, new Date(), Level.HOUR);
+        String formatBetween = DateUtil.formatBetween(date, new Date(), Level.SECOND);
         // 系统信息
         systemInfo.put("os", os.toString());
         systemInfo.put("day", formatBetween);
+        // FIXME: 2024/6/2 
 //        systemInfo.put("ip", NetUtil.localIps().toString());
         systemInfo.put("ip", "127.0.0.1");
 
