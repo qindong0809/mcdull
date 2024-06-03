@@ -1,15 +1,13 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.UserBO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,6 +18,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 public class LogonVO extends UserBO implements VO {
 
     @Schema(description = "token")

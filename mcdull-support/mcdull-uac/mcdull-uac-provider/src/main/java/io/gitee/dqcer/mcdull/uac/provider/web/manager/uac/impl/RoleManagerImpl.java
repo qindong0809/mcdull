@@ -34,11 +34,6 @@ public class RoleManagerImpl implements IRoleManager {
         if (vo == null) {
             return null;
         }
-//        vo.setCreatedByStr(userRepository.getById(entity.getCreatedBy()).getNickName());
-//        Integer updatedBy = entity.getUpdatedBy();
-//        if (updatedBy != null) {
-//            vo.setUpdatedByStr(userRepository.getById(updatedBy).getNickName());
-//        }
         return vo;
     }
 }

@@ -1,18 +1,19 @@
 package io.gitee.dqcer.mcdull.uac.provider.config;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.Resource;
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.uac.provider.util.Ip2RegionUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.context.logging.LoggingApplicationListener;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * 初初始化ip工具类
@@ -42,19 +43,21 @@ public class Ip2RegionListener implements ApplicationListener<ApplicationEnviron
             logDirectoryFile.mkdirs();
         }
 
-        String tempFilePath = null;
-        if (logDirectoryPath.endsWith("/")) {
+        String tempFilePath;
+        if (logDirectoryPath.endsWith(StrUtil.SLASH) || logDirectoryPath.endsWith(StrUtil.BACKSLASH)) {
             tempFilePath = logDirectoryPath + IP_FILE_NAME;
         } else {
-            tempFilePath = logDirectoryPath + "/" + IP_FILE_NAME;
+            tempFilePath = logDirectoryPath + File.separator + IP_FILE_NAME;
         }
 
         File tempFile = new File(tempFilePath);
         try {
-            FileUtils.copyInputStreamToFile(new ClassPathResource(IP_FILE_NAME).getInputStream(), tempFile);
+            Resource resourceObj = ResourceUtil.getResourceObj(IP_FILE_NAME);
+            resourceObj.readBytes();
+            FileUtil.writeBytes(resourceObj.readBytes(), tempFile);
             Ip2RegionUtil.init(tempFilePath);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             LogHelp.error(log, "无法复制ip数据文件 ip2region.xdb", e);
             throw new ExceptionInInitializerError("无法复制ip数据文件");
         } finally {

@@ -43,7 +43,6 @@ public class EnterpriseAddDTO {
 
     @Schema(description = "联系人电话")
     @NotBlank(message = "联系人电话不能为空")
-//    @Pattern(regexp = SmartVerificationUtil.PHONE_REGEXP, message = "手机号格式不正确")
     private String contactPhone;
 
     @SchemaEnum(desc = "类型", value = EnterpriseTypeEnum.class)

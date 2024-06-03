@@ -7,6 +7,7 @@ import io.gitee.dqcer.mcdull.framework.web.config.*;
 import io.gitee.dqcer.mcdull.framework.web.jmx.RedisJmxAdapter;
 import io.gitee.dqcer.mcdull.framework.web.jmx.ThreadPoolJmxAdapter;
 import io.gitee.dqcer.mcdull.framework.web.transform.SpringContextHolder;
+import io.gitee.dqcer.mcdull.framework.web.version.VersionInfoImplComponent;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
@@ -35,7 +36,8 @@ import java.lang.annotation.Target;
         I18nConfig.class,
         RedisJmxAdapter.class,
         ThreadPoolJmxAdapter.class,
-        SystemEnvironmentConfig.class
+        SystemEnvironmentConfig.class,
+        VersionInfoImplComponent.class
 })
 public @interface EnableWebCore {
 }

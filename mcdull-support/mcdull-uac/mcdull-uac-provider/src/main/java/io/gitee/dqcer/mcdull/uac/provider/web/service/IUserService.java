@@ -71,4 +71,6 @@ public interface IUserService {
     List<UserEntity> listByDeptList(List<Integer> deptIdList);
 
     List<UserEntity> getLike(String userName);
+
+    void updateLoginTime(Integer id);
 }

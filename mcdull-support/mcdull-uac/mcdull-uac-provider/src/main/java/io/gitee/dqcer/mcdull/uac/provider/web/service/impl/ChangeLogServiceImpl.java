@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.version.IVersionInfoComponent;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogUpdateDTO;
@@ -15,7 +16,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogAndVersionVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IChangeLogRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IChangeLogService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IVersionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +32,7 @@ import java.util.List;
 public class ChangeLogServiceImpl extends BasicServiceImpl<IChangeLogRepository> implements IChangeLogService {
 
     @Resource
-    private IVersionService versionService;
+    private IVersionInfoComponent versionInfoComponent;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -105,8 +105,8 @@ public class ChangeLogServiceImpl extends BasicServiceImpl<IChangeLogRepository>
             voList.sort((o1, o2) -> o2.getPublicDate().compareTo(o1.getPublicDate()));
             changeLogAndVersion.setList(voList);
         }
-        changeLogAndVersion.setGitVersion(versionService.getGitCurrentCommitInfo());
-        changeLogAndVersion.setJarVersion(versionService.getJarCurrentBuildInfo());
+        changeLogAndVersion.setGitVersion(versionInfoComponent.getGitCurrentCommitInfo());
+        changeLogAndVersion.setJarVersion(versionInfoComponent.getJarCurrentBuildInfo());
         return changeLogAndVersion;
     }
 

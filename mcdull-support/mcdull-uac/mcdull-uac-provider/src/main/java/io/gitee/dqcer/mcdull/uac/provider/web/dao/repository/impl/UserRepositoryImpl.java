@@ -5,6 +5,8 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -15,6 +17,7 @@ import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleUserQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserListDTO;
@@ -23,6 +26,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.UserMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -100,6 +104,23 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
         UserEntity entity = new UserEntity();
         entity.setId(id);
         entity.setLoginPwd(password);
+
+        UserEntity userEntity = this.getById(id);
+        String usedPassword = userEntity.getUsedPassword();
+        List<String> passwordList = new ArrayList<>();
+        if (StrUtil.isNotBlank(usedPassword)) {
+            boolean isArray = JSONUtil.isTypeJSONArray(usedPassword);
+            if (isArray) {
+                JSONArray objects = JSONUtil.parseArray(usedPassword);
+                List<String> list = objects.toList(String.class);
+                list.add(password);
+                passwordList.addAll(list);
+            }
+        } else {
+            passwordList.add(password);
+        }
+        entity.setUsedPassword(JSONUtil.toJsonStr(passwordList));
+        entity.setLastPasswordModifiedDate(UserContextHolder.getSession().getNow());
         return this.update(entity);
     }
 
@@ -112,7 +133,6 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
                     .or().like(UserEntity::getPhone, keyword)
             );
         }
-
         if (CollUtil.isNotEmpty(userIdList)) {
             query.in(IdEntity::getId, userIdList);
         }

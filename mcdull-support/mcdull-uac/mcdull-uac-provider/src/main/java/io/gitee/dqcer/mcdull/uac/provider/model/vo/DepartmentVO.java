@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 角色视图对象
@@ -12,6 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 public class DepartmentVO implements VO {
 
     private Integer departmentId;

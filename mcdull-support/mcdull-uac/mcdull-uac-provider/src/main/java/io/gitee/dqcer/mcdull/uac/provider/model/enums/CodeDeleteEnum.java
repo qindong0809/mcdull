@@ -8,8 +8,19 @@ import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
  */
 public enum CodeDeleteEnum implements IEnum<String> {
 
+    /**
+     * 单个删除
+     */
     SINGLE("Single", "单个删除"),
+
+    /**
+     * 批量删除
+     */
     BATCH("Batch", "批量删除"),
+
+    /**
+     * 单个和批量删除
+     */
     SINGLE_AND_BATCH("SingleAndBatch", "单个和批量删除");
 
 
@@ -18,16 +29,7 @@ public enum CodeDeleteEnum implements IEnum<String> {
     }
 
     public static CodeDeleteEnum toEnum(String code) {
-        switch (code) {
-            case "Single":
-                return CodeDeleteEnum.SINGLE;
-            case "Batch":
-                return CodeDeleteEnum.BATCH;
-            case "SingleAndBatch":
-                return CodeDeleteEnum.SINGLE_AND_BATCH;
-            default:
-                throw new IllegalArgumentException("invalid value , only [Single, Batch, SingleAndBatch] is allowed");
-        }
+        return IEnum.getByCode(CodeDeleteEnum.class, code);
     }
 
 

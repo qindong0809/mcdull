@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Enumeration;
 
 /**
  * servlet 工具类
@@ -49,6 +50,19 @@ public class ServletUtil {
         response.setHeader("Content-disposition", "attachment;filename=" + fileName);
     }
 
+    public static String getUserAgent() {
+        HttpServletRequest request = getRequest();
+        String userAgent = null;
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String element = headerNames.nextElement();
+            if ("User-Agent".equalsIgnoreCase(element)) {
+                userAgent = request.getHeader(element);
+            }
+        }
+        return userAgent;
+    }
+
 
     public static void setDownloadFileHeader(HttpServletResponse response, String fileName, Long fileSize) {
         response.setCharacterEncoding("utf-8");
@@ -56,7 +70,6 @@ public class ServletUtil {
             if (fileSize != null) {
                 response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(fileSize));
             }
-
             if (StrUtil.isNotEmpty(fileName)) {
                 response.setHeader(HttpHeaders.CONTENT_TYPE,
                         MediaTypeFactory.getMediaType(fileName).orElse(MediaType.APPLICATION_OCTET_STREAM) + ";charset=utf-8");

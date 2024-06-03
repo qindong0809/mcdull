@@ -1,11 +1,11 @@
-package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
+package io.gitee.dqcer.mcdull.framework.web.version;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IVersionService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,16 +14,19 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 /**
+ * 版本信息
  *
  * @author dqcer
- * @since 2024/05/23
+ * @since 2024/06/03
  */
-@Slf4j
-@Service
-public class VersionServiceImpl implements IVersionService {
+@Component
+public class VersionInfoImplComponent implements IVersionInfoComponent {
 
-    public static final String GIT_PROPERTIES = "git.properties";
-    public static final String JAR_BUILD_PROPERTIES = "META-INF/build-info.properties";
+    private static final Logger log = LoggerFactory.getLogger(VersionInfoImplComponent.class);
+
+    private static final String GIT_PROPERTIES = "git.properties";
+
+    private static final String JAR_BUILD_PROPERTIES = "META-INF/build-info.properties";
 
     @Override
     public Properties getJarCurrentBuildInfo() {
@@ -60,7 +63,8 @@ public class VersionServiceImpl implements IVersionService {
         Properties gitProperties = new Properties();
         properties.forEach((k, v) -> {
             String key = (String) k;
-            if (key.startsWith("\"git.commit")) {
+            String prefix = "\"git.commit";
+            if (key.startsWith(prefix)) {
                 String value = (String) v;
                 value = replaceFirstAndLast(value);
                 key = replaceFirstAndLast(key);
@@ -71,7 +75,8 @@ public class VersionServiceImpl implements IVersionService {
     }
 
     private static String replaceFirstAndLast(String str) {
-        if (str.startsWith("\"")) {
+        String prefix = "\"";
+        if (str.startsWith(prefix)) {
             str = StrUtil.replaceFirst(str, "\"", "");
             str = StrUtil.replaceLast(str, "\"", "");
         }

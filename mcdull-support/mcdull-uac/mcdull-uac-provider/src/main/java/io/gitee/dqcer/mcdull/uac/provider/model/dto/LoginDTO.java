@@ -7,6 +7,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginDeviceEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
@@ -19,6 +20,7 @@ import javax.validation.constraints.NotBlank;
  */
 @Getter
 @Setter
+@ToString
 @Schema(name = "用户登录对象")
 public class LoginDTO implements DTO {
 

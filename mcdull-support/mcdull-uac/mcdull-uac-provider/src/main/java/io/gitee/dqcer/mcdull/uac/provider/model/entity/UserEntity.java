@@ -5,6 +5,8 @@ import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 /**
  * 系统用户实体
  *
@@ -29,6 +31,12 @@ public class UserEntity extends BaseEntity<Integer> {
     private Integer departmentId;
 
     private Boolean administratorFlag;
+
+    private Date lastLoginTime;
+
+    private Date lastPasswordModifiedDate;
+
+    private String usedPassword;
 
     private String remark;
 }

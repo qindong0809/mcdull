@@ -27,7 +27,6 @@
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.1.55</version>
         </dependency>
         <dependency>
             <groupId>com.github.oshi</groupId>
@@ -70,11 +69,6 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>20.0</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.15.0</version>
         </dependency>
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
@@ -133,7 +127,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.6.6</version>
             </plugin>
             <plugin>
                 <groupId>io.github.git-commit-id</groupId>

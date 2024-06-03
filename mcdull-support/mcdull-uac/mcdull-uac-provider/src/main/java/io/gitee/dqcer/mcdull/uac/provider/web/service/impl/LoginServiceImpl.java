@@ -11,6 +11,7 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
@@ -20,13 +21,13 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginDeviceEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.PasswordPolicyVO;
 import io.gitee.dqcer.mcdull.uac.provider.util.Ip2RegionUtil;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,15 +53,22 @@ public class LoginServiceImpl implements ILoginService {
     @Resource
     private ILoginLogService loginLogService;
 
+    @Resource
+    private IPasswordPolicyService passwordPolicyService;
+
+    @Resource
+    private CacheChannel cacheChannel;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public LogonVO login(LoginDTO dto) {
         String message = null;
+        UserEntity userEntity = null;
         LoginLogResultTypeEnum typeEnum = LoginLogResultTypeEnum.LOGIN_SUCCESS;
         try {
             this.validateCaptcha(dto.getCaptchaCode(), dto.getCaptchaUuid());
             // 登录前置校验
-            UserEntity userEntity = this.loginPreCheck(dto.getLoginName(), dto.getPassword());
+            userEntity = this.loginPreCheck(dto.getLoginName(), dto.getPassword());
             StpUtil.login(userEntity.getId(), IEnum.getByCode(LoginDeviceEnum.class, dto.getLoginDevice()).getText());
             StpUtil.getSession().set(GlobalConstant.ADMINISTRATOR_FLAG, userEntity.getAdministratorFlag());
             return this.buildLogonVo(userEntity);
@@ -70,6 +78,28 @@ public class LoginServiceImpl implements ILoginService {
             throw e;
         } finally {
             this.saveLoginLog(dto.getLoginName(), typeEnum, message);
+            this.passwordPolicyHandle(dto, typeEnum, userEntity);
+        }
+    }
+
+    private void passwordPolicyHandle(LoginDTO dto, LoginLogResultTypeEnum typeEnum, UserEntity userEntity) {
+        String failKey = StrUtil.format("user_login_fail:{}", dto.getLoginName());
+
+        if (LoginLogResultTypeEnum.LOGIN_FAIL == typeEnum) {
+            PasswordPolicyVO policyVO = passwordPolicyService.detail();
+
+            Integer failCount = cacheChannel.get(failKey, Integer.class);
+            if (ObjUtil.isNull(failCount)) {
+                failCount = 0;
+            }
+            if (failCount > policyVO.getFailedLoginMaximumNumber()) {
+                throw new BusinessException("登录失败次数超过限制");
+            }
+            cacheChannel.put(failKey, failCount + 1, policyVO.getFailedLoginMaximumTime() * 60);
+        }
+        if (LoginLogResultTypeEnum.LOGIN_SUCCESS == typeEnum) {
+            cacheChannel.evict(failKey);
+            userService.updateLoginTime(userEntity.getId());
         }
     }
 
@@ -80,22 +110,9 @@ public class LoginServiceImpl implements ILoginService {
         log.setLoginIp(ipAddr);
         log.setLoginIpRegion(Ip2RegionUtil.getRegion(ipAddr));
         log.setLoginResult(resultTypeEnum.getCode());
-        log.setUserAgent(getUserAgent());
+        log.setUserAgent(ServletUtil.getUserAgent());
         log.setRemark(remark);
         loginLogService.add(log);
-    }
-
-    private static String getUserAgent() {
-        HttpServletRequest request = ServletUtil.getRequest();
-        String userAgent = null;
-        Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String element = headerNames.nextElement();
-            if ("User-Agent".equalsIgnoreCase(element)) {
-                userAgent = request.getHeader(element);
-            }
-        }
-        return userAgent;
     }
 
     private LogonVO buildLogonVo(UserEntity userEntity) {
@@ -103,16 +120,11 @@ public class LoginServiceImpl implements ILoginService {
         logonVO.setToken(StpUtil.getTokenValue());
         logonVO.setEmployeeId(userEntity.getId());
         logonVO.setLoginName(userEntity.getLoginName());
-//        logonVO.setUserType(userEntity.getUserType());
         logonVO.setActualName(userEntity.getActualName());
         logonVO.setDepartmentId(userEntity.getDepartmentId());
-//        logonVO.setDepartmentName(userEntity.getDepartmentName());
         logonVO.setAdministratorFlag(userEntity.getAdministratorFlag());
         logonVO.setGender(userEntity.getGender());
         logonVO.setPhone(userEntity.getPhone());
-//        logonVO.setIp(UserContextHolder.currentIp());
-//        logonVO.setUserAgent(UserContextHolder.currentUserAgent());
-//        logonVO.setLastLoginIp(userEntity.getLastLoginIp());
         logonVO.setMenuList(menuService.getList(userEntity.getId(), userEntity.getAdministratorFlag()));
        return logonVO;
     }

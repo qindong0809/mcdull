@@ -4,6 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Size;
@@ -17,6 +18,7 @@ import java.util.List;
 */
 @Setter
 @Getter
+@ToString
 public class UserListDTO extends PagedDTO {
 
     private static final long serialVersionUID = 1L;

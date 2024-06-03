@@ -11,6 +11,9 @@ import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
  */
 public enum ChangeLogTypeEnum implements IEnum<Integer> {
 
+    /**
+     * 重大更新
+     */
     MAJOR_UPDATE(1, "重大更新"),
 
     /**

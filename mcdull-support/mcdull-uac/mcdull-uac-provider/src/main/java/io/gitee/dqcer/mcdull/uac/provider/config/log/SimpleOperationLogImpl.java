@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
  * @since 2023/01/15 15:01:22
  */
 @Component
-public class SimpleOperationLogsAspect implements OperationLogsService {
+public class SimpleOperationLogImpl implements OperationLogsService {
 
     @Resource
     private OperationLogAsyncEvent asyncEvent;

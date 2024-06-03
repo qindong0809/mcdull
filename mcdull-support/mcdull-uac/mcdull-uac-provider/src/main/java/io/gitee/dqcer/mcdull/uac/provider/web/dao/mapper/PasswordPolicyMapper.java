@@ -1,12 +1,12 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.OaEnterpriseEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.PasswordPolicyEntity;
 
 /**
  * @author dqcer
  * @since 2024-04-29
  */
-public interface OaEnterpriseMapper extends BaseMapper<OaEnterpriseEntity> {
+public interface PasswordPolicyMapper extends BaseMapper<PasswordPolicyEntity> {
 
 }

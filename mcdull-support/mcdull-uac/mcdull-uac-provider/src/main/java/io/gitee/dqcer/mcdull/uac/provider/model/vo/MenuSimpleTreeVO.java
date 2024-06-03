@@ -6,8 +6,10 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * 简易的菜单VO
+ * 菜单VO
  *
+ * @author dqcer
+ * @since 2024/06/03
  */
 @Data
 public class MenuSimpleTreeVO {

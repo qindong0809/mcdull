@@ -15,6 +15,7 @@ import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
@@ -135,13 +136,6 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
     private void setUserFieldValue(Map<Integer, UserEntity> userMap, UserVO vo) {
         Integer createdBy = vo.getCreatedBy();
-//        if (ObjUtil.isNotNull(createdBy)) {
-//            vo.setCreatedByStr(userMap.getOrDefault(createdBy, new UserEntity()).getUsername());
-//        }
-//        Integer updatedBy = vo.getUpdatedBy();
-//        if (ObjUtil.isNotNull(updatedBy)) {
-//            vo.setUpdatedByStr(userMap.getOrDefault(updatedBy, new UserEntity()).getUsername());
-//        }
     }
 
     @Override
@@ -323,7 +317,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     @Override
     public String resetPassword(Integer userId) {
         String newPassword = RandomUtil.genAz09(5);
-        baseRepository.update(userId, newPassword);
+        baseRepository.update(userId, this.buildPassword(newPassword));
         return newPassword;
     }
 
@@ -406,11 +400,10 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         }
         List<Integer> userIdList = userList.stream().map(IdEntity::getId).collect(Collectors.toList());
         Map<Integer, List<RoleEntity>> roleListMap = roleService.getRoleMap(userIdList);
-
-
         Set<Integer> depIdSet = userList.stream().map(UserEntity::getDepartmentId).collect(Collectors.toSet());
         List<DepartmentEntity> departmentEntities = departmentRepository.listByIds(depIdSet);
-        Map<Integer, DepartmentEntity> deptMap = departmentEntities.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+        Map<Integer, DepartmentEntity> deptMap = departmentEntities.stream()
+                .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
 
         for (UserEntity entity : userList) {
             UserVO vo = UserConvert.entityToVO(entity);
@@ -459,6 +452,14 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
     @Override
     public List<UserEntity> getLike(String userName) {
         return baseRepository.like(userName);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateLoginTime(Integer id) {
+        UserEntity entity = (UserEntity) this.checkDataExistById(id);
+        entity.setLastLoginTime(UserContextHolder.getSession().getNow());
+        baseRepository.updateById(entity);
     }
 
     private List<UserEntity> list(List<Integer> userIdList) {

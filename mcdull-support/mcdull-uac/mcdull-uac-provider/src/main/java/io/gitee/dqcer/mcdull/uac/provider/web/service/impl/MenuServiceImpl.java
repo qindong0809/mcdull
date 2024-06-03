@@ -8,7 +8,6 @@ import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
@@ -249,53 +248,6 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
             if (CollUtil.isNotEmpty(childVOList)) {
                 routerVO.setChildren(childVOList);
             }
-        }
-        return routerVO;
-    }
-
-
-    public List<RouterVO> convert(List<Tree<Integer>> treeList) {
-        if (CollUtil.isEmpty(treeList)) {
-            return Collections.emptyList();
-        }
-        List<RouterVO> list = new ArrayList<>();
-        for (Tree<Integer> tree : treeList) {
-            RouterVO vo = this.convert(tree);
-            if (ObjUtil.isNotNull(vo)) {
-                list.add(vo);
-            }
-        }
-        return list;
-    }
-
-    private RouterVO convert(Tree<Integer> tree) {
-        if (ObjUtil.isNull(tree)) {
-            return null;
-        }
-        RouterVO routerVO = new RouterVO();
-        routerVO.setName(String.valueOf(tree.getName()));
-        routerVO.setPath(Convert.toStr(tree.get("path")));
-        routerVO.setHidden(Convert.toBool(tree.get("hidden"), false));
-        routerVO.setComponent(Convert.toStr(tree.get("component")));
-        routerVO.setQuery(Convert.toStr(tree.get("query")));
-        String meta = Convert.toStr(tree.get("meta"));
-        if (StrUtil.isNotBlank(meta)) {
-            MetaVO metaVO = JSONUtil.toBean(meta, MetaVO.class);
-            routerVO.setMeta(metaVO);
-        }
-        List<Tree<Integer>> children = tree.getChildren();
-        if (CollUtil.isNotEmpty(children)) {
-            List<RouterVO> childVOList = new ArrayList<>();
-            for (Tree<Integer> childTree : children) {
-                RouterVO childVO = this.convert(childTree);
-                if (ObjUtil.isNotNull(childVO)) {
-                    childVOList.add(childVO);
-                }
-            }
-            routerVO.setChildren(childVOList);
-            routerVO.setAlwaysShow(true);
-            routerVO.setRedirect("noRedirect");
-
         }
         return routerVO;
     }

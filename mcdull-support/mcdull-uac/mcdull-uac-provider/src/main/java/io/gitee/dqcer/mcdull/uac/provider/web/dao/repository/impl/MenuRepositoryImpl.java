@@ -8,14 +8,11 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuLiteDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.MenuTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.MenuMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
@@ -34,21 +31,6 @@ import java.util.stream.Collectors;
 @Service
 public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuEntity> implements IMenuRepository {
 
-    /**
-     * 分页查询
-     *
-     * @param dto dto
-     * @return {@link Page}<{@link RoleEntity}>
-     */
-    @Override
-    public Page<MenuEntity> selectPage(MenuLiteDTO dto) {
-        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
-        String keyword = dto.getKeyword();
-        if (StrUtil.isNotBlank(keyword)) {
-            query.and(i-> i.like(MenuEntity::getMenuName, keyword));
-        }
-        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
-    }
 
     @Override
     public List<String> allCodeList() {

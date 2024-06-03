@@ -8,6 +8,9 @@ create table if not exists `sys_user` (
 `phone` varchar(15)  null default null comment '手机号码',
 `department_id` int(0) not null comment '部门id',
 `administrator_flag` tinyint(0) not null default 0 comment '是否为超级管理员: 0 不是，1是',
+`last_login_time` datetime default null comment '最近一次登录时间',
+`last_password_modified_date` datetime default null comment '最近一次修改密码时间',
+`used_password` varchar(5000) null default null comment '密码历史记录',
 `remark` varchar(200)  null default null comment '备注',
 `created_by` int not null comment '创建人',
 `created_time` datetime not null comment '创建时间',
@@ -18,12 +21,12 @@ create table if not exists `sys_user` (
 primary key (`id`)
 )  comment='用户';
 
-insert into `sys_user` values(1, 'admin', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', 'Terry',   0, '13800000000', 1, 1, '超级管理员', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(2, 'dev',  'a29c57c6894dee6e8251510d58c07078ee3f49bf', '王大锤',      0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(3, 'test', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '王强',      0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(4, 'zhaoming', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '赵敏',      0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(5, 'qiangang', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '钱刚',      0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(6, 'sunli', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '孙丽',      0, '13800000000', 1, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(1, 'admin', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', 'Terry',   0, '13800000000', 1, 1, null, null, null, '超级管理员', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(2, 'dev',  'a29c57c6894dee6e8251510d58c07078ee3f49bf', '王大锤',      0, '13800000000', 1, 0, null, null, null, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(3, 'test', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '王强',      0, '13800000000', 1, 0, null, null, null,'普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(4, 'zhaoming', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '赵敏',      0, '13800000000', 1, null, null, null, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(5, 'qiangang', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '钱刚',      0, '13800000000', 1, null, null, null, 0, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(6, 'sunli', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '孙丽',      0, '13800000000', 1, 0, null, null, null, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
 
 drop table if exists `sys_role`;
 create table `sys_role`  (
@@ -632,3 +635,18 @@ create table `sys_serial_number_record`  (
 `updated_time` datetime default null comment '更新时间',
 primary key (`id`) using btree
 ) comment = 'serial_number记录表';
+
+
+drop table if exists `sys_password_policy`;
+create table `sys_password_policy`  (
+`id` int not null auto_increment comment '主键',
+`repeatable_password_number` int not null comment '与旧密码重复次数',
+`failed_login_maximum_number` int not null comment '登录失败最大次数',
+`failed_login_maximum_time` int not null comment '登录失败的时间（minute）',
+`password_expired_period` int not null comment '密码过期时间（day）',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree
+) comment = '密码配置';
+insert into `sys_password_policy` values (1, 3, 5, 10, 30, 0, sysdate(), sysdate());

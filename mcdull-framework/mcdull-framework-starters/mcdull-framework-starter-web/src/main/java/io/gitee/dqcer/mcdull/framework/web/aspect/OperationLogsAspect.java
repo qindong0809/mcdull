@@ -72,7 +72,7 @@ public class OperationLogsAspect {
         }
 
         long startTime = System.currentTimeMillis();
-        Boolean successFlag = true;
+        boolean successFlag = true;
         try {
             return joinPoint.proceed();
         } catch (Exception e) {
@@ -128,7 +128,7 @@ public class OperationLogsAspect {
         LogOperationDTO entity = new LogOperationDTO();
         entity.setUserId(UserContextHolder.userId());
         entity.setClientIp(IpUtil.getIpAddr(request));
-        entity.setUserAgent(getUserAgent(request));
+        entity.setUserAgent(ServletUtil.getUserAgent());
         entity.setHeaders(JSONUtil.toJsonStr(headers));
         entity.setParameterMap(JSONUtil.toJsonStr(params));
         entity.setPath(request.getRequestURI());
@@ -139,25 +139,13 @@ public class OperationLogsAspect {
         return entity;
     }
 
-    private static String getUserAgent(HttpServletRequest request) {
-        String userAgent = null;
-        Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String element = headerNames.nextElement();
-            if ("User-Agent".equalsIgnoreCase(element)) {
-                userAgent = request.getHeader(element);
-            }
-        }
-        return userAgent;
-    }
-
 
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
     public static final List<String> PATH_LIST = new ArrayList<>();
 
     static {
-        PATH_LIST.add(GlobalConstant.INNER_API + "/**");
+        PATH_LIST.add(GlobalConstant.INNER_API + GlobalConstant.ALL_PATTERNS);
     }
 
 

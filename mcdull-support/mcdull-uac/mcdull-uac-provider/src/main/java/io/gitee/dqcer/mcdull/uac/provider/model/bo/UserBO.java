@@ -7,6 +7,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.enums.UserTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 用户bo
@@ -16,6 +17,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
+@ToString
 public class UserBO implements BO {
 
     @Schema(description = "员工id")
