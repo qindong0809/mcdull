@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mcdull-bussiness</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.1.1-RELEASE</version>
+        <version>0.1.2-RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-uac-provider</artifactId>
-            <version>0.1.1-RELEASE</version>
+            <version>0.1.2-RELEASE</version>
         </dependency>
     </dependencies>
 

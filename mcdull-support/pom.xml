@@ -13,11 +13,11 @@
     <parent>
         <artifactId>mcdull</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.1.1-RELEASE</version>
+        <version>0.1.2-RELEASE</version>
     </parent>
 
     <artifactId>mcdull-support</artifactId>
-    <version>0.1.1-RELEASE</version>
+    <version>0.1.2-RELEASE</version>
     <name>mcdull-support</name>
     <packaging>pom</packaging>
 
@@ -29,7 +29,7 @@
             <dependency>
                 <groupId>io.gitee.dqcer</groupId>
                 <artifactId>mcdull-framework-dependencies</artifactId>
-                <version>0.1.1-RELEASE</version>
+                <version>0.1.2-RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
