@@ -17,6 +17,8 @@ public class FeedbackEntity extends RelEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 
+    private String code;
+
     private String feedbackContent;
 
     private String feedbackAttachment;

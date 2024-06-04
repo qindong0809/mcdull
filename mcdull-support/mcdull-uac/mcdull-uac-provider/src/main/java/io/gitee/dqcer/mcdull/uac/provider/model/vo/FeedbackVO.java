@@ -20,6 +20,9 @@ public class FeedbackVO {
     @Schema(description = "主键")
     private Integer feedbackId;
 
+    @Schema(description = "编号")
+    private String code;
+
     @Schema(description = "反馈内容")
     private String feedbackContent;
 

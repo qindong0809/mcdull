@@ -434,6 +434,7 @@ insert into `sys_change_log` values (3, 'v1.0.2', 3, '王大锤', sysdate(), 'v1
 drop table if exists `sys_feedback`;
 create table `sys_feedback`  (
 `id` int not null auto_increment comment '主键',
+`code` varchar(512)  not null comment '编号',
 `feedback_content` text  null comment '反馈内容',
 `feedback_attachment` varchar(500)  null default null comment '反馈图片',
 `user_id` int not null comment '创建人id',
@@ -603,24 +604,15 @@ create table `sys_serial_number`  (
 `id` int not null auto_increment comment '主键',
 `business_type` int not null comment '业务类型1/意见反馈 2/',
 `format` varchar(50) null default null comment '格式[yyyy]表示年,[mm]标识月,[dd]表示日,[nnn]表示三位数字',
-`rule_type` varchar(20) not null comment '规则格式。none没有周期, year 年周期, month月周期, day日周期',
-`init_number` int not null comment '初始值',
 `step_random_range` int not null comment '步长随机数',
 `remark` varchar(255) null default null comment '备注',
-`last_number` int null default null comment '上次产生的单号, 默认为空',
-`last_time` datetime(0) null default null comment '上次产生的单号时间',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
 primary key (`id`) using btree
 )comment = '单号生成器定义表';
 
--- ----------------------------
--- records of t_serial_number
--- ----------------------------
-insert into `sys_serial_number` values (1, 1, 'dk{yyyy}{mm}{dd}no{nnnnn}', 'day', 1000, 10, 'dk20201101no321', 1, sysdate(),  0, sysdate(), sysdate());
-insert into `sys_serial_number` values (2, 2, 'ht{yyyy}{mm}{dd}{nnnnn}-cx', 'none', 1, 1, '', 8, sysdate(),  0, sysdate(), sysdate());
-
+insert into `sys_serial_number` values (1, 1, 'FDBK.{yyyy}{mm}{dd}{nnnnn}', 1, 'FDBK.20201101321',  0, sysdate(), sysdate());
 
 drop table if exists `sys_serial_number_record`;
 create table `sys_serial_number_record`  (

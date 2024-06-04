@@ -10,11 +10,13 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FeedbackAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FeedbackQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.SerialNumberGenerateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FeedbackEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FeedbackVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFeedbackRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFeedbackService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.ISerialNumberService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,9 @@ public class FeedbackServiceImpl
     @Resource
     private IUserService userService;
 
+    @Resource
+    private ISerialNumberService serialNumberService;
+
     @Override
     public PagedVO<FeedbackVO> query(FeedbackQueryDTO dto) {
         Page<FeedbackEntity> entityPage = baseRepository.selectPage(dto);
@@ -62,6 +67,7 @@ public class FeedbackServiceImpl
     private FeedbackVO convertToConfigVO(FeedbackEntity entity) {
         FeedbackVO feedbackVO = new FeedbackVO();
         feedbackVO.setFeedbackId(entity.getId());
+        feedbackVO.setCode(entity.getCode());
         feedbackVO.setFeedbackContent(entity.getFeedbackContent());
         feedbackVO.setFeedbackAttachment(entity.getFeedbackAttachment());
         feedbackVO.setUserId(entity.getUserId());
@@ -74,6 +80,11 @@ public class FeedbackServiceImpl
     public void add(FeedbackAddDTO dto) {
         FeedbackEntity entity = this.convertToEntity(dto);
         entity.setUserId(UserContextHolder.userId());
+        SerialNumberGenerateDTO serialNumberGenerateDTO = new SerialNumberGenerateDTO();
+        serialNumberGenerateDTO.setCount(1);
+        serialNumberGenerateDTO.setSerialNumberId(1);
+        List<String> list = serialNumberService.generate(serialNumberGenerateDTO);
+        entity.setCode(list.get(0));
         baseRepository.insert(entity);
     }
 

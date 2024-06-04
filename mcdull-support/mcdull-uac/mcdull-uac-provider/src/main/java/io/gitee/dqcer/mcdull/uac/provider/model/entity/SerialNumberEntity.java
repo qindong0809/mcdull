@@ -5,8 +5,6 @@ import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
 /**
  * sys_serial_number
  *
@@ -24,15 +22,8 @@ public class SerialNumberEntity extends RelEntity<Integer> {
 
     private String format;
 
-    private String ruleType;
-
-    private Integer initNumber;
-
     private Integer stepRandomRange;
 
     private String remark;
 
-    private Integer lastNumber;
-
-    private Date lastTime;
 }

@@ -93,7 +93,7 @@ public class SerialNumberServiceImpl
                 int resultNumber = lastNumber + stepRandomRange;
                 resultList.add(resultNumber);
                 String pre = StrUtil.padPre(Convert.toStr(resultNumber), endIndex - startIndex, "0");
-                String oneFormat = StrUtil.replace(format, numberFormat, pre);
+                String oneFormat = StrUtil.replace(format, StrUtil.format("{{}}", numberFormat), pre);
                 formatList.add(oneFormat);
             }
         }
@@ -113,12 +113,8 @@ public class SerialNumberServiceImpl
         serialNumberVO.setSerialNumberId(entity.getId());
         serialNumberVO.setBusinessType(entity.getBusinessType());
         serialNumberVO.setFormat(entity.getFormat());
-        serialNumberVO.setRuleType(entity.getRuleType());
-        serialNumberVO.setInitNumber(entity.getInitNumber());
         serialNumberVO.setStepRandomRange(entity.getStepRandomRange());
         serialNumberVO.setRemark(entity.getRemark());
-        serialNumberVO.setLastNumber(entity.getLastNumber());
-        serialNumberVO.setLastTime(entity.getLastTime());
         return serialNumberVO;
     }
 }
