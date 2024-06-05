@@ -23,7 +23,7 @@ public class ServerMonitorController {
 
     @Operation(summary = "查询服务监控")
     @GetMapping("/monitor/server")
-    @SaCheckPermission("system:monitor:server")
+    @SaCheckPermission("system:monitor_server:read")
     public Result<Map<String, Object>> queryMonitor(){
         return Result.success(serviceMonitorService.getServers());
     }

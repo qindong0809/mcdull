@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 */
 @RestController
 @RequestMapping("/database/git")
-public class GitController implements BasicController {
+public class GitController extends BasicController {
 
     @Resource
     private IGitService GitService;

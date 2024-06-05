@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
@@ -44,6 +45,7 @@ public class CodeGeneratorConfigController {
     @Operation(summary = "查询数据库表")
     @PostMapping("/codeGenerator/table/queryTableList")
     @ResponseBody
+    @SaCheckPermission("support:code_generator:read")
     public Result<PagedVO<TableVO>> queryTableList(@RequestBody @Valid TableQueryForm tableQueryForm) {
         return Result.success(codeGeneratorService.queryTableList(tableQueryForm));
     }
@@ -60,6 +62,7 @@ public class CodeGeneratorConfigController {
     @Operation(summary = "更新配置")
     @PostMapping("/codeGenerator/table/updateConfig")
     @ResponseBody
+    @SaCheckPermission("support:code_generator:write")
     public Result<Boolean> updateConfig(@RequestBody @Valid CodeGeneratorConfigForm form) {
         codeGeneratorService.updateConfig(form);
         return Result.success(true);
@@ -70,11 +73,13 @@ public class CodeGeneratorConfigController {
     @Operation(summary = "预览")
     @PostMapping("/codeGenerator/code/preview")
     @ResponseBody
+    @SaCheckPermission("support:code_generator:write")
     public Result<String> preview(@RequestBody @Valid CodeGeneratorPreviewForm form) {
         return Result.success(codeGeneratorService.preview(form));
     }
 
     @Operation(summary = "下载")
+    @SaCheckPermission("support:code_generator:write")
     @GetMapping(value = "/codeGenerator/code/download/{tableName}", produces = "application/octet-stream")
     public void download(@PathVariable String tableName, HttpServletResponse response) throws IOException {
         byte[] dataStream = codeGeneratorService.download(tableName);

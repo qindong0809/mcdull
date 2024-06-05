@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
  */
 @RestController
 @RequestMapping("/common")
-public class FileController implements BasicController {
+public class FileController extends BasicController {
 
 
     @Resource

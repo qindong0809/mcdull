@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping("system/dict/type")
 @RestController
 @Validated
-public class DictTypeController implements BasicController {
+public class DictTypeController extends BasicController {
 
     @Resource
     private IDictTypeService dictTypeService;

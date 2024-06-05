@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.framework.web.basic;
 
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -16,6 +17,7 @@ import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLockedEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginDeviceEnum;
@@ -59,6 +61,9 @@ public class LoginServiceImpl implements ILoginService {
     @Resource
     private CacheChannel cacheChannel;
 
+    @Resource
+    private ILoginLockedService loginLockedService;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public LogonVO login(LoginDTO dto) {
@@ -78,11 +83,11 @@ public class LoginServiceImpl implements ILoginService {
             throw e;
         } finally {
             this.saveLoginLog(dto.getLoginName(), typeEnum, message);
-            this.passwordPolicyHandle(dto, typeEnum, userEntity);
+            this.passwordPolicyHandle(dto, typeEnum, userEntity, dto.getLoginName());
         }
     }
 
-    private void passwordPolicyHandle(LoginDTO dto, LoginLogResultTypeEnum typeEnum, UserEntity userEntity) {
+    private void passwordPolicyHandle(LoginDTO dto, LoginLogResultTypeEnum typeEnum, UserEntity userEntity, String loginName) {
         String failKey = StrUtil.format("user_login_fail:{}", dto.getLoginName());
 
         if (LoginLogResultTypeEnum.LOGIN_FAIL == typeEnum) {
@@ -93,7 +98,8 @@ public class LoginServiceImpl implements ILoginService {
                 failCount = 0;
             }
             if (failCount > policyVO.getFailedLoginMaximumNumber()) {
-                throw new BusinessException("登录失败次数超过限制");
+                loginLockedService.lock(loginName, policyVO.getFailedLoginMaximumTime());
+                throw new BusinessException("user.account.locked");
             }
             cacheChannel.put(failKey, failCount + 1, policyVO.getFailedLoginMaximumTime() * 60);
         }
@@ -142,6 +148,15 @@ public class LoginServiceImpl implements ILoginService {
             if (isOk) {
                 if (Boolean.TRUE.equals(userEntity.getInactive())) {
                     throw new BusinessException("user.account.not.active");
+                }
+                LoginLockedEntity lockedEntity = loginLockedService.get(username);
+                if (ObjUtil.isNotNull(lockedEntity)) {
+                    if (BooleanUtil.isTrue(lockedEntity.getLockFlag())) {
+                        if (DateUtil.compare(lockedEntity.getLoginLockEndTime(), new Date()) > 0) {
+                            loginLockedService.updateFailCount(lockedEntity);
+                            throw new BusinessException("user.account.locked");
+                        }
+                    }
                 }
                 return userEntity;
             }
