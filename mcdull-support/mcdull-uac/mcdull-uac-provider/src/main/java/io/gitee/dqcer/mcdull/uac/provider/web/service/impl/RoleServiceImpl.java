@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -13,7 +12,6 @@ import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
-import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.RoleConvert;
@@ -221,6 +219,12 @@ public class RoleServiceImpl
     @Override
     public void updateRoleMenu(RoleMenuUpdateDTO dto) {
         roleMenuService.deleteAndInsert(dto.getRoleId(), dto.getMenuIdList());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void batchRemoveRoleEmployee(RoleEmployeeUpdateDTO dto) {
+        userRoleService.batchRemoveUserListByRole(dto.getRoleId(), dto.getEmployeeIdList());
     }
 
 }

@@ -42,4 +42,6 @@ public interface IRoleService {
     void updateRole(RoleUpdateDTO dto);
 
     void updateRoleMenu(RoleMenuUpdateDTO dto);
+
+    void batchRemoveRoleEmployee(RoleEmployeeUpdateDTO dto);
 }

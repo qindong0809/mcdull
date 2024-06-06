@@ -3,7 +3,6 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -37,7 +36,6 @@ import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserRoleService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -118,7 +116,7 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
             }
             deptIdList.add(departmentId);
         }
-        Page<UserEntity> entityPage = baseRepository.selectPage(dto, deptIdList);
+        Page<UserEntity> entityPage = baseRepository.selectPage(dto, deptIdList, null);
         List<UserVO> voList = new ArrayList<>();
         List<UserEntity> userList = entityPage.getRecords();
         if (entityPage.getTotal() == GlobalConstant.Number.NUMBER_0) {
@@ -465,6 +463,21 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         UserEntity entity = (UserEntity) this.checkDataExistById(id);
         entity.setLastLoginTime(UserContextHolder.getSession().getNow());
         baseRepository.updateById(entity);
+    }
+
+    @Override
+    public PagedVO<UserVO> pageByRoleId(Integer roleId, UserListDTO dto) {
+
+        List<Integer> userId = userRoleService.getUserId(roleId);
+
+        Page<UserEntity> entityPage = baseRepository.selectPage(dto, null, userId);
+        List<UserVO> voList = new ArrayList<>();
+        List<UserEntity> userList = entityPage.getRecords();
+        if (entityPage.getTotal() == GlobalConstant.Number.NUMBER_0) {
+            return PageUtil.toPage(voList, entityPage);
+        }
+        voList = getVoList(userList);
+        return PageUtil.toPage(voList, entityPage);
     }
 
     private List<UserEntity> list(List<Integer> userIdList) {

@@ -33,6 +33,7 @@ public class UserController {
     @Resource
     private IUserService userService;
 
+
     @Authorized("sys:user:view")
     @Operation(summary = "Query Page", description = "")
     @GetMapping("user/list")

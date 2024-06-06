@@ -14,4 +14,6 @@ public interface IUserRoleService {
     Map<Integer, List<Integer>> getRoleIdListMap(List<Integer> userIdList);
 
     List<Integer> getUserId(Integer roleId);
+
+    void batchRemoveUserListByRole(Integer roleId, List<Integer> userList);
 }

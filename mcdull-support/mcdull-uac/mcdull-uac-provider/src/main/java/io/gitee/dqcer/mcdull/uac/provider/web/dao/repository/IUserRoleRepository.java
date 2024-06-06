@@ -44,4 +44,6 @@ public interface IUserRoleRepository extends IService<RoleUserEntity> {
     void insert(List<Integer> userIdList, Integer roleId);
 
     List<RoleUserEntity> list(List<Integer> userIdList, Integer roleId);
+
+    void batchRemoveUserListByRole(Integer roleId, List<Integer> userList);
 }

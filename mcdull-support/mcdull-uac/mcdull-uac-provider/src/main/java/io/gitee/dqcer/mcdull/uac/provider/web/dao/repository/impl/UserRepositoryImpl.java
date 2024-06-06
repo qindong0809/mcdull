@@ -38,7 +38,8 @@ import java.util.List;
 public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> implements IUserRepository {
 
     @Override
-    public Page<UserEntity> selectPage(UserListDTO dto, List<Integer> deptIdList) {
+    public Page<UserEntity> selectPage(UserListDTO dto, List<Integer> deptIdList,
+                                       List<Integer> notContainsUserIdList) {
         LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
         String keyword = dto.getKeyword();
         if (StrUtil.isNotBlank(keyword)) {
@@ -49,6 +50,9 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
         }
         if (CollUtil.isNotEmpty(deptIdList)) {
             query.in(UserEntity::getDepartmentId, deptIdList);
+        }
+        if (CollUtil.isNotEmpty(notContainsUserIdList)) {
+            query.notIn(IdEntity::getId, notContainsUserIdList);
         }
         Boolean disabledFlag = dto.getDisabledFlag();
         if (ObjUtil.isNotNull(disabledFlag)) {

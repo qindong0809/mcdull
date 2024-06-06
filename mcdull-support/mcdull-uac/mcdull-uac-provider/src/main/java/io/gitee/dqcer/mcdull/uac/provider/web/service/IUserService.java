@@ -74,4 +74,5 @@ public interface IUserService {
 
     void updateLoginTime(Integer id);
 
+    PagedVO<UserVO> pageByRoleId(Integer roleId, UserListDTO dto);
 }

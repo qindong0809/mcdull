@@ -24,7 +24,7 @@ public interface IUserRepository extends IService<UserEntity> {
      * @param deptIdList
      * @return {@link Page}<{@link UserEntity}>
      */
-    Page<UserEntity> selectPage(UserListDTO dto, List<Integer> deptIdList);
+    Page<UserEntity> selectPage(UserListDTO dto, List<Integer> deptIdList, List<Integer> notContainsUserIdList);
 
     /**
      * 插入
