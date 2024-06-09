@@ -16,7 +16,7 @@
       <groupId>de.codecentric</groupId>
       <artifactId>spring-boot-admin-starter-client</artifactId>
     </dependency>
-    <!--springboot-admin: JMX-Bean Management-->
+    <!--springboot-admin: JMX-Bean Management 暴露http接口-->
     <dependency>
       <groupId>org.jolokia</groupId>
       <artifactId>jolokia-core</artifactId>

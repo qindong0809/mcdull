@@ -10,7 +10,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDepartmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +35,6 @@ public class DeptController {
         return Result.success(deptService.list(dto));
     }
 
-    @Cacheable(cacheNames = "caffeineCache", key = "'department-all'")
     @GetMapping("list-all")
     public Result<List<DepartmentVO>> getAll() {
         return Result.success(deptService.getAll());

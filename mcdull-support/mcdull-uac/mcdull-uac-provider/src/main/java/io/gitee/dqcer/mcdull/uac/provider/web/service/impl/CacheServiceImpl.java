@@ -82,9 +82,12 @@ public class CacheServiceImpl implements ICacheService {
     @Override
     public Object cacheKey(Boolean caffeineCacheFlag, String cacheName) {
         if (BooleanUtil.isTrue(caffeineCacheFlag)) {
-            CaffeineCache cache = (CaffeineCache) cacheManager.getCache(cacheName);
+            CaffeineCache cache = (CaffeineCache) cacheManager.getCache(GlobalConstant.CAFFEINE_CACHE);
             if (cache != null) {
-                return cache.get(cacheName);
+                Cache.ValueWrapper wrapper = cache.get(cacheName);
+                if (wrapper != null) {
+                    return wrapper.get();
+                }
             }
             return null;
         }

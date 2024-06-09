@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeUtil;
-import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
@@ -19,6 +18,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDepartmentService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +51,7 @@ public class DepartmentServiceImpl extends BasicServiceImpl<IDepartmentRepositor
         return list;
     }
 
+    @Cacheable(cacheNames = "caffeineCache", key = "'department-all'")
     @Override
     public List<DepartmentVO> getAll() {
         List<DepartmentVO> list = new ArrayList<>();
