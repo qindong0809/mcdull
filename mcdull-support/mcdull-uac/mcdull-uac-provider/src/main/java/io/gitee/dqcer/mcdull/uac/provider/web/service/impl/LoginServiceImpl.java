@@ -26,6 +26,9 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.PasswordPolicyVO;
 import io.gitee.dqcer.mcdull.uac.provider.util.Ip2RegionUtil;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
+import org.springframework.cache.Cache;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,6 +66,9 @@ public class LoginServiceImpl implements ILoginService {
 
     @Resource
     private ILoginLockedService loginLockedService;
+
+    @Resource
+    private CaffeineCacheManager cacheManager;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -199,6 +205,7 @@ public class LoginServiceImpl implements ILoginService {
     }
 
 
+    @Cacheable(cacheNames = "getRoleList", key = "#userId")
     @Override
     public List<String> getRoleList(Integer userId) {
         List<UserPowerVO> userPowerVOList = userService.getResourceModuleList(userId);
@@ -212,10 +219,21 @@ public class LoginServiceImpl implements ILoginService {
     @Override
     public LogonVO getCurrentUserInfo() {
         Integer userId = UserContextHolder.userId();
+        String key = StrUtil.format("current:user:{}:role:list", userId);
+        Cache cache = cacheManager.getCache(GlobalConstant.CAFFEINE_CACHE);
+        if (ObjUtil.isNotNull(cache)) {
+            LogonVO vo = cache.get(key, LogonVO.class);
+            if (ObjUtil.isNotNull(vo)) {
+                return vo;
+            }
+        }
         UserEntity userEntity = userService.get(userId);
         if (ObjUtil.isNotNull(userEntity)) {
             LogonVO vo = this.buildLogonVo(userEntity);
             vo.setToken(StpUtil.getTokenValue());
+            if (ObjUtil.isNotNull(cache)) {
+                cache.put(key, vo);
+            }
             return vo;
         }
         return null;

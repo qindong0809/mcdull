@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
-import java.util.List;
+import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.CacheQueryDTO;
 
 /**
  * cache
@@ -10,9 +12,9 @@ import java.util.List;
  */
 public interface ICacheService {
 
-    List<String> cacheNames();
+    PagedVO<KeyValueVO<String, String>> cacheNames(CacheQueryDTO dto);
 
-    void removeCache(String cacheName);
+    void removeCache(Boolean caffeineCache, String name);
 
-    List<String> cacheKey(String cacheName);
+    Object cacheKey(Boolean caffeineCacheFlag, String cacheName);
 }
