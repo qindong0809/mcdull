@@ -36,7 +36,7 @@ public class ForgetPasswordController {
     @Operation(summary = "重置")
     @PostMapping("update")
     public Result<String> reset(@RequestBody @Valid ForgetPasswordRequestDTO dto) {
-        return Result.success(forgetPasswordService.reset(dto));
+        return Result.success(forgetPasswordService.request(dto));
     }
 
 }
