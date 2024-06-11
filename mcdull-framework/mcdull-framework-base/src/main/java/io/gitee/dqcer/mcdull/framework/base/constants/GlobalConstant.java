@@ -53,6 +53,7 @@ public class GlobalConstant {
      */
     public static final Integer EXCEL_EXPORT_MAX_ROW = 1048576;
 
+    public static final String CAFFEINE_CACHE = "caffeineCache";
 
 
     public static class Environment {

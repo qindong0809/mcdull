@@ -1,5 +1,8 @@
 package io.gitee.dqcer.mcdull.framework.redis.operation;
 
+import cn.hutool.core.collection.IterUtil;
+import org.redisson.api.RBucket;
+import org.redisson.api.RKeys;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.dao.DataAccessException;
@@ -20,6 +23,11 @@ import java.util.function.Consumer;
  */
 @SuppressWarnings("all")
 public final class RedisClient {
+
+    /**
+     * 使用 RedissonClient 替换 redisTemplate
+     */
+    @Deprecated
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -42,13 +50,12 @@ public final class RedisClient {
     }
 
     public Set<String> getAllKey(){
+        RKeys keys = redissonClient.getKeys();
+        Iterable<String> iterable = keys.getKeysByPattern("*");
         Set<String> result = new HashSet<>();
-        Set<String> keys = redisTemplate.keys("*");
-        if (keys != null && keys.size() > 0) {
-            for (Object key : keys) {
-                if (key != null) {
-                    result.add(key.toString());
-                }
+        if (IterUtil.isNotEmpty(iterable)) {
+            for (String s : iterable) {
+                result.add(s);
             }
         }
         return result;
@@ -127,11 +134,8 @@ public final class RedisClient {
      */
     public void delete(String... key) {
         if (key != null && key.length > 0) {
-            if (key.length == 1) {
-                redisTemplate.delete(key[0]);
-            } else {
-                redisTemplate.delete(Arrays.asList(key));
-            }
+            RKeys keys = redissonClient.getKeys();
+            keys.delete(key);
         }
     }
 
@@ -205,7 +209,8 @@ public final class RedisClient {
      */
     @SuppressWarnings("unchecked")
     public <T> T get(String key) {
-        return key == null ? null : (T) redisTemplate.opsForValue().get(key);
+        RBucket<T> bucket = redissonClient.getBucket(key);
+        return bucket.get();
     }
 
 
@@ -217,11 +222,8 @@ public final class RedisClient {
      * @param seconds 时间（秒），如果 time <= 0 则不设置失效时间
      */
     public void set(String key, Object value, int seconds) {
-        if (seconds > 0) {
-            redisTemplate.opsForValue().set(key, value, seconds, TimeUnit.SECONDS);
-        } else {
-            redisTemplate.opsForValue().set(key, seconds);
-        }
+        RBucket<Object> bucket = redissonClient.getBucket(key);
+        bucket.set(value, seconds, TimeUnit.SECONDS);
     }
 
     /**

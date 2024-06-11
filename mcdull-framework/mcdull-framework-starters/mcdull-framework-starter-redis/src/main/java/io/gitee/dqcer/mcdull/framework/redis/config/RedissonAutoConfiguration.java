@@ -8,7 +8,8 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import io.gitee.dqcer.mcdull.framework.redis.annotation.ExpireRedisCacheWriter;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.redis.aspect.CacheExpireAspect;
 import io.gitee.dqcer.mcdull.framework.redis.aspect.RedisLockAspect;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
@@ -18,22 +19,18 @@ import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -102,19 +99,30 @@ public class RedissonAutoConfiguration extends CachingConfigurerSupport {
         return new GenericJackson2JsonRedisSerializer(objectMapper);
     }
 
+//    @Bean(name = "redisCacheManager")
+//    public CacheManager redisCacheManager(RedisConnectionFactory factory, RedisSerializer<Object> redisSerializer) {
+//        RedisCacheConfiguration config = RedisCacheConfiguration
+//                // 注意默认配置允许缓存null
+//                .defaultCacheConfig()
+//                // 接口缓存上指定了key的时候统一加服务名前缀
+//                .computePrefixWith(cacheName -> appName + ":" + cacheName + ":")
+//                // 可以根据业务需要设置统一过期时间，这里是为了强制使用@CacheExpire手动设置过期时间所以设置很短
+//                .entryTtl(Duration.ofMinutes(1))
+//                // 配置序列化和反序列化方式
+//                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()))
+//                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer));
+//        return RedisCacheManager.builder(new ExpireRedisCacheWriter(factory)).cacheDefaults(config).build();
+//    }
+
     @Bean
-    public CacheManager cacheManager(RedisConnectionFactory factory, RedisSerializer<Object> redisSerializer) {
-        RedisCacheConfiguration config = RedisCacheConfiguration
-                // 注意默认配置允许缓存null
-                .defaultCacheConfig()
-                // 接口缓存上指定了key的时候统一加服务名前缀
-                .computePrefixWith(cacheName -> appName + ":" + cacheName + ":")
-                // 可以根据业务需要设置统一过期时间，这里是为了强制使用@CacheExpire手动设置过期时间所以设置很短
-                .entryTtl(Duration.ofMinutes(1))
-                // 配置序列化和反序列化方式
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer));
-        return RedisCacheManager.builder(new ExpireRedisCacheWriter(factory)).cacheDefaults(config).build();
+    public CaffeineCacheManager cacheManager() {
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager(GlobalConstant.CAFFEINE_CACHE);
+
+        Caffeine<Object, Object> caffeineBuilder = Caffeine.newBuilder()
+                .maximumSize(1000) // 设置最大缓存项数
+                .expireAfterWrite(10, TimeUnit.MINUTES); // 设置写入后过期时间
+        cacheManager.setCaffeine(caffeineBuilder);
+        return cacheManager;
     }
 
     /**

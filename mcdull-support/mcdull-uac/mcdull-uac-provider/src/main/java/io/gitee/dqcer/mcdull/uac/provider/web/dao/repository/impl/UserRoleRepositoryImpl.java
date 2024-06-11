@@ -135,4 +135,12 @@ public class UserRoleRepositoryImpl extends ServiceImpl<RoleUserMapper, RoleUser
         query.eq(RoleUserEntity::getRoleId, roleId);
         return baseMapper.selectList(query);
     }
+
+    @Override
+    public void batchRemoveUserListByRole(Integer roleId, List<Integer> userList) {
+        LambdaQueryWrapper<RoleUserEntity> query = Wrappers.lambdaQuery();
+        query.eq(RoleUserEntity::getRoleId, roleId);
+        query.in(RoleUserEntity::getUserId, userList);
+        this.remove(query);
+    }
 }

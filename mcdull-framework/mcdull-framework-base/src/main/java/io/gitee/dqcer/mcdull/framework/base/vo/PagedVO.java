@@ -30,7 +30,7 @@ public class PagedVO<T> implements Paged, VO {
     /**
      * 当前页数
      */
-    private Integer currentPage;
+    private Integer pageNum;
     /**
      * 列表数据
      */
@@ -42,14 +42,18 @@ public class PagedVO<T> implements Paged, VO {
      * @param list       列表数据
      * @param total 总记录数
      * @param pageSize   每页记录数
-     * @param currentPage   当前页数
+     * @param pageNum   当前页数
      */
-    public PagedVO(List<T> list, Integer total, Integer pageSize, Integer currentPage) {
+    public PagedVO(List<T> list, Integer total, Integer pageSize, Integer pageNum) {
         this.list = list;
         this.total = total;
         this.pageSize = pageSize;
-        this.currentPage = currentPage;
+        this.pageNum = pageNum;
         this.totalPage =  (int) Math.ceil((double) total / pageSize);
+    }
+
+    public PagedVO() {
+
     }
 
     public Integer getTotal() {
@@ -78,19 +82,15 @@ public class PagedVO<T> implements Paged, VO {
     }
 
 
-    /**
-     * 当前页
-     *
-     * @return {@link Long}
-     */
     @Override
     public Integer getPageNum() {
-        return currentPage;
+        return pageNum;
     }
 
-    public void setCurrentPage(Integer currentPage) {
-        this.currentPage = currentPage;
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
     }
+
 
     public List<T> getList() {
         return list;
@@ -106,7 +106,7 @@ public class PagedVO<T> implements Paged, VO {
                 "totalCount=" + total +
                 ", pageSize=" + pageSize +
                 ", totalPage=" + totalPage +
-                ", page=" + currentPage +
+                ", pageNum=" + pageNum +
                 ", list=" + list +
                 '}';
     }

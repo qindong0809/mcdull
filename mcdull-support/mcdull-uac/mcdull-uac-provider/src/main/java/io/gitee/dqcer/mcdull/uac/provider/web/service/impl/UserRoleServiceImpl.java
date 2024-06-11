@@ -48,4 +48,9 @@ public class UserRoleServiceImpl extends BasicServiceImpl<IUserRoleRepository>  
     public List<Integer> getUserId(Integer roleId) {
         return baseRepository.listByRole(roleId);
     }
+
+    @Override
+    public void batchRemoveUserListByRole(Integer roleId, List<Integer> userList) {
+        baseRepository.batchRemoveUserListByRole(roleId, userList);
+    }
 }
