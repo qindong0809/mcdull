@@ -307,7 +307,7 @@ primary key (`id`) using btree
 insert into `sys_config` values (1, '系统名称', 'system-name', 'xxx系统', '', 0, sysdate(), sysdate());
 insert into `sys_config` values (2, '域名名称', 'domain-name', 'http://mcdull.io:8081', '', 0, sysdate(), sysdate());
 insert into `sys_config` values (3, '重置密码邮件标题', 'forget-password-email-title', '密码重置请求', '', 0, sysdate(), sysdate());
-insert into `sys_config` values (3, '重置密码链接有效期（分钟）', 'forget-password-timeout', '5', '', 0, sysdate(), sysdate());
+insert into `sys_config` values (4, '重置密码链接有效期（分钟）', 'forget-password-timeout', '5', '', 0, sysdate(), sysdate());
 
 drop table if exists `sys_file`;
 create table `sys_file`  (
@@ -663,3 +663,17 @@ create table `sys_login_locked`  (
 `updated_time` datetime default null comment '更新时间',
 primary key (`id`) using btree
 ) comment = '登录失败次数记录表';
+
+drop table if exists `sys_email_send_history`;
+create table `sys_email_send_history`  (
+`id` int(0) not null auto_increment comment '主键',
+`sent_to` varchar(1000) not null comment '发送对象',
+`cc` varchar(1000) default null comment '抄送对象',
+`title` varchar(500) not null comment '标题',
+`content` varchar(4056) not null comment '内容',
+`file_id_array` varchar(1000) default null comment '附件',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree
+) comment = '通知类型';

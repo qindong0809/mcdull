@@ -55,26 +55,27 @@ public class ForgetPasswordServiceImpl implements IForgetPasswordService {
         String domainName = configService.getConfig("domain-name");
         String systemName = configService.getConfig("system-name");
         String forgetPasswordEmailTitle = configService.getConfig("forget-password-email-title");
-        String token = SaTempUtil.createToken(user.getId(), Convert.toInt(timeoutStr));
+        String token = SaTempUtil.createToken(user.getId(), Convert.toInt(timeoutStr) * 60);
         MapBuilder<String, String> builder = MapUtil.builder();
         builder
                 .put("{actualName}", user.getActualName())
                 .put("{systemName}", systemName)
                 .put("{domainName}", domainName)
-                .put("{link}", "auth/update/" + token)
+                .put("{link}", "rest-update-password/" + token)
                 .put("{timeout}", timeoutStr);
-        String templateFileName = "templates/forget-password.html";
+        String content = null;
+        String templateFileName = "template/forget-password-email.html";
         try (InputStream inputStream = ResourceUtil.getStream(templateFileName)) {
             if (inputStream != null) {
                 byte[] bytes = IoUtil.readBytes(inputStream);
-                String content = new String(bytes, StandardCharsets.UTF_8);
-                emailService.sendEmailHtml(user.getEmail(), forgetPasswordEmailTitle,
-                        this.replacePlaceholders(content, builder.map()));
+                content = new String(bytes, StandardCharsets.UTF_8);
             }
         } catch (Exception e) {
             LogHelp.error(log, "模版文件: {}", templateFileName, e);
             throw new BusinessException("找不到对应的模版文件");
         }
+        emailService.sendEmailHtml(user.getEmail(), forgetPasswordEmailTitle,
+                this.replacePlaceholders(content, builder.map()));
         return token;
     }
 
@@ -82,8 +83,14 @@ public class ForgetPasswordServiceImpl implements IForgetPasswordService {
     public void reset(ForgetPasswordRestDTO dto) {
         String token = dto.getToken();
         Integer userId = SaTempUtil.parseToken(token, Integer.class);
+        if (ObjectUtil.isNull(userId)) {
+            throw new BusinessException("无效链接");
+        }
         // 获取指定 token 的剩余有效期，单位：秒
-//        SaTempUtil.getTimeout(token);
+        long timeout = SaTempUtil.getTimeout(token);
+        if (timeout > 0) {
+            throw new BusinessException("链接已过期");
+        }
         if (ObjectUtil.isNotNull(userId)) {
             userService.resetPassword(userId, dto.getNewPassword());
             SaTempUtil.deleteToken(token);
@@ -92,7 +99,7 @@ public class ForgetPasswordServiceImpl implements IForgetPasswordService {
 
     private String replacePlaceholders(String template, Map<String, String> placeholders) {
         for (Map.Entry<String, String> entry : placeholders.entrySet()) {
-            template = template.replaceAll(entry.getKey(), entry.getValue());
+            template = template.replace(entry.getKey(), entry.getValue());
         }
         return template;
     }

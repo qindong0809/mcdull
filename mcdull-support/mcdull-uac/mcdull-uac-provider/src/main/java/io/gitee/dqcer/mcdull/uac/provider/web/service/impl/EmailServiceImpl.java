@@ -36,11 +36,13 @@ public class EmailServiceImpl implements IEmailService {
         threadPoolTaskExecutor.submit(() -> {
             LogHelp.info(log, "sendEmail. sendTo: {}, subject: {}", sendTo, subject);
             try {
-                emailSendHistoryService.insert(ListUtil.of(sendTo), null, subject, text);
-                MailUtil.send(sendTo, subject, text, false);
+                String send = MailUtil.send(sendTo, subject, text, false);
             } catch (Exception e) {
                 LogHelp.error(log, "send error. sendTo: {}, subject: {}", sendTo, subject, e);
+            }finally {
+                emailSendHistoryService.insert(ListUtil.of(sendTo), null, subject, text);
             }
+
         });
         return true;
     }
@@ -50,11 +52,13 @@ public class EmailServiceImpl implements IEmailService {
         threadPoolTaskExecutor.submit(() -> {
             LogHelp.info(log, "sendEmail. sendTo: {}, subject: {}", sendTo, subject);
             try {
-                emailSendHistoryService.insert(ListUtil.of(sendTo), null, subject, text);
                 MailUtil.send(sendTo, subject, text, true);
             } catch (Exception e) {
                 LogHelp.error(log, "send error. sendTo: {}, subject: {}", sendTo, subject, e);
+            }finally {
+                emailSendHistoryService.insert(ListUtil.of(sendTo), null, subject, text);
             }
+
         });
         return true;
     }
