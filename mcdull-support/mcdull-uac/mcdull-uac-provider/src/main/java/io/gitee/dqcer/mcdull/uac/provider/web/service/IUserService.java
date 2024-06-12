@@ -58,6 +58,8 @@ public interface IUserService {
 
     String resetPassword(Integer userId);
 
+    String resetPassword(Integer userId, String newPassword);
+
     List<UserAllVO> queryAll(Boolean disabledFlag);
 
     void batchUpdateDepartment(UserBatchUpdateDepartmentDTO dto);

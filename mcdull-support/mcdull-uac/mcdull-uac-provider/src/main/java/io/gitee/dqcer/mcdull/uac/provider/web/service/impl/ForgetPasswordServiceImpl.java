@@ -1,13 +1,29 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
+import cn.dev33.satoken.temp.SaTempUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.map.MapBuilder;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
+import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ForgetPasswordRequestDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.ForgetPasswordRestDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IEmailService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IForgetPasswordService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 /**
  * forget password service impl
@@ -18,15 +34,67 @@ import javax.annotation.Resource;
 @Service
 public class ForgetPasswordServiceImpl implements IForgetPasswordService {
 
+    private static final Logger log = LoggerFactory.getLogger(ForgetPasswordServiceImpl.class);
+
     @Resource
     private IUserService userService;
+
+    @Resource
+    private IConfigService configService;
+
+    @Resource
+    private IEmailService emailService;
 
     @Override
     public String request(ForgetPasswordRequestDTO dto) {
         UserEntity user = userService.get(dto.getUserIdentity());
         if (ObjectUtil.isNull(user)) {
-
+            throw new BusinessException("找不到对应用户");
         }
-        return null;
+        String timeoutStr = configService.getConfig("forget-password-timeout");
+        String domainName = configService.getConfig("domain-name");
+        String systemName = configService.getConfig("system-name");
+        String forgetPasswordEmailTitle = configService.getConfig("forget-password-email-title");
+        String token = SaTempUtil.createToken(user.getId(), Convert.toInt(timeoutStr));
+        MapBuilder<String, String> builder = MapUtil.builder();
+        builder
+                .put("{actualName}", user.getActualName())
+                .put("{systemName}", systemName)
+                .put("{domainName}", domainName)
+                .put("{link}", "auth/update/" + token)
+                .put("{timeout}", timeoutStr);
+        String templateFileName = "templates/forget-password.html";
+        try (InputStream inputStream = ResourceUtil.getStream(templateFileName)) {
+            if (inputStream != null) {
+                byte[] bytes = IoUtil.readBytes(inputStream);
+                String content = new String(bytes, StandardCharsets.UTF_8);
+                emailService.sendEmailHtml(user.getEmail(), forgetPasswordEmailTitle,
+                        this.replacePlaceholders(content, builder.map()));
+            }
+        } catch (Exception e) {
+            LogHelp.error(log, "模版文件: {}", templateFileName, e);
+            throw new BusinessException("找不到对应的模版文件");
+        }
+        return token;
     }
+
+    @Override
+    public void reset(ForgetPasswordRestDTO dto) {
+        String token = dto.getToken();
+        Integer userId = SaTempUtil.parseToken(token, Integer.class);
+        // 获取指定 token 的剩余有效期，单位：秒
+//        SaTempUtil.getTimeout(token);
+        if (ObjectUtil.isNotNull(userId)) {
+            userService.resetPassword(userId, dto.getNewPassword());
+            SaTempUtil.deleteToken(token);
+        }
+    }
+
+    private String replacePlaceholders(String template, Map<String, String> placeholders) {
+        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+            template = template.replaceAll(entry.getKey(), entry.getValue());
+        }
+        return template;
+    }
+
 }

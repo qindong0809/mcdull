@@ -106,6 +106,13 @@ public class ConfigRepositoryImpl extends ServiceImpl<ConfigMapper, ConfigEntity
         return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
     }
 
+    @Override
+    public ConfigEntity selectOne(String key) {
+        LambdaQueryWrapper<ConfigEntity> query = Wrappers.lambdaQuery();
+        query.eq(ConfigEntity::getConfigKey, key);
+        return baseMapper.selectOne(query);
+    }
+
     /**
     * 根据id删除批处理
     *

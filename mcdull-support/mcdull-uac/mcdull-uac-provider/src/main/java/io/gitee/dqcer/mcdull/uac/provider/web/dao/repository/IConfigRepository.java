@@ -61,4 +61,6 @@ public interface IConfigRepository extends IService<ConfigEntity>  {
      * @return boolean true/存在 false/不存在
      */
     boolean exist(ConfigEntity entity);
+
+    ConfigEntity selectOne(String key);
 }

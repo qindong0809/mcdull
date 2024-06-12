@@ -24,6 +24,8 @@ public class UserEntity extends BaseEntity<Integer> {
 
     private String actualName;
 
+    private String email;
+
     private Integer gender;
 
     private String phone;

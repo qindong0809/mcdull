@@ -324,6 +324,13 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         return newPassword;
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public String resetPassword(Integer userId, String newPassword) {
+        baseRepository.update(userId, this.buildPassword(newPassword));
+        return newPassword;
+    }
+
     @Override
     public List<UserAllVO> queryAll(Boolean disabledFlag) {
         List<UserAllVO> voList = new ArrayList<>();

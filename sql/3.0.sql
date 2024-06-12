@@ -4,6 +4,7 @@ create table if not exists `sys_user` (
 `login_name` varchar(30)  not null comment '登录帐号',
 `login_pwd` varchar(50)  not null comment '登录密码',
 `actual_name` varchar(30)  not null comment '员工名称',
+`email` varchar(300)  not null comment 'email',
 `gender` tinyint(1) not null default 0 comment '性别',
 `phone` varchar(15)  null default null comment '手机号码',
 `department_id` int(0) not null comment '部门id',
@@ -21,12 +22,12 @@ create table if not exists `sys_user` (
 primary key (`id`)
 )  comment='用户';
 
-insert into `sys_user` values(1, 'admin', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', 'Terry',   0, '13800000000', 1, 1, null, null, null, '超级管理员', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(2, 'dev',  'a29c57c6894dee6e8251510d58c07078ee3f49bf', '王大锤',      0, '13800000000', 1, 0, null, null, null, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(3, 'demo', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '演示账号（只读）',      0, '13800000000', 1, 0, null, null, null, '只读用户', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(4, 'zhaoming', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '赵敏',      0, '13800000000', 1, 0, null, null, null, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(5, 'qiangang', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '钱刚',      0, '13800000000', 1, 0, null, null, null, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(6, 'sunli', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '孙丽',      0, '13800000000', 1, 0, null, null, null, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(1, 'admin', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', 'Terry',  '1@sina.com', 0, '13800000000', 1, 1, null, null, null, '超级管理员', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(2, 'dev',  'a29c57c6894dee6e8251510d58c07078ee3f49bf', '王大锤',    '1@sina.com',  0, '13800000000', 1, 0, null, null, null, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(3, 'demo', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '演示账号（只读）',   '1@sina.com',   0, '13800000000', 1, 0, null, null, null, '只读用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(4, 'zhaoming', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '赵敏',   '1@sina.com',   0, '13800000000', 1, 0, null, null, null, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(5, 'qiangang', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '钱刚',   '1@sina.com',   0, '13800000000', 1, 0, null, null, null, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(6, 'sunli', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '孙丽',    '1@sina.com',  0, '13800000000', 1, 0, null, null, null, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
 
 drop table if exists `sys_role`;
 create table `sys_role`  (
@@ -303,7 +304,10 @@ create table `sys_config`  (
 primary key (`id`) using btree
 ) comment = '系统配置';
 
-insert into `sys_config` values (1, '万能密码', 'super_password', '1024lab', '建议定期修改', 0, sysdate(), sysdate());
+insert into `sys_config` values (1, '系统名称', 'system-name', 'xxx系统', '', 0, sysdate(), sysdate());
+insert into `sys_config` values (2, '域名名称', 'domain-name', 'http://mcdull.io:8081', '', 0, sysdate(), sysdate());
+insert into `sys_config` values (3, '重置密码邮件标题', 'forget-password-email-title', '密码重置请求', '', 0, sysdate(), sysdate());
+insert into `sys_config` values (3, '重置密码链接有效期（分钟）', 'forget-password-timeout', '5', '', 0, sysdate(), sysdate());
 
 drop table if exists `sys_file`;
 create table `sys_file`  (

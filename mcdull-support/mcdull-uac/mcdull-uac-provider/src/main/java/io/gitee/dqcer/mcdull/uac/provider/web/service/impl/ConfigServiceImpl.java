@@ -83,4 +83,13 @@ public class ConfigServiceImpl extends BasicServiceImpl<IConfigRepository> imple
         }
         baseRepository.deleteBatchByIds(idList);
     }
+
+    @Override
+    public String getConfig(String key) {
+        ConfigEntity entity = baseRepository.selectOne(key);
+        if (ObjUtil.isNotNull(entity)) {
+            return entity.getConfigValue();
+        }
+        return null;
+    }
 }

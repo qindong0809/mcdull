@@ -1,7 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ForgetPasswordRequestDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.ForgetPasswordRestDTO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IForgetPasswordService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,16 +29,20 @@ public class ForgetPasswordController {
     @Resource
     private IForgetPasswordService forgetPasswordService;
 
+    @SaIgnore
     @Operation(summary = "申请")
     @PostMapping("request")
-    public Result<String> request(@RequestBody @Valid ForgetPasswordRequestDTO dto) {
-        return Result.success(forgetPasswordService.request(dto));
+    public Result<Boolean> request(@RequestBody @Valid ForgetPasswordRequestDTO dto) {
+        forgetPasswordService.request(dto);
+        return Result.success(true);
     }
 
+    @SaIgnore
     @Operation(summary = "重置")
     @PostMapping("update")
-    public Result<String> reset(@RequestBody @Valid ForgetPasswordRequestDTO dto) {
-        return Result.success(forgetPasswordService.request(dto));
+    public Result<Boolean> reset(@RequestBody @Valid ForgetPasswordRestDTO dto) {
+        forgetPasswordService.reset(dto);
+        return Result.success(true);
     }
 
 }

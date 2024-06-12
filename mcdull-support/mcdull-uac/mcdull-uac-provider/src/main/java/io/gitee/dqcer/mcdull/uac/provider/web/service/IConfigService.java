@@ -24,4 +24,6 @@ public interface IConfigService {
     void update(ConfigUpdateDTO dto);
 
     void delete(List<Integer> idList);
+
+    String getConfig(String key);
 }

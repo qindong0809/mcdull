@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ForgetPasswordRequestDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.ForgetPasswordRestDTO;
 
 /**
  * forget password
@@ -11,4 +12,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.ForgetPasswordRequestDTO;
 public interface IForgetPasswordService {
 
     String request(ForgetPasswordRequestDTO dto);
+
+    void reset(ForgetPasswordRestDTO dto);
 }
