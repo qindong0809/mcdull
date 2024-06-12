@@ -88,7 +88,7 @@ public class ForgetPasswordServiceImpl implements IForgetPasswordService {
         }
         // 获取指定 token 的剩余有效期，单位：秒
         long timeout = SaTempUtil.getTimeout(token);
-        if (timeout > 0) {
+        if (timeout <= 0) {
             throw new BusinessException("链接已过期");
         }
         if (ObjectUtil.isNotNull(userId)) {
