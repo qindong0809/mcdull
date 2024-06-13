@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
+import cn.dev33.satoken.temp.SaTempUtil;
+import cn.hutool.core.util.ObjectUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ForgetPasswordRequestDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ForgetPasswordRestDTO;
@@ -41,7 +43,12 @@ public class ForgetPasswordController {
     @Operation(summary = "重置")
     @PostMapping("update")
     public Result<Boolean> reset(@RequestBody @Valid ForgetPasswordRestDTO dto) {
-        forgetPasswordService.reset(dto);
+        String token = dto.getToken();
+        Integer userId = SaTempUtil.parseToken(token, Integer.class);
+        if (ObjectUtil.isNull(userId)) {
+            return Result.error("无效链接");
+        }
+        forgetPasswordService.reset(userId, dto);
         return Result.success(true);
     }
 

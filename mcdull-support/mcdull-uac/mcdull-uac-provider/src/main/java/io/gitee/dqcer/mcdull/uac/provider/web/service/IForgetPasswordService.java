@@ -13,5 +13,5 @@ public interface IForgetPasswordService {
 
     String request(ForgetPasswordRequestDTO dto);
 
-    void reset(ForgetPasswordRestDTO dto);
+    void reset(Integer userId, ForgetPasswordRestDTO dto);
 }

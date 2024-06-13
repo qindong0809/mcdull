@@ -6,6 +6,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
@@ -47,9 +48,10 @@ public class ForgetPasswordServiceImpl implements IForgetPasswordService {
 
     @Override
     public String request(ForgetPasswordRequestDTO dto) {
-        UserEntity user = userService.get(dto.getUserIdentity());
+        String userIdentity = dto.getUserIdentity();
+        UserEntity user = userService.get(userIdentity);
         if (ObjectUtil.isNull(user)) {
-            throw new BusinessException("找不到对应用户");
+            throw new BusinessException("user.not.found", ArrayUtil.wrap(userIdentity));
         }
         String timeoutStr = configService.getConfig("forget-password-timeout");
         String domainName = configService.getConfig("domain-name");
@@ -80,21 +82,15 @@ public class ForgetPasswordServiceImpl implements IForgetPasswordService {
     }
 
     @Override
-    public void reset(ForgetPasswordRestDTO dto) {
+    public void reset(Integer userId, ForgetPasswordRestDTO dto) {
         String token = dto.getToken();
-        Integer userId = SaTempUtil.parseToken(token, Integer.class);
-        if (ObjectUtil.isNull(userId)) {
-            throw new BusinessException("无效链接");
-        }
         // 获取指定 token 的剩余有效期，单位：秒
         long timeout = SaTempUtil.getTimeout(token);
         if (timeout <= 0) {
             throw new BusinessException("链接已过期");
         }
-        if (ObjectUtil.isNotNull(userId)) {
-            userService.resetPassword(userId, dto.getNewPassword());
-            SaTempUtil.deleteToken(token);
-        }
+        userService.resetPassword(userId, dto.getNewPassword());
+        SaTempUtil.deleteToken(token);
     }
 
     private String replacePlaceholders(String template, Map<String, String> placeholders) {

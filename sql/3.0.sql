@@ -677,3 +677,17 @@ create table `sys_email_send_history`  (
 `updated_time` datetime default null comment '更新时间',
 primary key (`id`) using btree
 ) comment = '通知类型';
+
+create table if not exists `sys_info` (
+`id` int(0) not null auto_increment comment '主键',
+`email_host` varchar(128) not null comment '主机ip',
+`email_port` varchar(128) not null comment '主机端口',
+`email_username` varchar(128) not null comment '账户',
+`email_password` varchar(128) not null comment '密码',
+`email_from` varchar(128) not null comment '设置发送方,如：xx<postmaster@xxx.com>',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree
+)  comment='系统信息';
+insert into `sys_info` values (1, 'smtp.163.com', '25', 'postmaster@163.com', 'postmaster', 'postmaster', 0, sysdate(), sysdate());
