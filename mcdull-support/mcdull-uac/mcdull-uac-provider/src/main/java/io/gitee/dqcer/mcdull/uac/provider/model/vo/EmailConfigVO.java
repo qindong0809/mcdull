@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.uac.provider.model.bo;
+package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
 import io.gitee.dqcer.mcdull.framework.base.support.BO;
 import lombok.Data;
@@ -10,27 +10,27 @@ import lombok.Data;
  * @since 2024/06/13
  */
 @Data
-public class EmailConfigBO implements BO {
+public class EmailConfigVO implements BO {
 
-    private String host;
+    private String emailHost;
 
     /**
      * 主机端口
      */
-    private Integer port;
+    private Integer emailPort;
 
     /**
      * 账户
      */
-    private String username;
+    private String emailUsername;
 
     /**
      * 密码
      */
-    private String password;
+    private String emailPassword;
 
     /**
      * 设置发送方
      */
-    private String from;
+    private String emailFrom;
 }

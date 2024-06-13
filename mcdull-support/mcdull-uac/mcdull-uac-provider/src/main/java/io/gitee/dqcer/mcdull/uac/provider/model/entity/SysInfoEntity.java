@@ -25,7 +25,7 @@ public class SysInfoEntity extends RelEntity<Integer> {
     /**
      * 主机端口
      */
-    private String emailPort;
+    private Integer emailPort;
     /**
      * 账户
      */

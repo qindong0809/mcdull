@@ -224,6 +224,9 @@ INSERT INTO `sys_menu` VALUES (233, '读操作', 3, 232, 1, NULL, NULL, 1, 'syst
 INSERT INTO `sys_menu` VALUES (235, '查看缓存值', 3, 133, 1, NULL, NULL, 1, 'support:cache:value', 'support:cache:value', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (153, '清除缓存', 3, 133, 2, NULL, NULL, 1, 'support:cache:delete', 'support:cache:delete', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (154, '获取缓存key', 3, 133, 3, NULL, NULL, 1, 'support:cache:list', 'support:cache:list', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (236, '邮箱配置', 2, 50, 1, '/support/email-config/index', '/support/email-config/index.vue', 1, NULL, NULL, 'MailOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (237, '读操作', 3, 236, 1, NULL, NULL, 1, 'support:email_config:read', 'support:email_config:read', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (238, '写操作', 3, 236, 2, NULL, NULL, 1, 'support:email_config:write', 'support:email_config:write', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 
 drop table if exists `sys_role_menu`;
 create table `sys_role_menu`  (
