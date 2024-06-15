@@ -227,7 +227,11 @@ INSERT INTO `sys_menu` VALUES (154, '获取缓存key', 3, 133, 3, NULL, NULL, 1,
 INSERT INTO `sys_menu` VALUES (236, '邮箱配置', 2, 50, 1, '/support/email-config/index', '/support/email-config/index.vue', 1, NULL, NULL, 'MailOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (237, '读操作', 3, 236, 1, NULL, NULL, 1, 'support:email_config:read', 'support:email_config:read', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (238, '写操作', 3, 236, 2, NULL, NULL, 1, 'support:email_config:write', 'support:email_config:write', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (239, '表单设计列表', 2, 225, 1, '/support/form/form-list', '/support/form/form-list.vue', 1, NULL, NULL, 'FormOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (240, '表单数据', 2, 225, NULL, '1', NULL, 1, NULL, NULL, NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (241, '应用监控', 2, 111, 6, '/supprot/spring-boota-dmin/index', NULL, 1, NULL, NULL, 'AlertOutlined', NULL, 1, 'http://mcdull.io:9000', 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (242, '行政区域', 2, 50, 7, '/support/area/index', '/support/area/index.vue', 1, NULL, NULL, 'BankOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (243, '数据列表', 2, 239, 1, '/support/form/form-data-list', '/support/form/form-data-list.vue', 1, NULL, NULL, 'DiffOutlined', NULL, 0, NULL, 0, 0, 0, 0, 1, sysdate(), NULL, NULL);
 
 drop table if exists `sys_role_menu`;
 create table `sys_role_menu`  (

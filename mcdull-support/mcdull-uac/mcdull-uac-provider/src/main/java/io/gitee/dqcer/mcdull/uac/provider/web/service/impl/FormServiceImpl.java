@@ -4,6 +4,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -110,10 +114,54 @@ public class FormServiceImpl
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(formId);
         }
-        if (BooleanUtil.isFalse(entity.getPublish())) {
+//        if (BooleanUtil.isFalse(entity.getPublish())) {
+//            return Collections.emptyList();
+//        }
+        String jsonText = entity.getJsonText();
+        if (StrUtil.isBlank(jsonText)) {
+            return Collections.emptyList();
+        } // schemas
+        JSONObject jsonObject = JSONUtil.parseObj(jsonText);
+        JSONArray objects = jsonObject.get("schemas", JSONArray.class);
+        if (CollUtil.isEmpty(objects)) {
             return Collections.emptyList();
         }
-        return null;
+        List<FormItemVO> list = new ArrayList<>();
+        for (Object object : objects) {
+            if (ObjUtil.isNotNull(object)) {
+                JSONObject subJsonObject = JSONUtil.parseObj(object);
+                List<FormItemVO> sub = extracted(subJsonObject);
+                if (CollUtil.isNotEmpty(sub)) {
+                    list.addAll(sub);
+                }
+            }
+        }
+        return list;
+    }
+
+    private static List<FormItemVO> extracted(JSONObject jsonObject) {
+        List<FormItemVO> list = new ArrayList<>();
+        Object value = jsonObject.get("children");
+        if (ObjUtil.isNotNull(value)) {
+            JSONArray objects = JSONUtil.parseArray(value);
+            for (Object object : objects) {
+                JSONObject subJsonObject = JSONUtil.parseObj(object);
+                List<FormItemVO> sub = extracted(subJsonObject);
+                if (CollUtil.isNotEmpty(sub)) {
+                    list.addAll(sub);
+                }
+            }
+        } else {
+            String title = jsonObject.get("label", String.class);
+            String field = jsonObject.get("field", String.class);
+            if (StrUtil.isAllNotBlank(title, field)) {
+                FormItemVO itemVO = new FormItemVO();
+                itemVO.setName(title);
+                itemVO.setKey(field);
+                list.add(itemVO);
+            }
+        }
+        return list;
     }
 
     private FormEntity convertToEntity(FormAddDTO dto) {
