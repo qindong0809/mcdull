@@ -682,6 +682,7 @@ create table `sys_email_send_history`  (
 primary key (`id`) using btree
 ) comment = '通知类型';
 
+drop table if exists `sys_info`;
 create table if not exists `sys_info` (
 `id` int(0) not null auto_increment comment '主键',
 `email_host` varchar(128) not null comment '主机ip',
@@ -695,3 +696,19 @@ create table if not exists `sys_info` (
 primary key (`id`) using btree
 )  comment='系统信息';
 insert into `sys_info` values (1, 'smtp.163.com', '25', 'postmaster@163.com', 'postmaster', 'postmaster', 0, sysdate(), sysdate());
+
+drop table if exists `sys_form`;
+create table if not exists `sys_form` (
+`id` int auto_increment comment '主键',
+`name` varchar(255) not null comment '表单名称',
+`json_text` varchar(4056) default null comment '表单内容',
+`publish` tinyint(0) not null default 0 comment '发布（true/false）',
+`remark` varchar(512)  null default null comment '备注',
+`created_by` int not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` int default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+primary key (`id`)
+) comment='表单信息';
