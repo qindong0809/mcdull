@@ -6,7 +6,6 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
@@ -51,7 +50,7 @@ public class ForgetPasswordServiceImpl implements IForgetPasswordService {
         String userIdentity = dto.getUserIdentity();
         UserEntity user = userService.get(userIdentity);
         if (ObjectUtil.isNull(user)) {
-            throw new BusinessException("user.not.found", ArrayUtil.wrap(userIdentity));
+            throw new BusinessException("user.not.found", new Object[]{userIdentity});
         }
         String timeoutStr = configService.getConfig("forget-password-timeout");
         String domainName = configService.getConfig("domain-name");

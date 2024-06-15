@@ -1,6 +1,8 @@
 package ${packageName};
 
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 #foreach ($importClass in $importPackageList)
 $importClass
 #end

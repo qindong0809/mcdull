@@ -61,6 +61,7 @@ public class BusinessException extends RuntimeException {
 
 	public BusinessException(String messageCode, Object[] args) {
 		super(messageCode);
+		this.messageCode = messageCode;
 		this.args = args;
 	}
 

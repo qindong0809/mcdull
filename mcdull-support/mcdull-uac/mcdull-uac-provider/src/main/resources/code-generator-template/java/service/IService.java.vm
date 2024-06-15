@@ -22,5 +22,5 @@ public interface I${name.upperCamel}Service {
 
     void batchDelete(List<Integer> idList);
 
-    PagedVO<${name.upperCamel}VO>> queryPage(${name.upperCamel}QueryDTO dto);
+    PagedVO<${name.upperCamel}VO> queryPage(${name.upperCamel}QueryDTO dto);
 }
