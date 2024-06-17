@@ -38,6 +38,7 @@ import java.util.List;
 public class FormServiceImpl
         extends BasicServiceImpl<IFormRepository> implements IFormService {
 
+    @Override
     public PagedVO<FormVO> queryPage(FormQueryDTO dto) {
         List<FormVO> voList = new ArrayList<>();
         Page<FormEntity> entityPage = baseRepository.selectPage(dto);

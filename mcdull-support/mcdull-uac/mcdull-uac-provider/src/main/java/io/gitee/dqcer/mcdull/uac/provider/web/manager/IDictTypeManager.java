@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc;
+package io.gitee.dqcer.mcdull.uac.provider.web.manager;
 
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;

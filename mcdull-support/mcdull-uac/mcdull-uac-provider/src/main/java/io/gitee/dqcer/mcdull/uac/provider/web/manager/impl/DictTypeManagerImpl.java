@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.impl;
+package io.gitee.dqcer.mcdull.uac.provider.web.manager.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.uac.provider.config.constants.CacheConstants;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DictValueVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RemoteDictTypeVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.manager.mdc.IDictTypeManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IDictTypeManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDictValueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
