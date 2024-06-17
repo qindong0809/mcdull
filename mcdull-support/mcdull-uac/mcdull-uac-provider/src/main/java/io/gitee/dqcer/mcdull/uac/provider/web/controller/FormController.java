@@ -2,11 +2,9 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.FormAddDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.FormQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.FormUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.FormUpdateJsonTextDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormItemVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormRecordDataVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFormService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -81,5 +79,19 @@ public class FormController {
         return Result.success(formService.itemConfigList(formId));
     }
 
+    @Operation(summary = "添加form数据信息")
+    //    @SaCheckPermission("support:changeLog:add")
+    @PostMapping("/form/record-add")
+    public Result<Boolean> recordAdd(@RequestBody @Valid FormRecordAddDTO dto) {
+        formService.recordAdd(dto);
+        return Result.success(true);
+    }
+
+    @Operation(summary = "获取form数据信息")
+    //    @SaCheckPermission("support:changeLog:add")
+    @PostMapping("/form/record-queryPage")
+    public Result<PagedVO<FormRecordDataVO>> recordQueryPage(@RequestBody @Valid FormRecordQueryDTO dto) {
+        return Result.success(formService.recordQueryPage(dto));
+    }
 
 }

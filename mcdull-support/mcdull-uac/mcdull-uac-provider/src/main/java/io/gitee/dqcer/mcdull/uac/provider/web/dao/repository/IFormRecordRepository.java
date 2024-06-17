@@ -3,6 +3,8 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormRecordEntity;
 
+import java.util.List;
+
 
 /**
  * @author dqcer
@@ -11,4 +13,5 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormRecordEntity;
 public interface IFormRecordRepository extends IService<FormRecordEntity> {
 
 
+    List<FormRecordEntity> selectByFormId(Integer formId);
 }

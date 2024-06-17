@@ -19,7 +19,7 @@ public class FormItemEntity extends RelEntity<Integer> {
 
     private Integer formId;
 
-    private Integer contentType;
+    private String controlType;
 
     private String label;
 

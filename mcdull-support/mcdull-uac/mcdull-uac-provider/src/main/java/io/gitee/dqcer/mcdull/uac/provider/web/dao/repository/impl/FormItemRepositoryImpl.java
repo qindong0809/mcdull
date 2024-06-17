@@ -9,6 +9,8 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.FormItemMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormItemRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 /**
  *
@@ -24,5 +26,12 @@ public class FormItemRepositoryImpl extends
         LambdaQueryWrapper<FormItemEntity> query = Wrappers.lambdaQuery();
         query.eq(FormItemEntity::getFormId, formId);
         this.remove(query);
+    }
+
+    @Override
+    public List<FormItemEntity> selectByFormId(Integer formId) {
+        LambdaQueryWrapper<FormItemEntity> query = Wrappers.lambdaQuery();
+        query.eq(FormItemEntity::getFormId, formId);
+        return this.list(query);
     }
 }

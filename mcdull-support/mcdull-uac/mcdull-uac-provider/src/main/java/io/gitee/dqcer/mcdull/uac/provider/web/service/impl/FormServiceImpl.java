@@ -2,28 +2,25 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.FormAddDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.FormQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.FormUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.FormUpdateJsonTextDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormItemVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormRecordDataVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IFormManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFormService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +34,9 @@ import java.util.List;
 @Service
 public class FormServiceImpl
         extends BasicServiceImpl<IFormRepository> implements IFormService {
+
+    @Resource
+    private IFormManager formManager;
 
     @Override
     public PagedVO<FormVO> queryPage(FormQueryDTO dto) {
@@ -89,15 +89,7 @@ public class FormServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateJsonText(FormUpdateJsonTextDTO dto) {
-        FormEntity entity = baseRepository.getById(dto.getId());
-        if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(dto.getId());
-        }
-        if (BooleanUtil.isTrue(entity.getPublish())) {
-            throw new RuntimeException("动态表单已发布，不能修改");
-        }
-        entity.setJsonText(dto.getJsonText());
-        baseRepository.updateById(entity);
+        formManager.initFormAndFormItem(dto.getId(), dto.getJsonText());
     }
 
     @Override
@@ -121,48 +113,37 @@ public class FormServiceImpl
         String jsonText = entity.getJsonText();
         if (StrUtil.isBlank(jsonText)) {
             return Collections.emptyList();
-        } // schemas
-        JSONObject jsonObject = JSONUtil.parseObj(jsonText);
-        JSONArray objects = jsonObject.get("schemas", JSONArray.class);
-        if (CollUtil.isEmpty(objects)) {
+        }
+
+        List<JSONObject> formItemList = formManager.getFormItemList(jsonText);
+        if (CollUtil.isEmpty(formItemList)) {
             return Collections.emptyList();
         }
         List<FormItemVO> list = new ArrayList<>();
-        for (Object object : objects) {
-            if (ObjUtil.isNotNull(object)) {
-                JSONObject subJsonObject = JSONUtil.parseObj(object);
-                List<FormItemVO> sub = extracted(subJsonObject);
-                if (CollUtil.isNotEmpty(sub)) {
-                    list.addAll(sub);
+        for (JSONObject jsonObject : formItemList) {
+            if (ObjUtil.isNotNull(jsonObject)) {
+                String title = jsonObject.get("label", String.class);
+                String field = jsonObject.get("field", String.class);
+                if (StrUtil.isAllNotBlank(title, field)) {
+                    FormItemVO itemVO = new FormItemVO();
+                    itemVO.setName(title);
+                    itemVO.setKey(field);
+                    list.add(itemVO);
                 }
             }
         }
         return list;
     }
 
-    private static List<FormItemVO> extracted(JSONObject jsonObject) {
-        List<FormItemVO> list = new ArrayList<>();
-        Object value = jsonObject.get("children");
-        if (ObjUtil.isNotNull(value)) {
-            JSONArray objects = JSONUtil.parseArray(value);
-            for (Object object : objects) {
-                JSONObject subJsonObject = JSONUtil.parseObj(object);
-                List<FormItemVO> sub = extracted(subJsonObject);
-                if (CollUtil.isNotEmpty(sub)) {
-                    list.addAll(sub);
-                }
-            }
-        } else {
-            String title = jsonObject.get("label", String.class);
-            String field = jsonObject.get("field", String.class);
-            if (StrUtil.isAllNotBlank(title, field)) {
-                FormItemVO itemVO = new FormItemVO();
-                itemVO.setName(title);
-                itemVO.setKey(field);
-                list.add(itemVO);
-            }
-        }
-        return list;
+    @Override
+    public void recordAdd(FormRecordAddDTO dto) {
+        formManager.addFormRecordData(dto.getFormId(), dto.getFormData());
+    }
+
+    @Override
+    public PagedVO<FormRecordDataVO> recordQueryPage(FormRecordQueryDTO dto) {
+        List<FormRecordDataVO> list = formManager.recordList(dto.getFormId());
+        return PageUtil.ofSub(list, dto);
     }
 
     private FormEntity convertToEntity(FormAddDTO dto) {
