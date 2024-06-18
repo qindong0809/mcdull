@@ -14,6 +14,12 @@ import java.util.Map;
  */
 public interface IFormManager {
 
+    /**
+     * 根据json解析获取item list
+     *
+     * @param jsonText json文本
+     * @return {@link List}<{@link JSONObject}>
+     */
     List<JSONObject> getFormItemList(String jsonText);
 
     /**
@@ -24,7 +30,26 @@ public interface IFormManager {
      */
     void initFormAndFormItem(Integer formId, String jsonText);
 
+    /**
+     * 添加表单记录数据
+     *
+     * @param formId   表单id
+     * @param formData 表单数据
+     */
     void addFormRecordData(Integer formId, Map<String, String> formData);
 
+    /**
+     * 记录列表
+     *
+     * @param formId 表单id
+     * @return {@link List}<{@link FormRecordDataVO}>
+     */
     List<FormRecordDataVO> recordList(Integer formId);
+
+    /**
+     * 表单配置 ready
+     *
+     * @param formId 表单id
+     */
+    void formConfigReady(Integer formId);
 }

@@ -20,6 +20,8 @@ public interface IFormService {
 
     void updateJsonText(FormUpdateJsonTextDTO dto);
 
+    void formConfigReady(Integer formId);
+
     FormVO detail(Integer formId);
 
     List<FormItemVO> itemConfigList(Integer formId);
@@ -27,4 +29,6 @@ public interface IFormService {
     void recordAdd(FormRecordAddDTO dto);
 
     PagedVO<FormRecordDataVO> recordQueryPage(FormRecordQueryDTO dto);
+
+    void exportData(FormRecordQueryDTO dto);
 }

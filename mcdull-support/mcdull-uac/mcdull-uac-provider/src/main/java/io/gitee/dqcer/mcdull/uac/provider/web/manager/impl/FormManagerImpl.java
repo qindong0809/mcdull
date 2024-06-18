@@ -152,9 +152,9 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
         if (ObjUtil.isNull(formEntity)) {
             this.throwDataNotExistException(formId);
         }
-//        if (BooleanUtil.isFalse(formEntity.getPublish())) {
-//            throw new RuntimeException("动态表单未发布，不能添加数据");
-//        }
+        if (BooleanUtil.isFalse(formEntity.getPublish())) {
+            throw new RuntimeException("动态表单未发布，不能添加数据");
+        }
         if (MapUtil.isEmpty(formDataMap)) {
             return;
         }
@@ -186,9 +186,9 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
         if (ObjUtil.isNull(formId)) {
             return Collections.emptyList();
         }
-//        if (BooleanUtil.isFalse(formRepository.getById(formId).getPublish())) {
-//            return Collections.emptyList();
-//        }
+        if (BooleanUtil.isFalse(formRepository.getById(formId).getPublish())) {
+            return Collections.emptyList();
+        }
         List<FormItemEntity> itemList = formItemRepository.selectByFormId(formId);
         if (CollUtil.isEmpty(itemList)) {
             return Collections.emptyList();
@@ -224,5 +224,18 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             result.add(dataVO);
         }
         return result;
+    }
+
+    @Override
+    public void formConfigReady(Integer formId) {
+        FormEntity form = formRepository.getById(formId);
+        if (ObjUtil.isNull(form)) {
+            this.throwDataNotExistException(formId);
+        }
+        if (BooleanUtil.isTrue(form.getPublish())) {
+            return;
+        }
+        form.setPublish(true);
+        formRepository.updateById(form);
     }
 }

@@ -51,7 +51,8 @@ import java.util.stream.Collectors;
  * @since  2022/11/27
  */
 @Service
-public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implements IUserService {
+public class UserServiceImpl
+        extends BasicServiceImpl<IUserRepository>  implements IUserService {
 
     @Resource
     private IUserRoleService userRoleService;
@@ -117,13 +118,11 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
             deptIdList.add(departmentId);
         }
         Page<UserEntity> entityPage = baseRepository.selectPage(dto, deptIdList, null);
-        List<UserVO> voList = new ArrayList<>();
         List<UserEntity> userList = entityPage.getRecords();
-        if (entityPage.getTotal() == GlobalConstant.Number.NUMBER_0) {
-            return PageUtil.toPage(voList, entityPage);
+        if (CollUtil.isEmpty(userList)) {
+            return PageUtil.empty(dto);
         }
-        voList = getVoList(userList);
-        return PageUtil.toPage(voList, entityPage);
+        return PageUtil.toPage(this.getVoList(userList), entityPage);
     }
 
     private void setRoleListFieldValue(Map<Integer, List<RoleEntity>> roleListMap, UserVO vo, Integer userId ) {
@@ -135,10 +134,6 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
             vo.setRoleIdList(roleIdLis);
             vo.setRoleNameList(list.stream().map(RoleEntity::getRoleName).collect(Collectors.toList()));
         }
-    }
-
-    private void setUserFieldValue(Map<Integer, UserEntity> userMap, UserVO vo) {
-        Integer createdBy = vo.getCreatedBy();
     }
 
     @Override
@@ -336,21 +331,23 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
         List<UserAllVO> voList = new ArrayList<>();
         List<UserEntity> list = baseRepository.list();
         if (CollUtil.isNotEmpty(list)) {
-            Set<Integer> deptIdSet = list.stream().map(UserEntity::getDepartmentId).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+            Set<Integer> deptIdSet = list.stream()
+                    .map(UserEntity::getDepartmentId)
+                    .filter(ObjUtil::isNotNull).collect(Collectors.toSet());
             List<DepartmentEntity> departmentEntities = departmentRepository.listByIds(new ArrayList<>(deptIdSet));
-            Map<Integer, DepartmentEntity> map = new HashMap<>();
-            if (CollUtil.isNotEmpty(departmentEntities)) {
-               map = departmentEntities.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+            if (CollUtil.isEmpty(departmentEntities)) {
+                return Collections.emptyList();
             }
+            Map<Integer, DepartmentEntity> deptMap = departmentEntities.stream()
+                    .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
             List<Integer> userIdList = list.stream().map(IdEntity::getId).collect(Collectors.toList());
-
             Map<Integer, List<RoleEntity>> roleMap = roleService.getRoleMap(userIdList);
 
             for (UserEntity userEntity : list) {
                 UserAllVO vo = UserConvert.entityToAllVO(userEntity);
                 Integer departmentId = userEntity.getDepartmentId();
                 if (ObjUtil.isNotNull(departmentId)) {
-                    DepartmentEntity departmentEntity = map.get(departmentId);
+                    DepartmentEntity departmentEntity = deptMap.get(departmentId);
                     if (ObjUtil.isNotNull(departmentEntity)) {
                         vo.setDepartmentName(departmentEntity.getName());
                     }
@@ -358,8 +355,10 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
                 if (MapUtil.isNotEmpty(roleMap)) {
                     List<RoleEntity> roleEntities = roleMap.get(userEntity.getId());
                     if (CollUtil.isNotEmpty(roleEntities)) {
-                        vo.setRoleIdList(roleEntities.stream().map(i->Convert.toInt(i.getId())).collect(Collectors.toList()));
-                        vo.setRoleNameList(roleEntities.stream().map(RoleEntity::getRoleName).collect(Collectors.toList()));
+                        vo.setRoleIdList(roleEntities.stream()
+                                .map(IdEntity::getId).collect(Collectors.toList()));
+                        vo.setRoleNameList(roleEntities.stream()
+                                .map(RoleEntity::getRoleName).collect(Collectors.toList()));
                     }
                 }
                 voList.add(vo);
@@ -388,13 +387,11 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
             return PageUtil.empty(dto);
         }
         Page<UserEntity> entityPage = baseRepository.selectPageByRoleId(idList, dto);
-        List<UserVO> voList = new ArrayList<>();
         List<UserEntity> userList = entityPage.getRecords();
-        if (entityPage.getTotal() == GlobalConstant.Number.NUMBER_0) {
-            return PageUtil.toPage(voList, entityPage);
+        if (CollUtil.isEmpty(userList)) {
+            return PageUtil.empty(dto);
         }
-         voList = getVoList( userList);
-        return PageUtil.toPage(voList, entityPage);
+        return PageUtil.toPage(this.getVoList( userList), entityPage);
     }
 
     private List<UserVO> getVoList(List<UserEntity> userList) {
@@ -417,7 +414,6 @@ public class UserServiceImpl extends BasicServiceImpl<IUserRepository>  implemen
 
         for (UserEntity entity : userList) {
             UserVO vo = UserConvert.entityToVO(entity);
-            this.setUserFieldValue(userMap, vo);
             this.setRoleListFieldValue(roleListMap, vo, entity.getId());
             this.setDeptFieldValue(deptMap, entity.getDepartmentId(),vo);
             voList.add(vo);

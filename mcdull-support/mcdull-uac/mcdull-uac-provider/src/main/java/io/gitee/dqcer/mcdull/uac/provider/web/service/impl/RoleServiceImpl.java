@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -26,9 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户服务
@@ -128,48 +127,8 @@ public class RoleServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean toggleStatus(Integer id, ReasonDTO dto) {
-        RoleEntity role = baseRepository.getById(id);
-        if (ObjUtil.isNull(role)) {
-            throw new BusinessException(I18nConstants.DATA_NEED_REFRESH);
-        }
-        return baseRepository.toggleStatus(id, !role.getInactive());
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
     public boolean insertPermission(Integer id, RolePermissionInsertDTO dto) {
         return roleMenuService.deleteAndInsert(id, dto.getMenuIdList());
-    }
-
-    @Override
-    public Map<Integer, List<RoleEntity>> getRoleMapByMenuId(List<Integer> menuIdList) {
-        Map<Integer, List<RoleEntity>> map = MapUtil.newHashMap();
-        Map<Integer, List<Integer>> roleIdMap = roleMenuService.getRoleIdMap(menuIdList);
-        if (MapUtil.isNotEmpty(roleIdMap)) {
-            Set<Integer> roleIdSet = roleIdMap.values().stream().flatMap(Collection::stream)
-                    .collect(Collectors.toSet());
-            List<RoleEntity> listByIds = baseRepository.listByIds(new ArrayList<>(roleIdSet));
-            if (CollUtil.isNotEmpty(listByIds)) {
-                Map<Integer, RoleEntity> roleMap = listByIds.stream()
-                        .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
-                for (Map.Entry<Integer, List<Integer>> entry : roleIdMap.entrySet()) {
-                    Integer menuId = entry.getKey();
-                    List<Integer> value = entry.getValue();
-                    List<RoleEntity> roleList = new ArrayList<>();
-                    for (Integer roleId : value) {
-                        RoleEntity role = roleMap.get(roleId);
-                        if (ObjUtil.isNotNull(role)) {
-                            roleList.add(role);
-                        }
-                    }
-                    if (CollUtil.isNotEmpty(roleList)) {
-                        map.put(menuId, roleList);
-                    }
-                }
-            }
-        }
-        return map;
     }
 
     @Override

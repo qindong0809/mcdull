@@ -1,11 +1,13 @@
 package io.gitee.dqcer.mcdull.uac.provider.config;
 
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,9 +17,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 文件key反序列化<br>
  * 由于前端接收到的是序列化过的字段, 这边入库需要进行反序列化操作比较方便处理
  *
+ * @author dqcer
+ * @since 2024/06/18
  */
 @Slf4j
 public class FileKeyVoDeserializer extends JsonDeserializer<String> {
@@ -36,9 +39,11 @@ public class FileKeyVoDeserializer extends JsonDeserializer<String> {
             } else {
                 list.add(objectCodec.treeToValue(listOrObjectNode, FileVO.class));
             }
-            deserialize = list.stream().map(FileVO::getFileKey).collect(Collectors.joining(","));
+            deserialize = list.stream()
+                    .map(FileVO::getFileKey)
+                    .collect(Collectors.joining(StrUtil.COMMA));
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LogHelp.error(log, "反序列化失败", e);
             deserialize = listOrObjectNode.asText();
         }
         return deserialize;

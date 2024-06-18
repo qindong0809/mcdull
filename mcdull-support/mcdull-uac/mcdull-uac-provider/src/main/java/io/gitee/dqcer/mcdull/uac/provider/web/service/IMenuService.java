@@ -30,10 +30,6 @@ public interface IMenuService {
 
     void delete(List<Integer> menuIdList);
 
-    List<RoleMenuVO> roleMenuList();
-
-    List<Integer> roleMenuIdList(Integer roleId);
-
     List<MenuVO> getList(Integer userId, boolean administratorFlag);
 
     RoleMenuTreeVO getTreeRoleId(Integer roleId);

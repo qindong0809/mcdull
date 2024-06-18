@@ -92,6 +92,13 @@ public class FormServiceImpl
         formManager.initFormAndFormItem(dto.getId(), dto.getJsonText());
     }
 
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void formConfigReady(Integer formId) {
+        formManager.formConfigReady(formId);
+    }
+
     @Override
     public FormVO detail(Integer formId) {
         FormEntity entity = baseRepository.getById(formId);
@@ -144,6 +151,11 @@ public class FormServiceImpl
     public PagedVO<FormRecordDataVO> recordQueryPage(FormRecordQueryDTO dto) {
         List<FormRecordDataVO> list = formManager.recordList(dto.getFormId());
         return PageUtil.ofSub(list, dto);
+    }
+
+    @Override
+    public void exportData(FormRecordQueryDTO dto) {
+
     }
 
     private FormEntity convertToEntity(FormAddDTO dto) {

@@ -65,6 +65,14 @@ public class FormController {
         return Result.success(true);
     }
 
+    @Operation(summary = "form发布")
+    //    @SaCheckPermission("support:changeLog:add")
+    @PostMapping("/form/config-ready")
+    public Result<Boolean> formConfigReady(@RequestBody @Valid FormConfigReadyDTO dto) {
+        formService.formConfigReady(dto.getFormId());
+        return Result.success(true);
+    }
+
     @Operation(summary = "表单JSON详情")
     //    @SaCheckPermission("support:changeLog:add")
     @GetMapping("/form/detail/{formId}")
@@ -92,6 +100,13 @@ public class FormController {
     @PostMapping("/form/record-queryPage")
     public Result<PagedVO<FormRecordDataVO>> recordQueryPage(@RequestBody @Valid FormRecordQueryDTO dto) {
         return Result.success(formService.recordQueryPage(dto));
+    }
+
+    @Operation(summary = "获取form数据信息")
+    //    @SaCheckPermission("support:changeLog:add")
+    @PostMapping("/form/record-export")
+    public void exportData(@RequestBody @Valid FormRecordQueryDTO dto) {
+        formService.exportData(dto);
     }
 
 }

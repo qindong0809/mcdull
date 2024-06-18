@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.uac.provider.model.convert;
 
 import cn.hutool.core.convert.Convert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleAddDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 
@@ -13,17 +12,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
  * @since 2022/12/26
  */
 public class RoleConvert {
-
-    public static RoleVO entity2VO(RoleEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-        RoleVO roleVO = new RoleVO();
-        roleVO.setRoleId(Convert.toInt(entity.getId()));
-        roleVO.setRoleName(entity.getRoleName());
-        roleVO.setRoleCode(entity.getRoleCode());
-        return roleVO;
-    }
 
     public static RoleEntity insertToEntity(RoleAddDTO dto) {
         RoleEntity roleDO = new RoleEntity();

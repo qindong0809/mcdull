@@ -126,40 +126,6 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         baseRepository.removeBatchByIds(menuIdList);
     }
 
-    @Override
-    public List<RoleMenuVO> roleMenuList() {
-        List<RoleMenuVO> voList = new ArrayList<>();
-        List<MenuEntity> menuList = baseRepository.allAndButton();
-        if (CollUtil.isNotEmpty(menuList)) {
-            for (MenuEntity menu : menuList) {
-                RoleMenuVO vo = this.convertToRoleMenuVO(menu);
-                voList.add(vo);
-            }
-        }
-        return voList;
-    }
-
-    @Override
-    public List<Integer> roleMenuIdList(Integer roleId) {
-        Map<Integer, List<Integer>> menuIdListMap = roleMenuService.getMenuIdListMap(ListUtil.of(roleId));
-        if (MapUtil.isNotEmpty(menuIdListMap)) {
-            List<Integer> list = menuIdListMap.get(roleId);
-            if (CollUtil.isNotEmpty(list)) {
-                List<MenuEntity> menuList = baseRepository.listByIds(list);
-                if (CollUtil.isNotEmpty(menuList)) {
-                    return menuList.stream().map(IdEntity::getId).collect(Collectors.toList());
-                }
-            }
-        }
-        return Collections.emptyList();
-    }
-
-    private RoleMenuVO convertToRoleMenuVO(MenuEntity menu) {
-        RoleMenuVO roleMenuVO = new RoleMenuVO();
-        roleMenuVO.setId(menu.getId());
-        return roleMenuVO;
-    }
-
     private MenuEntity setUpdateField(MenuUpdateDTO dto, MenuEntity menuEntity) {
         menuEntity.setMenuName(dto.getMenuName());
         menuEntity.setMenuType(dto.getMenuType());

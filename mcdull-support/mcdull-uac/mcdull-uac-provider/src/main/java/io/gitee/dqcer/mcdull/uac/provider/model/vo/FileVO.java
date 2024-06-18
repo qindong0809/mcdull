@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.swagger.SchemaEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.UserTypeEnum;
@@ -11,9 +12,11 @@ import java.time.LocalDateTime;
 /**
  * 文件信息
  *
+ * @author dqcer
+ * @since 2024/06/18
  */
 @Data
-public class FileVO {
+public class FileVO implements VO {
 
     @Schema(description = "主键")
     private Integer fileId;
