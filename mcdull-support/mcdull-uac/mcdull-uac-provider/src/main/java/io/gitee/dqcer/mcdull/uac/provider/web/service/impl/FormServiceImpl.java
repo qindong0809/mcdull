@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
@@ -24,6 +25,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -65,13 +67,15 @@ public class FormServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(FormUpdateDTO dto) {
-        FormEntity form = baseRepository.getByName(dto.getName());
-        if (ObjUtil.isNotNull(form)) {
-            if (!form.getId().equals(dto.getId())) {
+        FormEntity tempForm = baseRepository.getByName(dto.getName());
+        if (ObjUtil.isNotNull(tempForm)) {
+            if (!tempForm.getId().equals(dto.getId())) {
                 this.throwDataExistException(dto.getName());
             }
         }
+        FormEntity form = baseRepository.getById(dto.getId());
         FormEntity entity = this.convertToEntity(dto);
+        entity.setPublish(form.getPublish());
         entity.setId(dto.getId());
         baseRepository.updateById(entity);
     }
@@ -114,9 +118,9 @@ public class FormServiceImpl
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(formId);
         }
-//        if (BooleanUtil.isFalse(entity.getPublish())) {
-//            return Collections.emptyList();
-//        }
+        if (BooleanUtil.isFalse(entity.getPublish())) {
+            return Collections.emptyList();
+        }
         String jsonText = entity.getJsonText();
         if (StrUtil.isBlank(jsonText)) {
             return Collections.emptyList();
@@ -148,9 +152,26 @@ public class FormServiceImpl
     }
 
     @Override
-    public PagedVO<FormRecordDataVO> recordQueryPage(FormRecordQueryDTO dto) {
+    public PagedVO<Map<String, String>> recordQueryPage(FormRecordQueryDTO dto) {
         List<FormRecordDataVO> list = formManager.recordList(dto.getFormId());
-        return PageUtil.ofSub(list, dto);
+        List<Map<String, String>> voList = new ArrayList<>();
+        for (FormRecordDataVO vo : list) {
+            Map<String, String> itemMap = vo.getItemMap();
+            String keyword = dto.getKeyword();
+            boolean isContains = true;
+            if (StrUtil.isNotBlank(keyword)) {
+                isContains = false;
+                boolean anyMatch = itemMap.entrySet().stream()
+                        .anyMatch(i -> StrUtil.contains(i.getValue().toLowerCase(), keyword.toLowerCase()));
+                if (anyMatch) {
+                    isContains = true;
+                }
+            }
+            if (isContains) {
+                voList.add(itemMap);
+            }
+        }
+        return PageUtil.ofSub(voList, dto);
     }
 
     @Override
@@ -162,7 +183,6 @@ public class FormServiceImpl
         FormEntity formEntity = new FormEntity();
         formEntity.setName(dto.getName());
         formEntity.setRemark(dto.getRemark());
-        formEntity.setPublish(false);
         return formEntity;
     }
 

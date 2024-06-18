@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
@@ -10,11 +11,14 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormItemEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormRecordEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormRecordItemEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormRecordDataVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormItemRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormRecordItemRepository;
@@ -125,6 +129,13 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                     formItem.setLabel(title);
                     formItem.setControlType(jsonObject.get("type", String.class));
                     formItem.setLabelCode(field);
+                    JSONObject componentProps = jsonObject.get("componentProps", JSONObject.class);
+                    if (ObjUtil.isNotNull(componentProps)) {
+                        JSONArray objects = componentProps.get("options", JSONArray.class);
+                        if (ObjUtil.isNotNull(objects)) {
+                            formItem.setOptions(objects.toString());
+                        }
+                    }
                     formItem.setOrderNumber(i ++);
                     JSONArray jsonArray = jsonObject.get("rules", JSONArray.class);
                     if (CollUtil.isNotEmpty(jsonArray)) {
@@ -217,7 +228,38 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             entry.getValue().forEach(formRecordItemEntity -> {
                 FormItemEntity item = itemMap.get(formRecordItemEntity.getFormItemId());
                 if (ObjUtil.isNotNull(item)) {
-                    dataMap.put(item.getLabelCode(), formRecordItemEntity.getCurrentValue());
+                    String currentValue = formRecordItemEntity.getCurrentValue();
+                    String controlType = item.getControlType();
+                    FormItemControlTypeEnum typeEnum = IEnum.getByCode(FormItemControlTypeEnum.class, controlType);
+                    if (FormItemControlTypeEnum.INPUT.equals(typeEnum)
+                            ||  FormItemControlTypeEnum.TEXTAREA.equals(typeEnum)
+                            ||  FormItemControlTypeEnum.DATE.equals(typeEnum)
+                            ||  FormItemControlTypeEnum.DATETIME.equals(typeEnum)
+                            ||  FormItemControlTypeEnum.NUMBER.equals(typeEnum)
+                            ||  FormItemControlTypeEnum.TIME.equals(typeEnum)
+                    ) {
+                        dataMap.put(item.getLabelCode(), currentValue);
+                    }
+                    if (FormItemControlTypeEnum.SELECT.equals(typeEnum)
+                            || FormItemControlTypeEnum.RADIO.equals(typeEnum)
+                            || FormItemControlTypeEnum.CHECKBOX.equals(typeEnum) ) {
+                        String options = item.getOptions();
+                        if (StrUtil.isNotBlank(options)) {
+                            JSONArray objects = JSONUtil.parseArray(options);
+                            if (ObjUtil.isNotNull(objects)) {
+                                List<LabelValueVO> list = objects.toList(LabelValueVO.class);
+                                if (CollUtil.isNotEmpty(list)) {
+                                    LabelValueVO<?, ?> vo = list.stream()
+                                            .filter(i -> i.getValue().equals(currentValue))
+                                            .findFirst()
+                                            .orElse(null);
+                                    if (ObjUtil.isNotNull(vo)) {
+                                        dataMap.put(item.getLabelCode(), Convert.toStr(vo.getLabel()));
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             });
             dataVO.setItemMap(dataMap);

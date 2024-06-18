@@ -25,6 +25,8 @@ public class FormItemEntity extends RelEntity<Integer> {
 
     private String labelCode;
 
+    private String options;
+
     private Boolean required;
 
     private Integer orderNumber;

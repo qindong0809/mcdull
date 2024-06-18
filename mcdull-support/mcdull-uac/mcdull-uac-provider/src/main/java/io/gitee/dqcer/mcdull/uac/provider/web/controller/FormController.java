@@ -4,7 +4,6 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormItemVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormRecordDataVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFormService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author dqcer
@@ -98,7 +98,7 @@ public class FormController {
     @Operation(summary = "获取form数据信息")
     //    @SaCheckPermission("support:changeLog:add")
     @PostMapping("/form/record-queryPage")
-    public Result<PagedVO<FormRecordDataVO>> recordQueryPage(@RequestBody @Valid FormRecordQueryDTO dto) {
+    public Result<PagedVO<Map<String, String>>> recordQueryPage(@RequestBody @Valid FormRecordQueryDTO dto) {
         return Result.success(formService.recordQueryPage(dto));
     }
 

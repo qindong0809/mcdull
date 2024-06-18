@@ -3,10 +3,10 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormItemVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormRecordDataVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormVO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IFormService {
 
@@ -28,7 +28,7 @@ public interface IFormService {
 
     void recordAdd(FormRecordAddDTO dto);
 
-    PagedVO<FormRecordDataVO> recordQueryPage(FormRecordQueryDTO dto);
+    PagedVO<Map<String, String>> recordQueryPage(FormRecordQueryDTO dto);
 
     void exportData(FormRecordQueryDTO dto);
 }

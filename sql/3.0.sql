@@ -721,9 +721,10 @@ drop table if exists `sys_form_item`;
 create table `sys_form_item` (
 `id` int auto_increment comment '主键',
 `form_id` int not null comment '表单id',
-`control_type` varchar(45) not null comment '控件类型 (text、textarea、select、radio、checkbox、date、time、datetime、number、file)',
+`control_type` varchar(45) not null comment '控件类型 (input、textarea、select、radio、checkbox、date、time、datetime、number、file)',
 `label` varchar(128) not null comment '显示名称',
 `label_code` varchar(64) not null comment '显示名称code(业务唯一)',
+`options` varchar(512) default null  comment '选项数组 select/radio/checkbox',
 `required` tinyint(0) not null default 0 comment '必填标识（true、false）',
 `order_number` int not null,
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
