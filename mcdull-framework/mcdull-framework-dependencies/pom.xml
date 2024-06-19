@@ -27,12 +27,12 @@
         <knife4j.version>4.4.0</knife4j.version>
         <fastjson.version>1.2.83</fastjson.version>
         <redisson.spring.boot.version>3.15.6</redisson.spring.boot.version>
-        <hutool.version>5.8.14</hutool.version>
+        <hutool.version>5.8.28</hutool.version>
         <archunit.version>1.0.1</archunit.version>
         <druid.version>1.2.14</druid.version>
         <kaptcha.version>2.3.3</kaptcha.version>
         <qiniu.version>[7.7.0, 7.7.99]</qiniu.version>
-        <easyexcel.version>3.2.1</easyexcel.version>
+        <easyexcel.version>4.0.1</easyexcel.version>
         <poi.version>4.1.2</poi.version>
         <itext7.version>7.2.5</itext7.version>
         <html2pdf.version>4.0.5</html2pdf.version>
