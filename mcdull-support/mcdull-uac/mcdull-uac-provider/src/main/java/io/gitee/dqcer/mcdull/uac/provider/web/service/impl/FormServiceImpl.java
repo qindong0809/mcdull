@@ -7,25 +7,27 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormItemVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormRecordDataVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormVO;
+import io.gitee.dqcer.mcdull.uac.provider.util.ExcelUtil;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IFormManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFormService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.io.ByteArrayOutputStream;
+import java.util.*;
 
 /**
  *
@@ -39,6 +41,9 @@ public class FormServiceImpl
 
     @Resource
     private IFormManager formManager;
+
+    @Resource
+    private IUserService userService;
 
     @Override
     public PagedVO<FormVO> queryPage(FormQueryDTO dto) {
@@ -153,6 +158,11 @@ public class FormServiceImpl
 
     @Override
     public PagedVO<Map<String, String>> recordQueryPage(FormRecordQueryDTO dto) {
+        List<Map<String, String>> voList = this.getAllRecord(dto);
+        return PageUtil.ofSub(voList, dto);
+    }
+
+    private List<Map<String, String>> getAllRecord(FormRecordQueryDTO dto) {
         List<FormRecordDataVO> list = formManager.recordList(dto.getFormId());
         List<Map<String, String>> voList = new ArrayList<>();
         for (FormRecordDataVO vo : list) {
@@ -171,12 +181,33 @@ public class FormServiceImpl
                 voList.add(itemMap);
             }
         }
-        return PageUtil.ofSub(voList, dto);
+        return voList;
     }
 
     @Override
-    public void exportData(FormRecordQueryDTO dto) {
+    public byte[]  exportData(FormRecordQueryDTO dto) {
+        List<Map<String, String>> allRecord = this.getAllRecord(dto);
+        List<FormItemVO> formItemVOS = this.itemConfigList(dto.getFormId());
+        Integer userId = UserContextHolder.userId();
+        String actualName = userService.getActualName(userId);
+        String s = TimeZoneUtil.serializeDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        Map<String, String> titleMap = new HashMap<>();
+        for (FormItemVO itemVO : formItemVOS) {
+            titleMap.put(itemVO.getName(), itemVO.getKey());
+        }
+        FormEntity form = baseRepository.getById(dto.getFormId());
+        ExcelUtil.exportExcelByMap(outputStream, form.getName(),
+                this.filterConditionsStr(dto), actualName, s, titleMap, allRecord);
+        return outputStream.toByteArray();
+    }
 
+    private String filterConditionsStr(FormRecordQueryDTO dto) {
+        String keyword = dto.getKeyword();
+        if (StrUtil.isNotBlank(keyword)) {
+            return "关键字： " + keyword;
+        }
+        return StrUtil.EMPTY;
     }
 
     private FormEntity convertToEntity(FormAddDTO dto) {

@@ -30,5 +30,5 @@ public interface IFormService {
 
     PagedVO<Map<String, String>> recordQueryPage(FormRecordQueryDTO dto);
 
-    void exportData(FormRecordQueryDTO dto);
+    byte[]  exportData(FormRecordQueryDTO dto);
 }

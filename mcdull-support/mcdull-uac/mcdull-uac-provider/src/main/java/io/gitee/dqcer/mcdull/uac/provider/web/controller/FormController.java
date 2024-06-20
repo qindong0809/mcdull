@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormItemVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormVO;
@@ -11,7 +12,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -104,9 +107,13 @@ public class FormController {
 
     @Operation(summary = "获取form数据信息")
     //    @SaCheckPermission("support:changeLog:add")
-    @PostMapping("/form/record-export")
-    public void exportData(@RequestBody @Valid FormRecordQueryDTO dto) {
-        formService.exportData(dto);
+    @PostMapping(value = "/form/record-export", produces = "application/octet-stream")
+    public void exportData(@RequestBody @Valid FormRecordQueryDTO dto) throws IOException {
+        byte[] dataStream = formService.exportData(dto);
+        HttpServletResponse response = ServletUtil.getResponse();
+        ServletUtil.setDownloadFileHeader(response,   "form_demo.xlsx",
+                (long) dataStream.length);
+        response.getOutputStream().write(dataStream);
     }
 
 }

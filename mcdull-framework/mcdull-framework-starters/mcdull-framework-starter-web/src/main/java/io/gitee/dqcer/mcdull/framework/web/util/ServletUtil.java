@@ -78,7 +78,7 @@ public class ServletUtil {
                 response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION);
             }
         } catch (UnsupportedEncodingException e) {
-            log.error(e.getMessage(), e);
+            LogHelp.error(log, e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }

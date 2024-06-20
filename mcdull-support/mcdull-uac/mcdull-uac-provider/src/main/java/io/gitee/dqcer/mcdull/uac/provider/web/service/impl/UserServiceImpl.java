@@ -491,5 +491,16 @@ public class UserServiceImpl
         return Collections.emptyList();
     }
 
+    @Override
+    public String getActualName(Integer userId) {
+        if (ObjUtil.isNotNull(userId)) {
+            UserEntity user = baseRepository.getById(userId);
+            if (ObjUtil.isNotNull(user)) {
+                return user.getActualName();
+            }
+        }
+        return StrUtil.EMPTY;
+    }
+
 
 }
