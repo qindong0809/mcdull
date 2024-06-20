@@ -116,4 +116,27 @@ public class FormController {
         response.getOutputStream().write(dataStream);
     }
 
+    @Operation(summary = "删除单条记录")
+    //    @SaCheckPermission("support:changeLog:add")
+    @GetMapping("/form/record-delete/{recordId}")
+    public Result<Boolean> deleteOneRecord(@PathVariable Integer recordId) {
+        formService.deleteOneRecord(recordId);
+        return Result.success(true);
+    }
+
+    @Operation(summary = "更新单条记录")
+    //    @SaCheckPermission("support:changeLog:add")
+    @PostMapping("/form/record-update")
+    public Result<Boolean> updateOneRecord(@RequestBody @Valid FormRecordUpdateDTO dto) {
+        formService.updateOneRecord(dto);
+        return Result.success(true);
+    }
+
+    @Operation(summary = "获取单体记录不用转")
+    //    @SaCheckPermission("support:changeLog:add")
+    @GetMapping("/form/record-detail-no-convert/{recordId}")
+    public Result<Map<String, Object>> getOneRecordNoConvert(@PathVariable Integer recordId) {
+        return Result.success(formService.getOneRecordNoConvert(recordId));
+    }
+
 }

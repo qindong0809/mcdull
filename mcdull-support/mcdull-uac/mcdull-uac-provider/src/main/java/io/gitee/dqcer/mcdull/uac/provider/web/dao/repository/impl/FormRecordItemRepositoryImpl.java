@@ -27,4 +27,11 @@ public class FormRecordItemRepositoryImpl extends
         query.eq(FormRecordItemEntity::getFormId, formId);
         return this.list(query);
     }
+
+    @Override
+    public List<FormRecordItemEntity> selectByRecordId(Integer recordId) {
+        LambdaQueryWrapper<FormRecordItemEntity> query = Wrappers.lambdaQuery();
+        query.eq(FormRecordItemEntity::getFormRecordId, recordId);
+        return this.list(query);
+    }
 }

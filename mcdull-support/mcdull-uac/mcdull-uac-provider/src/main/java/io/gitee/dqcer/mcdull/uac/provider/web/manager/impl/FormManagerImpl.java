@@ -12,6 +12,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormEntity;
@@ -25,6 +26,8 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormRecordItemRepo
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormRecordRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IFormManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +47,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class FormManagerImpl extends GenericLogic implements IFormManager {
+
+    private static final Logger log = LoggerFactory.getLogger(FormManagerImpl.class);
 
     @Resource
     private IFormRepository formRepository;
@@ -212,12 +217,17 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
         }
         Map<Integer, FormRecordEntity> recordMap = recordList.stream()
                 .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
-        List<FormRecordItemEntity> recordItemList = formRecordItemRepository.selectByFormId(formId);
-        if (CollUtil.isEmpty(recordItemList)) {
+        List<FormRecordItemEntity> recordItemList1 = formRecordItemRepository.selectByFormId(formId);
+        if (CollUtil.isEmpty(recordItemList1)) {
+            return Collections.emptyList();
+        }
+        List<FormRecordItemEntity> statusOkList = recordItemList1.stream()
+                .filter(i -> recordMap.containsKey(i.getFormRecordId())).collect(Collectors.toList());
+        if (CollUtil.isEmpty(statusOkList)) {
             return Collections.emptyList();
         }
         List<FormRecordDataVO> result = new ArrayList<>();
-        Map<Integer, List<FormRecordItemEntity>> recordGroupMap = recordItemList.stream()
+        Map<Integer, List<FormRecordItemEntity>> recordGroupMap = statusOkList.stream()
                 .collect(Collectors.groupingBy(FormRecordItemEntity::getFormRecordId));
         for (Map.Entry<Integer, List<FormRecordItemEntity>> entry : recordGroupMap.entrySet()) {
             FormRecordDataVO dataVO = new FormRecordDataVO();
@@ -279,5 +289,88 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
         }
         form.setPublish(true);
         formRepository.updateById(form);
+    }
+
+    @Override
+    public void deleteOneRecord(Integer recordId) {
+        FormRecordEntity formRecord = formRecordRepository.getById(recordId);
+        if (ObjUtil.isNull(formRecord)) {
+            this.throwDataNotExistException(recordId);
+        }
+       formRecordRepository.removeById(recordId);
+    }
+
+    @Override
+    public void updateOneRecord(Integer recordId, Map<String, String> formDataMap) {
+        if (MapUtil.isEmpty(formDataMap)) {
+            LogHelp.warn(log, "formDataMap is empty");
+            return;
+        }
+        FormRecordEntity formRecord = formRecordRepository.getById(recordId);
+        if (ObjUtil.isNull(formRecord)) {
+            this.throwDataNotExistException(recordId);
+        }
+        List<FormItemEntity> formItemEntityList = formItemRepository.selectByFormId(formRecord.getFormId());
+        if (CollUtil.isEmpty(formItemEntityList)) {
+            LogHelp.warn(log, "formId:{}. formItemEntityList is empty", formRecord.getFormId());
+            return;
+        }
+        Map<Integer, FormItemEntity> itemMap = formItemEntityList.stream()
+                .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+
+        List<FormRecordItemEntity> list = formRecordItemRepository.selectByRecordId(recordId);
+        if (CollUtil.isEmpty(list)) {
+            LogHelp.error(log, "recordId:{} is not exist", recordId);
+            return;
+        }
+        list.forEach(recordItem -> {
+            Integer formItemId = recordItem.getFormItemId();
+            FormItemEntity formItem = itemMap.get(formItemId);
+            if (ObjUtil.isNull(formItem)) {
+                LogHelp.error(log, "formItemId:{} is not exist", formItemId);
+                return;
+            }
+            String labelCode = formItem.getLabelCode();
+            String currentValue = formDataMap.get(labelCode);
+            recordItem.setCurrentValue(currentValue);
+        });
+        formRecordItemRepository.updateBatchById(list);
+    }
+
+    @Override
+    public Map<String, Object> getOneRecordNoConvert(Integer recordId) {
+        FormRecordEntity formRecord = formRecordRepository.getById(recordId);
+        if (ObjUtil.isNull(formRecord)) {
+            return Collections.emptyMap();
+        }
+        Integer formId = formRecord.getFormId();
+        List<FormItemEntity> itemList = formItemRepository.selectByFormId(formId);
+        if (CollUtil.isEmpty(itemList)) {
+            return Collections.emptyMap();
+        }
+        Map<Integer, FormItemEntity> itemMap = itemList.stream()
+                .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+
+        List<FormRecordItemEntity> recordItemList = formRecordItemRepository.selectByRecordId(recordId);
+        if (CollUtil.isNotEmpty(recordItemList)) {
+            Map<String, Object> result = MapUtil.newHashMap();
+            recordItemList.forEach(recordItem -> {
+                FormItemEntity formItem = itemMap.get(recordItem.getFormItemId());
+                if (ObjUtil.isNull(formItem)) {
+                    return;
+                }
+                String labelCode = formItem.getLabelCode();
+                String currentValue = recordItem.getCurrentValue();
+                FormItemControlTypeEnum typeEnum = IEnum.getByCode(FormItemControlTypeEnum.class,
+                        formItem.getControlType());
+                if (FormItemControlTypeEnum.NUMBER.equals(typeEnum)) {
+                    result.put(labelCode, Convert.toNumber(currentValue));
+                }else {
+                    result.put(labelCode, currentValue);
+                }
+            });
+            return result;
+        }
+        return Collections.emptyMap();
     }
 }

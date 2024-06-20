@@ -178,6 +178,7 @@ public class FormServiceImpl
                 }
             }
             if (isContains) {
+                itemMap.put("id", vo.getId().toString());
                 voList.add(itemMap);
             }
         }
@@ -200,6 +201,23 @@ public class FormServiceImpl
         ExcelUtil.exportExcelByMap(outputStream, form.getName(),
                 this.filterConditionsStr(dto), actualName, s, titleMap, allRecord);
         return outputStream.toByteArray();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteOneRecord(Integer recordId) {
+        formManager.deleteOneRecord(recordId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateOneRecord(FormRecordUpdateDTO dto) {
+        formManager.updateOneRecord(dto.getRecordId(), dto.getFormData());
+    }
+
+    @Override
+    public Map<String, Object> getOneRecordNoConvert(Integer recordId) {
+        return formManager.getOneRecordNoConvert(recordId);
     }
 
     private String filterConditionsStr(FormRecordQueryDTO dto) {

@@ -52,4 +52,15 @@ public interface IFormManager {
      * @param formId 表单id
      */
     void formConfigReady(Integer formId);
+
+    /**
+     * 删除表单记录
+     *
+     * @param recordId 记录id
+     */
+    void deleteOneRecord(Integer recordId);
+
+    void updateOneRecord(Integer recordId, Map<String, String> formData);
+
+    Map<String, Object> getOneRecordNoConvert(Integer recordId);
 }

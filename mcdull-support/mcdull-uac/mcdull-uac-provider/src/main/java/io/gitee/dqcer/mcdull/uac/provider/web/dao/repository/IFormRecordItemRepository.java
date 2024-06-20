@@ -14,4 +14,6 @@ public interface IFormRecordItemRepository extends IService<FormRecordItemEntity
 
 
     List<FormRecordItemEntity> selectByFormId(Integer formId);
+
+    List<FormRecordItemEntity> selectByRecordId(Integer recordId);
 }
