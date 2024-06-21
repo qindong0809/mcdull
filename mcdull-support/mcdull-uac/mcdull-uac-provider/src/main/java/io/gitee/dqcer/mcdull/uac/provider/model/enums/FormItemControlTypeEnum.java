@@ -15,6 +15,7 @@ public enum FormItemControlTypeEnum implements IEnum<String> {
     TEXTAREA("textarea", "textarea"),
     SELECT("select", "select"),
     RADIO("radio", "radio"),
+    SWITCH("switch", "switch"),
     CHECKBOX("checkbox", "checkbox"),
     DATE("date", "date"),
     TIME("time", "time"),

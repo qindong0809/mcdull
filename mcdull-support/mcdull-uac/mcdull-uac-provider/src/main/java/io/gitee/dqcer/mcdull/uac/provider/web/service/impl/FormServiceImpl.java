@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -172,7 +173,8 @@ public class FormServiceImpl
             if (StrUtil.isNotBlank(keyword)) {
                 isContains = false;
                 boolean anyMatch = itemMap.entrySet().stream()
-                        .anyMatch(i -> StrUtil.contains(i.getValue().toLowerCase(), keyword.toLowerCase()));
+                        .anyMatch(i ->
+                                StrUtil.contains(Convert.toStr(i.getValue(), StrUtil.EMPTY).toLowerCase(), keyword.toLowerCase()));
                 if (anyMatch) {
                     isContains = true;
                 }
@@ -193,7 +195,7 @@ public class FormServiceImpl
         String actualName = userService.getActualName(userId);
         String s = TimeZoneUtil.serializeDate(new Date(), "yyyy-MM-dd HH:mm:ss");
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        Map<String, String> titleMap = new HashMap<>();
+        Map<String, String> titleMap = new LinkedHashMap<>();
         for (FormItemVO itemVO : formItemVOS) {
             titleMap.put(itemVO.getName(), itemVO.getKey());
         }

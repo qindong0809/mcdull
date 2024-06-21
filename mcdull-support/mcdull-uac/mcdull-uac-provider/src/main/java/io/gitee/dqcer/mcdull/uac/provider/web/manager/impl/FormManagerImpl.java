@@ -139,6 +139,8 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                         JSONArray objects = componentProps.get("options", JSONArray.class);
                         if (ObjUtil.isNotNull(objects)) {
                             formItem.setOptions(objects.toString());
+                        } else {
+                            formItem.setOptions(componentProps.toString());
                         }
                     }
                     formItem.setOrderNumber(i ++);
@@ -163,7 +165,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
     }
 
     @Override
-    public void addFormRecordData(Integer formId, Map<String, String> formDataMap) {
+    public void addFormRecordData(Integer formId, Map<String, Object> formDataMap) {
         FormEntity formEntity = formRepository.getById(formId);
         if (ObjUtil.isNull(formEntity)) {
             this.throwDataNotExistException(formId);
@@ -186,12 +188,19 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
         List<FormRecordItemEntity> recordItemList = new ArrayList<>();
         formItemEntityList.forEach(formItemEntity -> {
             String labelCode = formItemEntity.getLabelCode();
-            String value = formDataMap.get(labelCode);
+            Object obj = formDataMap.get(labelCode);
             FormRecordItemEntity recordItem = new FormRecordItemEntity();
             recordItem.setFormItemId(formItemEntity.getId());
             recordItem.setFormRecordId(recordId);
             recordItem.setFormId(formId);
-            recordItem.setCurrentValue(value);
+            FormItemControlTypeEnum controlTypeEnum = FormItemControlTypeEnum.toEnum(formItemEntity.getControlType());
+            if (FormItemControlTypeEnum.CHECKBOX.equals(controlTypeEnum)) {
+                if (obj != null) {
+                    recordItem.setCurrentValue(JSONUtil.parseArray(obj).toString());
+                }
+            } else {
+                recordItem.setCurrentValue(Convert.toStr(obj));
+            }
             recordItemList.add(recordItem);
         });
         formRecordItemRepository.saveBatch(recordItemList);
@@ -241,18 +250,8 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                     String currentValue = formRecordItemEntity.getCurrentValue();
                     String controlType = item.getControlType();
                     FormItemControlTypeEnum typeEnum = IEnum.getByCode(FormItemControlTypeEnum.class, controlType);
-                    if (FormItemControlTypeEnum.INPUT.equals(typeEnum)
-                            ||  FormItemControlTypeEnum.TEXTAREA.equals(typeEnum)
-                            ||  FormItemControlTypeEnum.DATE.equals(typeEnum)
-                            ||  FormItemControlTypeEnum.DATETIME.equals(typeEnum)
-                            ||  FormItemControlTypeEnum.NUMBER.equals(typeEnum)
-                            ||  FormItemControlTypeEnum.TIME.equals(typeEnum)
-                    ) {
-                        dataMap.put(item.getLabelCode(), currentValue);
-                    }
                     if (FormItemControlTypeEnum.SELECT.equals(typeEnum)
-                            || FormItemControlTypeEnum.RADIO.equals(typeEnum)
-                            || FormItemControlTypeEnum.CHECKBOX.equals(typeEnum) ) {
+                            || FormItemControlTypeEnum.RADIO.equals(typeEnum)) {
                         String options = item.getOptions();
                         if (StrUtil.isNotBlank(options)) {
                             JSONArray objects = JSONUtil.parseArray(options);
@@ -269,6 +268,51 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                                 }
                             }
                         }
+                    }  else if (FormItemControlTypeEnum.SWITCH.equals(typeEnum)){
+                        String options = item.getOptions();
+                        if (StrUtil.isNotBlank(options)) {
+                            JSONObject jsonObject = JSONUtil.parseObj(options);
+                            if (ObjUtil.isNotNull(jsonObject)) {
+                                String checkedValue = jsonObject.get("checkedValue", String.class);
+                                String unCheckedValue = jsonObject.get("unCheckedValue", String.class);
+                                if (StrUtil.isNotBlank(checkedValue) && StrUtil.isNotBlank(unCheckedValue)) {
+                                    if (checkedValue.equals(currentValue)) {
+                                        dataMap.put(item.getLabelCode(), Convert.toStr(jsonObject.get("checkedChildren")));
+                                    } else {
+                                        dataMap.put(item.getLabelCode(), Convert.toStr(jsonObject.get("unCheckedChildren")));
+                                    }
+                                }
+                            }
+                            if (StrUtil.isNotBlank(jsonObject.getStr(currentValue))) {
+                                dataMap.put(item.getLabelCode(), jsonObject.getStr(currentValue));
+                            }
+                        }
+
+                    } else if (FormItemControlTypeEnum.CHECKBOX.equals(typeEnum)){
+                        String options = item.getOptions();
+                        if (StrUtil.isNotBlank(options)) {
+                            JSONArray objects = JSONUtil.parseArray(options);
+                            if (ObjUtil.isNotNull(objects)) {
+                                List<LabelValueVO> list = objects.toList(LabelValueVO.class);
+                                if (CollUtil.isNotEmpty(list)) {
+                                    if (StrUtil.isNotBlank(currentValue)) {
+                                        JSONArray parsedArray = JSONUtil.parseArray(currentValue);
+                                        if (CollUtil.isNotEmpty(parsedArray)) {
+                                            List<String> checkboxValueList = parsedArray.toList(String.class);
+                                            if (CollUtil.isNotEmpty(checkboxValueList)) {
+                                                String checkboxValueJoin = list.stream()
+                                                        .filter(i -> checkboxValueList.contains(Convert.toStr(i.getValue())))
+                                                        .map(i->Convert.toStr(i.getLabel()))
+                                                        .collect(Collectors.joining(", "));
+                                                dataMap.put(item.getLabelCode(), checkboxValueJoin);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        dataMap.put(item.getLabelCode(), currentValue);
                     }
                 }
             });
@@ -301,7 +345,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
     }
 
     @Override
-    public void updateOneRecord(Integer recordId, Map<String, String> formDataMap) {
+    public void updateOneRecord(Integer recordId, Map<String, Object> formDataMap) {
         if (MapUtil.isEmpty(formDataMap)) {
             LogHelp.warn(log, "formDataMap is empty");
             return;
@@ -331,8 +375,15 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                 return;
             }
             String labelCode = formItem.getLabelCode();
-            String currentValue = formDataMap.get(labelCode);
-            recordItem.setCurrentValue(currentValue);
+            Object obj = formDataMap.get(labelCode);
+            FormItemControlTypeEnum controlTypeEnum = FormItemControlTypeEnum.toEnum(formItem.getControlType());
+            if (FormItemControlTypeEnum.CHECKBOX.equals(controlTypeEnum)) {
+                if (obj != null) {
+                    recordItem.setCurrentValue(JSONUtil.parseArray(obj).toString());
+                }
+            } else {
+                recordItem.setCurrentValue(Convert.toStr(obj));
+            }
         });
         formRecordItemRepository.updateBatchById(list);
     }

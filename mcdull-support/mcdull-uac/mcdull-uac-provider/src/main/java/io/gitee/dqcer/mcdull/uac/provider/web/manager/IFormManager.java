@@ -36,7 +36,7 @@ public interface IFormManager {
      * @param formId   表单id
      * @param formData 表单数据
      */
-    void addFormRecordData(Integer formId, Map<String, String> formData);
+    void addFormRecordData(Integer formId, Map<String, Object> formData);
 
     /**
      * 记录列表
@@ -60,7 +60,7 @@ public interface IFormManager {
      */
     void deleteOneRecord(Integer recordId);
 
-    void updateOneRecord(Integer recordId, Map<String, String> formData);
+    void updateOneRecord(Integer recordId, Map<String, Object> formData);
 
     Map<String, Object> getOneRecordNoConvert(Integer recordId);
 }

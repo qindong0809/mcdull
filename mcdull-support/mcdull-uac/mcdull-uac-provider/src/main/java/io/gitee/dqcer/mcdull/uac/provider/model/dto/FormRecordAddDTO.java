@@ -14,6 +14,6 @@ public class FormRecordAddDTO implements DTO {
     private Integer formId;
 
 
-    private Map<String, String> formData;
+    private Map<String, Object> formData;
 
 }
