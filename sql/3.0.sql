@@ -228,10 +228,23 @@ INSERT INTO `sys_menu` VALUES (236, '邮箱配置', 2, 50, 1, '/support/email-co
 INSERT INTO `sys_menu` VALUES (237, '读操作', 3, 236, 1, NULL, NULL, 1, 'support:email_config:read', 'support:email_config:read', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (238, '写操作', 3, 236, 2, NULL, NULL, 1, 'support:email_config:write', 'support:email_config:write', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (239, '表单设计列表', 2, 225, 1, '/support/form/form-list', '/support/form/form-list.vue', 1, NULL, NULL, 'FormOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
-INSERT INTO `sys_menu` VALUES (240, '表单数据', 2, 225, NULL, '1', NULL, 1, NULL, NULL, NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (240, '表单数据', 2, 225, NULL, '1', NULL, 1, NULL, NULL, NULL, NULL, 0, NULL, 1, 1, 0, 1, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (241, '应用监控', 2, 111, 6, '/supprot/spring-boota-dmin/index', NULL, 1, NULL, NULL, 'AlertOutlined', NULL, 1, 'http://mcdull.io:9000', 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (242, '行政区域', 2, 50, 7, '/support/area/index', '/support/area/index.vue', 1, NULL, NULL, 'BankOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
-INSERT INTO `sys_menu` VALUES (243, '数据列表', 2, 239, 1, '/support/form/form-data-list', '/support/form/form-data-list.vue', 1, NULL, NULL, 'DiffOutlined', NULL, 0, NULL, 0, 0, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (243, '数据列表', 2, 225, 3, '/support/form/form-data-list', '/support/form/form-data-list.vue', 1, NULL, NULL, 'DiffOutlined', NULL, 0, NULL, 0, 0, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (244, '查询', 3, 239, NULL, NULL, NULL, 1, 'support:form:page', 'support:form:page', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (245, '新增', 3, 239, NULL, NULL, NULL, 1, 'support:form:add', 'support:form:add', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (246, '更新', 3, 239, NULL, NULL, NULL, 1, 'support:form:update', 'support:form:update', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (247, '删除', 3, 239, NULL, NULL, NULL, 1, 'support:form:delete', 'support:form:delete', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (248, '保存设计', 3, 226, NULL, NULL, NULL, 1, 'support:form:designer', 'support:form:designer', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (249, '发布', 3, 239, NULL, NULL, NULL, 1, 'support:form:publish', 'support:form:publish', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (250, '新增', 3, 243, NULL, NULL, NULL, 1, 'support:form:record:add', 'support:form:record:add', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (251, '查询', 3, 243, 2, NULL, NULL, 1, 'support:form:record:list', 'support:form:record:list', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (252, '导出', 3, 243, NULL, NULL, NULL, 1, 'support:form:record:export', 'support:form:record:export', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (253, '删除', 3, 243, NULL, NULL, NULL, 1, 'support:form:record:delete', 'support:form:record:delete', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (254, '更新', 3, 243, NULL, NULL, NULL, 1, 'support:form:record:update', 'support:form:record:update', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+
+
 
 drop table if exists `sys_role_menu`;
 create table `sys_role_menu`  (
