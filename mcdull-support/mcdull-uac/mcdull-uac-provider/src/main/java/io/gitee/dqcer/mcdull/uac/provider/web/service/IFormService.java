@@ -30,7 +30,7 @@ public interface IFormService {
 
     PagedVO<Map<String, String>> recordQueryPage(FormRecordQueryDTO dto);
 
-    byte[]  exportData(FormRecordQueryDTO dto);
+    void  exportData(FormRecordQueryDTO dto);
 
     void deleteOneRecord(Integer recordId);
 

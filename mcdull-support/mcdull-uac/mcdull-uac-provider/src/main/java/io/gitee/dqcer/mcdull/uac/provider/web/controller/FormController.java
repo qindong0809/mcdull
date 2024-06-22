@@ -3,7 +3,6 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormItemVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormVO;
@@ -13,9 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -78,14 +75,12 @@ public class FormController {
     }
 
     @Operation(summary = "表单JSON详情")
-//    @SaCheckPermission("support:form:page")
     @GetMapping("/form/detail/{formId}")
     public Result<FormVO> detail(@PathVariable Integer formId) {
         return Result.success(formService.detail(formId));
     }
 
     @Operation(summary = "表单字段详情")
-    //    @SaCheckPermission("support:changeLog:add")
     @GetMapping("/form/item-config-list/{formId}")
     public Result<List<FormItemVO>> itemConfigList(@PathVariable Integer formId) {
         return Result.success(formService.itemConfigList(formId));
@@ -109,12 +104,8 @@ public class FormController {
     @Operation(summary = "导出数据")
     @SaCheckPermission("support:form:record:export")
     @PostMapping(value = "/form/record-export", produces = "application/octet-stream")
-    public void exportData(@RequestBody @Valid FormRecordQueryDTO dto) throws IOException {
-        byte[] dataStream = formService.exportData(dto);
-        HttpServletResponse response = ServletUtil.getResponse();
-        ServletUtil.setDownloadFileHeader(response,   "form_demo.xlsx",
-                (long) dataStream.length);
-        response.getOutputStream().write(dataStream);
+    public void exportData(@RequestBody @Valid FormRecordQueryDTO dto) {
+       formService.exportData(dto);
     }
 
     @Operation(summary = "删除单条数据")
@@ -134,7 +125,6 @@ public class FormController {
     }
 
     @Operation(summary = "获取单体记录不用转")
-//    @SaCheckPermission("support:form:record:detail")
     @GetMapping("/form/record-detail-no-convert/{recordId}")
     public Result<Map<String, Object>> getOneRecordNoConvert(@PathVariable Integer recordId) {
         return Result.success(formService.getOneRecordNoConvert(recordId));

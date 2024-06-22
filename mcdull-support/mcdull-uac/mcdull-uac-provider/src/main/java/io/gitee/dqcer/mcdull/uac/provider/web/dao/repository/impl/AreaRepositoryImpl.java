@@ -1,13 +1,11 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.AreaQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.AreaEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.AreaMapper;
@@ -45,7 +43,8 @@ public class AreaRepositoryImpl extends
         LambdaQueryWrapper<AreaEntity> lambda = Wrappers.lambdaQuery();
         String keyword = param.getKeyword();
         if (ObjUtil.isNotNull(keyword)) {
-            // TODO 组装查询条件
+            lambda.and(i->i.like(AreaEntity::getName, keyword).or()
+                    .like(AreaEntity::getFullname, keyword));
         }
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }

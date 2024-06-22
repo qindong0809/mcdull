@@ -12,22 +12,27 @@ import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileExtensionTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormItemVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormRecordDataVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormVO;
 import io.gitee.dqcer.mcdull.uac.provider.util.ExcelUtil;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IFormManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.ICommonService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFormService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -45,6 +50,9 @@ public class FormServiceImpl
 
     @Resource
     private IUserService userService;
+
+    @Resource
+    private ICommonService commonService;
 
     @Override
     public PagedVO<FormVO> queryPage(FormQueryDTO dto) {
@@ -188,7 +196,7 @@ public class FormServiceImpl
     }
 
     @Override
-    public byte[]  exportData(FormRecordQueryDTO dto) {
+    public void  exportData(FormRecordQueryDTO dto) {
         List<Map<String, String>> allRecord = this.getAllRecord(dto);
         List<FormItemVO> formItemVOS = this.itemConfigList(dto.getFormId());
         Integer userId = UserContextHolder.userId();
@@ -202,7 +210,17 @@ public class FormServiceImpl
         FormEntity form = baseRepository.getById(dto.getFormId());
         ExcelUtil.exportExcelByMap(outputStream, form.getName(),
                 this.filterConditionsStr(dto), actualName, s, titleMap, allRecord);
-        return outputStream.toByteArray();
+        byte[] byteArray = outputStream.toByteArray();
+
+        String fileName = commonService.getFileName(FileExtensionTypeEnum.EXCEL_X, form.getName());
+
+        HttpServletResponse response = ServletUtil.getResponse();
+        ServletUtil.setDownloadFileHeader(response, fileName, (long) byteArray.length);
+        try {
+            response.getOutputStream().write(byteArray);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
