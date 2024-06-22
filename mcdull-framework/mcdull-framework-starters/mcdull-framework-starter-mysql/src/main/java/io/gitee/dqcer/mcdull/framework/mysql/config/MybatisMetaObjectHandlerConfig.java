@@ -7,8 +7,6 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 /**
  * 数据库字段自动填充配置
  *
@@ -26,7 +24,7 @@ public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
      */
     @Override
     public void insertFill(MetaObject metaObject) {
-        LogHelp.info(log, () -> "Field [createdTime、createdBy、delFlag、inactive] start insert fill ....");
+        LogHelp.debug(log, () -> "Field [createdTime、createdBy、delFlag、inactive] start insert fill ....");
         this.fillStrategy(metaObject, "createdTime", UserContextHolder.getSession().getNow());
         this.fillStrategy(metaObject, "createdBy", UserContextHolder.userId());
         this.fillStrategy(metaObject, "delFlag", Boolean.FALSE);
@@ -35,7 +33,7 @@ public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        LogHelp.info(log, () -> "Field [updatedTime、updatedBy] start update fill ....");
+        LogHelp.debug(log, () -> "Field [updatedTime、updatedBy] start update fill ....");
         this.fillStrategy(metaObject, "updatedTime", UserContextHolder.getSession().getNow());
         this.fillStrategy(metaObject, "updatedBy", UserContextHolder.userId());
     }
