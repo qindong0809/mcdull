@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -262,8 +261,8 @@ public class FormServiceImpl
         formVO.setJsonText(item.getJsonText());
         formVO.setPublish(item.getPublish());
         formVO.setRemark(item.getRemark());
-        formVO.setCreateTime(LocalDateTimeUtil.of(item.getCreatedTime()));
-        formVO.setUpdateTime(LocalDateTimeUtil.of(item.getUpdatedTime()));
+        formVO.setCreateTime(item.getCreatedTime());
+        formVO.setUpdateTime(item.getUpdatedTime());
         return formVO;
     }
 

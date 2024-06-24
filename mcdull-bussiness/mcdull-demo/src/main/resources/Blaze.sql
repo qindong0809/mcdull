@@ -1,6 +1,7 @@
 
+drop table if exists `blaze_customer_info`;
 create table if not exists `blaze_customer_info` (
-`id` int auto_increment primary key,
+`id` int auto_increment comment '主键',
 `name` varchar(255) not null comment '企业名称',
 `provinces_code` varchar(64) not null comment '所在地省代码',
 `city_code` varchar(64) not null comment '所在市代码',

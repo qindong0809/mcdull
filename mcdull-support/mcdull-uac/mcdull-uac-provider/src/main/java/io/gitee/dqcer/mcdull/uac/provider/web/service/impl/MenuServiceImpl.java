@@ -8,7 +8,6 @@ import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
@@ -24,7 +23,6 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -278,7 +276,7 @@ public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implemen
         return null;
     }
 
-    @Cacheable(cacheNames = GlobalConstant.CAFFEINE_CACHE, key = "#onlyMenu")
+//    @Cacheable(cacheNames = GlobalConstant.CAFFEINE_CACHE, key = "#onlyMenu")
     @Override
     public List<MenuTreeVO> queryMenuTree(Boolean onlyMenu) {
         List<MenuEntity> list = baseRepository.listOnlyMenu(onlyMenu);

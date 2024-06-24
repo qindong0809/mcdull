@@ -19,8 +19,16 @@ public interface I${name.upperCamel}Service {
     void update(${name.upperCamel}UpdateDTO dto);
 
     ${name.upperCamel}VO detail(Integer id);
+    #if($deleteInfo.isSupportDelete)
+        #if($deleteInfo.deleteEnum == "BATCH" || $deleteInfo.deleteEnum == "SingleAndBatch")
+    void batchDelete(List<${primaryKeyJavaType}> idList)
+        #end
 
-    void batchDelete(List<Integer> idList);
+        #if($deleteInfo.deleteEnum == "Single" || $deleteInfo.deleteEnum == "SingleAndBatch")
+    void delete(${primaryKeyJavaType} ${primaryKeyFieldName});
+        #end
+    #end
+
 
     PagedVO<${name.upperCamel}VO> queryPage(${name.upperCamel}QueryDTO dto);
 }

@@ -1,10 +1,12 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * FormVO
@@ -26,8 +28,10 @@ public class FormVO implements VO {
 
     private String remark;
 
-    private LocalDateTime createTime;
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date createTime;
 
-    private LocalDateTime updateTime;
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date updateTime;
 
 }
