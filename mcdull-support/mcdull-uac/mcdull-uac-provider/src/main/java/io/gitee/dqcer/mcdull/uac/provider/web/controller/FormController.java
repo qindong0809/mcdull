@@ -124,7 +124,7 @@ public class FormController {
         return Result.success(true);
     }
 
-    @Operation(summary = "获取单体记录不用转")
+    @Operation(summary = "获取单条记录不用转")
     @GetMapping("/form/record-detail-no-convert/{recordId}")
     public Result<Map<String, Object>> getOneRecordNoConvert(@PathVariable Integer recordId) {
         return Result.success(formService.getOneRecordNoConvert(recordId));
