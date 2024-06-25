@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.AreaQueryDTO;
@@ -14,6 +15,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.service.IAreaService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,6 +40,33 @@ public class AreaServiceImpl
             }
         }
         return PageUtil.toPage(voList, entityPage);
+    }
+
+    @Override
+    public List<LabelValueVO<String, String>> provinceList() {
+        return buildList(baseRepository.getByAreaType(1));
+    }
+
+    @Override
+    public List<LabelValueVO<String, String>> cityList(String provinceCode) {
+        AreaEntity areaEntity = baseRepository.getCode(provinceCode);
+        if (ObjUtil.isNull(areaEntity)) {
+            return Collections.emptyList();
+        }
+        return this.buildList(baseRepository.getByPid(areaEntity.getId()));
+    }
+
+    private List<LabelValueVO<String, String>> buildList(List<AreaEntity> list) {
+        if (CollUtil.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        List<LabelValueVO<String, String>> labelValueVOList = new ArrayList<>();
+        for (AreaEntity entity : list) {
+            LabelValueVO<String, String> labelValueVO =
+                    new LabelValueVO<>(entity.getCode(), entity.getFullname());
+            labelValueVOList.add(labelValueVO);
+        }
+        return labelValueVOList;
     }
 
     private AreaVO convertToVO(AreaEntity item){

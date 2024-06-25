@@ -49,4 +49,25 @@ public class AreaRepositoryImpl extends
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 
+    @Override
+    public List<AreaEntity> getByAreaType(int areaType) {
+        LambdaQueryWrapper<AreaEntity> query = Wrappers.lambdaQuery();
+        query.eq(AreaEntity::getAreaType, areaType);
+        return baseMapper.selectList(query);
+    }
+
+    @Override
+    public List<AreaEntity> getByPid(Integer pid) {
+        LambdaQueryWrapper<AreaEntity> query = Wrappers.lambdaQuery();
+        query.eq(AreaEntity::getPid, pid);
+        return baseMapper.selectList(query);
+    }
+
+    @Override
+    public AreaEntity getCode(String code) {
+        LambdaQueryWrapper<AreaEntity> query = Wrappers.lambdaQuery();
+        query.eq(AreaEntity::getCode, code);
+        return baseMapper.selectOne(query);
+    }
+
 }

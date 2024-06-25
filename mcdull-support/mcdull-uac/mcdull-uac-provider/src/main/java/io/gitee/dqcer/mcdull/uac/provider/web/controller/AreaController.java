@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.AreaQueryDTO;
@@ -7,12 +8,11 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.AreaVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IAreaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author dqcer
@@ -30,6 +30,19 @@ public class AreaController {
     public Result<PagedVO<AreaVO>> queryPage(@RequestBody @Valid AreaQueryDTO dto) {
         return Result.success(areaService.queryPage(dto));
     }
+
+    @Operation(summary = "省份")
+    @PostMapping("/area/provinceList")
+    public Result<List<LabelValueVO<String, String>>> provinceList() {
+        return Result.success(areaService.provinceList());
+    }
+
+    @Operation(summary = "城市")
+    @GetMapping("/area/{provinceCode}/city-list")
+    public Result<List<LabelValueVO<String, String>>> cityList(@PathVariable String provinceCode) {
+        return Result.success(areaService.cityList(provinceCode));
+    }
+
 
 
 }

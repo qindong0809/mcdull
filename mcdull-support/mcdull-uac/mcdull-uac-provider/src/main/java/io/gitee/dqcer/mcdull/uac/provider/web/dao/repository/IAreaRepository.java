@@ -21,4 +21,9 @@ public interface IAreaRepository extends IService<AreaEntity> {
 
     Page<AreaEntity> selectPage(AreaQueryDTO dto);
 
+    List<AreaEntity> getByAreaType(int areaType);
+
+    List<AreaEntity> getByPid(Integer pid);
+
+    AreaEntity getCode(String code);
 }
