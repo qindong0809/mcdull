@@ -2,6 +2,8 @@ package io.gitee.dqcer.mcdull.framework.base.storage;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Locale;
+import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -52,6 +54,21 @@ public class UnifySession<T> implements Serializable {
     private Date now;
 
     /**
+     * 时区标识符
+     *
+     * e.g: Asia/Shanghai
+     * {@link java.time.ZoneId#SHORT_IDS}
+     */
+    private String zoneIdStr;
+
+    /**
+     * 日期格式
+     */
+    private String dateFormat;
+
+    private Locale locale;
+
+    /**
      * 请求url
      */
     private String requestUrl;
@@ -63,18 +80,47 @@ public class UnifySession<T> implements Serializable {
 
     @Override
     public String toString() {
-        return "UnifySession{" +
-                "userId=" + userId +
-                ", userType=" + userType +
-                ", administratorFlag=" + administratorFlag +
-                ", tenantId=" + tenantId +
-                ", roleId=" + roleId +
-                ", language='" + language + '\'' +
-                ", traceId='" + traceId + '\'' +
-                ", now=" + now +
-                ", requestUrl='" + requestUrl + '\'' +
-                ", extension=" + extension +
-                '}';
+        return new StringJoiner(", ", UnifySession.class.getSimpleName() + "[", "]")
+                .add("userId=" + userId)
+                .add("userType=" + userType)
+                .add("administratorFlag=" + administratorFlag)
+                .add("tenantId=" + tenantId)
+                .add("roleId=" + roleId)
+                .add("language='" + language + "'")
+                .add("traceId='" + traceId + "'")
+                .add("now=" + now)
+                .add("zoneIdStr='" + zoneIdStr + "'")
+                .add("dateFormat='" + dateFormat + "'")
+                .add("requestUrl='" + requestUrl + "'")
+                .add("extension=" + extension)
+                .toString();
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public UnifySession<T> setLocale(Locale locale) {
+        this.locale = locale;
+        return this;
+    }
+
+    public String getZoneIdStr() {
+        return zoneIdStr;
+    }
+
+    public UnifySession<T> setZoneIdStr(String zoneIdStr) {
+        this.zoneIdStr = zoneIdStr;
+        return this;
+    }
+
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public UnifySession<T> setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+        return this;
     }
 
     public Boolean getAdministratorFlag() {

@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
 
 import java.io.IOException;
@@ -21,10 +23,19 @@ import java.util.Date;
  */
 public class DynamicDateSerialize extends DateSerializer implements ContextualSerializer {
 
-    private final JsonFormat jsonFormat;
+    private JsonFormat jsonFormat;
 
-    public DynamicDateSerialize(JsonFormat jsonFormat) {
+    private DynamicDateFormat dynamicDateFormat;
+
+    /**
+     * 默认构造方法, 以便序列化器能被Jackson正确识别
+     */
+    @SuppressWarnings("unused")
+    public DynamicDateSerialize() {}
+
+    public DynamicDateSerialize(JsonFormat jsonFormat, DynamicDateFormat dynamicDateFormat) {
         this.jsonFormat = jsonFormat;
+        this.dynamicDateFormat = dynamicDateFormat;
     }
 
     @Override
@@ -34,19 +45,38 @@ public class DynamicDateSerialize extends DateSerializer implements ContextualSe
             jsonGenerator.writeNull();
             return;
         }
+        String pattern = DatePattern.NORM_DATE_PATTERN;
         if (jsonFormat != null) {
-            String pattern = jsonFormat.pattern();
-            if (StrUtil.isBlank(pattern)) {
-                pattern = DatePattern.NORM_DATE_PATTERN;
+            String dynamicPattern = jsonFormat.pattern();
+            if (StrUtil.isNotBlank(dynamicPattern)) {
+                pattern = dynamicPattern;
             }
-            jsonGenerator.writeString(TimeZoneUtil.serializeDate(date, pattern));
         }
+        boolean timezoneStyle = false;
+        String zoneIdStr = "UTC";
+        UnifySession<?> unifySession = UserContextHolder.getSession();
+        if (unifySession != null) {
+            pattern = unifySession.getDateFormat();
+            zoneIdStr = unifySession.getZoneIdStr();
+            if (dynamicDateFormat != null) {
+                boolean enableTimezone = dynamicDateFormat.enableTimezone();
+                if (!enableTimezone) {
+                    zoneIdStr = null;
+                }
+                timezoneStyle = dynamicDateFormat.appendTimezoneStyle();
+            } else {
+                zoneIdStr = null;
+            }
+        }
+        String result = TimeZoneUtil.serializeDate(date, pattern, zoneIdStr, timezoneStyle);
+        jsonGenerator.writeString(result);
     }
 
     @Override
     public DateSerializer createContextual(SerializerProvider serializerProvider,
                                            BeanProperty beanProperty) {
-        JsonFormat annotation = beanProperty.getAnnotation(JsonFormat.class);
-        return new DynamicDateSerialize(annotation);
+        JsonFormat jsonFormat = beanProperty.getAnnotation(JsonFormat.class);
+        DynamicDateFormat dynamicDateFormat = beanProperty.getAnnotation(DynamicDateFormat.class);
+        return new DynamicDateSerialize(jsonFormat, dynamicDateFormat);
     }
 }

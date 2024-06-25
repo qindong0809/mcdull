@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.web.filter;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.date.DatePattern;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
@@ -50,6 +51,9 @@ public class HttpTraceLogFilter implements Filter {
                 unifySession.setUserId(StpUtil.isLogin() ? StpUtil.getLoginId() : null);
                 unifySession.setAdministratorFlag(StpUtil.getSession().get(GlobalConstant.ADMINISTRATOR_FLAG, false));
             }
+            unifySession.setDateFormat(DatePattern.NORM_DATETIME_PATTERN);
+            unifySession.setZoneIdStr("Asia/Shanghai");
+            unifySession.setLocale(request.getLocale());
             UserContextHolder.setSession(unifySession);
 
             if (!isRequestValid(request)) {

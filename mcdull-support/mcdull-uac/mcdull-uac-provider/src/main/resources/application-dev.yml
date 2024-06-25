@@ -22,7 +22,7 @@ spring:
         # 连接池中的最小空闲连接
         min-idle: 0
   datasource:
-    url: jdbc:mysql://mcdull.io:3306/mcdull-cloud-3?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&allowMultiQueries=true
+    url: jdbc:mysql://mcdull.io:3306/mcdull-cloud-3?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver

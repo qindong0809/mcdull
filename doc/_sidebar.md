@@ -11,7 +11,7 @@
     - [首页轮播图](/project/swiper) 
     - [各种示例](/project/p-case) 
 - **实用组件**
-    - [动态序列化和反序列化Date](project/date)
+    - [动态显示日期格式和时区](project/date)
 - **工具安利**
     - [Archunit](/project/archunit)
 - **企业研发规约**

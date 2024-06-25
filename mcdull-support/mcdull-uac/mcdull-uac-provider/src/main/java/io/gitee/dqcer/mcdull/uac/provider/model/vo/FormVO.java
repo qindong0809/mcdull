@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import lombok.Data;
 
@@ -31,6 +32,7 @@ public class FormVO implements VO {
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date createTime;
 
+    @DynamicDateFormat(enableTimezone = true)
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date updateTime;
 

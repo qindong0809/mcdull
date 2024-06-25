@@ -7,7 +7,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.time.zone.ZoneRules;
 import java.util.Date;
 import java.util.Locale;
@@ -29,6 +28,11 @@ public class TimeZoneUtil {
         return serializeDate(date, dateFormat, locale, zoneIdStr, true);
     }
 
+    public static String serializeDate(Date date, String dateFormat, String zoneIdStr, boolean appendTimezoneStyle) {
+        Locale locale = LocaleContextHolder.getLocale();
+        return serializeDate(date, dateFormat, locale, zoneIdStr, appendTimezoneStyle);
+    }
+
     /**
      * 序列化日期
      *
@@ -48,12 +52,12 @@ public class TimeZoneUtil {
                                        boolean splicingTimezone) {
         DateTime dateTime = DateTime.of(date);
         if (StrUtil.isBlank(zoneIdStr)) {
-            return DateUtil.format(dateTime, DateTimeFormatter.ofPattern(dateFormat, locale));
+            zoneIdStr = "UTC";
         }
         ZoneId zoneId = ZoneId.of(zoneIdStr);
         TimeZone timeZone = TimeZone.getTimeZone(zoneId);
-        dateTime.setTimeZone(timeZone);
-        String result = DateUtil.format(dateTime, DateTimeFormatter.ofPattern(dateFormat, locale));
+        DateTime convertTimeZone = DateUtil.convertTimeZone(dateTime, timeZone);
+        String result = convertTimeZone.toString(DateUtil.newSimpleFormat(dateFormat, locale, timeZone));
         if (splicingTimezone) {
             ZoneRules rules = zoneId.getRules();
             ZoneOffset offset = rules.getOffset(date.toInstant());

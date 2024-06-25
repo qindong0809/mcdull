@@ -3,7 +3,6 @@ package io.gitee.dqcer.mcdull.framework.base.storage;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 
 /**
  * 用户上下文
