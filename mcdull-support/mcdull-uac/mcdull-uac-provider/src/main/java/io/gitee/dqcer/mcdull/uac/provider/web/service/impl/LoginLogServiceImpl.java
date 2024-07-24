@@ -26,7 +26,8 @@ import java.util.List;
 * @since 2024-04-29
 */
 @Service
-public class LoginLogServiceImpl extends BasicServiceImpl<ILoginLogRepository> implements ILoginLogService {
+public class LoginLogServiceImpl
+        extends BasicServiceImpl<ILoginLogRepository> implements ILoginLogService {
 
     @Override
     public PagedVO<LoginLogVO> queryByPage(LoginLogQueryDTO dto) {

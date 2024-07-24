@@ -34,7 +34,8 @@ import java.util.stream.Collectors;
  * @author dqcer
  */
 @Service
-public class MenuServiceImpl extends BasicServiceImpl<IMenuRepository>  implements IMenuService {
+public class MenuServiceImpl
+        extends BasicServiceImpl<IMenuRepository>  implements IMenuService {
 
     @Resource
     private IRoleMenuService roleMenuService;

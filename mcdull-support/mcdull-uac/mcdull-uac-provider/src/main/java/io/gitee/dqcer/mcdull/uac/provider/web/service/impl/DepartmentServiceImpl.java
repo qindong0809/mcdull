@@ -33,7 +33,8 @@ import java.util.stream.Collectors;
  * @author dqcer
  */
 @Service
-public class DepartmentServiceImpl extends BasicServiceImpl<IDepartmentRepository>  implements IDepartmentService {
+public class DepartmentServiceImpl
+        extends BasicServiceImpl<IDepartmentRepository>  implements IDepartmentService {
 
     @Resource
     private IUserService userService;

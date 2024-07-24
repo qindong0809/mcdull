@@ -44,7 +44,7 @@ public class AreaServiceImpl
 
     @Override
     public List<LabelValueVO<String, String>> provinceList() {
-        return buildList(baseRepository.getByAreaType(1));
+        return this.buildList(baseRepository.getByAreaType(1));
     }
 
     @Override
@@ -57,16 +57,15 @@ public class AreaServiceImpl
     }
 
     private List<LabelValueVO<String, String>> buildList(List<AreaEntity> list) {
-        if (CollUtil.isEmpty(list)) {
-            return Collections.emptyList();
+        List<LabelValueVO<String, String>> voList = new ArrayList<>();
+        if (CollUtil.isNotEmpty(list)) {
+            for (AreaEntity entity : list) {
+                LabelValueVO<String, String> labelValueVO =
+                        new LabelValueVO<>(entity.getCode(), entity.getFullname());
+                voList.add(labelValueVO);
+            }
         }
-        List<LabelValueVO<String, String>> labelValueVOList = new ArrayList<>();
-        for (AreaEntity entity : list) {
-            LabelValueVO<String, String> labelValueVO =
-                    new LabelValueVO<>(entity.getCode(), entity.getFullname());
-            labelValueVOList.add(labelValueVO);
-        }
-        return labelValueVOList;
+        return voList;
     }
 
     private AreaVO convertToVO(AreaEntity item){
@@ -79,6 +78,4 @@ public class AreaServiceImpl
         vo.setLng(item.getLng());
         return vo;
     }
-
-
 }

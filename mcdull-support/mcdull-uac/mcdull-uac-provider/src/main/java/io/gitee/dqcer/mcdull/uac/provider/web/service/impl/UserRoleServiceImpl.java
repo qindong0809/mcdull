@@ -18,7 +18,8 @@ import java.util.Map;
  * @since 2024/01/29
  */
 @Service
-public class UserRoleServiceImpl extends BasicServiceImpl<IUserRoleRepository>  implements IUserRoleService {
+public class UserRoleServiceImpl
+        extends BasicServiceImpl<IUserRoleRepository>  implements IUserRoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)

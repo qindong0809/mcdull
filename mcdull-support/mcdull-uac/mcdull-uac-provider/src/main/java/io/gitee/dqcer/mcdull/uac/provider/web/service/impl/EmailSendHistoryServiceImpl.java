@@ -21,8 +21,8 @@ import java.util.List;
  * @since 2024/03/25
  */
 @Service
-public class EmailSendHistoryServiceImpl extends BasicServiceImpl<IEmailSendHistoryRepository>
-        implements IEmailSendHistoryService {
+public class EmailSendHistoryServiceImpl
+        extends BasicServiceImpl<IEmailSendHistoryRepository> implements IEmailSendHistoryService {
 
 
     @Override

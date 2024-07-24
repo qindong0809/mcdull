@@ -29,7 +29,8 @@ import java.util.List;
 * @since 2024-04-29
 */
 @Service
-public class ConfigServiceImpl extends BasicServiceImpl<IConfigRepository> implements IConfigService {
+public class ConfigServiceImpl
+        extends BasicServiceImpl<IConfigRepository> implements IConfigService {
 
     @Override
     public PagedVO<ConfigVO> queryPage(ConfigQueryDTO dto) {

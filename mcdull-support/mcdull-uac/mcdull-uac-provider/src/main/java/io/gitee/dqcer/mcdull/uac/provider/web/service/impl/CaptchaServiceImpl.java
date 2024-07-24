@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;

@@ -5,6 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
+import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.EmailConfigBO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IEmailSendHistoryService;
@@ -57,7 +58,7 @@ public class EmailServiceImpl implements IEmailService {
     public MailAccount getMailAccount() {
         EmailConfigBO emailConfigBO = sysInfoService.getEmailConfig();
         if (emailConfigBO == null) {
-            throw new RuntimeException("邮件配置不存在");
+            throw new RuntimeException(I18nConstants.DATA_NOT_EXIST);
         }
         return new MailAccount()
                 .setHost(emailConfigBO.getHost())
