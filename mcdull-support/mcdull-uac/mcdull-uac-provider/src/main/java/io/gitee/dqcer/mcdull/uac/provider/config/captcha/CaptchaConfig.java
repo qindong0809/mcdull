@@ -10,7 +10,8 @@ import java.util.Properties;
 /**
  * 验证码配置
  *
- * @author ruoyi
+ * @author dqcer
+ * @since 2024/05/28
  */
 @Configuration
 public class CaptchaConfig {

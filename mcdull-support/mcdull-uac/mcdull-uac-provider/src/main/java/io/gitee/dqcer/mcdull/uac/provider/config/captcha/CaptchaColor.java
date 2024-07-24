@@ -8,6 +8,8 @@ import java.util.Random;
 /**
  * 验证码颜色
  *
+ * @author dqcer
+ * @since 2024/05/28
  */
 public class CaptchaColor {
 

@@ -19,12 +19,6 @@
         <maven.compiler.source>1.8</maven.compiler.source>
     </properties>
 
-    <modules>
-<!--        <module>mcdull-admin</module>-->
-        <module>mcdull-business-common</module>
-        <module>mcdull-demo</module>
-    </modules>
-
     <dependencyManagement>
         <dependencies>
             <dependency>

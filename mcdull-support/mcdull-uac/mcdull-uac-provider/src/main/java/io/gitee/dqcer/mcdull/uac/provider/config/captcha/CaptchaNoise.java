@@ -10,6 +10,8 @@ import java.util.Random;
 /**
  * 验证码加噪处理
  *
+ * @author dqcer
+ * @since 2024/05/28
  */
 public class CaptchaNoise extends Configurable implements NoiseProducer {
 
