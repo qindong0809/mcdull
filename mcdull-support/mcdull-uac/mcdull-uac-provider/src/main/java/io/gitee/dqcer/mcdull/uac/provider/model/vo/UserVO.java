@@ -52,7 +52,11 @@ public class UserVO implements VO {
 
     private Integer createdBy;
 
+    private String createdByName;
+
     private Integer updatedBy;
+
+    private String updatedByName;
 
     protected LocalDateTime createdTime;
 

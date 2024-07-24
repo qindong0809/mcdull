@@ -29,7 +29,8 @@ import java.util.List;
  * @since 2024-04-29
  */
 @Service
-public class ChangeLogServiceImpl extends BasicServiceImpl<IChangeLogRepository> implements IChangeLogService {
+public class ChangeLogServiceImpl
+        extends BasicServiceImpl<IChangeLogRepository> implements IChangeLogService {
 
     @Resource
     private IVersionInfoComponent versionInfoComponent;

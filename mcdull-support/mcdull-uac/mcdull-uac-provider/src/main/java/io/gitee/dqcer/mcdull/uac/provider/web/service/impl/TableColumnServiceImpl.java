@@ -37,8 +37,8 @@ public class TableColumnServiceImpl
         String string = JSONUtil.parseArray(dto.getColumnList()).toString();
         List<TableColumnEntity> list = baseRepository.selectList(userId);
         if (CollUtil.isNotEmpty(list)) {
-            Map<Integer, TableColumnEntity> map = list.stream().collect(Collectors.toMap(TableColumnEntity::getTableId,
-                    Function.identity()));
+            Map<Integer, TableColumnEntity> map = list.stream()
+                    .collect(Collectors.toMap(TableColumnEntity::getTableId, Function.identity()));
             TableColumnEntity columnEntity = map.get(dto.getTableId());
             if (ObjUtil.isNotNull(columnEntity)) {
                 columnEntity.setColumns(string);
@@ -60,8 +60,8 @@ public class TableColumnServiceImpl
         Integer userId = UserContextHolder.userId();
         List<TableColumnEntity> list = baseRepository.selectList(userId);
         if (CollUtil.isNotEmpty(list)) {
-            Map<Integer, TableColumnEntity> map = list.stream().collect(Collectors.toMap(TableColumnEntity::getTableId,
-                    Function.identity()));
+            Map<Integer, TableColumnEntity> map = list.stream()
+                    .collect(Collectors.toMap(TableColumnEntity::getTableId, Function.identity()));
             TableColumnEntity columnEntity = map.get(tableId);
             if (ObjUtil.isNotNull(columnEntity)) {
                 baseRepository.removeById(columnEntity.getId());
@@ -76,8 +76,8 @@ public class TableColumnServiceImpl
         Integer userId = UserContextHolder.userId();
         List<TableColumnEntity> list = baseRepository.selectList(userId);
         if (CollUtil.isNotEmpty(list)) {
-            Map<Integer, TableColumnEntity> map = list.stream().collect(Collectors.toMap(TableColumnEntity::getTableId,
-                    Function.identity()));
+            Map<Integer, TableColumnEntity> map = list.stream()
+                    .collect(Collectors.toMap(TableColumnEntity::getTableId, Function.identity()));
             TableColumnEntity columnEntity = map.get(tableId);
             if (ObjUtil.isNotNull(columnEntity)) {
                 return columnEntity.getColumns();

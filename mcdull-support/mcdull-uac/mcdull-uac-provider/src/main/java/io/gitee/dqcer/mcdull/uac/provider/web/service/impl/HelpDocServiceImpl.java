@@ -40,7 +40,8 @@ import java.util.stream.Collectors;
 * @since 2024-04-29
 */
 @Service
-public class HelpDocServiceImpl extends BasicServiceImpl<IHelpDocRepository> implements IHelpDocService {
+public class HelpDocServiceImpl
+        extends BasicServiceImpl<IHelpDocRepository> implements IHelpDocService {
 
     @Resource
     private IHelpDocViewRecordRepository helpDocViewRecordRepository;

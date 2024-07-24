@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -15,6 +16,7 @@ import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
@@ -172,19 +174,19 @@ public class UserServiceImpl
     @Transactional(rollbackFor = Exception.class)
     public void toggleActive(Integer id) {
         UserEntity dbData = baseRepository.getById(id);
-        if (null == dbData) {
-            log.warn("数据不存在 id:{}", id);
+        if (ObjUtil.isNull(dbData)) {
+            LogHelp.warn(log, "数据不存在 id:{}", id);
             throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
         }
         Boolean administratorFlag = dbData.getAdministratorFlag();
         if (administratorFlag != null && administratorFlag) {
-            log.warn("管理员账号禁止禁用，id:{}", id);
+            LogHelp.warn(log, "管理员账号禁止禁用，id:{}", id);
             throw new BusinessException(I18nConstants.PERMISSION_DENIED);
         }
 
         boolean success = baseRepository.update(id, !dbData.getInactive());
-        if (!success) {
-            log.error("数据更新失败，id:{}", id);
+        if (BooleanUtil.isFalse(success)) {
+            LogHelp.error(log, "数据更新失败，id:{}", id);
             throw new BusinessException(I18nConstants.DB_OPERATION_FAILED);
         }
     }
@@ -416,9 +418,29 @@ public class UserServiceImpl
             UserVO vo = UserConvert.entityToVO(entity);
             this.setRoleListFieldValue(roleListMap, vo, entity.getId());
             this.setDeptFieldValue(deptMap, entity.getDepartmentId(),vo);
+            this.setCreatedByFieldValue(userMap, entity.getCreatedBy(), vo);
+            this.setUpdatedByFieldValue(userMap, entity.getUpdatedBy(), vo);
             voList.add(vo);
         }
         return voList;
+    }
+
+    private void setUpdatedByFieldValue(Map<Integer, UserEntity> userMap, Integer updatedBy, UserVO vo) {
+        if (ObjUtil.isNotNull(updatedBy)) {
+            UserEntity userEntity = userMap.get(updatedBy);
+            if (ObjUtil.isNotNull(userEntity)) {
+                vo.setUpdatedByName(userEntity.getActualName());
+            }
+        }
+    }
+
+    private void setCreatedByFieldValue(Map<Integer, UserEntity> userMap, Integer createdBy, UserVO vo) {
+        if (ObjUtil.isNotNull(createdBy)) {
+            UserEntity userEntity = userMap.get(createdBy);
+            if (ObjUtil.isNotNull(userEntity)) {
+                vo.setCreatedByName(userEntity.getActualName());
+            }
+        }
     }
 
     private void setDeptFieldValue(Map<Integer, DepartmentEntity> deptMap, Integer departmentId, UserVO vo) {

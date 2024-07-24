@@ -28,7 +28,8 @@ import java.util.List;
  * @since 2024/05/13
  */
 @Service
-public class RoleDataScopeServiceImpl extends BasicServiceImpl<IRoleDataScopeRepository> implements IRoleDataScopeService {
+public class RoleDataScopeServiceImpl
+        extends BasicServiceImpl<IRoleDataScopeRepository> implements IRoleDataScopeService {
     @Override
     public List<RoleDataScopeVO> getListByRole(Integer roleId) {
         List<RoleDataScopeVO> voList = new ArrayList<>();

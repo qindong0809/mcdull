@@ -34,7 +34,8 @@ import java.util.stream.Collectors;
 * @since 2024-04-29
 */
 @Service
-public class OperateLogServiceImpl extends BasicServiceImpl<IOperateLogRepository> implements IOperateLogService {
+public class OperateLogServiceImpl
+        extends BasicServiceImpl<IOperateLogRepository> implements IOperateLogService {
 
     @Resource
     private IUserService userService;

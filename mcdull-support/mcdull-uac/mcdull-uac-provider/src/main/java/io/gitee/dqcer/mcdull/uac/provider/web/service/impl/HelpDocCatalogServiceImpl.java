@@ -35,7 +35,8 @@ import java.util.stream.Collectors;
 * @since 2024-04-29
 */
 @Service
-public class HelpDocCatalogServiceImpl extends BasicServiceImpl<IHelpDocCatalogRepository> implements IHelpDocCatalogService {
+public class HelpDocCatalogServiceImpl
+        extends BasicServiceImpl<IHelpDocCatalogRepository> implements IHelpDocCatalogService {
 
 
     @Override

@@ -6,6 +6,7 @@ import cn.hutool.core.text.AntPathMatcher;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -74,7 +75,6 @@ public class CacheServiceImpl implements ICacheService {
                         .filter(item -> item.getKey().toLowerCase().contains(finalKeyword.toLowerCase()))
                         .collect(Collectors.toList());
             }
-
         }
         return PageUtil.ofSub(cacheNameList, dto);
     }
@@ -96,6 +96,7 @@ public class CacheServiceImpl implements ICacheService {
 
     @Override
     public void removeCache(Boolean caffeineCacheFlag, String cacheName) {
+        LogHelp.warn(log, "removeCache", "cacheName:{}", cacheName);
         if (BooleanUtil.isTrue(caffeineCacheFlag)) {
             CaffeineCache cache = (CaffeineCache) cacheManager.getCache(cacheName);
             if (cache != null) {
@@ -104,6 +105,5 @@ public class CacheServiceImpl implements ICacheService {
             return;
         }
         redisClient.delete(cacheName);
-
     }
 }

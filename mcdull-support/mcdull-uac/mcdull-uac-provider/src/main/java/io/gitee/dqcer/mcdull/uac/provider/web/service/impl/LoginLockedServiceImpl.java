@@ -25,7 +25,8 @@ import java.util.List;
  * @since 2024-04-29
  */
 @Service
-public class LoginLockedServiceImpl extends BasicServiceImpl<ILoginLockedRepository> implements ILoginLockedService {
+public class LoginLockedServiceImpl
+        extends BasicServiceImpl<ILoginLockedRepository> implements ILoginLockedService {
 
 
     @Override

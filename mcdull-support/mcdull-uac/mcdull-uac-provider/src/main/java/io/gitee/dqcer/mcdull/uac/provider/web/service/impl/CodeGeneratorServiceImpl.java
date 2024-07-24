@@ -34,7 +34,8 @@ import java.util.Optional;
 * @since 2024-04-29
 */
 @Service
-public class CodeGeneratorServiceImpl extends BasicServiceImpl<ICodeGeneratorConfigRepository> implements ICodeGeneratorService {
+public class CodeGeneratorServiceImpl
+        extends BasicServiceImpl<ICodeGeneratorConfigRepository> implements ICodeGeneratorService {
 
     @Resource
     private CodeGeneratorTemplateService codeGeneratorTemplateService;
