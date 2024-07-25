@@ -5,10 +5,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeVisibleRangeEntity;
 import java.util.List;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Notice visible range service
+ *
+ * @author dqcer
+ * @since 2024/7/25 9:26
+ */
+
 public interface INoticeVisibleRangeService {
 
     void batchInsert(List<NoticeVisibleRangeEntity> list);

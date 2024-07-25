@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 
 /**
-* 系统配置 业务实现类
+* Table Column Service Impl
 *
 * @author dqcer
 * @since 2024-04-29

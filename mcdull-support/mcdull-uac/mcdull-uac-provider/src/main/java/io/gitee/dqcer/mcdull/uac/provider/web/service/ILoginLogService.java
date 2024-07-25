@@ -6,10 +6,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LoginLogVO;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ *  Login Log Service
+ *
+ * @author dqcer
+ * @since 2024/7/25 9:24
+ */
+
 public interface ILoginLogService {
 
     PagedVO<LoginLogVO> queryByPage(LoginLogQueryDTO dto);

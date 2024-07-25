@@ -7,9 +7,9 @@ import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
@@ -30,7 +30,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * Department Service Impl
+ *
  * @author dqcer
+ * @since 2024/7/25 10:39
  */
 @Service
 public class DepartmentServiceImpl
@@ -39,18 +42,18 @@ public class DepartmentServiceImpl
     @Resource
     private IUserService userService;
 
-    @Override
-    public List<DepartmentVO> list(DeptListDTO dto) {
-        List<DepartmentVO> list = new ArrayList<>();
-        List<DepartmentEntity> deptList = baseRepository.list();
-        if (CollUtil.isNotEmpty(deptList)) {
-            for (DepartmentEntity dept : deptList) {
-                DepartmentVO vo = this.convertToVO(dept);
-                list.add(vo);
-            }
-        }
-        return list;
-    }
+//    @Override
+//    public List<DepartmentVO> list(DeptListDTO dto) {
+//        List<DepartmentVO> list = new ArrayList<>();
+//        List<DepartmentEntity> deptList = baseRepository.list();
+//        if (CollUtil.isNotEmpty(deptList)) {
+//            for (DepartmentEntity dept : deptList) {
+//                DepartmentVO vo = this.convertToVO(dept);
+//                list.add(vo);
+//            }
+//        }
+//        return list;
+//    }
 
     @Cacheable(cacheNames = "caffeineCache", key = "'department-all'")
     @Override
@@ -124,6 +127,8 @@ public class DepartmentServiceImpl
             List<Integer> deptIdList = currentList.stream().map(DepartmentEntity::getId).collect(Collectors.toList());
             List<UserEntity> userList =userService.listByDeptList(deptIdList);
             if (CollUtil.isNotEmpty(userList)) {
+                LogHelp.error(log, "exist data. {}", () ->
+                        userList.stream().map(UserEntity::getLoginName).collect(Collectors.toList()));
                 throw new BusinessException("dept.has.user");
             }
         }
@@ -169,7 +174,8 @@ public class DepartmentServiceImpl
     public Map<Integer, String> getNameMap(List<Integer> idList) {
         List<DepartmentEntity> list = baseRepository.listByIds(idList);
         if (CollUtil.isNotEmpty(list)) {
-            return list.stream().collect(Collectors.toMap(DepartmentEntity::getId, DepartmentEntity::getName));
+            return list.stream()
+                    .collect(Collectors.toMap(DepartmentEntity::getId, DepartmentEntity::getName));
         }
         return Collections.emptyMap();
     }
@@ -179,7 +185,8 @@ public class DepartmentServiceImpl
         List<Integer> voList = new ArrayList<>();
         List<DepartmentEntity> list = baseRepository.listByParentId(departmentId);
         if (CollUtil.isNotEmpty(list)) {
-            List<Integer> idList = list.stream().map(DepartmentEntity::getId).collect(Collectors.toList());
+            List<Integer> idList = list.stream()
+                    .map(DepartmentEntity::getId).collect(Collectors.toList());
             voList.addAll(idList);
             for (Integer id : idList) {
                 List<Integer> childrenIdList = this.getChildrenIdList(id);

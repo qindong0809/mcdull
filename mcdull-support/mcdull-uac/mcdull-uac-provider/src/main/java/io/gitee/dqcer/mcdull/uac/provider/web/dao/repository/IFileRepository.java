@@ -10,7 +10,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.FileEntity;
 import java.util.List;
 
 /**
-* 系统配置 数据库操作封装接口层
+* File Repository
 *
 * @author dqcer
 * @since 2024-04-29
@@ -21,7 +21,7 @@ public interface IFileRepository extends IService<FileEntity>  {
     * 根据ID列表批量查询数据
     *
     * @param idList id列表
-    * @return {@link List< ConfigEntity >}
+    * @return {@link List}
     */
     List<FileEntity> queryListByIds(List<Integer> idList);
 
@@ -29,7 +29,7 @@ public interface IFileRepository extends IService<FileEntity>  {
     * 按条件分页查询
     *
     * @param param 参数
-    * @return {@link Page< ConfigEntity >}
+    * @return {@link Page }
     */
     Page<FileEntity> selectPage(ConfigQueryDTO param);
 
@@ -64,7 +64,20 @@ public interface IFileRepository extends IService<FileEntity>  {
      */
     boolean exist(FileEntity entity);
 
+    /**
+     * 分页查询
+     *
+     * @param dto dto
+     * @param userIdList 用户id列表
+     * @return {@link Page }
+     */
     Page<FileEntity> selectPage(FileQueryDTO dto, List<Integer> userIdList);
 
+    /**
+     * 根据文件key获取文件信息
+     *
+     * @param fileKey 文件key
+     * @return {@link FileEntity}
+     */
     FileEntity getByFileKey(String fileKey);
 }

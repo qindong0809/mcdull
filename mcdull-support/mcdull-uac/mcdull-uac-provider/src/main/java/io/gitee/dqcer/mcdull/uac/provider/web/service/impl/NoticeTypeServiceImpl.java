@@ -18,10 +18,11 @@ import java.util.stream.Collectors;
 
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Notice Type Service Impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class NoticeTypeServiceImpl
         extends BasicServiceImpl<INoticeTypeRepository> implements INoticeTypeService {
@@ -69,7 +70,8 @@ public class NoticeTypeServiceImpl
         List<NoticeTypeEntity> list = baseRepository.list();
         if (CollUtil.isNotEmpty(list)) {
             this.validNameExist(id, name, list,
-                    (entity) -> !id.equals(entity.getId()) && entity.getNoticeTypeName().equals(name));
+                    (entity) -> !id.equals(entity.getId())
+                            && entity.getNoticeTypeName().equals(name));
         }
         typeEntity.setNoticeTypeName(name);
         baseRepository.save(typeEntity);

@@ -8,10 +8,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.LoginLockedVO;
 import java.util.List;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ *  Login Locked Service
+ *
+ * @author dqcer
+ * @since 2024/7/25 9:24
+ */
+
 public interface ILoginLockedService {
 
     LoginLockedEntity get(String loginName);

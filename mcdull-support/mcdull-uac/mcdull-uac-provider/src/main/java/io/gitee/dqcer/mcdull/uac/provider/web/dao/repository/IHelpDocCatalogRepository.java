@@ -9,17 +9,18 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.TableColumnEntity;
 import java.util.List;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Help doc catalog repository
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 public interface IHelpDocCatalogRepository extends IService<HelpDocCatalogEntity>  {
 
    /**
     * 根据ID列表批量查询数据
     *
     * @param idList id列表
-    * @return {@link List< HelpDocCatalogEntity >}
+    * @return {@link List}
     */
     List<HelpDocCatalogEntity> queryListByIds(List<Integer> idList);
 
@@ -27,7 +28,7 @@ public interface IHelpDocCatalogRepository extends IService<HelpDocCatalogEntity
     * 按条件分页查询
     *
     * @param param 参数
-    * @return {@link Page< HelpDocCatalogEntity >}
+    * @return {@link Page}
     */
     Page<HelpDocCatalogEntity> selectPage(ConfigQueryDTO param);
 
@@ -62,7 +63,19 @@ public interface IHelpDocCatalogRepository extends IService<HelpDocCatalogEntity
      */
     boolean exist(HelpDocCatalogEntity entity);
 
+    /**
+     * 获取用户目录
+     *
+     * @param userId 用户id
+     * @return {@link List}
+     */
    List<HelpDocCatalogEntity> selectList(Integer userId);
 
+   /**
+     * 获取用户目录
+     *
+     * @param parentId 父id
+     * @return {@link List}
+     */
     List<HelpDocCatalogEntity> list(Integer parentId);
 }

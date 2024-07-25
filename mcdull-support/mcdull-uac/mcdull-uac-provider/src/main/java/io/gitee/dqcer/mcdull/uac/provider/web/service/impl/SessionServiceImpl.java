@@ -20,20 +20,21 @@ import java.util.List;
 
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Session Service Impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class SessionServiceImpl implements ISessionService {
 
     @Resource
     private IUserService userService;
 
-
     @Override
     public PagedVO<SessionVO> queryPage(SessionQueryDTO dto) {
-        List<String> sessionIdList = StpUtil.searchSessionId("", 0, -1, false);
+        List<String> sessionIdList = StpUtil
+                .searchSessionId("", 0, -1, false);
         if (sessionIdList.isEmpty()) {
             return PageUtil.empty(dto);
         }
@@ -63,5 +64,4 @@ public class SessionServiceImpl implements ISessionService {
             StpUtil.kickout(userId);
         }
     }
-
 }

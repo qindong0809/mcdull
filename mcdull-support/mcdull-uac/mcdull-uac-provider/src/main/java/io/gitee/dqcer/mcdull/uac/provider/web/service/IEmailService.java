@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
 /**
- * 邮件服务
+ * Email Service
  *
  * @author dqcer
  * @since 2022/12/26

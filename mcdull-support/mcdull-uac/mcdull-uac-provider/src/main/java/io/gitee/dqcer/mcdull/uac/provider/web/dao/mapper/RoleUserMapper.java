@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleUserEntity;
 
 /**
- * 用户角色 mapper
+ * Role User mapper
  *
  * @author dqcer
  * @since 2022/12/25

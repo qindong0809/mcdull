@@ -24,7 +24,6 @@ import java.util.List;
  * @author dqcer
  * @since 2024-06-15 13:11:44
  */
-
 @Service
 public class AreaServiceImpl
         extends BasicServiceImpl<IAreaRepository> implements IAreaService {

@@ -27,10 +27,11 @@ import java.util.List;
 
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Serial Number Service Impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class SerialNumberServiceImpl
         extends BasicServiceImpl<ISerialNumberRepository> implements ISerialNumberService {

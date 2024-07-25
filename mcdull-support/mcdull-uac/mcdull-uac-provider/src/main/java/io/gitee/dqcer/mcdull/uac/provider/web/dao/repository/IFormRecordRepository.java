@@ -7,11 +7,18 @@ import java.util.List;
 
 
 /**
+ * Form record repository
+ *
  * @author dqcer
  * @since 2024-06-15 13:11:44
  */
 public interface IFormRecordRepository extends IService<FormRecordEntity> {
 
-
+    /**
+     * select by form id
+     *
+     * @param formId formId
+     * @return List<FormRecordEntity>
+     */
     List<FormRecordEntity> selectByFormId(Integer formId);
 }

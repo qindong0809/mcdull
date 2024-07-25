@@ -11,10 +11,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.TableVO;
 import java.util.List;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Code generator service
+ *
+ * @author dqcer
+ * @since 2024/7/25 9:19
+ */
+
 public interface ICodeGeneratorService {
 
 

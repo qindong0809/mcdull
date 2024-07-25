@@ -5,6 +5,8 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.HelpDocEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.HelpDocViewRecordEntity;
 
 /**
+ * Help Doc View Record Mapper
+ *
  * @author dqcer
  * @since 2024-04-29
  */

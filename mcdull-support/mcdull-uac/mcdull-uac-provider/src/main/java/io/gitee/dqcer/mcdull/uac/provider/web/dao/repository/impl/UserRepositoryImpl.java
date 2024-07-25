@@ -31,11 +31,14 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * User RepositoryImpl
+ *
  * @author dqcer
  * @since 2022/12/25
  */
 @Service
-public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> implements IUserRepository {
+public class UserRepositoryImpl
+        extends ServiceImpl<UserMapper, UserEntity> implements IUserRepository {
 
     @Override
     public Page<UserEntity> selectPage(UserListDTO dto, List<Integer> deptIdList,
@@ -62,12 +65,6 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 
-    /**
-     * 插入
-     *
-     * @param entity 实体
-     * @return {@link Long}
-     */
     @Override
     public Integer insert(UserEntity entity) {
         int row = baseMapper.insert(entity);
@@ -77,12 +74,6 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserEntity> impl
         return entity.getId();
     }
 
-    /**
-     * 单个根据账户名称
-     *
-     * @param loginName 账户
-     * @return {@link UserEntity}
-     */
     @Override
     public UserEntity get(String loginName) {
         LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();

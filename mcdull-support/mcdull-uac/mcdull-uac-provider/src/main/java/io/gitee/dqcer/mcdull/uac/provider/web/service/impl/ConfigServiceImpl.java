@@ -23,7 +23,7 @@ import java.util.List;
 
 
 /**
-* 系统配置 业务实现类
+* Config ServiceImpl
 *
 * @author dqcer
 * @since 2024-04-29

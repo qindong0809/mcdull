@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Notice Type Service
+ *
+ * @author dqcer
+ * @since 2024/7/25 9:25
+ */
+
 public interface INoticeTypeService {
 
     List<NoticeTypeVO> getAll();

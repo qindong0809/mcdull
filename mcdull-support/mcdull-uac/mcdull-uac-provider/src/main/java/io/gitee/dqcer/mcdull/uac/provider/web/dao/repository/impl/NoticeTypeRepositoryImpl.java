@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.INoticeTypeReposito
 import org.springframework.stereotype.Service;
 
 /**
-* 系统配置 数据库操作封装实现层
+* Notice Type Repository
 *
 * @author dqcer
 * @since 2024-04-29

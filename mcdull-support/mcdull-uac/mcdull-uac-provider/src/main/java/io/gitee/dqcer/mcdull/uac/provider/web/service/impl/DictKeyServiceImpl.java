@@ -1,8 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
@@ -22,7 +23,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Dict Key Service Impl
+ *
  * @author dqcer
+ * @since 2024/7/25 10:24
  */
 @Service
 public class DictKeyServiceImpl
@@ -66,18 +70,11 @@ public class DictKeyServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(List<Integer> idList) {
-        List<DictKeyEntity> listAll = baseRepository.getListAll();
-        if (CollUtil.isNotEmpty(listAll)) {
-            List<Integer> dbIdList = listAll.stream().map(IdEntity::getId).collect(Collectors.toList());
-            if (CollUtil.isNotEmpty(dbIdList)) {
-                for (Integer id : idList) {
-                    if (!dbIdList.contains(id)) {
-                        this.throwDataNotExistException(id);
-                    }
-                }
-            }
-            baseRepository.removeBatchByIds(idList);
+        List<DictKeyEntity> list = baseRepository.listByIds(idList);
+        if (CollUtil.isEmpty(list) || !NumberUtil.equals(idList.size(), list.size())) {
+            this.throwDataNotExistException(StrUtil.join(StrUtil.COMMA, idList));
         }
+        baseRepository.removeBatchByIds(idList);
     }
 
     @Transactional(rollbackFor = Exception.class)

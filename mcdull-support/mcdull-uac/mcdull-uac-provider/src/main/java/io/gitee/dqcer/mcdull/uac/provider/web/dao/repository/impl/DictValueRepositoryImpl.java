@@ -28,9 +28,8 @@ import java.util.List;
  * @since 2023/12/01
  */
 @Service
-public class DictValueRepositoryImpl extends ServiceImpl<DictValueMapper, DictValueEntity> implements IDictValueRepository {
-
-
+public class DictValueRepositoryImpl
+        extends ServiceImpl<DictValueMapper, DictValueEntity> implements IDictValueRepository {
 
     @Override
     public void insert(DictValueEntity entity) {

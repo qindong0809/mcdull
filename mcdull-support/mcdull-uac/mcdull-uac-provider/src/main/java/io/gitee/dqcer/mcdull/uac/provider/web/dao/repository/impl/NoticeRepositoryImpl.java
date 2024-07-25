@@ -20,11 +20,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
-* 系统配置 数据库操作封装实现层
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Notice RepositoryImpl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class NoticeRepositoryImpl extends
         ServiceImpl<NoticeMapper, NoticeEntity> implements INoticeRepository {
@@ -71,7 +71,8 @@ public class NoticeRepositoryImpl extends
                                                          Integer deptCode,
                                                          Integer userCode) {
         Page<?> page = new Page<>(dto.getPageNum(), dto.getPageSize());
-        return baseMapper.queryEmployeeNotViewNotice(page, dto, userId, deptIdList, administratorFlag, deptCode, userCode);
+        return baseMapper
+                .queryEmployeeNotViewNotice(page, dto, userId, deptIdList, administratorFlag, deptCode, userCode);
     }
 
     @Override
@@ -82,6 +83,7 @@ public class NoticeRepositoryImpl extends
                                                   Integer deptCode,
                                                   Integer userCode) {
         Page<?> page = new Page<>(dto.getPageNum(), dto.getPageSize());
-        return baseMapper.queryEmployeeNotice(page, dto, userId, deptIdList, administratorFlag, deptCode, userCode);
+        return baseMapper
+                .queryEmployeeNotice(page, dto, userId, deptIdList, administratorFlag, deptCode, userCode);
     }
 }

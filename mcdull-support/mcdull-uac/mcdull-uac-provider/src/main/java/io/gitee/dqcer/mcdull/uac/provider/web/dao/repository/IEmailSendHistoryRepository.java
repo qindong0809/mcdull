@@ -6,8 +6,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.EmailSendHistoryEntity;
 import java.util.List;
 
 /**
+ * Email send history repository
+ *
  * @author dqcer
+ * @since 2024/7/25 11:09
  */
+
 public interface IEmailSendHistoryRepository extends IService<EmailSendHistoryEntity> {
 
 

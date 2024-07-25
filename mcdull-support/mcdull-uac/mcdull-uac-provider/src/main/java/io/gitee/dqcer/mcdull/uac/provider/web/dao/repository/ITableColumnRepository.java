@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.TableColumnEntity;
 import java.util.List;
 
 /**
-* 系统配置 数据库操作封装接口层
+* Table Column Repository
 *
 * @author dqcer
 * @since 2024-04-29
@@ -19,7 +19,7 @@ public interface ITableColumnRepository extends IService<TableColumnEntity>  {
     * 根据ID列表批量查询数据
     *
     * @param idList id列表
-    * @return {@link List< TableColumnEntity >}
+    * @return {@link List}
     */
     List<TableColumnEntity> queryListByIds(List<Integer> idList);
 
@@ -27,7 +27,7 @@ public interface ITableColumnRepository extends IService<TableColumnEntity>  {
     * 按条件分页查询
     *
     * @param param 参数
-    * @return {@link Page< TableColumnEntity >}
+    * @return {@link Page}
     */
     Page<TableColumnEntity> selectPage(ConfigQueryDTO param);
 
@@ -62,5 +62,11 @@ public interface ITableColumnRepository extends IService<TableColumnEntity>  {
      */
     boolean exist(TableColumnEntity entity);
 
-   List<TableColumnEntity> selectList(Integer userId);
+    /**
+     * 查询列表
+     *
+     * @param userId 用户id
+     * @return {@link List}
+     */
+    List<TableColumnEntity> selectList(Integer userId);
 }

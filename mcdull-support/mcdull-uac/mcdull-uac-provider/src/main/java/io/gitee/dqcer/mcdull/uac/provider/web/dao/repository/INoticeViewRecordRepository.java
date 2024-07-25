@@ -6,13 +6,27 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeViewRecordEntity;
 import java.util.List;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Notice View Record Repository
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 public interface INoticeViewRecordRepository extends IService<NoticeViewRecordEntity> {
 
+    /**
+     * 根据 userId 和 noticeId 查询
+     *
+     * @param userId   userId
+     * @param noticeId noticeId
+     * @return NoticeViewRecordEntity
+     */
     NoticeViewRecordEntity getByUserIdAndNoticeId(Integer userId, Integer noticeId);
 
+    /**
+     * 根据 userId 查询
+     *
+     * @param userId userId
+     * @return List<NoticeViewRecordEntity>
+     */
     List<NoticeViewRecordEntity> getByUserId(Integer userId);
 }

@@ -28,10 +28,11 @@ import java.util.stream.Collectors;
 
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Enterprise ServiceImpl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class OaEnterpriseServiceImpl
         extends BasicServiceImpl<IOaEnterpriseRepository> implements IOaEnterpriseService {

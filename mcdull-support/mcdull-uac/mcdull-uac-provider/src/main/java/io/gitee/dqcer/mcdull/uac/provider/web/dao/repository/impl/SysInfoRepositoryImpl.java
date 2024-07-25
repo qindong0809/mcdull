@@ -9,13 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Sys info repository impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class SysInfoRepositoryImpl
         extends ServiceImpl<SysInfoMapper, SysInfoEntity>  implements ISysInfoRepository {
-
-    private static final Logger log = LoggerFactory.getLogger(SysInfoRepositoryImpl.class);
 
 }

@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.EmailConfigBO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.EmailConfigDTO;
@@ -16,20 +17,21 @@ import java.util.List;
 
 
 /**
+ * Sys info service impl
+ *
  * @author dqcer
  * @since 2024-04-29
  */
 @Service
-public class SysInfoServiceImpl extends BasicServiceImpl<ISysInfoRepository> implements ISysInfoService {
-
+public class SysInfoServiceImpl
+        extends BasicServiceImpl<ISysInfoRepository> implements ISysInfoService {
 
     @Override
     public EmailConfigBO getEmailConfig() {
-        List<SysInfoEntity> list = baseRepository.list();
-        if (list.isEmpty()) {
+        SysInfoEntity entity = this.getOne();
+        if (ObjUtil.isNull(entity)) {
             return null;
         }
-        SysInfoEntity entity = list.get(0);
         EmailConfigBO bo = new EmailConfigBO();
         bo.setHost(entity.getEmailHost());
         bo.setPort(entity.getEmailPort());
@@ -59,6 +61,7 @@ public class SysInfoServiceImpl extends BasicServiceImpl<ISysInfoRepository> imp
         if (CollUtil.isNotEmpty(list)) {
             return list.get(0);
         }
+        LogHelp.warn(log, "邮箱配置为空");
         return null;
     }
 

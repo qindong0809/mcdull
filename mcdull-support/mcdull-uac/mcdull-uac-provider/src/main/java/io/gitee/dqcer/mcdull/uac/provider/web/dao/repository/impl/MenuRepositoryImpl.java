@@ -23,13 +23,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * 菜单 数据库操作封装实现层
+ * Menu RepositoryImpl
  *
  * @author dqcer
  * @since 2022/12/26
  */
 @Service
-public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuEntity> implements IMenuRepository {
+public class MenuRepositoryImpl
+        extends ServiceImpl<MenuMapper, MenuEntity> implements IMenuRepository {
 
 
     @Override
@@ -71,7 +72,6 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuEntity> impl
                             }
                         }
                     }
-
                     resultMap.put(entry.getKey(), codeList);
                 }
             }
@@ -153,14 +153,17 @@ public class MenuRepositoryImpl extends ServiceImpl<MenuMapper, MenuEntity> impl
     public List<MenuEntity> listOnlyMenu(Boolean onlyMenu) {
         LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
         if (BooleanUtil.isTrue(onlyMenu)) {
-            query.in(MenuEntity::getMenuType, ListUtil.of(MenuTypeEnum.MENU.getCode(), MenuTypeEnum.CATALOG.getCode()));
+            query.in(MenuEntity::getMenuType,
+                    ListUtil.of(MenuTypeEnum.MENU.getCode(), MenuTypeEnum.CATALOG.getCode()));
         }
         query.eq(BaseEntity::getInactive, false);
         return baseMapper.selectList(query);
     }
 
     private List<MenuEntity> getMenuList(Map<Integer, List<Integer>> menuListMap) {
-        Set<Integer> idList = menuListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+        Set<Integer> idList = menuListMap.values().stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
         LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
         query.eq(BaseEntity::getInactive, InactiveEnum.FALSE.getCode());
         query.in(MenuEntity::getId, idList);

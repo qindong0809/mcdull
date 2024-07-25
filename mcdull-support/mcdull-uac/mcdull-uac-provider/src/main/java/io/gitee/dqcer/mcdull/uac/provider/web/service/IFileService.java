@@ -11,6 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+/**
+ * File Service
+ *
+ * @author dqcer
+ * @since 2024/7/25 9:22
+ */
+
 public interface IFileService {
 
     PagedVO<FileVO> queryPage(FileQueryDTO dto);

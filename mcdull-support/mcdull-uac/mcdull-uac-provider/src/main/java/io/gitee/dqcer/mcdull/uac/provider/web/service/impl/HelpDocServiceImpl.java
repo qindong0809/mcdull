@@ -7,6 +7,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
 
 
 /**
-* 系统配置 业务实现类
+* Help Doc ServiceImpl
 *
 * @author dqcer
 * @since 2024-04-29
@@ -61,6 +62,7 @@ public class HelpDocServiceImpl
         if (entity != null) {
             return this.convert(entity);
         }
+        LogHelp.error(log, "help doc not exist, id: {}", helpDocId);
         return null;
     }
 
@@ -250,25 +252,25 @@ public class HelpDocServiceImpl
     }
 
     private HelpDocVO convertEntity(HelpDocEntity entity) {
-        HelpDocVO helpDocVO = new HelpDocVO();
-        helpDocVO.setHelpDocId(entity.getId());
-        helpDocVO.setTitle(entity.getTitle());
-        helpDocVO.setHelpDocCatalogId(entity.getHelpDocCatalogId());
-        helpDocVO.setAuthor(entity.getAuthor());
-        helpDocVO.setSort(entity.getSort());
-        helpDocVO.setPageViewCount(entity.getPageViewCount());
-        helpDocVO.setUserViewCount(entity.getUserViewCount());
-        helpDocVO.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
-        helpDocVO.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
-        return helpDocVO;
+        HelpDocVO vo = new HelpDocVO();
+        vo.setHelpDocId(entity.getId());
+        vo.setTitle(entity.getTitle());
+        vo.setHelpDocCatalogId(entity.getHelpDocCatalogId());
+        vo.setAuthor(entity.getAuthor());
+        vo.setSort(entity.getSort());
+        vo.setPageViewCount(entity.getPageViewCount());
+        vo.setUserViewCount(entity.getUserViewCount());
+        vo.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
+        vo.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
+        return vo;
     }
 
     private HelpDocViewRecordVO convertRecord(HelpDocViewRecordEntity entity) {
-        HelpDocViewRecordVO helpDocViewRecordVO = new HelpDocViewRecordVO();
-        helpDocViewRecordVO.setUserId(entity.getUserId());
-        helpDocViewRecordVO.setPageViewCount(entity.getPageViewCount());
-        helpDocViewRecordVO.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
-        helpDocViewRecordVO.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
-        return helpDocViewRecordVO;
+        HelpDocViewRecordVO vo = new HelpDocViewRecordVO();
+        vo.setUserId(entity.getUserId());
+        vo.setPageViewCount(entity.getPageViewCount());
+        vo.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
+        vo.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
+        return vo;
     }
 }

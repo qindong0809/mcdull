@@ -9,11 +9,11 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigVO;
 import java.util.List;
 
 /**
-* 系统配置 业务接口类
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Config service
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 public interface IConfigService {
 
 

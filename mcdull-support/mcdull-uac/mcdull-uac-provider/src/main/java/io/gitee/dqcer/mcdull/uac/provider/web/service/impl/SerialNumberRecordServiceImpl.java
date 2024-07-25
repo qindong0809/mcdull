@@ -17,10 +17,11 @@ import java.util.List;
 
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Serial Number Record Service Impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class SerialNumberRecordServiceImpl
         extends BasicServiceImpl<ISerialNumberRecordRepository> implements ISerialNumberRecordService {

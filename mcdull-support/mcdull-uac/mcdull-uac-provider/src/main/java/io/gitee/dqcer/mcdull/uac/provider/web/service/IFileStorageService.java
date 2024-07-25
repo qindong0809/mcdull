@@ -5,9 +5,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileUploadVO;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 接口
+ * File Storage Service
  *
+ * @author dqcer
+ * @since 2024/7/25 9:22
  */
+
 public interface IFileStorageService {
 
     /**

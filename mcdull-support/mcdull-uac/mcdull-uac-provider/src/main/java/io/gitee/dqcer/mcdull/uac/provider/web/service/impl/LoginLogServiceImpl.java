@@ -21,14 +21,16 @@ import java.util.List;
 
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Login Log Service Impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class LoginLogServiceImpl
         extends BasicServiceImpl<ILoginLogRepository> implements ILoginLogService {
 
+    @Transactional(readOnly = true)
     @Override
     public PagedVO<LoginLogVO> queryByPage(LoginLogQueryDTO dto) {
         Page<LoginLogEntity> entityPage = baseRepository.selectPage(dto);
@@ -54,16 +56,16 @@ public class LoginLogServiceImpl
     }
 
     private LoginLogVO convertToConfigVO(LoginLogEntity entity) {
-        LoginLogVO loginLogVO = new LoginLogVO();
-        loginLogVO.setLoginLogId(entity.getId());
-        loginLogVO.setUserId(entity.getId());
-        loginLogVO.setLoginName(entity.getLoginName());
-        loginLogVO.setLoginIp(entity.getLoginIp());
-        loginLogVO.setLoginIpRegion(entity.getLoginIpRegion());
-        loginLogVO.setUserAgent(entity.getUserAgent());
-        loginLogVO.setRemark(entity.getRemark());
-        loginLogVO.setLoginResult(entity.getLoginResult());
-        loginLogVO.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
-        return loginLogVO;
+        LoginLogVO vo = new LoginLogVO();
+        vo.setLoginLogId(entity.getId());
+        vo.setUserId(entity.getId());
+        vo.setLoginName(entity.getLoginName());
+        vo.setLoginIp(entity.getLoginIp());
+        vo.setLoginIpRegion(entity.getLoginIpRegion());
+        vo.setUserAgent(entity.getUserAgent());
+        vo.setRemark(entity.getRemark());
+        vo.setLoginResult(entity.getLoginResult());
+        vo.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
+        return vo;
     }
 }

@@ -11,8 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * User Service
+ *
  * @author dqcer
+ * @since 2024/7/25 9:30
  */
+
 public interface IUserService {
     boolean passwordCheck(UserEntity entity, String passwordParam);
 

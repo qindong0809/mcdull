@@ -10,12 +10,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Department Service
+ *
  * @author dqcer
+ * @since 2024/7/25 9:20
  */
+
 public interface IDepartmentService {
 
 
-    List<DepartmentVO> list(DeptListDTO dto);
+//    List<DepartmentVO> list(DeptListDTO dto);
 
     List<DepartmentVO> getAll();
 

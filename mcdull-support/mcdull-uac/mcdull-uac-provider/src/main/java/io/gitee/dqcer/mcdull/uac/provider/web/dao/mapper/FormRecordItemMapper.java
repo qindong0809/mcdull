@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormRecordItemEntity;
 
 /**
+ * Form record item mapper
  *
  * @author dqcer
  * @since 2024-06-15 13:11:44

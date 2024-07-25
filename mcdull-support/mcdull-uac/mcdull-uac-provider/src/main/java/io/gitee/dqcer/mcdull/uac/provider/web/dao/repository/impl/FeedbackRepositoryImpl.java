@@ -17,8 +17,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.FeedbackQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FeedbackEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.FeedbackMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFeedbackRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,15 +24,13 @@ import java.util.Collections;
 import java.util.List;
 
 /**
-* 系统配置 数据库操作封装实现层
+* Feedback RepositoryImpl
 *
 * @author dqcer
 * @since 2024-04-29
 */
 @Service
 public class FeedbackRepositoryImpl extends ServiceImpl<FeedbackMapper, FeedbackEntity>  implements IFeedbackRepository {
-
-    private static final Logger log = LoggerFactory.getLogger(FeedbackRepositoryImpl.class);
 
     @Override
     public List<FeedbackEntity> queryListByIds(List<Integer> idList) {
@@ -73,7 +69,6 @@ public class FeedbackRepositoryImpl extends ServiceImpl<FeedbackMapper, Feedback
     public Integer insert(FeedbackEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
-            log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
         return entity.getId();
@@ -90,7 +85,6 @@ public class FeedbackRepositoryImpl extends ServiceImpl<FeedbackMapper, Feedback
     public void deleteBatchByIds(List<Integer> ids) {
         int rowSize = baseMapper.deleteBatchIds(ids);
         if (rowSize != ids.size()) {
-            log.error("数据插入失败 actual: {}, plan: {}, ids: {}", rowSize, ids.size(), ids);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
     }

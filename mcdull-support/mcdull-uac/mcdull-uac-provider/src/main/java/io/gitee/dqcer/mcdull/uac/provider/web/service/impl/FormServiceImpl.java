@@ -35,11 +35,11 @@ import java.io.IOException;
 import java.util.*;
 
 /**
+ * Form ServiceImpl
  *
  * @author dqcer
  * @since 2024-06-15 13:11:44
  */
-
 @Service
 public class FormServiceImpl
         extends BasicServiceImpl<IFormRepository> implements IFormService {
@@ -164,6 +164,7 @@ public class FormServiceImpl
         formManager.addFormRecordData(dto.getFormId(), dto.getFormData());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PagedVO<Map<String, String>> recordQueryPage(FormRecordQueryDTO dto) {
         List<Map<String, String>> voList = this.getAllRecord(dto);

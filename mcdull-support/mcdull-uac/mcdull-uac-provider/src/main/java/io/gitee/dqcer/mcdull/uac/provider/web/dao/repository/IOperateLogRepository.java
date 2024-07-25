@@ -9,21 +9,27 @@ import java.util.List;
 import java.util.Map;
 
 /**
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Operate log repository
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 public interface IOperateLogRepository extends IService<OperateLogEntity>  {
 
-
-   /**
-    * 按条件分页查询
-    *
-    * @param param      参数
-    * @param userIdList
-    * @return {@link Page< OperateLogEntity >}
-    */
+    /**
+     * 分页
+     *
+     * @param param      param
+     * @param userIdList userIdList
+     * @return {@link Page}<{@link OperateLogEntity}>
+     */
     Page<OperateLogEntity> selectPage(OperateLogQueryDTO param, List<Integer> userIdList);
 
+    /**
+     * 首页
+     *
+     * @return {@link List}<{@link Map}<{@link String}, {@link Object}>>
+     */
     List<Map<String, Object>> home();
 
 }
