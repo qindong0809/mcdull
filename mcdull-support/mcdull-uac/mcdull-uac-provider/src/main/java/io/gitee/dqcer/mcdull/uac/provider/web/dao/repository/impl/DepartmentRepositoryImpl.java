@@ -22,9 +22,8 @@ import java.util.List;
  * @since 2023/12/01
  */
 @Service
-public class DepartmentRepositoryImpl extends ServiceImpl<DepartmentMapper, DepartmentEntity> implements IDepartmentRepository {
-
-
+public class DepartmentRepositoryImpl
+        extends ServiceImpl<DepartmentMapper, DepartmentEntity> implements IDepartmentRepository {
 
     @Override
     public Integer insert(DepartmentEntity entity) {

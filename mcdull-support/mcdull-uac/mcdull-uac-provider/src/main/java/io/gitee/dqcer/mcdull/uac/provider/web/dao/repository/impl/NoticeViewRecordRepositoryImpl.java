@@ -11,13 +11,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Notice View Record Repository Impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class NoticeViewRecordRepositoryImpl extends
         ServiceImpl<NoticeViewRecordMapper, NoticeViewRecordEntity> implements INoticeViewRecordRepository {
-
 
     @Override
     public NoticeViewRecordEntity getByUserIdAndNoticeId(Integer userId, Integer noticeId) {

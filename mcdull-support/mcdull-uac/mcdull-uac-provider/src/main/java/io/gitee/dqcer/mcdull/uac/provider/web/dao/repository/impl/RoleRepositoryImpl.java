@@ -27,13 +27,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * 角色 数据库操作封装实现层
+ * role repository impl
  *
  * @author dqcer
  * @since 2022/12/25
  */
 @Service
-public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleEntity> implements IRoleRepository {
+public class RoleRepositoryImpl
+        extends ServiceImpl<RoleMapper, RoleEntity> implements IRoleRepository {
 
     @Override
     public Page<RoleEntity> selectPage(RolePageDTO dto) {
@@ -88,7 +89,7 @@ public class RoleRepositoryImpl extends ServiceImpl<RoleMapper, RoleEntity> impl
 
     @Override
     public boolean delete(Integer id, String reason) {
-        return removeById(id);
+        return this.removeById(id);
     }
 
     @Override

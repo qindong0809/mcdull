@@ -11,6 +11,8 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
+ * Code generator config mapper
+ *
  * @author dqcer
  * @since 2024-04-29
  */

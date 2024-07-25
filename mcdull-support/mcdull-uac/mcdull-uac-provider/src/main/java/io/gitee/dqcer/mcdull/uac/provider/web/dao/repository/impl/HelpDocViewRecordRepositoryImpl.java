@@ -8,24 +8,20 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocViewRecordQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.HelpDocViewRecordEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.HelpDocViewRecordMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IHelpDocViewRecordRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Help Doc View Record Repository Impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class HelpDocViewRecordRepositoryImpl
         extends ServiceImpl<HelpDocViewRecordMapper, HelpDocViewRecordEntity>  implements IHelpDocViewRecordRepository {
-
-    private static final Logger log = LoggerFactory.getLogger(HelpDocViewRecordRepositoryImpl.class);
 
     @Override
     public Page<HelpDocViewRecordEntity> selectPage(HelpDocViewRecordQueryDTO dto) {

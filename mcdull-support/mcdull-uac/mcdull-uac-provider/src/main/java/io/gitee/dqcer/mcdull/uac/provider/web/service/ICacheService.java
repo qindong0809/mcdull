@@ -5,7 +5,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CacheQueryDTO;
 
 /**
- * cache
+ * Cache service
  *
  * @author qcer
  * @since 2024/05/23

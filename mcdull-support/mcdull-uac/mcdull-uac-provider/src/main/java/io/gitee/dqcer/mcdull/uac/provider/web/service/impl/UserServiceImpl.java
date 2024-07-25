@@ -47,7 +47,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * 用户服务
+ * User ServiceImpl
  *
  * @author dqcer
  * @since  2022/11/27
@@ -70,9 +70,6 @@ public class UserServiceImpl
 
     private static final String AES_KEY = "1024abcd1024abcd1024abcd1024abcd";
 
-
-
-
     @Override
     public boolean passwordCheck(UserEntity entity, String passwordParam) {
         if (ObjUtil.isNotNull(entity) && StrUtil.isNotBlank(passwordParam)) {
@@ -83,10 +80,10 @@ public class UserServiceImpl
         return false;
     }
 
-
     private String hash(String webPassword) {
         return Sha1Util.getSha1(this.decrypt(webPassword));
     }
+
     public String decrypt(String data) {
         try {
             // 第一步： Base64 解码
@@ -127,7 +124,9 @@ public class UserServiceImpl
         return PageUtil.toPage(this.getVoList(userList), entityPage);
     }
 
-    private void setRoleListFieldValue(Map<Integer, List<RoleEntity>> roleListMap, UserVO vo, Integer userId ) {
+    private void setRoleListFieldValue(Map<Integer, List<RoleEntity>> roleListMap,
+                                       UserVO vo,
+                                       Integer userId ) {
         List<RoleEntity> list = roleListMap.getOrDefault(userId, ListUtil.empty());
         if (CollUtil.isNotEmpty(list)) {
             List<Integer> collect = list.stream().map(IdEntity::getId).collect(Collectors.toList());
@@ -200,7 +199,7 @@ public class UserServiceImpl
         }
         boolean anyMatch = userEntities.stream().anyMatch(UserEntity::getAdministratorFlag);
         if (anyMatch) {
-            log.warn("管理员账号禁止删除，id:{}", idList);
+            LogHelp.warn(log, "管理员账号禁止删除，id:{}", idList);
             throw new BusinessException(I18nConstants.PERMISSION_DENIED);
         }
         baseRepository.removeBatchByIds(idList);
@@ -227,6 +226,10 @@ public class UserServiceImpl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer update(Integer id, UserUpdateDTO dto) {
+        UserEntity entity = baseRepository.getById(id);
+        if (ObjUtil.isNull(entity)) {
+            this.throwDataNotExistException(id);
+        }
         this.checkParamThrowException(id, dto);
         UserEntity updateDO = UserConvert.updateDtoToEntity(dto);
         updateDO.setId(id);
@@ -236,21 +239,15 @@ public class UserServiceImpl
     }
 
     private void checkParamThrowException(Integer id, UserUpdateDTO dto) {
-        UserEntity entity = baseRepository.getById(id);
-        if (entity == null) {
-            log.warn("数据不存在 id:{}", id);
-            throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
-        }
         UserEntity userDO = baseRepository.get(dto.getLoginName());
         if (userDO != null) {
             boolean administratorFlag = userDO.getAdministratorFlag();
             if (administratorFlag) {
-                log.warn("管理员账号禁止操作，id:{}", id);
+                LogHelp.warn(log, "管理员账号禁止操作，id:{}", id);
                 throw new BusinessException(I18nConstants.PERMISSION_DENIED);
             }
-
             if (!userDO.getId().equals(id)) {
-                log.warn("账号名称已存在 account: {}", dto.getLoginName());
+                LogHelp.warn(log, "账号名称已存在 account: {}", dto.getLoginName());
                 throw new BusinessException(I18nConstants.DATA_EXISTS);
             }
         }
@@ -261,7 +258,7 @@ public class UserServiceImpl
         Map<Integer, List<RoleEntity>> roleListMap = roleService.getRoleMap(ListUtil.of(userId));
         List<RoleEntity> roleDOList = roleListMap.get(userId);
         if (CollUtil.isEmpty(roleDOList)) {
-            log.warn("userId: {} 查无角色权限", userId);
+            LogHelp.warn(log, "userId: {} 查无角色权限", userId);
             return Collections.emptyList();
         }
         List<UserPowerVO> vos = roleDOList.stream().map(i-> {
@@ -272,7 +269,8 @@ public class UserServiceImpl
         }).collect(Collectors.toList());
 
         Set<Integer> roleSet = vos.stream().map(UserPowerVO::getRoleId).collect(Collectors.toSet());
-        Map<Integer, List<String>> keyRoleIdValueMenuCode = menuService.getMenuCodeListMap(new ArrayList<>(roleSet));
+        Map<Integer, List<String>> keyRoleIdValueMenuCode = menuService
+                .getMenuCodeListMap(new ArrayList<>(roleSet));
         for (UserPowerVO vo : vos) {
             String code = vo.getCode();
             if (ObjectUtil.equals(GlobalConstant.SUPER_ADMIN_ROLE, code)) {
@@ -282,7 +280,7 @@ public class UserServiceImpl
             }
             List<String> menuCodeList = keyRoleIdValueMenuCode.get(vo.getRoleId());
             if (CollUtil.isEmpty(menuCodeList)) {
-                log.warn("userId: {} roleId: {} 查无模块权限", userId, vo.getRoleId());
+                LogHelp.warn(log, "userId: {} roleId: {} 查无模块权限", userId, vo.getRoleId());
                 menuCodeList = Collections.emptyList();
             }
             vo.setModules(menuCodeList);
@@ -336,7 +334,8 @@ public class UserServiceImpl
             Set<Integer> deptIdSet = list.stream()
                     .map(UserEntity::getDepartmentId)
                     .filter(ObjUtil::isNotNull).collect(Collectors.toSet());
-            List<DepartmentEntity> departmentEntities = departmentRepository.listByIds(new ArrayList<>(deptIdSet));
+            List<DepartmentEntity> departmentEntities = departmentRepository
+                    .listByIds(new ArrayList<>(deptIdSet));
             if (CollUtil.isEmpty(departmentEntities)) {
                 return Collections.emptyList();
             }
@@ -398,7 +397,8 @@ public class UserServiceImpl
 
     private List<UserVO> getVoList(List<UserEntity> userList) {
         List<UserVO> voList = new ArrayList<>();
-        Set<Integer> createdBySet = userList.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
+        Set<Integer> createdBySet = userList.stream().map(BaseEntity::getCreatedBy)
+                .collect(Collectors.toSet());
         Set<Integer> updatedBySet = userList.stream().map(BaseEntity::getUpdatedBy)
                 .filter(ObjUtil::isNotNull).collect(Collectors.toSet());
         createdBySet.addAll(updatedBySet);
@@ -409,7 +409,8 @@ public class UserServiceImpl
         }
         List<Integer> userIdList = userList.stream().map(IdEntity::getId).collect(Collectors.toList());
         Map<Integer, List<RoleEntity>> roleListMap = roleService.getRoleMap(userIdList);
-        Set<Integer> depIdSet = userList.stream().map(UserEntity::getDepartmentId).collect(Collectors.toSet());
+        Set<Integer> depIdSet = userList.stream().map(UserEntity::getDepartmentId)
+                .collect(Collectors.toSet());
         List<DepartmentEntity> departmentEntities = departmentRepository.listByIds(depIdSet);
         Map<Integer, DepartmentEntity> deptMap = departmentEntities.stream()
                 .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
@@ -425,7 +426,9 @@ public class UserServiceImpl
         return voList;
     }
 
-    private void setUpdatedByFieldValue(Map<Integer, UserEntity> userMap, Integer updatedBy, UserVO vo) {
+    private void setUpdatedByFieldValue(Map<Integer, UserEntity> userMap,
+                                        Integer updatedBy,
+                                        UserVO vo) {
         if (ObjUtil.isNotNull(updatedBy)) {
             UserEntity userEntity = userMap.get(updatedBy);
             if (ObjUtil.isNotNull(userEntity)) {
@@ -434,7 +437,9 @@ public class UserServiceImpl
         }
     }
 
-    private void setCreatedByFieldValue(Map<Integer, UserEntity> userMap, Integer createdBy, UserVO vo) {
+    private void setCreatedByFieldValue(Map<Integer, UserEntity> userMap,
+                                        Integer createdBy,
+                                        UserVO vo) {
         if (ObjUtil.isNotNull(createdBy)) {
             UserEntity userEntity = userMap.get(createdBy);
             if (ObjUtil.isNotNull(userEntity)) {
@@ -443,7 +448,9 @@ public class UserServiceImpl
         }
     }
 
-    private void setDeptFieldValue(Map<Integer, DepartmentEntity> deptMap, Integer departmentId, UserVO vo) {
+    private void setDeptFieldValue(Map<Integer, DepartmentEntity> deptMap,
+                                   Integer departmentId,
+                                   UserVO vo) {
         if (ObjUtil.isNotNull(departmentId)) {
             DepartmentEntity departmentEntity = deptMap.get(departmentId);
             if (ObjUtil.isNotNull(departmentEntity)) {
@@ -492,9 +499,7 @@ public class UserServiceImpl
 
     @Override
     public PagedVO<UserVO> pageByRoleId(Integer roleId, UserListDTO dto) {
-
         List<Integer> userId = userRoleService.getUserId(roleId);
-
         Page<UserEntity> entityPage = baseRepository.selectPage(dto, null, userId);
         List<UserVO> voList = new ArrayList<>();
         List<UserEntity> userList = entityPage.getRecords();
@@ -523,6 +528,4 @@ public class UserServiceImpl
         }
         return StrUtil.EMPTY;
     }
-
-
 }

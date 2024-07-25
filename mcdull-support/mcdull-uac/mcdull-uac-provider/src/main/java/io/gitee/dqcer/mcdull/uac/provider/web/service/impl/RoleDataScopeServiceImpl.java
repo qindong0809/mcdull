@@ -48,7 +48,8 @@ public class RoleDataScopeServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateByRoleId(RoleDataScopeUpdateDTO dto) {
-        List<RoleDataScopeUpdateDTO.RoleUpdateDataScopeListFormItem> scopeItemList = dto.getDataScopeItemList();
+        List<RoleDataScopeUpdateDTO.RoleUpdateDataScopeListFormItem> scopeItemList =
+                dto.getDataScopeItemList();
         Integer roleId = dto.getRoleId();
         List<RoleDataScopeEntity> dbList = baseRepository.getListByRole(roleId);
         List<RoleDataScopeEntity> tempList = new ArrayList<>();
@@ -107,7 +108,8 @@ public class RoleDataScopeServiceImpl
                     .build();
             viewTypeList.add(dataScopeViewTypeDTO);
         }
-        Comparator<DataScopeViewTypeVO> comparator = Comparator.comparing(DataScopeViewTypeVO::getViewTypeLevel);
+        Comparator<DataScopeViewTypeVO> comparator = Comparator
+                .comparing(DataScopeViewTypeVO::getViewTypeLevel);
         viewTypeList.sort(comparator);
         return viewTypeList;
     }
@@ -127,7 +129,8 @@ public class RoleDataScopeServiceImpl
                     .build();
             dataScopeTypeList.add(dataScopeDTO);
         }
-        Comparator<DataScopeBO> comparator = Comparator.comparing(DataScopeBO::getDataScopeTypeSort);
+        Comparator<DataScopeBO> comparator = Comparator
+                .comparing(DataScopeBO::getDataScopeTypeSort);
         dataScopeTypeList.sort(comparator);
         return dataScopeTypeList;
     }

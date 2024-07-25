@@ -21,6 +21,8 @@ import java.util.List;
 
 
 /**
+ * Login Locked Service Impl
+ *
  * @author dqcer
  * @since 2024-04-29
  */
@@ -37,21 +39,21 @@ public class LoginLockedServiceImpl
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public void lock(String loginName, Integer failedLoginMaximumTime) {
-        LoginLockedEntity loginLocked = new LoginLockedEntity();
-        loginLocked.setLockFlag(true);
-        loginLocked.setLoginName(loginName);
+        LoginLockedEntity entity = new LoginLockedEntity();
+        entity.setLockFlag(true);
+        entity.setLoginName(loginName);
         Date date = new Date();
-        loginLocked.setLoginLockBeginTime(date);
-        loginLocked.setLoginLockEndTime(DateUtil.offsetMinute(date, failedLoginMaximumTime));
-        loginLocked.setLoginFailCount(1);
-        baseRepository.save(loginLocked);
+        entity.setLoginLockBeginTime(date);
+        entity.setLoginLockEndTime(DateUtil.offsetMinute(date, failedLoginMaximumTime));
+        entity.setLoginFailCount(1);
+        baseRepository.save(entity);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public void updateFailCount(LoginLockedEntity lockedEntity) {
-        lockedEntity.setLoginFailCount(lockedEntity.getLoginFailCount() + 1);
-        baseRepository.updateById(lockedEntity);
+    public void updateFailCount(LoginLockedEntity entity) {
+        entity.setLoginFailCount(entity.getLoginFailCount() + 1);
+        baseRepository.updateById(entity);
     }
 
     @Override
@@ -79,16 +81,16 @@ public class LoginLockedServiceImpl
     }
 
     private LoginLockedVO convert(LoginLockedEntity entity) {
-        LoginLockedVO loginLockedVO = new LoginLockedVO();
-        loginLockedVO.setLoginFailId(entity.getId());
-        loginLockedVO.setLoginName(entity.getLoginName());
-        loginLockedVO.setLoginFailCount(entity.getLoginFailCount());
-        loginLockedVO.setLockFlag(entity.getLockFlag());
-        loginLockedVO.setLoginLockBeginTime(LocalDateTimeUtil.of(entity.getLoginLockBeginTime()));
-        loginLockedVO.setLoginLockEndTime(LocalDateTimeUtil.of(entity.getLoginLockEndTime()));
-        loginLockedVO.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
-        loginLockedVO.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
-        return loginLockedVO;
+        LoginLockedVO vo = new LoginLockedVO();
+        vo.setLoginFailId(entity.getId());
+        vo.setLoginName(entity.getLoginName());
+        vo.setLoginFailCount(entity.getLoginFailCount());
+        vo.setLockFlag(entity.getLockFlag());
+        vo.setLoginLockBeginTime(LocalDateTimeUtil.of(entity.getLoginLockBeginTime()));
+        vo.setLoginLockEndTime(LocalDateTimeUtil.of(entity.getLoginLockEndTime()));
+        vo.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
+        vo.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
+        return vo;
     }
 
 }

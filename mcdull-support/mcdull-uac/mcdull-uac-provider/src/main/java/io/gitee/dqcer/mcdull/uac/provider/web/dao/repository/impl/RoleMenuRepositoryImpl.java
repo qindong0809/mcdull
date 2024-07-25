@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 角色菜单 数据库操作封装实现层
+ * Role Menu Repository Impl
  *
  * @author dqcer
  * @since 2023/12/01
@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 @Service
 public class RoleMenuRepositoryImpl
         extends ServiceImpl<RoleMenuMapper, RoleMenuEntity> implements IRoleMenuRepository {
-
 
     @Override
     public Map<Integer, List<Integer>> menuIdListMap(Collection<Integer> roleIdCollection) {

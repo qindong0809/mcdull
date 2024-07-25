@@ -9,21 +9,50 @@ import java.util.List;
 
 
 /**
- * Area 数据库操作封装接口层
+ * Area repository
  *
  * @author dqcer
  * @since 2024-06-15 13:11:44
  */
 public interface IAreaRepository extends IService<AreaEntity> {
 
-
+    /**
+     * 查询列表
+     *
+     * @param idList idList
+     * @return {@link List}<{@link AreaEntity}>
+     */
     List<AreaEntity> queryListByIds(List<Integer> idList);
 
+    /**
+     * 分页
+     *
+     * @param dto dto
+     * @return {@link Page}<{@link AreaEntity}>
+     */
     Page<AreaEntity> selectPage(AreaQueryDTO dto);
 
+    /**
+     * 根据类型获取地区
+     *
+     * @param areaType areaType
+     * @return {@link List}<{@link AreaEntity}>
+     */
     List<AreaEntity> getByAreaType(int areaType);
 
+    /**
+     * 根据父id获取地区
+     *
+     * @param pid pid
+     * @return {@link List}<{@link AreaEntity}>
+     */
     List<AreaEntity> getByPid(Integer pid);
 
+    /**
+     * 根据code获取地区
+     *
+     * @param code code
+     * @return {@link AreaEntity}
+     */
     AreaEntity getCode(String code);
 }

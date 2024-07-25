@@ -6,10 +6,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.FeedbackQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FeedbackVO;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Feedback service
+ *
+ * @author dqcer
+ * @since 2024/7/25 9:21
+ */
+
 public interface IFeedbackService {
 
 

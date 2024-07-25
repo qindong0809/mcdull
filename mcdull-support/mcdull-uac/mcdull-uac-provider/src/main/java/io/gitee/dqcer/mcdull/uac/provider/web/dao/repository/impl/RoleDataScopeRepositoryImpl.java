@@ -7,13 +7,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDataScopeEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.RoleDataScopeMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleDataScopeRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
+ * Role data scope repository impl
  *
  * @author dqcer
  * @since 2024/05/13
@@ -21,8 +20,6 @@ import java.util.List;
 @Service
 public class RoleDataScopeRepositoryImpl extends ServiceImpl<RoleDataScopeMapper, RoleDataScopeEntity>
         implements IRoleDataScopeRepository {
-
-    private static final Logger log = LoggerFactory.getLogger(RoleDataScopeRepositoryImpl.class);
 
     @Override
     public List<RoleDataScopeEntity> getListByRole(Integer roleId) {
@@ -36,13 +33,19 @@ public class RoleDataScopeRepositoryImpl extends ServiceImpl<RoleDataScopeMapper
                        List<RoleDataScopeEntity> updateList,
                        List<RoleDataScopeEntity> removeList) {
         if (CollUtil.isNotEmpty(insertList)) {
-            this.saveBatch(insertList, insertList.size());
+            this.executeBatch(insertList, insertList.size(), (sqlSession, entity) -> {
+                sqlSession.getMapper(RoleDataScopeMapper.class).insert(entity);
+            });
         }
         if (CollUtil.isNotEmpty(updateList)) {
-            this.updateBatchById(updateList, updateList.size());
+            this.executeBatch(updateList, updateList.size(), (sqlSession, entity) -> {
+                sqlSession.getMapper(RoleDataScopeMapper.class).updateById(entity);
+            });
         }
         if (CollUtil.isNotEmpty(removeList)) {
-            this.removeBatchByIds(removeList, removeList.size());
+            this.executeBatch(removeList, removeList.size(), (sqlSession, entity) -> {
+                sqlSession.getMapper(RoleDataScopeMapper.class).deleteById(entity.getId());
+            });
         }
     }
 }

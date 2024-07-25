@@ -9,11 +9,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
+ * Email send history repository impl
+ *
  * @author dqcer
+ * @since 2024/7/25 13:17
  */
+
 @Service
-public class EmailSendHistoryRepositoryImpl extends ServiceImpl<EmailSendHistoryMapper, EmailSendHistoryEntity>
-        implements IEmailSendHistoryRepository {
+public class EmailSendHistoryRepositoryImpl
+        extends ServiceImpl<EmailSendHistoryMapper, EmailSendHistoryEntity> implements IEmailSendHistoryRepository {
 
     @Override
     public boolean batchInsert(List<EmailSendHistoryEntity> list) {

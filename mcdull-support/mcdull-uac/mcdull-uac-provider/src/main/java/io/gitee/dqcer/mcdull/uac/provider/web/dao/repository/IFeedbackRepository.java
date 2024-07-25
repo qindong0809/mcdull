@@ -9,16 +9,18 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.FeedbackEntity;
 import java.util.List;
 
 /**
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Feedback Repository
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ **/
 public interface IFeedbackRepository extends IService<FeedbackEntity>  {
 
    /**
     * 根据ID列表批量查询数据
     *
     * @param idList id列表
-    * @return {@link List< FeedbackEntity >}
+    * @return {@link List}
     */
     List<FeedbackEntity> queryListByIds(List<Integer> idList);
 
@@ -26,7 +28,7 @@ public interface IFeedbackRepository extends IService<FeedbackEntity>  {
     * 按条件分页查询
     *
     * @param param 参数
-    * @return {@link Page< FeedbackEntity >}
+    * @return {@link Page}
     */
     Page<FeedbackEntity> selectPage(FeedbackQueryDTO param);
 

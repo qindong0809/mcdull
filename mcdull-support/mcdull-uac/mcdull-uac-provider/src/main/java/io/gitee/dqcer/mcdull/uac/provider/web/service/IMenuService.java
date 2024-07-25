@@ -7,14 +7,17 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.MenuTreeVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.MenuVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleMenuTreeVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleMenuVO;
 
 import java.util.List;
 import java.util.Map;
 
 /**
+ * Menu Service
+ *
  * @author dqcer
+ * @since 2024/7/25 9:24
  */
+
 public interface IMenuService {
     Map<Integer, List<String>> getMenuCodeListMap(List<Integer> roleIdList);
 

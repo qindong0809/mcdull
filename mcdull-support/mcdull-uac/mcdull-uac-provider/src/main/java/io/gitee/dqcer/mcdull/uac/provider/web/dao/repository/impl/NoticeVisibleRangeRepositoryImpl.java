@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Notice visible range repository impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class NoticeVisibleRangeRepositoryImpl extends
         ServiceImpl<NoticeVisibleRangeMapper, NoticeVisibleRangeEntity> implements INoticeVisibleRangeRepository {

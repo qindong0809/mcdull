@@ -24,22 +24,15 @@ import java.util.Collections;
 import java.util.List;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Help doc catalog repository impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class HelpDocCatalogRepositoryImpl
         extends ServiceImpl<HelpDocCatalogMapper, HelpDocCatalogEntity>  implements IHelpDocCatalogRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(HelpDocCatalogRepositoryImpl.class);
-
-    /**
-     * 根据ID列表批量查询数据
-     *
-     * @param idList id列表
-     * @return {@link List< ConfigEntity >}
-     */
     @Override
     public List<HelpDocCatalogEntity> queryListByIds(List<Integer> idList) {
         LambdaQueryWrapper<HelpDocCatalogEntity> wrapper = Wrappers.lambdaQuery();
@@ -51,12 +44,7 @@ public class HelpDocCatalogRepositoryImpl
         return Collections.emptyList();
     }
 
-    /**
-     * 按条件分页查询
-     *
-     * @param param 参数
-     * @return {@link Page< ConfigEntity >}
-     */
+
     @Override
     public Page<HelpDocCatalogEntity> selectPage(ConfigQueryDTO param) {
         LambdaQueryWrapper<HelpDocCatalogEntity> lambda = new QueryWrapper<HelpDocCatalogEntity>().lambda();
@@ -68,39 +56,22 @@ public class HelpDocCatalogRepositoryImpl
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 
-    /**
-     * 根据ID获取单条数据
-     *
-     * @param id 主键
-     * @return {@link ConfigEntity}
-     */
+
     @Override
     public HelpDocCatalogEntity getById(Integer id) {
         return baseMapper.selectById(id);
     }
 
-    /**
-     * 插入数据
-     *
-     * @param entity 实体对象
-     * @return Integer id
-     */
+
     @Override
     public Integer insert(HelpDocCatalogEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
-            log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
         return entity.getId();
     }
 
-    /**
-     * 存在
-     *
-     * @param entity 实体对象
-     * @return boolean true/存在 false/不存在
-     */
     @Override
     public boolean exist(HelpDocCatalogEntity entity) {
         return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
@@ -131,7 +102,6 @@ public class HelpDocCatalogRepositoryImpl
     public void deleteBatchByIds(List<Integer> ids) {
         int rowSize = baseMapper.deleteBatchIds(ids);
         if (rowSize != ids.size()) {
-            log.error("数据插入失败 actual: {}, plan: {}, ids: {}", rowSize, ids.size(), ids);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
     }

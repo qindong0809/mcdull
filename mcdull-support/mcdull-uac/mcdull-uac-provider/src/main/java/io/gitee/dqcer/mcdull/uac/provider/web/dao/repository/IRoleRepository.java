@@ -32,9 +32,29 @@ public interface IRoleRepository extends IService<RoleEntity> {
      */
     Integer insert(RoleEntity entity);
 
+    /**
+     * 角色列表
+     *
+     * @param userRoleMap 用户角色映射
+     * @return {@link Map}<{@link Integer}, {@link List}<{@link RoleEntity}>>
+     */
     Map<Integer, List<RoleEntity>> roleListMap(Map<Integer, List<Integer>> userRoleMap);
 
+    /**
+     * 删除
+     *
+     * @param id      id
+     * @param reason  原因
+     * @return boolean
+     */
     boolean delete(Integer id, String reason);
 
+    /**
+     * 启用禁用
+     *
+     * @param id      id
+     * @param inactive 启用禁用
+     * @return boolean
+     */
     boolean toggleStatus(Integer id, boolean inactive);
 }

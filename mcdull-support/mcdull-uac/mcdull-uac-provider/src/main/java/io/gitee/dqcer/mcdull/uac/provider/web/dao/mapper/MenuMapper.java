@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
 
 /**
- * 菜单 mapper
+ * Menu mapper
  *
  * @author dqcer
  * @since 2022/12/25

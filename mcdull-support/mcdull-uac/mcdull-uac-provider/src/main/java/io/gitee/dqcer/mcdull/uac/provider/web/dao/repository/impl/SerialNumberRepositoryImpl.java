@@ -14,22 +14,20 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.SerialNumberEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.SerialNumberMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.ISerialNumberRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Serial Number Repository Impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class SerialNumberRepositoryImpl
         extends ServiceImpl<SerialNumberMapper, SerialNumberEntity>  implements ISerialNumberRepository {
-
-    private static final Logger log = LoggerFactory.getLogger(SerialNumberRepositoryImpl.class);
 
     @Override
     public List<SerialNumberEntity> queryListByIds(List<Integer> idList) {
@@ -61,7 +59,6 @@ public class SerialNumberRepositoryImpl
     public void insert(SerialNumberEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
-            log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
     }
@@ -75,7 +72,6 @@ public class SerialNumberRepositoryImpl
     public void deleteBatchByIds(List<Integer> ids) {
         int rowSize = baseMapper.deleteBatchIds(ids);
         if (rowSize != ids.size()) {
-            log.error("数据插入失败 actual: {}, plan: {}, ids: {}", rowSize, ids.size(), ids);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
     }

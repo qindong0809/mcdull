@@ -6,11 +6,18 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.EnterpriseQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.OaEnterpriseEntity;
 
 /**
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Enterprise repository
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 public interface IOaEnterpriseRepository extends IService<OaEnterpriseEntity>  {
 
-
+    /**
+     * 分页
+     *
+     * @param dto dto
+     * @return {@code Page<OaEnterpriseEntity>}
+     */
     Page<OaEnterpriseEntity> selectPage(EnterpriseQueryDTO dto);
 }

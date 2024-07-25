@@ -38,10 +38,11 @@ import java.util.stream.Collectors;
 
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Notice ServiceImpl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class NoticeServiceImpl
         extends BasicServiceImpl<INoticeRepository> implements INoticeService {
@@ -326,6 +327,10 @@ public class NoticeServiceImpl
     }
 
     private void setUpdateFieldValue(NoticeUpdateDTO item, NoticeEntity entity){
+        this.setCommonField(item, entity);
+    }
+
+    private void setCommonField(NoticeAddDTO item, NoticeEntity entity) {
         entity.setNoticeTypeId(item.getNoticeTypeId());
         entity.setTitle(item.getTitle());
         entity.setAllVisibleFlag(item.getAllVisibleFlag());
@@ -341,20 +346,7 @@ public class NoticeServiceImpl
 
     private NoticeEntity convertToEntity(NoticeAddDTO item){
         NoticeEntity entity = new NoticeEntity();
-        entity.setNoticeTypeId(item.getNoticeTypeId());
-        entity.setTitle(item.getTitle());
-        entity.setAllVisibleFlag(item.getAllVisibleFlag());
-        entity.setScheduledPublishFlag(item.getScheduledPublishFlag());
-        entity.setPublishTime(item.getPublishTime());
-        entity.setContentText(item.getContentText());
-        entity.setContentHtml(item.getContentHtml());
-        entity.setAttachment(item.getAttachment());
-        entity.setPageViewCount(0);
-        entity.setUserViewCount(0);
-        entity.setInactive(false);
-        entity.setSource(item.getSource());
-        entity.setAuthor(item.getAuthor());
-        entity.setDocumentNumber(item.getDocumentNumber());
+        this.setCommonField(item, entity);
         return entity;
     }
 

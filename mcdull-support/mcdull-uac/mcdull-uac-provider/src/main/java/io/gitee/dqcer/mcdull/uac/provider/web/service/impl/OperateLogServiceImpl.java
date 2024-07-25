@@ -29,10 +29,11 @@ import java.util.stream.Collectors;
 
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Operate Log Service Impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class OperateLogServiceImpl
         extends BasicServiceImpl<IOperateLogRepository> implements IOperateLogService {

@@ -14,11 +14,15 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.FormMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormRepository;
 import org.springframework.stereotype.Service;
 
-
+/**
+ * Form Repository Impl
+ *
+ * @author dqcer
+ * @since 2024/7/25 13:20
+ */
 @Service
 public class FormRepositoryImpl extends
         ServiceImpl<FormMapper, FormEntity> implements IFormRepository {
-
 
     @Override
     public Page<FormEntity> selectPage(FormQueryDTO param) {

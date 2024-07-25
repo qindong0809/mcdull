@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 import java.util.List;
 
 /**
-* 系统配置 数据库操作封装接口层
+* Config repository
 *
 * @author dqcer
 * @since 2024-04-29
@@ -19,7 +19,7 @@ public interface IConfigRepository extends IService<ConfigEntity>  {
     * 根据ID列表批量查询数据
     *
     * @param idList id列表
-    * @return {@link List< ConfigEntity >}
+    * @return {@link List}
     */
     List<ConfigEntity> queryListByIds(List<Integer> idList);
 
@@ -27,7 +27,7 @@ public interface IConfigRepository extends IService<ConfigEntity>  {
     * 按条件分页查询
     *
     * @param param 参数
-    * @return {@link Page< ConfigEntity >}
+    * @return {@link Page}
     */
     Page<ConfigEntity> selectPage(ConfigQueryDTO param);
 
@@ -62,5 +62,11 @@ public interface IConfigRepository extends IService<ConfigEntity>  {
      */
     boolean exist(ConfigEntity entity);
 
+    /**
+     * 根据key获取单条数据
+     *
+     * @param key key
+     * @return {@link ConfigEntity}
+     */
     ConfigEntity selectOne(String key);
 }

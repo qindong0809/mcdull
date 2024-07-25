@@ -7,16 +7,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
-import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ChangeLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.ChangeLogMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IChangeLogRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,14 +19,14 @@ import java.util.Collections;
 import java.util.List;
 
 /**
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Change  log repository impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class ChangeLogRepositoryImpl
         extends ServiceImpl<ChangeLogMapper, ChangeLogEntity>  implements IChangeLogRepository {
-
-    private static final Logger log = LoggerFactory.getLogger(ChangeLogRepositoryImpl.class);
 
     @Override
     public List<ChangeLogEntity> queryListByIds(List<Integer> idList) {
@@ -80,11 +75,7 @@ public class ChangeLogRepositoryImpl
 
     @Override
     public void insert(ChangeLogEntity entity) {
-        int rowSize = baseMapper.insert(entity);
-        if (rowSize == GlobalConstant.Database.ROW_0) {
-            log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
-            throw new DatabaseRowException(CodeEnum.DB_ERROR);
-        }
+        baseMapper.insert(entity);
     }
 
     @Override
@@ -94,10 +85,6 @@ public class ChangeLogRepositoryImpl
 
     @Override
     public void deleteBatchByIds(List<Integer> ids) {
-        int rowSize = baseMapper.deleteBatchIds(ids);
-        if (rowSize != ids.size()) {
-            log.error("数据插入失败 actual: {}, plan: {}, ids: {}", rowSize, ids.size(), ids);
-            throw new DatabaseRowException(CodeEnum.DB_ERROR);
-        }
+        baseMapper.deleteBatchIds(ids);
     }
 }

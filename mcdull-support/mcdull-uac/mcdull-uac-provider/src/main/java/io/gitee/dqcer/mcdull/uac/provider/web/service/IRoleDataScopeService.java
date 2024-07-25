@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleDataScopeVO;
 import java.util.List;
 
 /**
- * 数据范围服务
+ * Role Data Scope Service
  *
  * @author dqcer
  * @since 2024/05/13

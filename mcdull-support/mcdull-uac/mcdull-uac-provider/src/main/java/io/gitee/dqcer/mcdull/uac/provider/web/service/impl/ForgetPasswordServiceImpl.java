@@ -9,6 +9,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ForgetPasswordRequestDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ForgetPasswordRestDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
@@ -32,9 +33,8 @@ import java.util.Map;
  * @since 2024/06/11
  */
 @Service
-public class ForgetPasswordServiceImpl implements IForgetPasswordService {
-
-    private static final Logger log = LoggerFactory.getLogger(ForgetPasswordServiceImpl.class);
+public class ForgetPasswordServiceImpl
+        extends GenericLogic implements IForgetPasswordService {
 
     @Resource
     private IUserService userService;

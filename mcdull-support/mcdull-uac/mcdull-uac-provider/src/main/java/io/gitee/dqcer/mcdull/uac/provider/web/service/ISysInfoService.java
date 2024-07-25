@@ -5,10 +5,11 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.EmailConfigDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.EmailConfigVO;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Sys info service
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 public interface ISysInfoService {
 
     EmailConfigBO getEmailConfig();

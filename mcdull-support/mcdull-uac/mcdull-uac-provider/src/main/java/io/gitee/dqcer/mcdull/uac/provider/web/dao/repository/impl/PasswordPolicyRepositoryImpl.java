@@ -7,9 +7,11 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IPasswordPolicyRepo
 import org.springframework.stereotype.Service;
 
 /**
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Password  policy repository
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class PasswordPolicyRepositoryImpl
         extends ServiceImpl<PasswordPolicyMapper, PasswordPolicyEntity>  implements IPasswordPolicyRepository {

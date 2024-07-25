@@ -8,6 +8,13 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormVO;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Form service
+ *
+ * @author dqcer
+ * @since 2024/7/25 9:23
+ */
+
 public interface IFormService {
 
     PagedVO<FormVO> queryPage(FormQueryDTO dto);

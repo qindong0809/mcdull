@@ -35,7 +35,6 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 public class FileServiceImpl
         extends BasicServiceImpl<IFileRepository> implements IFileService {

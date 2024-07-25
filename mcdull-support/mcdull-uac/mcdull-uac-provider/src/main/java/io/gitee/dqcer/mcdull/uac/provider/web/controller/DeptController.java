@@ -30,10 +30,10 @@ public class DeptController {
     private IDepartmentService deptService;
 
 
-    @GetMapping("list")
-    public Result<List<DepartmentVO>> list(@Validated DeptListDTO dto) {
-        return Result.success(deptService.list(dto));
-    }
+//    @GetMapping("list")
+//    public Result<List<DepartmentVO>> list(@Validated DeptListDTO dto) {
+//        return Result.success(deptService.list(dto));
+//    }
 
     @GetMapping("list-all")
     public Result<List<DepartmentVO>> getAll() {

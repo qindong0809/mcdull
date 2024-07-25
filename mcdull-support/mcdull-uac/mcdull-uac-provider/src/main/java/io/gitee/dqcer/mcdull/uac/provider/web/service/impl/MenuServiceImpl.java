@@ -14,6 +14,7 @@ import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.MenuConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuAddDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuBaseForm;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
@@ -31,8 +32,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Menu ServiceImpl
+ *
  * @author dqcer
+ * @since 2024/7/25 9:57
  */
+
 @Service
 public class MenuServiceImpl
         extends BasicServiceImpl<IMenuRepository>  implements IMenuService {
@@ -126,26 +131,18 @@ public class MenuServiceImpl
     }
 
     private MenuEntity setUpdateField(MenuUpdateDTO dto, MenuEntity menuEntity) {
-        menuEntity.setMenuName(dto.getMenuName());
-        menuEntity.setMenuType(dto.getMenuType());
-        menuEntity.setParentId(dto.getParentId());
-        menuEntity.setSort(dto.getSort());
-        menuEntity.setPath(dto.getPath());
-        menuEntity.setComponent(dto.getComponent());
-        menuEntity.setPermsType(dto.getPermsType());
-        menuEntity.setApiPerms(dto.getApiPerms());
-        menuEntity.setWebPerms(dto.getWebPerms());
-        menuEntity.setIcon(dto.getIcon());
-        menuEntity.setContextMenuId(dto.getContextMenuId());
-        menuEntity.setFrameFlag(dto.getFrameFlag());
-        menuEntity.setFrameUrl(dto.getFrameUrl());
-        menuEntity.setCacheFlag(dto.getCacheFlag());
-        menuEntity.setVisibleFlag(dto.getVisibleFlag());
+        this.setCommonField(dto, menuEntity);
         return menuEntity;
     }
 
     private MenuEntity convertToEntity(MenuAddDTO dto) {
         MenuEntity menuEntity = new MenuEntity();
+        this.setCommonField(dto, menuEntity);
+        return menuEntity;
+
+    }
+
+    private void setCommonField(MenuBaseForm dto, MenuEntity menuEntity) {
         menuEntity.setMenuName(dto.getMenuName());
         menuEntity.setMenuType(dto.getMenuType());
         menuEntity.setParentId(dto.getParentId());
@@ -161,8 +158,6 @@ public class MenuServiceImpl
         menuEntity.setFrameUrl(dto.getFrameUrl());
         menuEntity.setCacheFlag(dto.getCacheFlag());
         menuEntity.setVisibleFlag(dto.getVisibleFlag());
-        return menuEntity;
-
     }
 
     private List<Tree<Integer>> getTrees(List<MenuEntity> menuList) {
@@ -304,15 +299,9 @@ public class MenuServiceImpl
             return null;
         }
         MenuTreeVO routerVO = new MenuTreeVO();
-        routerVO.setMenuId(Convert.toInt(tree.getId()));
-        routerVO.setParentId(Convert.toInt(tree.getParentId()));
-        routerVO.setMenuName(String.valueOf(tree.getName()));
-        routerVO.setMenuType(Convert.toInt(tree.get("menuType")));
-        routerVO.setContextMenuId(Convert.toInt(tree.get("contextMenuId")));
-        List<Tree<Integer>> children = tree.getChildren();
+        List<Tree<Integer>> children = this.getChildren(tree, routerVO);
         if (CollUtil.isNotEmpty(children)) {
             List<MenuTreeVO> childVOList = new ArrayList<>();
-
             for (Tree<Integer> childTree : children) {
                 MenuTreeVO childVO = this.convertTreeVO(childTree);
                 if (ObjUtil.isNotNull(childVO)) {
@@ -324,5 +313,14 @@ public class MenuServiceImpl
             }
         }
         return routerVO;
+    }
+
+    private List<Tree<Integer>> getChildren(Tree<Integer> tree, MenuTreeVO routerVO) {
+        routerVO.setMenuId(Convert.toInt(tree.getId()));
+        routerVO.setParentId(Convert.toInt(tree.getParentId()));
+        routerVO.setMenuName(String.valueOf(tree.getName()));
+        routerVO.setMenuType(Convert.toInt(tree.get("menuType")));
+        routerVO.setContextMenuId(Convert.toInt(tree.get("contextMenuId")));
+        return tree.getChildren();
     }
 }

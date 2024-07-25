@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 用户服务
+ * Role Service Impl
  *
  * @author dqcer
  * @since  2022/11/27
@@ -84,7 +84,7 @@ public class RoleServiceImpl
     @Transactional(rollbackFor = Exception.class)
     public void delete(Integer id) {
         RoleEntity dbData = baseRepository.getById(id);
-        if (null == dbData) {
+        if (ObjUtil.isNull(dbData)) {
             this.throwDataNotExistException(id);
         }
         baseRepository.removeById(id);
@@ -185,5 +185,4 @@ public class RoleServiceImpl
     public void batchRemoveRoleEmployee(RoleEmployeeUpdateDTO dto) {
         userRoleService.batchRemoveUserListByRole(dto.getRoleId(), dto.getEmployeeIdList());
     }
-
 }

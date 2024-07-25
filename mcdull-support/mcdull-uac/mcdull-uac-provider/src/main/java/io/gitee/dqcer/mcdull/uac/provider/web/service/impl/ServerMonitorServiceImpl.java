@@ -2,6 +2,8 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.DateUtil;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IServerMonitorService;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
@@ -20,13 +22,13 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 /**
- * 服务器监视器服务impl
+ * Server Monitor Service
  *
  * @author dqcer
  * @since 2024/05/31
  */
 @Service
-public class ServerMonitorServiceImpl implements IServerMonitorService {
+public class ServerMonitorServiceImpl extends GenericLogic implements IServerMonitorService {
 
 
     private final DecimalFormat df = new DecimalFormat("0.00");
@@ -50,7 +52,7 @@ public class ServerMonitorServiceImpl implements IServerMonitorService {
             resultMap.put("disk", getDiskInfo(os));
             resultMap.put("time", DateUtil.format(new Date(), "HH:mm:ss"));
         } catch (Exception e) {
-            e.printStackTrace();
+            LogHelp.error(log, "getServers error", e);
         }
         return resultMap;
     }

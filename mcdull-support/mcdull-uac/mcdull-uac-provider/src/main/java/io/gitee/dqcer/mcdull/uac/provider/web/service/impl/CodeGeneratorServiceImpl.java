@@ -29,10 +29,11 @@ import java.util.Optional;
 
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Code generator service
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class CodeGeneratorServiceImpl
         extends BasicServiceImpl<ICodeGeneratorConfigRepository> implements ICodeGeneratorService {
@@ -65,6 +66,7 @@ public class CodeGeneratorServiceImpl
             vo.setDeleteInfo(JSONUtil.parseObj(config.getDeleteInfo()).toBean(CodeDelete.class));
             return vo;
         }
+        LogHelp.warn(log, "table config is null, tableName: {}", table);
         return new TableConfigVO();
     }
 

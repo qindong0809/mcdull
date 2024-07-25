@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 用户角色 数据库操作封装接口层
+ * User role repository
  *
  * @author dqcer
  * @since 2022/12/26
@@ -39,11 +39,36 @@ public interface IUserRoleRepository extends IService<RoleUserEntity> {
      */
     List<RoleUserEntity> list(List<Integer> userIdList);
 
+    /**
+     * 列表
+     *
+     * @param roleId 角色id
+     * @return {@link List}<{@link Integer}>
+     */
     List<Integer> listByRole(Integer roleId);
 
+    /**
+     * 插入
+     *
+     * @param userIdList 用户id列表
+     * @param roleId     角色id
+     */
     void insert(List<Integer> userIdList, Integer roleId);
 
+    /**
+     * 列表
+     *
+     * @param userIdList 用户id列表
+     * @param roleId     角色id
+     * @return {@link List}<{@link RoleUserEntity}>
+     */
     List<RoleUserEntity> list(List<Integer> userIdList, Integer roleId);
 
+    /**
+     * 批量删除用户列表
+     *
+     * @param roleId    角色id
+     * @param userList  用户列表
+     */
     void batchRemoveUserListByRole(Integer roleId, List<Integer> userList);
 }

@@ -12,10 +12,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.HelpDocViewRecordVO;
 import java.util.List;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Help Doc Service
+ *
+ * @author dqcer
+ * @since 2024/7/25 9:23
+ */
+
 public interface IHelpDocService {
 
 

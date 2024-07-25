@@ -14,10 +14,11 @@ import java.util.stream.Collectors;
 
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Notice View Record Service Impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class NoticeViewRecordServiceImpl
         extends BasicServiceImpl<INoticeViewRecordRepository> implements INoticeViewRecordService {

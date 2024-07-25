@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -28,9 +27,8 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class DictKeyRepositoryImpl extends ServiceImpl<DictKeyMapper, DictKeyEntity> implements IDictKeyRepository {
-
-
+public class DictKeyRepositoryImpl
+        extends ServiceImpl<DictKeyMapper, DictKeyEntity> implements IDictKeyRepository {
 
     @Override
     public void insert(DictKeyEntity entity) {

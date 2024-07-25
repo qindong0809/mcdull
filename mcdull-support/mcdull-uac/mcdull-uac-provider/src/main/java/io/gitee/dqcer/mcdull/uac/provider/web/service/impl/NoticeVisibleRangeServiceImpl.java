@@ -13,10 +13,11 @@ import java.util.List;
 
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Notice visible range service impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class NoticeVisibleRangeServiceImpl
         extends BasicServiceImpl<INoticeVisibleRangeRepository> implements INoticeVisibleRangeService {

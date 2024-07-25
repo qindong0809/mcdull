@@ -7,10 +7,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.HelpDocCatalogVO;
 import java.util.List;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Help Doc Catalog Service
+ *
+ * @author dqcer
+ * @since 2024/7/25 9:23
+ */
+
 public interface IHelpDocCatalogService {
 
     List<HelpDocCatalogVO> getAll();

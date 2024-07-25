@@ -7,6 +7,13 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.AreaVO;
 
 import java.util.List;
 
+/**
+ * Area Service
+ *
+ * @author dqcer
+ * @since 2024/7/25 9:16
+ */
+
 public interface IAreaService {
 
     PagedVO<AreaVO> queryPage(AreaQueryDTO dto);

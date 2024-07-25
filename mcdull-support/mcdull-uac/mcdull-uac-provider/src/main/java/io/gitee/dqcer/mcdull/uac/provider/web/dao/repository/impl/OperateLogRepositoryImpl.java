@@ -21,13 +21,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Operate Log Repository Impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
-public class OperateLogRepositoryImpl extends ServiceImpl<OperateLogMapper, OperateLogEntity>  implements IOperateLogRepository {
-
+public class OperateLogRepositoryImpl
+        extends ServiceImpl<OperateLogMapper, OperateLogEntity>  implements IOperateLogRepository {
 
     @Override
     public Page<OperateLogEntity> selectPage(OperateLogQueryDTO param, List<Integer> userIdList) {

@@ -10,22 +10,57 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeUserVO;
 import java.util.List;
 
 /**
-* 系统配置 数据库操作封装接口层
+* Notice repository
 *
 * @author dqcer
 * @since 2024-04-29
 */
 public interface INoticeRepository extends IService<NoticeEntity> {
+
+    /**
+     * 根据id查询
+     *
+     * @param idList idList
+     * @return List<NoticeEntity>
+     */
     List<NoticeEntity> queryListByIds(List<Integer> idList);
 
+    /**
+     * 分页
+     *
+     * @param param param
+     * @return Page<NoticeEntity>
+     */
     Page<NoticeEntity> selectPage(NoticeQueryDTO param);
 
+    /**
+     * 查询员工未查看通知
+     *
+     * @param dto       dto
+     * @param userId    userId
+     * @param deptIdList deptIdList
+     * @param administratorFlag administratorFlag
+     * @param deptCode deptCode
+     * @param userCode userCode
+     * @return Page<NoticeUserVO>
+     */
     Page<NoticeUserVO> queryEmployeeNotViewNotice(NoticeEmployeeQueryDTO dto, Integer userId,
                                                   List<Integer> deptIdList,
                                                   Boolean administratorFlag,
                                                   Integer deptCode,
                                                   Integer userCode);
 
+    /**
+     * 查询员工通知
+     *
+     * @param dto       dto
+     * @param userId    userId
+     * @param deptIdList deptIdList
+     * @param administratorFlag administratorFlag
+     * @param deptCode deptCode
+     * @param userCode userCode
+     * @return Page<NoticeUserVO>
+     */
     Page<NoticeUserVO> queryEmployeeNotice(NoticeEmployeeQueryDTO dto,
                                            Integer userId,
                                            List<Integer> deptIdList,

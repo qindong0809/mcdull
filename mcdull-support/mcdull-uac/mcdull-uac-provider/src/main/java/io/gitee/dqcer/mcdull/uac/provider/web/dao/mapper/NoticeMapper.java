@@ -10,12 +10,50 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
+ * Notice Mapper
+ *
  * @author dqcer
  * @since 2024-04-29
  */
 public interface NoticeMapper extends BaseMapper<NoticeEntity> {
 
-    Page<NoticeUserVO> queryEmployeeNotViewNotice(@Param("page") Page<?> page, @Param("query") NoticeEmployeeQueryDTO dto, @Param("userId") Integer userId, @Param("deptIdList") List<Integer> deptIdList, @Param("administratorFlag") Boolean administratorFlag, @Param("deptCode") Integer deptCode, @Param("userCode") Integer userCode);
-    Page<NoticeUserVO> queryEmployeeNotice(@Param("page") Page<?> page, @Param("query") NoticeEmployeeQueryDTO dto, @Param("userId") Integer userId, @Param("deptIdList") List<Integer> deptIdList, @Param("administratorFlag") Boolean administratorFlag, @Param("deptCode") Integer deptCode, @Param("userCode") Integer userCode);
+    /**
+     * 查询员工未查看通知
+     *
+     * @param page      page
+     * @param dto       dto
+     * @param userId    userId
+     * @param deptIdList deptIdList
+     * @param administratorFlag administratorFlag
+     * @param deptCode deptCode
+     * @param userCode userCode
+     * @return {@link Page}<{@link NoticeUserVO}>
+     */
+    Page<NoticeUserVO> queryEmployeeNotViewNotice(@Param("page") Page<?> page,
+                                                  @Param("query") NoticeEmployeeQueryDTO dto,
+                                                  @Param("userId") Integer userId,
+                                                  @Param("deptIdList") List<Integer> deptIdList,
+                                                  @Param("administratorFlag") Boolean administratorFlag,
+                                                  @Param("deptCode") Integer deptCode,
+                                                  @Param("userCode") Integer userCode);
+    /**
+     * 查询员工通知
+     *
+     * @param page      page
+     * @param dto       dto
+     * @param userId    userId
+     * @param deptIdList deptIdList
+     * @param administratorFlag administratorFlag
+     * @param deptCode deptCode
+     * @param userCode userCode
+     * @return {@link Page}<{@link NoticeUserVO}>
+     */
+    Page<NoticeUserVO> queryEmployeeNotice(@Param("page") Page<?> page,
+                                           @Param("query") NoticeEmployeeQueryDTO dto,
+                                           @Param("userId") Integer userId,
+                                           @Param("deptIdList") List<Integer> deptIdList,
+                                           @Param("administratorFlag") Boolean administratorFlag,
+                                           @Param("deptCode") Integer deptCode,
+                                           @Param("userCode") Integer userCode);
 
 }

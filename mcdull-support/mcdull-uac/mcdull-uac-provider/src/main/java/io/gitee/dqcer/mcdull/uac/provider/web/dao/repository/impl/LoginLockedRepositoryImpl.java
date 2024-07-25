@@ -20,13 +20,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Login Locked Repository Impl
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class LoginLockedRepositoryImpl
         extends ServiceImpl<LoginLockedMapper, LoginLockedEntity>  implements ILoginLockedRepository {
-
 
     @Override
     public LoginLockedEntity get(String loginName) {
@@ -49,7 +49,9 @@ public class LoginLockedRepositoryImpl
         LocalDate startDate = param.getLoginLockBeginTimeBegin();
         LocalDate endDate = param.getLoginLockBeginTimeBegin();
         if (ObjUtil.isAllNotEmpty(startDate)) {
-            lambda.between(LoginLockedEntity::getLoginLockBeginTime, startDate, LocalDateTimeUtil.endOfDay(endDate.atStartOfDay()));
+            lambda.between(LoginLockedEntity::getLoginLockBeginTime,
+                    startDate,
+                    LocalDateTimeUtil.endOfDay(endDate.atStartOfDay()));
         }
         String loginName = param.getLoginName();
         if (StrUtil.isNotBlank(loginName)) {

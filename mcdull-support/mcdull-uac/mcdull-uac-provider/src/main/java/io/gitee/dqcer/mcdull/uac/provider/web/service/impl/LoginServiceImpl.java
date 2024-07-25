@@ -11,8 +11,10 @@ import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
+import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
@@ -38,13 +40,13 @@ import java.util.stream.Collectors;
 
 
 /**
- * 登录服务
+ * Login Service
  *
  * @author dqwcer
  * @since 2022/11/07
  */
 @Service
-public class LoginServiceImpl implements ILoginService {
+public class LoginServiceImpl extends GenericLogic implements ILoginService {
 
     @Resource
     private IUserService userService;
@@ -236,6 +238,7 @@ public class LoginServiceImpl implements ILoginService {
             }
             return vo;
         }
+        LogHelp.error(log, "getCurrentUserInfo error, userId: {}", userId);
         return null;
     }
 }

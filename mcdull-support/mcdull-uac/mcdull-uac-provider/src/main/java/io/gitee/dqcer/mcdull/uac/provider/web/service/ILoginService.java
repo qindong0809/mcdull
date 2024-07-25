@@ -6,8 +6,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
 import java.util.List;
 
 /**
+ * Login service
+ *
  * @author dqcer
+ * @since 2024/7/25 9:24
  */
+
 public interface ILoginService {
 
     /**

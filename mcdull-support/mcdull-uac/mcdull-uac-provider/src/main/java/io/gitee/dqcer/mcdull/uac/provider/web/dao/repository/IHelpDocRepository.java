@@ -2,24 +2,24 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.HelpDocEntity;
 
 import java.util.List;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Help doc repository
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 public interface IHelpDocRepository extends IService<HelpDocEntity>  {
 
    /**
     * 根据ID列表批量查询数据
     *
     * @param idList id列表
-    * @return {@link List< HelpDocEntity >}
+    * @return {@link List}
     */
     List<HelpDocEntity> queryListByIds(List<Integer> idList);
 
@@ -27,7 +27,7 @@ public interface IHelpDocRepository extends IService<HelpDocEntity>  {
     * 按条件分页查询
     *
     * @param param 参数
-    * @return {@link Page< HelpDocEntity >}
+    * @return {@link Page}
     */
     Page<HelpDocEntity> selectPage(HelpDocQueryDTO param);
 

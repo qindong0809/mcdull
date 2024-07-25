@@ -6,8 +6,6 @@ import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleUserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.RoleUserMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
@@ -23,50 +21,9 @@ import java.util.stream.Collectors;
  * @since 2022/12/25
  */
 @Service
-public class UserRoleRepositoryImpl extends ServiceImpl<RoleUserMapper, RoleUserEntity> implements IUserRoleRepository {
+public class UserRoleRepositoryImpl
+        extends ServiceImpl<RoleUserMapper, RoleUserEntity> implements IUserRoleRepository {
 
-    /**
-     * 优化一下方法
-     * @param userId
-     * @param roleIds
-     */
-    public void dd(Integer userId, List<Integer> roleIds) {
-        List<RoleUserEntity> roleUserEntities = baseMapper.selectList(
-                Wrappers.<RoleUserEntity>lambdaQuery().eq(RoleUserEntity::getUserId, userId));
-        if (CollUtil.isNotEmpty(roleUserEntities)) {
-            List<Integer> roleIdList = roleUserEntities.stream().map(RoleUserEntity::getRoleId).collect(Collectors.toList());
-            List<Integer> collect = roleIds.stream().filter(roleId -> !roleIdList.contains(roleId)).collect(Collectors.toList());
-            if (CollUtil.isNotEmpty(collect)) {
-                List<RoleUserEntity> entities = new ArrayList<>();
-                for (Integer roleId :collect) {
-                }
-            }
-        }
-
-        // FIXME: 2024/4/30
-
-        if (CollUtil.isEmpty(roleUserEntities)) {
-            List<RoleUserEntity> entities = new ArrayList<>();
-            for (Integer roleId : roleIds) {
-                RoleUserEntity entity = new RoleUserEntity();
-                entity.setRoleId(roleId);
-                entity.setUserId(userId);
-                entities.add(entity);
-            }
-            boolean saveBatch = saveBatch(entities);
-            if (!saveBatch) {
-                throw new DatabaseRowException(CodeEnum.DB_ERROR);
-            }
-        }
-    }
-
-
-    /**
-     * 更新根据用户id
-     *
-     * @param userId  用户id
-     * @param roleIds 角色id
-     */
     @Override
     public void insert(Integer userId, List<Integer> roleIds) {
         LambdaQueryWrapper<RoleUserEntity> query = Wrappers.lambdaQuery();
@@ -122,10 +79,9 @@ public class UserRoleRepositoryImpl extends ServiceImpl<RoleUserMapper, RoleUser
             entity.setUserId(userId);
             entities.add(entity);
         }
-        boolean saveBatch = saveBatch(entities);
-        if (!saveBatch) {
-            throw new DatabaseRowException(CodeEnum.DB_ERROR);
-        }
+        super.executeBatch(entities, (sqlSession, entity) -> {
+            baseMapper.insert(entity);
+        });
     }
 
     @Override

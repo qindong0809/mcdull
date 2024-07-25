@@ -10,10 +10,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.OperateLogVO;
 import java.util.List;
 
 /**
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Operate Log Service
+ *
+ * @author dqcer
+ * @since 2024/7/25 9:26
+ */
+
 public interface IOperateLogService extends IOperationLog {
 
     PagedVO<OperateLogVO> queryByPage(OperateLogQueryDTO dto);

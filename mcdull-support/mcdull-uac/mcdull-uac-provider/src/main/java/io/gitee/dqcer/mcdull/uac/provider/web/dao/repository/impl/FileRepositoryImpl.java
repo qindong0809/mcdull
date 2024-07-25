@@ -21,8 +21,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FileEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.FileMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -30,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
-* 系统配置 数据库操作封装实现层
+* File RepositoryImpl
 *
 * @author dqcer
 * @since 2024-04-29
@@ -38,8 +36,6 @@ import java.util.List;
 @Service
 public class FileRepositoryImpl
         extends ServiceImpl<FileMapper, FileEntity>  implements IFileRepository {
-
-    private static final Logger log = LoggerFactory.getLogger(FileRepositoryImpl.class);
 
     @Override
     public List<FileEntity> queryListByIds(List<Integer> idList) {
@@ -86,7 +82,6 @@ public class FileRepositoryImpl
     public Integer insert(FileEntity entity) {
         int rowSize = baseMapper.insert(entity);
         if (rowSize == GlobalConstant.Database.ROW_0) {
-            log.error("数据插入失败 rowSize: {}, entity:{}", rowSize, entity);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
         return entity.getId();
@@ -155,7 +150,6 @@ public class FileRepositoryImpl
     public void deleteBatchByIds(List<Integer> ids) {
         int rowSize = baseMapper.deleteBatchIds(ids);
         if (rowSize != ids.size()) {
-            log.error("数据插入失败 actual: {}, plan: {}, ids: {}", rowSize, ids.size(), ids);
             throw new DatabaseRowException(CodeEnum.DB_ERROR);
         }
     }

@@ -14,6 +14,8 @@ import java.util.List;
 
 
 /**
+ * Password Policy Service Impl
+ *
  * @author dqcer
  * @since 2024-04-29
  */
@@ -24,11 +26,11 @@ public class PasswordPolicyServiceImpl
 
     @Override
     public PasswordPolicyVO detail() {
-        PasswordPolicyEntity passwordPolicy = this.getEntity();
+        PasswordPolicyEntity passwordPolicy = this.get();
         return this.convert(passwordPolicy);
     }
 
-    private PasswordPolicyEntity getEntity() {
+    private PasswordPolicyEntity get() {
         List<PasswordPolicyEntity> list = baseRepository.list();
         if (CollUtil.isEmpty(list)) {
             this.throwDataNotExistException("is empty");
@@ -39,7 +41,7 @@ public class PasswordPolicyServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(PasswordPolicyDTO dto) {
-        PasswordPolicyEntity entity = this.getEntity();
+        PasswordPolicyEntity entity = this.get();
         entity.setRepeatablePasswordNumber(dto.getRepeatablePasswordNumber());
         entity.setFailedLoginMaximumNumber(dto.getFailedLoginMaximumNumber());
         entity.setFailedLoginMaximumTime(dto.getFailedLoginMaximumTime());

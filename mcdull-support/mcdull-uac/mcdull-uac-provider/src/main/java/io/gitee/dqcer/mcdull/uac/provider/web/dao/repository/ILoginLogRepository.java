@@ -2,27 +2,25 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginLogQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
 
 import java.util.List;
 
 /**
-* 系统配置 数据库操作封装接口层
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Login Log Repository
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 public interface ILoginLogRepository extends IService<LoginLogEntity>  {
 
    /**
     * 根据ID列表批量查询数据
     *
     * @param idList id列表
-    * @return {@link List< LoginLogEntity >}
+    * @return {@link List}
     */
     List<LoginLogEntity> queryListByIds(List<Integer> idList);
 
@@ -30,7 +28,7 @@ public interface ILoginLogRepository extends IService<LoginLogEntity>  {
     * 按条件分页查询
     *
     * @param param 参数
-    * @return {@link Page< LoginLogEntity >}
+    * @return {@link Page }
     */
     Page<LoginLogEntity> selectPage(LoginLogQueryDTO param);
 

@@ -11,6 +11,7 @@ import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedisClient;
+import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CacheQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ICacheService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class CacheServiceImpl implements ICacheService {
+public class CacheServiceImpl extends GenericLogic implements ICacheService {
 
     @Resource
     private CaffeineCacheManager cacheManager;

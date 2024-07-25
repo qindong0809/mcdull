@@ -4,9 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * User Role Service
+ *
  * @author dqcer
+ * @since 2024/7/25 9:29
  */
 public interface IUserRoleService {
+
     void batchUserListByRoleId(Integer userId, List<Integer> roleList);
 
     void batchUserListByRoleId(List<Integer> userIdList, Integer roleId);

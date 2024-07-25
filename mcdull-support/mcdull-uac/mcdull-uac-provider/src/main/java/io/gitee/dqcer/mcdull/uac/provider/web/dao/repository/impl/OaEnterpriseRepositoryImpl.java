@@ -18,15 +18,14 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
 /**
-* 系统配置 数据库操作封装实现层
-*
-* @author dqcer
-* @since 2024-04-29
-*/
+ * Enterprise Repository Impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
 @Service
 public class OaEnterpriseRepositoryImpl
         extends ServiceImpl<OaEnterpriseMapper, OaEnterpriseEntity>  implements IOaEnterpriseRepository {
-
 
     @Override
     public Page<OaEnterpriseEntity> selectPage(EnterpriseQueryDTO dto) {
