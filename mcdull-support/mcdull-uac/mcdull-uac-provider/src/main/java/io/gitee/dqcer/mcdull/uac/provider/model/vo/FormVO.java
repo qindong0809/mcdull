@@ -29,6 +29,7 @@ public class FormVO implements VO {
 
     private String remark;
 
+    @DynamicDateFormat(enableTimezone = true)
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date createTime;
 
