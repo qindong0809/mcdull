@@ -1,4 +1,9 @@
 
+INSERT INTO `sys_menu` VALUES (257, '企业管理', 2, 256, 1, '/blaze/customer/customer-info-list', '/blaze/customer/customer-info-list.vue', 1, NULL, NULL, 'AppstoreOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, '2024-06-24 23:12:50', NULL, NULL);
+INSERT INTO `sys_menu` VALUES (256, '企业端', 1, 255, NULL, NULL, NULL, 1, NULL, NULL, 'AppstoreAddOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, '2024-06-24 23:10:15', NULL, NULL);
+INSERT INTO `sys_menu` VALUES (255, '壹把火', 1, 0, 0, NULL, NULL, 1, NULL, NULL, 'DeploymentUnitOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, '2024-06-24 23:03:54', NULL, NULL);
+
+
 drop table if exists `blaze_customer_info`;
 create table if not exists `blaze_customer_info` (
 `id` int auto_increment comment '主键',
