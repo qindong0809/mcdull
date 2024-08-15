@@ -1,10 +1,8 @@
 package io.gitee.dqcer.mcdull.framework.redis.operation;
 
 import cn.hutool.core.collection.IterUtil;
-import org.redisson.api.RBucket;
-import org.redisson.api.RKeys;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import org.redisson.api.*;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.*;
 import org.springframework.lang.NonNull;
@@ -33,6 +31,20 @@ public final class RedisClient {
 
     @Resource
     private RedissonClient redissonClient;
+
+    /**
+     * rateLimit
+     *
+     * @param key     key
+     * @param quantity quantity
+     * @param time
+     * @return true / false
+     */
+    public boolean rateLimit(String key, int quantity, int time) {
+        RRateLimiter rateLimiter = redissonClient.getRateLimiter(GlobalConstant.RATE_LIMITER + key);
+        rateLimiter.trySetRate(RateType.OVERALL, quantity, time, RateIntervalUnit.SECONDS);
+        return rateLimiter.tryAcquire(1);
+    }
 
     /**
      * 指定缓存失效时间

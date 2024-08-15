@@ -28,6 +28,7 @@ public class I18nConstants {
     public static final String SYSTEM_ERROR = "system.error";
 
     public static final String SYSTEM_BUSY = "system.busy";
+    public static final String SYSTEM_REQUEST_TOO_FREQUENT = "system.request.too.frequent";
 
     public static final String DB_OPERATION_FAILED = "db.operation.failed";
     public static final String MISSING_PARAMETER = "missing.parameter";

@@ -1,7 +1,10 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
+import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.CaptchaVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
@@ -25,7 +28,7 @@ import javax.validation.Valid;
  */
 @RestController
 @Tag(name = "登录认证")
-public class LoginController {
+public class LoginController extends BasicController {
 
     @Resource
     private ILoginService loginService;
@@ -36,13 +39,16 @@ public class LoginController {
     @GetMapping("/login/getCaptcha")
     @SaIgnore
     public Result<CaptchaVO> getCaptcha() {
-        return Result.success(captchaService.get());
+        String suffix = StrUtil.format("login:captcha:ip_addr:{}", IpUtil.getIpAddr(super.getRequest()));
+        return Result.success(
+                super.rateLimiter(suffix, 5, 1, () -> captchaService.get()));
     }
 
     @Operation(summary = "登录")
     @PostMapping("login")
-    public Result<LogonVO> login(@RequestBody @Valid LoginDTO dto) {
-        return Result.success(loginService.login(dto));
+    public Result<LogonVO> login(@RequestBody @Valid LoginDTO dto) throws Exception {
+        return Result.success(
+                super.locker("login:", 0, () -> loginService.login(dto)));
     }
 
     @GetMapping("/current/user-info")

@@ -12,6 +12,8 @@ import javax.annotation.Resource;
 import java.util.Locale;
 
 /**
+ * Dynamic Locale Message Source
+ *
  * @author dqcer
  * @since 2023/12/27
  */

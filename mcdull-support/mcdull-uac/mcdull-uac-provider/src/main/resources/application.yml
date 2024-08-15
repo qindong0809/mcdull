@@ -3,9 +3,6 @@ server:
 spring:
   application:
     name: mcdull-uac-provider
-  jackson:
-    date-format: 'yyyy-MM-dd HH:mm:ss'
-    time-zone: 'GMT'
   boot:
     admin:
       client:
