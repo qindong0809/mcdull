@@ -55,6 +55,8 @@ public class GlobalConstant {
 
     public static final String CAFFEINE_CACHE = "caffeineCache";
 
+    public static final String RATE_LIMITER = "rateLimiter:";
+
 
     public static class Environment {
 
