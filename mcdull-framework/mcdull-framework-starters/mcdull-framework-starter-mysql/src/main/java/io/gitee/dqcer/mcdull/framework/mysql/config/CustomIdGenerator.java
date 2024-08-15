@@ -38,7 +38,7 @@ public class CustomIdGenerator implements IdentifierGenerator {
             }
 
             String lastStrOfIp = hostAddress.substring(hostAddress.lastIndexOf('.') + 1);
-            Long num = Long.valueOf(lastStrOfIp);
+            long num = Long.parseLong(lastStrOfIp);
 
             long dataCenterId = num / 32;
             long workId = num % 32;
@@ -53,16 +53,14 @@ public class CustomIdGenerator implements IdentifierGenerator {
         } catch (Exception e) {
             throw new BusinessException(e);
         }
-
-
     }
 
     private static List<String> getIpAddress() throws SocketException {
         List<String> list = new LinkedList<>();
-        Enumeration enumeration = NetworkInterface.getNetworkInterfaces();
+        Enumeration<?> enumeration = NetworkInterface.getNetworkInterfaces();
         while (enumeration.hasMoreElements()) {
             NetworkInterface network = (NetworkInterface) enumeration.nextElement();
-            Enumeration addresses = network.getInetAddresses();
+            Enumeration<?> addresses = network.getInetAddresses();
             while (addresses.hasMoreElements()) {
                 InetAddress address = (InetAddress) addresses.nextElement();
                 if (address != null) {

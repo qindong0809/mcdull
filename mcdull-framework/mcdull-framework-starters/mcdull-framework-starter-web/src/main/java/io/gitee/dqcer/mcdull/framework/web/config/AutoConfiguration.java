@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsAspect;
 import io.gitee.dqcer.mcdull.framework.web.aspect.TranslatorAspect;
+import io.gitee.dqcer.mcdull.framework.web.component.ConcurrentRateLimiter;
 import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
+import io.gitee.dqcer.mcdull.framework.web.component.impl.ConcurrentRateLimiterImpl;
 import io.gitee.dqcer.mcdull.framework.web.component.impl.DynamicLocaleMessageSourceImpl;
 import io.gitee.dqcer.mcdull.framework.web.filter.HttpTraceLogFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -64,5 +66,10 @@ public class AutoConfiguration {
     @Bean
     public DynamicLocaleMessageSource dynamicLocaleMessageSource() {
         return new DynamicLocaleMessageSourceImpl();
+    }
+
+    @Bean
+    public ConcurrentRateLimiter concurrentRateLimiter() {
+        return new ConcurrentRateLimiterImpl();
     }
 }

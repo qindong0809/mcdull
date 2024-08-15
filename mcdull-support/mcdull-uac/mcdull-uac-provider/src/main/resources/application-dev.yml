@@ -32,9 +32,3 @@ sa-token:
   active-timeout: 6000
   # token 有效期（单位：秒） 1天（86400秒），-1 代表永久有效
   timeout: 9000
-#  root=info
-#  com.alibaba.nacos.client.naming=WARN
-#  sun.net.www.protocol.http.HttpURLConnection=warn
-#  org.apache.http.headers=warn
-#  org.redisson.connection.DNSMonitor=warn
-#  io.gitee.dqcer=debug

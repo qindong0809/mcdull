@@ -13,7 +13,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 /**
- * 身份验证应用程序
+ * User data content application
  *
  * @author dqcer
  * @since 2022/10/31

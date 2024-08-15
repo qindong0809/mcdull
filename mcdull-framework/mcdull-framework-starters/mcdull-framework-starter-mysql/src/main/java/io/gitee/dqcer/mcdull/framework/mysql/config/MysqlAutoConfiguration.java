@@ -1,8 +1,10 @@
 package io.gitee.dqcer.mcdull.framework.mysql.config;
 
 
+import com.alibaba.druid.spring.boot.autoconfigure.properties.DruidStatProperties;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import com.alibaba.druid.util.Utils;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
@@ -31,7 +33,9 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.annotation.Resource;
+import javax.servlet.*;
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -130,7 +134,10 @@ public class MysqlAutoConfiguration {
         RoutingDataSource routingDataSource = new RoutingDataSource();
         //  默认数据源
         DataSource dataSource = DataSourceBuilder.builder(dataSourceProperties);
-        routingDataSource.setDefaultTargetDataSource(wrapDataSource(dataSource));
+        DataSource wrapDataSource = this.wrapDataSource(dataSource);
+        if (wrapDataSource != null) {
+            routingDataSource.setDefaultTargetDataSource(wrapDataSource);
+        }
         //  其它数据源集
         routingDataSource.setTargetDataSources(multipleDataSources());
         return routingDataSource;
@@ -200,5 +207,49 @@ public class MysqlAutoConfiguration {
         return bean;
     }
 
+    @Bean
+    public FilterRegistrationBean removeDruidAdFilterRegistrationBean(DruidStatProperties properties) {
+        /**
+         * 获取监控页面参数
+         */
+        DruidStatProperties.StatViewServlet druidConfig = properties.getStatViewServlet();
+        /**
+         * 获取common.js位置
+         */
+        String pattern = druidConfig.getUrlPattern() != null ? druidConfig.getUrlPattern() : "/druid/*";
+        String commonJsPattern = pattern.replaceAll("\\*", "js/common.js");
+        final String filePath = "support/http/resources/js/common.js";
+        /**
+         * 利用Filter进行过滤
+         */
+        Filter filter = new Filter() {
+            @Override
+            public void init(FilterConfig filterConfig) throws ServletException {
+            }
+            @Override
+            public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+                chain.doFilter(request, response);
+                response.resetBuffer();
+                /**
+                 * 获取common文件内容
+                 */
+                String text = Utils.readFromResource(filePath);
+                /**
+                 * 利用正则表达式删除<footer class="footer">中的<a>标签
+                 */
+                text = text.replaceAll("<a.*?banner\"></a><br/>", "");
+                text = text.replaceAll("powered.*?shrek.wang</a>", "");
+                response.getWriter().write(text);
+            }
+
+            @Override
+            public void destroy() {
+            }
+        };
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        registrationBean.setFilter(filter);
+        registrationBean.addUrlPatterns(commonJsPattern);
+        return registrationBean;
+    }
 
 }
