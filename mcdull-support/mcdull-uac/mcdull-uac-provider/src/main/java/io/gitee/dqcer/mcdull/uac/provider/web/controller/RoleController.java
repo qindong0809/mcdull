@@ -34,17 +34,14 @@ public class RoleController {
     @Resource
     private IUserService userService;
 
-    /**
-     * 列表
-     *
-     * @param dto dto
-     * @return {@link Result}<{@link List}<{@link UserVO}>>
-     */
+
+    @Operation(summary = "分页列表")
     @GetMapping("/role/list")
     public Result<PagedVO<RoleVO>> listByPage(@Validated RolePageDTO dto) {
         return Result.success(roleService.listByPage(dto));
     }
 
+    @Operation(summary = "获取所有角色")
     @GetMapping("role/list-all")
     public Result<List<RoleVO>> getListAll() {
         return Result.success(roleService.all());
@@ -88,6 +85,7 @@ public class RoleController {
         return Result.success(true);
     }
 
+    @Operation(summary = "添加角色权限")
     @PutMapping("{id}/permission")
     public Result<Boolean> insertPermission(@PathVariable("id") Integer id, @RequestBody RolePermissionInsertDTO dto) {
         return Result.success(roleService.insertPermission(id, dto));
@@ -112,7 +110,7 @@ public class RoleController {
         return Result.success(true);
     }
 
-    @Operation(summary = "查询用户")
+    @Operation(summary = "根据角色查询用户分页列表")
     @GetMapping("role/{roleId}/user-list")
     public Result<PagedVO<UserVO>> listByPage(@PathVariable("roleId") Integer roleId,
                                               @Validated UserListDTO dto) {

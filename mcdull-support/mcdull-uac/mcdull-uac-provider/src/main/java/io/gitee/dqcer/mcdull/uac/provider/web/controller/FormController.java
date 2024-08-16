@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.dev33.satoken.annotation.SaIgnore;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
@@ -29,7 +28,6 @@ public class FormController {
     private IFormService formService;
 
     @Operation(summary = "分页")
-    @SaIgnore
     @SaCheckPermission("support:form:page")
     @PostMapping("/form/queryPage")
     public Result<PagedVO<FormVO>> queryPage(@RequestBody @Valid FormQueryDTO dto) {

@@ -74,17 +74,17 @@ public class UserServiceImpl
     public boolean passwordCheck(UserEntity entity, String passwordParam) {
         if (ObjUtil.isNotNull(entity) && StrUtil.isNotBlank(passwordParam)) {
             String password = entity.getLoginPwd();
-            String sha1 = this.hash(passwordParam);
+            String sha1 = hash(passwordParam);
             return password.equals(sha1);
         }
         return false;
     }
 
-    private String hash(String webPassword) {
-        return Sha1Util.getSha1(this.decrypt(webPassword));
+    private static String hash(String webPassword) {
+        return Sha1Util.getSha1(decrypt(webPassword));
     }
 
-    public String decrypt(String data) {
+    public static String decrypt(String data) {
         try {
             // 第一步： Base64 解码
             byte[] base64Decode = Base64.getDecoder().decode(data);
@@ -95,13 +95,12 @@ public class UserServiceImpl
             return new String(decryptedBytes, StandardCharsets.UTF_8);
 
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
             return StrUtil.EMPTY;
         }
     }
 
     public String buildPassword(String param) {
-        return this.hash(param);
+        return hash(param);
     }
 
     @Override

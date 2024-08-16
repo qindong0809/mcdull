@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -50,6 +51,14 @@ public abstract class BasicController {
     protected <T> T rateLimiter(String key, int quantity, int seconds, Supplier<T> function) {
         if (concurrentRateLimiter.limiter(key, quantity, seconds)) {
             return function.get();
+        }
+        LogHelp.warn(log, "rateLimiter. key: {}. quantity: {}. seconds: {}", key, quantity, seconds);
+        throw new BusinessException(I18nConstants.SYSTEM_REQUEST_TOO_FREQUENT);
+    }
+
+    protected <T> void rateLimiter(String key, int quantity, int seconds, Consumer<T> function) {
+        if (concurrentRateLimiter.limiter(key, quantity, seconds)) {
+            function.accept(null);
         }
         LogHelp.warn(log, "rateLimiter. key: {}. quantity: {}. seconds: {}", key, quantity, seconds);
         throw new BusinessException(I18nConstants.SYSTEM_REQUEST_TOO_FREQUENT);

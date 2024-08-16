@@ -15,6 +15,7 @@ import io.gitee.dqcer.mcdull.framework.redis.aspect.RedisLockAspect;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
+import org.redisson.client.codec.StringCodec;
 import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -68,7 +69,8 @@ public class RedissonAutoConfiguration extends CachingConfigurerSupport {
     @Bean
     public RedissonClient redissonClient(RedisProperties properties) {
         Config config = new Config();
-        // 默认编码为性能最优 可视化可以用 set(new StringCodec());
+        // 默认编码为性能最优 可视化可以用 setCodec(new StringCodec());
+        config.setCodec(new StringCodec());
         config.useSingleServer()
                 .setAddress("redis://" + properties.getHost() + ":" + properties.getPort())
                 .setPassword(properties.getPassword())

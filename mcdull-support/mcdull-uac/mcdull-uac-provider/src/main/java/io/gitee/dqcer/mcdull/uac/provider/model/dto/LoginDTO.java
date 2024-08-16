@@ -29,7 +29,7 @@ public class LoginDTO implements DTO {
     @Length(max = 30, message = "登录账号最多30字符")
     private String loginName;
 
-    @Schema(description = "密码")
+    @Schema(description = "密码", example = "prtRvwLK8GXkHuWSGL50LQ==")
     @NotBlank(message = "{login.password.not-blank}")
     private String password;
 

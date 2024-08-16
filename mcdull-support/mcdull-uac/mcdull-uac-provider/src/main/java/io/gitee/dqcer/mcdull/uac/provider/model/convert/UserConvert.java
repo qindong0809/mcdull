@@ -28,7 +28,6 @@ public class UserConvert {
         Integer userId = entity.getId();
         userVO.setEmployeeId(Convert.toInt(userId));
         userVO.setLoginName(entity.getLoginName());
-        userVO.setLoginPwd(entity.getLoginPwd());
         userVO.setActualName(entity.getActualName());
         userVO.setGender(entity.getGender());
         userVO.setPhone(entity.getPhone());
@@ -36,8 +35,8 @@ public class UserConvert {
         userVO.setDepartmentId(Convert.toInt(departmentId));
         userVO.setAdministratorFlag(entity.getAdministratorFlag());
         userVO.setRemark(entity.getRemark());
-        userVO.setCreatedTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
-        userVO.setUpdatedTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
+        userVO.setCreatedTime(entity.getCreatedTime());
+        userVO.setUpdatedTime(entity.getUpdatedTime());
         return userVO;
     }
 

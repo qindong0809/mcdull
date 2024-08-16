@@ -22,7 +22,7 @@ public @interface EnumsStrValid {
 
     String message() default "值不在枚举值中";
 
-    boolean required() default false;
+    boolean required() default true;
 
     Class<?>[] groups() default {};
 
