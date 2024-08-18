@@ -21,10 +21,4 @@ public enum CodeQueryFieldQueryTypeEnum implements IEnum<String> {
     CodeQueryFieldQueryTypeEnum(String value, String desc) {
         init(value, desc);
     }
-
-    public static CodeQueryFieldQueryTypeEnum toEnum(String code) {
-        return IEnum.getByCode(CodeQueryFieldQueryTypeEnum.class, code);
-    }
-
-
 }

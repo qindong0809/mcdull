@@ -24,27 +24,4 @@ public enum StatusEnum implements IEnum<String> {
     StatusEnum(String code, String text) {
         init(code, text);
     }
-
-    @SuppressWarnings("unused")
-    public static StatusEnum toEnum(String value) {
-        switch (value) {
-            case "0":
-                return StatusEnum.ENABLE;
-            case "1":
-                return StatusEnum.DISABLE;
-            default:
-                throw new IllegalArgumentException("invalid value , only ['1', '2'] is allowed");
-        }
-    }
-
-    public static StatusEnum toEnum(Integer value) {
-        switch (value) {
-            case 0:
-                return StatusEnum.ENABLE;
-            case 1:
-                return StatusEnum.DISABLE;
-            default:
-                throw new IllegalArgumentException("invalid value , only ['1', '2'] is allowed");
-        }
-    }
 }

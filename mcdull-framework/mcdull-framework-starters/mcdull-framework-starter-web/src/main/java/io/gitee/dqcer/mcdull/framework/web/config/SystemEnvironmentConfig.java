@@ -23,6 +23,9 @@ public class SystemEnvironmentConfig implements Condition {
     @Value("${spring.profiles.active:dev}")
     private String systemEnvironment;
 
+    @Value("${spring.application.name:unknown}")
+    private String projectName;
+
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         return isDevOrTest(context);
@@ -39,8 +42,13 @@ public class SystemEnvironmentConfig implements Condition {
     @Bean("systemEnvironment")
     public SystemEnvironment initEnvironment() {
         EnvironmentEnum environmentEnum = IEnum.getByCode(EnvironmentEnum.class, systemEnvironment);
+        if (ObjUtil.isNull(environmentEnum)) {
+            throw new IllegalArgumentException("System environment not support");
+        }
         SystemEnvironment environment = new SystemEnvironment();
-        environment.setProd(ObjUtil.isNotEmpty(environmentEnum));
+        environment.setProd(EnvironmentEnum.PROD.getCode().equals(environmentEnum.getCode()));
+        environment.setProjectName(projectName);
+        environment.setEnvironment(environmentEnum.getCode());
         return environment;
     }
 }

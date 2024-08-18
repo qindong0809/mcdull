@@ -23,7 +23,7 @@ public class I18nConstants {
     public static final String DATA_EXISTS = "data.exists";
     public static final String NAME_DUPLICATED = "name.duplicated";
 
-    public static final String PERMISSION_DENIED = "permission.denied";
+    public static final String PERMISSION_DENIED = "system.permission.denied";
 
     public static final String SYSTEM_ERROR = "system.error";
 

@@ -29,8 +29,4 @@ public enum FormItemControlTypeEnum implements IEnum<String> {
         init(code, text);
     }
 
-    public static FormItemControlTypeEnum toEnum(String code) {
-        return IEnum.getByCode(FormItemControlTypeEnum.class, code);
-    }
-
 }

@@ -57,6 +57,7 @@ public class BaseExceptionAdvice {
             return Result.error(i18nMessage);
         }
         // 更多 code 码判断 ...
-        return Result.error(CodeEnum.UN_AUTHORIZATION, Collections.emptyList());
+        CodeEnum codeEnum = CodeEnum.UN_AUTHORIZATION;
+        return Result.error(codeEnum.getCode(), exception.getMessage(), null);
     }
 }

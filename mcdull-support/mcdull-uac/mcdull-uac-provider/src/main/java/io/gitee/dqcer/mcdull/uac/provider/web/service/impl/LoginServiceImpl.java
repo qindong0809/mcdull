@@ -9,12 +9,14 @@ import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.enums.EnvironmentEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
+import io.gitee.dqcer.mcdull.framework.web.config.SystemEnvironment;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
@@ -72,6 +74,9 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
     @Resource
     private CaffeineCacheManager cacheManager;
 
+    @Resource
+    private SystemEnvironment systemEnvironment;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public LogonVO login(LoginDTO dto) {
@@ -79,7 +84,10 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
         UserEntity userEntity = null;
         LoginLogResultTypeEnum typeEnum = LoginLogResultTypeEnum.LOGIN_SUCCESS;
         try {
-            this.validateCaptcha(dto.getCaptchaCode(), dto.getCaptchaUuid());
+            if (!EnvironmentEnum.DEV.getCode().equals(systemEnvironment.getEnvironment())) {
+                this.validateCaptcha(dto.getCaptchaCode(), dto.getCaptchaUuid());
+            }
+
             // 登录前置校验
             userEntity = this.loginPreCheck(dto.getLoginName(), dto.getPassword());
             StpUtil.login(userEntity.getId(), IEnum.getByCode(LoginDeviceEnum.class, dto.getLoginDevice()).getText());
@@ -88,6 +96,7 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
         } catch (Exception e) {
             message = e.getMessage();
             typeEnum = LoginLogResultTypeEnum.LOGIN_FAIL;
+            LogHelp.error(log, "Login error. dto: {}", () -> dto, () -> e);
             throw e;
         } finally {
             this.saveLoginLog(dto.getLoginName(), typeEnum, message);

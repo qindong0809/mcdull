@@ -7,10 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
-import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.LoginLogMapper;
@@ -55,10 +52,7 @@ public class LoginLogRepositoryImpl
 
     @Override
     public Integer insert(LoginLogEntity entity) {
-        int rowSize = baseMapper.insert(entity);
-        if (rowSize == GlobalConstant.Database.ROW_0) {
-            throw new DatabaseRowException(CodeEnum.DB_ERROR);
-        }
+        baseMapper.insert(entity);
         return entity.getId();
     }
 
@@ -69,9 +63,6 @@ public class LoginLogRepositoryImpl
 
     @Override
     public void deleteBatchByIds(List<Integer> ids) {
-        int rowSize = baseMapper.deleteBatchIds(ids);
-        if (rowSize != ids.size()) {
-            throw new DatabaseRowException(CodeEnum.DB_ERROR);
-        }
+        baseMapper.deleteBatchIds(ids);
     }
 }

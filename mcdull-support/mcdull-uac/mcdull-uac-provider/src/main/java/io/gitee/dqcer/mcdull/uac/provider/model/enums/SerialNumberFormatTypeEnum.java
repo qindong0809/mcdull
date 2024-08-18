@@ -24,8 +24,4 @@ public enum SerialNumberFormatTypeEnum implements IEnum<String> {
         init(code, text);
     }
 
-    public static SerialNumberFormatTypeEnum toEnum(String code) {
-        return IEnum.getByCode(SerialNumberFormatTypeEnum.class, code);
-    }
-
 }

@@ -22,13 +22,4 @@ public enum UserTypeEnum implements IEnum<Integer> {
         init(code, text);
     }
 
-    public static UserTypeEnum toEnum(Integer code) {
-        switch (code) {
-            case 1:
-                return UserTypeEnum.ADMIN_EMPLOYEE;
-            default:
-                throw new IllegalArgumentException("invalid value , only [1] is allowed");
-        }
-    }
-
 }

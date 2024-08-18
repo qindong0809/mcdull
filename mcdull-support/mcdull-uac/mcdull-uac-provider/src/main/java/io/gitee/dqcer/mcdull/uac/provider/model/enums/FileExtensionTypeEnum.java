@@ -21,8 +21,4 @@ public enum FileExtensionTypeEnum implements IEnum<String> {
         init(code, text);
     }
 
-    public static FileExtensionTypeEnum toEnum(String code) {
-        return IEnum.getByCode(FileExtensionTypeEnum.class, code);
-    }
-
 }

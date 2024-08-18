@@ -19,14 +19,4 @@ public enum LoginDeviceEnum implements IEnum<Integer> {
     LoginDeviceEnum(Integer code, String text) {
         init(code, text);
     }
-
-    public static LoginDeviceEnum toEnum(Integer code) {
-        switch (code) {
-            case 1:
-                return LoginDeviceEnum.PC;
-            default:
-                throw new IllegalArgumentException("invalid value , only [1] is allowed");
-        }
-    }
-
 }

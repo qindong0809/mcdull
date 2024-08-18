@@ -27,10 +27,4 @@ public enum CodeDeleteEnum implements IEnum<String> {
     CodeDeleteEnum(String value, String desc) {
         init(value, desc);
     }
-
-    public static CodeDeleteEnum toEnum(String code) {
-        return IEnum.getByCode(CodeDeleteEnum.class, code);
-    }
-
-
 }

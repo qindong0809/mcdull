@@ -24,8 +24,4 @@ public enum EnterpriseTypeEnum implements IEnum<Integer> {
         init(code, text);
     }
 
-    public static EnterpriseTypeEnum toEnum(Integer code) {
-        return IEnum.getByCode(EnterpriseTypeEnum.class, code);
-    }
-
 }

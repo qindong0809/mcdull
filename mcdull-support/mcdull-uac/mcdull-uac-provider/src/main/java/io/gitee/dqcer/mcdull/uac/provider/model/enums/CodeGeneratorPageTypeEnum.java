@@ -34,9 +34,4 @@ public enum CodeGeneratorPageTypeEnum implements IEnum<String> {
         init(value, desc);
 
     }
-
-    public static CodeGeneratorPageTypeEnum toEnum(String code) {
-        return IEnum.getByCode(CodeGeneratorPageTypeEnum.class, code);
-    }
-
 }

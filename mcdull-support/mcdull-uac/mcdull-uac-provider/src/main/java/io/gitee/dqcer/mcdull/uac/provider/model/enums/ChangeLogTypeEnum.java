@@ -32,8 +32,4 @@ public enum ChangeLogTypeEnum implements IEnum<Integer> {
         init(code, text);
     }
 
-    public static ChangeLogTypeEnum toEnum(Integer code) {
-        return IEnum.getByCode(ChangeLogTypeEnum.class, code);
-    }
-
 }

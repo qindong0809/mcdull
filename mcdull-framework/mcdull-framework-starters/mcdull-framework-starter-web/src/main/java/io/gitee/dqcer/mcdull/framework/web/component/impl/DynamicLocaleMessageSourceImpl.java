@@ -9,6 +9,7 @@ import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.annotation.Resource;
+import java.text.MessageFormat;
 import java.util.Locale;
 
 /**
@@ -30,9 +31,12 @@ public class DynamicLocaleMessageSourceImpl implements DynamicLocaleMessageSourc
         try {
             return messageSource.getMessage(code, args, locale);
         } catch (NoSuchMessageException e) {
-            LogHelp.error(log, e.getMessage());
+            LogHelp.warn(log, e.getMessage());
         }
-        return code;
+        if (args == null) {
+            return code;
+        }
+        return MessageFormat.format(code, args);
     }
 
     @Override

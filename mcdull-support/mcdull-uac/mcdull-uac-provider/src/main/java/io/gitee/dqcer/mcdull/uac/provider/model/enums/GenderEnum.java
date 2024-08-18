@@ -31,18 +31,4 @@ public enum GenderEnum implements IEnum<Integer> {
     GenderEnum(Integer code, String text) {
         init(code, text);
     }
-
-    public static GenderEnum toEnum(Integer code) {
-        switch (code) {
-            case 0:
-                return GenderEnum.UNKNOWN;
-            case 1:
-                return GenderEnum.MAN;
-            case 2:
-                return GenderEnum.WOMAN;
-            default:
-                throw new IllegalArgumentException("invalid value , only [1] is allowed");
-        }
-    }
-
 }

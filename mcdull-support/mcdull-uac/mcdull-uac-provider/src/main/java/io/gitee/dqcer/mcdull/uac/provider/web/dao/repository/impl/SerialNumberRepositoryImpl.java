@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
-import io.gitee.dqcer.mcdull.framework.base.exception.DatabaseRowException;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.SerialNumberEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.SerialNumberMapper;
@@ -57,10 +54,7 @@ public class SerialNumberRepositoryImpl
 
     @Override
     public void insert(SerialNumberEntity entity) {
-        int rowSize = baseMapper.insert(entity);
-        if (rowSize == GlobalConstant.Database.ROW_0) {
-            throw new DatabaseRowException(CodeEnum.DB_ERROR);
-        }
+        baseMapper.insert(entity);
     }
 
     @Override
@@ -70,9 +64,6 @@ public class SerialNumberRepositoryImpl
 
     @Override
     public void deleteBatchByIds(List<Integer> ids) {
-        int rowSize = baseMapper.deleteBatchIds(ids);
-        if (rowSize != ids.size()) {
-            throw new DatabaseRowException(CodeEnum.DB_ERROR);
-        }
+        baseMapper.deleteBatchIds(ids);
     }
 }

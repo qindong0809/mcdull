@@ -20,8 +20,4 @@ public enum SerialNumberBusinessTypeEnum implements IEnum<Integer> {
         init(code, text);
     }
 
-    public static SerialNumberBusinessTypeEnum toEnum(Integer code) {
-        return IEnum.getByCode(SerialNumberBusinessTypeEnum.class, code);
-    }
-
 }

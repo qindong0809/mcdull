@@ -59,8 +59,4 @@ public enum CodeFrontComponentEnum implements IEnum<String> {
         init(value, desc);
     }
 
-    public static CodeFrontComponentEnum toEnum(String code) {
-        return IEnum.getByCode(CodeFrontComponentEnum.class, code);
-    }
-
 }

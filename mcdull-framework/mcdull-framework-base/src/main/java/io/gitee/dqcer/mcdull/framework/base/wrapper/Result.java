@@ -46,6 +46,11 @@ public class Result<T> implements Serializable {
      */
     private Boolean ok;
 
+    /**
+     * exception
+     */
+    private String exception;
+
 
     /**
      * 初始化一个新创建的 Result 对象，使其表示一个空消息。
@@ -128,10 +133,11 @@ public class Result<T> implements Serializable {
      * @param resultCode 结果代码
      * @return 警告消息
      */
-    public static <T> Result<T> error(int resultCode, String msg) {
+    public static <T> Result<T> error(int resultCode, String msg, String exception) {
         return Result.<T>builder()
                 .withCode(resultCode)
                 .withMessage(msg)
+                .withException(exception)
                 .build();
     }
 
@@ -146,12 +152,23 @@ public class Result<T> implements Serializable {
         return code == CodeEnum.SUCCESS.code;
     }
 
+    public String getException() {
+        return exception;
+    }
+
+    public void setException(String exception) {
+        this.exception = exception;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", Result.class.getSimpleName() + "[", "]")
                 .add("code=" + code)
                 .add("message='" + message + "'")
                 .add("data=" + data)
+                .add("traceId='" + traceId + "'")
+                .add("ok=" + ok)
+                .add("exception='" + exception + "'")
                 .toString();
     }
 
@@ -203,6 +220,8 @@ public class Result<T> implements Serializable {
 
         private T data;
 
+        private String exception;
+
         private ResultBuilder() {
         }
 
@@ -221,6 +240,11 @@ public class Result<T> implements Serializable {
             return this;
         }
 
+        public ResultBuilder<T> withException(String exception) {
+            this.exception = exception;
+            return this;
+        }
+
         /**
          * Build result.
          *
@@ -231,6 +255,7 @@ public class Result<T> implements Serializable {
             result.setCode(code);
             result.setMessage(message);
             result.setData(data);
+            result.setException(exception);
             return result;
         }
     }

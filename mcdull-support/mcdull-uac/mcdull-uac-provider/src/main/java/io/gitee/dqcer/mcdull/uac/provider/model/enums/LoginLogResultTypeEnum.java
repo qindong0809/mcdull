@@ -30,8 +30,4 @@ public enum LoginLogResultTypeEnum implements IEnum<Integer> {
         init(code, text);
     }
 
-    public static LoginLogResultTypeEnum toEnum(Integer code) {
-        return IEnum.getByCode(LoginLogResultTypeEnum.class, code);
-    }
-
 }

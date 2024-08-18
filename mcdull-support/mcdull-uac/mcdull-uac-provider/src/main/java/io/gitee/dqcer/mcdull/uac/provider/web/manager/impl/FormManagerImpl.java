@@ -193,7 +193,8 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             recordItem.setFormItemId(formItemEntity.getId());
             recordItem.setFormRecordId(recordId);
             recordItem.setFormId(formId);
-            FormItemControlTypeEnum controlTypeEnum = FormItemControlTypeEnum.toEnum(formItemEntity.getControlType());
+            FormItemControlTypeEnum controlTypeEnum = IEnum.getByCode(FormItemControlTypeEnum.class,
+                    formItemEntity.getControlType());
             if (FormItemControlTypeEnum.CHECKBOX.equals(controlTypeEnum)) {
                 if (obj != null) {
                     recordItem.setCurrentValue(JSONUtil.parseArray(obj).toString());
@@ -376,7 +377,8 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             }
             String labelCode = formItem.getLabelCode();
             Object obj = formDataMap.get(labelCode);
-            FormItemControlTypeEnum controlTypeEnum = FormItemControlTypeEnum.toEnum(formItem.getControlType());
+            FormItemControlTypeEnum controlTypeEnum = IEnum.getByCode(FormItemControlTypeEnum.class,
+                    formItem.getControlType());
             if (FormItemControlTypeEnum.CHECKBOX.equals(controlTypeEnum)) {
                 if (obj != null) {
                     recordItem.setCurrentValue(JSONUtil.parseArray(obj).toString());

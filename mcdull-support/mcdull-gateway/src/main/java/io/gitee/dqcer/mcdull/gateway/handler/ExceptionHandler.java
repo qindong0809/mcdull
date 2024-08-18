@@ -56,7 +56,7 @@ public class ExceptionHandler implements WebExceptionHandler, Ordered {
                 Result<?> error;
                 if (ex instanceof ResponseStatusException) {
                     HttpStatus status = ((ResponseStatusException) ex).getStatus();
-                    error = Result.error(status.value(), status.getReasonPhrase());
+                    error = Result.error(status.value(), status.getReasonPhrase(), ex.getMessage());
                 } else {
                     log.warn("网关异常处理: {}", ex.getMessage());
                     error = Result.error(CodeEnum.INTERNAL_SERVER_ERROR, Collections.singletonList(ex.getMessage()));

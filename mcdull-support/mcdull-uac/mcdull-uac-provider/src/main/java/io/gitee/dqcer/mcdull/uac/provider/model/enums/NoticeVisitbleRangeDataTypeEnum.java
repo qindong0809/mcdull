@@ -27,8 +27,4 @@ public enum NoticeVisitbleRangeDataTypeEnum implements IEnum<Integer> {
         init(code, text);
     }
 
-    public static NoticeVisitbleRangeDataTypeEnum toEnum(Integer code) {
-        return IEnum.getByCode(NoticeVisitbleRangeDataTypeEnum.class, code);
-    }
-
 }

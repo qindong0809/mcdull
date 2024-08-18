@@ -53,10 +53,7 @@ public class RoleRepositoryImpl
 
     @Override
     public Integer insert(RoleEntity entity) {
-        int row = baseMapper.insert(entity);
-        if (row == GlobalConstant.Database.ROW_0) {
-            throw new BusinessException(CodeEnum.DB_ERROR);
-        }
+        baseMapper.insert(entity);
         return entity.getId();
     }
 

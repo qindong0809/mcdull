@@ -16,9 +16,7 @@ import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
-import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleUserQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
@@ -67,10 +65,7 @@ public class UserRepositoryImpl
 
     @Override
     public Integer insert(UserEntity entity) {
-        int row = baseMapper.insert(entity);
-        if (row == GlobalConstant.Database.ROW_0) {
-            throw new BusinessException(CodeEnum.DB_ERROR);
-        }
+        baseMapper.insert(entity);
         return entity.getId();
     }
 

@@ -18,8 +18,4 @@ public enum MenuPermsTypeEnum implements IEnum<Integer> {
         init(code, text);
     }
 
-    public static MenuPermsTypeEnum toEnum(Integer code) {
-        return IEnum.getByCode(MenuPermsTypeEnum.class, code);
-    }
-
 }

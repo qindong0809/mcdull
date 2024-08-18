@@ -14,12 +14,12 @@ public enum CodeEnum implements ICode , IEnum<Integer> {
 	/**
 	 * 操作成功
 	 */
-	SUCCESS(200, "操作成功"),
+	SUCCESS(200, "Success"),
 
 	/**
 	 * 服务异常
 	 */
-	INTERNAL_SERVER_ERROR(500, "{0}"),
+	INTERNAL_SERVER_ERROR(500, "system.internal.server.error"),
 
 	/**
 	 * 服务不可用
@@ -39,12 +39,12 @@ public enum CodeEnum implements ICode , IEnum<Integer> {
 	/**
 	 * 权限不足，此接口需要具备相应的权限才能访问
 	 */
-	POWER_CHECK_MODULE(403, "权限不足，此接口需要具备相应的权限才能访问"),
+	POWER_CHECK_MODULE(403, "system.permission.denied"),
 
 	/**
 	 * 无权限
 	 */
-	UN_AUTHORIZATION(401, "认证失败"),
+	UN_AUTHORIZATION(401, "system.authentication.failure"),
 
 	/**
 	 * 异地登录
@@ -52,9 +52,9 @@ public enum CodeEnum implements ICode , IEnum<Integer> {
 	OTHER_LOGIN(402, "异地登录"),
 
 	/**
-	 * 登录超时
+	 * 认证过期
 	 */
-	TIMEOUT_LOGIN(403, "token过期"),
+	TIMEOUT_LOGIN(403, "system.authentication.expired"),
 
 
 	/**
@@ -86,35 +86,7 @@ public enum CodeEnum implements ICode , IEnum<Integer> {
 	/**
 	 * 参数异常
 	 */
-	ERROR_PARAMETERS(999450, "参数异常: {0}"),
-
-	/**
-	 * 数据存在
-	 */
-	DATA_EXIST(999460, "数据已存在"),
-
-	/**
-	 * 数据不存在
-	 */
-	DATA_NOT_EXIST(999461, "数据不存在"),
-
-
-	NEED_REFRESH_DATA(999462, "请刷新后重试"),
-
-	/**
-	 * 错误类型
-	 */
-	ERROR_CONTENT_TYPE(999303, "请求头Content-Type异常"),
-
-	/**
-	 * 没有找到对应属性
-	 */
-	NOT_FIND_PROPERTIES_KEY(999302, "无法找到对应properties文件中对应的key"),
-
-	/**
-	 * 错误的转换
-	 */
-	ERROR_CONVERSION(999300, "参数接收时，类型转换异常"),
+	ERROR_PARAMETERS(999450, "system.validation.failed"),
 
 
 	;

@@ -19,7 +19,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EnumsIntValid {
 
-    String message() default "值不在枚举值中";
+    String message() default "{valid.enum.not.exist}";
 
     boolean required() default true;
 

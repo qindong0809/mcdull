@@ -5,11 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
-import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictKeyQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.DictKeyEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.DictKeyMapper;
@@ -32,10 +29,7 @@ public class DictKeyRepositoryImpl
 
     @Override
     public void insert(DictKeyEntity entity) {
-        int row = baseMapper.insert(entity);
-        if (row == GlobalConstant.Database.ROW_0) {
-            throw new BusinessException(CodeEnum.DB_ERROR);
-        }
+        baseMapper.insert(entity);
     }
 
 

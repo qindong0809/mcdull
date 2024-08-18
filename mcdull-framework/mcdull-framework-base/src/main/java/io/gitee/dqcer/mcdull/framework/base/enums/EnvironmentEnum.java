@@ -8,7 +8,9 @@ package io.gitee.dqcer.mcdull.framework.base.enums;
  */
 public enum EnvironmentEnum implements IEnum<String>{
 
-    PROD("prod", "已失活"),
+    PROD("prod", "生产环境"),
+    TEST("test", "测试环境"),
+    DEV("dev", "开发环境");
 
     ;
 

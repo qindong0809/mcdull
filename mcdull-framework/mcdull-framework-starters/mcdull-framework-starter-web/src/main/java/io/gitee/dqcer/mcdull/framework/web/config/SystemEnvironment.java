@@ -17,6 +17,19 @@ public class SystemEnvironment {
      */
     private String projectName;
 
+    /**
+     * 环境
+     */
+    private String environment;
+
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
+    }
+
     public Boolean getProd() {
         return isProd;
     }
