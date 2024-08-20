@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.enums.UserTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * 文件信息
@@ -50,5 +50,5 @@ public class FileVO implements VO {
     private String fileUrl;
 
     @Schema(description = "创建时间")
-    private LocalDateTime createTime;
+    private Date createTime;
 }

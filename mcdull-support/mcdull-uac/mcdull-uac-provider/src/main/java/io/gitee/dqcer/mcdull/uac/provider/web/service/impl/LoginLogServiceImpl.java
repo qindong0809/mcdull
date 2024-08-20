@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -65,7 +64,7 @@ public class LoginLogServiceImpl
         vo.setUserAgent(entity.getUserAgent());
         vo.setRemark(entity.getRemark());
         vo.setLoginResult(entity.getLoginResult());
-        vo.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
+        vo.setCreateTime(entity.getCreatedTime());
         return vo;
     }
 }

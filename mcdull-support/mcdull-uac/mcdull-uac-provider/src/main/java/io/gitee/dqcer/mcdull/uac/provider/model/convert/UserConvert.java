@@ -73,7 +73,7 @@ public class UserConvert {
         userAllVO.setDepartmentId(Convert.toInt(userEntity.getDepartmentId()));
         userAllVO.setDisabledFlag(userEntity.getInactive());
         userAllVO.setAdministratorFlag(userEntity.getAdministratorFlag());
-        userAllVO.setCreateTime(LocalDateTimeUtil.of(userEntity.getCreatedTime()));
+        userAllVO.setCreateTime(userEntity.getCreatedTime());
         return userAllVO;
     }
 }

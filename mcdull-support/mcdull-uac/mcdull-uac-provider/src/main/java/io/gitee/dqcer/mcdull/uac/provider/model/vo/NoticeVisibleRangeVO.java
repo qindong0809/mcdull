@@ -12,6 +12,7 @@ import lombok.Data;
 @Data
 public class NoticeVisibleRangeVO {
 
+    @Schema(description = "可见范围类型 0:部门 1:员工")
     @SchemaEnum(NoticeVisitbleRangeDataTypeEnum.class)
     private Integer dataType;
 

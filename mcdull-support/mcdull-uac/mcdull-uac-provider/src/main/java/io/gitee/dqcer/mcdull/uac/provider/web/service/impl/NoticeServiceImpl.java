@@ -117,7 +117,7 @@ public class NoticeServiceImpl
         if (ObjUtil.isNotNull(user)) {
             vo.setCreateUserName(user.getActualName());
         }
-        vo.setCreateTime(LocalDateTimeUtil.of(detail.getCreatedTime()));
+        vo.setCreateTime(detail.getCreatedTime());
 
         Boolean allVisibleFlag = vo.getAllVisibleFlag();
         if (BooleanUtil.isFalse(allVisibleFlag)) {
@@ -232,8 +232,8 @@ public class NoticeServiceImpl
         noticeUserVO.setPageViewCount(entity.getPageViewCount());
         noticeUserVO.setUserViewCount(entity.getUserViewCount());
         noticeUserVO.setDeletedFlag(entity.getDelFlag());
-        noticeUserVO.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
-        noticeUserVO.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
+        noticeUserVO.setCreateTime(entity.getCreatedTime());
+        noticeUserVO.setUpdateTime(entity.getUpdatedTime());
         return noticeUserVO;
     }
 
@@ -303,8 +303,8 @@ public class NoticeServiceImpl
         noticeDetailVO.setDocumentNumber(entity.getDocumentNumber());
         noticeDetailVO.setPageViewCount(entity.getPageViewCount());
         noticeDetailVO.setUserViewCount(entity.getUserViewCount());
-        noticeDetailVO.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
-        noticeDetailVO.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
+        noticeDetailVO.setCreateTime(entity.getCreatedTime());
+        noticeDetailVO.setUpdateTime(entity.getUpdatedTime());
         return noticeDetailVO;
     }
 
@@ -321,7 +321,7 @@ public class NoticeServiceImpl
         vo.setSource(item.getSource());
         vo.setAuthor(item.getAuthor());
         vo.setDocumentNumber(item.getDocumentNumber());
-        vo.setCreateTime(LocalDateTimeUtil.of(item.getCreatedTime()));
+        vo.setCreateTime(item.getCreatedTime());
         vo.setDeletedFlag(item.getDelFlag());
         return vo;
     }

@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.base.dto;
 
 
-import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import org.hibernate.validator.constraints.Length;
 
@@ -17,7 +16,7 @@ public class KeywordDTO implements DTO {
     /**
      * 关键字 最大长度512
      */
-    @Length(groups = {ValidGroup.Paged.class, ValidGroup.Keyword.class}, max = 256)
+    @Length(max = 256)
     protected String keyword;
 
     @Override

@@ -1,13 +1,16 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.UserBO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,5 +40,7 @@ public class LogonVO extends UserBO implements VO {
     private String lastLoginUserAgent;
 
     @Schema(description = "上次登录时间")
-    private LocalDateTime lastLoginTime;
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date lastLoginTime;
 }

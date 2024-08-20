@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.feign;
 
 import feign.FeignException;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,7 @@ public class ExceptionAdvice {
     public Result<?> feignException(FeignException exception) {
         log.error("feign调用异常: ", exception);
         // FIXME: 2024/3/26 国际化处理
-        return Result.error(CodeEnum.FEIGN_BIZ, Collections.singletonList(exception.contentUTF8()));
+        return Result.error(FeignCodeEnum.FEIGN_BIZ, Collections.singletonList(exception.contentUTF8()));
     }
 
     /**
@@ -45,7 +44,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(value = FeignBizException.class)
     public Result<?> feignBizException(FeignBizException exception) {
         log.error("feign调用异常: ", exception);
-        return Result.error(CodeEnum.FEIGN_BIZ, Collections.singletonList(exception.getResult()));
+        return Result.error(FeignCodeEnum.FEIGN_BIZ, Collections.singletonList(exception.getResult()));
     }
 
 }

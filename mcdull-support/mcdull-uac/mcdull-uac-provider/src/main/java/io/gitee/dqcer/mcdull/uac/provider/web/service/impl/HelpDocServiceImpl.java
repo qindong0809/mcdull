@@ -239,8 +239,8 @@ public class HelpDocServiceImpl
                             vo.setSort(entity.getSort());
                             vo.setPageViewCount(entity.getPageViewCount());
                             vo.setUserViewCount(entity.getUserViewCount());
-                            vo.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
-                            vo.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
+                            vo.setCreateTime((entity.getCreatedTime()));
+                            vo.setUpdateTime((entity.getUpdatedTime()));
                             voList.add(vo);
                         }
                     }
@@ -260,8 +260,8 @@ public class HelpDocServiceImpl
         vo.setSort(entity.getSort());
         vo.setPageViewCount(entity.getPageViewCount());
         vo.setUserViewCount(entity.getUserViewCount());
-        vo.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
-        vo.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
+        vo.setCreateTime((entity.getCreatedTime()));
+        vo.setUpdateTime((entity.getUpdatedTime()));
         return vo;
     }
 
@@ -269,8 +269,8 @@ public class HelpDocServiceImpl
         HelpDocViewRecordVO vo = new HelpDocViewRecordVO();
         vo.setUserId(entity.getUserId());
         vo.setPageViewCount(entity.getPageViewCount());
-        vo.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
-        vo.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
+        vo.setCreateTime((entity.getCreatedTime()));
+        vo.setUpdateTime((entity.getUpdatedTime()));
         return vo;
     }
 }

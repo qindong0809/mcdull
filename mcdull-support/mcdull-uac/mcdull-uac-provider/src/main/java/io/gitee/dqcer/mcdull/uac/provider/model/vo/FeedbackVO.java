@@ -3,13 +3,15 @@ package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.swagger.SchemaEnum;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.gitee.dqcer.mcdull.uac.provider.config.FileKeyVoDeserializer;
 import io.gitee.dqcer.mcdull.uac.provider.config.FileKeyVoSerializer;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.UserTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * 意见反馈 返回对象
@@ -41,8 +43,12 @@ public class FeedbackVO {
     private Integer userType;
 
     @Schema(description = "更新时间")
-    private LocalDateTime updateTime;
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date updateTime;
 
     @Schema(description = "创建时间")
-    private LocalDateTime createTime;
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date createTime;
 }

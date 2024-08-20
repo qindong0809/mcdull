@@ -8,7 +8,10 @@ import lombok.Data;
 /**
  * 数据范围
  *
+ * @author dqcer
+ * @since 2024/8/19 13:10
  */
+
 @Data
 @Builder
 public class DataScopeViewTypeVO implements VO {

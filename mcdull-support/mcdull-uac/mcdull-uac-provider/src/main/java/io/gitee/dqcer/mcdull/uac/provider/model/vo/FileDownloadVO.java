@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -8,16 +10,12 @@ import lombok.Data;
  * @author dqcer
  */
 @Data
-public class FileDownloadVO {
+public class FileDownloadVO implements VO {
 
-    /**
-     * 文件字节数据
-     */
+    @Schema(description = "文件字节数据")
     private byte[] data;
 
-    /**
-     * 文件元数据
-     */
+    @Schema(description = "文件元数据")
     private FileMetadataVO metadata;
 
 

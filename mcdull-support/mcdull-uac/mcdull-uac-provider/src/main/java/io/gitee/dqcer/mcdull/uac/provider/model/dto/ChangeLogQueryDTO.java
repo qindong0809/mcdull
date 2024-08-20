@@ -23,9 +23,6 @@ public class ChangeLogQueryDTO extends PagedDTO {
     @EnumsIntValid(value = ChangeLogTypeEnum.class, message = "更新类型:[1:特大版本功能更新;2:功能更新;3:bug修复] 错误")
     private Integer type;
 
-    @Schema(description = "关键字")
-    private String keyword;
-
     @Schema(description = "发布日期")
     private LocalDate publicDateBegin;
 

@@ -7,9 +7,12 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * 数据范围
+ * data scope and view type vo
  *
+ * @author dqcer
+ * @since 2024/8/19 13:10
  */
+
 @Data
 public class DataScopeAndViewTypeVO implements VO {
 

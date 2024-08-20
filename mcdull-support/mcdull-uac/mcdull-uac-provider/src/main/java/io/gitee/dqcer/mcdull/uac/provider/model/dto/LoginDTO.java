@@ -24,7 +24,7 @@ import javax.validation.constraints.NotBlank;
 @Schema(name = "用户登录对象")
 public class LoginDTO implements DTO {
 
-    @Schema(description = "登录账号")
+    @Schema(description = "登录账号", example = "admin")
     @NotBlank(message = "{login.username.not-blank}")
     @Length(max = 30, message = "登录账号最多30字符")
     private String loginName;

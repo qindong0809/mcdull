@@ -3,7 +3,6 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentTreeVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentVO;
@@ -29,12 +28,7 @@ public class DeptController {
     @Resource
     private IDepartmentService deptService;
 
-
-//    @GetMapping("list")
-//    public Result<List<DepartmentVO>> list(@Validated DeptListDTO dto) {
-//        return Result.success(deptService.list(dto));
-//    }
-
+    @Operation(summary = "查询部门全部列表")
     @GetMapping("list-all")
     public Result<List<DepartmentVO>> getAll() {
         return Result.success(deptService.getAll());

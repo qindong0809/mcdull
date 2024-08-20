@@ -3,7 +3,6 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -46,7 +46,7 @@ public class SessionServiceImpl implements ISessionService {
                 SessionVO vo = new SessionVO();
                 vo.setId(session.getId());
                 vo.setLoginId(Convert.toInt(loginId.toString()));
-                vo.setCreateTime(LocalDateTimeUtil.of(session.getCreateTime()));
+                vo.setCreateTime(new Date(session.getCreateTime()));
                 UserEntity user = userService.get(vo.getLoginId());
                 if (ObjUtil.isNotNull(user)) {
                     vo.setActualName(user.getActualName());

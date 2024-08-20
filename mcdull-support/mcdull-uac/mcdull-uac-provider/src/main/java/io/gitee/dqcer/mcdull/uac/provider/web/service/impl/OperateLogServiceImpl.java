@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -94,8 +93,8 @@ public class OperateLogServiceImpl
         vo.setUserAgent(entity.getUserAgent());
         vo.setSuccessFlag(entity.getSuccessFlag());
         vo.setFailReason(entity.getFailReason());
-        vo.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
-        vo.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
+        vo.setUpdateTime(entity.getUpdatedTime());
+        vo.setCreateTime(entity.getCreatedTime());
         return vo;
     }
 

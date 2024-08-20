@@ -1,13 +1,15 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.swagger.SchemaEnum;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.UserTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *  操作日志信息
@@ -65,12 +67,14 @@ public class OperateLogVO implements VO {
     private String failReason;
 
     @Schema(description = "更新时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime updateTime;
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date updateTime;
 
     @Schema(description = "创建时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime createTime;
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date createTime;
 
 
 }

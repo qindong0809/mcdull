@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -72,7 +71,7 @@ public class FeedbackServiceImpl
         feedbackVO.setFeedbackContent(entity.getFeedbackContent());
         feedbackVO.setFeedbackAttachment(entity.getFeedbackAttachment());
         feedbackVO.setUserId(entity.getUserId());
-        feedbackVO.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
+        feedbackVO.setCreateTime(entity.getCreatedTime());
         return feedbackVO;
     }
 

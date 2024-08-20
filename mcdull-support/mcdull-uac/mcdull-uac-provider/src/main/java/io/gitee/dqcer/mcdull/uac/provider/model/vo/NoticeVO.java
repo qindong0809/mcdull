@@ -1,10 +1,14 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 
 /**
@@ -60,9 +64,13 @@ public class NoticeVO implements VO {
     private String createUserName;
 
     @Schema(description = "创建时间")
-    private LocalDateTime createTime;
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date createTime;
 
     @Schema(description = "更新时间")
-    private LocalDateTime updateTime;
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date updateTime;
 
 }

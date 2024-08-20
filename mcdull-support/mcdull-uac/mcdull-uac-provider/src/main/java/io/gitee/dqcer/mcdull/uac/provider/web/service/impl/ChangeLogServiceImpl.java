@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -122,8 +121,8 @@ public class ChangeLogServiceImpl
         changeLogVO.setPublicDate(entity.getPublicDate());
         changeLogVO.setContent(entity.getContent());
         changeLogVO.setLink(entity.getLink());
-        changeLogVO.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
-        changeLogVO.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
+        changeLogVO.setCreateTime(entity.getCreatedTime());
+        changeLogVO.setUpdateTime(entity.getUpdatedTime());
         return changeLogVO;
     }
 

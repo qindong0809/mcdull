@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * @since 2024/06/03
  */
 @Data
-public class MenuSimpleTreeVO {
+public class MenuSimpleTreeVO implements VO {
 
     @Schema(description = "菜单ID")
     private Integer menuId;

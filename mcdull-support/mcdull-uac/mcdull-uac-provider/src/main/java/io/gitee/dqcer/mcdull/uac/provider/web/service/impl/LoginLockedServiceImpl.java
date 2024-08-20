@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -86,10 +85,10 @@ public class LoginLockedServiceImpl
         vo.setLoginName(entity.getLoginName());
         vo.setLoginFailCount(entity.getLoginFailCount());
         vo.setLockFlag(entity.getLockFlag());
-        vo.setLoginLockBeginTime(LocalDateTimeUtil.of(entity.getLoginLockBeginTime()));
-        vo.setLoginLockEndTime(LocalDateTimeUtil.of(entity.getLoginLockEndTime()));
-        vo.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
-        vo.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
+        vo.setLoginLockBeginTime(entity.getLoginLockBeginTime());
+        vo.setLoginLockEndTime(entity.getLoginLockEndTime());
+        vo.setCreateTime(entity.getCreatedTime());
+        vo.setUpdateTime(entity.getUpdatedTime());
         return vo;
     }
 

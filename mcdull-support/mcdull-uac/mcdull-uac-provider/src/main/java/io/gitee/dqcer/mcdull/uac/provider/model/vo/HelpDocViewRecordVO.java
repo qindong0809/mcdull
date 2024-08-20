@@ -1,10 +1,13 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * 帮助文档 - 浏览记录 VO
@@ -29,7 +32,9 @@ public class HelpDocViewRecordVO implements VO  {
     private String firstUserAgent;
 
     @Schema(description = "首次查看时间")
-    private LocalDateTime createTime;
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date createTime;
 
     @Schema(description = "最后一次 ip")
     private String lastIp;
@@ -38,5 +43,7 @@ public class HelpDocViewRecordVO implements VO  {
     private String lastUserAgent;
 
     @Schema(description = "最后一次查看时间")
-    private LocalDateTime updateTime;
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date updateTime;
 }

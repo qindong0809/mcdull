@@ -11,7 +11,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IConfigRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
 import org.springframework.stereotype.Service;
@@ -33,9 +33,9 @@ public class ConfigServiceImpl
         extends BasicServiceImpl<IConfigRepository> implements IConfigService {
 
     @Override
-    public PagedVO<ConfigVO> queryPage(ConfigQueryDTO dto) {
+    public PagedVO<ConfigInfoVO> queryPage(ConfigQueryDTO dto) {
         Page<ConfigEntity> entityPage = baseRepository.selectPage(dto);
-        List<ConfigVO> voList = new ArrayList<>();
+        List<ConfigInfoVO> voList = new ArrayList<>();
         for (ConfigEntity entity : entityPage.getRecords()) {
             voList.add(ConfigConvert.convertToConfigVO(entity));
         }

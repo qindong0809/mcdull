@@ -3,7 +3,6 @@ package io.gitee.dqcer.mcdull.framework.base.dto;
 import cn.hutool.core.convert.Convert;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.support.Paged;
-import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -23,16 +22,16 @@ public class PagedDTO extends KeywordDTO implements Paged {
     /**
      * 每页记录数
      */
-    @NotNull(groups = ValidGroup.Paged.class)
-    @Max(groups = ValidGroup.Paged.class, value = 1000)
-    @Min(groups = ValidGroup.Paged.class, value = 1)
+    @NotNull
+    @Max(value = 100000)
+    @Min(value = 1)
     protected Integer pageSize;
 
     /**
      * 当前页数
      */
-    @NotNull(groups = ValidGroup.Paged.class)
-    @Min(groups = ValidGroup.Paged.class, value = 1)
+    @NotNull
+    @Min(value = 1)
     protected Integer pageNum;
 
     /**

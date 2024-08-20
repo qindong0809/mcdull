@@ -6,48 +6,46 @@ import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
 /**
- * 帮助文档
- *
- */
+* 系统配置 返回客户端值
+*
+* @author dqcer
+* @since 2024-04-29
+*/
+@EqualsAndHashCode(callSuper = false)
 @Data
-public class HelpDocVO implements VO {
+public class ConfigInfoVO implements VO {
 
-    @Schema(description = "id")
-    private Integer helpDocId;
+    private static final long serialVersionUID = 1L;
 
-    @Schema(description = "标题")
-    private String title;
+    @Schema(description = "主键")
+    private Integer configId;
 
-    @Schema(description = "分类")
-    private Integer helpDocCatalogId;
+    @Schema(description = "参数名字")
+    private String configName;
 
-    @Schema(description = "分类名称")
-    private String helpDocCatalogName;
+    @Schema(description = "参数key")
+    private String configKey;
 
-    @Schema(description = "作者")
-    private String author;
-    
-    @Schema(description = "排序")
-    private Integer sort;
+    @Schema(description = "参数值")
+    private String configValue;
 
-    @Schema(description = "页面浏览量")
-    private Integer pageViewCount;
-
-    @Schema(description = "用户浏览量")
-    private Integer userViewCount;
+    @Schema(description = "备注")
+    private String remark;
 
     @Schema(description = "创建时间")
     @DynamicDateFormat(enableTimezone = true)
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date createTime;
 
-    @Schema(description = "更新时间")
+    @Schema(description = "上次修改时间")
     @DynamicDateFormat(enableTimezone = true)
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date updateTime;
+
 
 }

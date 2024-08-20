@@ -4,7 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigInfoVO;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
 public interface IConfigService {
 
 
-    PagedVO<ConfigVO> queryPage(ConfigQueryDTO dto);
+    PagedVO<ConfigInfoVO> queryPage(ConfigQueryDTO dto);
 
     void add(ConfigAddDTO dto);
 

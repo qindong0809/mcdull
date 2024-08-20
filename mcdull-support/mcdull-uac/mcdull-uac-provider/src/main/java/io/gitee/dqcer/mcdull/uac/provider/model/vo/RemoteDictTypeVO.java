@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import lombok.Getter;
 
 /**
  * 码表 VO
@@ -8,6 +9,7 @@ import io.gitee.dqcer.mcdull.framework.base.support.VO;
  * @author dqcer
  * @since 2022/12/26
  */
+@Getter
 public class RemoteDictTypeVO implements VO {
 
     private Integer id;
@@ -20,17 +22,9 @@ public class RemoteDictTypeVO implements VO {
 
     private Boolean inactive;
 
-    public Integer getId() {
-        return id;
-    }
-
     public RemoteDictTypeVO setId(Integer id) {
         this.id = id;
         return this;
-    }
-
-    public String getDictName() {
-        return dictName;
     }
 
     public RemoteDictTypeVO setDictName(String dictName) {
@@ -38,26 +32,14 @@ public class RemoteDictTypeVO implements VO {
         return this;
     }
 
-    public String getDictType() {
-        return dictType;
-    }
-
     public RemoteDictTypeVO setDictType(String dictType) {
         this.dictType = dictType;
         return this;
     }
 
-    public String getRemark() {
-        return remark;
-    }
-
     public RemoteDictTypeVO setRemark(String remark) {
         this.remark = remark;
         return this;
-    }
-
-    public Boolean getInactive() {
-        return inactive;
     }
 
     public RemoteDictTypeVO setInactive(Boolean inactive) {

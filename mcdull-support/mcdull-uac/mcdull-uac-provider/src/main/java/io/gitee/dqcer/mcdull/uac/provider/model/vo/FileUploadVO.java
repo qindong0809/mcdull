@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -8,7 +9,7 @@ import lombok.Data;
  *
  */
 @Data
-public class FileUploadVO {
+public class FileUploadVO implements VO {
 
     @Schema(description = "文件id")
     private Integer fileId;

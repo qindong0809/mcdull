@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,7 +36,7 @@ public class ConfigController {
     @Operation(summary = "分页查询")
     @PostMapping("/config/query")
     @SaCheckPermission("support:config:query")
-    public Result<PagedVO<ConfigVO>> query(@RequestBody @Valid ConfigQueryDTO queryDTO) {
+    public Result<PagedVO<ConfigInfoVO>> query(@RequestBody @Valid ConfigQueryDTO queryDTO) {
         return Result.success(configService.queryPage(queryDTO));
     }
 

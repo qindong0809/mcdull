@@ -14,15 +14,15 @@ import lombok.Data;
 @Data
 public class DictKeyVO implements VO {
 
-    @Schema
+    @Schema(description = "字典id")
     private Integer dictKeyId;
 
-    @Schema
+    @Schema(description = "字典编码")
     private String keyCode;
 
-    @Schema
+    @Schema(description = "字典名称")
     private String keyName;
 
-    @Schema
+    @Schema(description = "字典描述")
     private String remark;
 }

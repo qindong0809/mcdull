@@ -1,11 +1,15 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.swagger.SchemaEnum;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.UserTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import java.time.LocalDateTime;
+
+import java.util.Date;
 
 /**
  * 登录日志
@@ -43,6 +47,9 @@ public class LoginLogVO {
     @SchemaEnum(LoginLogResultTypeEnum.class)
     private Integer loginResult;
 
-    private LocalDateTime createTime;
+    @Schema(description = "创建时间")
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date createTime;
 
 }
