@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
 
 import java.util.List;
@@ -14,13 +15,9 @@ import java.util.List;
 
 public interface ILoginService {
 
-    /**
-     * 登录
-     *
-     * @param dto dto
-     * @return {@link LogonVO}
-     */
-    LogonVO login(LoginDTO dto);
+    void saveLoginLog(String loginName, LoginLogResultTypeEnum resultTypeEnum, String remark);
+
+    LogonVO buildLogonVo(UserEntity userEntity);
 
     /**
      * 注销
