@@ -112,7 +112,7 @@
   <logger name="springfox.bean.validators" level="ERROR"/>
   <logger name="springfox.documentation" level="ERROR" />
   <logger name="com.alibaba.nacos.client.naming" level="warn" />
-  <logger name="io.gitee.dqcer" level="info" />
+  <logger name="io.gitee.dqcer" level="debug" />
 
   <root level="info">
     <appender-ref ref="CONSOLE" />

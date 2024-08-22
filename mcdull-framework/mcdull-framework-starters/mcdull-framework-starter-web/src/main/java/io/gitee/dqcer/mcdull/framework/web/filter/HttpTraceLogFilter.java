@@ -11,8 +11,10 @@ import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -26,23 +28,23 @@ import java.util.Date;
  * @author dqcer
  * @since  2022/10/05
  */
-public class HttpTraceLogFilter implements Filter {
+public class HttpTraceLogFilter extends OncePerRequestFilter {
 
     protected Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        HttpServletRequest request = (HttpServletRequest)servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
+
         String requestUrl = request.getRequestURI();
-        LogHelp.debug(log, "start filter. url: {}", requestUrl);
         try {
             String traceId = request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER);
-            if(null == traceId || traceId.trim().length() == 0) {
+            if(null == traceId || traceId.trim().isEmpty()) {
                 traceId = RandomUtil.uuid();
             }
             MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
+            LogHelp.debug(log, "start filter. url: {}", requestUrl);
+
             UnifySession<Object> unifySession = new UnifySession<>();
             unifySession.setTraceId(traceId);
             unifySession.setRequestUrl(requestUrl);

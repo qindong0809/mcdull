@@ -1,10 +1,14 @@
 package io.gitee.dqcer.mcdull.framework.security;
 
+import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.filter.SaServletFilter;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -18,6 +22,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
 
+    protected Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Value("${file.storage.local.upload-path:/home/upload/}")
     private String uploadPath;
@@ -33,6 +38,7 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
             "/swagger-ui.html/**",
             "/swagger-resources/**",
             "/webjars/**",
+            "/error",
             "/v3/api-docs/**"};
 
     @Override
@@ -42,7 +48,13 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
             SaRouter
                     .match(GlobalConstant.ALL_PATTERNS)
                     .notMatch(EXCLUDE_PATTERNS)
-                    .check(r -> StpUtil.checkLogin());
+                    .check(r -> {
+                        try {
+                            StpUtil.checkLogin();
+                        } catch (Exception e) {
+                            LogHelp.error(log, "url: {} checkLogin error.", SaHolder.getRequest().getRequestPath());
+                        }
+                        });
 
 
             // 根据路由划分模块，不同模块不同鉴权

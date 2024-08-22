@@ -4,6 +4,7 @@ package io.gitee.dqcer.mcdull.framework.web;
 import io.gitee.dqcer.mcdull.framework.web.advice.BaseExceptionAdvice;
 import io.gitee.dqcer.mcdull.framework.web.advice.ExceptionAdvice;
 import io.gitee.dqcer.mcdull.framework.web.config.*;
+import io.gitee.dqcer.mcdull.framework.web.jmx.DatabaseJmxAdapter;
 import io.gitee.dqcer.mcdull.framework.web.jmx.RedisJmxAdapter;
 import io.gitee.dqcer.mcdull.framework.web.jmx.ThreadPoolJmxAdapter;
 import io.gitee.dqcer.mcdull.framework.web.transform.SpringContextHolder;
@@ -36,6 +37,7 @@ import java.lang.annotation.Target;
         I18nConfig.class,
         RedisJmxAdapter.class,
         ThreadPoolJmxAdapter.class,
+        DatabaseJmxAdapter.class,
         SystemEnvironmentConfig.class,
         VersionInfoImplComponent.class
 })

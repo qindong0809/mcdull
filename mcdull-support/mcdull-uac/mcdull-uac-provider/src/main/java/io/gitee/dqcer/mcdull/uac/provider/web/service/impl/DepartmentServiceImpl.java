@@ -13,8 +13,8 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentTreeVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentInfoVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentTreeInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDepartmentService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
@@ -42,27 +42,14 @@ public class DepartmentServiceImpl
     @Resource
     private IUserService userService;
 
-//    @Override
-//    public List<DepartmentVO> list(DeptListDTO dto) {
-//        List<DepartmentVO> list = new ArrayList<>();
-//        List<DepartmentEntity> deptList = baseRepository.list();
-//        if (CollUtil.isNotEmpty(deptList)) {
-//            for (DepartmentEntity dept : deptList) {
-//                DepartmentVO vo = this.convertToVO(dept);
-//                list.add(vo);
-//            }
-//        }
-//        return list;
-//    }
-
     @Cacheable(cacheNames = "caffeineCache", key = "'department-all'")
     @Override
-    public List<DepartmentVO> getAll() {
-        List<DepartmentVO> list = new ArrayList<>();
+    public List<DepartmentInfoVO> getAll() {
+        List<DepartmentInfoVO> list = new ArrayList<>();
         List<DepartmentEntity> deptList = baseRepository.list();
         if (CollUtil.isNotEmpty(deptList)) {
             for (DepartmentEntity dept : deptList) {
-                DepartmentVO vo = this.convertToVO(dept);
+                DepartmentInfoVO vo = this.convertToVO(dept);
                 list.add(vo);
             }
         }
@@ -150,11 +137,11 @@ public class DepartmentServiceImpl
     }
 
     @Override
-    public List<DepartmentTreeVO> departmentTree() {
+    public List<DepartmentTreeInfoVO> departmentTree() {
         List<DepartmentEntity> list = baseRepository.all();
         if (CollUtil.isNotEmpty(list)) {
             for (DepartmentEntity dept : list) {
-                DepartmentTreeVO vo = new DepartmentTreeVO();
+                DepartmentTreeInfoVO vo = new DepartmentTreeInfoVO();
                 vo.setDepartmentId(Convert.toInt(dept.getId()));
                 vo.setName(dept.getName());
                 vo.setManagerId(dept.getManagerId());
@@ -201,17 +188,17 @@ public class DepartmentServiceImpl
 
 
 
-    public static List<DepartmentTreeVO> convertTreeSelect(List<Tree<Integer>> list) {
-        List<DepartmentTreeVO> voList = new ArrayList<>();
+    public static List<DepartmentTreeInfoVO> convertTreeSelect(List<Tree<Integer>> list) {
+        List<DepartmentTreeInfoVO> voList = new ArrayList<>();
         for (Tree<Integer> longTree : list) {
-            DepartmentTreeVO vo = new DepartmentTreeVO();
+            DepartmentTreeInfoVO vo = new DepartmentTreeInfoVO();
             vo.setDepartmentId(longTree.getId());
             vo.setName(String.valueOf(longTree.getName()));
             List<Integer> subIdList = new ArrayList<>();
             subIdList.add(longTree.getId());
             List<Tree<Integer>> children = longTree.getChildren();
             if (CollUtil.isNotEmpty(children)) {
-                List<DepartmentTreeVO> subList = convertTreeSelect(children);
+                List<DepartmentTreeInfoVO> subList = convertTreeSelect(children);
                 vo.setChildren(subList);
                 List<Integer> sub = getSubList(subList);
                 subIdList.addAll(sub);
@@ -222,10 +209,10 @@ public class DepartmentServiceImpl
         return voList;
     }
 
-    private static List<Integer> getSubList(List<DepartmentTreeVO> subList) {
+    private static List<Integer> getSubList(List<DepartmentTreeInfoVO> subList) {
         List<Integer> subIdList = new ArrayList<>();
         if (CollUtil.isNotEmpty(subList)) {
-            for (DepartmentTreeVO treeVO : subList) {
+            for (DepartmentTreeInfoVO treeVO : subList) {
                 subIdList.add(treeVO.getDepartmentId());
                 if (CollUtil.isNotEmpty(treeVO.getChildren())) {
                     List<Integer> sub = getSubList(treeVO.getChildren());
@@ -236,8 +223,8 @@ public class DepartmentServiceImpl
         return subIdList;
     }
 
-    private DepartmentVO convertToVO(DepartmentEntity dept) {
-        DepartmentVO vo = new DepartmentVO();
+    private DepartmentInfoVO convertToVO(DepartmentEntity dept) {
+        DepartmentInfoVO vo = new DepartmentInfoVO();
         vo.setDepartmentId(Convert.toInt(dept.getId()));
         vo.setName(dept.getName());
         vo.setManagerId(dept.getManagerId());

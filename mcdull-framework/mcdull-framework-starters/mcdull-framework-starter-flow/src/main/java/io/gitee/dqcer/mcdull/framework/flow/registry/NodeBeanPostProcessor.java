@@ -5,7 +5,6 @@ import io.gitee.dqcer.mcdull.framework.flow.node.ProcessHandler;
 import io.gitee.dqcer.mcdull.framework.flow.node.TreeNode;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
@@ -15,7 +14,7 @@ import javax.annotation.Resource;
  * @author dqcer
  * @since 2023/01/07 19:01:17
  */
-@Component
+//@Component
 public class NodeBeanPostProcessor implements BeanPostProcessor {
 
     @Resource

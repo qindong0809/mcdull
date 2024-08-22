@@ -3,8 +3,10 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.flow.ProcessFlow;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
+import io.gitee.dqcer.mcdull.uac.provider.flow.login.LoginContext;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.CaptchaVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
@@ -34,6 +36,8 @@ public class LoginController extends BasicController {
     private ILoginService loginService;
     @Resource
     private ICaptchaService captchaService;
+    @Resource
+    private ProcessFlow processFlow;
 
     @Operation(summary = "验证码")
     @GetMapping("/login/getCaptcha")
@@ -47,8 +51,19 @@ public class LoginController extends BasicController {
     @Operation(summary = "登录")
     @PostMapping("login")
     public Result<LogonVO> login(@RequestBody @Valid LoginDTO dto) throws Exception {
+//        return Result.success(
+//                super.locker("login:", 0, () -> loginService.login(dto)));
+
+//        processFlow.run(() -> "login");
         return Result.success(
-                super.locker("login:", 0, () -> loginService.login(dto)));
+                super.rateLimiter("login:", 5, 1, () -> {
+                    LoginContext context = new LoginContext();
+                    context.setId("process_flow_login");
+                    context.setLoginDTO(dto);
+                    processFlow.run(context);
+                    return context.getVo();
+                }));
+
     }
 
     @GetMapping("/current/user-info")

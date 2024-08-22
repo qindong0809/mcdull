@@ -21,7 +21,7 @@
         <dependency>
             <groupId>io.github.minliuhua</groupId>
             <artifactId>warm-flow-mybatis-plus-sb-starter</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.4</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -124,6 +124,12 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-extra</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.gitee.dqcer</groupId>
+            <artifactId>mcdull-framework-starter-flow</artifactId>
+            <version>0.1.2-RELEASE</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>

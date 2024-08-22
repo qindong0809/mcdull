@@ -1,10 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentTreeVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentInfoVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentTreeInfoVO;
 
 import java.util.List;
 import java.util.Map;
@@ -18,10 +17,7 @@ import java.util.Map;
 
 public interface IDepartmentService {
 
-
-//    List<DepartmentVO> list(DeptListDTO dto);
-
-    List<DepartmentVO> getAll();
+    List<DepartmentInfoVO> getAll();
 
     boolean insert(DeptInsertDTO dto);
 
@@ -29,7 +25,7 @@ public interface IDepartmentService {
 
     boolean delete(Integer id);
 
-    List<DepartmentTreeVO> departmentTree();
+    List<DepartmentTreeInfoVO> departmentTree();
 
     Map<Integer, String> getNameMap(List<Integer> idList);
 

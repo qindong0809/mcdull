@@ -1,3 +1,6 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    io.gitee.dqcer.mcdull.framework.flow.config.ProcessFlowAutoConfiguration
+    io.gitee.dqcer.mcdull.framework.flow.config.ProcessFlowAutoConfiguration,\
+    io.gitee.dqcer.mcdull.framework.flow.ProcessFlow,\
+    io.gitee.dqcer.mcdull.framework.flow.factory.DefaultProcessFactory,\
+    io.gitee.dqcer.mcdull.framework.flow.registry.NodeRegistry
 

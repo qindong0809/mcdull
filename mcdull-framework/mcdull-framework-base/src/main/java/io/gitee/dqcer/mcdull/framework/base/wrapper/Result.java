@@ -109,7 +109,7 @@ public class Result<T> implements Serializable {
     public static <T> Result<T> error(String message) {
         return Result.<T>builder()
                 .withCode(CodeEnum.INTERNAL_SERVER_ERROR.getCode())
-                .withMessage(MessageFormat.format(CodeEnum.INTERNAL_SERVER_ERROR.getMessage(), message))
+                .withMessage(message)
                 .build();
     }
 

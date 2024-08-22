@@ -15,7 +15,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class DepartmentVO implements VO {
+public class DepartmentInfoVO implements VO {
 
     @Schema(description = "部门id")
     private Integer departmentId;

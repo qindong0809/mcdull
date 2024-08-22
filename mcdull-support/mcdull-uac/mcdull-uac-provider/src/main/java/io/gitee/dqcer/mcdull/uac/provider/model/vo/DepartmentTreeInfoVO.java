@@ -12,7 +12,7 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class DepartmentTreeVO extends DepartmentVO {
+public class DepartmentTreeInfoVO extends DepartmentInfoVO {
 
     @Schema(description = "同级上一个元素id")
     private Integer preId;
@@ -21,7 +21,7 @@ public class DepartmentTreeVO extends DepartmentVO {
     private Integer nextId;
 
     @Schema(description = "子部门")
-    private List<DepartmentTreeVO> children;
+    private List<DepartmentTreeInfoVO> children;
 
     @Schema(description = "自己和所有递归子部门的id集合")
     private List<Integer> selfAndAllChildrenIdList;

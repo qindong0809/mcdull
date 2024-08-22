@@ -4,8 +4,8 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentTreeVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentInfoVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentTreeInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDepartmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +30,7 @@ public class DeptController {
 
     @Operation(summary = "查询部门全部列表")
     @GetMapping("list-all")
-    public Result<List<DepartmentVO>> getAll() {
+    public Result<List<DepartmentInfoVO>> getAll() {
         return Result.success(deptService.getAll());
     }
 
@@ -58,7 +58,7 @@ public class DeptController {
 
     @Operation(summary = "查询部门树形列表")
     @GetMapping("treeList")
-    public Result<List<DepartmentTreeVO>> departmentTree() {
+    public Result<List<DepartmentTreeInfoVO>> departmentTree() {
         return Result.success(deptService.departmentTree());
     }
 

@@ -13,12 +13,4 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class WebWebMvcConfigurer extends AbstractWebMvcConfigurer {
 
-
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        super.addInterceptors(registry);
-//        registry.addInterceptor(new BaseInterceptor())
-//                .addPathPatterns(GlobalConstant.ALL_PATTERNS)
-//                .excludePathPatterns(EXCLUDE_PATTERNS);
-//    }
 }

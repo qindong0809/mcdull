@@ -1,0 +1,9 @@
+[{
+  "id": "process_flow_login",
+  "remark": "test process flow",
+  "nodeList": [
+    "Validate Captcha",
+    "Validate Login Name Password",
+    "Authority"
+  ]
+}]
