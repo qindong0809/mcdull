@@ -1,5 +1,6 @@
 package ${basic.javaPackageName}.domain.entity;
 
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 #foreach ($importClass in $importPackageList)
 $importClass
 #end

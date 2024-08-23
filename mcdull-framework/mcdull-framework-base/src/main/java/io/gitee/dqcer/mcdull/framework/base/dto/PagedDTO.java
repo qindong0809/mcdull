@@ -6,7 +6,6 @@ import io.gitee.dqcer.mcdull.framework.base.support.Paged;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -22,17 +21,15 @@ public class PagedDTO extends KeywordDTO implements Paged {
     /**
      * 每页记录数
      */
-    @NotNull
     @Max(value = 100000)
     @Min(value = 1)
-    protected Integer pageSize;
+    protected Integer pageSize = 10;
 
     /**
      * 当前页数
      */
-    @NotNull
     @Min(value = 1)
-    protected Integer pageNum;
+    protected Integer pageNum = 1;
 
     /**
      * 排序字段信息

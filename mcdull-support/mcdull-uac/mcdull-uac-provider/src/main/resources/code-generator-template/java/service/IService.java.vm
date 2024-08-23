@@ -21,7 +21,7 @@ public interface I${name.upperCamel}Service {
     ${name.upperCamel}VO detail(Integer id);
     #if($deleteInfo.isSupportDelete)
         #if($deleteInfo.deleteEnum == "BATCH" || $deleteInfo.deleteEnum == "SingleAndBatch")
-    void batchDelete(List<${primaryKeyJavaType}> idList)
+    void batchDelete(List<${primaryKeyJavaType}> idList);
         #end
 
         #if($deleteInfo.deleteEnum == "Single" || $deleteInfo.deleteEnum == "SingleAndBatch")

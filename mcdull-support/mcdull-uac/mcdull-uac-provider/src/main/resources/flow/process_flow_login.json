@@ -1,6 +1,6 @@
 [{
   "id": "process_flow_login",
-  "remark": "test process flow",
+  "remark": "login",
   "nodeList": [
     "Validate Captcha",
     "Validate Login Name Password",

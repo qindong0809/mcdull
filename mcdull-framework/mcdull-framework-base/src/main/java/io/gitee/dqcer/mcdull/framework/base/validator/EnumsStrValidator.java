@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.base.validator;
 
+import cn.hutool.core.util.ReflectUtil;
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ public class EnumsStrValidator implements ConstraintValidator<EnumsStrValid, Str
 
     private Class<?> enumClass;
 
-    private static final String METHOD_NAME = "toEnum";
+    private static final String METHOD_NAME = "getByCode";
 
     private boolean required;
 
@@ -29,24 +30,18 @@ public class EnumsStrValidator implements ConstraintValidator<EnumsStrValid, Str
     public void initialize(EnumsStrValid annotation) {
         enumClass = annotation.value();
         required = annotation.required();
-        try {
-            enumClass.getDeclaredMethod(METHOD_NAME, String.class);
-        } catch (NoSuchMethodException e){
-            throw new IllegalArgumentException("the enum class has not toEnum() method", e);
-        }
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         Method declareMethod;
         if (required) {
+            declareMethod = ReflectUtil.getMethodByName(enumClass, METHOD_NAME);
             try {
-                declareMethod = enumClass.getDeclaredMethod(METHOD_NAME, String.class);
-            }catch (NoSuchMethodException e){
-                return false;
-            }
-            try {
-                declareMethod.invoke(null, value);
+                Object invoke = declareMethod.invoke(null, enumClass, value);
+                if (invoke == null) {
+                    return false;
+                }
             } catch (Exception e) {
                 LogHelp.error(log, "Invoke error.", e);
                 return false;
@@ -54,5 +49,4 @@ public class EnumsStrValidator implements ConstraintValidator<EnumsStrValid, Str
         }
         return true;
     }
-
 }

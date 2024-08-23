@@ -24,6 +24,10 @@ public class TimeZoneUtil {
         return serializeDate(date, dateFormat, LocaleContextHolder.getLocale(), null, true);
     }
 
+    public static String serializeDate(Date date, String dateFormat, boolean splicingTimezone) {
+        return serializeDate(date, dateFormat, LocaleContextHolder.getLocale(), null, splicingTimezone);
+    }
+
     public static String serializeDate(Date date, String dateFormat, Locale locale, String zoneIdStr) {
         return serializeDate(date, dateFormat, locale, zoneIdStr, true);
     }
