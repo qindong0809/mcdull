@@ -46,7 +46,7 @@ public class UserController extends BasicController {
     }
 
     @Operation(summary = "Update Current User Password")
-    @PostMapping("/update/password")
+    @PostMapping("/user/update/password")
     public Result<Boolean> updatePassword(@Valid @RequestBody UserUpdatePasswordDTO dto) {
         userService.updatePassword(UserContextHolder.userId(), dto);
         return Result.success(true);
@@ -102,12 +102,12 @@ public class UserController extends BasicController {
         return Result.success(userService.update(dto.getEmployeeId(), dto));
     }
 
-    @Operation(summary = "修改密码", description = "")
-    @PostMapping("user/{id}/update-password")
-    public Result<Integer> updatePassword(@PathVariable("id") Integer id,
-                                       @RequestBody UserUpdatePasswordDTO dto){
-        return Result.success(userService.updatePassword(id, dto));
-    }
+//    @Operation(summary = "修改密码", description = "")
+//    @PostMapping("user/{id}/update-password")
+//    public Result<Integer> updatePassword(@PathVariable("id") Integer id,
+//                                       @RequestBody UserUpdatePasswordDTO dto){
+//        return Result.success(userService.updatePassword(id, dto));
+//    }
 
     @Operation(summary = "Reset Password")
     @PostMapping("/user/update/password/reset/{userId}")
