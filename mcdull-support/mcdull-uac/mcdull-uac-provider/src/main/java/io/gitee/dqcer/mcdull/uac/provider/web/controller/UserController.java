@@ -7,6 +7,7 @@ import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
@@ -28,7 +29,7 @@ import java.util.List;
  */
 @Tag(name = "部门员工")
 @RestController
-public class UserController {
+public class UserController extends BasicController {
 
     @Resource
     private IUserService userService;
@@ -52,11 +53,10 @@ public class UserController {
     }
 
     @Operation(summary = "添加员工(返回添加员工的密码)")
-    @RedisLock(key = "'lock:uac:user:' + #dto.loginName + '-' + #dto.actualName", timeout = 3)
     @PostMapping("/user/add")
     @SaCheckPermission("system:employee:add")
-    public Result<Integer> insert(@Valid @RequestBody UserAddDTO dto) {
-        return Result.success(userService.insert(dto));
+    public Result<Integer> insert(@Valid @RequestBody UserAddDTO dto) throws Exception {
+        return Result.success(super.locker(dto.getLoginName(), 0, () -> userService.insert(dto)));
     }
 
     @Operation(summary = "查询某个角色下的员工列表")

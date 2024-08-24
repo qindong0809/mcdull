@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.convert;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
@@ -46,6 +45,7 @@ public class UserConvert {
         entity.setLoginName(dto.getLoginName());
         entity.setGender(dto.getGender());
         entity.setPhone(dto.getPhone());
+        entity.setEmail(dto.getEmail());
         entity.setDepartmentId(dto.getDepartmentId());
         return entity;
 

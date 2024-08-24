@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -24,6 +26,11 @@ public class UserAddDTO implements DTO {
     @NotNull(message = "姓名不能为空")
     @Length(max = 30, message = "姓名最多30字符")
     private String actualName;
+
+    @Email
+    @Schema(description = "邮箱")
+    @NotBlank(message = "邮箱不能为空")
+    private String email;
 
     @Schema(description = "登录账号")
     @NotNull(message = "登录账号不能为空")
