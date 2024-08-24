@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.flow.login;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -88,9 +89,10 @@ public class ValidateCaptcha implements ProcessHandler<LoginContext> {
         if (LoginLogResultTypeEnum.LOGIN_FAIL == typeEnum) {
             PasswordPolicyVO policyVO = passwordPolicyService.detail();
 
-            Integer failCount = cacheChannel.get(failKey, Integer.class);
-            if (ObjUtil.isNull(failCount)) {
-                failCount = 0;
+            Object obj = cacheChannel.get(failKey, Object.class);
+            Integer failCount = 0;
+            if (ObjUtil.isNull(obj)) {
+                failCount = Convert.toInt(obj, 0);
             }
             if (failCount > policyVO.getFailedLoginMaximumNumber()) {
                 loginLockedService.lock(loginName, policyVO.getFailedLoginMaximumTime());

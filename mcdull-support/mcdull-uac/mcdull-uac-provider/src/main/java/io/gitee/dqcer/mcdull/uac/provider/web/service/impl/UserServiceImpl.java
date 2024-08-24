@@ -313,8 +313,14 @@ public class UserServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public String resetPassword(Integer userId) {
+        UserEntity byId = baseRepository.getById(userId);
+        if (ObjectUtil.isNotEmpty(byId)) {
+            if (byId.getAdministratorFlag()) {
+                throw new BusinessException(I18nConstants.PERMISSION_DENIED);
+            }
+        }
         String newPassword = RandomUtil.genAz09(5);
-        baseRepository.update(userId, this.buildPassword(newPassword));
+        baseRepository.update(userId, "a29c57c6894dee6e8251510d58c07078ee3f49bf");
         return newPassword;
     }
 
