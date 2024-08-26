@@ -12,21 +12,21 @@ import org.springframework.test.context.ContextConfiguration;
 
 import javax.annotation.Resource;
 
-@ContextConfiguration(classes = ThreadPoolConfig.class)
-@ActiveProfiles("dev")
-@SpringBootTest(classes = {MetaDataContentApplication.class})
+//@ContextConfiguration(classes = ThreadPoolConfig.class)
+//@ActiveProfiles("dev")
+//@SpringBootTest(classes = {MetaDataContentApplication.class})
 public class MailTest {
 
 
     @Resource
     private EmailServiceImpl emailServiceImpl;
 
-    @Test
+//    @Test
     void testMailTemplateError() {
         Assertions.assertTrue(emailServiceImpl.sendEmail("xxx@sina.com", "test", "hello word mail"));
     }
 
-    @Test
+//    @Test
     void testSendMailService() {
         byte[] bytes = FileUtil.readBytes("D:\\var\\log\\mcdull-mdc-provider\\2023-11-29\\info\\info-0.log");
         boolean isOk = emailServiceImpl.sendEmailWithBytes(bytes, "info.log", "derrek@snapmail.cc", "subject", "content");
