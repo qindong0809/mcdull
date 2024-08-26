@@ -140,4 +140,6 @@ public class ProductionScheduleVO implements VO {
 
     private Boolean warning;
 
+    private Integer okNumber;
+
 }

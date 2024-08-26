@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.xcr.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
@@ -15,9 +16,9 @@ import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileExtensionTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.util.ExcelUtil;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IProductionScheduleRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ICommonService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IProductionScheduleRepository;
 import io.gitee.dqcer.mcdull.uac.provider.xcr.domain.entity.ProductionScheduleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.xcr.domain.form.ProductionScheduleAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.xcr.domain.form.ProductionScheduleQueryDTO;
@@ -181,9 +182,19 @@ public class ProductionScheduleServiceImpl
                 int compare = DateUtil.compare(new Date(), offset);
                 if (compare > 0) {
                     warning = true;
+                    Date installationDate = vo.getInstallationDate();
+                    if (ObjUtil.isNotNull(installationDate)) {
+                        if (DateUtil.compare(new Date(), installationDate) > 0) {
+                            warning = false;
+                        }
+                    }
                 }
             }
             vo.setWarning(warning);
+            if (ObjUtil.isNotNull(customerConfirmationDate)) {
+                long betweenDay = DateUtil.betweenDay(customerConfirmationDate, new Date(), true);
+                vo.setOkNumber(Convert.toInt(betweenDay));
+            }
         }
     }
 
