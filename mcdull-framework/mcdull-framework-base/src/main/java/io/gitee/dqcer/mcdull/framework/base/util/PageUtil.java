@@ -50,6 +50,10 @@ public class PageUtil {
         return new PagedVO<>(list, list.size(), pageSize, pageNum);
     }
 
+    public static <T> PagedVO<T> of(List<T> list, Long pageSize, Long pageNum) {
+        return new PagedVO<>(list, list.size(), Convert.toInt(pageSize), Convert.toInt(pageNum));
+    }
+
     public static <T, D extends PagedDTO> PagedVO<T> ofSub(List<T> list, D pageDTO) {
         int start = (pageDTO.getPageNum() - 1) * pageDTO.getPageSize();
         int total = list.size();
