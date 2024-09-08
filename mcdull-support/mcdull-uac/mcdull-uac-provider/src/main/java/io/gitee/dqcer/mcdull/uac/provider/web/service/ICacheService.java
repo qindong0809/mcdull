@@ -14,7 +14,7 @@ public interface ICacheService {
 
     PagedVO<KeyValueVO<String, String>> cacheNames(CacheQueryDTO dto);
 
-    void removeCache(Boolean caffeineCache, String name);
+    boolean removeCache(Boolean caffeineCache, String name);
 
     Object cacheKey(Boolean caffeineCacheFlag, String cacheName);
 }

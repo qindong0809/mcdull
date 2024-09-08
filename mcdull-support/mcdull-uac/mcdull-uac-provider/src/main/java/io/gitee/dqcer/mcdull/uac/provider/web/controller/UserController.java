@@ -55,8 +55,9 @@ public class UserController extends BasicController {
     @Operation(summary = "添加员工(返回添加员工的密码)")
     @PostMapping("/user/add")
     @SaCheckPermission("system:employee:add")
-    public Result<Integer> insert(@Valid @RequestBody UserAddDTO dto) throws Exception {
-        return Result.success(super.locker(dto.getLoginName(), 0, () -> userService.insert(dto)));
+    public Result<Integer> insert(@Valid @RequestBody UserAddDTO dto) {
+        return Result.success(super.locker(dto.getLoginName(),
+                () -> userService.insert(dto)));
     }
 
     @Operation(summary = "查询某个角色下的员工列表")

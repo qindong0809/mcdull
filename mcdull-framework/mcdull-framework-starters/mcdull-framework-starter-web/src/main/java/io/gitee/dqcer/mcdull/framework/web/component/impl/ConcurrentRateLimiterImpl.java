@@ -33,15 +33,14 @@ public class ConcurrentRateLimiterImpl implements ConcurrentRateLimiter {
     }
 
     @Override
-    public <T> T locker(String key, long timeout, Supplier<T> function) throws Exception {
+    public <T> T locker(String key, long timeout, Supplier<T> function) {
         LogHelp.info(log, "Locker. key:{}, timeout:{}", key, timeout);
         RLock lock = redisClient.getLock(key);
         boolean locked = false;
         try {
             locked = lock.tryLock(timeout, TimeUnit.SECONDS);
-        } catch (InterruptedException  e) {
-            LogHelp.error(log, "Locker error. key: {}, timeout:{} ", key, timeout);
-            throw e;
+        } catch (Exception  e) {
+            LogHelp.error(log, "Locker InterruptedException error. key: {}, timeout:{} ", key, timeout, e);
         }
         if (!locked) {
             throw new BusinessException(I18nConstants.SYSTEM_BUSY);

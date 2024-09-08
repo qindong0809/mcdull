@@ -1,10 +1,13 @@
 package io.gitee.dqcer.mcdull.framework.web.basic;
 
+import cn.hutool.core.util.StrUtil;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.web.component.ConcurrentRateLimiter;
 import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
+import io.gitee.dqcer.mcdull.framework.web.config.SystemEnvironment;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +29,9 @@ public abstract class BasicController {
 
     @Resource
     private ConcurrentRateLimiter concurrentRateLimiter;
+
+    @Resource
+    private SystemEnvironment systemEnvironment;
 
     @Resource
     private DynamicLocaleMessageSource dynamicLocaleMessageSource;
@@ -72,9 +78,16 @@ public abstract class BasicController {
      * @param function function
      * @param <T>     T
      * @return T
-     * @throws Exception Exception
      */
-    protected <T> T locker(String key, long timeout, Supplier<T> function) throws Exception {
+    protected <T> T locker(String key, long timeout, Supplier<T> function) {
+        String projectName = systemEnvironment.getProjectName();
+        String environment = systemEnvironment.getEnvironment();
+        final String logKey = StrUtil.format("{}_{}_{}:{}",
+                GlobalConstant.ROOT_PREFIX, projectName, environment, key);
         return concurrentRateLimiter.locker(key, timeout, function);
+    }
+
+    protected <T> T locker(String key, Supplier<T> function) {
+        return concurrentRateLimiter.locker(key, 0L, function);
     }
 }

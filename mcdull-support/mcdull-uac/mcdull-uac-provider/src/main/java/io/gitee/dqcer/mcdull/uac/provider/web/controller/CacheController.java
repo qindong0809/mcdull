@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
@@ -44,8 +45,9 @@ public class CacheController extends BasicController {
     @PostMapping("/cache/remove")
     @SaCheckPermission("support:cache:delete")
     public Result<Boolean> removeCache(@RequestBody @Valid CacheDeleteDTO dto) {
-        cacheService.removeCache(dto.getCaffeineCacheFlag(), dto.getKey());
-        return Result.success(true);
+        final String key = StrUtil.format("{}:{}:{}", "cache", "remove", dto.getKey());
+        return Result.success(super.locker(key,
+                () -> cacheService.removeCache(dto.getCaffeineCacheFlag(), dto.getKey())));
     }
 
     @Operation(summary = "对应value")

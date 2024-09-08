@@ -96,15 +96,16 @@ public class CacheServiceImpl extends GenericLogic implements ICacheService {
     }
 
     @Override
-    public void removeCache(Boolean caffeineCacheFlag, String cacheName) {
+    public boolean removeCache(Boolean caffeineCacheFlag, String cacheName) {
         LogHelp.warn(log, "removeCache", "cacheName:{}", cacheName);
         if (BooleanUtil.isTrue(caffeineCacheFlag)) {
             CaffeineCache cache = (CaffeineCache) cacheManager.getCache(cacheName);
             if (cache != null) {
                 cache.clear();
             }
-            return;
+        } else {
+            redisClient.delete(cacheName);
         }
-        redisClient.delete(cacheName);
+        return true;
     }
 }

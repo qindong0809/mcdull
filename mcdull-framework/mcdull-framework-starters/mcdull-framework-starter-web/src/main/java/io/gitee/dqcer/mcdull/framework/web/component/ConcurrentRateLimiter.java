@@ -28,5 +28,5 @@ public interface ConcurrentRateLimiter {
      * @param timeout  超时时间
      * @return boolean true:通过 false:限流
      */
-    <T> T locker(String key, long timeout, Supplier<T> function) throws Exception;
+    <T> T locker(String key, long timeout, Supplier<T> function);
 }
