@@ -53,6 +53,7 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
                             StpUtil.checkLogin();
                         } catch (Exception e) {
                             LogHelp.error(log, "url: {} checkLogin error.", SaHolder.getRequest().getRequestPath());
+                            throw e;
                         }
                         });
 
