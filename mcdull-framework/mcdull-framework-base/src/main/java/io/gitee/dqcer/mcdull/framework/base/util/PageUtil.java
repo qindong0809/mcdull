@@ -58,7 +58,7 @@ public class PageUtil {
         int start = (pageDTO.getPageNum() - 1) * pageDTO.getPageSize();
         int total = list.size();
         int end = start + pageDTO.getPageSize();
-        if (total < end && total >= start) {
+        if (total <= end && total >= start) {
             end = total;
             return new PagedVO<>(list.subList(start, end), Convert.toInt(total), pageDTO.getPageSize(), pageDTO.getPageNum());
         }

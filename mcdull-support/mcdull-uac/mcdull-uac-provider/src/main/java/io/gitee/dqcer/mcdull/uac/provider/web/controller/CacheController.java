@@ -1,8 +1,10 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSON;
+import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -58,6 +60,19 @@ public class CacheController extends BasicController {
         if (o instanceof Collection) {
             return Result.success(JSONUtil.parseArray(o));
         }
-        return Result.success(JSONUtil.parse(o));
+
+        JSON json = null;
+        if (o instanceof String) {
+            String str = (String) o;
+            if (JSONUtil.isTypeJSONArray(str)) {
+                json = JSONUtil.parseArray(str);
+            } else if (JSONUtil.isTypeJSONObject(str)) {
+                json = JSONUtil.parseObj(str, new JSONConfig());
+            } else {
+                json = JSONUtil.parseArray(ListUtil.of(o));
+            }
+            return Result.success(json);
+        }
+        return Result.success(JSONUtil.parseObj(o));
     }
 }
