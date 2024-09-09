@@ -11,9 +11,12 @@ import lombok.Data;
 
 import java.util.Date;
 
+
 /**
  * 登录日志
  *
+ * @author dqcer
+ * @since 2024/09/09
  */
 @Data
 public class LoginLogVO {
@@ -25,9 +28,6 @@ public class LoginLogVO {
 
     @SchemaEnum(value = UserTypeEnum.class, desc = "用户类型")
     private Integer userType;
-
-    @Schema(description = "用户名")
-    private String userName;
 
     @Schema(description = "登录名")
     private String loginName;

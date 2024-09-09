@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -44,7 +45,7 @@ public class ChangeLogRepositoryImpl
     public Page<ChangeLogEntity> selectPage(ChangeLogQueryDTO param) {
         LambdaQueryWrapper<ChangeLogEntity> lambda = Wrappers.lambdaQuery();
         String keyword = param.getKeyword();
-        if (ObjUtil.isNotNull(keyword)) {
+        if (StrUtil.isNotBlank(keyword)) {
             lambda.and(i->i.like(ChangeLogEntity::getVersion, keyword)
                     .or().like(ChangeLogEntity::getContent, keyword));
         }
