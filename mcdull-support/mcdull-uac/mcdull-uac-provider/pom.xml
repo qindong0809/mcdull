@@ -116,6 +116,12 @@
         <dependency>
             <groupId>pro.fessional</groupId>
             <artifactId>kaptcha</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -128,8 +134,6 @@
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>mcdull-framework-starter-flow</artifactId>
-            <version>0.1.2-RELEASE</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>

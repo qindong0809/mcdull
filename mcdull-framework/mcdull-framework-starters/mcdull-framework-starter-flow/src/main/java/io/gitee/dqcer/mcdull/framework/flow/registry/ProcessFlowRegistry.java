@@ -43,8 +43,8 @@ public class ProcessFlowRegistry {
             log.error("Load process error");
             return;
         }
-        List<ProcessHandler> processProcessHandlers = new ArrayList<>();
         for (ProcessBean processBean : processBeans) {
+            List<ProcessHandler> processProcessHandlers = new ArrayList<>();
             List<String> nodeList = processBean.getNodeList();
             if (ObjUtil.isNull(nodeList)) {
                 continue;
