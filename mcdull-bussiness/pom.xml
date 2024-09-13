@@ -6,12 +6,12 @@
     <parent>
         <artifactId>mcdull</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.1.2-RELEASE</version>
+        <version>0.1.3-RELEASE</version>
     </parent>
 
     <artifactId>mcdull-bussiness</artifactId>
-    <version>0.1.2-RELEASE</version>
-    <name>mcdull-business</name>
+    <name>${project.artifactId} v${project.version}</name>
+
     <packaging>pom</packaging>
 
     <properties>
@@ -28,9 +28,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.gitee.dqcer</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>mcdull-framework-dependencies</artifactId>
-                <version>0.1.2-RELEASE</version>
+                <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

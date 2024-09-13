@@ -2,14 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>mcdull-uac</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.1.2-RELEASE</version>
+        <version>0.1.3-RELEASE</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
-
     <artifactId>mcdull-uac-provider</artifactId>
+    <name>${project.artifactId} v${project.version}</name>
 
     <properties>
         <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
@@ -44,8 +44,9 @@
         </dependency>
         <!-- 获取系统信息 -->
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-monitor</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.lionsoul</groupId>
@@ -67,46 +68,60 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
-            <artifactId>mcdull-framework-base</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.gitee.dqcer</groupId>
-            <artifactId>mcdull-framework-starter-web</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>20.0</version>
         </dependency>
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-redis</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-mysql</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-enforcer</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-security</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-config</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-swagger</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-oss</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-flow</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -130,10 +145,6 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-extra</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.gitee.dqcer</groupId>
-            <artifactId>mcdull-framework-starter-flow</artifactId>
         </dependency>
     </dependencies>
     <build>

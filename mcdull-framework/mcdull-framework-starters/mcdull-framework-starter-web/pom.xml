@@ -4,19 +4,42 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>mcdull-framework-starters</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.1.2-RELEASE</version>
+        <artifactId>mcdull-framework-starters</artifactId>
+        <version>0.1.3-RELEASE</version>
     </parent>
-
     <artifactId>mcdull-framework-starter-web</artifactId>
-    <version>0.1.2-RELEASE</version>
-
+    <name>${project.artifactId} v${project.version}</name>
 
     <dependencies>
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-security</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-base</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-redis</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-feign</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-config</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <!--集成web容器-->
@@ -37,26 +60,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.gitee.dqcer</groupId>
-            <artifactId>mcdull-framework-base</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.gitee.dqcer</groupId>
-            <artifactId>mcdull-framework-starter-redis</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.gitee.dqcer</groupId>
-            <artifactId>mcdull-framework-starter-feign</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.gitee.dqcer</groupId>
-            <artifactId>mcdull-framework-config</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

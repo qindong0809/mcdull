@@ -2,14 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>mcdull-framework-starters</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.1.2-RELEASE</version>
+        <version>0.1.3-RELEASE</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mcdull-framework-starter-mongodb</artifactId>
+    <name>${project.artifactId} v${project.version}</name>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -23,8 +24,10 @@
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-base</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>

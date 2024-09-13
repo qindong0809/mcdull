@@ -3,11 +3,12 @@
 1、引入一下模块
 ```xml
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-feign</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+        <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-nacos</artifactId>
             <exclusions>
                 <exclusion>
@@ -15,16 +16,17 @@
                     <groupId>commons-io</groupId>
                 </exclusion>
             </exclusions>
+        <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+        <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-uac-client</artifactId>
-            <version>0.1.2-RELEASE</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+        <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-mdc-client</artifactId>
-            <version>0.1.2-RELEASE</version>
+            <version>${project.version}</version>
         </dependency>
 ```
 2、去掉跨域配置

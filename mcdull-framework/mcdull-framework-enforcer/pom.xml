@@ -5,11 +5,12 @@
     <parent>
         <artifactId>mcdull-framework</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.1.2-RELEASE</version>
+        <version>0.1.3-RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mcdull-framework-enforcer</artifactId>
+    <name>${project.artifactId} v${project.version}</name>
 
     <description>自动测试架构和编码规则相关规约</description>
 
@@ -19,8 +20,9 @@
             <artifactId>archunit-junit5</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-base</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

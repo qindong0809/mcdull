@@ -6,12 +6,11 @@
     <parent>
         <artifactId>mcdull-framework</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.1.2-RELEASE</version>
+        <version>0.1.3-RELEASE</version>
     </parent>
 
     <artifactId>mcdull-framework-base</artifactId>
-    <version>0.1.2-RELEASE</version>
-    <name>mcdull-framework-base</name>
+    <name>${project.artifactId} v${project.version}</name>
 
     <dependencies>
         <dependency>
