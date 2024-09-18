@@ -1,7 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.front;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.google.common.base.CaseFormat;
+import cn.hutool.core.text.NamingCase;
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeGeneratorConfigForm;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeQueryField;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.CodeQueryFieldQueryTypeEnum;
@@ -26,7 +27,8 @@ public class ListVariableService extends CodeGenerateBaseVariableService {
         List<Map<String, Object>> variableList = new ArrayList<>();
         List<CodeQueryField> queryFields = form.getQueryFields();
         HashSet<String> frontImportSet = new HashSet<>();
-        frontImportSet.add("import " + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, form.getBasic().getModuleName()) + "Form from './" + CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, form.getBasic().getModuleName()) + "-form.vue';");
+//        frontImportSet.add("import " + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, form.getBasic().getModuleName()) + "Form from './" + CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, form.getBasic().getModuleName()) + "-form.vue';");
+        frontImportSet.add("import " + StrUtil.lowerFirst(form.getBasic().getModuleName()) + "Form from './" + NamingCase.toKebabCase(form.getBasic().getModuleName()) + "-form.vue';");
 
         for (CodeQueryField queryField : queryFields) {
             Map<String, Object> objectMap = BeanUtil.beanToMap(queryField);

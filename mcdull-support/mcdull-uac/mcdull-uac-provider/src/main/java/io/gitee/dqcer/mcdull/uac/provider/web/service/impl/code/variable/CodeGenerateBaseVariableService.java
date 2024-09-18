@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.text.NamingCase;
 import cn.hutool.core.util.StrUtil;
-import com.google.common.base.CaseFormat;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeField;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeGeneratorConfigForm;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeInsertAndUpdate;
@@ -35,7 +35,8 @@ public abstract class CodeGenerateBaseVariableService {
      * @return
      */
     public List<String> getJavaBeanImportClass(CodeGeneratorConfigForm form) {
-        String upperCamelName = CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_CAMEL, form.getBasic().getModuleName());
+//        String upperCamelName = CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_CAMEL, form.getBasic().getModuleName());
+        String upperCamelName = StrUtil.upperFirst(form.getBasic().getModuleName());
         ArrayList<String> list = new ArrayList<>();
 
         list.add("import " + form.getBasic().getJavaPackageName() + ".domain.entity." + upperCamelName + "Entity;" );

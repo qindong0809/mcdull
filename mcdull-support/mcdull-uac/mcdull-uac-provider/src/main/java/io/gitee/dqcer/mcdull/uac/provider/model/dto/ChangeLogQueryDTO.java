@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
+import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
-import io.gitee.dqcer.mcdull.framework.swagger.SchemaEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.ChangeLogTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

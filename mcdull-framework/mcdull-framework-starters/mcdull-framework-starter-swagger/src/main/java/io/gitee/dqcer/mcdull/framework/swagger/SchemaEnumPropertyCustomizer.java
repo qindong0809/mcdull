@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.framework.swagger;
 
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
+import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.swagger.v3.core.converter.AnnotatedType;

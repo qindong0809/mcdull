@@ -5,10 +5,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.text.NamingCase;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.json.JSONUtil;
-import com.google.common.base.CaseFormat;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.CodeGeneratorConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.util.CodeGeneratorTool;
@@ -105,7 +105,8 @@ public class CodeGeneratorTemplateService {
             for (CodeField codeField : enumFiledList) {
                 Map<String, Object> variablesMap = new HashMap<>();
 
-                String enumName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, codeField.getEnumName());
+//                String enumName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, codeField.getEnumName());
+                String enumName = StrUtil.upperFirst(codeField.getEnumName());
                 if (!enumName.endsWith("Enum")) {
                     enumName = enumName + "Enum";
                 }
@@ -179,9 +180,12 @@ public class CodeGeneratorTemplateService {
         //名词的大写开头和小写开头
 
         HashMap<String, String> names = new HashMap<>();
-        names.put("lowerCamel", CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, basic.getModuleName()));
-        names.put("upperCamel", CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_CAMEL, basic.getModuleName()));
-        names.put("lowerHyphenCamel", CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, basic.getModuleName()));
+//        names.put("lowerCamel", CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, basic.getModuleName()));
+        names.put("lowerCamel", StrUtil.lowerFirst(basic.getModuleName()));
+//        names.put("upperCamel", CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_CAMEL, basic.getModuleName()));
+        names.put("upperCamel", StrUtil.upperFirst(basic.getModuleName()));
+//        names.put("lowerHyphenCamel", CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, basic.getModuleName()));
+        names.put("lowerHyphenCamel",  NamingCase.toKebabCase(basic.getModuleName()));
         variablesMap.put("name", names);
 
         //主键字段名称和java类型

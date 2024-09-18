@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
-import io.gitee.dqcer.mcdull.framework.swagger.SchemaEnum;
 import io.gitee.dqcer.mcdull.uac.provider.config.FileKeyVoSerializer;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.EnterpriseTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;

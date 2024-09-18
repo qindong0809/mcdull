@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.backend;
 
 import cn.hutool.core.collection.CollUtil;
-import com.google.common.base.CaseFormat;
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeGeneratorConfigForm;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeInsertAndUpdateField;
@@ -62,7 +62,8 @@ public class ControllerVariableService extends CodeGenerateBaseVariableService {
             }
         }
 
-        packageSet.add("import " + form.getBasic().getJavaPackageName() + ".service." + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, form.getBasic().getModuleName()) + "Service;");
+//        packageSet.add("import " + form.getBasic().getJavaPackageName() + ".service." + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, form.getBasic().getModuleName()) + "Service;");
+        packageSet.add("import " + form.getBasic().getJavaPackageName() + ".service." + StrUtil.upperFirst( form.getBasic().getModuleName()) + "Service;");
 
         // 排序一下
         ArrayList<String> packageList = new ArrayList<>(packageSet);

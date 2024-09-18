@@ -14,7 +14,6 @@ import com.alibaba.excel.util.ListUtils;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.metadata.style.WriteFont;
-import com.google.common.collect.Lists;
 import io.gitee.dqcer.mcdull.uac.provider.config.CustomSheetWriteHandler;
 import org.apache.poi.ss.usermodel.BorderStyle;
 
@@ -93,7 +92,7 @@ public class ExcelUtil {
 
     private static List<List<String>> dynamicHeader(List<String> titleList) {
         return titleList.stream()
-                .map(item -> Lists.newArrayList(item.split(",")))
+                .map(item -> ListUtil.toList(item.split(",")))
                 .collect(Collectors.toList());
     }
 

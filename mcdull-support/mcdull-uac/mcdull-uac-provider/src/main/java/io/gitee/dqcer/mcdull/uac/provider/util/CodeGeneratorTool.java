@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.util;
 
+import cn.hutool.core.text.NamingCase;
 import cn.hutool.core.util.StrUtil;
-import com.google.common.base.CaseFormat;
 
 /**
  * 代码生成 velocity 工具类
@@ -17,7 +17,8 @@ public class CodeGeneratorTool {
         if (str == null) {
             return StrUtil.EMPTY;
         }
-        return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, str);
+//        return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, str);
+        return StrUtil.lowerFirst(str);
     }
 
     /**
@@ -27,7 +28,11 @@ public class CodeGeneratorTool {
         if (str == null) {
             return StrUtil.EMPTY;
         }
-        return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, str);
+//        return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, str);
+        // 使用正则表达式将大写字母前插入连字符，并转换为小写
+        String hyphenStr = str.replaceAll("([A-Z])", "-$1").toLowerCase();
+        // 去掉可能出现在字符串开头的连字符
+        return hyphenStr.startsWith("-") ? hyphenStr.substring(1) : hyphenStr;
     }
 
 

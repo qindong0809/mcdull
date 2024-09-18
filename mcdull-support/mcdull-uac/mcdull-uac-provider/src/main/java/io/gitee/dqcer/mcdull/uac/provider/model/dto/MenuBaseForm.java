@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 
-import io.gitee.dqcer.mcdull.framework.swagger.SchemaEnum;
+import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.MenuPermsTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.MenuTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;

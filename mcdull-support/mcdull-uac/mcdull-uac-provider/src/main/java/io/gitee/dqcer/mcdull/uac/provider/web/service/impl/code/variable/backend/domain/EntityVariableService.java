@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.backend.domain;
 
 import cn.hutool.core.collection.CollUtil;
-import com.google.common.collect.Lists;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeField;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeGeneratorConfigForm;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.CodeGenerateBaseVariableService;
@@ -34,7 +33,7 @@ public class EntityVariableService extends CodeGenerateBaseVariableService {
 
     public List<String> getImportPackageList(List<CodeField> fields) {
         if (CollUtil.isEmpty(fields)) {
-            return Lists.newArrayList();
+            return new ArrayList<>();
         }
 
         /**

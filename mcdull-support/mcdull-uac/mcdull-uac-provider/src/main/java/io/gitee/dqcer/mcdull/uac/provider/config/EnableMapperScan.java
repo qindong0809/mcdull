@@ -1,8 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.config;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.mysql.EnableDynamicDataSource;
-import org.mybatis.spring.annotation.MapperScan;
 
 import java.lang.annotation.*;
 
@@ -15,8 +13,8 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@MapperScan
-@EnableDynamicDataSource
+//@MapperScan
+//@EnableDynamicDataSource
 public @interface EnableMapperScan {
 
     @SuppressWarnings("unused")

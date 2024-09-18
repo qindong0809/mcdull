@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.front;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.text.NamingCase;
 import cn.hutool.core.util.StrUtil;
-import com.google.common.base.CaseFormat;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeField;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeGeneratorConfigForm;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.variable.CodeGenerateBaseVariableService;
@@ -30,7 +30,8 @@ public class ConstVariableService extends CodeGenerateBaseVariableService {
         List<CodeField> enumFiledList = form.getFields().stream().filter(e -> StrUtil.isNotBlank(e.getEnumName())).collect(Collectors.toList());
         for (CodeField codeField : enumFiledList) {
             Map<String, Object> beanToMap = BeanUtil.beanToMap(codeField);
-            String upperUnderscoreEnum = CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, codeField.getEnumName());
+//            String upperUnderscoreEnum = CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, codeField.getEnumName());
+            String upperUnderscoreEnum = NamingCase.toUnderlineCase(codeField.getEnumName());
             beanToMap.put("upperUnderscoreEnum", upperUnderscoreEnum);
             enumList.add(beanToMap);
         }
