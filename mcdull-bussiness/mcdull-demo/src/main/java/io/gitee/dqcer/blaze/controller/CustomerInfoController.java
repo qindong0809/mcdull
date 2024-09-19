@@ -20,7 +20,7 @@ import javax.validation.Valid;
  * @since 2024-06-24 22:28:36
  */
 @RestController
-@Tag(name = "企业信息")
+@Tag(name = "企业端信息")
 public class CustomerInfoController {
 
     @Resource

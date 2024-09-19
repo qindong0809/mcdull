@@ -8,10 +8,12 @@ import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.parser.JsqlParserSupport;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import com.baomidou.mybatisplus.extension.toolkit.SqlParserUtils;
 import net.sf.jsqlparser.expression.BinaryExpression;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.Function;
+import net.sf.jsqlparser.expression.Parenthesis;
+import net.sf.jsqlparser.expression.operators.arithmetic.Subtraction;
 import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.relational.InExpression;
 import net.sf.jsqlparser.expression.operators.relational.NotEqualsTo;
@@ -21,13 +23,11 @@ import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.select.Join;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.statement.select.SubSelect;
 import net.sf.jsqlparser.statement.update.Update;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
-import org.springframework.context.ApplicationContext;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -63,60 +63,49 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author dqcer
  * @since 2022/12/23
  */
-public class SqlReviewInnerInterceptor extends JsqlParserSupport implements InnerInterceptor {
-
-
-    private final ApplicationContext context;
+public class IllegalSQLInnerInterceptor extends JsqlParserSupport implements InnerInterceptor {
 
     /**
      * 缓存验证结果，提高性能
      */
-    private static final Set<String> CACHE_VALID_RESULT = new HashSet<>();
+    private static final Set<String> cacheValidResult = new HashSet<>();
     /**
      * 缓存表的索引信息
      */
-    private static final Map<String, List<SqlReviewInnerInterceptor.IndexInfo>> INDEX_INFO_MAP = new ConcurrentHashMap<>();
-
-    public SqlReviewInnerInterceptor(ApplicationContext context) {
-        this.context = context;
-    }
-
-    public String getActiveProfile() {
-        return context.getEnvironment().getActiveProfiles()[0];
-    }
-
+    private static final Map<String, List<IllegalSQLInnerInterceptor.IndexInfo>> indexInfoMap = new ConcurrentHashMap<>();
 
     @Override
     public void beforePrepare(StatementHandler sh, Connection connection, Integer transactionTimeout) {
         PluginUtils.MPStatementHandler mpStatementHandler = PluginUtils.mpStatementHandler(sh);
         MappedStatement ms = mpStatementHandler.mappedStatement();
         SqlCommandType sct = ms.getSqlCommandType();
-        if (sct == SqlCommandType.INSERT
-                || InterceptorIgnoreHelper.willIgnoreIllegalSql(ms.getId()) || !getActiveProfile().equals(GlobalConstant.Environment.PROD) ) {
+        if (sct == SqlCommandType.INSERT || InterceptorIgnoreHelper.willIgnoreIllegalSql(ms.getId())) {
             return;
         }
         BoundSql boundSql = mpStatementHandler.boundSql();
         String originalSql = boundSql.getSql();
         logger.debug("检查SQL是否合规，SQL:" + originalSql);
         String md5Base64 = EncryptUtils.md5Base64(originalSql);
-        if (CACHE_VALID_RESULT.contains(md5Base64)) {
+        if (cacheValidResult.contains(md5Base64)) {
             logger.debug("该SQL已验证，无需再次验证，，SQL:" + originalSql);
             return;
         }
         parserSingle(originalSql, connection);
         //缓存验证结果
-        CACHE_VALID_RESULT.add(md5Base64);
+        cacheValidResult.add(md5Base64);
     }
 
     @Override
     protected void processSelect(Select select, int index, String sql, Object obj) {
-        PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
-        Expression where = plainSelect.getWhere();
-        Assert.notNull(where, "非法SQL，必须要有where条件");
-        Table table = (Table) plainSelect.getFromItem();
-        List<Join> joins = plainSelect.getJoins();
-        validWhere(where, table, (Connection) obj);
-        validJoins(joins, table, (Connection) obj);
+        if (select instanceof PlainSelect) {
+            PlainSelect plainSelect = (PlainSelect) select;
+            Expression where = plainSelect.getWhere();
+            Assert.notNull(where, "非法SQL，必须要有where条件");
+            Table table = (Table) plainSelect.getFromItem();
+            List<Join> joins = plainSelect.getJoins();
+            validWhere(where, table, (Connection) obj);
+            validJoins(joins, table, (Connection) obj);
+        }
     }
 
     @Override
@@ -145,6 +134,10 @@ public class SqlReviewInnerInterceptor extends JsqlParserSupport implements Inne
      * @param expression ignore
      */
     private void validExpression(Expression expression) {
+        while (expression instanceof Parenthesis) {
+            Parenthesis parenthesis = (Parenthesis) expression;
+            expression = parenthesis.getExpression();
+        }
         //where条件使用了 or 关键字
         if (expression instanceof OrExpression) {
             OrExpression orExpression = (OrExpression) expression;
@@ -155,19 +148,21 @@ public class SqlReviewInnerInterceptor extends JsqlParserSupport implements Inne
         } else if (expression instanceof BinaryExpression) {
             BinaryExpression binaryExpression = (BinaryExpression) expression;
             // TODO 升级 jsqlparser 后待实现
-
+//            if (binaryExpression.isNot()) {
+//                throw new MybatisPlusException("非法SQL，where条件中不能使用【not】关键字，错误not信息：" + binaryExpression.toString());
+//            }
             if (binaryExpression.getLeftExpression() instanceof Function) {
                 Function function = (Function) binaryExpression.getLeftExpression();
                 throw new MybatisPlusException("非法SQL，where条件中不能使用数据库函数，错误函数信息：" + function.toString());
             }
-            if (binaryExpression.getRightExpression() instanceof SubSelect) {
-                SubSelect subSelect = (SubSelect) binaryExpression.getRightExpression();
+            if (binaryExpression.getRightExpression() instanceof Subtraction) {
+                Subtraction subSelect = (Subtraction) binaryExpression.getRightExpression();
                 throw new MybatisPlusException("非法SQL，where条件中不能使用子查询，错误子查询SQL信息：" + subSelect.toString());
             }
         } else if (expression instanceof InExpression) {
             InExpression inExpression = (InExpression) expression;
-            if (inExpression.getRightItemsList() instanceof SubSelect) {
-                SubSelect subSelect = (SubSelect) inExpression.getRightItemsList();
+            if (inExpression.getRightExpression() instanceof Subtraction) {
+                Subtraction subSelect = (Subtraction) inExpression.getRightExpression();
                 throw new MybatisPlusException("非法SQL，where条件中不能使用子查询，错误子查询SQL信息：" + subSelect.toString());
             }
         }
@@ -204,23 +199,29 @@ public class SqlReviewInnerInterceptor extends JsqlParserSupport implements Inne
     private void validUseIndex(Table table, String columnName, Connection connection) {
         //是否使用索引
         boolean useIndexFlag = false;
+        if (StringUtils.isNotBlank(columnName)) {
+            if (columnName.equals("del_flag")) {
+                return;
+            }
 
-        String tableInfo = table.getName();
-        //表存在的索引
-        String dbName = null;
-        String tableName;
-        String[] tableArray = tableInfo.split("\\.");
-        if (tableArray.length == 1) {
-            tableName = tableArray[0];
-        } else {
-            dbName = tableArray[0];
-            tableName = tableArray[1];
-        }
-        List<SqlReviewInnerInterceptor.IndexInfo> indexInfos = getIndexInfos(dbName, tableName, connection);
-        for (SqlReviewInnerInterceptor.IndexInfo indexInfo : indexInfos) {
-            if (null != columnName && columnName.equalsIgnoreCase(indexInfo.getColumnName())) {
-                useIndexFlag = true;
-                break;
+            String tableInfo = table.getName();
+            //表存在的索引
+            String dbName = null;
+            String tableName;
+            String[] tableArray = tableInfo.split("\\.");
+            if (tableArray.length == 1) {
+                tableName = tableArray[0];
+            } else {
+                dbName = tableArray[0];
+                tableName = tableArray[1];
+            }
+            columnName = SqlParserUtils.removeWrapperSymbol(columnName);
+            List<IllegalSQLInnerInterceptor.IndexInfo> indexInfos = getIndexInfos(dbName, tableName, connection);
+            for (IllegalSQLInnerInterceptor.IndexInfo indexInfo : indexInfos) {
+                if (indexInfo.getColumnName().equalsIgnoreCase(columnName)) {
+                    useIndexFlag = true;
+                    break;
+                }
             }
         }
         if (!useIndexFlag) {
@@ -276,8 +277,10 @@ public class SqlReviewInnerInterceptor extends JsqlParserSupport implements Inne
             }
 
             //获得右边表达式，并分解
-            Expression rightExpression = ((BinaryExpression) expression).getRightExpression();
-            validExpression(rightExpression);
+            if (joinTable != null) {
+                Expression rightExpression = ((BinaryExpression) expression).getRightExpression();
+                validExpression(rightExpression);
+            }
         }
     }
 
@@ -289,7 +292,7 @@ public class SqlReviewInnerInterceptor extends JsqlParserSupport implements Inne
      * @param conn      ignore
      * @return ignore
      */
-    public List<SqlReviewInnerInterceptor.IndexInfo> getIndexInfos(String dbName, String tableName, Connection conn) {
+    public List<IllegalSQLInnerInterceptor.IndexInfo> getIndexInfos(String dbName, String tableName, Connection conn) {
         return getIndexInfos(null, dbName, tableName, conn);
     }
 
@@ -302,10 +305,10 @@ public class SqlReviewInnerInterceptor extends JsqlParserSupport implements Inne
      * @param conn      ignore
      * @return ignore
      */
-    public List<SqlReviewInnerInterceptor.IndexInfo> getIndexInfos(String key, String dbName, String tableName, Connection conn) {
-        List<SqlReviewInnerInterceptor.IndexInfo> indexInfos = null;
+    public List<IllegalSQLInnerInterceptor.IndexInfo> getIndexInfos(String key, String dbName, String tableName, Connection conn) {
+        List<IllegalSQLInnerInterceptor.IndexInfo> indexInfos = null;
         if (StringUtils.isNotBlank(key)) {
-            indexInfos = INDEX_INFO_MAP.get(key);
+            indexInfos = indexInfoMap.get(key);
         }
         if (indexInfos == null || indexInfos.isEmpty()) {
             ResultSet rs;
@@ -313,12 +316,12 @@ public class SqlReviewInnerInterceptor extends JsqlParserSupport implements Inne
                 DatabaseMetaData metadata = conn.getMetaData();
                 String catalog = StringUtils.isBlank(dbName) ? conn.getCatalog() : dbName;
                 String schema = StringUtils.isBlank(dbName) ? conn.getSchema() : dbName;
-                rs = metadata.getIndexInfo(catalog, schema, tableName, false, true);
+                rs = metadata.getIndexInfo(catalog, schema, SqlParserUtils.removeWrapperSymbol(tableName), false, true);
                 indexInfos = new ArrayList<>();
                 while (rs.next()) {
                     //索引中的列序列号等于1，才有效
                     if (Objects.equals(rs.getString(8), "1")) {
-                        SqlReviewInnerInterceptor.IndexInfo indexInfo = new SqlReviewInnerInterceptor.IndexInfo();
+                        IllegalSQLInnerInterceptor.IndexInfo indexInfo = new IllegalSQLInnerInterceptor.IndexInfo();
                         indexInfo.setDbName(rs.getString(1));
                         indexInfo.setTableName(rs.getString(3));
                         indexInfo.setColumnName(rs.getString(9));
@@ -326,10 +329,10 @@ public class SqlReviewInnerInterceptor extends JsqlParserSupport implements Inne
                     }
                 }
                 if (StringUtils.isNotBlank(key)) {
-                    INDEX_INFO_MAP.put(key, indexInfos);
+                    indexInfoMap.put(key, indexInfos);
                 }
             } catch (SQLException e) {
-                logger.error("SQLException ", e);
+                logger.error(String.format("getIndexInfo fault, with key:%s, dbName:%s, tableName:%s", key, dbName, tableName), e);
             }
         }
         return indexInfos;
@@ -350,27 +353,24 @@ public class SqlReviewInnerInterceptor extends JsqlParserSupport implements Inne
             return dbName;
         }
 
-        public IndexInfo setDbName(String dbName) {
+        public void setDbName(String dbName) {
             this.dbName = dbName;
-            return this;
         }
 
         public String getTableName() {
             return tableName;
         }
 
-        public IndexInfo setTableName(String tableName) {
+        public void setTableName(String tableName) {
             this.tableName = tableName;
-            return this;
         }
 
         public String getColumnName() {
             return columnName;
         }
 
-        public IndexInfo setColumnName(String columnName) {
+        public void setColumnName(String columnName) {
             this.columnName = columnName;
-            return this;
         }
     }
 }

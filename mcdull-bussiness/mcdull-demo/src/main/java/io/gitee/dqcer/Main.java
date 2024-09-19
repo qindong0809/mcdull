@@ -4,6 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.mysql.EnableDynamicDataSource;
 import io.gitee.dqcer.mcdull.framework.redis.EnableCache;
 import io.gitee.dqcer.mcdull.framework.web.EnableWebCore;
+import io.gitee.dqcer.mcdull.uac.provider.config.Ip2RegionListener;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,10 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class Main {
 
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
-//        SpringApplication application = new SpringApplication(Main.class);
-//        application.addListeners(new Ip2RegionListener());
-//        application.run(args);
+//        SpringApplication.run(Main.class, args);
+        SpringApplication application = new SpringApplication(Main.class);
+        application.addListeners(new Ip2RegionListener());
+        application.run(args);
 
     }
 }

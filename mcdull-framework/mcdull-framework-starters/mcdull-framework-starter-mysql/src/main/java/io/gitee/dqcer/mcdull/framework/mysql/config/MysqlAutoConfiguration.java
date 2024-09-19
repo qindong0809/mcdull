@@ -99,7 +99,7 @@ public class MysqlAutoConfiguration {
         // 防止全部更新删除
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
         // SQL规范检查
-//        interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
+        interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
         // 数据变更记录（数据审计）
 //        interceptor.addInnerInterceptor(new DataChangeRecorderInnerInterceptor(context));
         interceptor.addInnerInterceptor(new DataChangeRecorderInnerInterceptor());
