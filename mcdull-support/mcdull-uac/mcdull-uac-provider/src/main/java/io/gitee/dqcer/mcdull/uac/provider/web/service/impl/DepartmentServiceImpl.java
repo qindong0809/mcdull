@@ -23,10 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -51,6 +48,16 @@ public class DepartmentServiceImpl
             for (DepartmentEntity dept : deptList) {
                 DepartmentInfoVO vo = this.convertToVO(dept);
                 list.add(vo);
+            }
+            Set<Integer> userSet = deptList.stream()
+                    .map(DepartmentEntity::getManagerId)
+                    .filter(ObjUtil::isNotNull)
+                    .collect(Collectors.toSet());
+            if (CollUtil.isNotEmpty(userSet)) {
+                Map<Integer, String> userMap = userService.getNameMap(new ArrayList<>(userSet));
+                for (DepartmentInfoVO vo : list) {
+                    vo.setManagerName(userMap.get(vo.getManagerId()));
+                }
             }
         }
         return list;
@@ -230,6 +237,8 @@ public class DepartmentServiceImpl
         vo.setManagerId(dept.getManagerId());
         vo.setParentId(Convert.toInt(dept.getParentId()));
         vo.setSort(dept.getSort());
+        vo.setCreateTime(dept.getCreatedTime());
+        vo.setUpdateTime(dept.getUpdatedTime());
         return vo;
 
     }

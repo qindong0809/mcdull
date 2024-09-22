@@ -1,0 +1,22 @@
+package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.MessageQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.MessageEntity;
+
+
+/**
+ * Message repository
+ *
+ * @author dqcer
+ * @since 2024-06-15 13:11:44
+ */
+public interface IMessageRepository extends IService<MessageEntity> {
+
+    Integer getUnreadCount(Integer userId);
+
+    Page<MessageEntity> selectPage(MessageQueryDTO dto);
+
+    boolean updateReadFlag(Integer id, Integer userId);
+}

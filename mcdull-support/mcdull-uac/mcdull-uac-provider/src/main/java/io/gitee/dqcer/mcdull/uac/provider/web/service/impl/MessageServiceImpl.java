@@ -1,0 +1,76 @@
+package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
+
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.MessageQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.MessageEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.MessageVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMessageRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IMessageService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Message Service
+ *
+ * @author dqcer
+ * @since 2024-06-15 13:11:44
+ */
+@Service
+public class MessageServiceImpl
+        extends BasicServiceImpl<IMessageRepository> implements IMessageService {
+
+
+    @Override
+    public Integer getUnreadCount(Integer userId) {
+        return super.baseRepository.getUnreadCount(userId);
+    }
+
+    @Override
+    public PagedVO<MessageVO> query(MessageQueryDTO dto) {
+        List<MessageVO> voList = new ArrayList<>();
+        Page<MessageEntity> entityPage = baseRepository.selectPage(dto);
+        List<MessageEntity> recordList = entityPage.getRecords();
+        if (CollUtil.isNotEmpty(recordList)) {
+            for (MessageEntity entity : recordList) {
+                MessageVO vo = this.convertToVO(entity);
+                voList.add(vo);
+            }
+        }
+        return PageUtil.toPage(voList, entityPage);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean updateReadFlag(Integer id, Integer userId) {
+        MessageEntity message = baseRepository.getById(id);
+        if (ObjUtil.isNull(message)) {
+            this.throwDataNotExistException(id);
+        }
+        if (message.getReadFlag()) {
+            this.throwDataNeedRefreshException("id: {}", id);
+        }
+        return baseRepository.updateReadFlag(id, userId);
+    }
+
+    private MessageVO convertToVO(MessageEntity entity) {
+        MessageVO messageVO = new MessageVO();
+        messageVO.setMessageId(entity.getId());
+        messageVO.setMessageType(entity.getMessageType());
+        messageVO.setReceiverUserId(entity.getReceiverUserId());
+        messageVO.setDataId(entity.getDataId());
+        messageVO.setTitle(entity.getTitle());
+        messageVO.setContent(entity.getContent());
+        messageVO.setReadFlag(entity.getReadFlag());
+        messageVO.setReadTime(entity.getReadTime());
+        messageVO.setCreatedTime(entity.getCreatedTime());
+        return messageVO;
+    }
+}

@@ -103,6 +103,13 @@ public class UserController extends BasicController {
         return Result.success(userService.update(dto.getEmployeeId(), dto));
     }
 
+    @Operation(summary = "更新登录人信息")
+    @PostMapping("/user/update/login")
+    public Result<Integer> updateByLogin(@Valid @RequestBody UserUpdateDTO dto) {
+        dto.setEmployeeId(UserContextHolder.userId());
+        return Result.success(userService.update(dto.getEmployeeId(), dto));
+    }
+
 //    @Operation(summary = "修改密码", description = "")
 //    @PostMapping("user/{id}/update-password")
 //    public Result<Integer> updatePassword(@PathVariable("id") Integer id,

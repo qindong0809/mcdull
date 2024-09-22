@@ -39,6 +39,7 @@ public class OperateLogRepositoryImpl
             lambda.between(RelEntity::getCreatedTime,
                     DateUtil.parseDate(startDate), DateUtil.endOfDay(DateUtil.parseDate(endDate)));
         }
+        lambda.eq(ObjUtil.isNotNull(param.getUserId()), OperateLogEntity::getUserId, param.getUserId());
         if (CollUtil.isNotEmpty(userIdList)) {
             lambda.in(OperateLogEntity::getUserId, userIdList);
         }

@@ -36,4 +36,7 @@ public class OperateLogQueryDTO extends PagedDTO {
 
     @Schema(description = "操作内容")
     private String content;
+
+    @Schema(hidden = true)
+    private Integer userId;
 }

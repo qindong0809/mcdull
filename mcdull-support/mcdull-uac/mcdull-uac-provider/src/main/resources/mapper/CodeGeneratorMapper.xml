@@ -10,16 +10,16 @@
     </select>
     <select id="queryTableList" resultType="io.gitee.dqcer.mcdull.uac.provider.model.vo.TableVO">
         select
-        tables.table_name,
-        tables.table_comment,
-        tables.create_time,
-        tables.update_time,
+        t.table_name,
+        t.table_comment,
+        t.create_time,
+        t.update_time,
         sys_code_generator_config.updated_time configTime
-        from information_schema.tables tables
-        left join sys_code_generator_config on tables.table_name = sys_code_generator_config.table_name
-        where tables.table_schema = (select database())
+        from information_schema.tables t
+        left join sys_code_generator_config on t.table_name = sys_code_generator_config.table_name
+        where t.table_schema = (select database())
         <if test="queryForm.tableNameKeywords != null and queryForm.tableNameKeywords != ''">
-            AND INSTR(tables.table_name,#{queryForm.tableNameKeywords})
+            AND INSTR(t.table_name,#{queryForm.tableNameKeywords})
         </if>
     </select>
     <select id="existByTable" resultType="java.lang.Long">

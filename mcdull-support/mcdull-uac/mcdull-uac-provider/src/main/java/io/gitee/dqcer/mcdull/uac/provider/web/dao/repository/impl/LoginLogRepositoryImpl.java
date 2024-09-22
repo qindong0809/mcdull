@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -15,6 +16,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.ILoginLogRepository
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,6 +43,14 @@ public class LoginLogRepositoryImpl
     @Override
     public Page<LoginLogEntity> selectPage(LoginLogQueryDTO param) {
         LambdaQueryWrapper<LoginLogEntity> lambda = new QueryWrapper<LoginLogEntity>().lambda();
+        lambda.like(ObjUtil.isNotNull(param.getKeyword()), LoginLogEntity::getLoginName, param.getKeyword());
+        lambda.like(ObjUtil.isNotNull(param.getIp()), LoginLogEntity::getLoginIp, param.getIp());
+        lambda.eq(StrUtil.isNotBlank(param.getUserName()), LoginLogEntity::getLoginName, param.getUserName());
+        Date startDate = param.getStartDate();
+        Date endDate = param.getEndDate();
+        if (ObjUtil.isNotNull(startDate) && ObjUtil.isNotNull(endDate)) {
+            lambda.between(LoginLogEntity::getCreatedTime, startDate, endDate);
+        }
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }

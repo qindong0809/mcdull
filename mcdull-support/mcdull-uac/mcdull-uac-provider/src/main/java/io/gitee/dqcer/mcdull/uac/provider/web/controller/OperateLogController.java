@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.NameValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -53,6 +54,13 @@ public class OperateLogController {
     @SaCheckPermission("support:operateLog:detail")
     public Result<OperateLogVO> detail(@PathVariable Integer operateLogId) {
         return Result.success(operateLogService.detail(operateLogId));
+    }
+
+    @Operation(summary = "分页查询当前登录人信息")
+    @PostMapping("/operateLog/page/query/login")
+    public Result<PagedVO<OperateLogVO>> queryByPageLogin(@RequestBody OperateLogQueryDTO dto) {
+        dto.setUserId(UserContextHolder.userId());
+        return Result.success(operateLogService.queryByPage(dto));
     }
 
 }

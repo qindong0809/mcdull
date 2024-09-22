@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.mysql.config;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.plugins.InterceptorIgnoreHelper;
 import com.baomidou.mybatisplus.core.toolkit.Assert;
@@ -99,9 +100,13 @@ public class IllegalSQLInnerInterceptor extends JsqlParserSupport implements Inn
     protected void processSelect(Select select, int index, String sql, Object obj) {
         if (select instanceof PlainSelect) {
             PlainSelect plainSelect = (PlainSelect) select;
+            Table table = (Table) plainSelect.getFromItem();
+            String name = table.getName();
+            if (StrUtil.equals(name, "sys_area")) {
+                return;
+            }
             Expression where = plainSelect.getWhere();
             Assert.notNull(where, "非法SQL，必须要有where条件");
-            Table table = (Table) plainSelect.getFromItem();
             List<Join> joins = plainSelect.getJoins();
             validWhere(where, table, (Connection) obj);
             validJoins(joins, table, (Connection) obj);
@@ -203,7 +208,10 @@ public class IllegalSQLInnerInterceptor extends JsqlParserSupport implements Inn
             if (columnName.equals("del_flag")) {
                 return;
             }
-
+            List<String> nameParts = table.getNameParts();
+            if (StrUtil.containsAnyIgnoreCase(String.join(".", nameParts.get(nameParts.size() - 1)), "information_schema")) {
+                return;
+            }
             String tableInfo = table.getName();
             //表存在的索引
             String dbName = null;

@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Date;
+
 /**
  * 登录查询日志
  *
@@ -14,15 +16,18 @@ import lombok.EqualsAndHashCode;
 public class LoginLogQueryDTO extends PagedDTO {
 
     @Schema(description = "开始日期")
-    private String startDate;
+    private Date startDate;
 
     @Schema(description = "结束日期")
-    private String endDate;
+    private Date endDate;
 
     @Schema(description = "用户名称")
     private String userName;
 
     @Schema(description = "ip")
     private String ip;
+
+    @Schema(hidden = true)
+    private Integer userId;
 
 }
