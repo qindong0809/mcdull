@@ -45,6 +45,15 @@ public class UserController extends BasicController {
         return Result.success(userService.listByPage(dto));
     }
 
+    @Operation(summary = "导出数据")
+    @SaCheckPermission("support:form:record:export")
+    @PostMapping(value = "user/list/record-export")
+    public Result<Boolean> exportData(@RequestBody @Valid FormRecordQueryDTO dto) {
+//        List<Annotation> annotations = AnnotationUtil.scanClass(this.getClass());
+//        userService.exportData(dto);
+        return Result.success(true);
+    }
+
     @Operation(summary = "Update Current User Password")
     @PostMapping("/user/update/password")
     public Result<Boolean> updatePassword(@Valid @RequestBody UserUpdatePasswordDTO dto) {

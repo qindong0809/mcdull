@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.enums;
 
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -30,6 +29,11 @@ public enum FileFolderTypeEnum implements IEnum<Integer> {
      * 意见反馈
      */
     FEEDBACK(4, FileFolderTypeEnum.FOLDER_PUBLIC + "/feedback/", "意见反馈"),
+
+    /**
+     * 导出
+     */
+    EXPORT(5, FileFolderTypeEnum.FOLDER_PUBLIC + "/export/", "导出"),
 
     ;
 

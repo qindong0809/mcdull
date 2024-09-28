@@ -22,7 +22,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormVO;
 import io.gitee.dqcer.mcdull.uac.provider.util.ExcelUtil;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IFormManager;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.ICommonService;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFormService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Service;
@@ -51,7 +51,7 @@ public class FormServiceImpl
     private IUserService userService;
 
     @Resource
-    private ICommonService commonService;
+    private ICommonManager commonService;
 
     @Override
     public PagedVO<FormVO> queryPage(FormQueryDTO dto) {
