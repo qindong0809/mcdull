@@ -19,6 +19,25 @@ import java.util.*;
  */
 public class AuditUtil {
 
+    public static <T extends Audit> List<FieldDiff> compare(T before) {
+        JSONObject beforeJson = JSONUtil.parseObj(before, false);
+        List<FieldDiff> fieldDiffList = new ArrayList<>();
+        for (Map.Entry<String, Object> entry : beforeJson) {
+            String key = entry.getKey();
+            Object beforeValue = entry.getValue();
+            Field field = ReflectUtil.getField(before.getClass(), key);
+            AuditDescription annotation = field.getAnnotation(AuditDescription.class);
+            if (annotation == null) {
+                throw new IllegalArgumentException();
+            }
+            FieldDiff diff = new FieldDiff();
+            diff.setDescription(annotation);
+            diff.setBeforeValue(beforeValue);
+            fieldDiffList.add(diff);
+        }
+        CollUtil.sort(fieldDiffList, (o1, o2) -> NumberUtil.compare(o1.description.sort(), o2.description.sort()));
+        return fieldDiffList;
+    }
 
     public static <T extends Audit> List<FieldDiff> compare(T before, T after) {
         JSONObject beforeJson = JSONUtil.parseObj(before, false);
@@ -44,6 +63,31 @@ public class AuditUtil {
         }
         CollUtil.sort(fieldDiffList, (o1, o2) -> NumberUtil.compare(o1.description.sort(), o2.description.sort()));
         return fieldDiffList;
+    }
+
+    public static <T extends Audit> String compareStr(T before) {
+        List<FieldDiff> list = compare(before);
+        StringBuilder builder = new StringBuilder();
+        builder.append(before.prefix());
+        builder.append(before.tagCharacter()[0]);
+        StringJoiner result = new StringJoiner(SymbolConstants.COMMA + SymbolConstants.SPACE);
+
+        for (FieldDiff diff : list) {
+            Object beforeValue = diff.getBeforeValue();
+            StringBuilder one = new StringBuilder();
+            AuditDescription description = diff.getDescription();
+            boolean dateType = beforeValue instanceof Date;
+            one.append(StrUtil.format("{}{}", description.label(), before.separate()));
+            one.append(StrUtil.format("{}{}{}",
+                    description.tagCharacter()[0],
+                    dateType ? DateUtil.format((Date) beforeValue, description.datePattern())
+                            : Convert.toStr(beforeValue, StrUtil.EMPTY),
+                    description.tagCharacter()[1]));
+            result.add(one);
+        }
+        builder.append(result);
+        builder.append(before.tagCharacter()[1]);
+        return builder.toString();
     }
 
     public static <T extends Audit> String compareStr(T before, T after) {

@@ -5,6 +5,7 @@ import cn.hutool.core.date.DatePattern;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * http日志
@@ -51,11 +53,14 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
             unifySession.setNow(new Date());
             if (StpUtil.isLogin()) {
                 unifySession.setUserId(StpUtil.isLogin() ? StpUtil.getLoginId() : null);
-                unifySession.setAdministratorFlag(StpUtil.getSession().get(GlobalConstant.ADMINISTRATOR_FLAG, false));
+                CacheUser cacheUser = StpUtil.getSession().get(GlobalConstant.CACHE_CURRENT_USER, new CacheUser());
+                unifySession.setAdministratorFlag(cacheUser.getAdministratorFlag());
+                unifySession.setDateFormat(cacheUser.getDateFormat());
+                unifySession.setZoneIdStr(cacheUser.getZoneIdStr());
+                unifySession.setLocale(new Locale(cacheUser.getLanguage()));
+                unifySession.setTenantId(cacheUser.getTenantId());
+                unifySession.setLoginName(cacheUser.getLoginName());
             }
-            unifySession.setDateFormat(DatePattern.NORM_DATETIME_PATTERN);
-            unifySession.setZoneIdStr("Asia/Shanghai");
-            unifySession.setLocale(request.getLocale());
             UserContextHolder.setSession(unifySession);
 
             if (!isRequestValid(request)) {

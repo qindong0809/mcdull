@@ -14,6 +14,7 @@ public class GlobalConstant {
     public static final String UTF_8 = "UTF-8";
 
     public static final String ADMINISTRATOR_FLAG = "administratorFlag";
+    public static final String CACHE_CURRENT_USER = "cacheCurrentUser";
 
     /**
      * 内部接口调用 前缀

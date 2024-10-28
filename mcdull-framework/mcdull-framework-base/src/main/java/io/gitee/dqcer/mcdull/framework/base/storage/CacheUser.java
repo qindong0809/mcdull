@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.base.storage;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * 缓存的用户
@@ -9,103 +8,77 @@ import java.time.LocalDateTime;
  * @author dqcer
  * @since 2021/11/14
  */
-public class CacheUser implements Serializable {
+public class CacheUser implements ICurrentUser, Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private Integer tenantId;
 
-    /**
-     * 在线
-     */
-    public static final Integer ONLINE = 1;
+    private Boolean administratorFlag;
 
-    /**
-     * 挤下线
-     */
-    public static final Integer OFFLINE = 2;
+    private String language;
 
-    /**
-     * 主动注销
-     */
-    public static final Integer LOGOUT = 3;
+    private String zoneIdStr;
 
-    /**
-     *
-     */
-    private Integer userId;
+    private String dateFormat;
 
-    /**
-     * 租户id
-     */
-    private Long tenantId;
+    private String loginName;
 
-    /**
-     * 用户类型类型 1/自定义 2/内置管理员
-     */
-    private Integer userType;
+    public String getLoginName() {
+        return loginName;
+    }
 
-    /**
-     * 1/在线 2/挤下线 3/主动退出
-     */
-    private Integer onlineStatus;
-
-    /**
-     * 最后活跃的时间
-     */
-    private LocalDateTime lastActiveTime;
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
 
     @Override
-    public String toString() {
-        return "CacheUser{" +
-                "userId=" + userId +
-                ", tenantId=" + tenantId +
-                ", onlineStatus=" + onlineStatus +
-                ", lastActiveTime=" + lastActiveTime +
-                '}';
-    }
-
-    public Integer getUserType() {
-        return userType;
-    }
-
-    public CacheUser setUserType(Integer userType) {
-        this.userType = userType;
-        return this;
-    }
-
-    public Long getTenantId() {
+    public Integer getTenantId() {
         return tenantId;
     }
 
-    public CacheUser setTenantId(Long tenantId) {
+    @Override
+    public void setTenantId(Integer tenantId) {
         this.tenantId = tenantId;
-        return this;
     }
 
-    public Integer getUserId() {
-        return userId;
+    @Override
+    public Boolean getAdministratorFlag() {
+        return administratorFlag;
     }
 
-    public CacheUser setUserId(Integer userId) {
-        this.userId = userId;
-        return this;
+    @Override
+    public void setAdministratorFlag(Boolean administratorFlag) {
+        this.administratorFlag = administratorFlag;
     }
 
-    public Integer getOnlineStatus() {
-        return onlineStatus;
+    @Override
+    public String getLanguage() {
+        return language;
     }
 
-    public CacheUser setOnlineStatus(Integer onlineStatus) {
-        this.onlineStatus = onlineStatus;
-        return this;
+    @Override
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
-    public LocalDateTime getLastActiveTime() {
-        return lastActiveTime;
+    @Override
+    public String getZoneIdStr() {
+        return zoneIdStr;
     }
 
-    public CacheUser setLastActiveTime(LocalDateTime lastActiveTime) {
-        this.lastActiveTime = lastActiveTime;
-        return this;
+    @Override
+    public void setZoneIdStr(String zoneIdStr) {
+        this.zoneIdStr = zoneIdStr;
+    }
+
+    @Override
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    @Override
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
     }
 }

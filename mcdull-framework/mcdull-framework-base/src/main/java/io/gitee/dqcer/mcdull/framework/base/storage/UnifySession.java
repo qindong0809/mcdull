@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author dqcer
  * @since 2021/11/13
  */
-public class UnifySession<T> implements Serializable {
+public class UnifySession<T> implements ICurrentUser, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -74,6 +74,13 @@ public class UnifySession<T> implements Serializable {
     private String requestUrl;
 
     /**
+     * 权限代码
+     */
+    private String permissionCode;
+
+    private String loginName;
+
+    /**
      * 扩展
      */
     private ConcurrentHashMap<String, Object> extension;
@@ -93,7 +100,24 @@ public class UnifySession<T> implements Serializable {
                 .add("dateFormat='" + dateFormat + "'")
                 .add("requestUrl='" + requestUrl + "'")
                 .add("extension=" + extension)
+                .add("permissionCode=" + permissionCode)
                 .toString();
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
+
+    public String getPermissionCode() {
+        return permissionCode;
+    }
+
+    public void setPermissionCode(String permissionCode) {
+        this.permissionCode = permissionCode;
     }
 
     public Locale getLocale() {
@@ -105,30 +129,54 @@ public class UnifySession<T> implements Serializable {
         return this;
     }
 
+    @Override
+    public Integer getTenantId() {
+        return this.tenantId;
+    }
+
+    @Override
+    public void setTenantId(Integer tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    @Override
+    public Boolean getAdministratorFlag() {
+        return this.administratorFlag;
+    }
+
+    @Override
+    public void setAdministratorFlag(Boolean administratorFlag) {
+        this.administratorFlag = administratorFlag;
+    }
+
+    @Override
+    public String getLanguage() {
+        return this.language;
+    }
+
+    @Override
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    @Override
     public String getZoneIdStr() {
-        return zoneIdStr;
+        return this.zoneIdStr;
     }
 
-    public UnifySession<T> setZoneIdStr(String zoneIdStr) {
+    @Override
+    public void setZoneIdStr(String zoneIdStr) {
         this.zoneIdStr = zoneIdStr;
-        return this;
     }
 
+    @Override
     public String getDateFormat() {
         return dateFormat;
     }
 
-    public UnifySession<T> setDateFormat(String dateFormat) {
+    @Override
+    public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
-        return this;
-    }
-
-    public Boolean getAdministratorFlag() {
-        return administratorFlag;
-    }
-
-    public void setAdministratorFlag(Boolean administratorFlag) {
-        this.administratorFlag = administratorFlag;
     }
 
     public Integer getUserType() {
@@ -148,28 +196,12 @@ public class UnifySession<T> implements Serializable {
         this.userId = userId;
     }
 
-    public Integer getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Integer tenantId) {
-        this.tenantId = tenantId;
-    }
-
     public Integer getRoleId() {
         return roleId;
     }
 
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
     }
 
     public String getTraceId() {

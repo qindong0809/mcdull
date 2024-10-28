@@ -745,3 +745,17 @@ create table `sys_form_record_item` (
 `updated_time` datetime default null comment '更新时间',
 primary key (`id`) using btree
 ) comment='表单业务数据输入项信息';
+
+create table `sys_biz_audit` (
+`id` int auto_increment comment '主键',
+`biz_type_code` varchar(64) not null comment '业务类型, 权限code',
+`operation` int not null comment '动作 1/新增 2/更新 3/启用 4/停用 5/删除 ',
+`biz_index` varchar(128) not null comment '操作索引',
+`biz_id` int not null,
+`comment` text default null,
+`operator` varchar(64) ,
+`operation_time` datetime not null,
+`ext` json default null,
+primary key (`id`) using btree,
+key `idx_biz_type` (`biz_type_code`) using btree
+) comment='Biz Audit';

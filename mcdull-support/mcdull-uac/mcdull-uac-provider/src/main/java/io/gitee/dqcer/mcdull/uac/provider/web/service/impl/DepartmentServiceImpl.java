@@ -192,7 +192,10 @@ public class DepartmentServiceImpl
         return voList;
     }
 
-
+    @Override
+    public DepartmentEntity getById(Integer departmentId) {
+        return baseRepository.getById(departmentId);
+    }
 
 
     public static List<DepartmentTreeInfoVO> convertTreeSelect(List<Tree<Integer>> list) {

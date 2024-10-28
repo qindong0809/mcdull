@@ -17,11 +17,11 @@ public interface IDictTypeManager {
     /**
      * 字典视图对象
      *
-     * @param selectType 选择类型
+     * @param selectTypeEnum 选择类型
      * @param code       代码
      * @return {@link RemoteDictTypeVO}
      */
-    KeyValueBO<String, String> dictVO(String selectType, String code);
+    KeyValueBO<String, String> dictVO(IEnum<String> selectTypeEnum, String code);
 
 
     /**

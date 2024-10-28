@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptUpdateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentTreeInfoVO;
 
@@ -30,4 +31,6 @@ public interface IDepartmentService {
     Map<Integer, String> getNameMap(List<Integer> idList);
 
     List<Integer> getChildrenIdList(Integer departmentId);
+
+    DepartmentEntity getById(Integer departmentId);
 }

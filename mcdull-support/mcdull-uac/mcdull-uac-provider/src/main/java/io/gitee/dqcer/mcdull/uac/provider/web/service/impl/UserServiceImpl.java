@@ -10,6 +10,8 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.symmetric.AES;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
+import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
@@ -24,19 +26,20 @@ import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.audit.UserAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.UserConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.DictSelectTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserRoleService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IDictTypeManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +70,15 @@ public class UserServiceImpl
 
     @Resource
     private IDepartmentRepository departmentRepository;
+
+    @Resource
+    private IDepartmentService departmentService;
+
+    @Resource
+    private IAuditManager auditManager;
+
+    @Resource
+    private IDictTypeManager dictTypeManager;
 
     private static final String AES_KEY = "1024abcd1024abcd1024abcd1024abcd";
 
@@ -140,9 +152,36 @@ public class UserServiceImpl
     @Transactional(rollbackFor = Exception.class)
     public Integer insert(UserAddDTO dto) {
         this.checkParam(dto);
-        Integer id = this.buildEntityAndInsert(dto);
-        userRoleService.batchUserListByRoleId(id, dto.getRoleIdList());
-        return id;
+        UserEntity entity = this.buildEntityAndInsert(dto);
+        Integer userId = entity.getId();
+        userRoleService.batchUserListByRoleId(userId, dto.getRoleIdList());
+        auditManager.saveByAddEnum(dto.getActualName(), userId, this.buildAuditLog(entity));
+        return userId;
+    }
+
+    private Audit buildAuditLog(UserEntity user) {
+        UserAudit audit = new UserAudit();
+        audit.setLoginName(user.getLoginName());
+        audit.setActualName(user.getActualName());
+        audit.setRemark(user.getRemark());
+        Integer departmentId = user.getDepartmentId();
+        if (ObjUtil.isNotNull(departmentId)) {
+            DepartmentEntity department = departmentService.getById(departmentId);
+            if (ObjUtil.isNotNull(department)) {
+                audit.setDepartment(department.getName());
+            }
+        }
+        Integer gender = user.getGender();
+        if (ObjUtil.isNotNull(gender)) {
+            KeyValueBO<String, String> vo = dictTypeManager.dictVO(DictSelectTypeEnum.USER_SEX, gender.toString());
+            if (ObjUtil.isNotNull(vo)) {
+                audit.setGender(vo.getValue());
+            }
+        }
+        audit.setEmail(user.getEmail());
+        audit.setPhone(user.getPhone());
+        audit.setRemark(user.getRemark());
+        return audit;
     }
 
     @Override
@@ -161,11 +200,11 @@ public class UserServiceImpl
         }
     }
 
-    private Integer buildEntityAndInsert(UserAddDTO dto) {
+    private UserEntity buildEntityAndInsert(UserAddDTO dto) {
         UserEntity entity = UserConvert.insertDtoToEntity(dto);
         entity.setLoginPwd("a29c57c6894dee6e8251510d58c07078ee3f49bf");
         entity.setAdministratorFlag(false);
-        return baseRepository.insert(entity);
+        return entity;
     }
 
     @Override

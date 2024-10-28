@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.web.json.serialize;
 
 import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -14,6 +15,7 @@ import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * 动态日期序列化程序
@@ -54,6 +56,7 @@ public class DynamicDateSerialize extends DateSerializer implements ContextualSe
         }
         boolean timezoneStyle = false;
         String zoneIdStr = "UTC";
+        Locale locale = serializerProvider.getLocale();
         UnifySession<?> unifySession = UserContextHolder.getSession();
         if (unifySession != null) {
             pattern = unifySession.getDateFormat();
@@ -67,8 +70,11 @@ public class DynamicDateSerialize extends DateSerializer implements ContextualSe
             } else {
                 zoneIdStr = null;
             }
+            if (ObjectUtil.isNotNull(unifySession.getLocale())) {
+                locale = unifySession.getLocale();
+            }
         }
-        String result = TimeZoneUtil.serializeDate(date, pattern, zoneIdStr, timezoneStyle);
+        String result = TimeZoneUtil.serializeDate(date, pattern, locale, zoneIdStr, timezoneStyle);
         jsonGenerator.writeString(result);
     }
 

@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.framework.web.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import io.gitee.dqcer.mcdull.framework.web.aspect.AuditAspect;
 import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsAspect;
 import io.gitee.dqcer.mcdull.framework.web.aspect.TranslatorAspect;
 import io.gitee.dqcer.mcdull.framework.web.component.ConcurrentRateLimiter;
@@ -48,6 +49,11 @@ public class AutoConfiguration {
     @Bean
     public OperationLogsAspect operationLogsAspect() {
         return new OperationLogsAspect();
+    }
+
+    @Bean
+    public AuditAspect auditAspect() {
+        return new AuditAspect();
     }
 
     /**

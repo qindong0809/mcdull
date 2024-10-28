@@ -45,17 +45,17 @@ public class DictTypeManagerImpl implements IDictTypeManager {
     /**
      * 字典视图对象
      *
-     * @param selectType 选择类型
+     * @param selectTypeEnum 选择类型
      * @param code       代码
      * @return {@link RemoteDictTypeVO}
      */
     @Override
-    public KeyValueBO<String, String> dictVO(String selectType, String code){
-        if (StrUtil.isBlank(selectType) || StrUtil.isBlank(code)) {
-            log.error("select: {} code: {}", selectType, code);
+    public KeyValueBO<String, String> dictVO(IEnum<String> selectTypeEnum, String code){
+        if (ObjectUtil.isNull(selectTypeEnum) || StrUtil.isBlank(code)) {
+            log.error("select: {} code: {}", selectTypeEnum, code);
             throw new IllegalArgumentException("参数异常");
         }
-        Map<String, String> map = this.getMap(selectType);
+        Map<String, String> map = this.getMap(selectTypeEnum.getCode());
         if (CollUtil.isNotEmpty(map)) {
             return new KeyValueBO<>(code, map.get(code));
         }

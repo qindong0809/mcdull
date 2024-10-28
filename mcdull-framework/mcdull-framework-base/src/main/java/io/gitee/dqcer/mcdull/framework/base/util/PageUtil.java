@@ -1,7 +1,11 @@
 package io.gitee.dqcer.mcdull.framework.base.util;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 
@@ -46,15 +50,32 @@ public class PageUtil {
                 Convert.toInt(iPage.getPageSize()), Convert.toInt(iPage.getPageNum()));
     }
 
-    public static <T> PagedVO<T> of(List<T> list, Integer pageSize, Integer pageNum) {
-        return new PagedVO<>(list, list.size(), pageSize, pageNum);
-    }
-
-    public static <T> PagedVO<T> of(List<T> list, Long pageSize, Long pageNum) {
-        return new PagedVO<>(list, list.size(), Convert.toInt(pageSize), Convert.toInt(pageNum));
-    }
-
     public static <T, D extends PagedDTO> PagedVO<T> ofSub(List<T> list, D pageDTO) {
+        if (CollUtil.isEmpty(list)) {
+            return empty(pageDTO);
+        }
+        Integer pageNum = pageDTO.getPageNum();
+        Integer pageSize = pageDTO.getPageSize();
+        int total = list.size();
+        if (ObjectUtil.isNull(pageNum) || ObjectUtil.isNull(pageSize)) {
+            throw new IllegalArgumentException("pageNum or pageSize is null");
+        }
+        int remainder = total % pageSize;
+        int totalPage = remainder > GlobalConstant.Number.NUMBER_0
+                ? total / pageSize + GlobalConstant.Number.NUMBER_1
+                : total / pageSize;
+        Integer currentPage = totalPage < pageNum ? totalPage : pageNum;
+        int fromIndex = pageSize * (currentPage - GlobalConstant.Number.NUMBER_1);
+        int toIndex = Math.min(pageSize * currentPage, total);
+        List<T> subList = list.subList(fromIndex, toIndex);
+        PagedVO<T> page = new PagedVO<>(subList, total, pageSize, currentPage);
+        page.setPageNum(pageNum);
+        page.setPageSize(pageSize);
+        page.setTotal(total);
+        return page;
+    }
+
+    public static <T, D extends PagedDTO> PagedVO<T> ofSub1(List<T> list, D pageDTO) {
         int start = (pageDTO.getPageNum() - 1) * pageDTO.getPageSize();
         int total = list.size();
         int end = start + pageDTO.getPageSize();

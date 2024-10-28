@@ -163,9 +163,7 @@ public class NoticeServiceImpl
 
     @Override
     public PagedVO<NoticeUserVO> queryUserNotice(NoticeEmployeeQueryDTO dto) {
-
         Integer userId = UserContextHolder.userId();
-
         List<Integer> deptIdList = new ArrayList<>();
         UserEntity userEntity = userService.get(userId);
         Integer departmentId = userEntity.getDepartmentId();
@@ -205,7 +203,7 @@ public class NoticeServiceImpl
                 voAllList.add(noticeUserVO);
             }
         }
-        return  PageUtil.of(voAllList, Convert.toInt(dto.getPageSize()), Convert.toInt(dto.getPageNum()));
+        return  PageUtil.ofSub(voAllList, dto);
     }
 
     private List<NoticeEntity> filter(NoticeEmployeeQueryDTO dto, List<NoticeEntity> noticeEntityList) {

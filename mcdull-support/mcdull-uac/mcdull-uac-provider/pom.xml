@@ -24,6 +24,11 @@
 <!--            <version>1.2.4</version>-->
 <!--        </dependency>-->
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-business-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>
         </dependency>

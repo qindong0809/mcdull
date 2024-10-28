@@ -21,7 +21,7 @@
 
     <modules>
 <!--        <module>mcdull-admin</module>-->
-<!--        <module>mcdull-business-common</module>-->
+        <module>mcdull-business-common</module>
         <module>mcdull-demo</module>
     </modules>
 

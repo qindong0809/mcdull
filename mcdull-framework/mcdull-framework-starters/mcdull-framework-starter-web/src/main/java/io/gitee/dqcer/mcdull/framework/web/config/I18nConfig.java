@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.framework.web.config;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,7 @@ import java.util.TimeZone;
  * @since 2023/12/27
  */
 @Configuration
-public class I18nConfig {
+public class I18nConfig implements SmartInitializingSingleton {
 
     protected Logger log = LoggerFactory.getLogger(getClass());
 
@@ -42,4 +43,13 @@ public class I18nConfig {
     }
 
 
+    @Override
+    public void afterSingletonsInstantiated() {
+        LogHelp.info(log, "i18nConfig i18n file loading...");
+        this.reloadI18nFile();
+    }
+
+    private void reloadI18nFile() {
+        // todo
+    }
 }
