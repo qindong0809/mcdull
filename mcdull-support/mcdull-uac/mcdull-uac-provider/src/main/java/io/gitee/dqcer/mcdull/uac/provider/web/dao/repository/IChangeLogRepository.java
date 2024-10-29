@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ChangeLogEntity;
@@ -13,7 +14,7 @@ import java.util.List;
 * @author dqcer
 * @since 2024-04-29
 */
-public interface IChangeLogRepository extends IService<ChangeLogEntity>  {
+public interface IChangeLogRepository extends IRepository<ChangeLogEntity> {
 
     /**
      * 查询列表

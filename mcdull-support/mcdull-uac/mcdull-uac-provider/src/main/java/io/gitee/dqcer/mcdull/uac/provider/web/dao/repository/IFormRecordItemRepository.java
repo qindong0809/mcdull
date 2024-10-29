@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormRecordItemEntity;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * @author dqcer
  * @since 2024-06-15 13:11:44
  */
-public interface IFormRecordItemRepository extends IService<FormRecordItemEntity> {
+public interface IFormRecordItemRepository extends IRepository<FormRecordItemEntity> {
 
     /**
      * select by form id

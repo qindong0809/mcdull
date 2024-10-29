@@ -25,7 +25,7 @@ public interface Audit {
      * @return {@link String}
      */
     default String[] tagCharacter() {
-        return new String[]{"[", "]"};
+        return new String[]{"", ""};
     }
 
     /**

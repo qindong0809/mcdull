@@ -74,7 +74,7 @@ public class DictKeyServiceImpl
         if (CollUtil.isEmpty(list) || !NumberUtil.equals(idList.size(), list.size())) {
             this.throwDataNotExistException(StrUtil.join(StrUtil.COMMA, idList));
         }
-        baseRepository.removeBatchByIds(idList);
+        baseRepository.removeByIds(idList);
     }
 
     @Transactional(rollbackFor = Exception.class)

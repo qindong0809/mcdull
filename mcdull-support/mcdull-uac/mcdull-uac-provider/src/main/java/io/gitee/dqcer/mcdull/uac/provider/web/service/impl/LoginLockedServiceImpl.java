@@ -76,7 +76,7 @@ public class LoginLockedServiceImpl
         for (LoginLockedEntity lockedEntity : list) {
             lockedEntity.setLockFlag(false);
         }
-        baseRepository.updateBatchById(list);
+        baseRepository.updateBatchById(list, list.size());
     }
 
     private LoginLockedVO convert(LoginLockedEntity entity) {

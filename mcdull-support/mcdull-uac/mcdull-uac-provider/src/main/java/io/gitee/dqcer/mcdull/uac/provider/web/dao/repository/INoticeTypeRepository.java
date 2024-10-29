@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeTypeEntity;
 
 /**
@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeTypeEntity;
  * @author dqcer
  * @since 2024-04-29
  */
-public interface INoticeTypeRepository extends IService<NoticeTypeEntity>  {
+public interface INoticeTypeRepository extends IRepository<NoticeTypeEntity> {
 
 
 }

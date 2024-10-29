@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FeedbackQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FeedbackEntity;
@@ -27,7 +27,7 @@ import java.util.List;
 * @since 2024-04-29
 */
 @Service
-public class FeedbackRepositoryImpl extends ServiceImpl<FeedbackMapper, FeedbackEntity>  implements IFeedbackRepository {
+public class FeedbackRepositoryImpl extends CrudRepository<FeedbackMapper, FeedbackEntity> implements IFeedbackRepository {
 
     @Override
     public List<FeedbackEntity> queryListByIds(List<Integer> idList) {

@@ -8,14 +8,11 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
-import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RolePageDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.RoleMapper;
@@ -34,7 +31,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class RoleRepositoryImpl
-        extends ServiceImpl<RoleMapper, RoleEntity> implements IRoleRepository {
+        extends CrudRepository<RoleMapper, RoleEntity> implements IRoleRepository {
 
     @Override
     public Page<RoleEntity> selectPage(RolePageDTO dto) {

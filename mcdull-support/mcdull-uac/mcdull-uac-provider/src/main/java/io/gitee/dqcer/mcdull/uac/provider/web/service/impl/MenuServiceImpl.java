@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -127,7 +128,7 @@ public class MenuServiceImpl
         if (entityList.size() != menuIdList.size()) {
             this.throwDataNotExistException(menuIdList);
         }
-        baseRepository.removeBatchByIds(menuIdList);
+        baseRepository.removeByIds(menuIdList);
     }
 
     private MenuEntity setUpdateField(MenuUpdateDTO dto, MenuEntity menuEntity) {
@@ -278,6 +279,21 @@ public class MenuServiceImpl
         List<MenuEntity> list = baseRepository.listOnlyMenu(onlyMenu);
         List<Tree<Integer>> integerTree = this.getTrees(list);
         return this.convertMenuTreeVO(integerTree);
+    }
+
+    @Override
+    public Map<String, MenuEntity> getMenuName(List<String> codeList) {
+        if (CollUtil.isNotEmpty(codeList)) {
+            return baseRepository.all().stream()
+                    .filter(menuEntity -> codeList.contains(menuEntity.getApiPerms()))
+                    .collect(Collectors.toMap(MenuEntity::getApiPerms, Function.identity()));
+        }
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public List<MenuEntity> listAll() {
+        return baseRepository.all();
     }
 
     public List<MenuTreeVO> convertMenuTreeVO(List<Tree<Integer>> treeList) {

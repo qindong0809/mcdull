@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.EmailSendHistoryEntity;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * @since 2024/7/25 11:09
  */
 
-public interface IEmailSendHistoryRepository extends IService<EmailSendHistoryEntity> {
+public interface IEmailSendHistoryRepository extends IRepository<EmailSendHistoryEntity> {
 
 
     /**

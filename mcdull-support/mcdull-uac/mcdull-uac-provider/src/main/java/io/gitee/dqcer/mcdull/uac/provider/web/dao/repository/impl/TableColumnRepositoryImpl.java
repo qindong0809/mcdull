@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.TableColumnEntity;
@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Service
 public class TableColumnRepositoryImpl
-        extends ServiceImpl<TableColumnMapper, TableColumnEntity>  implements ITableColumnRepository {
+        extends CrudRepository<TableColumnMapper, TableColumnEntity> implements ITableColumnRepository {
 
     @Override
     public List<TableColumnEntity> queryListByIds(List<Integer> idList) {

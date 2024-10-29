@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormItemEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.FormItemMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormItemRepository;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Service
 public class FormItemRepositoryImpl extends
-        ServiceImpl<FormItemMapper, FormItemEntity> implements IFormItemRepository {
+        CrudRepository<FormItemMapper, FormItemEntity> implements IFormItemRepository {
 
     @Override
     public void deleteByFormId(Integer formId) {

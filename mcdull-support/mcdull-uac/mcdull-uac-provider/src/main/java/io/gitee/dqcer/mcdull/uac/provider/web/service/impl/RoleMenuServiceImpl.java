@@ -35,7 +35,7 @@ public class RoleMenuServiceImpl
     public boolean deleteAndInsert(Integer roleId, List<Integer> menuIdList) {
         List<RoleMenuEntity> list = baseRepository.listByRoleId(roleId);
         if (CollUtil.isNotEmpty(list)) {
-            baseRepository.removeBatchByIds(list);
+            baseRepository.removeByIds(list);
         }
         if (CollUtil.isNotEmpty(menuIdList)) {
             baseRepository.insert(roleId, menuIdList);

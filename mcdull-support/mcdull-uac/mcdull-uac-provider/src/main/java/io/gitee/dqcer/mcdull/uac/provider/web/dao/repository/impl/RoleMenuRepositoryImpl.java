@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleMenuEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.RoleMenuMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleMenuRepository;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class RoleMenuRepositoryImpl
-        extends ServiceImpl<RoleMenuMapper, RoleMenuEntity> implements IRoleMenuRepository {
+        extends CrudRepository<RoleMenuMapper, RoleMenuEntity> implements IRoleMenuRepository {
 
     @Override
     public Map<Integer, List<Integer>> menuIdListMap(Collection<Integer> roleIdCollection) {

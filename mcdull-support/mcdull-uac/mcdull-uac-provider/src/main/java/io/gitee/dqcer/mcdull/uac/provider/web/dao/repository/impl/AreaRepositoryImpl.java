@@ -5,7 +5,7 @@ import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.AreaQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.AreaEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.AreaMapper;
@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Service
 public class AreaRepositoryImpl extends
-        ServiceImpl<AreaMapper, AreaEntity> implements IAreaRepository {
+        CrudRepository<AreaMapper, AreaEntity> implements IAreaRepository {
 
     @Override
     public List<AreaEntity> queryListByIds(List<Integer> idList) {

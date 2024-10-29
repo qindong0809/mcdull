@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MessageQueryDTO;
@@ -28,7 +28,7 @@ import java.util.Date;
  */
 @Service
 public class MessageRepositoryImpl extends
-        ServiceImpl<MessageMapper, MessageEntity> implements IMessageRepository {
+        CrudRepository<MessageMapper, MessageEntity> implements IMessageRepository {
 
 
     @Override

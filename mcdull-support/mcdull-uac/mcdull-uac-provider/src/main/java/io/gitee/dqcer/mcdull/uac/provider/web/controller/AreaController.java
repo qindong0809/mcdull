@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.AreaQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.AreaVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IAreaService;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 @RestController
 @Tag(name = "行政区域")
-public class AreaController {
+public class AreaController extends BasicController {
 
     @Resource
     private IAreaService areaService;

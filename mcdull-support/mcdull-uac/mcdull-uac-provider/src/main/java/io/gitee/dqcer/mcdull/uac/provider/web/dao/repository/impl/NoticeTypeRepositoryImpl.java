@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeTypeEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.NoticeTypeMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.INoticeTypeRepository;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 */
 @Service
 public class NoticeTypeRepositoryImpl
-        extends ServiceImpl<NoticeTypeMapper, NoticeTypeEntity>  implements INoticeTypeRepository {
+        extends CrudRepository<NoticeTypeMapper, NoticeTypeEntity> implements INoticeTypeRepository {
 
 
 

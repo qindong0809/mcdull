@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
@@ -26,7 +27,7 @@ import java.util.List;
 */
 @Service
 public class ConfigRepositoryImpl
-        extends ServiceImpl<ConfigMapper, ConfigEntity>  implements IConfigRepository {
+        extends CrudRepository<ConfigMapper, ConfigEntity> implements IConfigRepository {
 
     @Override
     public List<ConfigEntity> queryListByIds(List<Integer> idList) {

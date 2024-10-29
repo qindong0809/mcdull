@@ -5,7 +5,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleUserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.RoleUserMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRoleRepository;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserRoleRepositoryImpl
-        extends ServiceImpl<RoleUserMapper, RoleUserEntity> implements IUserRoleRepository {
+        extends CrudRepository<RoleUserMapper, RoleUserEntity> implements IUserRoleRepository {
 
     @Override
     public void insert(Integer userId, List<Integer> roleIds) {

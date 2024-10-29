@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ChangeLogEntity;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Service
 public class ChangeLogRepositoryImpl
-        extends ServiceImpl<ChangeLogMapper, ChangeLogEntity>  implements IChangeLogRepository {
+        extends CrudRepository<ChangeLogMapper, ChangeLogEntity> implements IChangeLogRepository {
 
     @Override
     public List<ChangeLogEntity> queryListByIds(List<Integer> idList) {

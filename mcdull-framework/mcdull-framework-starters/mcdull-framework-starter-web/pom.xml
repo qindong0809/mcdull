@@ -72,6 +72,11 @@
             <artifactId>spring-jdbc</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

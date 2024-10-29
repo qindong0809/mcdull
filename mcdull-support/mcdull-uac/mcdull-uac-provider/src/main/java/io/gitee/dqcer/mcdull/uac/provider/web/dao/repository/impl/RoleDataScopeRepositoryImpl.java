@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleDataScopeEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.RoleDataScopeMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleDataScopeRepository;
@@ -18,8 +18,8 @@ import java.util.List;
  * @since 2024/05/13
  */
 @Service
-public class RoleDataScopeRepositoryImpl extends ServiceImpl<RoleDataScopeMapper, RoleDataScopeEntity>
-        implements IRoleDataScopeRepository {
+public class RoleDataScopeRepositoryImpl
+        extends CrudRepository<RoleDataScopeMapper, RoleDataScopeEntity> implements IRoleDataScopeRepository {
 
     @Override
     public List<RoleDataScopeEntity> getListByRole(Integer roleId) {

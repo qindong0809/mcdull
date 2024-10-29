@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.OperateLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.OperateLogEntity;
@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @Service
 public class OperateLogRepositoryImpl
-        extends ServiceImpl<OperateLogMapper, OperateLogEntity>  implements IOperateLogRepository {
+        extends CrudRepository<OperateLogMapper, OperateLogEntity> implements IOperateLogRepository {
 
     @Override
     public Page<OperateLogEntity> selectPage(OperateLogQueryDTO param, List<Integer> userIdList) {

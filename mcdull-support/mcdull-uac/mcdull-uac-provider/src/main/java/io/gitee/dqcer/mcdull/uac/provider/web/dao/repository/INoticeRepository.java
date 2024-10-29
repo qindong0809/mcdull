@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeEmployeeQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeEntity;
@@ -15,7 +15,7 @@ import java.util.List;
 * @author dqcer
 * @since 2024-04-29
 */
-public interface INoticeRepository extends IService<NoticeEntity> {
+public interface INoticeRepository extends IRepository<NoticeEntity> {
 
     /**
      * 根据id查询

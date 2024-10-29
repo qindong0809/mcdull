@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.OperateLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.OperateLogEntity;
 
@@ -14,7 +14,7 @@ import java.util.Map;
  * @author dqcer
  * @since 2024-04-29
  */
-public interface IOperateLogRepository extends IService<OperateLogEntity>  {
+public interface IOperateLogRepository extends IRepository<OperateLogEntity> {
 
     /**
      * 分页

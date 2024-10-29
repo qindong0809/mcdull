@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.DepartmentMapper;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 @Service
 public class DepartmentRepositoryImpl
-        extends ServiceImpl<DepartmentMapper, DepartmentEntity> implements IDepartmentRepository {
+        extends CrudRepository<DepartmentMapper, DepartmentEntity> implements IDepartmentRepository {
 
     @Override
     public Integer insert(DepartmentEntity entity) {

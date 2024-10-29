@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.HelpDocRelationEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.HelpDocRelationMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IHelpDocRelationRepository;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Service
 public class HelpDocRelationRepositoryImpl
-        extends ServiceImpl<HelpDocRelationMapper, HelpDocRelationEntity>  implements IHelpDocRelationRepository {
+        extends CrudRepository<HelpDocRelationMapper, HelpDocRelationEntity> implements IHelpDocRelationRepository {
 
     @Override
     public List<HelpDocRelationEntity> listByRelationId(Integer relationId) {

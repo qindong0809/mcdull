@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MessageQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MessageEntity;
 
@@ -12,7 +12,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.MessageEntity;
  * @author dqcer
  * @since 2024-06-15 13:11:44
  */
-public interface IMessageRepository extends IService<MessageEntity> {
+public interface IMessageRepository extends IRepository<MessageEntity> {
 
     Integer getUnreadCount(Integer userId);
 

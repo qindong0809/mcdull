@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FeedbackQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FeedbackEntity;
@@ -14,7 +14,7 @@ import java.util.List;
  * @author dqcer
  * @since 2024-04-29
  **/
-public interface IFeedbackRepository extends IService<FeedbackEntity>  {
+public interface IFeedbackRepository extends IRepository<FeedbackEntity> {
 
    /**
     * 根据ID列表批量查询数据

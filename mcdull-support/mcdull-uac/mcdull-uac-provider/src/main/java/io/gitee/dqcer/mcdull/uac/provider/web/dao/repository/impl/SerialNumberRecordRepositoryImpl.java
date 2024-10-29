@@ -5,7 +5,7 @@ import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.SerialNumberRecordQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.SerialNumberRecordEntity;
@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Service
 public class SerialNumberRecordRepositoryImpl
-        extends ServiceImpl<SerialNumberRecordMapper, SerialNumberRecordEntity>  implements ISerialNumberRecordRepository {
+        extends CrudRepository<SerialNumberRecordMapper, SerialNumberRecordEntity> implements ISerialNumberRecordRepository {
 
     @Override
     public List<SerialNumberRecordEntity> queryListByIds(List<Integer> idList) {

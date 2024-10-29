@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeEmployeeQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeQueryDTO;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Service
 public class NoticeRepositoryImpl extends
-        ServiceImpl<NoticeMapper, NoticeEntity> implements INoticeRepository {
+        CrudRepository<NoticeMapper, NoticeEntity> implements INoticeRepository {
 
     @Override
     public List<NoticeEntity> queryListByIds(List<Integer> idList) {

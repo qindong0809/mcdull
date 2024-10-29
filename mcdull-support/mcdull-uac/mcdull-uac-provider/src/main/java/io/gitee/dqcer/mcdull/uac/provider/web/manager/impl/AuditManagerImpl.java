@@ -26,7 +26,27 @@ public class AuditManagerImpl implements IAuditManager {
 
     @Override
     public <T extends Audit> void saveByAddEnum(String bizIndex, Integer bizId, T auditBean) {
-        if (ObjUtil.isNull(auditBean) || ObjUtil.isNull(bizId) || StrUtil.isBlank(bizIndex)) {
+        this.common(OperationTypeEnum.ADD,  bizIndex, bizId, null, auditBean, null);
+    }
+    @Override
+    public <T extends Audit> void saveByUpdateEnum(String bizIndex, Integer bizId, T oldAuditBean, T newAuditBean) {
+        this.common(OperationTypeEnum.UPDATE,  bizIndex, bizId, oldAuditBean, newAuditBean, null);
+    }
+
+    @Override
+    public void saveByDeleteEnum(String bizIndex, Integer bizId, String reason) {
+        this.common(OperationTypeEnum.DELETE,  bizIndex, bizId, null, null, reason);
+    }
+
+    @Override
+    public void saveByStatusEnum(String bizIndex, Integer bizId, boolean active, String reason) {
+        this.common(active ? OperationTypeEnum.ENABLE : OperationTypeEnum.DISABLE,  bizIndex, bizId, null, null, reason);
+    }
+
+
+    private <T extends Audit> void common(OperationTypeEnum typeEnum, String bizIndex, Integer bizId,
+                                          T oldAuditBean, T newAuditBean, String reason) {
+        if (ObjUtil.isNull(bizId) || StrUtil.isBlank(bizIndex)) {
             throw new IllegalArgumentException();
         }
         UnifySession<?> session = UserContextHolder.getSession();
@@ -34,8 +54,18 @@ public class AuditManagerImpl implements IAuditManager {
             return;
         }
         String bizTypeCode = session.getPermissionCode();
-        String comment = AuditUtil.compareStr(auditBean);
+        String comment = StrUtil.EMPTY;
+        if (typeEnum == OperationTypeEnum.UPDATE) {
+            comment = AuditUtil.compareStr(oldAuditBean, newAuditBean);
+        } else if (typeEnum == OperationTypeEnum.ADD) {
+            comment = AuditUtil.compareStr(oldAuditBean);
+        } else if (typeEnum == OperationTypeEnum.DELETE
+                || typeEnum == OperationTypeEnum.DISABLE
+                || typeEnum == OperationTypeEnum.ENABLE) {
+            comment = reason;
+        }
         String loginName = session.getLoginName();
-        bizAuditService.insert(bizTypeCode, OperationTypeEnum.ADD, bizIndex, bizId, comment, loginName, new Date(), null);
+        bizAuditService.insert(bizTypeCode, typeEnum, bizIndex, bizId, comment, loginName, new Date(), null);
     }
+
 }

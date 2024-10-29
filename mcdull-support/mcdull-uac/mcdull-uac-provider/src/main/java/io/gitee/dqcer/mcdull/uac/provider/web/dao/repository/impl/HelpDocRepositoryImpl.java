@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.HelpDocEntity;
@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Service
 public class HelpDocRepositoryImpl
-        extends ServiceImpl<HelpDocMapper, HelpDocEntity>  implements IHelpDocRepository {
+        extends CrudRepository<HelpDocMapper, HelpDocEntity> implements IHelpDocRepository {
 
 
     @Override

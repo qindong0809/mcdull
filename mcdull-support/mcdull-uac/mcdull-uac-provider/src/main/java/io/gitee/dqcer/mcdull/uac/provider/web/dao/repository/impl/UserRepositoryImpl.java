@@ -10,7 +10,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
@@ -36,7 +36,7 @@ import java.util.List;
  */
 @Service
 public class UserRepositoryImpl
-        extends ServiceImpl<UserMapper, UserEntity> implements IUserRepository {
+        extends CrudRepository<UserMapper, UserEntity> implements IUserRepository {
 
     @Override
     public Page<UserEntity> selectPage(UserListDTO dto, List<Integer> deptIdList,

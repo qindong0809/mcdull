@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleUserQueryDTO;
@@ -15,7 +16,7 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/26
  */
-public interface IUserRepository extends IService<UserEntity> {
+public interface IUserRepository extends IRepository<UserEntity> {
 
     /**
      * 分页查询

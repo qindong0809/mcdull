@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleMenuEntity;
 
 import java.util.Collection;
@@ -13,7 +13,7 @@ import java.util.Map;
  * @author dqcer
  * @since 2022/12/26
  */
-public interface IRoleMenuRepository extends IService<RoleMenuEntity> {
+public interface IRoleMenuRepository extends IRepository<RoleMenuEntity> {
 
     /**
      * 按角色id映射

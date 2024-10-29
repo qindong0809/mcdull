@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.EnterpriseQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.OaEnterpriseEntity;
@@ -25,7 +25,7 @@ import java.time.LocalDate;
  */
 @Service
 public class OaEnterpriseRepositoryImpl
-        extends ServiceImpl<OaEnterpriseMapper, OaEnterpriseEntity>  implements IOaEnterpriseRepository {
+        extends CrudRepository<OaEnterpriseMapper, OaEnterpriseEntity> implements IOaEnterpriseRepository {
 
     @Override
     public Page<OaEnterpriseEntity> selectPage(EnterpriseQueryDTO dto) {

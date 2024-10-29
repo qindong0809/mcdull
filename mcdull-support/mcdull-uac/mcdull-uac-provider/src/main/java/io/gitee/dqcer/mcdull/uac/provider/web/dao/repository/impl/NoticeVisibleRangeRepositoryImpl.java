@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeVisibleRangeEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.NoticeVisibleRangeMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.INoticeVisibleRangeRepository;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Service
 public class NoticeVisibleRangeRepositoryImpl extends
-        ServiceImpl<NoticeVisibleRangeMapper, NoticeVisibleRangeEntity> implements INoticeVisibleRangeRepository {
+        CrudRepository<NoticeVisibleRangeMapper, NoticeVisibleRangeEntity> implements INoticeVisibleRangeRepository {
 
     @Override
     public List<NoticeVisibleRangeEntity> list(NoticeVisibleRangeEntity entity) {

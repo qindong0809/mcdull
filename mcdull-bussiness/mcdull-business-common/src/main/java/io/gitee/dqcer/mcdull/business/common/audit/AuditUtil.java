@@ -10,6 +10,8 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.SymbolConstants;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -71,19 +73,21 @@ public class AuditUtil {
         builder.append(before.prefix());
         builder.append(before.tagCharacter()[0]);
         StringJoiner result = new StringJoiner(SymbolConstants.COMMA + SymbolConstants.SPACE);
-
         for (FieldDiff diff : list) {
             Object beforeValue = diff.getBeforeValue();
             StringBuilder one = new StringBuilder();
             AuditDescription description = diff.getDescription();
             boolean dateType = beforeValue instanceof Date;
-            one.append(StrUtil.format("{}{}", description.label(), before.separate()));
-            one.append(StrUtil.format("{}{}{}",
-                    description.tagCharacter()[0],
-                    dateType ? DateUtil.format((Date) beforeValue, description.datePattern())
-                            : Convert.toStr(beforeValue, StrUtil.EMPTY),
-                    description.tagCharacter()[1]));
-            result.add(one);
+            String val = dateType ? DateUtil.format((Date) beforeValue, description.datePattern())
+                    : Convert.toStr(beforeValue, StrUtil.EMPTY);
+            if (StrUtil.isNotBlank(val)) {
+                one.append(StrUtil.format("{}{}", description.label(), before.separate()));
+                one.append(StrUtil.format("{}{}{}",
+                        description.tagCharacter()[0],
+                        val,
+                        description.tagCharacter()[1]));
+                result.add(one);
+            }
         }
         builder.append(result);
         builder.append(before.tagCharacter()[1]);
@@ -126,36 +130,13 @@ public class AuditUtil {
     }
 
 
+    @Setter
+    @Getter
     public static class FieldDiff {
-
 
         private AuditDescription description;
         private Object beforeValue;
-
         private Object afterValue;
 
-        public AuditDescription getDescription() {
-            return description;
-        }
-
-        public void setDescription(AuditDescription description) {
-            this.description = description;
-        }
-
-        public Object getBeforeValue() {
-            return beforeValue;
-        }
-
-        public void setBeforeValue(Object beforeValue) {
-            this.beforeValue = beforeValue;
-        }
-
-        public Object getAfterValue() {
-            return afterValue;
-        }
-
-        public void setAfterValue(Object afterValue) {
-            this.afterValue = afterValue;
-        }
     }
 }

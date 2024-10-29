@@ -38,4 +38,19 @@ public interface IMenuService {
     RoleMenuTreeVO getTreeRoleId(Integer roleId);
 
     List<MenuTreeVO> queryMenuTree(Boolean onlyMenu);
+
+    /**
+     * 获取菜单名称
+     *
+     * @param codeList 代码列表
+     * @return {@link Map }<{@link String }, {@link String }>
+     */
+    Map<String, MenuEntity> getMenuName(List<String> codeList);
+
+    /**
+     * 列出全部
+     *
+     * @return {@link List }<{@link MenuEntity }>
+     */
+    List<MenuEntity> listAll();
 }

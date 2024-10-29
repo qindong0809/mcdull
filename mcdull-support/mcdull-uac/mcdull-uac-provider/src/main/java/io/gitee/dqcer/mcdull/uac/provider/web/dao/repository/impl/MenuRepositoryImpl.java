@@ -8,7 +8,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class MenuRepositoryImpl
-        extends ServiceImpl<MenuMapper, MenuEntity> implements IMenuRepository {
+        extends CrudRepository<MenuMapper, MenuEntity> implements IMenuRepository {
 
 
     @Override

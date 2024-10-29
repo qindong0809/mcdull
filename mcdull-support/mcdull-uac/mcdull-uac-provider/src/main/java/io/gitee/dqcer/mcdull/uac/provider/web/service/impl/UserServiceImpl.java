@@ -72,9 +72,6 @@ public class UserServiceImpl
     private IDepartmentRepository departmentRepository;
 
     @Resource
-    private IDepartmentService departmentService;
-
-    @Resource
     private IAuditManager auditManager;
 
     @Resource
@@ -166,7 +163,7 @@ public class UserServiceImpl
         audit.setRemark(user.getRemark());
         Integer departmentId = user.getDepartmentId();
         if (ObjUtil.isNotNull(departmentId)) {
-            DepartmentEntity department = departmentService.getById(departmentId);
+            DepartmentEntity department = departmentRepository.getById(departmentId);
             if (ObjUtil.isNotNull(department)) {
                 audit.setDepartment(department.getName());
             }
@@ -204,6 +201,7 @@ public class UserServiceImpl
         UserEntity entity = UserConvert.insertDtoToEntity(dto);
         entity.setLoginPwd("a29c57c6894dee6e8251510d58c07078ee3f49bf");
         entity.setAdministratorFlag(false);
+        baseRepository.insert(entity);
         return entity;
     }
 
@@ -226,6 +224,7 @@ public class UserServiceImpl
             LogHelp.error(log, "数据更新失败，id:{}", id);
             throw new BusinessException(I18nConstants.DB_OPERATION_FAILED);
         }
+        auditManager.saveByStatusEnum(dbData.getActualName(), id, !dbData.getInactive(), null);
     }
 
     @Override
@@ -240,7 +239,10 @@ public class UserServiceImpl
             LogHelp.warn(log, "管理员账号禁止删除，id:{}", idList);
             throw new BusinessException(I18nConstants.PERMISSION_DENIED);
         }
-        baseRepository.removeBatchByIds(idList);
+        baseRepository.removeByIds(idList);
+        for (UserEntity userEntity : userEntities) {
+            auditManager.saveByDeleteEnum(userEntity.getActualName(), userEntity.getId(), null);
+        }
         return true;
     }
 
@@ -273,6 +275,7 @@ public class UserServiceImpl
         updateDO.setId(id);
         baseRepository.updateById(updateDO);
         userRoleService.batchUserListByRoleId(id, dto.getRoleIdList());
+        auditManager.saveByUpdateEnum(entity.getActualName(), entity.getId(), this.buildAuditLog(entity), this.buildAuditLog(baseRepository.getById(id)));
         return updateDO.getId();
     }
 
@@ -422,7 +425,7 @@ public class UserServiceImpl
         }
         Integer departmentId = dto.getDepartmentId();
         userEntities.forEach(i -> i.setDepartmentId(departmentId));
-        baseRepository.updateBatchById(userEntities);
+        baseRepository.updateBatchById(userEntities, 500);
     }
 
     @Override

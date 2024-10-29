@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictValueAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictValueQueryDTO;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Service
 public class DictValueRepositoryImpl
-        extends ServiceImpl<DictValueMapper, DictValueEntity> implements IDictValueRepository {
+        extends CrudRepository<DictValueMapper, DictValueEntity> implements IDictValueRepository {
 
     @Override
     public void insert(DictValueEntity entity) {

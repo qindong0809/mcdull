@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictKeyQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.DictKeyEntity;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * @author dqcer
  * @since 2022/12/26
  */
-public interface IDictKeyRepository extends IService<DictKeyEntity> {
+public interface IDictKeyRepository extends IRepository<DictKeyEntity> {
 
     /**
      * insert

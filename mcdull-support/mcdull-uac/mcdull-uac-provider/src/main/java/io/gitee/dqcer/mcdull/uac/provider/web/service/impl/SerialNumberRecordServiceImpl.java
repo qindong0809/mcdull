@@ -50,7 +50,7 @@ public class SerialNumberRecordServiceImpl
             entity.setCount(oldRecord.getCount() + i + 1);
             list.add(entity);
         }
-        baseRepository.saveBatch(list);
+        baseRepository.saveBatch(list, list.size());
     }
 
     @Override
@@ -65,6 +65,6 @@ public class SerialNumberRecordServiceImpl
             entity.setCount(i + 1);
             list.add(entity);
         }
-        baseRepository.saveBatch(list);
+        baseRepository.saveBatch(list, list.size());
     }
 }

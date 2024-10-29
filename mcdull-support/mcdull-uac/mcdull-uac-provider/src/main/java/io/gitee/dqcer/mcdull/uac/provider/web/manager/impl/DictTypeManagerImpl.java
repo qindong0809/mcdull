@@ -78,7 +78,7 @@ public class DictTypeManagerImpl implements IDictTypeManager {
         if (ObjectUtil.isNull(selectCode)) {
             throw new IllegalArgumentException("'selectCode' is null.");
         }
-        String key = MessageFormat.format(CacheConstants.DICT_LIST,  selectCode);
+        String key = StrUtil.format(CacheConstants.DICT_LIST,  selectCode);
         List<KeyValueBO<String, String>> list = cacheChannel.get(key, List.class);
         if (CollUtil.isNotEmpty(list)) {
             return list.stream().collect(Collectors.toMap(KeyValueBO::getKey, KeyValueBO::getValue));

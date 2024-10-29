@@ -8,7 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginFailQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLockedEntity;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Service
 public class LoginLockedRepositoryImpl
-        extends ServiceImpl<LoginLockedMapper, LoginLockedEntity>  implements ILoginLockedRepository {
+        extends CrudRepository<LoginLockedMapper, LoginLockedEntity> implements ILoginLockedRepository {
 
     @Override
     public LoginLockedEntity get(String loginName) {

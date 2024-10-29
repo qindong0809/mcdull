@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
@@ -13,11 +14,13 @@ import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.audit.RoleAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.RoleConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserRoleService;
@@ -44,6 +47,9 @@ public class RoleServiceImpl
 
     @Resource
     private IRoleMenuService roleMenuService;
+
+    @Resource
+    private IAuditManager auditManager;
     
 
     @Override
@@ -78,6 +84,15 @@ public class RoleServiceImpl
         }
         RoleEntity entity = RoleConvert.insertToEntity(dto);
         baseRepository.insert(entity);
+        auditManager.saveByAddEnum(dto.getRoleName(), entity.getId(), this.buildAuditLog(entity));
+    }
+
+    private Audit buildAuditLog(RoleEntity entity) {
+        RoleAudit audit = new RoleAudit();
+        audit.setRoleName(entity.getRoleName());
+        audit.setRoleCode(entity.getRoleCode());
+        audit.setRemark(entity.getRemark());
+        return audit;
     }
 
     @Override
@@ -88,6 +103,7 @@ public class RoleServiceImpl
             this.throwDataNotExistException(id);
         }
         baseRepository.removeById(id);
+        auditManager.saveByDeleteEnum(dbData.getRoleName(), id, null);
     }
 
     @Override
@@ -116,7 +132,10 @@ public class RoleServiceImpl
         role.setRoleName(dto.getRoleName());
         role.setRoleCode(dto.getRoleCode());
         role.setRemark(dto.getRemark());
-        return baseRepository.updateById(role);
+        baseRepository.updateById(role);
+        auditManager.saveByUpdateEnum(dto.getRoleName(), id, this.buildAuditLog(role),
+                this.buildAuditLog(baseRepository.getById(id)));
+        return true;
     }
 
     @Transactional(rollbackFor = Exception.class)

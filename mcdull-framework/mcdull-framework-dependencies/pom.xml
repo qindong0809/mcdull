@@ -23,6 +23,7 @@
         <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>
         <spring-boot-admin.version>2.7.1</spring-boot-admin.version>
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
+        <mybatis-plus-bom.version>3.5.9</mybatis-plus-bom.version>
         <hibernate-validator.version>6.1.0.Final</hibernate-validator.version>
         <knife4j.version>4.4.0</knife4j.version>
         <fastjson.version>1.2.83</fastjson.version>
@@ -159,19 +160,26 @@
             <!-- orm 依赖-->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
+                <artifactId>mybatis-plus-bom</artifactId>
+                <version>${mybatis-plus-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-core</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-extension</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.baomidou</groupId>-->
+<!--                <artifactId>mybatis-plus-boot-starter</artifactId>-->
+<!--                <version>${mybatis-plus.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>com.baomidou</groupId>-->
+<!--                <artifactId>mybatis-plus-core</artifactId>-->
+<!--                <version>${mybatis-plus.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>com.baomidou</groupId>-->
+<!--                <artifactId>mybatis-plus-extension</artifactId>-->
+<!--                <version>${mybatis-plus.version}</version>-->
+<!--            </dependency>-->
             <!--参数效验-->
             <dependency>
                 <groupId>org.hibernate</groupId>

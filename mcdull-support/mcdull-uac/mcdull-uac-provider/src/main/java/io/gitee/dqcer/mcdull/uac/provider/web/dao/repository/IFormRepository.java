@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FormQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormEntity;
 
@@ -13,7 +13,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormEntity;
  * @since 2024/7/25 11:24
  */
 
-public interface IFormRepository extends IService<FormEntity> {
+public interface IFormRepository extends IRepository<FormEntity> {
 
     /**
      * 分页

@@ -3,10 +3,13 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
 import io.gitee.dqcer.mcdull.framework.web.version.IVersionInfoComponent;
+import io.gitee.dqcer.mcdull.uac.provider.model.audit.ChangeLogAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogUpdateDTO;
@@ -14,12 +17,14 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.ChangeLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogAndVersionVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IChangeLogRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IChangeLogService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -36,6 +41,9 @@ public class ChangeLogServiceImpl
     @Resource
     private IVersionInfoComponent versionInfoComponent;
 
+    @Resource
+    private IAuditManager auditManager;
+
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -47,6 +55,18 @@ public class ChangeLogServiceImpl
         }
         ChangeLogEntity entity = this.convertEntity(dto);
         baseRepository.insert(entity);
+        auditManager.saveByAddEnum(dto.getVersion(), entity.getId(), this.buildAuditLog(entity));
+    }
+
+    private Audit buildAuditLog(ChangeLogEntity entity) {
+        ChangeLogAudit audit = new ChangeLogAudit();
+        audit.setVersion(entity.getVersion());
+        audit.setContent(entity.getContent());
+        audit.setPublicDate(TimeZoneUtil.serializeDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        audit.setPublishAuthor(entity.getPublishAuthor());
+        audit.setLink(entity.getLink());
+//        audit.setType(entity.getType());
+        return audit;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -73,7 +93,7 @@ public class ChangeLogServiceImpl
         if (entityList.size() != idList.size()) {
             this.throwDataNotExistException(idList);
         }
-        baseRepository.removeBatchByIds(idList);
+        baseRepository.removeByIds(idList);
     }
 
     @Override

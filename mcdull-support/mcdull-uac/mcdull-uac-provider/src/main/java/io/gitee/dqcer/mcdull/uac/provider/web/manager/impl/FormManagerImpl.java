@@ -161,7 +161,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                 }
             }
         }
-        formItemRepository.saveBatch(itemEntityList);
+        formItemRepository.saveBatch(itemEntityList, itemEntityList.size());
     }
 
     @Override
@@ -204,7 +204,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             }
             recordItemList.add(recordItem);
         });
-        formRecordItemRepository.saveBatch(recordItemList);
+        formRecordItemRepository.saveBatch(recordItemList, recordItemList.size());
     }
 
     @Override
@@ -387,7 +387,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                 recordItem.setCurrentValue(Convert.toStr(obj));
             }
         });
-        formRecordItemRepository.updateBatchById(list);
+        formRecordItemRepository.updateBatchById(list, list.size());
     }
 
     @Override

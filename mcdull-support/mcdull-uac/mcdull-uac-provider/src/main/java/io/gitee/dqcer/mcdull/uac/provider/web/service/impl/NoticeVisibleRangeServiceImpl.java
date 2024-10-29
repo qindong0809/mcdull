@@ -48,7 +48,7 @@ public class NoticeVisibleRangeServiceImpl
             baseRepository.updateBatchById(updateList, updateList.size());
         }
         if (CollUtil.isNotEmpty(removeList)) {
-            baseRepository.removeBatchByIds(removeList, removeList.size());
+            baseRepository.removeByIds(removeList);
         }
     }
 }

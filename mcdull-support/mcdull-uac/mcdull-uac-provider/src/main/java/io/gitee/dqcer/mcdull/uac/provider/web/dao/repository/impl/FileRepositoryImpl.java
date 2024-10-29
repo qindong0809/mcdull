@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
@@ -32,7 +32,7 @@ import java.util.List;
 */
 @Service
 public class FileRepositoryImpl
-        extends ServiceImpl<FileMapper, FileEntity>  implements IFileRepository {
+        extends CrudRepository<FileMapper, FileEntity> implements IFileRepository {
 
     @Override
     public List<FileEntity> queryListByIds(List<Integer> idList) {

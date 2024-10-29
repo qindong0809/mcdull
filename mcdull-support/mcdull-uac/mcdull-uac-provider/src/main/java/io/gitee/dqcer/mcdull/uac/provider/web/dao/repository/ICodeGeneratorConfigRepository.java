@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FeedbackQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.TableQueryForm;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.CodeGeneratorConfigEntity;
@@ -17,7 +17,7 @@ import java.util.List;
  * @author dqcer
  * @since 2024-04-29
  */
-public interface ICodeGeneratorConfigRepository extends IService<CodeGeneratorConfigEntity>  {
+public interface ICodeGeneratorConfigRepository extends IRepository<CodeGeneratorConfigEntity> {
 
    /**
     * 根据ID列表批量查询数据

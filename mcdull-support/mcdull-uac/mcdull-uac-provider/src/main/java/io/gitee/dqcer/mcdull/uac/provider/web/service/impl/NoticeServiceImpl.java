@@ -435,7 +435,7 @@ public class NoticeServiceImpl
         if (entityList.size() != idList.size()) {
             this.throwDataNotExistException(idList);
         }
-        baseRepository.removeBatchByIds(idList);
+        baseRepository.removeByIds(idList);
     }
 
 }

@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.EmailSendHistoryEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.EmailSendHistoryMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IEmailSendHistoryRepository;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 public class EmailSendHistoryRepositoryImpl
-        extends ServiceImpl<EmailSendHistoryMapper, EmailSendHistoryEntity> implements IEmailSendHistoryRepository {
+        extends CrudRepository<EmailSendHistoryMapper, EmailSendHistoryEntity> implements IEmailSendHistoryRepository {
 
     @Override
     public boolean batchInsert(List<EmailSendHistoryEntity> list) {

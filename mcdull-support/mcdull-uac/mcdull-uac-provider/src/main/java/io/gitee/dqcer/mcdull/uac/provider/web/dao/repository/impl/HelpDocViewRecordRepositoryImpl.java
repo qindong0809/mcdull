@@ -5,7 +5,7 @@ import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocViewRecordQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.HelpDocViewRecordEntity;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class HelpDocViewRecordRepositoryImpl
-        extends ServiceImpl<HelpDocViewRecordMapper, HelpDocViewRecordEntity>  implements IHelpDocViewRecordRepository {
+        extends CrudRepository<HelpDocViewRecordMapper, HelpDocViewRecordEntity> implements IHelpDocViewRecordRepository {
 
     @Override
     public Page<HelpDocViewRecordEntity> selectPage(HelpDocViewRecordQueryDTO dto) {
