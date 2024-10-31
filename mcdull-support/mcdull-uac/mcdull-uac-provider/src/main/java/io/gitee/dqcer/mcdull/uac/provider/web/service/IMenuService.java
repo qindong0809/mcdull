@@ -40,17 +40,9 @@ public interface IMenuService {
     List<MenuTreeVO> queryMenuTree(Boolean onlyMenu);
 
     /**
-     * 获取菜单名称
+     * 导出数据
      *
-     * @param codeList 代码列表
-     * @return {@link Map }<{@link String }, {@link String }>
+     * @param dto DTO
      */
-    Map<String, MenuEntity> getMenuName(List<String> codeList);
-
-    /**
-     * 列出全部
-     *
-     * @return {@link List }<{@link MenuEntity }>
-     */
-    List<MenuEntity> listAll();
+    void exportData(MenuListDTO dto);
 }

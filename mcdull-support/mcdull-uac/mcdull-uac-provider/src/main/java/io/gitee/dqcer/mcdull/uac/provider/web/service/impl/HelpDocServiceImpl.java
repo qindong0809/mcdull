@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -23,8 +22,8 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IHelpDocCatalogRepo
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IHelpDocRelationRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IHelpDocRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IHelpDocViewRecordRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IHelpDocService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,7 +47,7 @@ public class HelpDocServiceImpl
     private IHelpDocViewRecordRepository helpDocViewRecordRepository;
 
     @Resource
-    private IUserService userService;
+    private IUserManager userManager;
 
     @Resource
     private IHelpDocCatalogRepository helpDocCatalogRepository;
@@ -104,7 +103,7 @@ public class HelpDocServiceImpl
         List<HelpDocViewRecordEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
             Set<Integer> userIdSet = records.stream().map(HelpDocViewRecordEntity::getUserId).collect(Collectors.toSet());
-            Map<Integer, UserEntity> userMap = userService.getEntityMap(new ArrayList<>(userIdSet));
+            Map<Integer, UserEntity> userMap = userManager.getEntityMap(new ArrayList<>(userIdSet));
             for (HelpDocViewRecordEntity entity : records) {
                 HelpDocViewRecordVO vo = this.convertRecord(entity);
                 if (MapUtil.isNotEmpty(userMap)) {

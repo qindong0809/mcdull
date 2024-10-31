@@ -23,10 +23,9 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileMetadataVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileUploadVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileStorageService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,26 +42,25 @@ public class FileServiceImpl
     private IFileStorageService fileStorageService;
 
     @Resource
-    private IUserService userService;
+    private IUserManager userManager;
 
     @Override
     public PagedVO<FileVO> queryPage(FileQueryDTO dto) {
         String creatorName = dto.getCreatorName();
         List<Integer> userIdList = new ArrayList<>();
         if (StrUtil.isNotBlank(creatorName)) {
-            List<UserEntity> entityList = userService.getLike(creatorName);
-            if (CollUtil.isEmpty(entityList)) {
-                return PageUtil.empty(dto);
-            }
+            List<UserEntity> entityList = userManager.getLike(creatorName);
             userIdList = entityList.stream().map(IdEntity::getId).collect(Collectors.toList());
         }
-
+        if (CollUtil.isEmpty(userIdList)) {
+            return PageUtil.empty(dto);
+        }
         Page<FileEntity> entityPage = baseRepository.selectPage(dto, userIdList);
         List<FileVO> voList = new ArrayList<>();
         List<FileEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
             Set<Integer> userIdSet = records.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
-            Map<Integer, String> userMap = userService.getNameMap(new ArrayList<>(userIdSet));
+            Map<Integer, String> userMap = userManager.getNameMap(new ArrayList<>(userIdSet));
             for (FileEntity entity : records) {
                 FileVO fileVO = FileConvert.convertToEntity(entity);
                 fileVO.setFileUrl(fileStorageService.getFileUrl(entity.getFileKey()));

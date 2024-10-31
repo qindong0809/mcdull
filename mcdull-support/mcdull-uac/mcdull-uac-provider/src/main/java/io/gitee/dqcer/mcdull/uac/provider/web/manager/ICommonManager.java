@@ -20,4 +20,6 @@ public interface ICommonManager {
     void storageExcel(String modelName, String suffixFileName, String condition,
                  Supplier<Map<String, String>> supplierTitleMap,
                  Supplier<List<Map<String, String>>> supplierDataList);
+
+    void exportExcel(String sheetName, String conditions, Map<String, String> titleMap, List<Map<String, String>> mapList);
 }

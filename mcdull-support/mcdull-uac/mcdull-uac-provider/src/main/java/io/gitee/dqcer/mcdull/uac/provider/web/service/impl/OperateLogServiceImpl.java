@@ -16,6 +16,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.OperateLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.OperateLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IOperateLogRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IOperateLogService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,9 @@ public class OperateLogServiceImpl
     @Resource
     private IUserService userService;
 
+    @Resource
+    private IUserManager userManager;
+
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public void save(OperateLogEntity dto) {
@@ -51,7 +55,7 @@ public class OperateLogServiceImpl
         String userName = dto.getUserName();
         List<Integer> userIdList = new ArrayList<>();
         if (StrUtil.isNotBlank(userName)) {
-            List<UserEntity> userList = userService.getLike(userName);
+            List<UserEntity> userList = userManager.getLike(userName);
             if (CollUtil.isEmpty(userList)) {
                 return PageUtil.empty(dto);
             }
@@ -62,7 +66,7 @@ public class OperateLogServiceImpl
         List<OperateLogEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
             Set<Integer> userIdSet = records.stream().map(OperateLogEntity::getUserId).collect(Collectors.toSet());
-            Map<Integer, UserEntity> userMap = userService.getEntityMap(new ArrayList<>(userIdSet));
+            Map<Integer, UserEntity> userMap = userManager.getEntityMap(new ArrayList<>(userIdSet));
             for (OperateLogEntity entity : records) {
                 OperateLogVO vo = this.convertToLogVO(entity);
                 Integer operateUserId = vo.getOperateUserId();

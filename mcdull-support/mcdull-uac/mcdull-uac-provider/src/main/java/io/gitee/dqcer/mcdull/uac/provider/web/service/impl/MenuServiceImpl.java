@@ -6,6 +6,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
@@ -21,6 +22,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
@@ -48,6 +50,9 @@ public class MenuServiceImpl
 
     @Resource
     private IRoleService roleService;
+
+    @Resource
+    private ICommonManager commonManager;
 
     @Override
     public Map<Integer, List<String>> getMenuCodeListMap(List<Integer> roleIdList) {
@@ -282,18 +287,58 @@ public class MenuServiceImpl
     }
 
     @Override
-    public Map<String, MenuEntity> getMenuName(List<String> codeList) {
-        if (CollUtil.isNotEmpty(codeList)) {
-            return baseRepository.all().stream()
-                    .filter(menuEntity -> codeList.contains(menuEntity.getApiPerms()))
-                    .collect(Collectors.toMap(MenuEntity::getApiPerms, Function.identity()));
+    public void exportData(MenuListDTO dto) {
+        List<MenuVO> list = CollUtil.emptyIfNull(this.list(dto));
+        List<Integer> parentList = list.stream().map(MenuVO::getParentId)
+                .distinct().collect(Collectors.toList());
+        Map<Integer, MenuEntity> parentMap = baseRepository.listByIds(parentList).stream()
+                .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+        Map<String, String> titleMap = this.getTitleMap();
+        List<Map<String, String>> mapList = new ArrayList<>();
+        for (MenuVO vo : list) {
+            Map<String, String> map = new HashMap<>();
+            map.put("menuName", vo.getMenuName());
+            map.put("menuType", Convert.toStr(vo.getMenuType()));
+            Integer parentId = vo.getParentId();
+            if (ObjUtil.isNotNull(parentId)) {
+                MenuEntity menuEntity = parentMap.get(parentId);
+                if (ObjUtil.isNotNull(menuEntity)) {
+                    map.put("parentName", menuEntity.getMenuName());
+                }
+            }
+            map.put("sort", Convert.toStr(vo.getSort()));
+            map.put("path", StrUtil.isEmpty(vo.getPath()) ? StrUtil.EMPTY : vo.getPath());
+            map.put("component", vo.getComponent());
+            map.put("apiPerms", vo.getApiPerms());
+            map.put("webPerms", vo.getWebPerms());
+            map.put("icon", vo.getIcon());
+            map.put("contextMenu", Convert.toStr(vo.getContextMenuId()));
+            map.put("frameFlag", BooleanUtil.toStringYesNo(vo.getFrameFlag()));
+            map.put("frameUrl", vo.getFrameUrl());
+            map.put("cacheFlag", BooleanUtil.toStringYesNo(vo.getCacheFlag()));
+            map.put("visibleFlag", BooleanUtil.toStringYesNo(vo.getVisibleFlag()));
+            mapList.add(map);
         }
-        return Collections.emptyMap();
+        commonManager.exportExcel("菜单列表", StrUtil.EMPTY, titleMap, mapList);
     }
 
-    @Override
-    public List<MenuEntity> listAll() {
-        return baseRepository.all();
+    private Map<String, String> getTitleMap() {
+        Map<String, String> titleMap = new LinkedHashMap<>();
+        titleMap.put("菜单名称", "menuName");
+        titleMap.put("菜单类型", "menuType");
+        titleMap.put("父级", "parentName");
+        titleMap.put("排序", "sort");
+        titleMap.put("路由地址", "path");
+        titleMap.put("组件路径", "component");
+        titleMap.put("api权限", "apiPerms");
+        titleMap.put("web权限", "webPerms");
+        titleMap.put("图标", "icon");
+        titleMap.put("是否为上下文菜单", "contextMenu");
+        titleMap.put("是否为frame", "frameFlag");
+        titleMap.put("frame地址", "frameUrl");
+        titleMap.put("是否缓存", "cacheFlag");
+        titleMap.put("是否可见", "visibleFlag");
+        return titleMap;
     }
 
     public List<MenuTreeVO> convertMenuTreeVO(List<Tree<Integer>> treeList) {

@@ -7,31 +7,25 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
-import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
-import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
+import io.gitee.dqcer.mcdull.uac.provider.model.audit.FormAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileExtensionTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormItemVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormRecordDataVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormVO;
-import io.gitee.dqcer.mcdull.uac.provider.util.ExcelUtil;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.manager.IFormManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IFormManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFormService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -48,10 +42,10 @@ public class FormServiceImpl
     private IFormManager formManager;
 
     @Resource
-    private IUserService userService;
+    private ICommonManager commonManager;
 
     @Resource
-    private ICommonManager commonService;
+    private IAuditManager auditManager;
 
     @Override
     public PagedVO<FormVO> queryPage(FormQueryDTO dto) {
@@ -74,7 +68,18 @@ public class FormServiceImpl
         if (ObjUtil.isNotNull(entity)) {
             this.throwDataExistException(dto.getName());
         }
-        baseRepository.save(this.convertToEntity(dto));
+        FormEntity formEntity = this.convertToEntity(dto);
+        baseRepository.save(formEntity);
+        auditManager.saveByAddEnum(formEntity.getName(), formEntity.getId(), this.buildAuditLog(entity));
+    }
+
+    private Audit buildAuditLog(FormEntity entity) {
+        FormAudit audit = new FormAudit();
+        audit.setName(entity.getName());
+        audit.setJsonText(entity.getJsonText());
+        audit.setPublish(entity.getPublish());
+        audit.setRemark(entity.getRemark());
+        return audit;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -86,11 +91,13 @@ public class FormServiceImpl
                 this.throwDataExistException(dto.getName());
             }
         }
-        FormEntity form = baseRepository.getById(dto.getId());
-        FormEntity entity = this.convertToEntity(dto);
-        entity.setPublish(form.getPublish());
-        entity.setId(dto.getId());
-        baseRepository.updateById(entity);
+        FormEntity oldEntity = baseRepository.getById(dto.getId());
+        FormEntity newEntity = this.convertToEntity(dto);
+        newEntity.setPublish(oldEntity.getPublish());
+        newEntity.setId(dto.getId());
+        baseRepository.updateById(newEntity);
+        auditManager.saveByUpdateEnum(oldEntity.getName(), oldEntity.getId(),
+                this.buildAuditLog(oldEntity), this.buildAuditLog(newEntity));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -101,12 +108,16 @@ public class FormServiceImpl
             this.throwDataNotExistException(id);
         }
         baseRepository.removeById(id);
+        auditManager.saveByDeleteEnum(entity.getName(), entity.getId(), "");
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateJsonText(FormUpdateJsonTextDTO dto) {
+        FormEntity entity = baseRepository.getById(dto.getId());
         formManager.initFormAndFormItem(dto.getId(), dto.getJsonText());
+        auditManager.saveByUpdateEnum(entity.getName(), entity.getId(),
+                this.buildAuditLog(entity), this.buildAuditLog(baseRepository.getById(dto.getId())));
     }
 
 
@@ -199,29 +210,16 @@ public class FormServiceImpl
     public void  exportData(FormRecordQueryDTO dto) {
         List<Map<String, String>> allRecord = this.getAllRecord(dto);
         List<FormItemVO> formItemVOS = this.itemConfigList(dto.getFormId());
-        Integer userId = UserContextHolder.userId();
-        String actualName = userService.getActualName(userId);
-        String s = TimeZoneUtil.serializeDate(new Date(), "yyyy-MM-dd HH:mm:ss");
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Map<String, String> titleMap = new LinkedHashMap<>();
         for (FormItemVO itemVO : formItemVOS) {
             titleMap.put(itemVO.getName(), itemVO.getKey());
         }
         FormEntity form = baseRepository.getById(dto.getFormId());
-        ExcelUtil.exportExcelByMap(outputStream, form.getName(),
-                this.filterConditionsStr(dto), actualName, s, titleMap, allRecord);
-        byte[] byteArray = outputStream.toByteArray();
-
-        String fileName = commonService.getFileName(FileExtensionTypeEnum.EXCEL_X, form.getName());
-
-        HttpServletResponse response = ServletUtil.getResponse();
-        ServletUtil.setDownloadFileHeader(response, fileName, (long) byteArray.length);
-        try {
-            response.getOutputStream().write(byteArray);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String conditions = this.filterConditionsStr(dto);
+        String sheetName = form.getName();
+        commonManager.exportExcel(sheetName, conditions, titleMap, allRecord);
     }
+
 
     @Transactional(rollbackFor = Exception.class)
     @Override

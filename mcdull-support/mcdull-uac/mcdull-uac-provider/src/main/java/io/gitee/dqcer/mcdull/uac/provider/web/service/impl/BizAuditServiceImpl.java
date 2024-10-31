@@ -14,9 +14,9 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.BizAuditEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.BizAuditVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IBizAuditRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IMenuManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IBizAuditService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +35,7 @@ public class BizAuditServiceImpl
         extends BasicServiceImpl<IBizAuditRepository> implements IBizAuditService {
 
     @Resource
-    private IMenuService menuService;
+    private IMenuManager menuManager;
 
     @Resource
     private IUserManager userManager;
@@ -64,8 +64,8 @@ public class BizAuditServiceImpl
         List<BizAuditEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
             Set<String> codeSet = recordList.stream().map(BizAuditEntity::getBizTypeCode).collect(Collectors.toSet());
-            Map<String, MenuEntity> nameMap = menuService.getMenuName(new ArrayList<>(codeSet));
-            List<MenuEntity> listAll = menuService.listAll();
+            Map<String, MenuEntity> nameMap = menuManager.getMenuName(new ArrayList<>(codeSet));
+            List<MenuEntity> listAll = menuManager.listAll();
             List<String> loginList = recordList.stream().map(BizAuditEntity::getOperator).collect(Collectors.toList());
             Map<String, String> nameMapByLoginName = userManager.getNameMapByLoginName(loginList);
             for (BizAuditEntity entity : recordList) {

@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager;
 
-import io.gitee.dqcer.mcdull.business.common.audit.Audit;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -29,4 +29,20 @@ public interface IUserManager {
     * @return {@link Map }<{@link String }, {@link String }>
     */
    Map<String, String> getNameMapByLoginName(List<String> loginList);
+
+   /**
+    * get like
+    *
+    * @param userName 用户名
+    * @return {@link List }<{@link UserEntity }>
+    */
+   List<UserEntity> getLike(String userName);
+
+   /**
+    * 获取实体映射
+    *
+    * @param userIdList 用户 ID 列表
+    * @return {@link Map }<{@link Integer }, {@link UserEntity }>
+    */
+   Map<Integer, UserEntity> getEntityMap(List<Integer> userIdList);
 }
