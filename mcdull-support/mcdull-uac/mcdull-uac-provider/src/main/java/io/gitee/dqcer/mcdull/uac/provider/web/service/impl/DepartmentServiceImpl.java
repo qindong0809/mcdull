@@ -5,10 +5,12 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.ObjUtil;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.audit.DepartmentAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DeptUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
@@ -16,6 +18,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentTreeInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDepartmentService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.cache.annotation.Cacheable;
@@ -38,6 +41,9 @@ public class DepartmentServiceImpl
 
     @Resource
     private IUserService userService;
+
+    @Resource
+    private IAuditManager auditManager;
 
     @Cacheable(cacheNames = "caffeineCache", key = "'department-all'")
     @Override
@@ -75,7 +81,30 @@ public class DepartmentServiceImpl
             }
         }
         DepartmentEntity menu = this.convertToEntity(dto);
-        return baseRepository.save(menu);
+        baseRepository.save(menu);
+        auditManager.saveByAddEnum(dto.getName(), menu.getId(), this.buildAuditLog(menu));
+        return true;
+    }
+
+    private Audit buildAuditLog(DepartmentEntity menu) {
+        DepartmentAudit audit = new DepartmentAudit();
+        audit.setName(menu.getName());
+        audit.setSort(menu.getSort());
+        Integer managerId = menu.getManagerId();
+        if (ObjUtil.isNotNull(managerId)) {
+            UserEntity user = userService.get(managerId);
+            if (ObjUtil.isNotNull(user)) {
+                audit.setManagerName(user.getActualName());
+            }
+        }
+        Integer parentId = menu.getParentId();
+        if (ObjUtil.isNotNull(parentId)) {
+            DepartmentEntity department = this.getById(parentId);
+            if (ObjUtil.isNotNull(department)) {
+                audit.setParentName(department.getName());
+            }
+        }
+        return audit;
     }
 
     private DepartmentEntity convertToEntity(DeptInsertDTO dto) {
@@ -102,7 +131,10 @@ public class DepartmentServiceImpl
                     i -> !i.getId().equals(id) && i.getName().equals(dto.getName()));
         }
         this.settingUpdateValue(dto, entity);
-        return baseRepository.updateById(entity);
+        baseRepository.updateById(entity);
+        auditManager.saveByUpdateEnum(dto.getName(), id,
+                this.buildAuditLog(entity), this.buildAuditLog(getById(id)));
+        return true;
     }
 
     private void settingUpdateValue(DeptUpdateDTO dto, DepartmentEntity entity) {
@@ -115,6 +147,10 @@ public class DepartmentServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean delete(Integer id) {
+        DepartmentEntity department = baseRepository.getById(id);
+        if (ObjUtil.isNull(department)) {
+            this.throwDataNotExistException(id);
+        }
         List<DepartmentEntity> all = baseRepository.list();
         List<DepartmentEntity> currentList = this.getChildNodeByParentId(all, id);
         if (CollUtil.isNotEmpty(currentList)) {
@@ -126,7 +162,9 @@ public class DepartmentServiceImpl
                 throw new BusinessException("dept.has.user");
             }
         }
-        return baseRepository.removeById(id);
+        baseRepository.removeById(id);
+        auditManager.saveByDeleteEnum(department.getName(), department.getId(), "");
+        return true;
     }
 
     private List<DepartmentEntity> getChildNodeByParentId(List<DepartmentEntity> all, Integer parentId) {

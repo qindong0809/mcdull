@@ -3,9 +3,11 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.audit.ConfigAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.ConfigConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
@@ -13,10 +15,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IConfigRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +35,9 @@ import java.util.List;
 @Service
 public class ConfigServiceImpl
         extends BasicServiceImpl<IConfigRepository> implements IConfigService {
+
+    @Resource
+    private IAuditManager auditManager;
 
     @Override
     public PagedVO<ConfigInfoVO> queryPage(ConfigQueryDTO dto) {
@@ -50,7 +57,18 @@ public class ConfigServiceImpl
             this.validNameExist(null, dto.getConfigName(),
                     list, entity -> entity.getConfigName().equals(dto.getConfigName()));
         }
-        baseRepository.insert(ConfigConvert.convertToConfigEntity(dto));
+        ConfigEntity configEntity = ConfigConvert.convertToConfigEntity(dto);
+        Integer configId = baseRepository.insert(configEntity);
+        auditManager.saveByAddEnum(dto.getConfigName(), configId, this.buildAuditLog(configEntity));
+    }
+
+    private Audit buildAuditLog(ConfigEntity configEntity) {
+        ConfigAudit audit = new ConfigAudit();
+        audit.setConfigName(configEntity.getConfigName());
+        audit.setConfigValue(configEntity.getConfigValue());
+        audit.setConfigKey(configEntity.getConfigKey());
+        audit.setRemark(configEntity.getRemark());
+        return audit;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -70,6 +88,8 @@ public class ConfigServiceImpl
         ConfigEntity updateEntity = ConfigConvert.convertToConfigEntity(dto);
         updateEntity.setId(configId);
         baseRepository.updateById(updateEntity);
+        auditManager.saveByUpdateEnum(dto.getConfigName(), configId,
+                this.buildAuditLog(configEntity), this.buildAuditLog(baseRepository.getById(configId)));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -83,6 +103,9 @@ public class ConfigServiceImpl
             this.throwDataNotExistException(idList);
         }
         baseRepository.deleteBatchByIds(idList);
+        for (ConfigEntity entity : entityList) {
+            auditManager.saveByDeleteEnum(entity.getConfigName(), entity.getId(), null);
+        }
     }
 
     @Override

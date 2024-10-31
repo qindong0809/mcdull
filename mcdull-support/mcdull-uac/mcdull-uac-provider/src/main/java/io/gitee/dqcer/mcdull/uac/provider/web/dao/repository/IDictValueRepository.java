@@ -45,7 +45,7 @@ public interface IDictValueRepository extends IRepository<DictValueEntity> {
      *
      * @param dto dto
      */
-    void insert(DictValueAddDTO dto);
+    DictValueEntity insert(DictValueAddDTO dto);
 
     /**
      * update

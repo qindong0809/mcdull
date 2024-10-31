@@ -44,7 +44,7 @@ public interface IDictKeyRepository extends IRepository<DictKeyEntity> {
      * @param keyName key name
      * @param remark  remark
      */
-    void insert(String keyCode, String keyName, String remark);
+    DictKeyEntity insert(String keyCode, String keyName, String remark);
 
     /**
      * update

@@ -2,21 +2,26 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.audit.DictKeyAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictKeyAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictKeyQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictKeyUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.DictKeyEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DictKeyVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDictKeyRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDictKeyService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +37,8 @@ import java.util.stream.Collectors;
 public class DictKeyServiceImpl
         extends BasicServiceImpl<IDictKeyRepository>  implements IDictKeyService {
 
+    @Resource
+    private IAuditManager auditManager;
 
     @Transactional(readOnly = true)
     @Override
@@ -48,9 +55,7 @@ public class DictKeyServiceImpl
     public PagedVO<DictKeyVO> getList(DictKeyQueryDTO dto) {
         Page<DictKeyEntity> entityPage = baseRepository.selectPage(dto);
         List<DictKeyVO> voList = new ArrayList<>();
-        entityPage.getRecords().forEach(entity -> {
-            voList.add(this.buildVO(entity));
-        });
+        entityPage.getRecords().forEach(entity -> voList.add(this.buildVO(entity)));
         return PageUtil.toPage(voList, entityPage);
     }
 
@@ -64,7 +69,16 @@ public class DictKeyServiceImpl
             this.validNameExist(null, keyName, listAll, entity -> entity.getKeyName().equals(keyName));
             this.validNameExist(null, keyCode, listAll, entity -> entity.getKeyCode().equals(keyCode));
         }
-        baseRepository.insert(keyCode, keyName, dto.getRemark());
+        DictKeyEntity entity = baseRepository.insert(keyCode, keyName, dto.getRemark());
+        auditManager.saveByAddEnum(entity.getKeyName(), entity.getId(), this.buildAuditLog(entity));
+    }
+
+    private Audit buildAuditLog(DictKeyEntity entity) {
+        DictKeyAudit audit = new DictKeyAudit();
+        audit.setKeyName(entity.getKeyName());
+        audit.setKeyCode(entity.getKeyCode());
+        audit.setRemark(entity.getRemark());
+        return audit;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -75,12 +89,19 @@ public class DictKeyServiceImpl
             this.throwDataNotExistException(StrUtil.join(StrUtil.COMMA, idList));
         }
         baseRepository.removeByIds(idList);
+        for (DictKeyEntity entity : list) {
+            auditManager.saveByDeleteEnum(entity.getKeyName(), entity.getId(), null);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(DictKeyUpdateDTO dto) {
         Integer dictKeyId = dto.getDictKeyId();
+        DictKeyEntity dictKey = baseRepository.getById(dictKeyId);
+        if (ObjUtil.isNull(dictKey)) {
+            this.throwDataNotExistException(dictKeyId);
+        }
         String keyCode = dto.getKeyCode();
         String keyName = dto.getKeyName();
         List<DictKeyEntity> listAll = baseRepository.getListAll();
@@ -90,6 +111,8 @@ public class DictKeyServiceImpl
             this.validNameExist(dictKeyId, keyName, listAll,
                     entity -> (!entity.getId().equals(dictKeyId)) && (entity.getKeyName().equals(keyName)));
             baseRepository.update(dictKeyId, keyCode, keyName, dto.getRemark());
+            auditManager.saveByUpdateEnum(keyName, dictKeyId,
+                    this.buildAuditLog(dictKey), this.buildAuditLog(baseRepository.getById(dictKeyId)));
         }
     }
 
@@ -104,6 +127,11 @@ public class DictKeyServiceImpl
             }
         }
         return null;
+    }
+
+    @Override
+    public DictKeyEntity getById(Integer keyId) {
+        return baseRepository.getById(keyId);
     }
 
     private DictKeyVO buildVO(DictKeyEntity entity) {

@@ -52,16 +52,16 @@ public class DictKeyRepositoryImpl
     }
 
     @Override
-    public void insert(String keyCode, String keyName, String remark) {
-        if (StrUtil.isNotBlank(keyCode) && StrUtil.isNotBlank(keyName)) {
-            DictKeyEntity entity = new DictKeyEntity();
-            entity.setKeyCode(keyCode);
-            entity.setKeyName(keyName);
-            entity.setRemark(remark);
-            this.insert(entity);
-            return;
+    public DictKeyEntity insert(String keyCode, String keyName, String remark) {
+        if (StrUtil.isBlank(keyName) || StrUtil.isBlank(keyCode)) {
+            throw new IllegalArgumentException("keyName or keyCode is null");
         }
-        LogHelp.error(log, "keyCode or keyName is null. {}-{}", keyCode, keyName);
+        DictKeyEntity entity = new DictKeyEntity();
+        entity.setKeyCode(keyCode);
+        entity.setKeyName(keyName);
+        entity.setRemark(remark);
+        this.insert(entity);
+        return entity;
     }
 
     @Override

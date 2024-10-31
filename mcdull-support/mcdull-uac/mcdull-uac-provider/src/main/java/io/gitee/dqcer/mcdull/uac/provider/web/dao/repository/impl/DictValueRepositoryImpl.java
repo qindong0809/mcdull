@@ -62,7 +62,7 @@ public class DictValueRepositoryImpl
     }
 
     @Override
-    public void insert(DictValueAddDTO dto) {
+    public DictValueEntity insert(DictValueAddDTO dto) {
         DictValueEntity entity = new DictValueEntity();
         entity.setDictKeyId(dto.getDictKeyId());
         entity.setValueCode(dto.getValueCode());
@@ -70,6 +70,7 @@ public class DictValueRepositoryImpl
         entity.setSort(dto.getSort());
         entity.setRemark(dto.getRemark());
         this.insert(entity);
+        return entity;
     }
 
     @Override

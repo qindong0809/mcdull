@@ -84,6 +84,8 @@ public class ChangeLogServiceImpl
         }
         this.settingUpdateField(dto, logEntity);
         baseRepository.updateById(logEntity);
+        auditManager.saveByUpdateEnum(dto.getVersion(), changeLogId,
+                this.buildAuditLog(logEntity), this.buildAuditLog(baseRepository.getById(changeLogId)));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -94,6 +96,9 @@ public class ChangeLogServiceImpl
             this.throwDataNotExistException(idList);
         }
         baseRepository.removeByIds(idList);
+        for (ChangeLogEntity entity : entityList) {
+            auditManager.saveByDeleteEnum(entity.getVersion(), entity.getId(), null);
+        }
     }
 
     @Override

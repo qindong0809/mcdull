@@ -4,6 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictKeyAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictKeyQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictKeyUpdateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.DictKeyEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DictKeyVO;
 
 import java.util.List;
@@ -59,4 +60,12 @@ public interface IDictKeyService {
      * @return {@link DictKeyVO}
      */
     DictKeyVO getByCode(String keyCode);
+
+    /**
+     * 按 ID 获取
+     *
+     * @param keyId 密钥 ID
+     * @return {@link DictKeyEntity }
+     */
+    DictKeyEntity getById(Integer keyId);
 }

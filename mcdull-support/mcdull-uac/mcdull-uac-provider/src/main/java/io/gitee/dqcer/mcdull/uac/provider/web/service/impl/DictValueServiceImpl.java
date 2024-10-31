@@ -3,19 +3,23 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.audit.DictValueAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictValueAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictValueQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.DictValueUpdateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.DictKeyEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.DictValueEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DictKeyVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DictValueVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDictValueRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDictKeyService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDictValueService;
 import org.springframework.stereotype.Service;
@@ -40,6 +44,9 @@ public class DictValueServiceImpl
 
     @Resource
     private IDictKeyService dictKeyService;
+
+    @Resource
+    private IAuditManager auditManager;
 
     @Override
     public PagedVO<DictValueVO> getList(DictValueQueryDTO dto) {
@@ -66,19 +73,42 @@ public class DictValueServiceImpl
         String valueCode = dto.getValueCode();
         this.validNameExist(null, valueName, entityList, i -> i.getValueName().equals(valueName));
         this.validNameExist(null, valueCode, entityList, i -> i.getValueCode().equals(valueCode));
-        baseRepository.insert(dto);
+        DictValueEntity entity = baseRepository.insert(dto);
+        auditManager.saveByAddEnum(entity.getValueName(), entity.getId(), this.buildAuditLog(entity));
+    }
+
+    private Audit buildAuditLog(DictValueEntity entity) {
+        DictValueAudit audit = new DictValueAudit();
+        audit.setValueName(entity.getValueName());
+        audit.setValueCode(entity.getValueCode());
+        Integer dictKeyId = entity.getDictKeyId();
+        if (ObjUtil.isNotNull(dictKeyId)) {
+            DictKeyEntity dictKey = dictKeyService.getById(dictKeyId);
+            if (ObjUtil.isNotNull(dictKey)) {
+                audit.setKeyName(dictKey.getKeyName());
+            }
+        }
+        audit.setRemark(entity.getRemark());
+        audit.setSort(entity.getSort());
+        return audit;
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(DictValueUpdateDTO dto) {
         Integer id = dto.getDictValueId();
+        DictValueEntity entity = baseRepository.getById(id);
+        if (ObjUtil.isNull(entity)) {
+            super.throwDataNotExistException(id);
+        }
         String valueName = dto.getValueName();
         String valueCode = dto.getValueCode();
         List<DictValueEntity> entityList = baseRepository.getListByDictKeyId(dto.getDictKeyId());
         this.validNameExist(id, valueName, entityList, i -> (!i.getId().equals(id)) && i.getValueName().equals(valueName));
         this.validNameExist(id, valueCode, entityList, i -> (!i.getId().equals(id)) && i.getValueCode().equals(valueCode));
         baseRepository.update(dto);
+        auditManager.saveByUpdateEnum(valueName, id,
+                this.buildAuditLog(entity), this.buildAuditLog(baseRepository.getById(id)));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -91,6 +121,10 @@ public class DictValueServiceImpl
                 List<Integer> collect = list.stream().map(IdEntity::getId).collect(Collectors.toList());
                 if (!CollUtil.containsAll(collect, idList)) {
                     throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
+                }
+                baseRepository.removeByIds(idList);
+                for (Integer id : idList) {
+                    auditManager.saveByDeleteEnum(entity.getValueName(), id, null);
                 }
             }
         }

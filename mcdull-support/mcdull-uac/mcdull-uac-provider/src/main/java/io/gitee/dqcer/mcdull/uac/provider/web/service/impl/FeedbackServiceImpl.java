@@ -3,10 +3,12 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.audit.FeedbackAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FeedbackAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FeedbackQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.SerialNumberGenerateDTO;
@@ -14,6 +16,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.FeedbackEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FeedbackVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFeedbackRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFeedbackService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ISerialNumberService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
@@ -43,6 +46,9 @@ public class FeedbackServiceImpl
 
     @Resource
     private ISerialNumberService serialNumberService;
+
+    @Resource
+    private IAuditManager auditManager;
 
     @Override
     public PagedVO<FeedbackVO> query(FeedbackQueryDTO dto) {
@@ -86,6 +92,22 @@ public class FeedbackServiceImpl
         List<String> list = serialNumberService.generate(serialNumberGenerateDTO);
         entity.setCode(list.get(0));
         baseRepository.insert(entity);
+        auditManager.saveByAddEnum(entity.getCode(), entity.getId(), this.buildAuditLog(entity));
+    }
+
+    private Audit buildAuditLog(FeedbackEntity entity) {
+        FeedbackAudit audit = new FeedbackAudit();
+        audit.setFeedbackContent(entity.getFeedbackContent());
+        audit.setFeedbackAttachment(entity.getFeedbackAttachment());
+        audit.setCode(entity.getCode());
+        Integer userId = entity.getUserId();
+        if (ObjUtil.isNotNull(userId)) {
+            UserEntity user = userService.get(userId);
+            if (ObjUtil.isNotNull(user)) {
+                audit.setUserName(user.getActualName());
+            }
+        }
+        return audit;
     }
 
     private FeedbackEntity convertToEntity(FeedbackAddDTO dto) {
