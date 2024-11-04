@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocCatalogAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocCatalogUpdateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.HelpDocCatalogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.HelpDocCatalogVO;
 
 import java.util.List;
@@ -21,5 +22,9 @@ public interface IHelpDocCatalogService {
 
     void update(HelpDocCatalogUpdateDTO dto);
 
-    void delete(Integer helpDocCatalogId);
+    void delete(Integer id);
+
+    HelpDocCatalogEntity getById(Integer id);
+
+    List<HelpDocCatalogEntity> queryListByIds(List<Integer> idList);
 }

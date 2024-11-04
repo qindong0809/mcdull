@@ -9,10 +9,13 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.audit.MenuAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.MenuConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuBaseForm;
@@ -20,8 +23,10 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.MenuTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleMenuService;
@@ -53,6 +58,9 @@ public class MenuServiceImpl
 
     @Resource
     private ICommonManager commonManager;
+
+    @Resource
+    private IAuditManager auditManager;
 
     @Override
     public Map<Integer, List<String>> getMenuCodeListMap(List<Integer> roleIdList) {
@@ -103,6 +111,32 @@ public class MenuServiceImpl
         }
         MenuEntity menu = this.convertToEntity(dto);
         baseRepository.save(menu);
+        auditManager.saveByAddEnum(dto.getMenuName(), menu.getId(), this.buildAuditLog(menu));
+    }
+
+    private Audit buildAuditLog(MenuEntity menu) {
+        MenuAudit audit = new MenuAudit();
+        audit.setMenuName(menu.getMenuName());
+        audit.setSort(menu.getSort());
+        audit.setMenuTypeName(IEnum.getTextByCode(MenuTypeEnum.class, menu.getMenuType()));
+        Integer parentId = menu.getParentId();
+        if (ObjUtil.isNotNull(parentId)) {
+            MenuEntity menuEntity = baseRepository.getById(parentId);
+            if (ObjUtil.isNotNull(menuEntity)) {
+                audit.setParentName(menuEntity.getMenuName());
+            }
+        }
+        audit.setPath(menu.getPath());
+        audit.setComponent(menu.getComponent());
+        audit.setApiPerms(menu.getApiPerms());
+        audit.setWebPerms(menu.getWebPerms());
+        audit.setIcon(menu.getIcon());
+        audit.setContextMenuId(this.convertContextMenuId(menu.getContextMenuId()));
+        audit.setFrameFlag(BooleanUtil.toStringYesNo(menu.getFrameFlag()));
+        audit.setFrameUrl(menu.getFrameUrl());
+        audit.setCacheFlag(BooleanUtil.toStringYesNo(menu.getCacheFlag()));
+        audit.setVisibleFlag(BooleanUtil.toStringYesNo(menu.getVisibleFlag()));
+        return audit;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -113,6 +147,7 @@ public class MenuServiceImpl
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
         }
+        MenuEntity oldEntity = ObjUtil.cloneByStream(entity);
         Integer parentId = dto.getParentId();
         List<MenuEntity> childList = baseRepository.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
@@ -124,6 +159,8 @@ public class MenuServiceImpl
         }
         MenuEntity menu = this.setUpdateField(dto, entity);
         baseRepository.updateById(menu);
+        auditManager.saveByUpdateEnum(dto.getMenuName(), id,
+                this.buildAuditLog(oldEntity), this.buildAuditLog(menu));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -134,6 +171,9 @@ public class MenuServiceImpl
             this.throwDataNotExistException(menuIdList);
         }
         baseRepository.removeByIds(menuIdList);
+        for (MenuEntity entity : entityList) {
+            auditManager.saveByDeleteEnum(entity.getMenuName(), entity.getId(), null);
+        }
     }
 
     private MenuEntity setUpdateField(MenuUpdateDTO dto, MenuEntity menuEntity) {
@@ -312,7 +352,7 @@ public class MenuServiceImpl
             map.put("apiPerms", vo.getApiPerms());
             map.put("webPerms", vo.getWebPerms());
             map.put("icon", vo.getIcon());
-            map.put("contextMenu", Convert.toStr(vo.getContextMenuId()));
+            map.put("contextMenu", this.convertContextMenuId(vo.getContextMenuId()));
             map.put("frameFlag", BooleanUtil.toStringYesNo(vo.getFrameFlag()));
             map.put("frameUrl", vo.getFrameUrl());
             map.put("cacheFlag", BooleanUtil.toStringYesNo(vo.getCacheFlag()));
@@ -383,5 +423,10 @@ public class MenuServiceImpl
         routerVO.setMenuType(Convert.toInt(tree.get("menuType")));
         routerVO.setContextMenuId(Convert.toInt(tree.get("contextMenuId")));
         return tree.getChildren();
+    }
+
+    private String convertContextMenuId(Integer menuId) {
+        return BooleanUtil.toStringYesNo(
+                BooleanUtil.toBooleanObject(menuId.toString()));
     }
 }

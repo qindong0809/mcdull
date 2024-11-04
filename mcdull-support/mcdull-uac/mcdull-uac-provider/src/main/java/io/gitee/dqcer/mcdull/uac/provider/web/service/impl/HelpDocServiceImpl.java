@@ -5,11 +5,13 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.audit.HelpDocAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocUpdateDTO;
@@ -18,11 +20,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.HelpDocDetailVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.HelpDocVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.HelpDocViewRecordVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IHelpDocCatalogRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IHelpDocRelationRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IHelpDocRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IHelpDocViewRecordRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IHelpDocCatalogService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IHelpDocService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,10 +53,13 @@ public class HelpDocServiceImpl
     private IUserManager userManager;
 
     @Resource
-    private IHelpDocCatalogRepository helpDocCatalogRepository;
+    private IHelpDocCatalogService helpDocCatalogService;
 
     @Resource
     private IHelpDocRelationRepository helpDocRelationRepository;
+
+    @Resource
+    private IAuditManager auditManager;
 
     @Override
     public HelpDocDetailVO view(Integer helpDocId) {
@@ -76,7 +82,7 @@ public class HelpDocServiceImpl
         vo.setUserViewCount(entity.getUserViewCount());
         vo.setAuthor(entity.getAuthor());
         vo.setHelpDocCatalogId(Convert.toInt(entity.getHelpDocCatalogId()));
-        vo.setHelpDocCatalogName(helpDocCatalogRepository.getById(entity.getHelpDocCatalogId()).getName());
+        vo.setHelpDocCatalogName(helpDocCatalogService.getById(entity.getHelpDocCatalogId()).getName());
         return vo;
     }
 
@@ -125,7 +131,7 @@ public class HelpDocServiceImpl
         List<HelpDocEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
             Set<Integer> catalogIdSet = records.stream().map(HelpDocEntity::getHelpDocCatalogId).collect(Collectors.toSet());
-            List<HelpDocCatalogEntity> catalogEntityList = helpDocCatalogRepository.queryListByIds(new ArrayList<>(catalogIdSet));
+            List<HelpDocCatalogEntity> catalogEntityList = helpDocCatalogService.queryListByIds(new ArrayList<>(catalogIdSet));
             Map<Integer, HelpDocCatalogEntity> catalogEntityMap = new HashMap<>();
             if (CollUtil.isNotEmpty(catalogEntityList)) {
                 catalogEntityMap = catalogEntityList.stream().collect(Collectors.toMap(HelpDocCatalogEntity::getId,
@@ -176,6 +182,23 @@ public class HelpDocServiceImpl
         entity.setUserViewCount(0);
         entity.setAttachment(dto.getAttachment());
         baseRepository.insert(entity);
+        auditManager.saveByAddEnum(dto.getTitle(), entity.getId(), this.buildAuditLog(entity));
+    }
+
+    private Audit buildAuditLog(HelpDocEntity entity) {
+        HelpDocAudit audit = new HelpDocAudit();
+        Integer helpDocCatalogId = entity.getHelpDocCatalogId();
+        if (ObjUtil.isNotNull(helpDocCatalogId)) {
+            HelpDocCatalogEntity docCatalog = helpDocCatalogService.getById(helpDocCatalogId);
+            if (ObjUtil.isNotNull(docCatalog)) {
+                audit.setHelpDocCatalogName(docCatalog.getName());
+            }
+        }
+        audit.setTitle(entity.getTitle());
+        audit.setContentText(entity.getContentText());
+        audit.setContentHtml(entity.getContentHtml());
+        audit.setAttachment(entity.getAttachment());
+        return audit;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -186,7 +209,7 @@ public class HelpDocServiceImpl
         if (ObjUtil.isNull(docEntity)) {
             this.throwDataNotExistException(helpDocId);
         }
-
+        HelpDocEntity oldEntity = ObjUtil.cloneByStream(docEntity);
         Integer helpDocCatalogId = dto.getHelpDocCatalogId();
         List<HelpDocEntity> list = baseRepository.listByCatalogId(helpDocCatalogId);
         if (CollUtil.isNotEmpty(list)) {
@@ -201,6 +224,8 @@ public class HelpDocServiceImpl
         docEntity.setSort(dto.getSort());
         docEntity.setAttachment(dto.getAttachment());
         baseRepository.updateById(docEntity);
+        auditManager.saveByUpdateEnum(dto.getTitle(), helpDocId,
+                this.buildAuditLog(oldEntity), this.buildAuditLog(docEntity));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -211,6 +236,7 @@ public class HelpDocServiceImpl
             this.throwDataNotExistException(helpDocId);
         }
         baseRepository.removeById(helpDocId);
+        auditManager.saveByDeleteEnum(entity.getTitle(), helpDocId, "");
     }
 
     @Override
@@ -229,7 +255,7 @@ public class HelpDocServiceImpl
                         HelpDocEntity entity = entityMap.get(relation.getHelpDocId());
                         if (ObjUtil.isNotNull(entity)) {
                             Integer helpDocCatalogId = entity.getHelpDocCatalogId();
-                            HelpDocCatalogEntity helpDocCatalog = helpDocCatalogRepository.getById(helpDocCatalogId);
+                            HelpDocCatalogEntity helpDocCatalog = helpDocCatalogService.getById(helpDocCatalogId);
                             if (ObjUtil.isNotNull(helpDocCatalog)) {
                                 vo.setHelpDocCatalogName(helpDocCatalog.getName());
                             }

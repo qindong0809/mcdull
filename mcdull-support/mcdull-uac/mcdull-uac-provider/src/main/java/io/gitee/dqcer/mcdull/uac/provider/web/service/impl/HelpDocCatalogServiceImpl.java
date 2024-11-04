@@ -3,29 +3,23 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.audit.HelpDocCatalogAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocCatalogAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocCatalogUpdateDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.TableColumnUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.HelpDocCatalogEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.TableColumnEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.HelpDocCatalogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IHelpDocCatalogRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.ITableColumnRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IHelpDocCatalogService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.ITableColumnService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 
 /**
@@ -38,6 +32,8 @@ import java.util.stream.Collectors;
 public class HelpDocCatalogServiceImpl
         extends BasicServiceImpl<IHelpDocCatalogRepository> implements IHelpDocCatalogService {
 
+    @Resource
+    private IAuditManager auditManager;
 
     @Override
     public List<HelpDocCatalogVO> getAll() {
@@ -65,6 +61,22 @@ public class HelpDocCatalogServiceImpl
         entity.setSort(dto.getSort());
         entity.setParentId(dto.getParentId());
         baseRepository.insert(entity);
+
+        auditManager.saveByAddEnum(dto.getName(), entity.getId(), this.buildAuditLog(entity));
+    }
+
+    private Audit buildAuditLog(HelpDocCatalogEntity entity) {
+        HelpDocCatalogAudit audit = new HelpDocCatalogAudit();
+        audit.setName(entity.getName());
+        Integer parentId = entity.getParentId();
+        if (ObjUtil.isNotNull(parentId)) {
+            HelpDocCatalogEntity parentEntity = baseRepository.getById(parentId);
+            if (ObjUtil.isNotNull(parentEntity)) {
+                audit.setParentName(parentEntity.getName());
+            }
+        }
+        audit.setSort(entity.getSort());
+        return audit;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -75,6 +87,7 @@ public class HelpDocCatalogServiceImpl
         if (ObjUtil.isNull(helpDocCatalog)) {
             this.throwDataNotExistException(helpDocCatalogId);
         }
+        HelpDocCatalogEntity oldEntity = ObjUtil.cloneByStream(helpDocCatalog);
         List<HelpDocCatalogEntity> list = baseRepository.list(dto.getParentId());
         if (CollUtil.isNotEmpty(list)) {
             this.validNameExist(helpDocCatalogId, dto.getName(), list,
@@ -83,16 +96,32 @@ public class HelpDocCatalogServiceImpl
         helpDocCatalog.setName(dto.getName());
         helpDocCatalog.setSort(dto.getSort());
         baseRepository.updateById(helpDocCatalog);
+        auditManager.saveByUpdateEnum(dto.getName(), helpDocCatalogId,
+                this.buildAuditLog(oldEntity), this.buildAuditLog(helpDocCatalog));
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void delete(Integer helpDocCatalogId) {
-        HelpDocCatalogEntity helpDocCatalog = baseRepository.getById(helpDocCatalogId);
+    public void delete(Integer id) {
+        HelpDocCatalogEntity helpDocCatalog = baseRepository.getById(id);
         if (ObjUtil.isNull(helpDocCatalog)) {
-            this.throwDataNotExistException(helpDocCatalogId);
+            this.throwDataNotExistException(id);
         }
         baseRepository.removeById(helpDocCatalog);
+        auditManager.saveByDeleteEnum(helpDocCatalog.getName(), id, null);
+    }
+
+    @Override
+    public HelpDocCatalogEntity getById(Integer id) {
+        return baseRepository.getById(id);
+    }
+
+    @Override
+    public List<HelpDocCatalogEntity> queryListByIds(List<Integer> idList) {
+        if (CollUtil.isNotEmpty(idList)) {
+            return baseRepository.queryListByIds(idList);
+        }
+        return Collections.emptyList();
     }
 
     private HelpDocCatalogVO convert(HelpDocCatalogEntity entity) {

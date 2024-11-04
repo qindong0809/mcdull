@@ -3,17 +3,21 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.audit.MessageAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MessageQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MessageEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.MessageVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMessageRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IMessageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +31,8 @@ import java.util.List;
 public class MessageServiceImpl
         extends BasicServiceImpl<IMessageRepository> implements IMessageService {
 
+    @Resource
+    private IAuditManager auditManager;
 
     @Override
     public Integer getUnreadCount(Integer userId) {
@@ -54,10 +60,20 @@ public class MessageServiceImpl
         if (ObjUtil.isNull(message)) {
             this.throwDataNotExistException(id);
         }
+        MessageEntity oldMessage = ObjUtil.cloneByStream(message);
         if (message.getReadFlag()) {
             this.throwDataNeedRefreshException("id: {}", id);
         }
-        return baseRepository.updateReadFlag(id, userId);
+        baseRepository.updateReadFlag(id, userId);
+        auditManager.saveByUpdateEnum(message.getTitle(), id,
+                this.buildAuditLog(oldMessage), this.buildAuditLog(message));
+        return true;
+    }
+
+    private Audit buildAuditLog(MessageEntity message) {
+        MessageAudit audit = new MessageAudit();
+        audit.setReadFlag(Boolean.toString(message.getReadFlag()));
+        return audit;
     }
 
     private MessageVO convertToVO(MessageEntity entity) {
