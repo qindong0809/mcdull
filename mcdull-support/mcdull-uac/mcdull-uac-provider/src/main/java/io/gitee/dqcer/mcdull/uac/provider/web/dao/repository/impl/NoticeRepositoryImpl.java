@@ -86,4 +86,14 @@ public class NoticeRepositoryImpl extends
         return baseMapper
                 .queryEmployeeNotice(page, dto, userId, deptIdList, administratorFlag, deptCode, userCode);
     }
+
+    @Override
+    public List<NoticeEntity> listByTitleName(String title) {
+        if (StrUtil.isNotBlank(title)) {
+            LambdaQueryWrapper<NoticeEntity> query = Wrappers.lambdaQuery();
+            query.eq(NoticeEntity::getTitle, title);
+            return baseMapper.selectList(query);
+        }
+        return Collections.emptyList();
+    }
 }

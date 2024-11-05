@@ -72,13 +72,14 @@ public class ValidateCaptcha implements ProcessHandler<LoginContext> {
     }
 
     @Override
-    public void finallyException(Exception exception, LoginContext context) {
-        if (ProcessHandler.super.endNode() || ObjUtil.isNotNull(exception)) {
-            ProcessHandler.super.finallyException(exception, context);
+    public void finallyException(ProcessHandler processHandler, Exception exception, LoginContext context) {
+        if (processHandler.endNode() || ObjUtil.isNotNull(exception)) {
+            ProcessHandler.super.finallyException(processHandler, exception, context);
             LoginDTO dto = context.getLoginDTO();
             Dict dict = context.getDict();
             LoginLogResultTypeEnum typeEnum = (LoginLogResultTypeEnum) dict.get("typeEnum");
-            this.saveLoginLog(dto.getLoginName(), typeEnum, exception.getMessage());
+            String message = ObjUtil.isNotNull(exception) ? exception.getMessage() : StrUtil.EMPTY;
+            this.saveLoginLog(dto.getLoginName(), typeEnum, message);
             this.passwordPolicyHandle(dto, typeEnum,  dict.get("user", new UserEntity()), dto.getLoginName());
         }
     }

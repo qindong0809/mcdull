@@ -62,4 +62,12 @@ public interface ILoginLogRepository extends IRepository<LoginLogEntity> {
      * @return boolean true/存在 false/不存在
      */
     boolean exist(LoginLogEntity entity);
+
+ /**
+  * 按用户 ID 获取列表
+  *
+  * @param loginName 登录名称
+  * @return {@link List }<{@link LoginLogEntity }>
+  */
+ List<LoginLogEntity> getListByLoginName(String loginName);
 }

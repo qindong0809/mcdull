@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.framework.web.json.serialize;
 
 
+import cn.hutool.core.date.DatePattern;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -34,4 +36,10 @@ public @interface DynamicDateFormat {
      */
     boolean appendTimezoneStyle() default true;
 
+    /**
+     * 日期格式
+     *
+     * @return {@link String }
+     */
+    String dateFormat() default DatePattern.NORM_DATE_PATTERN;
 }

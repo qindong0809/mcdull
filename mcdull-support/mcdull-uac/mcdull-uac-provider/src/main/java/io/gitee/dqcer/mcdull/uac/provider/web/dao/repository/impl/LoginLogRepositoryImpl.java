@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.repository.CrudRepository;
-import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.TimestampEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.LoginLogMapper;
@@ -51,7 +51,7 @@ public class LoginLogRepositoryImpl
         if (ObjUtil.isNotNull(startDate) && ObjUtil.isNotNull(endDate)) {
             lambda.between(LoginLogEntity::getCreatedTime, startDate, endDate);
         }
-        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        lambda.orderByDesc(ListUtil.of(TimestampEntity::getCreatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 
@@ -72,7 +72,18 @@ public class LoginLogRepositoryImpl
     }
 
     @Override
+    public List<LoginLogEntity> getListByLoginName(String loginName) {
+        LambdaQueryWrapper<LoginLogEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(LoginLogEntity::getLoginName, loginName);
+        List<LoginLogEntity> list =  baseMapper.selectList(wrapper);
+        if (ObjUtil.isNotNull(list)) {
+            return list;
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
     public void deleteBatchByIds(List<Integer> ids) {
-        baseMapper.deleteBatchIds(ids);
+        baseMapper.deleteByIds(ids);
     }
 }

@@ -44,10 +44,11 @@ public class ProcessFlow {
                 ex = e;
                 throw e;
             } finally {
-                if (i != 0 && processHandler.extendParentNodeTryAttr()) {
-                    processHandlers.get(i - 1).finallyException(ex, context);
+                if (i != 0) {
+                    ProcessHandler parent = this.getParentProcessHandler(processHandler, processHandlers, i);
+                    parent.finallyException(processHandler, ex, context);
                 } else {
-                    processHandler.finallyException(ex, context);
+                    processHandler.finallyException(processHandler, ex, context);
                 }
             }
             boolean endNode = processHandler.endNode();
@@ -55,5 +56,24 @@ public class ProcessFlow {
                 break;
             }
         }
+    }
+
+    @SuppressWarnings("rawtypes")
+    private ProcessHandler getParentProcessHandler(ProcessHandler processHandler,
+                                                   List<ProcessHandler> processHandlers, int index) {
+        if (processHandler.extendParentNodeTryAttr()) {
+            if (index >= 1) {
+                int parentIndex = index - 1;
+                ProcessHandler parent = processHandlers.get(parentIndex);
+                if (null != parent) {
+                    if (parent.extendParentNodeTryAttr()) {
+                        return this.getParentProcessHandler(parent, processHandlers, parentIndex);
+                    }
+                    return parent;
+                }
+            }
+        }
+        return processHandler;
+
     }
 }

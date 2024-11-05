@@ -7,7 +7,6 @@ import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
-import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
 import io.gitee.dqcer.mcdull.framework.web.version.IVersionInfoComponent;
 import io.gitee.dqcer.mcdull.uac.provider.model.audit.ChangeLogAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogAddDTO;
@@ -18,13 +17,13 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogAndVersionVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IChangeLogRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IChangeLogService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -44,7 +43,6 @@ public class ChangeLogServiceImpl
     @Resource
     private IAuditManager auditManager;
 
-
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void add(ChangeLogAddDTO dto) {
@@ -62,10 +60,9 @@ public class ChangeLogServiceImpl
         ChangeLogAudit audit = new ChangeLogAudit();
         audit.setVersion(entity.getVersion());
         audit.setContent(entity.getContent());
-        audit.setPublicDate(TimeZoneUtil.serializeDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        audit.setPublicDate(entity.getPublicDate().toString());
         audit.setPublishAuthor(entity.getPublishAuthor());
         audit.setLink(entity.getLink());
-//        audit.setType(entity.getType());
         return audit;
     }
 

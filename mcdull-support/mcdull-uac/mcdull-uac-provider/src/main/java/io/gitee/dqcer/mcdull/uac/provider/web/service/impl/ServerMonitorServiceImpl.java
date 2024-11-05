@@ -28,7 +28,8 @@ import java.util.*;
  * @since 2024/05/31
  */
 @Service
-public class ServerMonitorServiceImpl extends GenericLogic implements IServerMonitorService {
+public class ServerMonitorServiceImpl
+        extends GenericLogic implements IServerMonitorService {
 
 
     private final DecimalFormat df = new DecimalFormat("0.00");

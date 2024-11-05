@@ -57,7 +57,7 @@ public class CommonManagerImpl implements ICommonManager {
                         Supplier<List<Map<String, String>>> supplierDataList) {
         Integer userId = UserContextHolder.userId();
         String actualName = this.getUserName(userId);
-        String dateTimeStr = TimeZoneUtil.serializeDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+        String dateTimeStr = this.convertDateTimeStr(new Date());
         String fileName = this.getFileName(FileExtensionTypeEnum.EXCEL_X, suffixFileName);
         LogHelp.info(log, "Storage. actualName: {} fileName: {}", modelName, actualName, fileName);
         ByteArrayOutputStream byteArrayOutputStreamMap = new ByteArrayOutputStream();
@@ -72,6 +72,14 @@ public class CommonManagerImpl implements ICommonManager {
         fileService.fileUpload(multipartFile, FileFolderTypeEnum.EXPORT.getValue());
     }
 
+    @Override
+    public String convertDateTimeStr(Date date) {
+        if (ObjUtil.isNull(date)) {
+            return StrUtil.EMPTY;
+        }
+        return TimeZoneUtil.serializeDate(date, "yyyy-MM-dd HH:mm:ss");
+    }
+
     private String getUserName(Integer userId) {
         Map<Integer, String> nameMap = userManager.getNameMap(ListUtil.of(userId));
         return nameMap.get(userId);
@@ -83,7 +91,7 @@ public class CommonManagerImpl implements ICommonManager {
         Integer userId = UserContextHolder.userId();
         String actualName = this.getUserName(userId);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        String s = TimeZoneUtil.serializeDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+        String s = this.convertDateTimeStr(new Date());
         ExcelUtil.exportExcelByMap(outputStream, sheetName,
                 conditions, actualName, s, titleMap, mapList);
         byte[] byteArray = outputStream.toByteArray();

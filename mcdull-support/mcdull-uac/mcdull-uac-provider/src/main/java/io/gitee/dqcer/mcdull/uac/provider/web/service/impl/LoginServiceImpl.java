@@ -78,6 +78,13 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
         logonVO.setGender(userEntity.getGender());
         logonVO.setPhone(userEntity.getPhone());
         logonVO.setMenuList(menuService.getList(userEntity.getId(), userEntity.getAdministratorFlag()));
+        LoginLogEntity lastLoginLog = loginLogService.getLastLoginLog(userEntity.getLoginName());
+        if (ObjUtil.isNotNull(lastLoginLog)) {
+            logonVO.setLastLoginIp(lastLoginLog.getLoginIp());
+            logonVO.setLastLoginIpRegion(lastLoginLog.getLoginIpRegion());
+            logonVO.setLastLoginUserAgent(lastLoginLog.getUserAgent());
+            logonVO.setLastLoginTime(lastLoginLog.getCreatedTime());
+        }
        return logonVO;
     }
 

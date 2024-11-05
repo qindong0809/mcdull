@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
+import cn.hutool.core.date.DatePattern;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
@@ -40,7 +41,7 @@ public class LogonVO extends UserBO implements VO {
     private String lastLoginUserAgent;
 
     @Schema(description = "上次登录时间")
-    @DynamicDateFormat(enableTimezone = true)
+    @DynamicDateFormat(enableTimezone = true, dateFormat = DatePattern.NORM_DATETIME_PATTERN)
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date lastLoginTime;
 }

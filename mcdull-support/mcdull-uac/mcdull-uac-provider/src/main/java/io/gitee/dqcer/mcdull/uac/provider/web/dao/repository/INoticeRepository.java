@@ -67,4 +67,12 @@ public interface INoticeRepository extends IRepository<NoticeEntity> {
                                            Boolean administratorFlag,
                                            Integer deptCode,
                                            Integer userCode);
+
+    /**
+     * 按标题名称列出
+     *
+     * @param title 标题
+     * @return {@link List }<{@link NoticeEntity }>
+     */
+    List<NoticeEntity> listByTitleName(String title);
 }

@@ -8,6 +8,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.engine.CompareBean;
 import io.gitee.dqcer.mcdull.framework.base.engine.DomainEngine;
@@ -18,6 +19,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
+import io.gitee.dqcer.mcdull.uac.provider.model.audit.NoticeAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.NoticeViewRecordEntity;
@@ -26,6 +28,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.NoticeVisitbleRangeDataTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.INoticeRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +65,9 @@ public class NoticeServiceImpl
     @Resource
     private INoticeViewRecordService noticeViewRecordService;
 
+    @Resource
+    private IAuditManager auditManager;
+
     @Override
     public PagedVO<NoticeVO> queryPage(NoticeQueryDTO dto) {
         List<NoticeVO> voList = new ArrayList<>();
@@ -75,7 +81,6 @@ public class NoticeServiceImpl
             Set<Integer> userIdSet = recordList.stream()
                     .map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
             LocalDateTime now = LocalDateTime.now();
-
             Map<Integer, String> nameMap = userService.getNameMap(new ArrayList<>(userIdSet));
             for (NoticeEntity entity : recordList) {
                 NoticeVO vo = this.convertToVO(entity);
@@ -351,14 +356,15 @@ public class NoticeServiceImpl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void insert(NoticeAddDTO dto) {
-        NoticeEntity entity = this.convertToEntity(dto);
-        if (BooleanUtil.isFalse(dto.getScheduledPublishFlag())) {
-            entity.setPublishTime(LocalDateTime.now());
+        List<NoticeEntity> entityList = baseRepository.listByTitleName(dto.getTitle());
+        if (CollUtil.isNotEmpty(entityList)) {
+            this.throwDataExistException(dto.getTitle());
         }
+        NoticeEntity entity = this.convertToEntity(dto);
+        entity.setPublishTime(BooleanUtil.isFalse(dto.getScheduledPublishFlag())
+                ? LocalDateTime.now() : dto.getPublishTime());
         baseRepository.save(entity);
-
         Integer id = entity.getId();
-
         if (BooleanUtil.isFalse(dto.getAllVisibleFlag())) {
             List<NoticeVisibleRangeDTO> visibleRangeList = dto.getVisibleRangeList();
             if (CollUtil.isNotEmpty(visibleRangeList)) {
@@ -373,6 +379,23 @@ public class NoticeServiceImpl
                 noticeVisibleRangeService.batchInsert(rangeEntityList);
             }
         }
+        auditManager.saveByAddEnum(entity.getTitle(), id, this.buildAuditLog(entity));
+    }
+
+    private Audit buildAuditLog(NoticeEntity entity) {
+        NoticeAudit audit = new NoticeAudit();
+        audit.setNoticeTypeName(entity.getNoticeTypeId());
+        audit.setTitle(entity.getTitle());
+        audit.setAllVisibleFlag(BooleanUtil.toStringYesNo(entity.getAllVisibleFlag()));
+        audit.setScheduledPublishFlag(BooleanUtil.toStringYesNo(entity.getScheduledPublishFlag()));
+        audit.setPublishTime(entity.getPublishTime().toString());
+        audit.setContentText(entity.getContentText());
+        audit.setContentHtml(entity.getContentHtml());
+        audit.setAttachment(entity.getAttachment());
+        audit.setSource(entity.getSource());
+        audit.setAuthor(entity.getAuthor());
+        audit.setDocumentNumber(entity.getDocumentNumber());
+        return audit;
     }
 
 
@@ -384,14 +407,13 @@ public class NoticeServiceImpl
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
         }
+        NoticeEntity oldEntity = ObjUtil.cloneByStream(entity);
         this.setUpdateFieldValue(dto, entity);
         if (BooleanUtil.isFalse(dto.getScheduledPublishFlag())) {
             entity.setPublishTime(LocalDateTime.now());
         }
         baseRepository.updateById(entity);
-
         List<NoticeVisibleRangeDTO> visibleRangeList = dto.getVisibleRangeList();
-
         List<NoticeVisibleRangeEntity> dbList = noticeVisibleRangeService.getListByNoticeId(id);
         List<NoticeVisibleRangeEntity> tempList = new ArrayList<>();
         if (CollUtil.isNotEmpty(visibleRangeList)) {
@@ -415,6 +437,8 @@ public class NoticeServiceImpl
         }
         CompareBean<NoticeVisibleRangeEntity, Integer> compare = DomainEngine.compare(dbList, tempList);
         noticeVisibleRangeService.update(compare.getInsertList(), compare.getUpdateList(), compare.getRemoveList());
+        auditManager.saveByUpdateEnum(entity.getTitle(), id,
+                this.buildAuditLog(oldEntity), this.buildAuditLog(entity));
     }
 
     @Override
@@ -436,6 +460,8 @@ public class NoticeServiceImpl
             this.throwDataNotExistException(idList);
         }
         baseRepository.removeByIds(idList);
+        for (NoticeEntity entity : entityList) {
+            auditManager.saveByDeleteEnum(entity.getTitle(), entity.getId(), null);
+        }
     }
-
 }

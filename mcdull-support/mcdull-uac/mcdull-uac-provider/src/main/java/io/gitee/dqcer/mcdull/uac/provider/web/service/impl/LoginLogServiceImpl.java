@@ -10,6 +10,7 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LoginLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.ILoginLogRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginLogService;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -66,6 +68,20 @@ public class LoginLogServiceImpl
             entity.setRemark(dynamicLocaleMessageSource.getMessage(remark));
         }
         baseRepository.insert(entity);
+    }
+
+    @Override
+    public LoginLogEntity getLastLoginLog(String loginName) {
+        List<LoginLogEntity> list = baseRepository.getListByLoginName(loginName);
+        if (CollUtil.isNotEmpty(list)) {
+            List<LoginLogEntity> successLoginList = list.stream()
+                    .filter(item -> LoginLogResultTypeEnum.LOGIN_SUCCESS.getCode().equals(item.getLoginResult()))
+                    .sorted((o1, o2) -> o2.getCreatedTime().compareTo(o1.getCreatedTime())).collect(Collectors.toList());
+            if (CollUtil.isNotEmpty(successLoginList)) {
+                return successLoginList.get(0);
+            }
+        }
+        return null;
     }
 
     private LoginLogVO convertToConfigVO(LoginLogEntity entity) {

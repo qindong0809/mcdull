@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.framework.web.json.serialize;
 
-import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -47,7 +46,7 @@ public class DynamicDateSerialize extends DateSerializer implements ContextualSe
             jsonGenerator.writeNull();
             return;
         }
-        String pattern = DatePattern.NORM_DATE_PATTERN;
+        String pattern = dynamicDateFormat.dateFormat();
         if (jsonFormat != null) {
             String dynamicPattern = jsonFormat.pattern();
             if (StrUtil.isNotBlank(dynamicPattern)) {
@@ -59,8 +58,14 @@ public class DynamicDateSerialize extends DateSerializer implements ContextualSe
         Locale locale = serializerProvider.getLocale();
         UnifySession<?> unifySession = UserContextHolder.getSession();
         if (unifySession != null) {
-            pattern = unifySession.getDateFormat();
-            zoneIdStr = unifySession.getZoneIdStr();
+            String dateFormat = unifySession.getDateFormat();
+            if (StrUtil.isNotBlank(dateFormat)) {
+                pattern = dateFormat;
+            }
+            String sessionZoneIdStr = unifySession.getZoneIdStr();
+            if (StrUtil.isNotBlank(sessionZoneIdStr)) {
+                zoneIdStr = sessionZoneIdStr;
+            }
             if (dynamicDateFormat != null) {
                 boolean enableTimezone = dynamicDateFormat.enableTimezone();
                 if (!enableTimezone) {

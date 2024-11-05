@@ -476,7 +476,6 @@ create table `sys_login_log`  (
 `remark` varchar(2000)  null default null comment '备注',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
-`updated_time` datetime default null comment '更新时间',
 primary key (`id`) using btree,
 index `customer_id`(`login_name`) using btree
 ) comment = '用户登录日志';
@@ -498,7 +497,6 @@ create table `sys_operate_log`  (
 `fail_reason` longtext null comment '失败原因',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
-`updated_time` datetime default null comment '更新时间',
 primary key (`id`) using btree
 ) comment = '操作记录';
 

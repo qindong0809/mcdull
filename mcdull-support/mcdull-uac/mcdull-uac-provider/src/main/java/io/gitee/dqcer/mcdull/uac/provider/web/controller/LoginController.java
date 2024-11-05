@@ -51,10 +51,6 @@ public class LoginController extends BasicController {
     @Operation(summary = "登录")
     @PostMapping("login")
     public Result<LogonVO> login(@RequestBody @Valid LoginDTO dto) throws Exception {
-//        return Result.success(
-//                super.locker("login:", 0, () -> loginService.login(dto)));
-
-//        processFlow.run(() -> "login");
         return Result.success(
                 super.rateLimiter("login:", 5, 1, () -> {
                     LoginContext context = new LoginContext();
@@ -66,6 +62,11 @@ public class LoginController extends BasicController {
 
     }
 
+    /**
+     * 与login返回一致，待确认是否重复
+     * @return
+     */
+    @Deprecated
     @GetMapping("/current/user-info")
     @Operation(summary = "登录人信息", description = "角色、权限、个人信息")
     public Result<LogonVO> getCurrentUserInfo() {

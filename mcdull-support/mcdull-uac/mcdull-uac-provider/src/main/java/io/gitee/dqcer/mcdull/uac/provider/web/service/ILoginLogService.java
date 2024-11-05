@@ -17,4 +17,6 @@ public interface ILoginLogService {
     PagedVO<LoginLogVO> queryByPage(LoginLogQueryDTO dto);
 
     void add(LoginLogEntity entity);
+
+    LoginLogEntity getLastLoginLog(String loginName);
 }

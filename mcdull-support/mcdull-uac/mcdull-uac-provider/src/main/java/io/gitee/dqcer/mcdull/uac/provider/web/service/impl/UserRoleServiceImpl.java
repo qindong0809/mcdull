@@ -52,6 +52,7 @@ public class UserRoleServiceImpl
         return baseRepository.listByRole(roleId);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void batchRemoveUserListByRole(Integer roleId, List<Integer> userList) {
         baseRepository.batchRemoveUserListByRole(roleId, userList);

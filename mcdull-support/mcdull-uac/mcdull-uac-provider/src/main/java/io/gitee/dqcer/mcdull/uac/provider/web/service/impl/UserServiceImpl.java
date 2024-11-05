@@ -89,21 +89,20 @@ public class UserServiceImpl
         return false;
     }
 
-    private static String hash(String webPassword) {
+    private String hash(String webPassword) {
         return Sha1Util.getSha1(decrypt(webPassword));
     }
 
-    public static String decrypt(String data) {
+    public String decrypt(String data) {
         try {
             // 第一步： Base64 解码
             byte[] base64Decode = Base64.getDecoder().decode(data);
-
             // 第二步： AES 解密
             AES aes = new AES(AES_KEY.getBytes(StandardCharsets.UTF_8));
             byte[] decryptedBytes = aes.decrypt(base64Decode);
             return new String(decryptedBytes, StandardCharsets.UTF_8);
-
         } catch (Exception e) {
+            LogHelp.error(log, "密码解密失败", e);
             return StrUtil.EMPTY;
         }
     }
@@ -308,7 +307,6 @@ public class UserServiceImpl
             vo.setCode(i.getRoleCode());
             return vo;
         }).collect(Collectors.toList());
-
         Set<Integer> roleSet = vos.stream().map(UserPowerVO::getRoleId).collect(Collectors.toSet());
         Map<Integer, List<String>> keyRoleIdValueMenuCode = menuService
                 .getMenuCodeListMap(new ArrayList<>(roleSet));
@@ -454,14 +452,14 @@ public class UserServiceImpl
         if (CollUtil.isNotEmpty(list)) {
             userMap = list.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
         }
-        List<Integer> userIdList = userList.stream().map(IdEntity::getId).collect(Collectors.toList());
+        List<Integer> userIdList = userList.stream().map(IdEntity::getId)
+                .collect(Collectors.toList());
         Map<Integer, List<RoleEntity>> roleListMap = roleService.getRoleMap(userIdList);
         Set<Integer> depIdSet = userList.stream().map(UserEntity::getDepartmentId)
                 .collect(Collectors.toSet());
         List<DepartmentEntity> departmentEntities = departmentRepository.listByIds(depIdSet);
         Map<Integer, DepartmentEntity> deptMap = departmentEntities.stream()
                 .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
-
         for (UserEntity entity : userList) {
             UserVO vo = UserConvert.entityToVO(entity);
             this.setRoleListFieldValue(roleListMap, vo, entity.getId());

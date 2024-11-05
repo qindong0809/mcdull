@@ -1,11 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.TimestampEntity;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 /**
  * sys_login_log
@@ -16,7 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @TableName("sys_login_log")
-public class LoginLogEntity extends RelEntity<Integer> {
+public class LoginLogEntity extends TimestampEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,6 +26,9 @@ public class LoginLogEntity extends RelEntity<Integer> {
 
     private String userAgent;
 
+    /**
+     * {@link  io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum}
+     */
     private Integer loginResult;
 
     private String remark;

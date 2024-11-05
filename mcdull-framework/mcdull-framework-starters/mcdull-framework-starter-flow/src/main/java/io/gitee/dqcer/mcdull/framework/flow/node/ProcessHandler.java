@@ -63,7 +63,7 @@ public interface ProcessHandler<Context> {
         LogHelp.error(log, "ProcessHandler error. context: {}", context, exception);
     }
 
-    default void finallyException(Exception exception, Context context){
+    default void finallyException(ProcessHandler processHandler, Exception exception, Context context){
         Logger log = LoggerFactory.getLogger(this.getClass());
         LogHelp.debug(log, "ProcessHandler afterExecute. context: {}", context);
     }

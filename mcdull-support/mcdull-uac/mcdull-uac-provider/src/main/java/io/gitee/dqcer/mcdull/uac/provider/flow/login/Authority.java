@@ -11,6 +11,7 @@ import io.gitee.dqcer.mcdull.framework.flow.node.TreeNode;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginDeviceEnum;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +34,8 @@ public class Authority implements ProcessHandler<LoginContext> {
         CacheUser cache = this.buildCacheUser(userEntity);
         StpUtil.getSession().set(GlobalConstant.CACHE_CURRENT_USER, cache);
         context.setVo(loginService.buildLogonVo(userEntity));
+        dict.put("typeEnum", LoginLogResultTypeEnum.LOGIN_SUCCESS);
+        context.setDict(dict);
     }
 
     private CacheUser buildCacheUser(UserEntity entity) {
@@ -47,6 +50,11 @@ public class Authority implements ProcessHandler<LoginContext> {
 
     @Override
     public boolean extendParentNodeTryAttr() {
+        return true;
+    }
+
+    @Override
+    public boolean endNode() {
         return true;
     }
 }
