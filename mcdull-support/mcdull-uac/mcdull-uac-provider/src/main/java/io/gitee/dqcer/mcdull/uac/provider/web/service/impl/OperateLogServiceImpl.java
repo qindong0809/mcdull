@@ -97,7 +97,6 @@ public class OperateLogServiceImpl
         vo.setUserAgent(entity.getUserAgent());
         vo.setSuccessFlag(entity.getSuccessFlag());
         vo.setFailReason(entity.getFailReason());
-        vo.setUpdateTime(entity.getUpdatedTime());
         vo.setCreateTime(entity.getCreatedTime());
         return vo;
     }

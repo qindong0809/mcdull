@@ -66,11 +66,6 @@ public class OperateLogVO implements VO {
     @Schema(description = "失败原因")
     private String failReason;
 
-    @Schema(description = "更新时间")
-    @DynamicDateFormat(enableTimezone = true)
-    @JsonSerialize(using = DynamicDateSerialize.class)
-    private Date updateTime;
-
     @Schema(description = "创建时间")
     @DynamicDateFormat(enableTimezone = true)
     @JsonSerialize(using = DynamicDateSerialize.class)

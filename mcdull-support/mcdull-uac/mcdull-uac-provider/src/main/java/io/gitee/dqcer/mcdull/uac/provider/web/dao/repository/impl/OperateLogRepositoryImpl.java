@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.repository.CrudRepository;
-import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.TimestampEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.OperateLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.OperateLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.OperateLogMapper;
@@ -36,7 +36,7 @@ public class OperateLogRepositoryImpl
         String startDate = param.getStartDate();
         String endDate = param.getEndDate();
         if (StrUtil.isAllNotBlank(startDate, endDate)) {
-            lambda.between(RelEntity::getCreatedTime,
+            lambda.between(TimestampEntity::getCreatedTime,
                     DateUtil.parseDate(startDate), DateUtil.endOfDay(DateUtil.parseDate(endDate)));
         }
         lambda.eq(ObjUtil.isNotNull(param.getUserId()), OperateLogEntity::getUserId, param.getUserId());
@@ -67,7 +67,7 @@ public class OperateLogRepositoryImpl
         if (StrUtil.isNotBlank(content)) {
             lambda.like(OperateLogEntity::getContent, content);
         }
-        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        lambda.orderByDesc(ListUtil.of(TimestampEntity::getCreatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 

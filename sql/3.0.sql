@@ -712,6 +712,24 @@ primary key (`id`) using btree
 )  comment='系统信息';
 insert into `sys_info` values (1, 'smtp.163.com', '25', 'postmaster@163.com', 'postmaster', 'postmaster', 0, sysdate(), sysdate());
 
+drop table if exists `sys_message`;
+create table `sys_message`  (
+`id` int(0) not null auto_increment comment '主键',
+`message_type` smallint(0) not null comment '消息类型',
+`receiver_user_type` int(0) not null comment '接收者用户类型',
+`receiver_user_id` bigint(0) not null comment '接收者用户id',
+`data_id` varchar(500) null default '' comment '相关数据id',
+`title` varchar(1000) not null comment '标题',
+`content` text not null comment '内容',
+`read_flag` tinyint(1) not null default 0 comment '是否已读',
+`read_time` datetime(0) null default null comment '已读时间',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree,
+index `idx_msg`(`message_type`, `receiver_user_type`, `receiver_user_id`) using btree
+)comment = '通知消息';
+
 drop table if exists `sys_form`;
 create table if not exists `sys_form` (
 `id` int auto_increment comment '主键',

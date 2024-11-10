@@ -3,6 +3,7 @@ package io.gitee.dqcer.blaze.domain.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 企业信息 实体类
@@ -11,6 +12,7 @@ import lombok.Data;
  * @since 2024-06-24 22:28:36
  */
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("blaze_customer_info")
 public class CustomerInfoEntity extends BaseEntity<Integer> {
