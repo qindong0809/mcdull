@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.web.filter;
 
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.date.DatePattern;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
@@ -45,8 +44,7 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
                 traceId = RandomUtil.uuid();
             }
             MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
-            LogHelp.debug(log, "start filter. url: {}", requestUrl);
-
+            LogHelp.debug(log, "Build UnifySession And Initializing TraceId.");
             UnifySession<Object> unifySession = new UnifySession<>();
             unifySession.setTraceId(traceId);
             unifySession.setRequestUrl(requestUrl);
@@ -71,7 +69,7 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } finally {
-            LogHelp.debug(log, "end filter. url: {}", requestUrl);
+            LogHelp.debug(log, "Clean UnifySession.");
             UserContextHolder.clearSession();
             MDC.remove(HttpHeaderConstants.LOG_TRACE_ID);
         }

@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.redis.operation;
 
 import cn.hutool.core.collection.IterUtil;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import org.redisson.api.*;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.*;
@@ -41,7 +40,7 @@ public final class RedisClient {
      * @return true / false
      */
     public boolean rateLimit(String key, int quantity, int time) {
-        RRateLimiter rateLimiter = redissonClient.getRateLimiter(GlobalConstant.RATE_LIMITER + key);
+        RRateLimiter rateLimiter = redissonClient.getRateLimiter(key);
         rateLimiter.trySetRate(RateType.OVERALL, quantity, time, RateIntervalUnit.SECONDS);
         return rateLimiter.tryAcquire(1);
     }

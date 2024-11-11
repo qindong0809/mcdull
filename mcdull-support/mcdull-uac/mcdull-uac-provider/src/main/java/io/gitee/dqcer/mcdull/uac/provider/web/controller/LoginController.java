@@ -45,14 +45,15 @@ public class LoginController extends BasicController {
     public Result<CaptchaVO> getCaptcha() {
         String suffix = StrUtil.format("login:captcha:ip_addr:{}", IpUtil.getIpAddr(super.getRequest()));
         return Result.success(
-                super.rateLimiter(suffix, 5, 1, () -> captchaService.get()));
+                super.rateLimiter(suffix , 5, 1, () -> captchaService.get()));
     }
 
     @Operation(summary = "登录")
     @PostMapping("login")
     public Result<LogonVO> login(@RequestBody @Valid LoginDTO dto) throws Exception {
+        String suffix = "login:" + dto.getLoginName();
         return Result.success(
-                super.rateLimiter("login:", 5, 1, () -> {
+                super.rateLimiter(suffix, 5, 1, () -> {
                     LoginContext context = new LoginContext();
                     context.setId("process_flow_login");
                     context.setLoginDTO(dto);

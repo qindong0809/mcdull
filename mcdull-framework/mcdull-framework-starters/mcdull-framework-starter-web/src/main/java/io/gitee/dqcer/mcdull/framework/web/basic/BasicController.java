@@ -4,10 +4,9 @@ import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
-import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.web.component.ConcurrentRateLimiter;
 import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
-import io.gitee.dqcer.mcdull.framework.web.config.SystemEnvironment;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +30,10 @@ public abstract class BasicController {
     private ConcurrentRateLimiter concurrentRateLimiter;
 
     @Resource
-    private SystemEnvironment systemEnvironment;
+    private DynamicLocaleMessageSource dynamicLocaleMessageSource;
 
     @Resource
-    private DynamicLocaleMessageSource dynamicLocaleMessageSource;
+    private McdullProperties mcdullProperties;
 
     protected Logger log = LoggerFactory.getLogger(getClass());
     protected HttpServletRequest getRequest() {
@@ -55,18 +54,23 @@ public abstract class BasicController {
      * @return T
      */
     protected <T> T rateLimiter(String key, int quantity, int seconds, Supplier<T> function) {
+        key = this.buildKeyName(key);
         if (concurrentRateLimiter.limiter(key, quantity, seconds)) {
             return function.get();
         }
-        LogHelp.warn(log, "rateLimiter. key: {}. quantity: {}. seconds: {}", key, quantity, seconds);
         throw new BusinessException(I18nConstants.SYSTEM_REQUEST_TOO_FREQUENT);
     }
 
+    private String buildKeyName(String key) {
+        key = mcdullProperties.getApplicationName() + ":" + GlobalConstant.RATE_LIMITER + key;
+        return key;
+    }
+
     protected <T> void rateLimiter(String key, int quantity, int seconds, Consumer<T> function) {
+        key = this.buildKeyName(key);
         if (concurrentRateLimiter.limiter(key, quantity, seconds)) {
             function.accept(null);
         }
-        LogHelp.warn(log, "rateLimiter. key: {}. quantity: {}. seconds: {}", key, quantity, seconds);
         throw new BusinessException(I18nConstants.SYSTEM_REQUEST_TOO_FREQUENT);
     }
 
@@ -80,10 +84,8 @@ public abstract class BasicController {
      * @return T
      */
     protected <T> T locker(String key, long timeout, Supplier<T> function) {
-        String projectName = systemEnvironment.getProjectName();
-        String environment = systemEnvironment.getEnvironment();
-        final String logKey = StrUtil.format("{}_{}_{}:{}",
-                GlobalConstant.ROOT_PREFIX, projectName, environment, key);
+        String applicationName = mcdullProperties.getApplicationName();
+        final String logKey = StrUtil.format("{}_{}_{}:{}", GlobalConstant.ROOT_PREFIX, applicationName, key);
         return concurrentRateLimiter.locker(key, timeout, function);
     }
 

@@ -15,6 +15,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 /**
  * 自动配置
@@ -39,6 +40,20 @@ public class AutoConfiguration {
         filterRegistrationBean.setEnabled(true);
         filterRegistrationBean.addUrlPatterns("/*");
         return filterRegistrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean<CommonsRequestLoggingFilter> loggingFilter() {
+        FilterRegistrationBean<CommonsRequestLoggingFilter> registrationBean = new FilterRegistrationBean<>();
+        CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter();
+        // 设置记录的请求信息级别
+        filter.setIncludeClientInfo(true);
+        filter.setIncludeQueryString(true);
+        filter.setIncludePayload(true);
+        filter.setIncludeHeaders(true);
+        filter.setMaxPayloadLength(1000);
+        registrationBean.setFilter(filter);
+        return registrationBean;
     }
 
     @Bean

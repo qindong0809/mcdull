@@ -1,14 +1,16 @@
 package io.gitee.dqcer.mcdull.frameowrk.soagov;
 
+import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.Resource;
 
 /**
  * Prometheus配置
@@ -22,12 +24,12 @@ public class PrometheusConfiguration implements CommandLineRunner {
 
 	private static final Logger log = LoggerFactory.getLogger(PrometheusConfiguration.class);
 
-	@Value("${spring.application.name:unknown}")
-	private String applicationName;
+	@Resource
+	private McdullProperties mcdullProperties;
 
 	@Bean
 	MeterRegistryCustomizer<MeterRegistry> appMetricsCommonTags() {
-		return registry -> registry.config().commonTags("application", applicationName);
+		return registry -> registry.config().commonTags("application", mcdullProperties.getApplicationName());
 	}
 
 	@Override

@@ -50,7 +50,7 @@ sa-token:
   # 是否输出操作日志
   is-log: true
   # 日志等级（trace、debug、info、warn、error、fatal）
-  log-level: debug
+  log-level: info
   # 启动时的字符画打印
   is-print: false
   # 是否从cookie读取token

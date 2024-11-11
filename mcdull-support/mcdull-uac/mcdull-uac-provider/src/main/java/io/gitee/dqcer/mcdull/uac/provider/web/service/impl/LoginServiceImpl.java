@@ -14,6 +14,7 @@ import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum;
@@ -52,6 +53,9 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
     @Resource
     private CaffeineCacheManager cacheManager;
 
+    @Resource
+    private IDepartmentService departmentService;
+
 
     @Override
     public void saveLoginLog(String loginName, LoginLogResultTypeEnum resultTypeEnum, String remark) {
@@ -68,24 +72,33 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
 
     @Override
     public LogonVO buildLogonVo(UserEntity userEntity) {
-        LogonVO logonVO = new LogonVO();
-        logonVO.setToken(StpUtil.getTokenValue());
-        logonVO.setEmployeeId(userEntity.getId());
-        logonVO.setLoginName(userEntity.getLoginName());
-        logonVO.setActualName(userEntity.getActualName());
-        logonVO.setDepartmentId(userEntity.getDepartmentId());
-        logonVO.setAdministratorFlag(userEntity.getAdministratorFlag());
-        logonVO.setGender(userEntity.getGender());
-        logonVO.setPhone(userEntity.getPhone());
-        logonVO.setMenuList(menuService.getList(userEntity.getId(), userEntity.getAdministratorFlag()));
+        LogonVO vo = new LogonVO();
+        vo.setToken(StpUtil.getTokenValue());
+        vo.setEmployeeId(userEntity.getId());
+        vo.setLoginName(userEntity.getLoginName());
+        vo.setActualName(userEntity.getActualName());
+        vo.setDepartmentId(userEntity.getDepartmentId());
+        vo.setAdministratorFlag(userEntity.getAdministratorFlag());
+        vo.setGender(userEntity.getGender());
+        vo.setPhone(userEntity.getPhone());
+        vo.setIp(IpUtil.getIpAddr(ServletUtil.getRequest()));
+        vo.setUserAgent(ServletUtil.getUserAgent());
+        Integer departmentId = userEntity.getDepartmentId();
+        if (ObjUtil.isNotNull(departmentId)) {
+            DepartmentEntity department = departmentService.getById(departmentId);
+            if (ObjUtil.isNotNull(department)) {
+                vo.setDepartmentName(department.getName());
+            }
+        }
+        vo.setMenuList(menuService.getList(userEntity.getId(), userEntity.getAdministratorFlag()));
         LoginLogEntity lastLoginLog = loginLogService.getLastLoginLog(userEntity.getLoginName());
         if (ObjUtil.isNotNull(lastLoginLog)) {
-            logonVO.setLastLoginIp(lastLoginLog.getLoginIp());
-            logonVO.setLastLoginIpRegion(lastLoginLog.getLoginIpRegion());
-            logonVO.setLastLoginUserAgent(lastLoginLog.getUserAgent());
-            logonVO.setLastLoginTime(lastLoginLog.getCreatedTime());
+            vo.setLastLoginIp(lastLoginLog.getLoginIp());
+            vo.setLastLoginIpRegion(lastLoginLog.getLoginIpRegion());
+            vo.setLastLoginUserAgent(lastLoginLog.getUserAgent());
+            vo.setLastLoginTime(lastLoginLog.getCreatedTime());
         }
-       return logonVO;
+       return vo;
     }
 
 

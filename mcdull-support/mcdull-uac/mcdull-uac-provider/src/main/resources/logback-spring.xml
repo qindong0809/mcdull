@@ -112,6 +112,7 @@
   <logger name="springfox.bean.validators" level="ERROR"/>
   <logger name="springfox.documentation" level="ERROR" />
   <logger name="com.alibaba.nacos.client.naming" level="warn" />
+  <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="info" />
   <logger name="io.gitee.dqcer" level="info" />
 
   <root level="info">

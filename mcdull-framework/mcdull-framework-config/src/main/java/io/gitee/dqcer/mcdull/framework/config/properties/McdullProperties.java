@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.config.properties;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -28,6 +29,17 @@ public class McdullProperties {
     private OssProperties oss = new OssProperties();
 
     private MailProperties mail = new MailProperties();
+
+    @Value("${spring.application.name:unknown}")
+    private String applicationName;
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
 
     public MailProperties getMail() {
         return mail;

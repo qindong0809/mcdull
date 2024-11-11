@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 import io.gitee.dqcer.mcdull.framework.web.transform.SpringContextHolder;
@@ -59,16 +60,18 @@ public class OperationLogsAspect {
         }
         HttpServletRequest request = ServletUtil.getRequest();
         String requestUrl = request.getRequestURI();
-        LogHelp.debug(log, "Operation Logs Url:{}", requestUrl);
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         if (method.isAnnotationPresent(UnAuthorize.class) || this.ignoreFilter(requestUrl, PATH_LIST)) {
             return joinPoint.proceed();
         }
-
         OperationLogsService bean = SpringContextHolder.getBean(OperationLogsService.class);
         if (!bean.needInterceptor(request, method)) {
             return joinPoint.proceed();
+        }
+        UnifySession<?> unifySession = UserContextHolder.getSession();
+        if (unifySession != null) {
+            LogHelp.info(log, "Operation Logs Url:{}", unifySession.getRequestUrl());
         }
 
         long startTime = System.currentTimeMillis();

@@ -17,7 +17,6 @@ import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.StringCodec;
 import org.redisson.config.Config;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -44,10 +43,6 @@ import java.util.stream.Stream;
  */
 @Configuration
 public class RedissonAutoConfiguration extends CachingConfigurerSupport {
-
-    @Value("${spring.application.name:unknown}")
-    private String appName;
-
 
     @Bean
     @ConditionalOnMissingBean(CacheChannel.class)
@@ -100,21 +95,6 @@ public class RedissonAutoConfiguration extends CachingConfigurerSupport {
         objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
         return new GenericJackson2JsonRedisSerializer(objectMapper);
     }
-
-//    @Bean(name = "redisCacheManager")
-//    public CacheManager redisCacheManager(RedisConnectionFactory factory, RedisSerializer<Object> redisSerializer) {
-//        RedisCacheConfiguration config = RedisCacheConfiguration
-//                // 注意默认配置允许缓存null
-//                .defaultCacheConfig()
-//                // 接口缓存上指定了key的时候统一加服务名前缀
-//                .computePrefixWith(cacheName -> appName + ":" + cacheName + ":")
-//                // 可以根据业务需要设置统一过期时间，这里是为了强制使用@CacheExpire手动设置过期时间所以设置很短
-//                .entryTtl(Duration.ofMinutes(1))
-//                // 配置序列化和反序列化方式
-//                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()))
-//                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer));
-//        return RedisCacheManager.builder(new ExpireRedisCacheWriter(factory)).cacheDefaults(config).build();
-//    }
 
     @Bean
     public CaffeineCacheManager cacheManager() {
