@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.framework.base.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
@@ -88,5 +87,10 @@ public class PageUtil {
 
     public static <T, D extends PagedDTO> PagedVO<T> of(List<T> list, D dto) {
         return new PagedVO<>(list, list.size(), dto.getPageSize(), dto.getPageNum());
+    }
+
+    public static <D extends PagedDTO> void setMaxPageSize(D dto) {
+        dto.setPageSize(Integer.MAX_VALUE);
+        dto.setPageNum(GlobalConstant.Number.NUMBER_1);
     }
 }

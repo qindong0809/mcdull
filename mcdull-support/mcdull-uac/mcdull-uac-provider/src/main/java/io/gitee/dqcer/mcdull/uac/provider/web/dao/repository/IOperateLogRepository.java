@@ -32,4 +32,10 @@ public interface IOperateLogRepository extends IRepository<OperateLogEntity> {
      */
     List<Map<String, Object>> home();
 
+    /**
+     * 仅获取模块
+     *
+     * @return {@link List }<{@link OperateLogEntity }>
+     */
+    List<OperateLogEntity> getOnlyModule();
 }

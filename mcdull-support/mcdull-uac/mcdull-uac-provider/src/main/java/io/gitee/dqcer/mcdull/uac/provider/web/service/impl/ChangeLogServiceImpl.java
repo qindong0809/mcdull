@@ -17,7 +17,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogAndVersionVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IChangeLogRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
-import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IChangeLogService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +44,7 @@ public class ChangeLogServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void add(ChangeLogAddDTO dto) {
+    public boolean add(ChangeLogAddDTO dto) {
         List<ChangeLogEntity> list = baseRepository.list();
         if (CollUtil.isNotEmpty(list)) {
             this.validNameExist(null, dto.getVersion(), list,
@@ -54,6 +53,7 @@ public class ChangeLogServiceImpl
         ChangeLogEntity entity = this.convertEntity(dto);
         baseRepository.insert(entity);
         auditManager.saveByAddEnum(dto.getVersion(), entity.getId(), this.buildAuditLog(entity));
+        return true;
     }
 
     private Audit buildAuditLog(ChangeLogEntity entity) {

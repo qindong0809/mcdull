@@ -38,87 +38,11 @@
         <itext7.version>7.2.5</itext7.version>
         <html2pdf.version>4.0.5</html2pdf.version>
         <sa-token.version>1.37.0</sa-token.version>
-<!--        <jsqlparser.version>4.6</jsqlparser.version>-->
+        <oshi.version>6.1.4</oshi.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- mcdull framework 依赖 -->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-framework-base</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-framework-config</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-framework-enforcer</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-framework-starter-feign</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-framework-starter-mysql</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-framework-starter-nacos</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-framework-starter-monitor</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-framework-starter-redis</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-framework-starter-oss</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-framework-starter-web</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-framework-starter-flow</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-framework-starter-security</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-framework-starter-swagger</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-business-common</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.gitee.dqcer</groupId>-->
-<!--                <artifactId>mcdull-mdc-client</artifactId>-->
-<!--                <version>${mcdull.version}</version>-->
-<!--            </dependency>-->
             <!-- spring boot 依赖 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -165,21 +89,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>com.baomidou</groupId>-->
-<!--                <artifactId>mybatis-plus-boot-starter</artifactId>-->
-<!--                <version>${mybatis-plus.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>com.baomidou</groupId>-->
-<!--                <artifactId>mybatis-plus-core</artifactId>-->
-<!--                <version>${mybatis-plus.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>com.baomidou</groupId>-->
-<!--                <artifactId>mybatis-plus-extension</artifactId>-->
-<!--                <version>${mybatis-plus.version}</version>-->
-<!--            </dependency>-->
             <!--参数效验-->
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -254,15 +163,15 @@
                 <artifactId>html2pdf</artifactId>
                 <version>${html2pdf.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>com.github.jsqlparser</groupId>-->
-<!--                <artifactId>jsqlparser</artifactId>-->
-<!--                <version>${jsqlparser.version}</version>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-core</artifactId>
                 <version>${sa-token.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.oshi</groupId>
+                <artifactId>oshi-core</artifactId>
+                <version>${oshi.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

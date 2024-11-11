@@ -14,6 +14,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.BizAuditEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.BizAuditVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IBizAuditRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IMenuManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IBizAuditService;
@@ -39,6 +40,9 @@ public class BizAuditServiceImpl
 
     @Resource
     private IUserManager userManager;
+
+    @Resource
+    private ICommonManager commonManager;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -83,6 +87,38 @@ public class BizAuditServiceImpl
             }
         }
         return PageUtil.toPage(voList, entityPage);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void exportData(BizAuditQueryDTO dto) {
+        PageUtil.setMaxPageSize(dto);
+        PagedVO<BizAuditVO> page = this.queryPage(dto);
+        List<BizAuditVO> list = new ArrayList<>();
+        if (ObjUtil.isNotNull(page)) {
+            list = page.getList();
+        }
+        Map<String, String> titleMap = new HashMap<>(8);
+        titleMap.put("业务类型", "bizTypeName");
+        titleMap.put("业务类型路径", "bizTypeRootName");
+        titleMap.put("业务索引", "bizIndex");
+        titleMap.put("业务动作", "operationName");
+        titleMap.put("业务内容", "comment");
+        titleMap.put("操作人", "operator");
+        titleMap.put("操作时间", "operationTime");
+        List<Map<String, String>> mapList = new ArrayList<>();
+        for (BizAuditVO vo : list) {
+            Map<String, String> map = new HashMap<>(8);
+            map.put("bizTypeName", vo.getBizTypeName());
+            map.put("bizTypeRootName", vo.getBizTypeRootName());
+            map.put("bizIndex", vo.getBizIndex());
+            map.put("operationName", vo.getOperationName());
+            map.put("comment", vo.getComment());
+            map.put("operator", vo.getOperator());
+            map.put("operationTime", vo.getOperationTime().toString());
+            mapList.add(map);
+        }
+        commonManager.exportExcel("业务操作记录", StrUtil.EMPTY, titleMap, mapList);
     }
 
     public List<String> getRootName(List<MenuEntity> list, Integer id) {

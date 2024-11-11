@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.ListUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogUpdateDTO;
@@ -26,16 +27,17 @@ import java.util.List;
 @RestController
 @Tag(name = "更新日志")
 @RequestMapping
-public class ChangeLogController {
+public class ChangeLogController extends BasicController {
 
     @Resource
     private IChangeLogService changeLogService;
+
     @Operation(summary = "添加")
     @PostMapping("/changeLog/add")
     @SaCheckPermission("support:changeLog:add")
     public Result<Boolean> add(@RequestBody @Valid ChangeLogAddDTO addForm) {
-        changeLogService.add(addForm);
-        return Result.success(true);
+        final String key = "changeLog:add:" + addForm.getVersion() + "_" + addForm.getType();
+        return Result.success(super.locker(key, () -> changeLogService.add(addForm)));
     }
 
     @Operation(summary = "更新")

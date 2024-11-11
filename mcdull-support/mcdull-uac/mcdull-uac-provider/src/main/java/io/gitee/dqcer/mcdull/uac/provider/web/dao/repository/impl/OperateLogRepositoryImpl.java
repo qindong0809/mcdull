@@ -79,4 +79,11 @@ public class OperateLogRepositoryImpl
         return this.listMaps(queryWrapper);
     }
 
+    @Override
+    public List<OperateLogEntity> getOnlyModule() {
+        LambdaQueryWrapper<OperateLogEntity> query = Wrappers.lambdaQuery();
+        query.select(OperateLogEntity::getModule);
+        return baseMapper.selectList(query);
+    }
+
 }

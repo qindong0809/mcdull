@@ -92,4 +92,9 @@ public abstract class BasicController {
     protected <T> T locker(String key, Supplier<T> function) {
         return concurrentRateLimiter.locker(key, 0L, function);
     }
+
+    protected <T, S> T locker(String key, Supplier<S> function, T defaultValue) {
+        concurrentRateLimiter.locker(key, 0L, function);
+        return defaultValue;
+    }
 }

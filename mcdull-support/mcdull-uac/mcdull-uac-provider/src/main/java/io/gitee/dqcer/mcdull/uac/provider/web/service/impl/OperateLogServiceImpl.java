@@ -132,7 +132,7 @@ public class OperateLogServiceImpl
 
     @Override
     public List<NameValueVO<String, Integer>> pieHome() {
-        List<OperateLogEntity> list = baseRepository.list();
+        List<OperateLogEntity> list = baseRepository.getOnlyModule();
         if (CollUtil.isNotEmpty(list)) {
             List<NameValueVO<String, Integer>> voList = new ArrayList<>();
             Map<String, Long> map = list.stream()

@@ -18,7 +18,7 @@ import java.util.List;
 
 public interface IChangeLogService {
 
-    void add(ChangeLogAddDTO addForm);
+    boolean add(ChangeLogAddDTO addForm);
 
     void update(ChangeLogUpdateDTO logUpdateForm);
 

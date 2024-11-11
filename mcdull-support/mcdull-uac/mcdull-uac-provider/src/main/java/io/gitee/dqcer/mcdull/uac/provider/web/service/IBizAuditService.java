@@ -37,4 +37,11 @@ public interface IBizAuditService {
      * @return {@link PagedVO }<{@link BizAuditVO }>
      */
     PagedVO<BizAuditVO> queryPage(BizAuditQueryDTO queryForm);
+
+    /**
+     * 导出数据
+     *
+     * @param dto DTO
+     */
+    void exportData(BizAuditQueryDTO dto);
 }
