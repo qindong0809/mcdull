@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.base.dto;
 
 import cn.hutool.core.convert.Convert;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.support.Paged;
 
 import javax.validation.constraints.Max;
@@ -36,10 +35,6 @@ public class PagedDTO extends KeywordDTO implements Paged {
      */
     protected List<OrderItem> orders;
 
-    /**
-     * 不需要分页
-     */
-    protected Boolean notNeedPaged;
 
     @Override
     public String toString() {
@@ -47,34 +42,26 @@ public class PagedDTO extends KeywordDTO implements Paged {
                 .add("pageSize=" + pageSize)
                 .add("pageNum=" + pageNum)
                 .add("orders=" + orders)
-                .add("notNeedPaged=" + notNeedPaged)
                 .add("keyword='" + keyword + "'")
                 .toString();
     }
 
     @Override
     public Integer getPageSize() {
-        if (this.notNeedPaged != null) {
-            if (notNeedPaged) {
-                return GlobalConstant.EXCEL_EXPORT_MAX_ROW;
-            }
-        }
-        return Convert.toInt(pageSize, GlobalConstant.Number.NUMBER_20);
+        return Convert.toInt(pageSize);
     }
 
-    public PagedDTO setPageSize(Integer pageSize) {
+    public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
-        return this;
     }
 
     @Override
     public Integer getPageNum() {
-        return Convert.toInt(pageNum, GlobalConstant.Number.NUMBER_1);
+        return Convert.toInt(pageNum);
     }
 
-    public PagedDTO setPageNum(Integer pageNum) {
+    public void setPageNum(Integer pageNum) {
         this.pageNum = pageNum;
-        return this;
     }
 
     public List<OrderItem> getOrders() {
@@ -84,13 +71,5 @@ public class PagedDTO extends KeywordDTO implements Paged {
     public PagedDTO setOrders(List<OrderItem> orders) {
         this.orders = orders;
         return this;
-    }
-
-    public Boolean getNotNeedPaged() {
-        return notNeedPaged;
-    }
-
-    public void setNotNeedPaged(Boolean notNeedPaged) {
-        this.notNeedPaged = notNeedPaged;
     }
 }

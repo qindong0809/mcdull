@@ -14,6 +14,7 @@ import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.audit.MenuAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.MenuConvert;
@@ -28,6 +29,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMenuRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IMenuManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleMenuService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
@@ -61,6 +63,9 @@ public class MenuServiceImpl
 
     @Resource
     private IAuditManager auditManager;
+
+    @Resource
+    private IMenuManager menuManager;
 
     @Override
     public Map<Integer, List<String>> getMenuCodeListMap(List<Integer> roleIdList) {
@@ -360,6 +365,11 @@ public class MenuServiceImpl
             mapList.add(map);
         }
         commonManager.exportExcel("菜单列表", StrUtil.EMPTY, titleMap, mapList);
+    }
+
+    @Override
+    public List<LabelValueVO<String, String>> getDropdownOptions() {
+        return menuManager.getNameCodeList();
     }
 
     private Map<String, String> getTitleMap() {

@@ -14,7 +14,6 @@ import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
-import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
@@ -39,7 +38,10 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentReposito
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IDictTypeManager;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserRoleService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -511,10 +513,7 @@ public class UserServiceImpl
         if (CollUtil.isEmpty(idList)) {
             return Collections.emptyList();
         }
-        PagedDTO dto = new PagedDTO();
-        dto.setNotNeedPaged(true);
-        Page<UserEntity> entityPage = baseRepository.selectPageByRoleId(idList, dto);
-        List<UserEntity> records = entityPage.getRecords();
+        List<UserEntity> records = baseRepository.listByIds(idList);
         return this.getVoList(records);
     }
 

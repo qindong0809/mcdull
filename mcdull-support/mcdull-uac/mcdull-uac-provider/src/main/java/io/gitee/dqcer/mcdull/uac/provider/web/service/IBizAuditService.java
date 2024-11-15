@@ -28,7 +28,7 @@ public interface IBizAuditService {
      * @param operationTime     操作时间
      * @param ext               ext
      */
-    void insert(String bizTypeCode, OperationTypeEnum operationTypeEnum, String bizIndex, Integer bizId, String comment, String operator, Date operationTime, String ext);
+    Integer insert(String bizTypeCode, OperationTypeEnum operationTypeEnum, String bizIndex, Integer bizId, String comment, String operator, Date operationTime, String ext);
 
     /**
      * Query 页面

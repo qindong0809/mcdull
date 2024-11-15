@@ -4,15 +4,19 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.business.common.audit.AuditUtil;
 import io.gitee.dqcer.mcdull.business.common.audit.OperationTypeEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.BizAuditQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.BizAuditEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.BizAuditFieldEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.BizAuditVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IBizAuditFieldRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IBizAuditRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IMenuManager;
@@ -44,9 +48,12 @@ public class BizAuditServiceImpl
     @Resource
     private ICommonManager commonManager;
 
+    @Resource
+    private IBizAuditFieldRepository bizAuditFieldRepository;
+
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void insert(String bizTypeCode, OperationTypeEnum operationTypeEnum, String bizIndex, Integer bizId,
+    public Integer insert(String bizTypeCode, OperationTypeEnum operationTypeEnum, String bizIndex, Integer bizId,
                        String comment, String operator, Date operationTime, String ext) {
         BizAuditEntity entity = new BizAuditEntity();
         entity.setBizTypeCode(bizTypeCode);
@@ -57,7 +64,9 @@ public class BizAuditServiceImpl
         entity.setBizId(bizId);
         entity.setBizIndex(bizIndex);
         entity.setExt(ext);
+        entity.setTraceId(UserContextHolder.getSession().getTraceId());
         baseRepository.save(entity);
+        return entity.getId();
     }
 
     @Transactional(readOnly = true)
@@ -67,26 +76,43 @@ public class BizAuditServiceImpl
         Page<BizAuditEntity> entityPage = baseRepository.selectPage(queryForm);
         List<BizAuditEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
-            Set<String> codeSet = recordList.stream().map(BizAuditEntity::getBizTypeCode).collect(Collectors.toSet());
-            Map<String, MenuEntity> nameMap = menuManager.getMenuName(new ArrayList<>(codeSet));
-            List<MenuEntity> listAll = menuManager.listAll();
             List<String> loginList = recordList.stream().map(BizAuditEntity::getOperator).collect(Collectors.toList());
             Map<String, String> nameMapByLoginName = userManager.getNameMapByLoginName(loginList);
+            List<LabelValueVO<String, String>> nameCodeList = menuManager.getNameCodeList();
+            Map<String, String> codeMap = nameCodeList.stream().collect(Collectors.toMap(LabelValueVO::getValue, LabelValueVO::getLabel));
+            List<Integer> list = recordList.stream().map(BizAuditEntity::getBizId).collect(Collectors.toList());
+            Map<Integer, List<BizAuditFieldEntity>> map = bizAuditFieldRepository.map(list);
             for (BizAuditEntity entity : recordList) {
                 BizAuditVO vo = this.convertToVO(entity);
-                MenuEntity menuEntity = nameMap.get(entity.getBizTypeCode());
-                if (menuEntity != null) {
-                    vo.setBizTypeName(menuEntity.getMenuName());
-                    List<String> rootNameList = this.getRootName(listAll, menuEntity.getId());
-                    Collections.reverse(rootNameList);
-                    vo.setBizTypeRootName(StrUtil.join(StrUtil.SLASH, rootNameList));
-                }
+                vo.setBizTypeName(codeMap.get(entity.getBizTypeCode()));
                 vo.setOperationName(IEnum.getTextByCode(OperationTypeEnum.class, entity.getOperation()));
                 vo.setOperatorName(nameMapByLoginName.get(entity.getOperator()));
+                if (OperationTypeEnum.ADD.getCode().equals(entity.getOperation())
+                        || OperationTypeEnum.UPDATE.getCode().equals(entity.getOperation())) {
+                    List<BizAuditFieldEntity> auditFieldList = map.get(vo.getId());
+                    if (CollUtil.isNotEmpty(auditFieldList)) {
+                        List<AuditUtil.FieldDiff> diffList = this.convertFieldDiff(auditFieldList);
+                        String comment = AuditUtil.compareStr(diffList, OperationTypeEnum.UPDATE.getCode().equals(entity.getOperation()));
+                        vo.setComment(comment);
+                    }
+                }
                 voList.add(vo);
             }
         }
         return PageUtil.toPage(voList, entityPage);
+    }
+
+    private List<AuditUtil.FieldDiff> convertFieldDiff(List<BizAuditFieldEntity> auditFieldList) {
+        List<AuditUtil.FieldDiff> diffList = new ArrayList<>();
+        for (BizAuditFieldEntity auditField : auditFieldList) {
+            AuditUtil.FieldDiff diff = new AuditUtil.FieldDiff();
+            diff.setBeforeValue(auditField.getOldValue());
+            diff.setAfterValue(auditField.getNewValue());
+            diff.setFieldName(auditField.getFieldName());
+            diff.setSortOrder(auditField.getSortOrder());
+            diffList.add(diff);
+        }
+        return diffList;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -119,22 +145,6 @@ public class BizAuditServiceImpl
             mapList.add(map);
         }
         commonManager.exportExcel("业务操作记录", StrUtil.EMPTY, titleMap, mapList);
-    }
-
-    public List<String> getRootName(List<MenuEntity> list, Integer id) {
-        if (ObjUtil.isNotNull(id)) {
-            MenuEntity menuEntity = list.stream().filter(item -> ObjUtil.equal(item.getId(), id)).findFirst().orElse(null);
-            if (ObjUtil.isNotNull(menuEntity)) {
-                List<String> arrayList = new ArrayList<>();
-                arrayList.add(menuEntity.getMenuName());
-                List<String> l = this.getRootName(list, menuEntity.getParentId());
-                if (CollUtil.isNotEmpty(l)) {
-                    arrayList.addAll(l);
-                }
-                return arrayList;
-            }
-        }
-        return null;
     }
 
     private BizAuditVO convertToVO(BizAuditEntity entity) {

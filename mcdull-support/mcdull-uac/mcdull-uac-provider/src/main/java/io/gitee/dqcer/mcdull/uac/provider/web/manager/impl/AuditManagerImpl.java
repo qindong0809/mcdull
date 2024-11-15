@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
@@ -7,13 +8,17 @@ import io.gitee.dqcer.mcdull.business.common.audit.AuditUtil;
 import io.gitee.dqcer.mcdull.business.common.audit.OperationTypeEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.BizAuditFieldEntity;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IBizAuditFieldRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IBizAuditService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -22,6 +27,9 @@ public class AuditManagerImpl implements IAuditManager {
 
     @Resource
     private IBizAuditService bizAuditService;
+
+    @Resource
+    private IBizAuditFieldRepository bizAuditFieldRepository;
 
 
     @Override
@@ -55,17 +63,34 @@ public class AuditManagerImpl implements IAuditManager {
         }
         String bizTypeCode = session.getPermissionCode();
         String comment = StrUtil.EMPTY;
+        List<AuditUtil.FieldDiff> diffList = new ArrayList<>();
         if (typeEnum == OperationTypeEnum.UPDATE) {
-            comment = AuditUtil.compareStr(oldAuditBean, newAuditBean);
+            diffList = AuditUtil.compare(oldAuditBean, newAuditBean);
         } else if (typeEnum == OperationTypeEnum.ADD) {
-            comment = AuditUtil.compareStr(oldAuditBean);
+            diffList = AuditUtil.compare(oldAuditBean);
         } else if (typeEnum == OperationTypeEnum.DELETE
                 || typeEnum == OperationTypeEnum.DISABLE
                 || typeEnum == OperationTypeEnum.ENABLE) {
             comment = reason;
         }
         String loginName = session.getLoginName();
-        bizAuditService.insert(bizTypeCode, typeEnum, bizIndex, bizId, comment, loginName, new Date(), null);
+        Integer bizAuditId = bizAuditService.insert(bizTypeCode, typeEnum, bizIndex, bizId, comment, loginName, new Date(), null);
+        if (CollUtil.isNotEmpty(diffList)) {
+            this.insertAuditFieldList(diffList, bizAuditId);
+        }
     }
 
+    private void insertAuditFieldList(List<AuditUtil.FieldDiff> diffList, Integer bizAuditId) {
+        List<BizAuditFieldEntity> list = new ArrayList<>();
+        for (AuditUtil.FieldDiff fieldDiff : diffList) {
+            BizAuditFieldEntity auditField = new BizAuditFieldEntity();
+            auditField.setBizAuditId(bizAuditId);
+            auditField.setFieldName(fieldDiff.getFieldName());
+            auditField.setOldValue(fieldDiff.getBeforeValue());
+            auditField.setNewValue(fieldDiff.getAfterValue());
+            auditField.setSortOrder(fieldDiff.getSortOrder());
+            list.add(auditField);
+        }
+        bizAuditFieldRepository.saveBatch(list, list.size());
+    }
 }

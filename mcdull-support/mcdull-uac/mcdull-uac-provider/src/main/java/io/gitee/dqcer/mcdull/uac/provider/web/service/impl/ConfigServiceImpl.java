@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.audit.ConfigAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.ConfigConvert;
@@ -35,6 +36,9 @@ import java.util.List;
 @Service
 public class ConfigServiceImpl
         extends BasicServiceImpl<IConfigRepository> implements IConfigService {
+
+    @Resource
+    private CacheChannel cacheChannel;
 
     @Resource
     private IAuditManager auditManager;
@@ -110,10 +114,32 @@ public class ConfigServiceImpl
 
     @Override
     public String getConfig(String key) {
+        List<?> list = cacheChannel.get("sys_config", List.class);
+        if (CollUtil.isNotEmpty(list)) {
+            for (Object o : list) {
+                ConfigEntity entity = (ConfigEntity) o;
+                if (entity.getConfigKey().equals(key)) {
+                    return entity.getConfigValue();
+                }
+            }
+            return null;
+        }
+        List<ConfigEntity> entityList = baseRepository.list();
+        if (CollUtil.isNotEmpty(entityList)) {
+            cacheChannel.put("sys_config", entityList, -1);
+            ConfigEntity configEntity = entityList.stream()
+                    .filter(entity -> entity.getConfigKey().equals(key)).findFirst().orElse(null);
+            if (ObjUtil.isNotNull(configEntity)) {
+                return configEntity.getConfigValue();
+            }
+        }
+
         ConfigEntity entity = baseRepository.selectOne(key);
         if (ObjUtil.isNotNull(entity)) {
             return entity.getConfigValue();
         }
         return null;
     }
+
+
 }

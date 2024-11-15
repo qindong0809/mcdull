@@ -21,21 +21,20 @@ import java.util.*;
  */
 public class AuditUtil {
 
-    public static <T extends Audit> List<FieldDiff> compare(T before) {
-        JSONObject beforeJson = JSONUtil.parseObj(before, false);
+    public static <T extends Audit> List<FieldDiff> compare(T after) {
+        JSONObject beforeJson = JSONUtil.parseObj(after, false);
         List<FieldDiff> fieldDiffList = new ArrayList<>();
         for (Map.Entry<String, Object> entry : beforeJson) {
             String key = entry.getKey();
-            Object beforeValue = entry.getValue();
-            Field field = ReflectUtil.getField(before.getClass(), key);
+            Object afterValue = entry.getValue();
+            Field field = ReflectUtil.getField(after.getClass(), key);
             AuditDescription annotation = field.getAnnotation(AuditDescription.class);
-            if (annotation == null) {
-                throw new IllegalArgumentException();
+            if (null != annotation) {
+                FieldDiff diff = new FieldDiff();
+                diff.setDescription(annotation);
+                diff.setAfterValue(Convert.toStr(afterValue));
+                fieldDiffList.add(diff);
             }
-            FieldDiff diff = new FieldDiff();
-            diff.setDescription(annotation);
-            diff.setBeforeValue(beforeValue);
-            fieldDiffList.add(diff);
         }
         CollUtil.sort(fieldDiffList, (o1, o2) -> NumberUtil.compare(o1.description.sort(), o2.description.sort()));
         return fieldDiffList;
@@ -53,14 +52,13 @@ public class AuditUtil {
             if (!Objects.equals(afterValue, beforeValue)) {
                 Field field = ReflectUtil.getField(before.getClass(), key);
                 AuditDescription annotation = field.getAnnotation(AuditDescription.class);
-                if (annotation == null) {
-                    throw new IllegalArgumentException();
+                if (null != annotation) {
+                    FieldDiff diff = new FieldDiff();
+                    diff.setDescription(annotation);
+                    diff.setBeforeValue(Convert.toStr(beforeValue));
+                    diff.setAfterValue(Convert.toStr(afterValue));
+                    fieldDiffList.add(diff);
                 }
-                FieldDiff diff = new FieldDiff();
-                diff.setDescription(annotation);
-                diff.setBeforeValue(beforeValue);
-                diff.setAfterValue(afterValue);
-                fieldDiffList.add(diff);
             }
         }
         CollUtil.sort(fieldDiffList, (o1, o2) -> NumberUtil.compare(o1.description.sort(), o2.description.sort()));
@@ -94,6 +92,22 @@ public class AuditUtil {
         return builder.toString();
     }
 
+    public static <T extends Audit> String compareStr(List<FieldDiff> list, boolean update) {
+        StringJoiner result = new StringJoiner(SymbolConstants.COMMA + SymbolConstants.SPACE);
+        list.sort((o1, o2) -> NumberUtil.compare(o1.getSortOrder(), o2.getSortOrder()));
+        for (FieldDiff diff : list) {
+            StringBuilder one = new StringBuilder();
+            if (update) {
+                one.append(StrUtil.format("{}: '{}' {} '{}'",
+                        diff.getFieldName(), diff.getBeforeValue(), "更新为", diff.getAfterValue()));
+            } else {
+                one.append(StrUtil.format("{}: '{}'", diff.getFieldName(), diff.getBeforeValue()));
+            }
+            result.add(one);
+        }
+        return result.toString();
+    }
+
     public static <T extends Audit> String compareStr(T before, T after) {
         List<FieldDiff> list = compare(before, after);
         StringBuilder builder = new StringBuilder();
@@ -107,18 +121,15 @@ public class AuditUtil {
             if (ObjectUtil.notEqual(beforeValue, afterValue)) {
                 StringBuilder one = new StringBuilder();
                 AuditDescription description = diff.getDescription();
-                boolean dateType = beforeValue instanceof Date;
                 one.append(StrUtil.format("{}{}", description.label(), before.separate()));
                 one.append(StrUtil.format("{}{}{}",
                         description.tagCharacter()[0],
-                        dateType ? DateUtil.format((Date) beforeValue, description.datePattern())
-                                : Convert.toStr(beforeValue, StrUtil.EMPTY),
+                        Convert.toStr(beforeValue, StrUtil.EMPTY),
                         description.tagCharacter()[1]));
                 one.append(description.to());
                 one.append(StrUtil.format("{}{}{}",
                         description.tagCharacter()[0],
-                        dateType ? DateUtil.format((Date) afterValue, description.datePattern())
-                                : Convert.toStr(afterValue, StrUtil.EMPTY),
+                        Convert.toStr(afterValue, StrUtil.EMPTY),
                         description.tagCharacter()[1]));
 
                 result.add(one);
@@ -135,8 +146,10 @@ public class AuditUtil {
     public static class FieldDiff {
 
         private AuditDescription description;
-        private Object beforeValue;
-        private Object afterValue;
+        private String beforeValue;
+        private String afterValue;
+        private String fieldName;
+        private Integer sortOrder;
 
     }
 }

@@ -325,10 +325,11 @@ create table `sys_config`  (
 primary key (`id`) using btree
 ) comment = '系统配置';
 
-insert into `sys_config` values (1, '系统名称', 'system-name', 'xxx系统', '', 0, sysdate(), sysdate());
-insert into `sys_config` values (2, '域名名称', 'domain-name', 'http://mcdull.io:8081', '', 0, sysdate(), sysdate());
-insert into `sys_config` values (3, '重置密码邮件标题', 'forget-password-email-title', '密码重置请求', '', 0, sysdate(), sysdate());
-insert into `sys_config` values (4, '重置密码链接有效期（分钟）', 'forget-password-timeout', '5', '', 0, sysdate(), sysdate());
+insert into `sys_config` values ('系统名称', 'system-name', 'xxx系统', '', 0, sysdate(), sysdate());
+insert into `sys_config` values ('域名名称', 'domain-name', 'http://mcdull.io:8081', '', 0, sysdate(), sysdate());
+insert into `sys_config` values ('重置密码邮件标题', 'forget-password-email-title', '密码重置请求', '', 0, sysdate(), sysdate());
+insert into `sys_config` values ('重置密码链接有效期（分钟）', 'forget-password-timeout', '5', '', 0, sysdate(), sysdate());
+insert into `sys_config` values ('是否记录操作请求日志', 'log-operation-request', 'Yes', '', 0, sysdate(), sysdate());
 
 drop table if exists `sys_file`;
 create table `sys_file`  (
@@ -790,6 +791,7 @@ primary key (`id`) using btree
 
 create table `sys_biz_audit` (
 `id` int auto_increment comment '主键',
+`trace_id` varchar(64) not null comment 'traceId',
 `biz_type_code` varchar(64) not null comment '业务类型, 权限code',
 `operation` int not null comment '动作 1/新增 2/更新 3/启用 4/停用 5/删除 ',
 `biz_index` varchar(128) not null comment '操作索引',
@@ -802,4 +804,17 @@ create table `sys_biz_audit` (
 `created_time` datetime not null comment '创建时间',
 primary key (`id`) using btree,
 key `idx_biz_type` (`biz_type_code`) using btree
+) comment='Biz Audit';
+
+create table `sys_biz_audit_field` (
+`id` int auto_increment,
+`biz_audit_id` int not null,
+`field_name` varchar(64) not null,
+`sort_order` int not null,
+`old_value` varchar(1024),
+`new_value` varchar(1024),
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+primary key (`id`) using btree,
+key `idx_biz_audit_id` (`biz_audit_id`) using btree
 ) comment='Biz Audit';

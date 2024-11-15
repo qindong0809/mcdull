@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
@@ -45,4 +46,12 @@ public interface IMenuService {
      * @param dto DTO
      */
     void exportData(MenuListDTO dto);
+
+    /**
+     * 获取下拉选项
+     *
+     * @return {@link List }<{@link LabelValueVO }<{@link String }, {@link String }>>
+     */
+    List<LabelValueVO<String, String>> getDropdownOptions();
+
 }

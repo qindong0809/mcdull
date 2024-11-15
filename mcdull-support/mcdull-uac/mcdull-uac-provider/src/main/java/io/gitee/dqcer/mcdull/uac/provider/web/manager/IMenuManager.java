@@ -1,9 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager;
 
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MenuEntity;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Role 管理器
@@ -14,17 +14,16 @@ import java.util.Map;
 public interface IMenuManager {
 
     /**
-     * 获取菜单名称
-     *
-     * @param codeList 代码列表
-     * @return {@link Map }<{@link String }, {@link MenuEntity }>
-     */
-    Map<String, MenuEntity> getMenuName(List<String> codeList);
-
-    /**
      * 列出全部
      *
      * @return {@link List }<{@link MenuEntity }>
      */
     List<MenuEntity> listAll();
+
+    /**
+     * 获取名称代码列表
+     *
+     * @return {@link List }<{@link LabelValueVO }<{@link String }, {@link String }>>
+     */
+    List<LabelValueVO<String, String>> getNameCodeList();
 }

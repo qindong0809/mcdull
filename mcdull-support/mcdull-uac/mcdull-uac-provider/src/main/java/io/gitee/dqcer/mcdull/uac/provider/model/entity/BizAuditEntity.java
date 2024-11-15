@@ -20,6 +20,8 @@ public class BizAuditEntity extends TimestampEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 
+    private String traceId;
+
     private String bizTypeCode;
 
     /**

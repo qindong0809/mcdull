@@ -2,8 +2,6 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.repository.IRepository;
-import com.baomidou.mybatisplus.extension.service.IService;
-import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.RoleUserQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
@@ -69,15 +67,6 @@ public interface IUserRepository extends IRepository<UserEntity> {
      * @return {@link Page}<{@link UserEntity}>
      */
     Page<UserEntity> selectPageByRoleId(List<Integer> userIdList, RoleUserQueryDTO dto);
-
-    /**
-     * 根据角色id分页
-     *
-     * @param userIdList 用户id列表
-     * @param dto        dto
-     * @return {@link Page}<{@link UserEntity}>
-     */
-    Page<UserEntity> selectPageByRoleId(List<Integer> userIdList, PagedDTO dto);
 
     /**
      * 根据部门id列表

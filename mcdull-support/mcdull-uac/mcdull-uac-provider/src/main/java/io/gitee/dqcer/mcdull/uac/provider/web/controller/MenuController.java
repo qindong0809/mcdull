@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.FormRecordQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
@@ -80,4 +80,9 @@ public class MenuController {
         menuService.exportData(dto);
     }
 
+    @Operation(summary = "下拉选项")
+    @GetMapping("/menu/dropdown-options")
+    public Result<List<LabelValueVO<String, String>>> getDropdownOptions() {
+        return Result.success(menuService.getDropdownOptions());
+    }
 }

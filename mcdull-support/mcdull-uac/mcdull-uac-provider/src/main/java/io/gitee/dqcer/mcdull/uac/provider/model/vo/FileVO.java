@@ -1,7 +1,10 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.UserTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -49,6 +52,8 @@ public class FileVO implements VO {
     @Schema(description = "文件展示url")
     private String fileUrl;
 
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
     @Schema(description = "创建时间")
     private Date createTime;
 }

@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
@@ -12,7 +11,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
@@ -127,37 +125,6 @@ public class UserRepositoryImpl
             query.in(IdEntity::getId, userIdList);
         }
         query.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
-        Boolean notNeedPaged = dto.getNotNeedPaged();
-        if (BooleanUtil.isTrue(notNeedPaged)) {
-            List<UserEntity> userEntities = baseMapper.selectList(query);
-            Page<UserEntity> objectPage = new Page<>();
-            objectPage.setRecords(userEntities);
-            return objectPage;
-        }
-        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
-    }
-
-    @Override
-    public Page<UserEntity> selectPageByRoleId(List<Integer> userIdList, PagedDTO dto) {
-        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
-        String keyword = dto.getKeyword();
-        if (StrUtil.isNotBlank(keyword)) {
-            query.and(i-> i.like(UserEntity::getLoginName, keyword)
-                    .or().like(UserEntity::getPhone, keyword)
-            );
-        }
-
-        if (CollUtil.isNotEmpty(userIdList)) {
-            query.in(IdEntity::getId, userIdList);
-        }
-        query.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
-        Boolean notNeedPaged = dto.getNotNeedPaged();
-        if (BooleanUtil.isTrue(notNeedPaged)) {
-            List<UserEntity> userEntities = baseMapper.selectList(query);
-            Page<UserEntity> objectPage = new Page<>();
-            objectPage.setRecords(userEntities);
-            return objectPage;
-        }
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 

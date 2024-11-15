@@ -51,10 +51,11 @@ public class FileServiceImpl
         if (StrUtil.isNotBlank(creatorName)) {
             List<UserEntity> entityList = userManager.getLike(creatorName);
             userIdList = entityList.stream().map(IdEntity::getId).collect(Collectors.toList());
+            if (CollUtil.isEmpty(userIdList)) {
+                return PageUtil.empty(dto);
+            }
         }
-        if (CollUtil.isEmpty(userIdList)) {
-            return PageUtil.empty(dto);
-        }
+
         Page<FileEntity> entityPage = baseRepository.selectPage(dto, userIdList);
         List<FileVO> voList = new ArrayList<>();
         List<FileEntity> records = entityPage.getRecords();
