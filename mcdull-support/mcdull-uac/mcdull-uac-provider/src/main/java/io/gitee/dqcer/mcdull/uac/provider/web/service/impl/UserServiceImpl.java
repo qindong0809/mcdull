@@ -153,11 +153,11 @@ public class UserServiceImpl
         UserEntity entity = this.buildEntityAndInsert(dto);
         Integer userId = entity.getId();
         userRoleService.batchUserListByRoleId(userId, dto.getRoleIdList());
-        auditManager.saveByAddEnum(dto.getActualName(), userId, this.buildAuditLog(entity));
+        auditManager.saveByAddEnum(dto.getActualName(), userId, this.buildAuditLog(entity, dto.getRoleIdList()));
         return userId;
     }
 
-    private Audit buildAuditLog(UserEntity user) {
+    private Audit buildAuditLog(UserEntity user, List<Integer> roleIdList) {
         UserAudit audit = new UserAudit();
         audit.setLoginName(user.getLoginName());
         audit.setActualName(user.getActualName());
@@ -179,6 +179,13 @@ public class UserServiceImpl
         audit.setEmail(user.getEmail());
         audit.setPhone(user.getPhone());
         audit.setRemark(user.getRemark());
+        if (CollUtil.isNotEmpty(roleIdList)) {
+            Map<Integer, String> roleMap = roleService.mapName(roleIdList);
+            StringJoiner joiner = new StringJoiner(StrUtil.COMMA + StrUtil.SPACE);
+            roleIdList.forEach(roleId -> joiner.add(roleMap.get(roleId)));
+            audit.setRoleJoin(joiner.toString());
+        }
+
         return audit;
     }
 
@@ -272,11 +279,17 @@ public class UserServiceImpl
             this.throwDataNotExistException(id);
         }
         this.checkParamThrowException(id, dto);
+        Map<Integer, List<Integer>> roleIdListMap = userRoleService.getRoleIdListMap(ListUtil.of(id));
+        List<Integer> roleIdList = new ArrayList<>();
+        if (CollUtil.isNotEmpty(roleIdListMap)) {
+            roleIdList = roleIdListMap.get(id);
+        }
         UserEntity updateDO = UserConvert.updateDtoToEntity(dto);
         updateDO.setId(id);
         baseRepository.updateById(updateDO);
         userRoleService.batchUserListByRoleId(id, dto.getRoleIdList());
-        auditManager.saveByUpdateEnum(entity.getActualName(), entity.getId(), this.buildAuditLog(entity), this.buildAuditLog(baseRepository.getById(id)));
+        auditManager.saveByUpdateEnum(entity.getActualName(), entity.getId(),
+                this.buildAuditLog(entity, roleIdList), this.buildAuditLog(baseRepository.getById(id), dto.getRoleIdList()));
         return updateDO.getId();
     }
 

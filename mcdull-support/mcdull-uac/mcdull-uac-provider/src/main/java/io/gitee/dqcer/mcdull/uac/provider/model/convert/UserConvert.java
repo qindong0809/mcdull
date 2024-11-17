@@ -60,6 +60,7 @@ public class UserConvert {
         userEntity.setDepartmentId(dto.getDepartmentId());
         userEntity.setInactive(dto.getDisabledFlag());
         userEntity.setId(dto.getEmployeeId());
+        userEntity.setEmail(dto.getEmail());
         return userEntity;
     }
 

@@ -30,9 +30,7 @@ public class AuditUtil {
             Field field = ReflectUtil.getField(after.getClass(), key);
             AuditDescription annotation = field.getAnnotation(AuditDescription.class);
             if (null != annotation) {
-                FieldDiff diff = new FieldDiff();
-                diff.setDescription(annotation);
-                diff.setAfterValue(Convert.toStr(afterValue));
+                FieldDiff diff = getFieldDiff(annotation, afterValue);
                 fieldDiffList.add(diff);
             }
         }
@@ -53,16 +51,23 @@ public class AuditUtil {
                 Field field = ReflectUtil.getField(before.getClass(), key);
                 AuditDescription annotation = field.getAnnotation(AuditDescription.class);
                 if (null != annotation) {
-                    FieldDiff diff = new FieldDiff();
-                    diff.setDescription(annotation);
+                    FieldDiff diff = getFieldDiff(annotation, afterValue);
                     diff.setBeforeValue(Convert.toStr(beforeValue));
-                    diff.setAfterValue(Convert.toStr(afterValue));
                     fieldDiffList.add(diff);
                 }
             }
         }
         CollUtil.sort(fieldDiffList, (o1, o2) -> NumberUtil.compare(o1.description.sort(), o2.description.sort()));
         return fieldDiffList;
+    }
+
+    private static FieldDiff getFieldDiff(AuditDescription annotation, Object afterValue) {
+        FieldDiff diff = new FieldDiff();
+        diff.setDescription(annotation);
+        diff.setAfterValue(Convert.toStr(afterValue));
+        diff.setFieldName(annotation.label());
+        diff.setSortOrder(annotation.sort());
+        return diff;
     }
 
     public static <T extends Audit> String compareStr(T before) {

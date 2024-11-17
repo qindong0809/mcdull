@@ -25,6 +25,9 @@ public class UserAudit implements Audit {
     @AuditDescription(label = "部门", sort = 6)
     private String department;
 
+    @AuditDescription(label = "角色", sort = 6)
+    private String roleJoin;
+
     @AuditDescription(label = "备注", sort = 7)
     private String remark;
 }

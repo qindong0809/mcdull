@@ -26,8 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Role Service Impl
@@ -188,5 +190,14 @@ public class RoleServiceImpl
     @Override
     public void batchRemoveRoleEmployee(RoleEmployeeUpdateDTO dto) {
         userRoleService.batchRemoveUserListByRole(dto.getRoleId(), dto.getEmployeeIdList());
+    }
+
+    @Override
+    public Map<Integer, String> mapName(List<Integer> roleIdList) {
+        if (CollUtil.isNotEmpty(roleIdList)) {
+            List<RoleEntity> list = baseRepository.listByIds(roleIdList);
+            return list.stream().collect(Collectors.toMap(RoleEntity::getId, RoleEntity::getRoleName));
+        }
+        return Collections.emptyMap();
     }
 }

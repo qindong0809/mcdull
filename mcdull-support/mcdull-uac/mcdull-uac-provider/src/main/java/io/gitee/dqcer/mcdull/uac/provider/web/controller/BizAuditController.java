@@ -1,11 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.BizAuditQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.FormRecordQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.BizAuditVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IBizAuditService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,14 +23,14 @@ public class BizAuditController extends BasicController {
     private IBizAuditService bizAuditService;
 
     @Operation(summary = "分页查询")
-    @PostMapping("/biz-audit/queryPage")
+    @PostMapping("/system/biz-audit/query")
     public Result<PagedVO<BizAuditVO>> queryPage(@RequestBody @Valid BizAuditQueryDTO dto) {
         return Result.success(bizAuditService.queryPage(dto));
     }
 
     @Operation(summary = "导出数据")
 //    @SaCheckPermission("support:form:record:export")
-    @PostMapping(value = "/biz-audit/record-export", produces = "application/octet-stream")
+    @PostMapping(value = "/system/biz-audit/record-export", produces = "application/octet-stream")
     public void exportData(@RequestBody @Valid BizAuditQueryDTO dto) {
         bizAuditService.exportData(dto);
     }

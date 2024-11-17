@@ -40,4 +40,6 @@ public interface IRoleService {
     void updateRoleMenu(RoleMenuUpdateDTO dto);
 
     void batchRemoveRoleEmployee(RoleEmployeeUpdateDTO dto);
+
+    Map<Integer, String> mapName(List<Integer> roleIdList);
 }

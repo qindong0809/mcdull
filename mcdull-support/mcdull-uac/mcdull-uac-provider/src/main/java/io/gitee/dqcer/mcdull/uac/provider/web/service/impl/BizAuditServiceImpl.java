@@ -80,7 +80,7 @@ public class BizAuditServiceImpl
             Map<String, String> nameMapByLoginName = userManager.getNameMapByLoginName(loginList);
             List<LabelValueVO<String, String>> nameCodeList = menuManager.getNameCodeList();
             Map<String, String> codeMap = nameCodeList.stream().collect(Collectors.toMap(LabelValueVO::getValue, LabelValueVO::getLabel));
-            List<Integer> list = recordList.stream().map(BizAuditEntity::getBizId).collect(Collectors.toList());
+            List<Integer> list = recordList.stream().map(BizAuditEntity::getId).collect(Collectors.toList());
             Map<Integer, List<BizAuditFieldEntity>> map = bizAuditFieldRepository.map(list);
             for (BizAuditEntity entity : recordList) {
                 BizAuditVO vo = this.convertToVO(entity);
