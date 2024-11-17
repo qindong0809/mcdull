@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
 import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
-import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
@@ -17,7 +16,6 @@ import java.util.Map;
  */
 
 public interface IRoleService {
-    PagedVO<RoleVO> listByPage(RolePageDTO dto);
 
     RoleVO detail(Integer id);
 

@@ -63,7 +63,7 @@ public class UserController extends BasicController {
 
     @Operation(summary = "添加员工(返回添加员工的密码)")
     @PostMapping("/user/add")
-    @SaCheckPermission("system:employee:add")
+    @SaCheckPermission("system:employee:write")
     public Result<Integer> insert(@Valid @RequestBody UserAddDTO dto) {
         return Result.success(super.locker(dto.getLoginName(),
                 () -> userService.insert(dto)));
@@ -83,7 +83,7 @@ public class UserController extends BasicController {
 
     @Operation(summary = "角色成员列表中批量添加员工")
     @PostMapping("/role/employee/batchAddRoleEmployee")
-    @SaCheckPermission("system:role:employee:add")
+    @SaCheckPermission("system:role:write")
     public Result<Boolean> addUserListByRole(@Valid @RequestBody RoleUserUpdateDTO dto) {
         userService.addUserListByRole(dto);
         return Result.success(true);
@@ -91,7 +91,7 @@ public class UserController extends BasicController {
 
     @Operation(summary = "更新员工禁用/启用状态")
     @GetMapping("/employee/update/disabled/{userId}")
-    @SaCheckPermission("system:employee:disabled")
+    @SaCheckPermission("system:employee:write")
     public Result<Boolean> updateDisableFlag(@PathVariable Integer userId) {
         userService.toggleActive(userId);
         return Result.success(true);
@@ -99,7 +99,7 @@ public class UserController extends BasicController {
 
     @Operation(summary = "批量删除员工")
     @PostMapping("/employee/update/batch/delete")
-    @SaCheckPermission("system:employee:delete")
+    @SaCheckPermission("system:employee:write")
     public Result<Boolean> batchUpdateDeleteFlag(@RequestBody List<Integer> userIdList) {
         userService.delete(userIdList);
         return Result.success(true);
@@ -107,7 +107,7 @@ public class UserController extends BasicController {
 
     @Operation(summary = "更新数据", description = "")
     @PostMapping("/user/update")
-    @SaCheckPermission("system:employee:update")
+    @SaCheckPermission("system:employee:write")
     public Result<Integer> update(@RequestBody @Validated UserUpdateDTO dto){
         return Result.success(userService.update(dto.getEmployeeId(), dto));
     }
@@ -135,7 +135,7 @@ public class UserController extends BasicController {
 
     @Operation(summary = "批量调整员工部门")
     @PostMapping("/user/update/batch/department")
-    @SaCheckPermission("system:employee:department:update")
+    @SaCheckPermission("system:employee:write")
     public Result<Boolean> batchUpdateDepartment(@Valid @RequestBody UserBatchUpdateDepartmentDTO dto) {
         userService.batchUpdateDepartment(dto);
         return Result.success(true);

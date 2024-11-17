@@ -1,19 +1,13 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.repository.CrudRepository;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
-import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.RolePageDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.RoleMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IRoleRepository;
@@ -32,21 +26,6 @@ import java.util.stream.Collectors;
 @Service
 public class RoleRepositoryImpl
         extends CrudRepository<RoleMapper, RoleEntity> implements IRoleRepository {
-
-    @Override
-    public Page<RoleEntity> selectPage(RolePageDTO dto) {
-        LambdaQueryWrapper<RoleEntity> query = Wrappers.lambdaQuery();
-        String name = dto.getName();
-        if (StrUtil.isNotBlank(name)) {
-            query.like(RoleEntity::getRoleName, name);
-        }
-        Boolean inactive = dto.getInactive();
-        if (ObjUtil.isNotNull(inactive)) {
-            query.eq(BaseEntity::getInactive, inactive);
-        }
-        query.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
-        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
-    }
 
     @Override
     public Integer insert(RoleEntity entity) {

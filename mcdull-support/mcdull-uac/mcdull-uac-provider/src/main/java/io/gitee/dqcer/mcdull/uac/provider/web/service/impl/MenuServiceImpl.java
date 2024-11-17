@@ -427,7 +427,7 @@ public class MenuServiceImpl
     }
 
     private List<Tree<Integer>> getChildren(Tree<Integer> tree, MenuTreeVO routerVO) {
-        routerVO.setMenuId(Convert.toInt(tree.getId()));
+        routerVO.setMenuId(Convert.toInt(tree.getId(), 0));
         routerVO.setParentId(Convert.toInt(tree.getParentId()));
         routerVO.setMenuName(String.valueOf(tree.getName()));
         routerVO.setMenuType(Convert.toInt(tree.get("menuType")));
@@ -436,7 +436,9 @@ public class MenuServiceImpl
     }
 
     private String convertContextMenuId(Integer menuId) {
-        return BooleanUtil.toStringYesNo(
-                BooleanUtil.toBooleanObject(menuId.toString()));
+        if (ObjUtil.isNull(menuId)) {
+            return StrUtil.EMPTY;
+        }
+        return menuId.toString();
     }
 }

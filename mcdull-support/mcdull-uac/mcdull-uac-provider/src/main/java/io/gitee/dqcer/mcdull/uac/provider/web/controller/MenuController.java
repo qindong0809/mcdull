@@ -46,7 +46,7 @@ public class MenuController {
 
     @Operation(summary = "添加菜单")
     @PostMapping("/menu/add")
-    @SaCheckPermission("system:menu:add")
+    @SaCheckPermission("system:menu:write")
     public Result<Boolean> addMenu(@RequestBody @Valid MenuAddDTO dto) {
         menuService.insert(dto);
         return Result.success(true);
@@ -54,7 +54,7 @@ public class MenuController {
 
     @Operation(summary = "更新菜单")
     @PostMapping("/menu/update")
-    @SaCheckPermission("system:menu:update")
+    @SaCheckPermission("system:menu:write")
     public Result<Boolean> updateMenu(@RequestBody @Valid MenuUpdateDTO dto) {
         menuService.update(dto);
         return Result.success(true);
@@ -67,14 +67,14 @@ public class MenuController {
 
     @Operation(summary = "批量删除")
     @GetMapping("/menu/batchDelete")
-    @SaCheckPermission("system:menu:batchDelete")
+    @SaCheckPermission("system:menu:write")
     public Result<Boolean> batchDeleteMenu(@RequestParam("menuIdList") List<Integer> menuIdList) {
         menuService.delete(menuIdList);
         return Result.success(true);
     }
 
     @Operation(summary = "导出数据")
-//    @SaCheckPermission("support:form:record:export")
+    @SaCheckPermission("system:menu:export")
     @PostMapping(value = "/menu/record-export", produces = "application/octet-stream")
     public void exportData(@Validated MenuListDTO dto) {
         menuService.exportData(dto);

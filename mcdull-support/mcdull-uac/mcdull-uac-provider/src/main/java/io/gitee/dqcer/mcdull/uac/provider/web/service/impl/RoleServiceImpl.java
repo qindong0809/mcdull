@@ -5,14 +5,11 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
-import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
-import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.audit.RoleAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.RoleConvert;
@@ -50,18 +47,6 @@ public class RoleServiceImpl
 
     @Resource
     private IAuditManager auditManager;
-    
-
-    @Override
-    public PagedVO<RoleVO> listByPage(RolePageDTO dto) {
-        Page<RoleEntity> entityPage = baseRepository.selectPage(dto);
-        List<RoleVO> voList = new ArrayList<>();
-        for (RoleEntity entity : entityPage.getRecords()) {
-            RoleVO vo = RoleConvert.entityToVO(entity);
-            voList.add(vo);
-        }
-        return PageUtil.toPage(voList, entityPage);
-    }
 
     @Override
     public RoleVO detail(Integer id) {

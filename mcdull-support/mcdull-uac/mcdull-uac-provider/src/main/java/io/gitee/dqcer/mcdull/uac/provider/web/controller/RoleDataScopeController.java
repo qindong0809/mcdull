@@ -35,7 +35,7 @@ public class RoleDataScopeController {
 
     @Operation(summary = "批量设置某角色数据范围")
     @PostMapping("/role/dataScope/updateRoleDataScopeList")
-    @SaCheckPermission("system:role:dataScope:update")
+    @SaCheckPermission("system:role:write")
     public Result<Boolean> updateRoleDataScopeList(@RequestBody @Valid RoleDataScopeUpdateDTO dto) {
         roleDataScopeService.updateByRoleId(dto);
         return Result.success(true);

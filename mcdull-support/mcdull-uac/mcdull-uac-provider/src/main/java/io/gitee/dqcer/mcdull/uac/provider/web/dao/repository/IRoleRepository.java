@@ -1,8 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.repository.IRepository;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.RolePageDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 
 import java.util.List;
@@ -15,14 +13,6 @@ import java.util.Map;
  * @since 2022/12/26
  */
 public interface IRoleRepository extends IRepository<RoleEntity> {
-
-    /**
-     * 分页查询
-     *
-     * @param dto dto
-     * @return {@link Page}<{@link RoleEntity}>
-     */
-    Page<RoleEntity> selectPage(RolePageDTO dto);
 
     /**
      * 插入

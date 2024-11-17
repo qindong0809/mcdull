@@ -30,6 +30,7 @@ public class DeptController {
 
     @Operation(summary = "查询部门全部列表")
     @GetMapping("list-all")
+    @SaCheckPermission("system:department:read")
     public Result<List<DepartmentInfoVO>> getAll() {
         return Result.success(deptService.getAll());
     }
@@ -37,21 +38,21 @@ public class DeptController {
 
     @Operation(summary = "Add")
     @PostMapping("insert")
-    @SaCheckPermission("system:department:add")
+    @SaCheckPermission("system:department:write")
     public Result<Boolean> insert(@RequestBody @Validated DeptInsertDTO dto){
         return Result.success(deptService.insert(dto));
     }
 
     @Operation(summary = "Update")
     @PostMapping("update")
-    @SaCheckPermission("system:department:update")
+    @SaCheckPermission("system:department:write")
     public Result<Boolean> updateDepartment(@Valid @RequestBody DeptUpdateDTO dto) {
         return Result.success(deptService.update(dto.getDepartmentId(), dto));
     }
 
     @Operation(summary = "Delete ")
     @DeleteMapping("delete/{departmentId}")
-    @SaCheckPermission("system:department:delete")
+    @SaCheckPermission("system:department:write")
     public Result<Boolean> deleteDepartment(@PathVariable Integer departmentId) {
         return Result.success(deptService.delete(departmentId));
     }
