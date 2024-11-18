@@ -35,6 +35,8 @@ public enum FileFolderTypeEnum implements IEnum<Integer> {
      */
     EXPORT(5, FileFolderTypeEnum.FOLDER_PUBLIC + "/export/", "导出"),
 
+    SYSTEM_DATABASE_BACKUP(9999, FileFolderTypeEnum.FOLDER_PRIVATE + "/system/database-backup/", "系统/数据库备份"),
+
     ;
 
     /**

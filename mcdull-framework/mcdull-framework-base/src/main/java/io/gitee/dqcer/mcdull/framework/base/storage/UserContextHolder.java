@@ -1,8 +1,13 @@
 package io.gitee.dqcer.mcdull.framework.base.storage;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
+
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * 用户上下文
@@ -16,6 +21,20 @@ public class UserContextHolder {
      * 统一的会话
      */
     static InheritableThreadLocal<UnifySession<?>> UNIFY_SESSION = new InheritableThreadLocal<>();
+
+
+    public static void setDefaultSession() {
+        UnifySession<Integer> session = new UnifySession<>();
+            session.setTraceId(RandomUtil.uuid());
+            session.setNow(new Date());
+            session.setDateFormat(DatePattern.NORM_DATETIME_PATTERN);
+            session.setLanguage(Locale.SIMPLIFIED_CHINESE.getLanguage());
+            session.setZoneIdStr("Asia/Shanghai");
+            session.setTenantId(0);
+            session.setLoginName("system");
+            session.setUserId(0);
+            UserContextHolder.setSession(session);
+    }
 
     /**
      * 获取会话

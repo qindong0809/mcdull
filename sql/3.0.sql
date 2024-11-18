@@ -323,6 +323,7 @@ insert into `sys_config` values (null, '域名名称', 'domain-name', 'http://mc
 insert into `sys_config` values (null, '重置密码邮件标题', 'forget-password-email-title', '密码重置请求', '', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '重置密码链接有效期（分钟）', 'forget-password-timeout', '5', '', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '是否记录操作请求日志', 'log-operation-request', 'Yes', '', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '定时任务（数据库备份）', 'task-database-backup', '0 0 */2 * * ?', '比如：*/2 * * * *（每2分钟）空则不启用', 0, sysdate(), sysdate());
 
 drop table if exists `sys_file`;
 create table `sys_file`  (

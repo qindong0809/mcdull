@@ -55,4 +55,32 @@ public class ConcurrentRateLimiterImpl implements ConcurrentRateLimiter {
             LogHelp.debug(log, "分布式锁成功释放锁. key: {}", key);
         }
     }
+
+    @Override
+    public <T> void locker(String key, long timeout, Supplier<T> function, boolean throwException) {
+        LogHelp.info(log, "Locker. key:{}, timeout:{}", key, timeout);
+        RLock lock = redisClient.getLock(key);
+        boolean locked = false;
+        try {
+            locked = lock.tryLock(timeout, TimeUnit.SECONDS);
+        } catch (Exception  e) {
+            LogHelp.error(log, "Locker InterruptedException error. key: {}, timeout:{} ", key, timeout, e);
+        }
+        if (!locked) {
+            if (throwException) {
+                throw new BusinessException(I18nConstants.SYSTEM_BUSY);
+            }
+            return;
+        }
+
+        try {
+            function.get();
+        } catch (Exception e) {
+            LogHelp.error(log, "Locker error. key: {}, timeout:{} ", key, timeout);
+            throw e;
+        } finally {
+            lock.unlock();
+            LogHelp.debug(log, "分布式锁成功释放锁. key: {}", key);
+        }
+    }
 }

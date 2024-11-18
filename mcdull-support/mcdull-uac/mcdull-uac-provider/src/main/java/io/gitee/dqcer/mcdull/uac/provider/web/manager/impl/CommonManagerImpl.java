@@ -48,7 +48,7 @@ public class CommonManagerImpl implements ICommonManager {
         if (ObjUtil.isNull(date)) {
             return StrUtil.EMPTY;
         }
-        return TimeZoneUtil.serializeDate(date, "yyyy-MM-dd HH:mm:ss");
+        return TimeZoneUtil.serializeDate(date, "yyyyMMdd_HHmmss", false);
     }
 
     private String getUserName(Integer userId) {

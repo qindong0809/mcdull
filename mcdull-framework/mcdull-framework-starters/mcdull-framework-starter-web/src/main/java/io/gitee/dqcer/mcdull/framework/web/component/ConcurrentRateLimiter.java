@@ -29,4 +29,14 @@ public interface ConcurrentRateLimiter {
      * @return boolean true:通过 false:限流
      */
     <T> T locker(String key, long timeout, Supplier<T> function);
+
+    /**
+     * 锁
+     *
+     * @param key            钥匙
+     * @param timeout        超时
+     * @param function       功能
+     * @param throwException 抛出异常
+     */
+    <T> void locker(String key, long timeout, Supplier<T> function, boolean throwException);
 }

@@ -126,14 +126,13 @@ public class ConfigServiceImpl
         }
         List<ConfigEntity> entityList = baseRepository.list();
         if (CollUtil.isNotEmpty(entityList)) {
-            cacheChannel.put("sys_config", entityList, -1);
+            cacheChannel.put("sys_config", entityList, 60 * 60 * 24);
             ConfigEntity configEntity = entityList.stream()
                     .filter(entity -> entity.getConfigKey().equals(key)).findFirst().orElse(null);
             if (ObjUtil.isNotNull(configEntity)) {
                 return configEntity.getConfigValue();
             }
         }
-
         ConfigEntity entity = baseRepository.selectOne(key);
         if (ObjUtil.isNotNull(entity)) {
             return entity.getConfigValue();
