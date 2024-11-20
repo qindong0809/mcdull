@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
@@ -33,5 +34,12 @@ public class BizAuditController extends BasicController {
     @PostMapping(value = "/system/biz-audit/record-export", produces = "application/octet-stream")
     public void exportData(@RequestBody @Valid BizAuditQueryDTO dto) {
         bizAuditService.exportData(dto);
+    }
+
+    @Operation(summary = "分页查询")
+    @PostMapping("/system/user-biz-audit/query")
+    public Result<PagedVO<BizAuditVO>> queryPageByLoginUser(@RequestBody @Valid BizAuditQueryDTO dto) {
+        dto.setOperator(UserContextHolder.getSession().getLoginName());
+        return Result.success(bizAuditService.queryPage(dto));
     }
 }

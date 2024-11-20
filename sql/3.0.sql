@@ -114,9 +114,8 @@ INSERT INTO `sys_menu` VALUES (86, '部门写操作', 3, 46, 1, NULL, NULL, 1, '
 INSERT INTO `sys_menu` VALUES (91, '员工写操作', 3, 46, NULL, NULL, NULL, 1, 'system:employee:write', 'system:employee:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (76, '角色管理', 2, 45, 2, '/employee/role', '/system/employee/role/index.vue', NULL, NULL, NULL, 'SlidersOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (97, '写操作', 3, 76, NULL, NULL, NULL, 1, 'system:role:write', 'system:role:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
-
-INSERT INTO `sys_menu` VALUES (80, '操作审计', 2, 111, 3, '/support/audit-log/audit-log-list', '/support/audit-log/audit-log-list.vue', NULL, NULL, NULL, 'VideoCameraOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
-
+INSERT INTO `sys_menu` VALUES (80, '日志审计', 2, 111, 3, '/support/audit-log/audit-log-list', '/support/audit-log/audit-log-list.vue', NULL, NULL, NULL, 'VideoCameraOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (87, '邮件记录', 2, 111, 3, '/support/email-history/email-history-list', '/support/email-history/email-history-list.vue', NULL, NULL, NULL, 'MailOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 
 INSERT INTO `sys_menu` VALUES (47, '商品管理', 2, 48, 1, '/erp/goods/list', '/business/erp/goods/goods-list.vue', NULL, NULL, NULL, 'AliwangwangOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (48, '商品管理', 1, 137, 10, '/goods', NULL, NULL, NULL, NULL, 'BarcodeOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);

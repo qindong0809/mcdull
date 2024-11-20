@@ -32,7 +32,7 @@ public class EmailSendHistoryController extends BasicController {
     private IEmailSendHistoryService emailSendHistoryService;
 
     @Operation(summary = "分页查询")
-    @PostMapping("/emails-send/query")
+    @PostMapping("/system/emails-send/query")
     @SaCheckPermission("system:email_send:read")
     public Result<PagedVO<EmailSendHistoryVO>> query(@RequestBody @Valid EmailSendHistoryQueryDTO queryDTO) {
         return Result.success(emailSendHistoryService.queryPage(queryDTO));
