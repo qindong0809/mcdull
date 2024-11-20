@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.EmailTypeEnum;
+
 /**
  * Email Service
  *
@@ -11,23 +13,24 @@ public interface IEmailService {
     /**
      * 发送电子邮件
      *
-     * @param sendTo  发送到
-     * @param subject 主题
-     * @param text    文本
+     * @param emailTypeEnum email 类型 enum
+     * @param sendTo        发送到
+     * @param subject       主题
+     * @param text          文本
      * @return boolean
      */
-    boolean sendEmail(String sendTo, String subject, String text);
+    boolean sendEmail(EmailTypeEnum emailTypeEnum, String sendTo, String subject, String text);
 
 
     /**
      * 发送电子邮件 html
      *
-     * @param sendTo  发送到
-     * @param subject 主题
-     * @param text    文本
-     * @return boolean
+     * @param emailTpeEmail emailTpeEmail
+     * @param sendTo        发送到
+     * @param subject       主题
+     * @param text          文本
      */
-    boolean sendEmailHtml(String sendTo, String subject, String text);
+    void sendEmailHtml(EmailTypeEnum emailTpeEmail, String sendTo, String subject, String text);
 
     /**
      * 用字节发送电子邮件

@@ -323,7 +323,9 @@ insert into `sys_config` values (null, '域名名称', 'domain-name', 'http://mc
 insert into `sys_config` values (null, '重置密码邮件标题', 'forget-password-email-title', '密码重置请求', '', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '重置密码链接有效期（分钟）', 'forget-password-timeout', '5', '', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '是否记录操作请求日志', 'log-operation-request', 'Yes', '', 0, sysdate(), sysdate());
-insert into `sys_config` values (null, '定时任务（数据库备份）', 'task-database-backup', '0 0 */2 * * ?', '比如：*/2 * * * *（每2分钟）空则不启用', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '设置定时任务（数据库备份）', 'task-database-backup', '0 0 */2 * * ?', '比如：*/2 * * * *（每2分钟）空则不启用', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '开启创建账号Email通知', 'create-account-email', 'yes', 'yes/启用 no/不启用', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '设置账号初始默认密码', 'init-account-password', '123456', '建议五位数以上', 0, sysdate(), sysdate());
 
 drop table if exists `sys_file`;
 create table `sys_file`  (
@@ -681,6 +683,7 @@ primary key (`id`) using btree
 drop table if exists `sys_email_send_history`;
 create table `sys_email_send_history`  (
 `id` int(0) not null auto_increment comment '主键',
+`type` int(0) not null comment '类型',
 `sent_to` varchar(1000) not null comment '发送对象',
 `cc` varchar(1000) default null comment '抄送对象',
 `title` varchar(500) not null comment '标题',
@@ -688,9 +691,8 @@ create table `sys_email_send_history`  (
 `file_id_array` varchar(1000) default null comment '附件',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
-`updated_time` datetime default null comment '更新时间',
 primary key (`id`) using btree
-) comment = '通知类型';
+) comment = 'email 发送历史';
 
 drop table if exists `sys_info`;
 create table if not exists `sys_info` (

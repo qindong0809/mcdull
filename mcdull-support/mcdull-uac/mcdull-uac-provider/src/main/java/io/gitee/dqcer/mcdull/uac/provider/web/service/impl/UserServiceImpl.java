@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -20,7 +21,6 @@ import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
-import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
@@ -32,16 +32,15 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.DictSelectTypeEnum;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.EmailTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IDictTypeManager;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IRoleService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserRoleService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,6 +77,15 @@ public class UserServiceImpl
 
     @Resource
     private IDictTypeManager dictTypeManager;
+
+    @Resource
+    private IConfigService configService;
+
+    @Resource
+    private IEmailService emailService;
+
+    @Resource
+    private ICommonManager commonManager;
 
     private static final String AES_KEY = "1024abcd1024abcd1024abcd1024abcd";
 
@@ -150,11 +158,39 @@ public class UserServiceImpl
     @Transactional(rollbackFor = Exception.class)
     public Integer insert(UserAddDTO dto) {
         this.checkParam(dto);
-        UserEntity entity = this.buildEntityAndInsert(dto);
+        UserEntity entity = UserConvert.insertDtoToEntity(dto);
+        entity.setLoginPwd(this.getDefaultPassword());
+        entity.setAdministratorFlag(false);
+        baseRepository.insert(entity);
         Integer userId = entity.getId();
+        String value = configService.getConfig("create-account-email");
+        if (StrUtil.isNotBlank(value)) {
+            boolean isEnable = BooleanUtil.toBoolean(value);
+            if (isEnable) {
+                String email = entity.getEmail();
+                if (StrUtil.isNotBlank(email)) {
+                    String content = StrUtil.format("欢迎加入，您的账号为：{}，初始密码请联系管理员，登录系统后及时修改密码。", entity.getLoginName());
+                    MapBuilder<String, String> builder = MapUtil.builder();
+                    builder.put("{title}", StrUtil.EMPTY)
+                            .put("{content}", content);
+                    String templateFileName = "template/common-template-email.html";
+                    String html = commonManager.readTemplateFileContent(templateFileName);
+                    emailService.sendEmailHtml(EmailTypeEnum.CREATE_ACCOUNT, email, "开通账号",
+                            commonManager.replacePlaceholders(html, builder.map()));
+                }
+            }
+        }
         userRoleService.batchUserListByRoleId(userId, dto.getRoleIdList());
         auditManager.saveByAddEnum(dto.getActualName(), userId, this.buildAuditLog(entity, dto.getRoleIdList()));
         return userId;
+    }
+
+    private String getDefaultPassword() {
+        String value = configService.getConfig("init-account-password");
+        if (StrUtil.isNotBlank(value)) {
+            return Sha1Util.getSha1(value);
+        }
+        return StrUtil.EMPTY;
     }
 
     private Audit buildAuditLog(UserEntity user, List<Integer> roleIdList) {
@@ -203,14 +239,6 @@ public class UserServiceImpl
             this.validNameExist(null, dto.getLoginName(), list,
                     i -> i.getLoginName().equals(dto.getLoginName()));
         }
-    }
-
-    private UserEntity buildEntityAndInsert(UserAddDTO dto) {
-        UserEntity entity = UserConvert.insertDtoToEntity(dto);
-        entity.setLoginPwd("a29c57c6894dee6e8251510d58c07078ee3f49bf");
-        entity.setAdministratorFlag(false);
-        baseRepository.insert(entity);
-        return entity;
     }
 
     @Override
@@ -374,9 +402,8 @@ public class UserServiceImpl
                 throw new BusinessException(I18nConstants.PERMISSION_DENIED);
             }
         }
-        String newPassword = RandomUtil.genAz09(5);
-        baseRepository.update(userId, "a29c57c6894dee6e8251510d58c07078ee3f49bf");
-        return newPassword;
+        baseRepository.update(userId, this.getDefaultPassword());
+        return StrUtil.EMPTY;
     }
 
     @Transactional(rollbackFor = Exception.class)

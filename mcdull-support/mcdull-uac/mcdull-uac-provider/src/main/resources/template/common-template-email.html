@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333333;
+        }
+        p {
+            color: #666666;
+            line-height: 1.6;
+        }
+        a.reset-link {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            margin-top: 10px;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        a.reset-link:hover {
+            background-color: #0056b3;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>{title}</h1>
+    <p>亲爱的 {actualName}，</p>
+    <p>{content}</p>
+    <ol>
+        <li>点击这里<a href="{domainName}" class="reset-link">进行登录</a></li>
+    </ol>
+
+    <p>如果您有任何问题或需要帮助，请回复此邮件或联系我们的客户支持团队。</p>
+    <p>感谢您的使用。</p>
+    <p>此致<br></p>
+</div>
+</body>
+</html>

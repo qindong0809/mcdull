@@ -1,9 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.repository.IRepository;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.EmailSendHistoryQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.EmailSendHistoryEntity;
-
-import java.util.List;
 
 /**
  * Email send history repository
@@ -14,12 +14,5 @@ import java.util.List;
 
 public interface IEmailSendHistoryRepository extends IRepository<EmailSendHistoryEntity> {
 
-
-    /**
-     * 批量插入
-     *
-     * @param list 列表
-     * @return boolean
-     */
-    boolean batchInsert(List<EmailSendHistoryEntity> list);
+    Page<EmailSendHistoryEntity> selectPage(EmailSendHistoryQueryDTO queryDTO);
 }

@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.mail.MailAccount;
@@ -9,6 +8,7 @@ import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.EmailConfigBO;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.EmailTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IEmailSendHistoryService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IEmailService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ISysInfoService;
@@ -38,7 +38,7 @@ public class EmailServiceImpl
     private ISysInfoService sysInfoService;
 
     @Override
-    public boolean sendEmail(String sendTo, String subject, String text) {
+    public boolean sendEmail(EmailTypeEnum typeEnum, String sendTo, String subject, String text) {
         MailAccount mailAccount = this.getMailAccount();
         threadPoolTaskExecutor.submit(() -> {
             LogHelp.info(log, "sendEmail. sendTo: {}, subject: {}", sendTo, subject);
@@ -47,7 +47,7 @@ public class EmailServiceImpl
             } catch (Exception e) {
                 LogHelp.error(log, "send error. sendTo: {}, subject: {}", sendTo, subject, e);
             }finally {
-                emailSendHistoryService.insert(ListUtil.of(sendTo), null, subject, text);
+                emailSendHistoryService.insert(typeEnum, sendTo, subject, text);
             }
         });
         return true;
@@ -68,7 +68,7 @@ public class EmailServiceImpl
     }
 
     @Override
-    public boolean sendEmailHtml(String sendTo, String subject, String text) {
+    public void sendEmailHtml(EmailTypeEnum emailTypeEnum, String sendTo, String subject, String text) {
         MailAccount mailAccount = this.getMailAccount();
         threadPoolTaskExecutor.submit(() -> {
             LogHelp.info(log, "sendEmail. sendTo: {}, subject: {}", sendTo, subject);
@@ -77,11 +77,9 @@ public class EmailServiceImpl
             } catch (Exception e) {
                 LogHelp.error(log, "send error. sendTo: {}, subject: {}", sendTo, subject, e);
             }finally {
-                emailSendHistoryService.insert(ListUtil.of(sendTo), null, subject, text);
+                emailSendHistoryService.insert(emailTypeEnum, sendTo, subject, text);
             }
-
         });
-        return true;
     }
 
 

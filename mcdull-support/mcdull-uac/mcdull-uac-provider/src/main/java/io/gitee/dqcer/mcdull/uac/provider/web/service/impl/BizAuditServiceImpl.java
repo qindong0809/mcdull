@@ -94,6 +94,9 @@ public class BizAuditServiceImpl
                         List<AuditUtil.FieldDiff> diffList = this.convertFieldDiff(auditFieldList);
                         String comment = AuditUtil.compareStr(diffList, OperationTypeEnum.UPDATE.getCode().equals(entity.getOperation()));
                         vo.setComment(comment);
+                        // 排序
+                        diffList.sort(Comparator.comparingInt(AuditUtil.FieldDiff::getSortOrder));
+                        vo.setDiffList(diffList);
                     }
                 }
                 voList.add(vo);

@@ -2,10 +2,14 @@ package io.gitee.dqcer.mcdull.uac.provider.web.manager.impl;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
@@ -20,6 +24,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -74,5 +80,27 @@ public class CommonManagerImpl implements ICommonManager {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public String readTemplateFileContent(String path) {
+        try (InputStream inputStream = ResourceUtil.getStream(path)) {
+            if (inputStream != null) {
+                byte[] bytes = IoUtil.readBytes(inputStream);
+                return new String(bytes, StandardCharsets.UTF_8);
+            }
+            return StrUtil.EMPTY;
+        } catch (Exception e) {
+            LogHelp.error(log, "模版文件: {}", path, e);
+            throw new BusinessException("找不到对应的模版文件");
+        }
+    }
+
+    @Override
+    public String replacePlaceholders(String template, Map<String, String> placeholders) {
+        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+            template = template.replace(entry.getKey(), entry.getValue());
+        }
+        return template;
     }
 }

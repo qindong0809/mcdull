@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.gitee.dqcer.mcdull.business.common.audit.AuditUtil;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -52,4 +54,7 @@ public class BizAuditVO implements VO {
     @DynamicDateFormat(enableTimezone = true)
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date operationTime;
+
+    @Schema(description = "差异列表")
+    private List<AuditUtil.FieldDiff> diffList;
 }
