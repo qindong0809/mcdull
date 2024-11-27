@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import lombok.Getter;
@@ -29,4 +31,7 @@ public class LoginLockedEntity extends RelEntity<Integer> {
     private Date loginLockBeginTime;
 
     private Date loginLockEndTime;
+
+    @TableField(fill = FieldFill.INSERT)
+    protected Boolean inactive;
 }

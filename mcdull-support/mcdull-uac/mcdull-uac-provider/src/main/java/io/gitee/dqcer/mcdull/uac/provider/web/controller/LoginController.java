@@ -11,6 +11,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.CaptchaVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LogonVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ICaptchaService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,6 +39,16 @@ public class LoginController extends BasicController {
     private ICaptchaService captchaService;
     @Resource
     private ProcessFlow processFlow;
+    @Resource
+    private IConfigService configService;
+
+    @Operation(summary = "查看是否启用验证码")
+    @GetMapping("/login/enabled-captcha")
+    @SaIgnore
+    public Result<Boolean> enabledCaptcha() {
+         String suffix = StrUtil.format("login:enabled_captcha:ip_addr:{}", IpUtil.getIpAddr(super.getRequest()));
+        return Result.success(super.rateLimiter(suffix , 5, 1, () -> configService.isCaptchaEnabled()));
+    }
 
     @Operation(summary = "验证码")
     @GetMapping("/login/getCaptcha")

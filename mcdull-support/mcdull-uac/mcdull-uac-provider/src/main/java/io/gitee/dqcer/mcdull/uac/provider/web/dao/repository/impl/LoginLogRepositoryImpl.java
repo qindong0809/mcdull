@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.TimestampEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.LoginLogMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.ILoginLogRepository;
 import org.springframework.stereotype.Service;
@@ -69,6 +70,19 @@ public class LoginLogRepositoryImpl
     @Override
     public boolean exist(LoginLogEntity entity) {
         return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
+    }
+
+    @Override
+    public LoginLogEntity getFirst(String loginName) {
+        LambdaQueryWrapper<LoginLogEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(LoginLogEntity::getLoginName, loginName);
+        wrapper.ne(LoginLogEntity::getLoginResult, LoginLogResultTypeEnum.LOGIN_FAIL);
+        wrapper.orderByAsc(LoginLogEntity::getCreatedTime);
+        List<LoginLogEntity> list =  baseMapper.selectList(wrapper);
+        if (ObjUtil.isNotNull(list)) {
+            return list.get(0);
+        }
+        return null;
     }
 
     @Override

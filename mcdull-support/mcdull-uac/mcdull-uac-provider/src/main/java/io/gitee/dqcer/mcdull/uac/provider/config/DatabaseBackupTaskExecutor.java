@@ -6,7 +6,6 @@ import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.cron.CronUtil;
-import cn.hutool.cron.task.Task;
 import io.gitee.dqcer.mcdull.business.common.dump.SqlDumper;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.component.ConcurrentRateLimiter;
@@ -59,8 +58,8 @@ public class DatabaseBackupTaskExecutor {
         log.info("task-database-backup: {}", value);
         if (StrUtil.isNotBlank(value)) {
             // 创建并注册定时任务
-            CronUtil.schedule(value, (Task) ()
-                    -> concurrentRateLimiter.locker(key, 0, this::startBackup, false));
+            CronUtil.schedule(value, (Runnable) () ->
+                    concurrentRateLimiter.locker(key, 0, this::startBackup, false));
             // 秒级别定时任务
             CronUtil.setMatchSecond(true);
             // 启动定时任务调度器

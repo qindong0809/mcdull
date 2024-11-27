@@ -19,4 +19,6 @@ public interface IMessageRepository extends IRepository<MessageEntity> {
     Page<MessageEntity> selectPage(MessageQueryDTO dto);
 
     boolean updateReadFlag(Integer id, Integer userId);
+
+    MessageEntity getByUserId(Integer receiverUserId, String dataId);
 }

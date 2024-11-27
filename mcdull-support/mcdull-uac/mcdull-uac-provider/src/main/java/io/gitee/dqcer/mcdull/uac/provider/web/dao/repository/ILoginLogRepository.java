@@ -63,6 +63,9 @@ public interface ILoginLogRepository extends IRepository<LoginLogEntity> {
      */
     boolean exist(LoginLogEntity entity);
 
+
+    LoginLogEntity getFirst(String loginName);
+
  /**
   * 按用户 ID 获取列表
   *

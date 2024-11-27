@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -10,6 +11,7 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.audit.MessageAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MessageQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.MessageEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.MessageTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.MessageVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMessageRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
@@ -68,6 +70,24 @@ public class MessageServiceImpl
         auditManager.saveByUpdateEnum(message.getTitle(), id,
                 this.buildAuditLog(oldMessage), this.buildAuditLog(message));
         return true;
+    }
+
+    @Override
+    public void insert(MessageTypeEnum typeEnum, Integer receiverUserId, String dataId,
+                       String title, String content) {
+        MessageEntity entity = new MessageEntity();
+        entity.setMessageType(typeEnum.getCode());
+        entity.setReceiverUserId(receiverUserId);
+        entity.setDataId(dataId);
+        entity.setTitle(title);
+        entity.setContent(content);
+        baseRepository.save(entity);
+    }
+
+    @Override
+    public boolean getByUserId(Integer receiverUserId, String dataId) {
+        MessageEntity entity = baseRepository.getByUserId(receiverUserId, dataId);
+        return ObjectUtil.isNotNull(entity);
     }
 
     private Audit buildAuditLog(MessageEntity message) {

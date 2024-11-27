@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service;
 
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MessageQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.MessageTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.MessageVO;
 
 /**
@@ -18,4 +19,9 @@ public interface IMessageService {
     PagedVO<MessageVO> query(MessageQueryDTO queryForm);
 
     boolean updateReadFlag(Integer id, Integer integer);
+
+    void insert(MessageTypeEnum typeEnum, Integer receiverUserId, String dataId,
+                String title, String content);
+
+    boolean getByUserId(Integer receiverUserId, String dataId);
 }

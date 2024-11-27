@@ -71,6 +71,11 @@ public class LoginLogServiceImpl
     }
 
     @Override
+    public LoginLogEntity getFirstLoginLog(String loginName) {
+        return baseRepository.getFirst(loginName);
+    }
+
+    @Override
     public LoginLogEntity getLastLoginLog(String loginName) {
         List<LoginLogEntity> list = baseRepository.getListByLoginName(loginName);
         if (CollUtil.isNotEmpty(list)) {

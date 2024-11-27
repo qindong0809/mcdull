@@ -165,19 +165,16 @@ public class UserServiceImpl
         Integer userId = entity.getId();
         String value = configService.getConfig("create-account-email");
         if (StrUtil.isNotBlank(value)) {
-            boolean isEnable = BooleanUtil.toBoolean(value);
-            if (isEnable) {
-                String email = entity.getEmail();
-                if (StrUtil.isNotBlank(email)) {
-                    String content = StrUtil.format("欢迎加入，您的账号为：{}，初始密码请联系管理员，登录系统后及时修改密码。", entity.getLoginName());
-                    MapBuilder<String, String> builder = MapUtil.builder();
-                    builder.put("{title}", StrUtil.EMPTY)
-                            .put("{content}", content);
-                    String templateFileName = "template/common-template-email.html";
-                    String html = commonManager.readTemplateFileContent(templateFileName);
-                    emailService.sendEmailHtml(EmailTypeEnum.CREATE_ACCOUNT, email, "开通账号",
-                            commonManager.replacePlaceholders(html, builder.map()));
-                }
+            String email = entity.getEmail();
+            if (StrUtil.isNotBlank(email)) {
+                String content = StrUtil.format(value, entity.getLoginName());
+                MapBuilder<String, String> builder = MapUtil.builder();
+                builder.put("{title}", StrUtil.EMPTY)
+                        .put("{content}", content);
+                String templateFileName = "template/common-template-email.html";
+                String html = commonManager.readTemplateFileContent(templateFileName);
+                emailService.sendEmailHtml(EmailTypeEnum.CREATE_ACCOUNT, email, "开通账号",
+                        commonManager.replacePlaceholders(html, builder.map()));
             }
         }
         userRoleService.batchUserListByRoleId(userId, dto.getRoleIdList());

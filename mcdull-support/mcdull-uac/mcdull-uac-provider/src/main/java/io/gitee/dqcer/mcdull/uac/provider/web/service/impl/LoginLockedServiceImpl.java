@@ -1,6 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -35,26 +38,6 @@ public class LoginLockedServiceImpl
         return baseRepository.get(loginName);
     }
 
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    @Override
-    public void lock(String loginName, Integer failedLoginMaximumTime) {
-        LoginLockedEntity entity = new LoginLockedEntity();
-        entity.setLockFlag(true);
-        entity.setLoginName(loginName);
-        Date date = new Date();
-        entity.setLoginLockBeginTime(date);
-        entity.setLoginLockEndTime(DateUtil.offsetMinute(date, failedLoginMaximumTime));
-        entity.setLoginFailCount(1);
-        baseRepository.save(entity);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public void updateFailCount(LoginLockedEntity entity) {
-        entity.setLoginFailCount(entity.getLoginFailCount() + 1);
-        baseRepository.updateById(entity);
-    }
-
     @Override
     public PagedVO<LoginLockedVO> queryPage(LoginFailQueryDTO dto) {
         Page<LoginLockedEntity> entityPage = baseRepository.selectPage(dto);
@@ -74,9 +57,50 @@ public class LoginLockedServiceImpl
             this.throwDataNotExistException(idList);
         }
         for (LoginLockedEntity lockedEntity : list) {
-            lockedEntity.setLockFlag(false);
+            lockedEntity.setInactive(true);
         }
         baseRepository.updateBatchById(list, list.size());
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    @Override
+    public void updateFailCount(String username, Integer failedLoginMaximumTime, int failCount) {
+        LoginLockedEntity entity = this.get(username);
+        if (ObjUtil.isNull(entity)) {
+             entity = new LoginLockedEntity();
+            entity.setLoginName(username);
+        }
+        entity.setLockFlag(false);
+        Date date = new Date();
+        entity.setLoginLockBeginTime(date);
+        entity.setLoginLockEndTime(DateUtil.offsetMinute(date, failedLoginMaximumTime));
+        entity.setLoginFailCount(failCount);
+        entity.setInactive(false);
+        baseRepository.saveOrUpdate(entity);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void inactive(String username) {
+         LoginLockedEntity entity = this.get(username);
+        if (ObjUtil.isNotNull(entity)) {
+            entity.setInactive(true);
+        }
+        baseRepository.updateById(entity);
+    }
+
+    @Override
+    public int getLoginFailureCount(String loginName) {
+         LoginLockedEntity lockedEntity = this.get(loginName);
+        if (ObjUtil.isNotNull(lockedEntity)) {
+            if (BooleanUtil.isFalse(lockedEntity.getInactive())) {
+                Date loginLockEndTime = lockedEntity.getLoginLockEndTime();
+                if (DateUtil.compare(loginLockEndTime, new Date()) > 0) {
+                    return Convert.toInt(lockedEntity.getLoginFailCount(), 0);
+                }
+            }
+        }
+        return 0;
     }
 
     private LoginLockedVO convert(LoginLockedEntity entity) {

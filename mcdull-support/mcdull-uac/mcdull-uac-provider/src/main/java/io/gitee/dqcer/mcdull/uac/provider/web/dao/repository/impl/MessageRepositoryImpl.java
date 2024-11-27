@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjUtil;
@@ -18,6 +19,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IMessageRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -66,6 +68,18 @@ public class MessageRepositoryImpl extends
         update.set(MessageEntity::getReadFlag, true);
         update.eq(IdEntity::getId, id);
         return this.update(update);
+    }
+
+    @Override
+    public MessageEntity getByUserId(Integer receiverUserId, String dataId) {
+        LambdaQueryWrapper<MessageEntity> query = Wrappers.lambdaQuery();
+        query.eq(MessageEntity::getReceiverUserId, receiverUserId);
+        query.eq(MessageEntity::getDataId, dataId);
+        List<MessageEntity> list = this.list(query);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
     }
 
 }

@@ -317,14 +317,18 @@ create table `sys_config`  (
 primary key (`id`) using btree
 ) comment = '系统配置';
 
-insert into `sys_config` values (null, '系统名称', 'system-name', 'xxx系统', '', 0, sysdate(), sysdate());
-insert into `sys_config` values (null, '域名名称', 'domain-name', 'http://mcdull.io:8081', '', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '登录验证码', 'login-captcha', 'yes', 'yes/启用 no/不启用', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '系统名称', 'system-name', 'xxx系统', '用于重置密码占位符', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '域名名称', 'domain-name', 'http://mcdull.io:8081', '用于重置密码链接', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '重置密码邮件标题', 'forget-password-email-title', '密码重置请求', '', 0, sysdate(), sysdate());
-insert into `sys_config` values (null, '重置密码链接有效期（分钟）', 'forget-password-timeout', '5', '', 0, sysdate(), sysdate());
-insert into `sys_config` values (null, '是否记录操作请求日志', 'log-operation-request', 'Yes', '', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '重置密码链接有效期（分钟）', 'forget-password-timeout', '5', '链接有效期', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '是否记录操作请求日志', 'log-operation-request', 'yes', 'yes/启用 no/不启用', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '设置定时任务（数据库备份）', 'task-database-backup', '0 0 */2 * * ?', '比如：*/2 * * * *（每2分钟）空则不启用', 0, sysdate(), sysdate());
-insert into `sys_config` values (null, '开启创建账号Email通知', 'create-account-email', 'yes', 'yes/启用 no/不启用', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '新增用户Email通知', 'create-account-email', '欢迎加入，您的账号为：{}，初始密码请联系管理员，登录系统后及时修改密码。', '空则不通知', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '设置账号初始默认密码', 'init-account-password', '123456', '建议五位数以上', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '首次登录自动发送消息通用文案', 'first-login-send-message', '您好！为了确保您的账户安全，请定期更新您的密码，如果有任何疑问，请及时与我们联系。', '站内信', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '密码过期后提醒文案', 'expired-password-reminder', '您的密码于{}已过期，请尽快修改密码。', '站内信', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '密码过期后提醒频次', 'expired-password-reminder-frequency', '1', '1/一次 2/每次 0/从不', 0, sysdate(), sysdate());
 
 drop table if exists `sys_file`;
 create table `sys_file`  (
@@ -673,6 +677,7 @@ create table `sys_login_locked`  (
 `lock_flag` tinyint(0) null default 0 comment '锁定状态:1锁定，0未锁定',
 `login_lock_begin_time` datetime(0) null default null comment '连续登录失败锁定开始时间',
 `login_lock_end_time` datetime(0) null default null comment '连续登录失败锁定结束时间',
+`inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
@@ -712,7 +717,6 @@ drop table if exists `sys_message`;
 create table `sys_message`  (
 `id` int(0) not null auto_increment comment '主键',
 `message_type` smallint(0) not null comment '消息类型',
-`receiver_user_type` int(0) not null comment '接收者用户类型',
 `receiver_user_id` bigint(0) not null comment '接收者用户id',
 `data_id` varchar(500) null default '' comment '相关数据id',
 `title` varchar(1000) not null comment '标题',
@@ -723,7 +727,7 @@ create table `sys_message`  (
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
 primary key (`id`) using btree,
-index `idx_msg`(`message_type`, `receiver_user_type`, `receiver_user_id`) using btree
+index `idx_msg`(`message_type`, `receiver_user_id`) using btree
 )comment = '通知消息';
 
 drop table if exists `sys_form`;

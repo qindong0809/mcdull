@@ -18,5 +18,7 @@ public interface ILoginLogService {
 
     void add(LoginLogEntity entity);
 
+    LoginLogEntity getFirstLoginLog(String loginName);
+
     LoginLogEntity getLastLoginLog(String loginName);
 }

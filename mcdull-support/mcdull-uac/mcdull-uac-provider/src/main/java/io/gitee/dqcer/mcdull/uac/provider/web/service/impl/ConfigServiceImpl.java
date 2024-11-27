@@ -1,7 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -115,14 +117,15 @@ public class ConfigServiceImpl
     @Override
     public String getConfig(String key) {
         List<?> list = cacheChannel.get("sys_config", List.class);
+        String value = null;
         if (CollUtil.isNotEmpty(list)) {
             for (Object o : list) {
                 ConfigEntity entity = (ConfigEntity) o;
                 if (entity.getConfigKey().equals(key)) {
-                    return entity.getConfigValue();
+                    value = entity.getConfigValue();
+                    break;
                 }
             }
-            return null;
         }
         List<ConfigEntity> entityList = baseRepository.list();
         if (CollUtil.isNotEmpty(entityList)) {
@@ -133,11 +136,16 @@ public class ConfigServiceImpl
                 return configEntity.getConfigValue();
             }
         }
-        ConfigEntity entity = baseRepository.selectOne(key);
-        if (ObjUtil.isNotNull(entity)) {
-            return entity.getConfigValue();
+        return value;
+    }
+
+    @Override
+    public Boolean isCaptchaEnabled() {
+        String config = this.getConfig("login-captcha");
+        if (StrUtil.isNotBlank(config)) {
+            return BooleanUtil.toBooleanObject(config);
         }
-        return null;
+        return false;
     }
 
 
