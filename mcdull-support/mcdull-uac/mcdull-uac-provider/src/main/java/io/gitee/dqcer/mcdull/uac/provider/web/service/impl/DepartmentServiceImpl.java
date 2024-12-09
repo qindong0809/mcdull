@@ -185,13 +185,6 @@ public class DepartmentServiceImpl
     public List<DepartmentTreeInfoVO> departmentTree() {
         List<DepartmentEntity> list = baseRepository.all();
         if (CollUtil.isNotEmpty(list)) {
-            for (DepartmentEntity dept : list) {
-                DepartmentTreeInfoVO vo = new DepartmentTreeInfoVO();
-                vo.setDepartmentId(Convert.toInt(dept.getId()));
-                vo.setName(dept.getName());
-                vo.setManagerId(dept.getManagerId());
-                vo.setParentId(Convert.toInt(dept.getParentId()));
-            }
             List<Tree<Integer>> build = TreeUtil.build(list, 0, (deptDO, treeNode) -> {
                 treeNode.setId(Convert.toInt(deptDO.getId()));
                 treeNode.setParentId(Convert.toInt(deptDO.getParentId()));

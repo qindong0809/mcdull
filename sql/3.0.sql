@@ -333,7 +333,7 @@ insert into `sys_config` values (null, '密码过期后提醒频次', 'expired-p
 drop table if exists `sys_file`;
 create table `sys_file`  (
 `id` int not null auto_increment comment '主键id',
-`folder_type` tinyint unsigned not null comment '文件夹类型',
+`folder_type` int not null comment '文件夹类型',
 `file_name` varchar(100) null default null comment '文件名称',
 `file_size` int(0) null default null comment '文件大小',
 `file_key` varchar(200)  not null comment '文件key，用于文件下载',
@@ -349,6 +349,22 @@ unique index `uk_file_key`(`file_key`) using btree,
 index `module_id_module_type`(`folder_type`) using btree,
 index `module_type`(`folder_type`) using btree
 ) comment = '文件';
+
+drop table if exists `sys_folder`;
+create table `sys_folder`  (
+`id` int not null auto_increment comment '主键id',
+`name` varchar(50) not null comment '名称',
+`parent_id` int not null default 0 comment '父级id',
+`id_path` varchar(1024) not null comment 'id路径',
+`sort` int(0) not null comment '排序',
+`created_by` int not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` int default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+primary key (`id`) using btree
+) comment = '文件夹';
 
 drop table if exists `sys_table_column`;
 create table `sys_table_column`  (
