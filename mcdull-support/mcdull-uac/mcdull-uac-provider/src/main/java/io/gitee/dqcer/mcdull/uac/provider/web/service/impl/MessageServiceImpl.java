@@ -62,13 +62,10 @@ public class MessageServiceImpl
         if (ObjUtil.isNull(message)) {
             this.throwDataNotExistException(id);
         }
-        MessageEntity oldMessage = ObjUtil.cloneByStream(message);
         if (message.getReadFlag()) {
             this.throwDataNeedRefreshException("id: {}", id);
         }
         baseRepository.updateReadFlag(id, userId);
-        auditManager.saveByUpdateEnum(message.getTitle(), id,
-                this.buildAuditLog(oldMessage), this.buildAuditLog(message));
         return true;
     }
 

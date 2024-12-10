@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -79,7 +80,7 @@ public class LoginLogRepositoryImpl
         wrapper.ne(LoginLogEntity::getLoginResult, LoginLogResultTypeEnum.LOGIN_FAIL);
         wrapper.orderByAsc(LoginLogEntity::getCreatedTime);
         List<LoginLogEntity> list =  baseMapper.selectList(wrapper);
-        if (ObjUtil.isNotNull(list)) {
+        if (CollUtil.isNotEmpty(list)) {
             return list.get(0);
         }
         return null;
