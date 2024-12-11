@@ -34,11 +34,9 @@ public class LoginDTO implements DTO {
     private String password;
 
     @Schema(description = "验证码")
-    @NotBlank(message = "验证码不能为空")
     private String captchaCode;
 
     @Schema(description = "验证码uuid标识")
-    @NotBlank(message = "验证码uuid标识不能为空")
     private String captchaUuid;
 
     @EnumsIntValid(value = LoginDeviceEnum.class)
