@@ -609,4 +609,29 @@ public class UserServiceImpl
         }
         return StrUtil.EMPTY;
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void exportData() {
+        UserListDTO dto = new UserListDTO();
+        PageUtil.setMaxPageSize(dto);
+        List<UserVO> list = CollUtil.emptyIfNull(this.listByPage(dto).getList());
+        Map<String, String> titleMap = this.getTitleMap();
+        List<Map<String, String>> mapList = new ArrayList<>();
+        for (UserVO vo : list) {
+            Map<String, String> map = new HashMap<>();
+            map.put("username", vo.getActualName());
+            map.put("jobNumber", vo.getLoginName());
+            mapList.add(map);
+        }
+        commonManager.exportExcel("部门人员", StrUtil.EMPTY, titleMap, mapList);
+    }
+
+    private Map<String, String> getTitleMap() {
+        Map<String, String> titleMap = new LinkedHashMap<>();
+        titleMap.put("姓名", "username");
+        titleMap.put("登录账号", "jobNumber");
+        // todo 待完善
+        return titleMap;
+    }
 }

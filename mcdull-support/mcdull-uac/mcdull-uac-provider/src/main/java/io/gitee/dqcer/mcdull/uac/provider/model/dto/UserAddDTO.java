@@ -50,7 +50,6 @@ public class UserAddDTO implements DTO {
     private Boolean disabledFlag;
 
     @Schema(description = "手机号")
-    @NotNull(message = "手机号不能为空")
     private String phone;
 
     @Schema(description = "角色列表")

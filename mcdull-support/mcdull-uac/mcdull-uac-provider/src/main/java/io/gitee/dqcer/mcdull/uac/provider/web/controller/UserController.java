@@ -46,12 +46,10 @@ public class UserController extends BasicController {
     }
 
     @Operation(summary = "导出数据")
-    @SaCheckPermission("support:form:record:export")
-    @PostMapping(value = "user/list/record-export")
-    public Result<Boolean> exportData(@RequestBody @Valid FormRecordQueryDTO dto) {
-//        List<Annotation> annotations = AnnotationUtil.scanClass(this.getClass());
-//        userService.exportData(dto);
-        return Result.success(true);
+    @SaCheckPermission("system:employee:export")
+    @PostMapping(value = "user/list/record-export", produces = "application/octet-stream")
+    public void exportData() {
+        userService.exportData();
     }
 
     @Operation(summary = "Update Current User Password")

@@ -83,4 +83,7 @@ public interface IUserService {
     PagedVO<UserVO> pageByRoleId(Integer roleId, UserListDTO dto);
 
     String getActualName(Integer userId);
+
+    void exportData();
+
 }

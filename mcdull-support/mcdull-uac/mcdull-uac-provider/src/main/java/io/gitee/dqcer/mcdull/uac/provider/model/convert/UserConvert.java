@@ -30,12 +30,14 @@ public class UserConvert {
         userVO.setActualName(entity.getActualName());
         userVO.setGender(entity.getGender());
         userVO.setPhone(entity.getPhone());
+        userVO.setEmail(entity.getEmail());
         Integer departmentId = entity.getDepartmentId();
         userVO.setDepartmentId(Convert.toInt(departmentId));
         userVO.setAdministratorFlag(entity.getAdministratorFlag());
         userVO.setRemark(entity.getRemark());
         userVO.setCreatedTime(entity.getCreatedTime());
         userVO.setUpdatedTime(entity.getUpdatedTime());
+        userVO.setInactive(entity.getInactive());
         return userVO;
     }
 

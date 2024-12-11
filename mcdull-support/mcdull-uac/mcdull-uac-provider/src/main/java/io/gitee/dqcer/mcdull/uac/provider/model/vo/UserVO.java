@@ -38,6 +38,9 @@ public class UserVO implements VO {
     @Schema(description = "手机号")
     private String phone;
 
+    @Schema(description = "E-mail")
+    private String email;
+
     @Schema(description = "部门id")
     private Integer departmentId;
 
@@ -77,5 +80,7 @@ public class UserVO implements VO {
     @DynamicDateFormat(enableTimezone = true)
     @JsonSerialize(using = DynamicDateSerialize.class)
     protected Date updatedTime;
+
+    private Boolean inactive;
 
 }
