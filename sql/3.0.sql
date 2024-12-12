@@ -805,6 +805,7 @@ create table `sys_form_record_item` (
 primary key (`id`) using btree
 ) comment='表单业务数据输入项信息';
 
+drop table if exists `sys_biz_audit`;
 create table `sys_biz_audit` (
 `id` int auto_increment comment '主键',
 `trace_id` varchar(64) not null comment 'traceId',
@@ -822,6 +823,7 @@ primary key (`id`) using btree,
 key `idx_biz_type` (`biz_type_code`) using btree
 ) comment='Biz Audit';
 
+drop table if exists `sys_biz_audit_field`;
 create table `sys_biz_audit_field` (
 `id` int auto_increment,
 `biz_audit_id` int not null,

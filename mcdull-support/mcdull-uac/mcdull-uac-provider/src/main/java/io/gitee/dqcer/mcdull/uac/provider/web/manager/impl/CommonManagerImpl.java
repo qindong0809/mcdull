@@ -44,7 +44,7 @@ public class CommonManagerImpl implements ICommonManager {
         StrJoiner joiner = new StrJoiner(StrUtil.UNDERLINE);
         joiner.append(args);
         Date now = UserContextHolder.getSession().getNow();
-        String dateStr = TimeZoneUtil.serializeDate(now, DatePattern.PURE_DATETIME_PATTERN);
+        String dateStr = TimeZoneUtil.serializeDate(now, DatePattern.PURE_DATETIME_PATTERN, false);
         return StrUtil.format("{}_{}{}", joiner, dateStr, fileExtension.getCode());
     }
 
@@ -62,7 +62,7 @@ public class CommonManagerImpl implements ICommonManager {
         if (ObjUtil.isNull(date)) {
             return StrUtil.EMPTY;
         }
-        return TimeZoneUtil.serializeDate(date, UserContextHolder.getSession().getDateFormat(), false);
+        return TimeZoneUtil.serializeDate(date, UserContextHolder.getSession().getDateFormat(), true);
     }
 
     private String getUserName(Integer userId) {
@@ -76,7 +76,7 @@ public class CommonManagerImpl implements ICommonManager {
         Integer userId = UserContextHolder.userId();
         String actualName = this.getUserName(userId);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        String s = this.convertDateTimeStr(new Date());
+        String s = this.convertDateByUserTimezone(new Date());
         ExcelUtil.exportExcelByMap(outputStream, sheetName,
                 conditions, actualName, s, titleMap, mapList);
         byte[] byteArray = outputStream.toByteArray();

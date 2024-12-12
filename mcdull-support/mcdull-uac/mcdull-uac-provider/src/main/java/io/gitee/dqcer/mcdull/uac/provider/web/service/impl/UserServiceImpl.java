@@ -49,6 +49,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IDictTypeManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -99,6 +100,9 @@ public class UserServiceImpl
 
     @Resource
     private IFileService fileService;
+
+    @Resource
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     private static final String AES_KEY = "1024abcd1024abcd1024abcd1024abcd";
 
@@ -205,6 +209,13 @@ public class UserServiceImpl
         entity.setAdministratorFlag(false);
         baseRepository.insert(entity);
         Integer userId = entity.getId();
+        threadPoolTaskExecutor.execute(() -> this.sendCreateAccountEmail(entity));
+        userRoleService.batchUserListByRoleId(userId, dto.getRoleIdList());
+        auditManager.saveByAddEnum(dto.getActualName(), userId, this.buildAuditLog(entity, dto.getRoleIdList()));
+        return userId;
+    }
+
+    private void sendCreateAccountEmail(UserEntity entity) {
         String value = configService.getConfig("create-account-email");
         if (StrUtil.isNotBlank(value)) {
             String email = entity.getEmail();
@@ -212,7 +223,9 @@ public class UserServiceImpl
                 String content = StrUtil.format(value, entity.getLoginName());
                 MapBuilder<String, String> builder = MapUtil.builder();
                 builder.put("{title}", StrUtil.EMPTY)
-                        .put("{content}", content);
+                        .put("{content}", content)
+                        .put("{domainName}", configService.getConfig("domain-name"))
+                        .put("{actualName}", entity.getActualName());
                 String templateFileName = "template/common-template-email.html";
                 String html = commonManager.readTemplateFileContent(templateFileName);
                 String htmlStr = commonManager.replacePlaceholders(html, builder.map());
@@ -222,9 +235,6 @@ public class UserServiceImpl
                 this.generatePdfDocumentConditional(title, email, htmlStr, entity);
             }
         }
-        userRoleService.batchUserListByRoleId(userId, dto.getRoleIdList());
-        auditManager.saveByAddEnum(dto.getActualName(), userId, this.buildAuditLog(entity, dto.getRoleIdList()));
-        return userId;
     }
 
     private void generatePdfDocumentConditional(String title, String email, String htmlStr, UserEntity entity) {
