@@ -7,15 +7,19 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
-import com.alibaba.excel.metadata.data.FormulaData;
-import com.alibaba.excel.metadata.data.RichTextStringData;
-import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.util.ListUtils;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.metadata.style.WriteFont;
+import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
+import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
+import com.alibaba.excel.write.style.row.SimpleRowHeightStyleStrategy;
 import io.gitee.dqcer.mcdull.uac.provider.config.CustomSheetWriteHandler;
+import io.gitee.dqcer.mcdull.uac.provider.config.IndexStyleCellWriteHandler;
 import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -64,9 +68,6 @@ public class ExcelUtil {
         return list;
     }
 
-
-
-
     public static void exportExcelByMap(OutputStream outputStream,
                                    String sheetName,
                                    String filterConditions,
@@ -106,70 +107,77 @@ public class ExcelUtil {
         ExcelWriter writer = EasyExcel.write(outputStream).head(titleList)
                 .build();
         WriteSheet indexSheet = EasyExcel.writerSheet("Index")
-                .registerWriteHandler(new CustomSheetWriteHandler(0))
+                .registerWriteHandler(new IndexStyleCellWriteHandler())
                 .needHead(false)
                 .build();
         writer.write(indexDataList(filterConditions, exportBy, exportTime), indexSheet);
 
         WriteSheet dataSheet = EasyExcel.writerSheet(sheetName)
+                .registerWriteHandler(defaultStyles())
+                // 自动计算列宽
+                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                .registerWriteHandler(new SimpleRowHeightStyleStrategy((short) 25, (short) 25))
                 .registerWriteHandler(new CustomSheetWriteHandler(titleList.size()))
                 .build();
         writer.write(dataList,dataSheet);
         writer.finish();
     }
 
+    public static HorizontalCellStyleStrategy defaultStyles() {
+        // 表头样式策略
+        WriteCellStyle headWriteCellStyle = new WriteCellStyle();
+        headWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        headWriteCellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+        WriteFont headWriteFont = new WriteFont();
+        headWriteFont.setBold(true);
+        headWriteFont.setFontName("Calibri");
+        headWriteFont.setFontHeightInPoints((short) 11);
+        headWriteCellStyle.setWriteFont(headWriteFont);
+        // 内容样式策略策略
+        WriteCellStyle contentWriteCellStyle = new WriteCellStyle();
+        // 设置背景颜色白色
+        contentWriteCellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+        // 设置垂直居中为居中对齐
+        contentWriteCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        // 设置左右对齐为靠左对齐
+        contentWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.LEFT);
+        // 设置单元格上下左右边框为细边框
+        contentWriteCellStyle.setBorderBottom(BorderStyle.THIN);
+        contentWriteCellStyle.setBorderLeft(BorderStyle.THIN);
+        contentWriteCellStyle.setBorderRight(BorderStyle.THIN);
+        contentWriteCellStyle.setBorderTop(BorderStyle.THIN);
+        //创建字体对象
+        WriteFont contentWriteFont = new WriteFont();
+        //内容字体大小
+        contentWriteFont.setFontName("Calibri");
+        contentWriteFont.setFontHeightInPoints((short) 11);
+        contentWriteFont.setBold(false);//不加粗
+        contentWriteCellStyle.setWriteFont(contentWriteFont);
+        // 初始化表格样式
+        return new HorizontalCellStyleStrategy(headWriteCellStyle, contentWriteCellStyle);
+    }
+
+
     private static List<List<Object>> indexDataList(String filterConditions, String exportBy, String exportTime) {
         List<List<Object>> list = ListUtils.newArrayList();
         List<Object> data = ListUtils.newArrayList();
-
-        WriteCellData<Object> objectWriteCellData = buildIndexCellName("过滤条件: ");
-        objectWriteCellData.setFormulaData(new FormulaData());
-        objectWriteCellData.setRichTextStringDataValue(new RichTextStringData());
-        data.add(objectWriteCellData);
-        data.add(buildIndexCellValue(filterConditions));
+        data.add("过滤条件: ");
+        data.add(filterConditions);
         list.add(data);
 
-        List<Object> data2 = ListUtils.newArrayList();
-        data2.add(buildIndexCellName("导出人: "));
-        data2.add(buildIndexCellValue(exportBy));
-        list.add(data2);
+        data = ListUtils.newArrayList();
+        data.add("导出人: ");
+        data.add(exportBy);
+        list.add(data);
 
-        List<Object> data3 = ListUtils.newArrayList();
-        data3.add(buildIndexCellName("导出时间: "));
-        data3.add(buildIndexCellValue(exportTime));
-        list.add(data3);
+        data = ListUtils.newArrayList();
+        data.add("导出时间: ");
+        data.add(exportTime);
+        list.add(data);
         return list;
     }
 
-    private static WriteCellData<Object> buildIndexCellName(String text) {
-        WriteCellData<Object> objectWriteCellData = new WriteCellData<>(text);
-        WriteCellStyle style = getWriteCellStyle();
-        WriteFont boldFont = new WriteFont();
-        boldFont.setBold(true);
-        boldFont.setFontName("Arial");
-        style.setWriteFont(boldFont);
-        // 换行\n
-        style.setWrapped(true);
-        objectWriteCellData.setWriteCellStyle(style);
 
-        return objectWriteCellData;
-    }
-
-    private static WriteCellStyle getWriteCellStyle() {
-        WriteCellStyle style = new WriteCellStyle();
-        style.setBorderBottom(BorderStyle.THIN);
-        style.setBorderLeft(BorderStyle.THIN);
-        style.setBorderRight(BorderStyle.THIN);
-        style.setBorderTop(BorderStyle.THIN);
-        return style;
-    }
-
-    private static WriteCellData<Object> buildIndexCellValue(String text) {
-        WriteCellData<Object> objectWriteCellData = new WriteCellData<>(text);
-        WriteCellStyle style = getWriteCellStyle();
-        objectWriteCellData.setWriteCellStyle(style);
-        return objectWriteCellData;
-    }
 
     private static List<List<String>> toTitleList(Map<String, String> titleMap) {
         if (MapUtil.isEmpty(titleMap)) {

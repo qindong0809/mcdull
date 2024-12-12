@@ -15,6 +15,8 @@ public interface ICommonManager {
 
     String convertDateTimeStr(Date date);
 
+    String convertDateByUserTimezone(Date date);
+
     void exportExcel(String sheetName, String conditions, Map<String, String> titleMap, List<Map<String, String>> mapList);
 
     String readTemplateFileContent(String path);

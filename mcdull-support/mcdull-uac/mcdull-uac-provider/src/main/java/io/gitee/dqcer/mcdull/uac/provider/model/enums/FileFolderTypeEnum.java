@@ -37,6 +37,8 @@ public enum FileFolderTypeEnum implements IEnum<Integer> {
 
     SYSTEM_DATABASE_BACKUP(9999, FileFolderTypeEnum.FOLDER_PRIVATE + "/system/database-backup/", "系统/数据库备份"),
 
+
+    USER(100, FileFolderTypeEnum.FOLDER_PUBLIC + "/user/", "用户信息"),
     ;
 
     /**

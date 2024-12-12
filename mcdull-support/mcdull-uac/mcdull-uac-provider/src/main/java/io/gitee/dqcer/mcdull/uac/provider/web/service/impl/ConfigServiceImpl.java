@@ -115,6 +115,15 @@ public class ConfigServiceImpl
     }
 
     @Override
+    public Boolean getConfigToBool(String key) {
+        String config = this.getConfig(key);
+        if (StrUtil.isNotBlank(config)) {
+            return BooleanUtil.toBooleanObject(config);
+        }
+        return null;
+    }
+
+    @Override
     public String getConfig(String key) {
         List<?> list = cacheChannel.get("sys_config", List.class);
         String value = null;

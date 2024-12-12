@@ -36,7 +36,7 @@
         <easyexcel.version>4.0.1</easyexcel.version>
         <poi.version>4.1.2</poi.version>
         <itext7.version>7.2.5</itext7.version>
-        <html2pdf.version>4.0.5</html2pdf.version>
+        <html2pdf.version>6.0.0</html2pdf.version>
         <sa-token.version>1.37.0</sa-token.version>
         <oshi.version>6.1.4</oshi.version>
     </properties>

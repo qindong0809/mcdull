@@ -81,6 +81,7 @@ public class UserVO implements VO {
     @JsonSerialize(using = DynamicDateSerialize.class)
     protected Date updatedTime;
 
+    @Schema(description = "是否禁用")
     private Boolean inactive;
 
 }

@@ -3,6 +3,9 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
@@ -12,11 +15,15 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.symmetric.AES;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
+import io.gitee.dqcer.mcdull.business.common.pdf.ByteArrayInOutConvert;
+import io.gitee.dqcer.mcdull.business.common.pdf.HtmlConvertPdf;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -33,6 +40,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.DictSelectTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.EmailTypeEnum;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentRepository;
@@ -45,7 +53,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -87,7 +97,39 @@ public class UserServiceImpl
     @Resource
     private ICommonManager commonManager;
 
+    @Resource
+    private IFileService fileService;
+
     private static final String AES_KEY = "1024abcd1024abcd1024abcd1024abcd";
+
+    public static void main(String[] args) {
+        String pdf = "D:\\temp\\1-1-1-1-3-1.pdf";
+        ArrayList<String> objects = new ArrayList<>();
+        objects.add("administrator@keda.com");
+        objects.add("administrator@keda.com");
+        objects.add("administrator@keda.com");
+        objects.add("administrator@keda.com");
+        objects.add("administrator@keda.com");
+        objects.add("administrator@keda.com");
+
+        ArrayList<String> list = new ArrayList<>();
+        list.add("hr@keda.com");
+        list.add("dev@keda.com");
+        list.add("dev@keda.com");
+        list.add("dev@keda.com");
+        list.add("dev@keda.com");
+        list.add("dev@keda.com");
+        String s = ResourceUtil.readStr("template/common-template-email.html", StandardCharsets.UTF_8);
+        ByteArrayInOutConvert byteArrayInOutStream = new HtmlConvertPdf()
+                .generatePdf(HtmlConvertPdf.getHtml("Email subject", objects, list, new Date(), s));
+        FileUtil.writeBytes(byteArrayInOutStream.toByteArray(), pdf);
+
+        // 第二次更新pdf
+        String footerLeftMsgFormat = "Report generated for {0} on {1}";
+        String message = MessageFormat.format(footerLeftMsgFormat, "Terry",
+                DateUtil.formatDateTime(new Date()));
+        HtmlConvertPdf.updatePdfLeftFooter(FileUtil.getInputStream(pdf), pdf + ".pdf", message);
+    }
 
     @Override
     public boolean passwordCheck(UserEntity entity, String passwordParam) {
@@ -173,13 +215,33 @@ public class UserServiceImpl
                         .put("{content}", content);
                 String templateFileName = "template/common-template-email.html";
                 String html = commonManager.readTemplateFileContent(templateFileName);
-                emailService.sendEmailHtml(EmailTypeEnum.CREATE_ACCOUNT, email, "开通账号",
-                        commonManager.replacePlaceholders(html, builder.map()));
+                String htmlStr = commonManager.replacePlaceholders(html, builder.map());
+                String title = "开通账号";
+                emailService.sendEmailHtml(EmailTypeEnum.CREATE_ACCOUNT, email, title,
+                        htmlStr);
+                this.generatePdfDocumentConditional(title, email, htmlStr, entity);
             }
         }
         userRoleService.batchUserListByRoleId(userId, dto.getRoleIdList());
         auditManager.saveByAddEnum(dto.getActualName(), userId, this.buildAuditLog(entity, dto.getRoleIdList()));
         return userId;
+    }
+
+    private void generatePdfDocumentConditional(String title, String email, String htmlStr, UserEntity entity) {
+        Boolean status = configService.getConfigToBool("create-account-email-build-pdf");
+        if (BooleanUtil.isTrue(status)) {
+            ByteArrayInOutConvert byteArrayInOutStream = new HtmlConvertPdf()
+                    .generatePdf(HtmlConvertPdf.getHtml(title, ListUtil.of(email), new ArrayList<>(), new Date(), htmlStr));
+            // 第二次更新pdf
+            String message =  commonManager.convertDateTimeStr(new Date());
+            String fileName = StrUtil.format("{}_{}_{}.pdf", title, entity.getActualName(), message);
+            String pafPathParent = FileUtil.getTmpDirPath() + File.separator + System.currentTimeMillis();
+            String pdfPath = pafPathParent + File.separator + fileName;
+            HtmlConvertPdf.updatePdfLeftFooter(byteArrayInOutStream.getInputStream(), pdfPath, message);
+            fileService.fileUpload(new File(pdfPath), FileFolderTypeEnum.USER.getValue());
+            FileUtil.del(pdfPath);
+            FileUtil.del(pafPathParent);
+        }
     }
 
     private String getDefaultPassword() {
@@ -622,6 +684,16 @@ public class UserServiceImpl
             Map<String, String> map = new HashMap<>();
             map.put("username", vo.getActualName());
             map.put("jobNumber", vo.getLoginName());
+            map.put("gender", StrUtil.toString(vo.getGender()));
+            map.put("phone", vo.getPhone());
+            map.put("email", vo.getEmail());
+            map.put("departmentName", vo.getDepartmentName());
+            map.put("roleName", StrUtil.join(StrUtil.COMMA, vo.getRoleNameList()));
+            map.put("createdByName", vo.getCreatedByName());
+            map.put("createdTime",commonManager.convertDateByUserTimezone(vo.getCreatedTime()));
+            map.put("updatedByName", vo.getUpdatedByName());
+            map.put("updatedTime", commonManager.convertDateByUserTimezone(vo.getUpdatedTime()));
+            map.put("inactive", IEnum.getTextByCode(InactiveEnum.class, vo.getInactive()));
             mapList.add(map);
         }
         commonManager.exportExcel("部门人员", StrUtil.EMPTY, titleMap, mapList);
@@ -631,7 +703,16 @@ public class UserServiceImpl
         Map<String, String> titleMap = new LinkedHashMap<>();
         titleMap.put("姓名", "username");
         titleMap.put("登录账号", "jobNumber");
-        // todo 待完善
+        titleMap.put("性别", "gender");
+        titleMap.put("手机号", "phone");
+        titleMap.put("邮箱", "email");
+        titleMap.put("部门名称", "departmentName");
+        titleMap.put("角色名称", "roleName");
+        titleMap.put("创建人", "createdByName");
+        titleMap.put("创建时间", "createdTime");
+        titleMap.put("更新人", "updatedByName");
+        titleMap.put("更新时间", "updatedTime");
+        titleMap.put("状态", "inactive");
         return titleMap;
     }
 }

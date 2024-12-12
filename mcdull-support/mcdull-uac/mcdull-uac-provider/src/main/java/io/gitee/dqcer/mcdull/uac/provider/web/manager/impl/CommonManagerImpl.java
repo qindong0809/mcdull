@@ -57,6 +57,14 @@ public class CommonManagerImpl implements ICommonManager {
         return TimeZoneUtil.serializeDate(date, "yyyyMMdd_HHmmss", false);
     }
 
+    @Override
+    public String convertDateByUserTimezone(Date date) {
+        if (ObjUtil.isNull(date)) {
+            return StrUtil.EMPTY;
+        }
+        return TimeZoneUtil.serializeDate(date, UserContextHolder.getSession().getDateFormat(), false);
+    }
+
     private String getUserName(Integer userId) {
         Map<Integer, String> nameMap = userManager.getNameMap(ListUtil.of(userId));
         return nameMap.get(userId);

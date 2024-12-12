@@ -25,6 +25,8 @@ public interface IConfigService {
 
     void delete(List<Integer> idList);
 
+    Boolean getConfigToBool(String key);
+
     String getConfig(String key);
 
     Boolean isCaptchaEnabled();

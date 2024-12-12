@@ -37,14 +37,19 @@ public class FontUtils {
     public final static String FONT_DIR = String.join(File.separator, CACHE_FOLD, FONTS);
 
     {
+       loadResource();
+    }
+
+    private static void loadResource() {
         try {
             // 解析类路径下的资源文件
             PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
             Resource[] resources = resolver.getResources(FONTS + "/*");
             if (resources != null) {
-                FileUtil.touch(FONT_DIR);
+                FileUtil.mkdir(FONT_DIR);
                 for (Resource resource : resources) {
-                    FileUtil.copy(resource.getFile(), new File(String.join(File.separator, FONT_DIR, resource.getFilename())), true);
+                    String fielName = String.join(File.separator, FONT_DIR, resource.getFilename());
+                    FileUtil.copy(resource.getFile(), new File(fielName), true);
                 }
             }
             FontProgramFactory.registerFontDirectory(FONT_DIR);
@@ -79,8 +84,14 @@ public class FontUtils {
      * @return {@link FontProvider}
      */
     public static FontProvider getFontProvider() {
+        boolean exist = FileUtil.exist(FontUtils.FONT_DIR + File.separator + Arial);
+        if (!exist) {
+            loadResource();
+        }
+
         FontProvider pro = new DefaultFontProvider();
         try {
+            log.info("Font directory: " + FontUtils.FONT_DIR);
             pro.addFont(FontProgramFactory.createFont(FontUtils.FONT_DIR + File.separator + Arial));
             pro.addFont(FontProgramFactory.createFont(FontUtils.FONT_DIR + File.separator + STSONG));
         } catch (IOException e) {

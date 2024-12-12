@@ -59,7 +59,7 @@ public class UserController extends BasicController {
         return Result.success(true);
     }
 
-    @Operation(summary = "添加员工(返回添加员工的密码)")
+    @Operation(summary = "添加")
     @PostMapping("/user/add")
     @SaCheckPermission("system:employee:write")
     public Result<Integer> insert(@Valid @RequestBody UserAddDTO dto) {

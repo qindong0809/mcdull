@@ -15,4 +15,6 @@ public enum InactiveEnum implements IEnum<Boolean>{
     InactiveEnum(Boolean code, String text) {
         init(code, text);
     }
+
+
 }

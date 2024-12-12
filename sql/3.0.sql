@@ -325,6 +325,7 @@ insert into `sys_config` values (null, '重置密码链接有效期（分钟）'
 insert into `sys_config` values (null, '是否记录操作请求日志', 'log-operation-request', 'yes', 'yes/启用 no/不启用', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '设置定时任务（数据库备份）', 'task-database-backup', '0 0 */2 * * ?', '比如：*/2 * * * *（每2分钟）空则不启用', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '新增用户Email通知', 'create-account-email', '欢迎加入，您的账号为：{}，初始密码请联系管理员，登录系统后及时修改密码。', '空则不通知', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '新增用户Email自动生成PDF', 'create-account-email-build-pdf', 'yes', 'yes/启用 no/不启用', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '设置账号初始默认密码', 'init-account-password', '123456', '建议五位数以上', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '首次登录自动发送消息通用文案', 'first-login-send-message', '您好！为了确保您的账户安全，请定期更新您的密码，如果有任何疑问，请及时与我们联系。', '站内信', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '密码过期后提醒文案', 'expired-password-reminder', '您的密码于{}已过期，请尽快修改密码。', '站内信', 0, sysdate(), sysdate());
