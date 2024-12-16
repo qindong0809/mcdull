@@ -120,7 +120,7 @@ public class CommonManagerImpl implements ICommonManager {
                         .registerWriteHandler(new CustomSheetWriteHandler(
                                 sheetDordownMap.get(sheetName), listIndex, mapLength, sheetName, true, entry.getValue().size()))
                         .build();
-                excelWriter.write(ExcelUtil.getEmptyDataList(sheetTemplateMap.get(sheetName), 15), writeSheet2);
+                excelWriter.write(ExcelUtil.getEmptyDataList(sheetTemplateMap.get(sheetName), 30), writeSheet2);
             }
         }
     }

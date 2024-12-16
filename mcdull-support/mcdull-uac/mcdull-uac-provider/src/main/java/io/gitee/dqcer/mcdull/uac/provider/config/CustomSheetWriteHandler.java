@@ -49,7 +49,7 @@ public class CustomSheetWriteHandler extends AbstractColumnWidthStyleStrategy im
     }
 
     public CustomSheetWriteHandler(Integer totalColumn) {
-        new CustomSheetWriteHandler(Collections.emptyMap(), Collections.emptyList(), Collections.emptyMap(), StrUtil.EMPTY, true, totalColumn);
+        this(Collections.emptyMap(), Collections.emptyList(), Collections.emptyMap(), StrUtil.EMPTY, true, totalColumn);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class CustomSheetWriteHandler extends AbstractColumnWidthStyleStrategy im
         if (this.isDataSheet()) {
             Sheet sheet = writeSheetHolder.getSheet();
             // collNum:表示要冻结的列数；rowNum:表示要冻结的行数；firstCellNum:表示被固定列右边第一列的列号；firstRollNum :表示被固定行下边第一列的行号;
-            sheet.createFreezePane(0, 1, 0, 0);
+            sheet.createFreezePane(0, 1, 0, 1);
             if (ObjectUtil.isNotEmpty(autoFilter)) {
                 // 过滤列
                 sheet.setAutoFilter(new CellRangeAddress(0,0,0,totalColumn - 1 ));
@@ -137,7 +137,7 @@ public class CustomSheetWriteHandler extends AbstractColumnWidthStyleStrategy im
     }
 
     private boolean isDataSheet() {
-        return Convert.toInt(totalColumn, 0) != 0;
+        return Convert.toInt(this.totalColumn, 0) != 0;
     }
 
 }
