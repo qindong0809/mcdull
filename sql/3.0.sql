@@ -330,6 +330,7 @@ insert into `sys_config` values (null, '设置账号初始默认密码', 'init-a
 insert into `sys_config` values (null, '首次登录自动发送消息通用文案', 'first-login-send-message', '您好！为了确保您的账户安全，请定期更新您的密码，如果有任何疑问，请及时与我们联系。', '站内信', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '密码过期后提醒文案', 'expired-password-reminder', '您的密码于{}已过期，请尽快修改密码。', '站内信', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '密码过期后提醒频次', 'expired-password-reminder-frequency', '1', '1/一次 2/每次 0/从不', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '导出后自动存储', 'export-auto-storage', 'yes', 'yes/启用 no/不启用', 0, sysdate(), sysdate());
 
 drop table if exists `sys_file`;
 create table `sys_file`  (

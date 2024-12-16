@@ -52,6 +52,13 @@ public class UserController extends BasicController {
         userService.exportData();
     }
 
+    @Operation(summary = "下载模板")
+    @SaCheckPermission("system:employee:download_template")
+    @PostMapping(value = "user/list/download-template", produces = "application/octet-stream")
+    public void downloadTemplate() {
+        userService.downloadTemplate();
+    }
+
     @Operation(summary = "Update Current User Password")
     @PostMapping("/user/update/password")
     public Result<Boolean> updatePassword(@Valid @RequestBody UserUpdatePasswordDTO dto) {

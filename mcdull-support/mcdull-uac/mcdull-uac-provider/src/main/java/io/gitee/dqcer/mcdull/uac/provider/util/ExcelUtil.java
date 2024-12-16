@@ -16,6 +16,7 @@ import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy
 import com.alibaba.excel.write.style.row.SimpleRowHeightStyleStrategy;
 import io.gitee.dqcer.mcdull.uac.provider.config.CustomSheetWriteHandler;
 import io.gitee.dqcer.mcdull.uac.provider.config.IndexStyleCellWriteHandler;
+import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -123,6 +124,19 @@ public class ExcelUtil {
         writer.finish();
     }
 
+    public static List<List<Object>> getEmptyDataList(List<DynamicFieldBO> fieldList, int num) {
+        List<List<Object>> list = new ArrayList<>();
+        for (int i = 0; i < num; i++) {
+            List<Object> data = new ArrayList<>();
+            int size = fieldList.size();
+            for (int j = 0; j < size; j++) {
+                data.add(StrUtil.EMPTY);
+            }
+            list.add(data);
+        }
+        return list;
+    }
+
     public static HorizontalCellStyleStrategy defaultStyles() {
         // 表头样式策略
         WriteCellStyle headWriteCellStyle = new WriteCellStyle();
@@ -158,7 +172,7 @@ public class ExcelUtil {
     }
 
 
-    private static List<List<Object>> indexDataList(String filterConditions, String exportBy, String exportTime) {
+    public static List<List<Object>> indexDataList(String filterConditions, String exportBy, String exportTime) {
         List<List<Object>> list = ListUtils.newArrayList();
         List<Object> data = ListUtils.newArrayList();
         data.add("过滤条件: ");

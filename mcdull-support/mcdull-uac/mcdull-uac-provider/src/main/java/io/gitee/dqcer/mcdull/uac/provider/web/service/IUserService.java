@@ -86,4 +86,5 @@ public interface IUserService {
 
     void exportData();
 
+    void downloadTemplate();
 }

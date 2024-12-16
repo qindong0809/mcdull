@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.hutool.core.convert.Convert;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -61,9 +59,7 @@ public class FileController {
         String userAgent = null;
         FileDownloadVO fileDownloadVO = fileService.getDownloadFile(fileKey, userAgent);
         // 设置下载消息头
-        ServletUtil.setDownloadFileHeader(response, fileDownloadVO.getMetadata().getFileName(),
-                Convert.toLong(fileDownloadVO.getMetadata().getFileSize()));
-
+        ServletUtil.setDownloadFileHeader(response, fileDownloadVO.getMetadata().getFileName());
         // 下载
         response.getOutputStream().write(fileDownloadVO.getData());
     }

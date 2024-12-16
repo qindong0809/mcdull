@@ -83,7 +83,7 @@ public class CodeGeneratorConfigController {
     @GetMapping(value = "/codeGenerator/code/download/{tableName}", produces = "application/octet-stream")
     public void download(@PathVariable String tableName, HttpServletResponse response) throws IOException {
         byte[] dataStream = codeGeneratorService.download(tableName);
-        ServletUtil.setDownloadFileHeader(response, tableName + "_code.zip", (long) dataStream.length);
+        ServletUtil.setDownloadFileHeader(response, tableName + "_code.zip");
         response.getOutputStream().write(dataStream);
     }
 

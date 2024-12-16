@@ -33,6 +33,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.audit.UserAudit;
+import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.UserConvert;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
@@ -41,6 +42,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.DictSelectTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.EmailTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentRepository;
@@ -707,6 +709,21 @@ public class UserServiceImpl
             mapList.add(map);
         }
         commonManager.exportExcel("部门人员", StrUtil.EMPTY, titleMap, mapList);
+    }
+
+    @Override
+    public void downloadTemplate() {
+        Map<String, List<DynamicFieldBO>> sheetHeaderMap = new HashMap<>(8);
+        List<DynamicFieldBO> fieldList = new ArrayList<>();
+        fieldList.add(new DynamicFieldBO("username", "姓名", true, FormItemControlTypeEnum.INPUT));
+        DynamicFieldBO departmentField = new DynamicFieldBO("departmentName", "部门名称", true, FormItemControlTypeEnum.SELECT);
+        List<DepartmentEntity> departmentEntityList = departmentRepository.list();
+        if (CollUtil.isNotEmpty(departmentEntityList)) {
+//            departmentField.setDropdownList(departmentEntityList.stream().map(get));
+        }
+        fieldList.add(departmentField);
+        sheetHeaderMap.put("模板", fieldList);
+        commonManager.downloadExcelTemplate(sheetHeaderMap, "部门人员模板");
     }
 
     private Map<String, String> getTitleMap() {

@@ -64,12 +64,9 @@ public class ServletUtil {
     }
 
 
-    public static void setDownloadFileHeader(HttpServletResponse response, String fileName, Long fileSize) {
+    public static void setDownloadFileHeader(HttpServletResponse response, String fileName) {
         response.setCharacterEncoding("utf-8");
         try {
-            if (fileSize != null) {
-                response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(fileSize));
-            }
             if (StrUtil.isNotEmpty(fileName)) {
                 response.setHeader(HttpHeaders.CONTENT_TYPE,
                         MediaTypeFactory.getMediaType(fileName).orElse(MediaType.APPLICATION_OCTET_STREAM) + ";charset=utf-8");

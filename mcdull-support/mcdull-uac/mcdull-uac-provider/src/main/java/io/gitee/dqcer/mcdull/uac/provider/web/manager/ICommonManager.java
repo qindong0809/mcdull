@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager;
 
+import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,8 @@ public interface ICommonManager {
     String convertDateTimeStr(Date date);
 
     String convertDateByUserTimezone(Date date);
+
+    void downloadExcelTemplate(Map<String, List<DynamicFieldBO>> sheetMap, String fileNamePrefix);
 
     void exportExcel(String sheetName, String conditions, Map<String, String> titleMap, List<Map<String, String>> mapList);
 
