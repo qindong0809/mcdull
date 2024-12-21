@@ -3,9 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
@@ -58,7 +56,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -107,35 +104,6 @@ public class UserServiceImpl
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     private static final String AES_KEY = "1024abcd1024abcd1024abcd1024abcd";
-
-    public static void main(String[] args) {
-        String pdf = "D:\\temp\\1-1-1-1-3-1.pdf";
-        ArrayList<String> objects = new ArrayList<>();
-        objects.add("administrator@keda.com");
-        objects.add("administrator@keda.com");
-        objects.add("administrator@keda.com");
-        objects.add("administrator@keda.com");
-        objects.add("administrator@keda.com");
-        objects.add("administrator@keda.com");
-
-        ArrayList<String> list = new ArrayList<>();
-        list.add("hr@keda.com");
-        list.add("dev@keda.com");
-        list.add("dev@keda.com");
-        list.add("dev@keda.com");
-        list.add("dev@keda.com");
-        list.add("dev@keda.com");
-        String s = ResourceUtil.readStr("template/common-template-email.html", StandardCharsets.UTF_8);
-        ByteArrayInOutConvert byteArrayInOutStream = new HtmlConvertPdf()
-                .generatePdf(HtmlConvertPdf.getHtml("Email subject", objects, list, new Date(), s));
-        FileUtil.writeBytes(byteArrayInOutStream.toByteArray(), pdf);
-
-        // 第二次更新pdf
-        String footerLeftMsgFormat = "Report generated for {0} on {1}";
-        String message = MessageFormat.format(footerLeftMsgFormat, "Terry",
-                DateUtil.formatDateTime(new Date()));
-        HtmlConvertPdf.updatePdfLeftFooter(FileUtil.getInputStream(pdf), pdf + ".pdf", message);
-    }
 
     @Override
     public boolean passwordCheck(UserEntity entity, String passwordParam) {
