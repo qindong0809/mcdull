@@ -9,8 +9,8 @@ import io.gitee.dqcer.mcdull.framework.flow.node.TreeNode;
 import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ICaptchaService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
 import org.springframework.stereotype.Component;
 
@@ -30,12 +30,12 @@ public class ValidateCaptcha implements ProcessHandler<LoginContext> {
     private ILoginService loginService;
 
     @Resource
-    private IConfigService configService;
+    private ICommonManager commonManager;
 
     @Override
     public void execute(LoginContext context) {
         LoginDTO dto = context.getLoginDTO();
-        if (configService.isCaptchaEnabled()) {
+        if (commonManager.isCaptchaEnabled()) {
             captchaService.checkCaptcha(dto.getCaptchaCode(), dto.getCaptchaUuid());
         }
     }
@@ -51,6 +51,7 @@ public class ValidateCaptcha implements ProcessHandler<LoginContext> {
         context.setDict(dict);
     }
 
+    @SuppressWarnings("all")
     @Override
     public void finallyException(ProcessHandler processHandler, Exception exception, LoginContext context) {
         if (processHandler.endNode() || ObjUtil.isNotNull(exception)) {

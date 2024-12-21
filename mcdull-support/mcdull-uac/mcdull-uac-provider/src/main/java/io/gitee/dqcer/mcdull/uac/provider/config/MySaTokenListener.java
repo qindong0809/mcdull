@@ -11,7 +11,11 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.MessageTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.PasswordPolicyVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginLogService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IMessageService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IPasswordPolicyService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +35,7 @@ public class MySaTokenListener implements SaTokenListener {
     private IUserService userService;
     
     @Resource
-    private IConfigService configService;
+    private ICommonManager commonManager;
 
     @Resource
     private IMessageService messageService;
@@ -50,7 +54,7 @@ public class MySaTokenListener implements SaTokenListener {
         if (ObjUtil.isNotNull(user)) {
             Date lastLoginTime = user.getLastLoginTime();
             if (ObjUtil.isNull(lastLoginTime)) {
-                String welcome = configService.getConfig("first-login-send-message");
+                String welcome = commonManager.getConfig("first-login-send-message");
                 if (StrUtil.isNotBlank(welcome)) {
                     messageService.insert(MessageTypeEnum.MAIL, userId, userId.toString(), "欢迎使用", welcome);
                 }
@@ -65,9 +69,9 @@ public class MySaTokenListener implements SaTokenListener {
                         Date createdTime = firstLoginLog.getCreatedTime();
                         long time = (new Date().getTime() - createdTime.getTime()) / 1000 / 60;
                         if (time > passwordExpiredPeriod) {
-                            String reminderTemplate = configService.getConfig("expired-password-reminder");
+                            String reminderTemplate = commonManager.getConfig("expired-password-reminder");
                             if (StrUtil.isNotBlank(reminderTemplate)) {
-                                String config = configService.getConfig("expired-password-reminder-frequency");
+                                String config = commonManager.getConfig("expired-password-reminder-frequency");
                                 if (StrUtil.isNotBlank(config)) {
                                     Integer frequency = Convert.toInt(config);
                                     String formatted = StrUtil.format("{}（有效期{}）",

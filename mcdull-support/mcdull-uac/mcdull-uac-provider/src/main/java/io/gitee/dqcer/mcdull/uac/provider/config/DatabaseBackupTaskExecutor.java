@@ -54,7 +54,7 @@ public class DatabaseBackupTaskExecutor {
     @PostConstruct
     public void init() {
         final String key = "task-database-backup";
-        String value = configService.getConfig(key);
+        String value = commonManager.getConfig(key);
         log.info("task-database-backup: {}", value);
         if (StrUtil.isNotBlank(value)) {
             // 创建并注册定时任务

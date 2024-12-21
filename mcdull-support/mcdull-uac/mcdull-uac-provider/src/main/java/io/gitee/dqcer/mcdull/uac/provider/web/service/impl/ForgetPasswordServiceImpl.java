@@ -12,7 +12,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.ForgetPasswordRestDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.EmailTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IEmailService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IForgetPasswordService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
@@ -34,9 +33,6 @@ public class ForgetPasswordServiceImpl
     private IUserService userService;
 
     @Resource
-    private IConfigService configService;
-
-    @Resource
     private IEmailService emailService;
 
     @Resource
@@ -49,10 +45,10 @@ public class ForgetPasswordServiceImpl
         if (ObjectUtil.isNull(user)) {
             throw new BusinessException("user.not.found", new Object[]{userIdentity});
         }
-        String timeoutStr = configService.getConfig("forget-password-timeout");
-        String domainName = configService.getConfig("domain-name");
-        String systemName = configService.getConfig("system-name");
-        String forgetPasswordEmailTitle = configService.getConfig("forget-password-email-title");
+        String timeoutStr = commonManager.getConfig("forget-password-timeout");
+        String domainName = commonManager.getConfig("domain-name");
+        String systemName = commonManager.getConfig("system-name");
+        String forgetPasswordEmailTitle = commonManager.getConfig("forget-password-email-title");
         String token = SaTempUtil.createToken(user.getId(), Convert.toInt(timeoutStr) * 60);
         MapBuilder<String, String> builder = MapUtil.builder();
         builder

@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
@@ -57,7 +58,16 @@ public class UserRepositoryImpl
         if (ObjUtil.isNotNull(disabledFlag)) {
             query.eq(BaseEntity::getInactive, disabledFlag);
         }
-        query.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        String sortField = dto.getSortField();
+        if (StrUtil.isNotBlank(sortField)) {
+            query.orderBy(sortField.equals(LambdaUtil.getFieldName(UserEntity::getActualName)), dto.isAsc(), UserEntity::getActualName);
+            query.orderBy(sortField.equals(LambdaUtil.getFieldName(UserEntity::getLoginName)), dto.isAsc(), UserEntity::getLoginName);
+            query.orderBy(sortField.equals(LambdaUtil.getFieldName(UserEntity::getInactive)), dto.isAsc(), UserEntity::getInactive);
+            query.orderBy(sortField.equals(LambdaUtil.getFieldName(UserEntity::getCreatedTime)), dto.isAsc(), UserEntity::getCreatedTime);
+            query.orderBy(sortField.equals(LambdaUtil.getFieldName(UserEntity::getUpdatedTime)), dto.isAsc(), UserEntity::getUpdatedTime);
+        } else {
+            query.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        }
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }
 

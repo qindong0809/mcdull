@@ -89,9 +89,6 @@ public class UserServiceImpl
     private IDictTypeManager dictTypeManager;
 
     @Resource
-    private IConfigService configService;
-
-    @Resource
     private IEmailService emailService;
 
     @Resource
@@ -186,7 +183,7 @@ public class UserServiceImpl
     }
 
     private void sendCreateAccountEmail(UserEntity entity) {
-        String value = configService.getConfig("create-account-email");
+        String value = commonManager.getConfig("create-account-email");
         if (StrUtil.isNotBlank(value)) {
             String email = entity.getEmail();
             if (StrUtil.isNotBlank(email)) {
@@ -194,7 +191,7 @@ public class UserServiceImpl
                 MapBuilder<String, String> builder = MapUtil.builder();
                 builder.put("{title}", StrUtil.EMPTY)
                         .put("{content}", content)
-                        .put("{domainName}", configService.getConfig("domain-name"))
+                        .put("{domainName}", commonManager.getConfig("domain-name"))
                         .put("{actualName}", entity.getActualName());
                 String templateFileName = "template/common-template-email.html";
                 String html = commonManager.readTemplateFileContent(templateFileName);
@@ -208,7 +205,7 @@ public class UserServiceImpl
     }
 
     private void generatePdfDocumentConditional(String title, String email, String htmlStr, UserEntity entity) {
-        Boolean status = configService.getConfigToBool("create-account-email-build-pdf");
+        Boolean status = commonManager.getConfigToBool("create-account-email-build-pdf");
         if (BooleanUtil.isTrue(status)) {
             ByteArrayInOutConvert byteArrayInOutStream = new HtmlConvertPdf()
                     .generatePdf(HtmlConvertPdf.getHtml(title, ListUtil.of(email), new ArrayList<>(), new Date(), htmlStr));
@@ -225,7 +222,7 @@ public class UserServiceImpl
     }
 
     private String getDefaultPassword() {
-        String value = configService.getConfig("init-account-password");
+        String value = commonManager.getConfig("init-account-password");
         if (StrUtil.isNotBlank(value)) {
             return Sha1Util.getSha1(value);
         }

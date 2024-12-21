@@ -26,4 +26,10 @@ public interface ICommonManager {
     String readTemplateFileContent(String path);
 
     String replacePlaceholders(String template, Map<String, String> placeholders);
+
+    String getConfig(String key);
+
+    Boolean isCaptchaEnabled();
+
+    Boolean getConfigToBool(String key);
 }

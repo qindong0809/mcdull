@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DatePattern;
@@ -20,18 +21,20 @@ import com.alibaba.excel.write.style.row.SimpleRowHeightStyleStrategy;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
 import io.gitee.dqcer.mcdull.uac.provider.config.CustomSheetWriteHandler;
 import io.gitee.dqcer.mcdull.uac.provider.config.IndexStyleCellWriteHandler;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileExtensionTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.util.ExcelUtil;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IConfigRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -54,10 +57,13 @@ public class CommonManagerImpl implements ICommonManager {
     private IUserManager userManager;
 
     @Resource
-    private IConfigService configService;
+    private IFileService fileService;
 
     @Resource
-    private IFileService fileService;
+    private IConfigRepository configRepository;
+
+    @Resource
+    private CacheChannel cacheChannel;
 
     private String getFileName(FileExtensionTypeEnum fileExtension, String... args) {
         if (ObjUtil.isNull(fileExtension) || ArrayUtil.isEmpty(args)) {
@@ -181,7 +187,7 @@ public class CommonManagerImpl implements ICommonManager {
 
         String fileName = this.getFileName(FileExtensionTypeEnum.EXCEL_X, sheetName);
 
-        Boolean exportAutoStorage = configService.getConfigToBool("export-auto-storage");
+        Boolean exportAutoStorage = this.getConfigToBool("export-auto-storage");
         if (BooleanUtil.isTrue(exportAutoStorage)) {
             byte[] copiedBinaryData = new byte[byteArray.length];
             ArrayUtil.copy(byteArray, copiedBinaryData, byteArray.length);
@@ -220,4 +226,48 @@ public class CommonManagerImpl implements ICommonManager {
         }
         return template;
     }
+
+    @Override
+    public String getConfig(String key) {
+        List<?> list = cacheChannel.get("sys_config", List.class);
+        String value = null;
+        if (CollUtil.isNotEmpty(list)) {
+            for (Object o : list) {
+                ConfigEntity entity = (ConfigEntity) o;
+                if (entity.getConfigKey().equals(key)) {
+                    value = entity.getConfigValue();
+                    break;
+                }
+            }
+        }
+        List<ConfigEntity> entityList = configRepository.list();
+        if (CollUtil.isNotEmpty(entityList)) {
+            cacheChannel.put("sys_config", entityList, 60 * 60 * 24);
+            ConfigEntity configEntity = entityList.stream()
+                    .filter(entity -> entity.getConfigKey().equals(key)).findFirst().orElse(null);
+            if (ObjUtil.isNotNull(configEntity)) {
+                return configEntity.getConfigValue();
+            }
+        }
+        return value;
+    }
+
+    @Override
+    public Boolean isCaptchaEnabled() {
+        String config = this.getConfig("login-captcha");
+        if (StrUtil.isNotBlank(config)) {
+            return BooleanUtil.toBooleanObject(config);
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean getConfigToBool(String key) {
+        String config = this.getConfig(key);
+        if (StrUtil.isNotBlank(config)) {
+            return BooleanUtil.toBooleanObject(config);
+        }
+        return null;
+    }
+
 }

@@ -8,6 +8,7 @@ import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsService;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.OperateLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.util.Ip2RegionUtil;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +32,7 @@ public class SimpleOperationLogImpl implements OperationLogsService {
     private OperationLogAsyncEvent asyncEvent;
 
     @Resource
-    private IConfigService configService;
+    private ICommonManager commonManager;
 
     /**
      * 是否需要拦截器
@@ -44,7 +45,7 @@ public class SimpleOperationLogImpl implements OperationLogsService {
     public boolean needInterceptor(HttpServletRequest request, Method method) {
         Tag tag = AnnotationUtils.findAnnotation(method.getDeclaringClass(), Tag.class);
         Operation operation = method.getAnnotation(Operation.class);
-        String value = configService.getConfig("log-operation-request");
+        String value = commonManager.getConfig("log-operation-request");
         if (StrUtil.isNotBlank(value)) {
             BooleanUtil.toBoolean(value);
             return ObjUtil.isAllNotEmpty(tag, operation) && BooleanUtil.toBoolean(value);

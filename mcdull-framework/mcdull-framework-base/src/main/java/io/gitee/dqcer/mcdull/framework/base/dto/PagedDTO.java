@@ -1,12 +1,13 @@
 package io.gitee.dqcer.mcdull.framework.base.dto;
 
 import cn.hutool.core.convert.Convert;
+import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
+import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
+import io.gitee.dqcer.mcdull.framework.base.enums.SortOrderEnum;
 import io.gitee.dqcer.mcdull.framework.base.support.Paged;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.util.List;
-import java.util.StringJoiner;
 
 
 /**
@@ -33,17 +34,29 @@ public class PagedDTO extends KeywordDTO implements Paged {
     /**
      * 排序字段信息
      */
-    protected List<OrderItem> orders;
+    protected String sortField;
+
+    /**
+     * 排序方式
+     */
+    @SchemaEnum(SortOrderEnum.class)
+    @EnumsStrValid(required = false, value = SortOrderEnum.class, message = "排序类型 枚举值错误")
+    protected String sortOrder;
+
+    public boolean isAsc() {
+        return SortOrderEnum.ASC.getCode().equals(sortOrder);
+    }
 
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", PagedDTO.class.getSimpleName() + "[", "]")
-                .add("pageSize=" + pageSize)
-                .add("pageNum=" + pageNum)
-                .add("orders=" + orders)
-                .add("keyword='" + keyword + "'")
-                .toString();
+        return "PagedDTO{" +
+                "pageSize=" + pageSize +
+                ", pageNum=" + pageNum +
+                ", sortField='" + sortField + '\'' +
+                ", sortOrder='" + sortOrder + '\'' +
+                ", keyword='" + keyword + '\'' +
+                '}';
     }
 
     @Override
@@ -64,12 +77,19 @@ public class PagedDTO extends KeywordDTO implements Paged {
         this.pageNum = pageNum;
     }
 
-    public List<OrderItem> getOrders() {
-        return orders;
+    public String getSortField() {
+        return sortField;
     }
 
-    public PagedDTO setOrders(List<OrderItem> orders) {
-        this.orders = orders;
-        return this;
+    public void setSortField(String sortField) {
+        this.sortField = sortField;
+    }
+
+    public String getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(String sortOrder) {
+        this.sortOrder = sortOrder;
     }
 }

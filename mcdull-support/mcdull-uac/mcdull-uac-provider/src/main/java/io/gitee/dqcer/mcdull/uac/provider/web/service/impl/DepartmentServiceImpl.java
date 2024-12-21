@@ -21,6 +21,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentReposito
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDepartmentService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +70,8 @@ public class DepartmentServiceImpl
         return list;
     }
 
+
+    @CacheEvict(cacheNames = "caffeineCache", key = "'department-all'", allEntries=true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean insert(DeptInsertDTO dto) {
@@ -117,6 +120,7 @@ public class DepartmentServiceImpl
 
     }
 
+    @CacheEvict(cacheNames = "caffeineCache", key = "'department-all'", allEntries=true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean update(Integer id, DeptUpdateDTO dto) {
@@ -144,6 +148,7 @@ public class DepartmentServiceImpl
         entity.setSort(dto.getSort());
     }
 
+    @CacheEvict(cacheNames = "caffeineCache", key = "'department-all'", allEntries=true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean delete(Integer id) {

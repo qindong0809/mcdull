@@ -39,8 +39,7 @@ import java.util.List;
 public class ConfigServiceImpl
         extends BasicServiceImpl<IConfigRepository> implements IConfigService {
 
-    @Resource
-    private CacheChannel cacheChannel;
+
 
     @Resource
     private IAuditManager auditManager;
@@ -113,49 +112,5 @@ public class ConfigServiceImpl
             auditManager.saveByDeleteEnum(entity.getConfigName(), entity.getId(), null);
         }
     }
-
-    @Override
-    public Boolean getConfigToBool(String key) {
-        String config = this.getConfig(key);
-        if (StrUtil.isNotBlank(config)) {
-            return BooleanUtil.toBooleanObject(config);
-        }
-        return null;
-    }
-
-    @Override
-    public String getConfig(String key) {
-        List<?> list = cacheChannel.get("sys_config", List.class);
-        String value = null;
-        if (CollUtil.isNotEmpty(list)) {
-            for (Object o : list) {
-                ConfigEntity entity = (ConfigEntity) o;
-                if (entity.getConfigKey().equals(key)) {
-                    value = entity.getConfigValue();
-                    break;
-                }
-            }
-        }
-        List<ConfigEntity> entityList = baseRepository.list();
-        if (CollUtil.isNotEmpty(entityList)) {
-            cacheChannel.put("sys_config", entityList, 60 * 60 * 24);
-            ConfigEntity configEntity = entityList.stream()
-                    .filter(entity -> entity.getConfigKey().equals(key)).findFirst().orElse(null);
-            if (ObjUtil.isNotNull(configEntity)) {
-                return configEntity.getConfigValue();
-            }
-        }
-        return value;
-    }
-
-    @Override
-    public Boolean isCaptchaEnabled() {
-        String config = this.getConfig("login-captcha");
-        if (StrUtil.isNotBlank(config)) {
-            return BooleanUtil.toBooleanObject(config);
-        }
-        return false;
-    }
-
 
 }
