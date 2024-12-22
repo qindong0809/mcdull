@@ -4,6 +4,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.FolderInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FolderUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderTreeInfoVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderTreeVO;
 
 import java.util.List;
 

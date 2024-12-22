@@ -15,6 +15,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.FolderUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FolderEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderTreeInfoVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderTreeVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFolderRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFolderService;
@@ -45,7 +46,6 @@ public class FolderServiceImpl
     @Resource
     private IAuditManager auditManager;
 
-    @Cacheable(cacheNames = "caffeineCache", key = "'department-all'")
     @Override
     public List<FolderInfoVO> getAll() {
         List<FolderInfoVO> list = new ArrayList<>();
@@ -169,10 +169,13 @@ public class FolderServiceImpl
         for (Tree<Integer> longTree : list) {
             FolderTreeInfoVO vo = new FolderTreeInfoVO();
             vo.setId(longTree.getId());
+            vo.setKey(longTree.getId() + "");
+            vo.setTitle(String.valueOf(longTree.getName()));
             vo.setName(String.valueOf(longTree.getName()));
             List<Integer> subIdList = new ArrayList<>();
             subIdList.add(longTree.getId());
             List<Tree<Integer>> children = longTree.getChildren();
+            vo.setIsLeaf(CollUtil.isEmpty(children));
             if (CollUtil.isNotEmpty(children)) {
                 List<FolderTreeInfoVO> subList = convertTreeSelect(children);
                 vo.setChildren(subList);

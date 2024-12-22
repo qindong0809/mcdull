@@ -16,6 +16,13 @@ import java.util.List;
 @Data
 public class FolderTreeInfoVO extends FolderInfoVO {
 
+    private String title;
+
+    private String key;
+
+    @Schema(description = "是否是叶子节点")
+    private Boolean isLeaf;
+
     @Schema(description = "同级上一个元素id")
     private Integer preId;
 
