@@ -6,9 +6,11 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * User Service
@@ -87,4 +89,6 @@ public interface IUserService {
     void exportData();
 
     void downloadTemplate();
+
+    boolean importData(MultipartFile file);
 }

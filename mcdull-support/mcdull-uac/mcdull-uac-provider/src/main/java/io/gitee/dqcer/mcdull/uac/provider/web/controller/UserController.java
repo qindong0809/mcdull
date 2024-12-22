@@ -9,6 +9,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileUploadVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -57,6 +59,13 @@ public class UserController extends BasicController {
     @PostMapping(value = "user/list/download-template", produces = "application/octet-stream")
     public void downloadTemplate() {
         userService.downloadTemplate();
+    }
+
+    @Operation(summary = "上传数据")
+    @PostMapping("/user/list/import-data")
+    public Result<Boolean> upload(@RequestParam MultipartFile file) {
+        final String pre = "user_import_data";
+        return Result.success(super.locker(pre, () -> userService.importData(file)));
     }
 
     @Operation(summary = "Update Current User Password")

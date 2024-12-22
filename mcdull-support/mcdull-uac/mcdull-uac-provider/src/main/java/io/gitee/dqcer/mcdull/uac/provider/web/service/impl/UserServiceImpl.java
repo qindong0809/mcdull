@@ -52,9 +52,11 @@ import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
@@ -689,6 +691,15 @@ public class UserServiceImpl
         fieldList.add(departmentField);
         sheetHeaderMap.put("模板", fieldList);
         commonManager.downloadExcelTemplate(sheetHeaderMap, "部门人员模板");
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean importData(MultipartFile file) {
+        // todo 待完善
+
+
+        return false;
     }
 
     private Map<String, String> getTitleMap() {
