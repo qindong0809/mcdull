@@ -70,7 +70,7 @@ public class FormServiceImpl
         }
         FormEntity formEntity = this.convertToEntity(dto);
         baseRepository.save(formEntity);
-        auditManager.saveByAddEnum(formEntity.getName(), formEntity.getId(), this.buildAuditLog(entity));
+        auditManager.saveByAddEnum(formEntity.getName(), formEntity.getId(), this.buildAuditLog(formEntity));
     }
 
     private Audit buildAuditLog(FormEntity entity) {

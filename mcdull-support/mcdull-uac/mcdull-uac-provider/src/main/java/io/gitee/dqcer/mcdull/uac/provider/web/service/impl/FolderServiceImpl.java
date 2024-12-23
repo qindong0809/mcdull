@@ -13,6 +13,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.audit.FolderAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FolderInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FolderUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FolderEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderTreeInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderTreeVO;
@@ -153,6 +154,7 @@ public class FolderServiceImpl
     @Override
     public List<FolderTreeInfoVO> getTree() {
         List<FolderEntity> list = baseRepository.all();
+        // todo FileFolderTypeEnum
         if (CollUtil.isNotEmpty(list)) {
             List<Tree<Integer>> build = TreeUtil.build(list, 0, (entity, treeNode) -> {
                 treeNode.setId(Convert.toInt(entity.getId()));
