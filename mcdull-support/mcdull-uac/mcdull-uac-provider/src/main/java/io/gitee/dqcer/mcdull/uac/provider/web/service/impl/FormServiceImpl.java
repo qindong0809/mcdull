@@ -14,9 +14,11 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.audit.FormAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.FormRecordEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormItemVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormRecordDataVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormRecordRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFormRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
@@ -47,17 +49,26 @@ public class FormServiceImpl
     @Resource
     private IAuditManager auditManager;
 
+    @Resource
+    private IFormRecordRepository formRecordRepository;
+
     @Override
     public PagedVO<FormVO> queryPage(FormQueryDTO dto) {
         List<FormVO> voList = new ArrayList<>();
         Page<FormEntity> entityPage = baseRepository.selectPage(dto);
         List<FormEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
+            List<FormRecordEntity> list = formRecordRepository.list();
             for (FormEntity entity : recordList) {
                 FormVO vo = this.convertToVO(entity);
+                Integer count = Convert.toInt(list.stream().filter(i -> i.getFormId().equals(entity.getId())).count());
+                vo.setDataNumber(count);
                 voList.add(vo);
             }
         }
+
+
+
         return PageUtil.toPage(voList, entityPage);
     }
 

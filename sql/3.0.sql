@@ -205,7 +205,7 @@ INSERT INTO `sys_menu` VALUES (223, '强退', 3, 221, NULL, NULL, NULL, 1, 'syst
 INSERT INTO `sys_menu` VALUES (222, '查询', 3, 221, NULL, NULL, NULL, 1, 'system:monitor:session_read', 'system:monitor:session_read', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 
 INSERT INTO `sys_menu` VALUES (225, '表单设计器', 1, 0, 0, NULL, NULL, 1, NULL, NULL, 'ApiOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
-INSERT INTO `sys_menu` VALUES (226, '设计表单', 2, 225, NULL, '/support/designer/index', '/support/designer/index.vue', 1, NULL, NULL, 'AndroidOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (226, '设计表单', 2, 225, NULL, '/support/designer/index', '/support/designer/index.vue', 1, NULL, NULL, 'AndroidOutlined', NULL, 0, NULL, 1, 0, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (229, '密码策略', 2, 213, NULL, '/support/password-policy/index', '/support/password-policy/index.vue', 1, NULL, NULL, 'ContactsOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (230, '读操作', 3, 229, 1, NULL, NULL, 1, 'support:password_policy:read', 'support:password_policy:read', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (231, '写操作', 3, 229, 2, NULL, NULL, 1, 'support:password_policy:write', 'support:password_policy:write', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
