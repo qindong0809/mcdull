@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Pair;
+import cn.hutool.core.lang.Tuple;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
@@ -13,6 +15,8 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.symmetric.AES;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
+import io.gitee.dqcer.mcdull.business.common.excel.DataAnalysisListener;
+import io.gitee.dqcer.mcdull.business.common.excel.DynamicFieldTemplate;
 import io.gitee.dqcer.mcdull.business.common.pdf.ByteArrayInOutConvert;
 import io.gitee.dqcer.mcdull.business.common.pdf.HtmlConvertPdf;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
@@ -22,6 +26,7 @@ import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
+import io.gitee.dqcer.mcdull.framework.base.enums.SexEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -41,6 +46,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.enums.DictSelectTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.EmailTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentRepository;
@@ -55,8 +61,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.File;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
@@ -683,24 +692,96 @@ public class UserServiceImpl
         Map<String, List<DynamicFieldBO>> sheetHeaderMap = new HashMap<>(8);
         List<DynamicFieldBO> fieldList = new ArrayList<>();
         fieldList.add(new DynamicFieldBO("username", "姓名", true, FormItemControlTypeEnum.INPUT));
+        fieldList.add(this.getDepartmentFieldBO());
+        fieldList.add(this.getRoleFieldBO());
+        fieldList.add(this.getSexFieldBO());
+        sheetHeaderMap.put("模板", fieldList);
+        commonManager.downloadExcelTemplate(sheetHeaderMap, "部门人员模板");
+    }
+
+    private DynamicFieldBO getSexFieldBO() {
+        DynamicFieldBO sexFieldBO = new DynamicFieldBO("sex", "性别", true, FormItemControlTypeEnum.SELECT);
+        sexFieldBO.setDropdownList(IEnum.getAll(SexEnum.class).stream().map(IEnum::getText).collect(Collectors.toList()));
+        sexFieldBO.setExtraObj(IEnum.getAll(SexEnum.class));
+        return sexFieldBO;
+    }
+
+    private DynamicFieldBO getDepartmentFieldBO() {
         DynamicFieldBO departmentField = new DynamicFieldBO("departmentName", "部门名称", true, FormItemControlTypeEnum.SELECT);
         List<DepartmentEntity> departmentEntityList = departmentRepository.list();
         if (CollUtil.isNotEmpty(departmentEntityList)) {
-//            departmentField.setDropdownList(departmentEntityList.stream().map(get));
+            departmentField.setDropdownList(departmentEntityList.stream().map(DepartmentEntity::getName).collect(Collectors.toList()));
+            departmentField.setExtraObj(departmentEntityList);
         }
-        fieldList.add(departmentField);
-        sheetHeaderMap.put("模板", fieldList);
-        commonManager.downloadExcelTemplate(sheetHeaderMap, "部门人员模板");
+        return departmentField;
+    }
+
+    private DynamicFieldBO getRoleFieldBO() {
+        DynamicFieldBO roleField = new DynamicFieldBO("roleName", "角色", true, FormItemControlTypeEnum.SELECT);
+        List<RoleVO> roleList = roleService.all();
+        if (CollUtil.isNotEmpty(roleList)) {
+            roleField.setDropdownList(roleList.stream().map(RoleVO::getRoleName).collect(Collectors.toList()));
+            roleField.setExtraObj(roleList);
+        }
+        return roleField;
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean importData(MultipartFile file) {
-        // todo 待完善
-
-
-        return false;
+        commonManager.importExcelData(file, this::getFieldBOList, this::saveData);
+        return true;
     }
+
+    private void saveData(List<Pair<String, DataAnalysisListener>> pairList) {
+        for (Pair<String, DataAnalysisListener> pair : pairList) {
+            List<Tuple> dataList = pair.getValue().getDataList();
+            if (CollUtil.isNotEmpty(dataList)) {
+                for (Tuple tuple : dataList) {
+                    List<Pair<DynamicFieldTemplate, String>> oneRowDataList = tuple.get(0);
+                    UserAddDTO userAddDTO = new UserAddDTO();
+                    userAddDTO.setActualName(this.getByKey(oneRowDataList, "actualName", String.class));
+                    userAddDTO.setLoginName(this.getByKey(oneRowDataList, "loginName", String.class));
+                    userAddDTO.setGender(this.getByKey(oneRowDataList, "sex", Integer.class));
+                    userAddDTO.setDepartmentId(this.getByKey(oneRowDataList, "departmentName", Integer.class));
+                    userAddDTO.setPhone(this.getByKey(oneRowDataList, "phone", String.class));
+                    userAddDTO.setEmail(this.getByKey(oneRowDataList, "email", String.class));
+                    userAddDTO.setDisabledFlag(this.getByKey(oneRowDataList, "inactive", Boolean.class));
+                    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+                    Validator validator = factory.getValidator();
+                    Set<ConstraintViolation<UserAddDTO>> violations = validator.validate(userAddDTO);
+                    if (!violations.isEmpty()) {
+                        // 处理验证错误
+                        log.error("验证错误：{}", violations);
+                        continue;
+                    }
+                    this.insert(userAddDTO);
+                }
+            }
+        }
+    }
+
+    private <T> T getByKey(List<Pair<DynamicFieldTemplate, String>> oneRowDataList, String key, Class<T> aClass) {
+        for (Pair<DynamicFieldTemplate, String> pair : oneRowDataList) {
+            DynamicFieldTemplate dynamicFieldTemplate = pair.getKey();
+            if (StrUtil.equalsIgnoreCase(key, dynamicFieldTemplate.getCode())) {
+                return Convert.convert(aClass, pair.getValue());
+            }
+        }
+        return null;
+    }
+
+    private List<DynamicFieldTemplate> getFieldBOList(String fileName) {
+        List<DynamicFieldTemplate> fieldBOList = new ArrayList<>();
+        switch (fileName) {
+            case "部门人员模板":
+            default:
+                break;
+        }
+        return fieldBOList;
+    }
+
+
 
     private Map<String, String> getTitleMap() {
         Map<String, String> titleMap = new LinkedHashMap<>();

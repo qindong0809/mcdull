@@ -7,6 +7,8 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Pair;
+import cn.hutool.core.lang.Tuple;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ArrayUtil;
@@ -14,18 +16,24 @@ import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.read.builder.ExcelReaderBuilder;
+import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.alibaba.excel.write.style.row.SimpleRowHeightStyleStrategy;
+import io.gitee.dqcer.mcdull.business.common.excel.CustomSheetWriteHandler;
+import io.gitee.dqcer.mcdull.business.common.excel.DataAnalysisListener;
+import io.gitee.dqcer.mcdull.business.common.excel.DynamicFieldTemplate;
+import io.gitee.dqcer.mcdull.business.common.excel.IndexStyleCellWriteHandler;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
-import io.gitee.dqcer.mcdull.uac.provider.config.CustomSheetWriteHandler;
-import io.gitee.dqcer.mcdull.uac.provider.config.IndexStyleCellWriteHandler;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileExtensionTypeEnum;
@@ -39,6 +47,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -48,6 +57,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Slf4j
 @Service
@@ -111,7 +122,7 @@ public class CommonManagerImpl implements ICommonManager {
         String fileName = this.getFileName(FileExtensionTypeEnum.EXCEL_X, fileNamePrefix);
         ServletUtil.setDownloadFileHeader(response, fileName);
         try (ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream()).build()) {
-            WriteSheet writeSheet = EasyExcel.writerSheet(0, "Index")
+            WriteSheet writeSheet = EasyExcel.writerSheet(0, GlobalConstant.Excel.INDEX)
                     .registerWriteHandler(new IndexStyleCellWriteHandler())
                     .build();
             excelWriter.write(ExcelUtil.indexDataList(StrUtil.EMPTY, actualName, dateTimeStr), writeSheet);
@@ -129,6 +140,42 @@ public class CommonManagerImpl implements ICommonManager {
                 excelWriter.write(ExcelUtil.getEmptyDataList(sheetTemplateMap.get(sheetName), 30), writeSheet2);
             }
         }
+    }
+
+    @SneakyThrows
+    @Override
+    public void importExcelData(MultipartFile file, Function<String, List<DynamicFieldTemplate>> function,
+                                Consumer<List<Pair<String, DataAnalysisListener>>> consumer) {
+        String filename = file.getOriginalFilename();
+
+        InputStream inputStream = file.getInputStream();
+        ExcelReaderBuilder readerBuilder = EasyExcel.read(inputStream);
+        ExcelReader excelReader = readerBuilder.build();
+        List<ReadSheet> resultList = new LinkedList<>();
+        List<Pair<String, DataAnalysisListener>> pairList = new ArrayList<>();
+        List<ReadSheet> sheetList = excelReader.excelExecutor().sheetList();
+        for (ReadSheet readSheet : sheetList) {
+            String sheetName = readSheet.getSheetName();
+            if (StrUtil.equalsIgnoreCase(sheetName, GlobalConstant.Excel.INDEX)
+                    || StrUtil.containsIgnoreCase(sheetName, GlobalConstant.Excel.HIDDEN)) {
+                continue;
+            }
+            pairList.add(Pair.of(sheetName, new DataAnalysisListener(function.apply(sheetName))));
+        }
+        excelReader.read(resultList);
+        for (Pair<String, DataAnalysisListener> pair : pairList) {
+            List<Tuple> errorList = pair.getValue().getErrorList();
+            if (CollUtil.isNotEmpty(errorList)) {
+                StringBuilder sb = new StringBuilder();
+                for (Tuple tuple : errorList) {
+                    Object o = tuple.get(0);
+                    sb.append(o).append(StrUtil.COMMA);
+                }
+                String errorMsg = StrUtil.subBefore(sb.toString(), StrUtil.COMMA, false);
+                throw new BusinessException(errorMsg);
+            }
+        }
+        consumer.accept(pairList);
     }
 
     private Map<String, List<List<String>>> getSheetHeadMap(Map<String, List<DynamicFieldBO>> sheetTemplateMap) {

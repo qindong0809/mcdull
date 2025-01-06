@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.uac.provider.config;
+package io.gitee.dqcer.mcdull.business.common.excel;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
@@ -8,6 +8,7 @@ import com.alibaba.excel.write.handler.context.CellWriteHandlerContext;
 import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteWorkbookHolder;
 import com.alibaba.excel.write.style.column.AbstractColumnWidthStyleStrategy;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -79,7 +80,7 @@ public class CustomSheetWriteHandler extends AbstractColumnWidthStyleStrategy im
             //设置下拉框
             DataValidationHelper helper = sheet.getDataValidationHelper();
             for (Map.Entry<Integer, String[]> entry : map.entrySet()) {
-                String hiddenName = StrUtil.format("{}_{}_{}", "hidden", sheetName, entry.getKey());
+                String hiddenName = StrUtil.format("{}_{}_{}", GlobalConstant.Excel.HIDDEN, sheetName, entry.getKey());
                 //1.创建一个隐藏的sheet 名称为 hidden
                 Workbook workbook = writeWorkbookHolder.getWorkbook();
                 Sheet hidden = workbook.createSheet(hiddenName);

@@ -1,10 +1,16 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager;
 
+import cn.hutool.core.lang.Pair;
+import io.gitee.dqcer.mcdull.business.common.excel.DataAnalysisListener;
+import io.gitee.dqcer.mcdull.business.common.excel.DynamicFieldTemplate;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Common service
@@ -20,6 +26,9 @@ public interface ICommonManager {
     String convertDateByUserTimezone(Date date);
 
     void downloadExcelTemplate(Map<String, List<DynamicFieldBO>> sheetMap, String fileNamePrefix);
+
+    void importExcelData(MultipartFile file, Function<String, List<DynamicFieldTemplate>> function,
+                         Consumer<List<Pair<String, DataAnalysisListener>>> consumer);
 
     void exportExcel(String sheetName, String conditions, Map<String, String> titleMap, List<Map<String, String>> mapList);
 

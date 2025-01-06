@@ -14,8 +14,9 @@ import com.alibaba.excel.write.metadata.style.WriteFont;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.alibaba.excel.write.style.row.SimpleRowHeightStyleStrategy;
-import io.gitee.dqcer.mcdull.uac.provider.config.CustomSheetWriteHandler;
-import io.gitee.dqcer.mcdull.uac.provider.config.IndexStyleCellWriteHandler;
+import io.gitee.dqcer.mcdull.business.common.excel.CustomSheetWriteHandler;
+import io.gitee.dqcer.mcdull.business.common.excel.IndexStyleCellWriteHandler;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -107,7 +108,7 @@ public class ExcelUtil {
                                    List<List<String>> dataList) {
         ExcelWriter writer = EasyExcel.write(outputStream).head(titleList)
                 .build();
-        WriteSheet indexSheet = EasyExcel.writerSheet("Index")
+        WriteSheet indexSheet = EasyExcel.writerSheet(GlobalConstant.Excel.INDEX)
                 .registerWriteHandler(new IndexStyleCellWriteHandler())
                 .needHead(false)
                 .build();

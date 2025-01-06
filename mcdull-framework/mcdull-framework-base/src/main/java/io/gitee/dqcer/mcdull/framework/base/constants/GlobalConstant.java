@@ -130,5 +130,10 @@ public class GlobalConstant {
         public static final Integer NUMBER_20 = 20;
     }
 
+    public static class Excel {
+        public static final String INDEX = "Index";
+        public static final String HIDDEN = "hidden";
+    }
+
 }
 
