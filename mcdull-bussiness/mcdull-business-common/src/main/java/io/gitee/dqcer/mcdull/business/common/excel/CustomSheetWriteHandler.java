@@ -84,13 +84,16 @@ public class CustomSheetWriteHandler extends AbstractColumnWidthStyleStrategy im
                 //1.创建一个隐藏的sheet 名称为 hidden
                 Workbook workbook = writeWorkbookHolder.getWorkbook();
                 Sheet hidden = workbook.createSheet(hiddenName);
-                Name category1Name = workbook.createName();
-                category1Name.setNameName(hiddenName);
-                //下拉框的起始行,结束行,起始列,结束列
+                Name oldName = workbook.getName(hiddenName);
+                if (ObjectUtil.isNotNull(oldName)) {
+                    workbook.removeName(oldName);
+                }
+                Name name = workbook.createName();
+                name.setNameName(hiddenName);
+                String columnLabel = getExcelColumnLabel(entry.getKey());
+                name.setRefersToFormula(hiddenName + "!$" + columnLabel + "$1:$" + columnLabel + "$65535");
+                DataValidationConstraint constraint = helper.createFormulaListConstraint(hiddenName);
                 CellRangeAddressList addressList = new CellRangeAddressList(1, 2000, entry.getKey(), entry.getKey());
-                //获取excel列名
-                String excelLine = getExcelLine(entry.getKey());
-                //2.循环赋值
                 String[] values = entry.getValue();
                 for (int i = 0, length = values.length; i < length; i++) {
                     // 3:表示你开始的行数  3表示 你开始的列数
@@ -100,11 +103,6 @@ public class CustomSheetWriteHandler extends AbstractColumnWidthStyleStrategy im
                     }
                     row.createCell(entry.getKey()).setCellValue(values[i]);
                 }
-                //4.  =hidden!$H:$1:$H$50  sheet为hidden的 H1列开始H50行数据获取下拉数组
-                String refers = "=" + hiddenName + "!$" + excelLine +
-                        "$1:$" + excelLine + "$" + (values.length);
-                //5 将刚才设置的sheet引用到你的下拉列表中
-                DataValidationConstraint constraint = helper.createFormulaListConstraint(refers);
                 DataValidation dataValidation = helper.createValidation(constraint, addressList);
                 if (dataValidation instanceof HSSFDataValidation) {
                     dataValidation.setSuppressDropDownArrow(false);
@@ -123,22 +121,26 @@ public class CustomSheetWriteHandler extends AbstractColumnWidthStyleStrategy im
                 }
             }
         }
-
-    }
-
-    public static String getExcelLine(int num) {
-        String line = "";
-        int first = num / 26;
-        int second = num % 26;
-        if (first > 0) {
-            line = (char) ('A' + first - 1) + "";
-        }
-        line += (char) ('A' + second) + "";
-        return line;
     }
 
     private boolean isDataSheet() {
         return Convert.toInt(this.totalColumn, 0) != 0;
+    }
+
+    private static String getExcelColumnLabel(int num) {
+        String temp = "";
+        double i = Math.floor(Math.log(25.0 * (num) / 26.0 + 1) / Math.log(26)) + 1;
+        if (i > 1) {
+            double sub = num - 26 * (Math.pow(26, i - 1) - 1) / 25;
+            for (double j = i; j > 0; j--) {
+                temp = temp + (char) (sub / Math.pow(26, j - 1) + 65);
+                sub = sub % Math.pow(26, j - 1);
+            }
+        } else {
+            temp = temp + (char) (num + 65);
+        }
+        return temp;
+
     }
 
 }
