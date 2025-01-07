@@ -6,7 +6,9 @@ import io.gitee.dqcer.blaze.domain.form.CustomerInfoQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.CustomerInfoUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.CustomerInfoVO;
 import io.gitee.dqcer.blaze.service.ICustomerInfoService;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.SelectOptionVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author dqcer
@@ -30,6 +33,12 @@ public class CustomerInfoController {
     @PostMapping("/customerInfo/queryPage")
     public Result<PagedVO<CustomerInfoVO>> queryPage(@RequestBody @Valid CustomerInfoQueryDTO dto) {
         return Result.success(customerInfoService.queryPage(dto));
+    }
+
+    @Operation(summary = "全部数据")
+    @PostMapping("/customerInfo/list")
+    public Result<List<LabelValueVO<Integer, String>>> list() {
+        return Result.success(customerInfoService.list());
     }
 
     @Operation(summary = "添加")

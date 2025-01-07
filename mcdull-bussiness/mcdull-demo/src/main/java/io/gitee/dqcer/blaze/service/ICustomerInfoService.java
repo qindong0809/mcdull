@@ -4,6 +4,7 @@ import io.gitee.dqcer.blaze.domain.form.CustomerInfoAddDTO;
 import io.gitee.dqcer.blaze.domain.form.CustomerInfoQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.CustomerInfoUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.CustomerInfoVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 
 import java.util.List;
@@ -27,4 +28,6 @@ public interface ICustomerInfoService {
     void batchDelete(List<Integer> idList);
 
     PagedVO<CustomerInfoVO> queryPage(CustomerInfoQueryDTO dto);
+
+    List<LabelValueVO<Integer, String>> list();
 }

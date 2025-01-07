@@ -74,7 +74,7 @@ public class DictValueServiceImpl
         this.validNameExist(null, valueName, entityList, i -> i.getValueName().equals(valueName));
         this.validNameExist(null, valueCode, entityList, i -> i.getValueCode().equals(valueCode));
         DictValueEntity entity = baseRepository.insert(dto);
-        auditManager.saveByAddEnum(entity.getValueName(), entity.getId(), this.buildAuditLog(entity));
+//        auditManager.saveByAddEnum(entity.getValueName(), entity.getId(), this.buildAuditLog(entity));
     }
 
     private Audit buildAuditLog(DictValueEntity entity) {

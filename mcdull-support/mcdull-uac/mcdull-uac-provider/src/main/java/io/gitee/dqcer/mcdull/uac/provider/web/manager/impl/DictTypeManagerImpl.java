@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -72,6 +71,11 @@ public class DictTypeManagerImpl implements IDictTypeManager {
             return list.stream().collect(Collectors.toMap(DictValueVO::getValueCode, DictValueVO::getValueName));
         }
         return Collections.emptyMap();
+    }
+
+    @Override
+    public void clean() {
+        cacheChannel.evict(CacheConstants.DICT_LIST);
     }
 
     private Map<String, String> getMap(String selectCode) {

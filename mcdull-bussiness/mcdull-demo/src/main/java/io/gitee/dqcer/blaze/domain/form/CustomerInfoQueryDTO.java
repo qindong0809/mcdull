@@ -22,6 +22,6 @@ public class CustomerInfoQueryDTO extends PagedDTO {
     private String customerType;
 
     @Schema(description = "状态（true/已失活 false/未失活）")
-    private String inactive;
+    private Boolean inactive;
 
 }

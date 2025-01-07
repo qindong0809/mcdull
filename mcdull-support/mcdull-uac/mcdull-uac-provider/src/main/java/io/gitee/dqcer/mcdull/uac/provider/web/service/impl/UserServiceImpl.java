@@ -692,11 +692,21 @@ public class UserServiceImpl
         Map<String, List<DynamicFieldBO>> sheetHeaderMap = new HashMap<>(8);
         List<DynamicFieldBO> fieldList = new ArrayList<>();
         fieldList.add(new DynamicFieldBO("username", "姓名", true, FormItemControlTypeEnum.INPUT));
-        fieldList.add(this.getDepartmentFieldBO());
-        fieldList.add(this.getRoleFieldBO());
         fieldList.add(this.getSexFieldBO());
+        fieldList.add(new DynamicFieldBO("loginName", "登录账号", true, FormItemControlTypeEnum.INPUT));
+        fieldList.add(this.getStatusFieldBO());
+        fieldList.add(this.getRoleFieldBO());
+        fieldList.add(this.getDepartmentFieldBO());
+        fieldList.add(new DynamicFieldBO("email", "邮箱", true, FormItemControlTypeEnum.INPUT));
         sheetHeaderMap.put("模板", fieldList);
         commonManager.downloadExcelTemplate(sheetHeaderMap, "部门人员模板");
+    }
+
+    private DynamicFieldBO getStatusFieldBO() {
+        DynamicFieldBO statusBO = new DynamicFieldBO("status", "状态", true, FormItemControlTypeEnum.SELECT);
+        statusBO.setDropdownList(IEnum.getAll(InactiveEnum.class).stream().map(IEnum::getText).collect(Collectors.toList()));
+        statusBO.setExtraObj(IEnum.getAll(SexEnum.class));
+        return statusBO;
     }
 
     private DynamicFieldBO getSexFieldBO() {

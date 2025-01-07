@@ -12,6 +12,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.mapper.AreaMapper;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IAreaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -68,6 +69,16 @@ public class AreaRepositoryImpl extends
         LambdaQueryWrapper<AreaEntity> query = Wrappers.lambdaQuery();
         query.eq(AreaEntity::getCode, code);
         return baseMapper.selectOne(query);
+    }
+
+    @Override
+    public List<AreaEntity> listByCode(ArrayList<String> codeList) {
+        if (ObjUtil.isNotNull(codeList)) {
+            LambdaQueryWrapper<AreaEntity> query = Wrappers.lambdaQuery();
+            query.in(AreaEntity::getCode, codeList);
+            return baseMapper.selectList(query);
+        }
+        return Collections.emptyList();
     }
 
 }

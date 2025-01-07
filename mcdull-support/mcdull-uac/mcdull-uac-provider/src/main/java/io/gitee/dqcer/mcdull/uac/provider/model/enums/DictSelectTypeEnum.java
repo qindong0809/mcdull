@@ -68,6 +68,9 @@ public enum DictSelectTypeEnum implements IEnum<String> {
      */
     JOB_GROUP("sys_job_group", "任务组"),
 
+    CUSTOMER_TYPE("CUSTOMER_TYPE", "客户类型"),
+    IN_ACTIVE("IN_ACTIVE", "状态"),
+
 
     ;
 

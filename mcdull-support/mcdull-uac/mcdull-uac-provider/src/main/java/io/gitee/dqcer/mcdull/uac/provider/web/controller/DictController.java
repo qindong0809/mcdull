@@ -7,6 +7,7 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DictKeyVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DictValueVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IDictTypeManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDictKeyService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDictValueService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,6 +33,9 @@ public class DictController extends BasicController {
 
     @Resource
     private IDictValueService dictValueService;
+
+    @Resource
+    private IDictTypeManager dictTypeManager;
 
 
     @Operation(summary = "查询全部")
@@ -76,8 +80,7 @@ public class DictController extends BasicController {
     @GetMapping("/dict/cache/refresh")
     @SaCheckPermission("support:dict:refresh")
     public Result<String> cacheRefresh() {
-//         dictCacheService.cacheRefresh();
-        Integer.parseInt("ee");
+        dictTypeManager.clean();
         return null;
     }
 

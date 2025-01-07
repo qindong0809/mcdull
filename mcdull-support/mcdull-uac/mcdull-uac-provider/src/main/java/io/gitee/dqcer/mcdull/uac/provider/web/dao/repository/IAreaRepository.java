@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.AreaQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.AreaEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -56,4 +57,12 @@ public interface IAreaRepository extends IRepository<AreaEntity> {
      * @return {@link AreaEntity}
      */
     AreaEntity getCode(String code);
+
+    /**
+     * 根据code获取地区
+     *
+     * @param codeList codeList
+     * @return {@link List}<{@link AreaEntity}>
+     */
+    List<AreaEntity> listByCode(ArrayList<String> codeList);
 }

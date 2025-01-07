@@ -27,9 +27,11 @@ public interface IDictTypeManager {
     /**
      * code Name
      *
-     * @param codeList   codeList
      * @param selectTypeEnum selectTypeEnum
      * @return {@link Map}<{@link String}, {@link String}>
      */
     Map<String, String> codeNameMap(IEnum<String> selectTypeEnum);
+
+    void clean();
+
 }

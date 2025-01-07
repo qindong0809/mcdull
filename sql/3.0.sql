@@ -284,6 +284,8 @@ create table `sys_dict_key`  (
 primary key (`id`) using btree
 ) comment = '字段key';
 INSERT INTO `sys_dict_key` VALUES (1, 'GODOS_PLACE', '商品产地', '商品产地的字典', 0, sysdate(), sysdate());
+INSERT INTO `sys_dict_key` VALUES (2, 'IN_ACTIVE', '失活标识', 'true/停用 false/启用 ', 0, sysdate(), sysdate());
+INSERT INTO `sys_dict_key` VALUES (3, 'CUSTOMER_TYPE', '客户类型', ' ', 0, sysdate(), sysdate());
 
 drop table if exists `sys_dict_value`;
 create table `sys_dict_value`  (
@@ -303,6 +305,14 @@ primary key (`id`) using btree
 insert into `sys_dict_value` values (1, 1, 'luo_yang',  '洛阳', '', 1, 0, sysdate(), sysdate());
 insert into `sys_dict_value` values (2, 1, 'zheng_zhou', '郑州', '', 2, 0, sysdate(), sysdate());
 insert into `sys_dict_value` values (3, 1, 'bei_jing', '北京', '', 3, 0, sysdate(), sysdate());
+
+insert into `sys_dict_value` values (4, 2, 'false', '启用', '', 1, 0, sysdate(), sysdate());
+insert into `sys_dict_value` values (5, 2, 'true', '停用', '', 1, 0, sysdate(), sysdate());
+
+insert into `sys_dict_value` values (6, 3, '1', '私企', '', 1, 0, sysdate(), sysdate());
+insert into `sys_dict_value` values (7, 3, '2', '国企', '', 1, 0, sysdate(), sysdate());
+insert into `sys_dict_value` values (8, 3, '3', '同行中介', '', 1, 0, sysdate(), sysdate());
+insert into `sys_dict_value` values (9, 3, '4', '资质公司', '', 1, 0, sysdate(), sysdate());
 
 drop table if exists `sys_config`;
 create table `sys_config`  (
@@ -837,3 +847,29 @@ create table `sys_biz_audit_field` (
 primary key (`id`) using btree,
 key `idx_biz_audit_id` (`biz_audit_id`) using btree
 ) comment='Biz Audit';
+
+drop table if exists `blaze_certificate_requirements`;
+create table blaze_certificate_requirements (
+`id` int auto_increment primary key,
+`certificate_level` int not null comment '证书级别',
+`specialty` int not null comment '专业',
+`province` int not null comment '单位所在省',
+`city` int not null comment '单位所在市',
+`quantity` int not null comment '数量',
+`title` varchar(255) not null comment '职称 1/无 2/初级 3/中级 4/高级 5/不限',
+`initial_or_transfer` int not null comment '初始/转注（1/无 2/初始 3/转注 4/其它）',
+`certificate_status` int not null comment '证书状态（1/正常 2/不正常）',
+`position_contract_price` decimal(10, 2) not null comment '职位合同价',
+`other_costs` decimal(10, 2) not null comment '其他费用',
+`actual_position_price` decimal(10, 2) not null comment '职位实际价',
+`duration` int not null comment '期限（月）',
+`bidding_exit` int not null comment '招标出场（1、可出场不招标 2、不出场可招标 3、出场招标 4、项目 5、资质 6、其它情况）',
+`three_personnel` int not null comment '三类人员（1、无 2、有A证 3、有B证 4、有C证 5、可考A证 6、可考B证 7、可考C证 8、不考A证 9、不考B证 10、不考C证 11、其它）',
+`social_security_requirement` int not null comment '社保要求（1、无社保 2、唯一社保可转 3、唯一社保可停 4、国企社保非唯一 5、私企社保非唯一 ）',
+`position_source` int not null comment '职位来源（1、企业直签 2、同行中介）',
+`position_title` varchar(255) not null comment '职位标题',
+`remarks` text comment '备注',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间'
+) comment='证书需求表';
