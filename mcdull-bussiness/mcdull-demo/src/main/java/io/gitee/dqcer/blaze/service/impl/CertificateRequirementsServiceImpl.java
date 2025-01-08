@@ -2,22 +2,26 @@ package io.gitee.dqcer.blaze.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.blaze.dao.repository.ICertificateRequirementsRepository;
 import io.gitee.dqcer.blaze.domain.entity.CertificateRequirementsEntity;
+import io.gitee.dqcer.blaze.domain.enums.*;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsAddDTO;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.CertificateRequirementsVO;
-
-import java.util.ArrayList;
-import java.util.List;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 证书需求表 Service
@@ -30,13 +34,51 @@ import org.springframework.transaction.annotation.Transactional;
 public class CertificateRequirementsServiceImpl
         extends BasicServiceImpl<ICertificateRequirementsRepository> implements ICertificateRequirementsService {
 
+    @Resource
+    private IAreaManager areaManager;
+
     public PagedVO<CertificateRequirementsVO> queryPage(CertificateRequirementsQueryDTO dto) {
         List<CertificateRequirementsVO> voList = new ArrayList<>();
         Page<CertificateRequirementsEntity> entityPage = baseRepository.selectPage(dto);
         List<CertificateRequirementsEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
+            Set<String> provinceSet = recordList.stream().map(CertificateRequirementsEntity::getProvince).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+            Set<String> all = new HashSet<>(provinceSet);
+            Set<String> citySet = recordList.stream().map(CertificateRequirementsEntity::getCity).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+            if (CollUtil.isNotEmpty(citySet)) {
+                all.addAll(citySet);
+            }
+            Map<String, String> areaMap = areaManager.map(all);
             for (CertificateRequirementsEntity entity : recordList) {
                 CertificateRequirementsVO vo = this.convertToVO(entity);
+                Integer title = vo.getTitle();
+                if (ObjUtil.isNotNull(title)) {
+                    vo.setTitleName(IEnum.getTextByCode(CertificateTitleEnum.class, title));
+                }
+                Integer initialOrTransfer = vo.getInitialOrTransfer();
+                if (ObjUtil.isNotNull(initialOrTransfer)) {
+                    vo.setInitialOrTransferName(IEnum.getTextByCode(CertificateInitialOrTransferEnum.class, initialOrTransfer));
+                }
+                Integer certificateStatus = vo.getCertificateStatus();
+                if (ObjUtil.isNotNull(certificateStatus)) {
+                    vo.setCertificateStatusName(IEnum.getTextByCode(CertificateStatusEnum.class, certificateStatus));
+                }
+                Integer biddingExit = vo.getBiddingExit();
+                if (ObjUtil.isNotNull(biddingExit)) {
+                    vo.setBiddingExitName(IEnum.getTextByCode(CertificateBiddingExitEnum.class, biddingExit));
+                }
+                Integer threePersonnel = vo.getThreePersonnel();
+                if (ObjUtil.isNotNull(threePersonnel)) {
+                    vo.setThreePersonnelName(IEnum.getTextByCode(CertificateThreePersonnerEnum.class, threePersonnel));
+                }
+                Integer socialSecurityRequirement = vo.getSocialSecurityRequirement();
+                if (ObjUtil.isNotNull(socialSecurityRequirement)) {
+                    vo.setSocialSecurityRequirementName(IEnum.getTextByCode(CertificateSocialSecurityRequirementEnum.class, socialSecurityRequirement));
+                }
+                Integer positionSource = vo.getPositionSource();
+                if (ObjUtil.isNotNull(positionSource)) {
+                    vo.setPositionSourceName(IEnum.getTextByCode(CertificatePositionSourceEnum.class, positionSource));
+                }
                 voList.add(vo);
             }
         }
