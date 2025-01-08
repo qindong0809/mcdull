@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.blaze.dao.repository.ICertificateRequirementsRepository;
+import io.gitee.dqcer.blaze.domain.bo.CertificateBO;
 import io.gitee.dqcer.blaze.domain.entity.CertificateRequirementsEntity;
 import io.gitee.dqcer.blaze.domain.enums.*;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsAddDTO;
@@ -11,11 +12,14 @@ import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.CertificateRequirementsVO;
 import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
+import io.gitee.dqcer.blaze.service.ICustomerInfoService;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
+import io.gitee.dqcer.util.CertificateUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +33,6 @@ import java.util.stream.Collectors;
  * @author dqcer
  * @since 2025-01-07 21:32:34
  */
-
 @Service
 public class CertificateRequirementsServiceImpl
         extends BasicServiceImpl<ICertificateRequirementsRepository> implements ICertificateRequirementsService {
@@ -37,20 +40,38 @@ public class CertificateRequirementsServiceImpl
     @Resource
     private IAreaManager areaManager;
 
+    @Resource
+    private ICustomerInfoService customerInfoService;
+
     public PagedVO<CertificateRequirementsVO> queryPage(CertificateRequirementsQueryDTO dto) {
         List<CertificateRequirementsVO> voList = new ArrayList<>();
         Page<CertificateRequirementsEntity> entityPage = baseRepository.selectPage(dto);
         List<CertificateRequirementsEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
-            Set<String> provinceSet = recordList.stream().map(CertificateRequirementsEntity::getProvince).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
-            Set<String> all = new HashSet<>(provinceSet);
-            Set<String> citySet = recordList.stream().map(CertificateRequirementsEntity::getCity).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
-            if (CollUtil.isNotEmpty(citySet)) {
-                all.addAll(citySet);
-            }
-            Map<String, String> areaMap = areaManager.map(all);
+            List<LabelValueVO<Integer, String>> customerInfoList = customerInfoService.list();
+            Map<Integer, CertificateBO> certificateMap = CertificateUtil.getCertificateMap();
             for (CertificateRequirementsEntity entity : recordList) {
                 CertificateRequirementsVO vo = this.convertToVO(entity);
+                vo.setCustomerName(customerInfoList.stream()
+                        .filter(v -> v.getValue().equals(vo.getCustomerId()))
+                        .map(LabelValueVO::getLabel)
+                        .findFirst().orElse(""));
+                Integer certificateLevel = vo.getCertificateLevel();
+                if (ObjUtil.isNotNull(certificateLevel)) {
+                    CertificateBO certificateBO = certificateMap.get(certificateLevel);
+                    if (ObjUtil.isNotNull(certificateBO)) {
+                        vo.setCertificateLevelName(certificateBO.getName());
+                        Integer specialty = vo.getSpecialty();
+                        if (ObjUtil.isNotNull(specialty)) {
+                            List<CertificateBO.Major> majorList = certificateBO.getMajorList();
+                            String name = majorList.stream()
+                                    .filter(v -> v.getCode().equals(specialty))
+                                    .map(CertificateBO.Major::getName)
+                                    .findFirst().orElse("");
+                            vo.setSpecialtyName(name);
+                        }
+                    }
+                }
                 Integer title = vo.getTitle();
                 if (ObjUtil.isNotNull(title)) {
                     vo.setTitleName(IEnum.getTextByCode(CertificateTitleEnum.class, title));
@@ -80,6 +101,8 @@ public class CertificateRequirementsServiceImpl
                     vo.setPositionSourceName(IEnum.getTextByCode(CertificatePositionSourceEnum.class, positionSource));
                 }
                 voList.add(vo);
+                areaManager.set(voList);
+
             }
         }
         return PageUtil.toPage(voList, entityPage);
@@ -88,10 +111,11 @@ public class CertificateRequirementsServiceImpl
     private CertificateRequirementsVO convertToVO(CertificateRequirementsEntity item){
         CertificateRequirementsVO vo = new CertificateRequirementsVO();
         vo.setId(item.getId());
+        vo.setCustomerId(item.getCustomerId());
         vo.setCertificateLevel(item.getCertificateLevel());
         vo.setSpecialty(item.getSpecialty());
-        vo.setProvince(item.getProvince());
-        vo.setCity(item.getCity());
+        vo.setProvincesCode(item.getProvincesCode());
+        vo.setCityCode(item.getCityCode());
         vo.setQuantity(item.getQuantity());
         vo.setTitle(item.getTitle());
         vo.setInitialOrTransfer(item.getInitialOrTransfer());
@@ -111,10 +135,11 @@ public class CertificateRequirementsServiceImpl
 
     private void setUpdateFieldValue(CertificateRequirementsUpdateDTO item, CertificateRequirementsEntity entity){
         entity.setId(item.getId());
+        entity.setCustomerId(item.getCustomerId());
         entity.setCertificateLevel(item.getCertificateLevel());
         entity.setSpecialty(item.getSpecialty());
-        entity.setProvince(item.getProvince());
-        entity.setCity(item.getCity());
+        entity.setProvincesCode(item.getProvincesCode());
+        entity.setCityCode(item.getCityCode());
         entity.setQuantity(item.getQuantity());
         entity.setTitle(item.getTitle());
         entity.setInitialOrTransfer(item.getInitialOrTransfer());
@@ -132,11 +157,12 @@ public class CertificateRequirementsServiceImpl
     }
 
     private CertificateRequirementsEntity convertToEntity(CertificateRequirementsAddDTO item){
-            CertificateRequirementsEntity entity = new CertificateRequirementsEntity();
+        CertificateRequirementsEntity entity = new CertificateRequirementsEntity();
+        entity.setCustomerId(item.getCustomerId());
         entity.setCertificateLevel(item.getCertificateLevel());
         entity.setSpecialty(item.getSpecialty());
-        entity.setProvince(item.getProvince());
-        entity.setCity(item.getCity());
+        entity.setProvincesCode(item.getProvincesCode());
+        entity.setCityCode(item.getCityCode());
         entity.setQuantity(item.getQuantity());
         entity.setTitle(item.getTitle());
         entity.setInitialOrTransfer(item.getInitialOrTransfer());

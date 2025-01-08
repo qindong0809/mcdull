@@ -18,6 +18,10 @@ import java.math.BigDecimal;
 @Data
 public class CertificateRequirementsAddDTO implements DTO {
 
+    @Schema(description = "客户id", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "客户id 不能为空")
+    private Integer customerId;
+
     @Schema(description = "证书级别", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "证书级别 不能为空")
     private Integer certificateLevel;
@@ -28,18 +32,18 @@ public class CertificateRequirementsAddDTO implements DTO {
 
     @Schema(description = "单位所在省", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "单位所在省 不能为空")
-    private String province;
+    private String provincesCode;
 
     @Schema(description = "单位所在市", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "单位所在市 不能为空")
-    private String city;
+    private String cityCode;
 
     @Schema(description = "数量", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "数量 不能为空")
     private Integer quantity;
 
     @Schema(description = "职称", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "职称 不能为空")
+    @NotNull(message = "职称 不能为空")
     private Integer title;
 
     @Schema(description = "初始/转注", requiredMode = Schema.RequiredMode.REQUIRED)

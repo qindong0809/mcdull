@@ -1,7 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.AreaEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.IArea;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IAreaRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IDictTypeManager;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *  码表通用逻辑实现类
@@ -40,5 +43,29 @@ public class AreaManagerImpl implements IAreaManager {
             }
         }
         return Collections.emptyMap();
+    }
+
+    @Override
+    public <T extends IArea> void set(List<T> list) {
+        if (CollUtil.isNotEmpty(list)) {
+            Set<String> provincesSet = list.stream().map(IArea::getProvincesCode).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+            Set<String> citySet = list.stream().map(IArea::getCityCode).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+            Set<String> codList = new HashSet<>(provincesSet.size() + citySet.size());
+            if (CollUtil.isNotEmpty(provincesSet)) {
+                codList.addAll(provincesSet);
+            }
+            if (CollUtil.isNotEmpty(citySet)) {
+                codList.addAll(citySet);
+            }
+            Map<String, String> map = this.map(codList);
+            for (T t : list) {
+                if (ObjUtil.isNotNull(t.getProvincesCode())) {
+                    t.setProvincesName(map.get(t.getProvincesCode()));
+                }
+                if (ObjUtil.isNotNull(t.getCityCode())) {
+                    t.setCityName(map.get(t.getCityCode()));
+                }
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package io.gitee.dqcer.blaze.domain.vo;
 
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.IArea;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -14,11 +15,17 @@ import java.math.BigDecimal;
  */
 
 @Data
-public class CertificateRequirementsVO implements VO {
+public class CertificateRequirementsVO implements IArea, VO {
 
 
     @Schema(description = "id")
     private Integer id;
+
+    @Schema(description = "客户id")
+    private Integer customerId;
+
+    @Schema(description = "客户名称")
+    private String customerName;
 
     @Schema(description = "证书级别")
     private Integer certificateLevel;
@@ -32,16 +39,16 @@ public class CertificateRequirementsVO implements VO {
     @Schema(description = "专业名称")
     private String specialtyName;
 
-    @Schema(description = "单位所在省")
-    private String province;
+    @Schema(description = "所在地省代码")
+    private String provincesCode;
 
-    @Schema(description = "单位所在省名称")
-    private String provinceName;
+    @Schema(description = "所在地省名称")
+    private String provincesName;
 
-    @Schema(description = "单位所在市")
-    private String city;
+    @Schema(description = "所在市代码")
+    private String cityCode;
 
-    @Schema(description = "单位所在市名称")
+    @Schema(description = "所在市名称")
     private String cityName;
 
     @Schema(description = "数量")

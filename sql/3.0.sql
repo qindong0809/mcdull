@@ -851,10 +851,11 @@ key `idx_biz_audit_id` (`biz_audit_id`) using btree
 drop table if exists `blaze_certificate_requirements`;
 create table blaze_certificate_requirements (
 `id` int auto_increment primary key,
+`customer_id` int not null comment '所属公司',
 `certificate_level` int not null comment '证书级别',
 `specialty` int not null comment '专业',
-`province` int not null comment '单位所在省',
-`city` int not null comment '单位所在市',
+`provinces_code` varchar(64) not null comment '单位所在省',
+`city_code` varchar(64) not null comment '单位所在市',
 `quantity` int not null comment '数量',
 `title` varchar(255) not null comment '职称 1/无 2/初级 3/中级 4/高级 5/不限',
 `initial_or_transfer` int not null comment '初始/转注（1/无 2/初始 3/转注 4/其它）',

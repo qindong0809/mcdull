@@ -53,17 +53,6 @@ public class CustomerInfoServiceImpl
             Set<Integer> userIdSet = recordList.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
             Set<Integer> collect = recordList.stream().map(BaseEntity::getUpdatedBy).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
             userIdSet.addAll(collect);
-            Set<String> codList = new HashSet<>();
-            Set<String> provinceList = recordList.stream().map(CustomerInfoEntity::getProvincesCode)
-                    .filter(ObjUtil::isNotNull).collect(Collectors.toSet());
-            if (CollUtil.isNotEmpty(provinceList)) {
-                codList.addAll(provinceList);
-            }
-            Set<String> cityList = recordList.stream().map(CustomerInfoEntity::getCityCode).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
-            if (CollUtil.isNotEmpty(cityList)) {
-                codList.addAll(cityList);
-            }
-            Map<String, String> areaMap = areaManager.map(codList);
             Map<Integer, String> nameMap = userManager.getNameMap(new ArrayList<>(userIdSet));
             for (CustomerInfoEntity entity : recordList) {
                 CustomerInfoVO vo = this.convertToVO(entity);
@@ -77,10 +66,9 @@ public class CustomerInfoServiceImpl
                 }
                 vo.setCreatedName(nameMap.get(vo.getCreatedBy()));
                 vo.setUpdatedName(nameMap.get(vo.getUpdatedBy()));
-                vo.setProvincesName(areaMap.get(vo.getProvincesCode()));
-                vo.setCityName(areaMap.get(vo.getCityCode()));
                 voList.add(vo);
             }
+            areaManager.set(voList);
         }
         return PageUtil.toPage(voList, entityPage);
     }

@@ -44,10 +44,10 @@ public class CertificateRequirementsController extends BasicController {
     }
 
     @Operation(summary = "专业")
-    @GetMapping("/CertificateRequirements/getMajorList")
-    public Result<List<LabelValueVO<Integer, String>>> getMajorList(PkDTO parentIdDTO) {
+    @GetMapping("/CertificateRequirements/getMajorList/{code}")
+    public Result<List<LabelValueVO<Integer, String>>> getMajorList(@PathVariable Integer code) {
         Map<Integer, CertificateBO> certificateMap = CertificateUtil.getCertificateMap();
-        return Result.success(certificateMap.get(parentIdDTO.getId()).getMajorList().stream()
+        return Result.success(certificateMap.get(code).getMajorList().stream()
                 .map(v -> new LabelValueVO<>(v.getCode(), v.getName())).collect(Collectors.toList()));
     }
 

@@ -1,5 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager;
 
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.IArea;
+
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,4 +14,6 @@ import java.util.Set;
 public interface IAreaManager {
 
     Map<String, String> map(Set<String> codeSet);
+
+    <T extends IArea> void set(List<T> list);
 }

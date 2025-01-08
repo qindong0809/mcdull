@@ -7,4 +7,6 @@ public interface IArea {
     void setProvincesName(String provincesName);
 
     String getCityCode();
+
+    void setCityName(String cityName);
 }

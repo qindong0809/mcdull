@@ -19,6 +19,8 @@ import java.math.BigDecimal;
 @TableName("blaze_certificate_requirements")
 public class CertificateRequirementsEntity extends RelEntity<Integer> {
 
+    private Integer customerId;
+
     /**
      * 证书级别
      */
@@ -30,11 +32,11 @@ public class CertificateRequirementsEntity extends RelEntity<Integer> {
     /**
      * 单位所在省
      */
-    private String province;
+    private String provincesCode;
     /**
      * 单位所在市
      */
-    private String city;
+    private String cityCode;
     /**
      * 数量
      */

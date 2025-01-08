@@ -22,6 +22,10 @@ public class CertificateRequirementsUpdateDTO implements DTO {
     @NotNull(message = "id 不能为空")
     private Integer id;
 
+    @Schema(description = "客户id", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "客户id 不能为空")
+    private Integer customerId;
+
     @Schema(description = "证书级别", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "证书级别 不能为空")
     private Integer certificateLevel;
@@ -32,11 +36,11 @@ public class CertificateRequirementsUpdateDTO implements DTO {
 
     @Schema(description = "单位所在省", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "单位所在省 不能为空")
-    private String province;
+    private String provincesCode;
 
     @Schema(description = "单位所在市", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "单位所在市 不能为空")
-    private String city;
+    private String cityCode;
 
     @Schema(description = "数量", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "数量 不能为空")
