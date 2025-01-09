@@ -6,7 +6,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.AreaEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.IArea;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IAreaRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
-import io.gitee.dqcer.mcdull.uac.provider.web.manager.IDictTypeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -1,5 +1,6 @@
 package io.gitee.dqcer.blaze.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.ListUtil;
 import io.gitee.dqcer.blaze.domain.bo.CertificateBO;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsAddDTO;
@@ -7,7 +8,6 @@ import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.CertificateRequirementsVO;
 import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
-import io.gitee.dqcer.mcdull.framework.base.dto.PkDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -55,6 +55,18 @@ public class CertificateRequirementsController extends BasicController {
     @PostMapping("/CertificateRequirements/queryPage")
     public Result<PagedVO<CertificateRequirementsVO>> queryPage(@RequestBody @Valid CertificateRequirementsQueryDTO dto) {
         return Result.success(certificateRequirementsService.queryPage(dto));
+    }
+
+    @Operation(summary = "导出数据")
+    @PostMapping(value = "CertificateRequirements/list/record-export", produces = "application/octet-stream")
+    public void exportData() {
+        certificateRequirementsService.exportData();
+    }
+
+    @Operation(summary = "下载模板")
+    @PostMapping(value = "CertificateRequirements/list/download-template", produces = "application/octet-stream")
+    public void downloadTemplate() {
+        certificateRequirementsService.downloadTemplate();
     }
 
     @Operation(summary = "添加")
