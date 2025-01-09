@@ -1,11 +1,15 @@
 package io.gitee.dqcer.blaze.domain.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.IArea;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 证书需求表 列表VO
@@ -113,5 +117,10 @@ public class CertificateRequirementsVO implements IArea, VO {
 
     @Schema(description = "备注")
     private String remarks;
+
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    @Schema(description = "创建时间")
+    private Date createdTime;
 
 }

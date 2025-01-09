@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.business.common.excel;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.write.handler.SheetWriteHandler;
@@ -13,6 +14,8 @@ import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +54,14 @@ public class CustomSheetWriteHandler extends AbstractColumnWidthStyleStrategy im
 
     public CustomSheetWriteHandler(Integer totalColumn) {
         this(Collections.emptyMap(), Collections.emptyList(), Collections.emptyMap(), StrUtil.EMPTY, true, totalColumn);
+    }
+
+    @Override
+    public void afterCellDispose(CellWriteHandlerContext context) {
+        if (BooleanUtil.isTrue(context.getHead())) {
+            Workbook workbook = context.getWriteWorkbookHolder().getWorkbook();
+            this.keywordColorRed(context.getCell(), (SXSSFWorkbook) workbook, true);
+        }
     }
 
     @Override
@@ -141,6 +152,28 @@ public class CustomSheetWriteHandler extends AbstractColumnWidthStyleStrategy im
         }
         return temp;
 
+    }
+
+    private void keywordColorRed(Cell cell, SXSSFWorkbook workbook, boolean isBold) {
+        Font font = getXssfFont(workbook, isBold);
+        String stringCellValue = cell.getStringCellValue();
+        if (stringCellValue.contains("*")) {
+            XSSFRichTextString xssfRichTextString = new XSSFRichTextString(stringCellValue);
+            xssfRichTextString.applyFont(font);
+
+            Font font1 = getXssfFont(workbook, isBold);
+            font1.setColor(IndexedColors.RED.getIndex());
+            int indexOf = stringCellValue.indexOf("*");
+            xssfRichTextString.applyFont(indexOf, indexOf + 1, font1);
+            cell.setCellValue(xssfRichTextString);
+        }
+    }
+
+    private static Font getXssfFont(SXSSFWorkbook workbook, boolean isBold) {
+        Font font1 = workbook.createFont();
+        font1.setFontName("Calibri");
+        font1.setBold(isBold);
+        return font1;
     }
 
 }

@@ -1,9 +1,11 @@
 package io.gitee.dqcer.mcdull.uac.provider.model.bo;
 
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
 import lombok.Data;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 动态字段
@@ -35,5 +37,12 @@ public class DynamicFieldBO {
         this.name = name;
         this.required = required;
         this.controlTypeEnum = controlTypeEnum;
+    }
+    @SuppressWarnings("unchecked")
+    public DynamicFieldBO(String code, String name, Boolean required, FormItemControlTypeEnum controlTypeEnum, Class clazz) {
+        this(code, name, required, controlTypeEnum);
+        List<IEnum<Integer>> list = IEnum.getAll(clazz);
+        this.extraObj = list;
+        this.dropdownList = list.stream().map(IEnum::getText).collect(Collectors.toList());
     }
 }

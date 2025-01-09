@@ -22,11 +22,11 @@ public interface ICertificateRequirementsService {
 
     void update(CertificateRequirementsUpdateDTO dto);
 
-    CertificateRequirementsVO detail(Integer id);
-
     void batchDelete(List<Integer> idList);
 
-    void delete(Integer id);
-
     PagedVO<CertificateRequirementsVO> queryPage(CertificateRequirementsQueryDTO dto);
+
+    void exportData();
+
+    void downloadTemplate();
 }
