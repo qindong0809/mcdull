@@ -47,7 +47,7 @@ public class CertificateRequirementsUpdateDTO implements DTO {
     private Integer quantity;
 
     @Schema(description = "职称", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "职称 不能为空")
+    @NotNull(message = "职称 不能为空")
     private Integer title;
 
     @Schema(description = "初始/转注", requiredMode = Schema.RequiredMode.REQUIRED)

@@ -77,13 +77,13 @@ public class CertificateRequirementsVO implements IArea, VO {
     private String certificateStatusName;
 
     @Schema(description = "职位合同价")
-    private BigDecimal positionContractPrice;
+    private String positionContractPrice;
 
     @Schema(description = "其他费用")
-    private BigDecimal otherCosts;
+    private String otherCosts;
 
     @Schema(description = "职位实际价")
-    private BigDecimal actualPositionPrice;
+    private String actualPositionPrice;
 
     @Schema(description = "期限（月）")
     private Integer duration;
