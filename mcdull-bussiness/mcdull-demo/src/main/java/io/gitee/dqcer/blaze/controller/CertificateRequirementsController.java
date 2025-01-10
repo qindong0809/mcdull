@@ -1,6 +1,5 @@
 package io.gitee.dqcer.blaze.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.ListUtil;
 import io.gitee.dqcer.blaze.domain.bo.CertificateBO;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsAddDTO;

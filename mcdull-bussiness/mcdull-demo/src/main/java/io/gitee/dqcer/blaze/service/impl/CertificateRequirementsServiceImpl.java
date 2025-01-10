@@ -1,6 +1,8 @@
 package io.gitee.dqcer.blaze.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -29,6 +31,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,6 +67,18 @@ public class CertificateRequirementsServiceImpl
             Map<Integer, CertificateBO> certificateMap = CertificateUtil.getCertificateMap();
             for (CertificateRequirementsEntity entity : recordList) {
                 CertificateRequirementsVO vo = this.convertToVO(entity);
+                BigDecimal positionContractPrice = entity.getPositionContractPrice();
+                if (ObjUtil.isNotNull(positionContractPrice)) {
+                    vo.setPositionContractPrice(positionContractPrice.setScale(2, RoundingMode.HALF_UP).toString());
+                }
+                BigDecimal otherCosts = entity.getOtherCosts();
+                if (ObjUtil.isNotNull(otherCosts)) {
+                    vo.setOtherCosts(otherCosts.setScale(2, RoundingMode.HALF_UP).toString());
+                }
+                BigDecimal actualPositionPrice = entity.getActualPositionPrice();
+                if (ObjUtil.isNotNull(actualPositionPrice)) {
+                    vo.setActualPositionPrice(actualPositionPrice.setScale(2, RoundingMode.HALF_UP).toString());
+                }
                 vo.setCustomerName(customerInfoList.stream()
                         .filter(v -> v.getValue().equals(vo.getCustomerId()))
                         .map(LabelValueVO::getLabel)
@@ -239,9 +255,6 @@ public class CertificateRequirementsServiceImpl
         vo.setTitle(item.getTitle());
         vo.setInitialOrTransfer(item.getInitialOrTransfer());
         vo.setCertificateStatus(item.getCertificateStatus());
-        vo.setPositionContractPrice(item.getPositionContractPrice());
-        vo.setOtherCosts(item.getOtherCosts());
-        vo.setActualPositionPrice(item.getActualPositionPrice());
         vo.setDuration(item.getDuration());
         vo.setBiddingExit(item.getBiddingExit());
         vo.setThreePersonnel(item.getThreePersonnel());
