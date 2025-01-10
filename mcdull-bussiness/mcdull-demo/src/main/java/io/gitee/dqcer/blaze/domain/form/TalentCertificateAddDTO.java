@@ -9,22 +9,18 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
- * 证书需求表 更新表单
+ * 证书需求表 新建表单
  *
  * @author dqcer
  * @since 2025-01-07 21:32:34
  */
 
 @Data
-public class CertificateRequirementsUpdateDTO implements DTO {
+public class TalentCertificateAddDTO implements DTO {
 
-    @Schema(description = "id", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "id 不能为空")
-    private Integer id;
-
-    @Schema(description = "客户id", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "客户id 不能为空")
-    private Integer customerId;
+    @Schema(description = "证书id", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "证书id 不能为空")
+    private Integer talentId;
 
     @Schema(description = "证书级别", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "证书级别 不能为空")

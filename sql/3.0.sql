@@ -857,7 +857,7 @@ create table blaze_certificate_requirements (
 `provinces_code` varchar(64) not null comment '单位所在省',
 `city_code` varchar(64) not null comment '单位所在市',
 `quantity` int not null comment '数量',
-`title` varchar(255) not null comment '职称 1/无 2/初级 3/中级 4/高级 5/不限',
+`title` int not null comment '职称 1/无 2/初级 3/中级 4/高级 5/不限',
 `initial_or_transfer` int not null comment '初始/转注（1/无 2/初始 3/转注 4/其它）',
 `certificate_status` int not null comment '证书状态（1/正常 2/不正常）',
 `position_contract_price` decimal(10, 2) not null comment '职位合同价',
@@ -875,17 +875,45 @@ create table blaze_certificate_requirements (
 `updated_time` datetime default null comment '更新时间'
 ) comment='证书需求表';
 
-create table talent (
-id int auto_increment primary key,
-name varchar(255) not null comment '姓名',
-id_number varchar(18) not null unique comment '身份证号',
-contact_number varchar(15) not null comment '联系电话',
-work_unit_type varchar(100) not null comment '工作单位性质',
-social_security_status int  not null comment '社保状态',
-social_security_location varchar(100) not null comment '社保所在地',
-gender enum('男', '女', '其他') not null,
-title varchar(100) not null comment '职称',
+drop table if exists `blaze_talent`;
+create table `blaze_talent` (
+`id` int auto_increment primary key,
+`name` varchar(255) not null comment '姓名',
+`id_number` varchar(18) not null unique comment '身份证号',
+`contact_number` varchar(15) not null comment '联系电话',
+`work_unit_type` int not null comment '工作单位性质 1、私企 2、国企 3、其它',
+`social_security_status` int  not null comment '社保状态 1、无社保 2、唯一社保可转 3、唯一社保可停 4、国企社保非唯一 5、私企社保非唯一 ',
+`provinces_code` varchar(64) not null comment '社保所在省',
+`city_code` varchar(64) not null comment '社保所在市',
+`gender` int not null comment '性别 0、未知 1、男 2、女 9、不明',
+`title` varchar(100) not null comment '职称 1/无 2/初级 3/中级 4/高级 5/不限',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间'
-);
+) comment='人才表';
+
+drop table if exists `blaze_talent_certificate`;
+create table blaze_talent_certificate (
+`id` int auto_increment primary key,
+`talent_id` int not null comment '所属人才',
+`certificate_level` int not null comment '证书级别',
+`specialty` int not null comment '专业',
+`provinces_code` varchar(64) not null comment '发证所在省',
+`city_code` varchar(64) not null comment '发证所在市',
+`title` int not null comment '职称 1/无 2/初级 3/中级 4/高级 5/不限',
+`initial_or_transfer` int not null comment '初始/转注（1/无 2/初始 3/转注 4/其它）',
+`certificate_status` int not null comment '证书状态（1/正常 2/不正常）',
+`position_contract_price` decimal(10, 2) not null comment '证书合同价',
+`other_costs` decimal(10, 2) not null comment '其他费用',
+`actual_position_price` decimal(10, 2) not null comment '证书实际价',
+`duration` int not null comment '期限（月）',
+`bidding_exit` int not null comment '招标出场（1、可出场不招标 2、不出场可招标 3、出场招标 4、项目 5、资质 6、其它情况）',
+`three_personnel` int not null comment '三类人员（1、无 2、有A证 3、有B证 4、有C证 5、可考A证 6、可考B证 7、可考C证 8、不考A证 9、不考B证 10、不考C证 11、其它）',
+`social_security_requirement` int not null comment '社保要求（1、无社保 2、唯一社保可转 3、唯一社保可停 4、国企社保非唯一 5、私企社保非唯一 ）',
+`position_source` int not null comment '证书来源（1、企业直签 2、同行中介）',
+`position_title` varchar(255) not null comment '证书标题',
+`remarks` text comment '备注',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间'
+) comment='人才证书需求';

@@ -1,0 +1,98 @@
+package io.gitee.dqcer.blaze.controller;
+
+import cn.hutool.core.collection.ListUtil;
+import io.gitee.dqcer.blaze.domain.bo.CertificateBO;
+import io.gitee.dqcer.blaze.domain.form.TalentCertificateAddDTO;
+import io.gitee.dqcer.blaze.domain.form.TalentCertificateQueryDTO;
+import io.gitee.dqcer.blaze.domain.form.TalentCertificateUpdateDTO;
+import io.gitee.dqcer.blaze.domain.vo.TalentCertificateVO;
+import io.gitee.dqcer.blaze.service.ITalentCertificateService;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
+import io.gitee.dqcer.util.CertificateUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * @author dqcer
+ * @since 2025-01-07 21:32:34
+ */
+@RestController
+@Tag(name = "人才证书需求表")
+public class TalentCertificateController extends BasicController {
+
+    @Resource
+    private ITalentCertificateService talentCertificateService;
+
+    @Operation(summary = "人才证书级别")
+    @GetMapping("/talent-cert/getCertificateLevelList")
+    public Result<List<LabelValueVO<Integer, String>>> getCertificateLevelList() {
+        Map<Integer, CertificateBO> certificateMap = CertificateUtil.getCertificateMap();
+        List<LabelValueVO<Integer, String> > list = certificateMap.values().stream()
+                .map(v -> new LabelValueVO<>(v.getCode(), v.getName())).collect(Collectors.toList());
+        return Result.success(list);
+    }
+
+    @Operation(summary = "专业")
+    @GetMapping("/talent-cert/getMajorList/{code}")
+    public Result<List<LabelValueVO<Integer, String>>> getMajorList(@PathVariable Integer code) {
+        Map<Integer, CertificateBO> certificateMap = CertificateUtil.getCertificateMap();
+        return Result.success(certificateMap.get(code).getMajorList().stream()
+                .map(v -> new LabelValueVO<>(v.getCode(), v.getName())).collect(Collectors.toList()));
+    }
+
+    @Operation(summary = "分页")
+    @PostMapping("/talent-cert/queryPage")
+    public Result<PagedVO<TalentCertificateVO>> queryPage(@RequestBody @Valid TalentCertificateQueryDTO dto) {
+        return Result.success(talentCertificateService.queryPage(dto));
+    }
+
+    @Operation(summary = "导出数据")
+    @PostMapping(value = "/talent-cert/list/record-export", produces = "application/octet-stream")
+    public void exportData() {
+        talentCertificateService.exportData();
+    }
+
+    @Operation(summary = "下载模板")
+    @PostMapping(value = "/talent-cert/list/download-template", produces = "application/octet-stream")
+    public void downloadTemplate() {
+        talentCertificateService.downloadTemplate();
+    }
+
+    @Operation(summary = "添加")
+    @PostMapping("/talent-cert/add")
+    public Result<Boolean> add(@RequestBody @Valid TalentCertificateAddDTO dto) {
+        talentCertificateService.insert(dto);
+        return Result.success(true);
+    }
+
+    @Operation(summary = "更新")
+    @PostMapping("/talent-cert/update")
+    public Result<Boolean> update(@RequestBody @Valid TalentCertificateUpdateDTO dto) {
+        talentCertificateService.update(dto);
+        return Result.success(true);
+    }
+
+    @Operation(summary = "批量删除")
+    @PostMapping("/talent-cert/batchDelete")
+    public Result<Boolean> batchDelete(@RequestBody List<Integer> idList) {
+        talentCertificateService.batchDelete(idList);
+        return Result.success(true);
+    }
+
+    @Operation(summary = "删除")
+    @GetMapping("/talent-cert/delete/{id}")
+    public Result<Boolean> batchDelete(@PathVariable Integer id) {
+        talentCertificateService.batchDelete(ListUtil.of(id));
+        return Result.success(true);
+    }
+}

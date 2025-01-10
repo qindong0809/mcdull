@@ -4,16 +4,16 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.blaze.dao.repository.ICertificateRequirementsRepository;
+import io.gitee.dqcer.blaze.dao.repository.ITalentCertificateRepository;
 import io.gitee.dqcer.blaze.domain.bo.CertificateBO;
-import io.gitee.dqcer.blaze.domain.entity.CertificateRequirementsEntity;
+import io.gitee.dqcer.blaze.domain.entity.TalentCertificateEntity;
 import io.gitee.dqcer.blaze.domain.enums.*;
-import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsAddDTO;
-import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsQueryDTO;
-import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsUpdateDTO;
-import io.gitee.dqcer.blaze.domain.vo.CertificateRequirementsVO;
-import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
-import io.gitee.dqcer.blaze.service.ICustomerInfoService;
+import io.gitee.dqcer.blaze.domain.form.TalentCertificateAddDTO;
+import io.gitee.dqcer.blaze.domain.form.TalentCertificateQueryDTO;
+import io.gitee.dqcer.blaze.domain.form.TalentCertificateUpdateDTO;
+import io.gitee.dqcer.blaze.domain.vo.TalentCertificateVO;
+import io.gitee.dqcer.blaze.service.ITalentCertificateService;
+import io.gitee.dqcer.blaze.service.ITalentService;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
@@ -41,14 +41,14 @@ import java.util.stream.Collectors;
  * @since 2025-01-07 21:32:34
  */
 @Service
-public class CertificateRequirementsServiceImpl
-        extends BasicServiceImpl<ICertificateRequirementsRepository> implements ICertificateRequirementsService {
+public class TalentCertificateServiceImpl
+        extends BasicServiceImpl<ITalentCertificateRepository> implements ITalentCertificateService {
 
     @Resource
     private IAreaManager areaManager;
 
     @Resource
-    private ICustomerInfoService customerInfoService;
+    private ITalentService talentService;
 
     @Resource
     private ICommonManager commonManager;
@@ -56,15 +56,15 @@ public class CertificateRequirementsServiceImpl
     @Resource
     private IAreaService areaService;
 
-    public PagedVO<CertificateRequirementsVO> queryPage(CertificateRequirementsQueryDTO dto) {
-        List<CertificateRequirementsVO> voList = new ArrayList<>();
-        Page<CertificateRequirementsEntity> entityPage = baseRepository.selectPage(dto);
-        List<CertificateRequirementsEntity> recordList = entityPage.getRecords();
+    public PagedVO<TalentCertificateVO> queryPage(TalentCertificateQueryDTO dto) {
+        List<TalentCertificateVO> voList = new ArrayList<>();
+        Page<TalentCertificateEntity> entityPage = baseRepository.selectPage(dto);
+        List<TalentCertificateEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
-            List<LabelValueVO<Integer, String>> customerInfoList = customerInfoService.list();
+            List<LabelValueVO<Integer, String>> talentList = talentService.list();
             Map<Integer, CertificateBO> certificateMap = CertificateUtil.getCertificateMap();
-            for (CertificateRequirementsEntity entity : recordList) {
-                CertificateRequirementsVO vo = this.convertToVO(entity);
+            for (TalentCertificateEntity entity : recordList) {
+                TalentCertificateVO vo = this.convertToVO(entity);
                 BigDecimal positionContractPrice = entity.getPositionContractPrice();
                 if (ObjUtil.isNotNull(positionContractPrice)) {
                     vo.setPositionContractPrice(positionContractPrice.setScale(2, RoundingMode.HALF_UP).toString());
@@ -77,8 +77,8 @@ public class CertificateRequirementsServiceImpl
                 if (ObjUtil.isNotNull(actualPositionPrice)) {
                     vo.setActualPositionPrice(actualPositionPrice.setScale(2, RoundingMode.HALF_UP).toString());
                 }
-                vo.setCustomerName(customerInfoList.stream()
-                        .filter(v -> v.getValue().equals(vo.getCustomerId()))
+                vo.setTalentName(talentList.stream()
+                        .filter(v -> v.getValue().equals(vo.getTalentId()))
                         .map(LabelValueVO::getLabel)
                         .findFirst().orElse(""));
                 Integer certificateLevel = vo.getCertificateLevel();
@@ -135,19 +135,18 @@ public class CertificateRequirementsServiceImpl
 
     @Override
     public void exportData() {
-        CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
+        TalentCertificateQueryDTO dto = new TalentCertificateQueryDTO();
         PageUtil.setMaxPageSize(dto);
         Map<String, String> titleMap = this.getTitleMap();
-        List<CertificateRequirementsVO> list = CollUtil.emptyIfNull(this.queryPage(dto).getList());
+        List<TalentCertificateVO> list = CollUtil.emptyIfNull(this.queryPage(dto).getList());
         List<Map<String, String>> mapList = new ArrayList<>();
-        for (CertificateRequirementsVO vo : list) {
+        for (TalentCertificateVO vo : list) {
             Map<String, String> map = new HashMap<>();
-            map.put("customerName", vo.getCustomerName());
+            map.put("customerName", vo.getTalentName());
             map.put("certificateLevelName", vo.getCertificateLevelName());
             map.put("specialtyName", vo.getSpecialtyName());
             map.put("provincesName", vo.getProvincesName());
             map.put("cityName", vo.getCityName());
-            map.put("quantity", StrUtil.toString(vo.getQuantity()));
             map.put("titleName", vo.getTitleName());
             map.put("initialOrTransferName", vo.getInitialOrTransferName());
             map.put("certificateStatusName", vo.getCertificateStatusName());
@@ -175,7 +174,6 @@ public class CertificateRequirementsServiceImpl
         fieldList.add(new DynamicFieldBO("specialtyName", "专业 *", true, FormItemControlTypeEnum.INPUT));
         fieldList.add(this.getProvinceFieldBO());
         fieldList.add(new DynamicFieldBO("cityName", "城市", true, FormItemControlTypeEnum.INPUT));
-        fieldList.add(new DynamicFieldBO("quantity", "数量", true, FormItemControlTypeEnum.NUMBER));
         fieldList.add(new DynamicFieldBO("title", "职称", true, FormItemControlTypeEnum.SELECT, CertificateTitleEnum.class));
         fieldList.add(new DynamicFieldBO("initialOrTransfer", "是否转正", true, FormItemControlTypeEnum.SELECT, CertificateInitialOrTransferEnum.class));
         fieldList.add(new DynamicFieldBO("certificateStatus", "证书状态", true, FormItemControlTypeEnum.SELECT, CertificateStatusEnum.class));
@@ -210,7 +208,7 @@ public class CertificateRequirementsServiceImpl
 
     private DynamicFieldBO getCustomerFieldBO() {
         DynamicFieldBO fieldBO = new DynamicFieldBO("customerName", "客户名称", true, FormItemControlTypeEnum.SELECT);
-        List<LabelValueVO<Integer, String>> customerList = customerInfoService.list();
+        List<LabelValueVO<Integer, String>> customerList = talentService.list();
         fieldBO.setDropdownList(customerList.stream().map(LabelValueVO::getLabel).collect(Collectors.toList()));
         fieldBO.setExtraObj(customerList);
         return fieldBO;
@@ -241,15 +239,14 @@ public class CertificateRequirementsServiceImpl
         return titleMap;
     }
 
-    private CertificateRequirementsVO convertToVO(CertificateRequirementsEntity item){
-        CertificateRequirementsVO vo = new CertificateRequirementsVO();
+    private TalentCertificateVO convertToVO(TalentCertificateEntity item){
+        TalentCertificateVO vo = new TalentCertificateVO();
         vo.setId(item.getId());
-        vo.setCustomerId(item.getCustomerId());
+        vo.setTalentId(item.getTalentId());
         vo.setCertificateLevel(item.getCertificateLevel());
         vo.setSpecialty(item.getSpecialty());
         vo.setProvincesCode(item.getProvincesCode());
         vo.setCityCode(item.getCityCode());
-        vo.setQuantity(item.getQuantity());
         vo.setTitle(item.getTitle());
         vo.setInitialOrTransfer(item.getInitialOrTransfer());
         vo.setCertificateStatus(item.getCertificateStatus());
@@ -264,14 +261,13 @@ public class CertificateRequirementsServiceImpl
         return vo;
     }
 
-    private void setUpdateFieldValue(CertificateRequirementsUpdateDTO item, CertificateRequirementsEntity entity){
+    private void setUpdateFieldValue(TalentCertificateUpdateDTO item, TalentCertificateEntity entity){
         entity.setId(item.getId());
-        entity.setCustomerId(item.getCustomerId());
+        entity.setTalentId(item.getTalentId());
         entity.setCertificateLevel(item.getCertificateLevel());
         entity.setSpecialty(item.getSpecialty());
         entity.setProvincesCode(item.getProvincesCode());
         entity.setCityCode(item.getCityCode());
-        entity.setQuantity(item.getQuantity());
         entity.setTitle(item.getTitle());
         entity.setInitialOrTransfer(item.getInitialOrTransfer());
         entity.setCertificateStatus(item.getCertificateStatus());
@@ -286,14 +282,13 @@ public class CertificateRequirementsServiceImpl
         entity.setRemarks(item.getRemarks());
     }
 
-    private CertificateRequirementsEntity convertToEntity(CertificateRequirementsAddDTO item){
-        CertificateRequirementsEntity entity = new CertificateRequirementsEntity();
-        entity.setCustomerId(item.getCustomerId());
+    private TalentCertificateEntity convertToEntity(TalentCertificateAddDTO item){
+        TalentCertificateEntity entity = new TalentCertificateEntity();
+        entity.setTalentId(item.getTalentId());
         entity.setCertificateLevel(item.getCertificateLevel());
         entity.setSpecialty(item.getSpecialty());
         entity.setProvincesCode(item.getProvincesCode());
         entity.setCityCode(item.getCityCode());
-        entity.setQuantity(item.getQuantity());
         entity.setTitle(item.getTitle());
         entity.setInitialOrTransfer(item.getInitialOrTransfer());
         entity.setCertificateStatus(item.getCertificateStatus());
@@ -310,24 +305,26 @@ public class CertificateRequirementsServiceImpl
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void insert(CertificateRequirementsAddDTO dto) {
-        CertificateRequirementsEntity entity = this.convertToEntity(dto);
+    public void insert(TalentCertificateAddDTO dto) {
+        TalentCertificateEntity entity = this.convertToEntity(dto);
         entity.setPositionTitle(StrUtil.EMPTY);
         baseRepository.save(entity);
         this.builderPositionTitle(entity);
+
     }
 
-    private void builderPositionTitle(CertificateRequirementsEntity entity) {
-        CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
+    private void builderPositionTitle(TalentCertificateEntity entity) {
+        TalentCertificateQueryDTO dto = new TalentCertificateQueryDTO();
         PageUtil.setMaxPageSize(dto);
-        PagedVO<CertificateRequirementsVO> page = this.queryPage(dto);
+        PagedVO<TalentCertificateVO> page = this.queryPage(dto);
         if (ObjUtil.isNotNull(page)) {
-            List<CertificateRequirementsVO> list = page.getList();
-            CertificateRequirementsVO vo = list.stream().filter(i -> i.getId().equals(entity.getId())).findFirst().orElse(null);
+            List<TalentCertificateVO> list = page.getList();
+            TalentCertificateVO vo = list.stream().filter(i -> i.getId().equals(entity.getId())).findFirst().orElse(null);
             if (ObjUtil.isNotNull(vo)) {
-                String positionTitle = StrUtil.format("{}|{}|{}|{}|{}|{}|{}|{}", vo.getCustomerName(), vo.getCertificateLevelName(),
+                String positionTitle = StrUtil.format("{}|{}|{}|{}|{}|{}|{}|{}", vo.getTalentName(), vo.getCertificateLevelName(),
                         vo.getSpecialtyName(), vo.getSocialSecurityRequirementName(), vo.getActualPositionPrice(),
                         vo.getDuration(), vo.getInitialOrTransferName(), vo.getThreePersonnelName());
+
                 entity.setPositionTitle(positionTitle);
                 baseRepository.updateById(entity);
             }
@@ -336,9 +333,9 @@ public class CertificateRequirementsServiceImpl
 
 
     @Transactional(rollbackFor = Exception.class)
-    public void update(CertificateRequirementsUpdateDTO dto) {
+    public void update(TalentCertificateUpdateDTO dto) {
         Integer id = dto.getId();
-        CertificateRequirementsEntity entity = baseRepository.getById(id);
+        TalentCertificateEntity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
         }
@@ -349,7 +346,7 @@ public class CertificateRequirementsServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     public void batchDelete(List<Integer> idList) {
-        List<CertificateRequirementsEntity> entityList = baseRepository.queryListByIds(idList);
+        List<TalentCertificateEntity> entityList = baseRepository.queryListByIds(idList);
         if (entityList.size() != idList.size()) {
             this.throwDataNotExistException(idList);
         }

@@ -16,15 +16,15 @@ import java.math.BigDecimal;
  */
 
 @Data
-public class CertificateRequirementsUpdateDTO implements DTO {
+public class TalentCertificateUpdateDTO implements DTO {
 
     @Schema(description = "id", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "id 不能为空")
     private Integer id;
 
-    @Schema(description = "客户id", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "客户id 不能为空")
-    private Integer customerId;
+    @Schema(description = "所属人才", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "所属人才 不能为空")
+    private Integer talentId;
 
     @Schema(description = "证书级别", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "证书级别 不能为空")
