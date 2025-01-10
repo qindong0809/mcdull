@@ -874,3 +874,18 @@ create table blaze_certificate_requirements (
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间'
 ) comment='证书需求表';
+
+create table talent (
+id int auto_increment primary key,
+name varchar(255) not null comment '姓名',
+id_number varchar(18) not null unique comment '身份证号',
+contact_number varchar(15) not null comment '联系电话',
+work_unit_type varchar(100) not null comment '工作单位性质',
+social_security_status int  not null comment '社保状态',
+social_security_location varchar(100) not null comment '社保所在地',
+gender enum('男', '女', '其他') not null,
+title varchar(100) not null comment '职称',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间'
+);
