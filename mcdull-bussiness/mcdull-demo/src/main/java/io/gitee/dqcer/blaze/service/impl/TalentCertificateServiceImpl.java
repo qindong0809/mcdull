@@ -20,13 +20,17 @@ import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileUploadVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IAreaService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import io.gitee.dqcer.util.CertificateUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -55,6 +59,9 @@ public class TalentCertificateServiceImpl
 
     @Resource
     private IAreaService areaService;
+
+    @Resource
+    private IFileService fileService;
 
     public PagedVO<TalentCertificateVO> queryPage(TalentCertificateQueryDTO dto) {
         List<TalentCertificateVO> voList = new ArrayList<>();
@@ -333,7 +340,7 @@ public class TalentCertificateServiceImpl
 
 
     @Transactional(rollbackFor = Exception.class)
-    public void update(TalentCertificateUpdateDTO dto) {
+    public void update(TalentCertificateUpdateDTO dto, MultipartFile file) {
         Integer id = dto.getId();
         TalentCertificateEntity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
@@ -342,6 +349,8 @@ public class TalentCertificateServiceImpl
         this.setUpdateFieldValue(dto, entity);
         baseRepository.updateById(entity);
         this.builderPositionTitle(entity);
+        FileUploadVO fileUploadVO = fileService.fileUpload(file, FileFolderTypeEnum.BIZ.getValue());
+        System.out.println(fileUploadVO);
     }
 
     @Transactional(rollbackFor = Exception.class)

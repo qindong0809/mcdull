@@ -39,6 +39,10 @@ public enum FileFolderTypeEnum implements IEnum<Integer> {
 
 
     USER(100, FileFolderTypeEnum.FOLDER_PUBLIC + "/user/", "用户信息"),
+
+    BIZ(200, FileFolderTypeEnum.FOLDER_PUBLIC + "/biz/", "业务"),
+
+
     ;
 
     /**

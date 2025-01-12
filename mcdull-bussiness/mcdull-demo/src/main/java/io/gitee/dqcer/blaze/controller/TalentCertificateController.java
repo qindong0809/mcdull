@@ -14,7 +14,9 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.util.CertificateUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -76,9 +78,10 @@ public class TalentCertificateController extends BasicController {
     }
 
     @Operation(summary = "更新")
-    @PostMapping("/talent-cert/update")
-    public Result<Boolean> update(@RequestBody @Valid TalentCertificateUpdateDTO dto) {
-        talentCertificateService.update(dto);
+    @PostMapping(value = "/talent-cert/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result<Boolean> update( @Valid TalentCertificateUpdateDTO dto, @RequestPart("file") MultipartFile file) {
+        talentCertificateService.update(dto, file);
         return Result.success(true);
     }
 

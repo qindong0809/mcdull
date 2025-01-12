@@ -5,6 +5,7 @@ import io.gitee.dqcer.blaze.domain.form.TalentCertificateQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.TalentCertificateVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface ITalentCertificateService {
 
     void insert(TalentCertificateAddDTO dto);
 
-    void update(TalentCertificateUpdateDTO dto);
+    void update(TalentCertificateUpdateDTO dto, MultipartFile file);
 
     void batchDelete(List<Integer> idList);
 
