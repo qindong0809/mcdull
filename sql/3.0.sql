@@ -329,7 +329,8 @@ primary key (`id`) using btree
 
 insert into `sys_config` values (null, '登录验证码', 'login-captcha', 'yes', 'yes/启用 no/不启用', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '系统名称', 'system-name', 'xxx系统', '用于重置密码占位符', 0, sysdate(), sysdate());
-insert into `sys_config` values (null, '域名名称', 'domain-name', 'http://mcdull.io:8081', '用于重置密码链接', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '域名名称', 'domain-name', 'http://mcdull.io:8081', 'email 链接', 0, sysdate(), sysdate());
+insert into `sys_config` values (null, '文件域名', 'file-domain-name', 'http://localhost:8090', '图片文件访问', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '重置密码邮件标题', 'forget-password-email-title', '密码重置请求', '', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '重置密码链接有效期（分钟）', 'forget-password-timeout', '5', '链接有效期', 0, sysdate(), sysdate());
 insert into `sys_config` values (null, '是否记录操作请求日志', 'log-operation-request', 'yes', 'yes/启用 no/不启用', 0, sysdate(), sysdate());

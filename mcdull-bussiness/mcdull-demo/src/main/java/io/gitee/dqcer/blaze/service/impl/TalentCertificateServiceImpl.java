@@ -1,6 +1,7 @@
 package io.gitee.dqcer.blaze.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -11,6 +12,7 @@ import io.gitee.dqcer.blaze.domain.enums.*;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateAddDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateUpdateDTO;
+import io.gitee.dqcer.blaze.domain.vo.FileVO;
 import io.gitee.dqcer.blaze.domain.vo.TalentCertificateVO;
 import io.gitee.dqcer.blaze.service.ITalentCertificateService;
 import io.gitee.dqcer.blaze.service.ITalentService;
@@ -68,10 +70,16 @@ public class TalentCertificateServiceImpl
         Page<TalentCertificateEntity> entityPage = baseRepository.selectPage(dto);
         List<TalentCertificateEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
+            String fileDomainName = commonManager.getConfig("file-domain-name");
             List<LabelValueVO<Integer, String>> talentList = talentService.list();
             Map<Integer, CertificateBO> certificateMap = CertificateUtil.getCertificateMap();
             for (TalentCertificateEntity entity : recordList) {
                 TalentCertificateVO vo = this.convertToVO(entity);
+                FileVO fileVO = new FileVO();
+                fileVO.setUrl(fileDomainName + "/upload/public/common/b78c4a06ed2c4ee1a84a834b984120c4_20250112145154.jpg");
+                fileVO.setFileName("ddd.jpg");
+                fileVO.setId(1);
+                vo.setFileList(ListUtil.of(fileVO));
                 BigDecimal positionContractPrice = entity.getPositionContractPrice();
                 if (ObjUtil.isNotNull(positionContractPrice)) {
                     vo.setPositionContractPrice(positionContractPrice.setScale(2, RoundingMode.HALF_UP).toString());

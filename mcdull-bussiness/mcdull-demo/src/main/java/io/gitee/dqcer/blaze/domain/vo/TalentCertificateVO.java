@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 证书需求表 列表VO
@@ -118,5 +119,8 @@ public class TalentCertificateVO implements IArea, VO {
     @JsonSerialize(using = DynamicDateSerialize.class)
     @Schema(description = "创建时间")
     private Date createdTime;
+
+    @Schema(description = "附件列表")
+    private List<FileVO> fileList;
 
 }
