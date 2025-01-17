@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.admin.model.dto.sys;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * 系统配置 接收客户端参数

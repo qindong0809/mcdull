@@ -17,7 +17,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebExceptionHandler;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -55,7 +55,7 @@ public class ExceptionHandler implements WebExceptionHandler, Ordered {
             try {
                 Result<?> error;
                 if (ex instanceof ResponseStatusException) {
-                    HttpStatus status = ((ResponseStatusException) ex).getStatus();
+                    HttpStatus status = (HttpStatus) ((ResponseStatusException) ex).getStatusCode();
                     error = Result.error(status.value(), status.getReasonPhrase(), ex.getMessage());
                 } else {
                     log.warn("网关异常处理: {}", ex.getMessage());

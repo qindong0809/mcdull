@@ -2,7 +2,7 @@
 
 ## 环境准备
 
-1. 必要环境``java1.8``、``Idea``、``Maven``、``Redis``、``MySQL5.7+或8.0.14+``、``nodejs``
+1. 必要环境``java17``、``Idea``、``Maven``、``Redis``、``MySQL5.7+或8.0.14+``、``nodejs``
 2. 拉取后端工程[mcdull](https://gitee.com/dqcer/mcdull.git)
 3. 初始化数据库脚本
    - ./sql/3.0.sql

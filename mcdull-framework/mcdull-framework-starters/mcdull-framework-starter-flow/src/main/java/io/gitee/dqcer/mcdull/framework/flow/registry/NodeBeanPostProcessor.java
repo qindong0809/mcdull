@@ -3,10 +3,10 @@ package io.gitee.dqcer.mcdull.framework.flow.registry;
 import cn.hutool.core.annotation.AnnotationUtil;
 import io.gitee.dqcer.mcdull.framework.flow.node.ProcessHandler;
 import io.gitee.dqcer.mcdull.framework.flow.node.TreeNode;
+import jakarta.annotation.Resource;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
-import javax.annotation.Resource;
 
 /**
  * Node Bean Post Processor

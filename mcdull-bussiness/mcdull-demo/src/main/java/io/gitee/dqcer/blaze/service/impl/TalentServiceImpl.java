@@ -23,7 +23,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

@@ -3,8 +3,8 @@ package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 
 @Data

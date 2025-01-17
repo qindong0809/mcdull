@@ -5,7 +5,7 @@ import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.LanguageEnum;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 /**
  * sys dict dto

@@ -11,13 +11,12 @@ import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.component.ConcurrentRateLimiter;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.io.File;
 import java.sql.Connection;
@@ -34,9 +33,6 @@ import java.util.HashSet;
 @Slf4j
 @Component
 public class DatabaseBackupTaskExecutor {
-
-    @Resource
-    private IConfigService configService;
 
     @Resource
     private DataSource dataSource;

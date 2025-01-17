@@ -17,7 +17,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.service.IForgetPasswordService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * forget password service impl

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * system environment config

@@ -22,7 +22,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.service.impl.code.CodeGeneratorTem
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;

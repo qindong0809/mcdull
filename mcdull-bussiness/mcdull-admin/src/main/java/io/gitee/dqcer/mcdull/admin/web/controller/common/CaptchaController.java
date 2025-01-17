@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 验证码控制器

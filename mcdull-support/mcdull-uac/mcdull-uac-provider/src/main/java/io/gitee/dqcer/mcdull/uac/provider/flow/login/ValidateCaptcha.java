@@ -14,7 +14,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.service.ICaptchaService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @Component(value = "ValidateCaptcha")
 @TreeNode(code = "Validate Captcha")

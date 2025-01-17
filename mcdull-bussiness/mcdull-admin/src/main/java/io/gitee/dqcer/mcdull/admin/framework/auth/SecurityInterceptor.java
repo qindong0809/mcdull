@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserSession;
 import io.gitee.dqcer.mcdull.framework.web.interceptor.BaseInfoInterceptor;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.admin.model.dto.sys;
 
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * 登录 dto

@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.framework.redis.operation;
 
 import io.gitee.dqcer.mcdull.framework.redis.ICache;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 
 /**

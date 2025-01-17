@@ -5,7 +5,7 @@ import io.gitee.dqcer.mcdull.framework.flow.ProcessFlow;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 演示流程控制器

@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.framework.base.dto;
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * 常用于失活、删除等操作

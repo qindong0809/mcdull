@@ -4,7 +4,7 @@ import io.gitee.dqcer.mcdull.framework.web.async.BaseAsyncEvent;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.OperateLogEntity;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author dqcere

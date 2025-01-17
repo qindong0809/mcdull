@@ -29,7 +29,7 @@ public class ServiceLogAgent {
 
         //动态构建操作，根据transformer规则执行拦截操作
         // 匹配上的具体的类型描述
-        AgentBuilder.Transformer transformer = (builder, typeDescription, classLoader, javaModule) -> {
+        AgentBuilder.Transformer transformer = (builder, typeDescription, classLoader, javaModule, protectionDomain) -> {
             //构建拦截规则
             return builder
                     //method()指定哪些方法需要被拦截，ElementMatchers.any()表示拦截所有方法

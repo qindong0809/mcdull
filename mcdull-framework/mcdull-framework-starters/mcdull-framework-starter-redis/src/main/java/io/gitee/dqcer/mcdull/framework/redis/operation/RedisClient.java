@@ -6,7 +6,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.*;
 import org.springframework.lang.NonNull;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;

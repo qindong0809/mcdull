@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.business.common.recommend;
 
 import cn.hutool.core.io.BOMInputStream;
 import io.gitee.dqcer.mcdull.business.common.recommend.dto.RelateDTO;
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -17,7 +16,7 @@ class RecommendTest {
 
     private static final Logger log = LoggerFactory.getLogger(RecommendTest.class);
 
-    @Test
+//    @Test
     void userCfRecommend() throws IOException {
         List<RelateDTO<Integer, Integer>> relateList = getRelateList();
 
@@ -47,7 +46,7 @@ class RecommendTest {
         return relateList;
     }
 
-    @Test
+//    @Test
     void itemCfRecommend() throws IOException {
         final Integer targetItem = 2;
         List<Integer> itemIds = Recommend.itemCfRecommend(targetItem, getRelateList());

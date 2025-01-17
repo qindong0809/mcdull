@@ -48,7 +48,7 @@ public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {
         MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
 
         if (log.isInfoEnabled()) {
-            log.info("请求地址:{} {} 来源Ip: {}", request.getMethodValue(), request.getURI(), IpUtils.getRealIp(request));
+            log.info("请求地址:{} 来源Ip: {}", request.getURI(), IpUtils.getRealIp(request));
         }
 
         // 打印请求头

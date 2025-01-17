@@ -6,8 +6,8 @@ import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsService;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
 /**

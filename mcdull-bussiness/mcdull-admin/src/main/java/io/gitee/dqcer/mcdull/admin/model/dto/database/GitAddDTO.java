@@ -5,7 +5,7 @@ import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * @author dqcer

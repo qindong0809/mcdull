@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.framework.web.aspect;
 
 import io.gitee.dqcer.mcdull.framework.web.feign.model.LogOperationDTO;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
 /**

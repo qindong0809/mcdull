@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * 代码生成 预览 表单

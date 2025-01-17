@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.framework.web.util;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * ip 工具类

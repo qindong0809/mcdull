@@ -6,8 +6,8 @@ import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.SortOrderEnum;
 import io.gitee.dqcer.mcdull.framework.base.support.Paged;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 
 /**

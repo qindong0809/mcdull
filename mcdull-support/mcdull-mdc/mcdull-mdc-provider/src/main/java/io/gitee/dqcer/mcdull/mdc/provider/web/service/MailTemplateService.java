@@ -11,7 +11,7 @@ import io.gitee.dqcer.mcdull.mdc.provider.model.vo.MailTemplateVO;
 import io.gitee.dqcer.mcdull.mdc.provider.web.dao.mapper.MailTemplateMapper;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 

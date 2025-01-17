@@ -6,9 +6,8 @@ import io.gitee.dqcer.mcdull.framework.config.properties.OssTypeEnum;
 import io.gitee.dqcer.mcdull.framework.oss.factory.LocalClient;
 import io.gitee.dqcer.mcdull.framework.oss.factory.OssClient;
 import io.gitee.dqcer.mcdull.framework.oss.factory.QiniuClient;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 
 /**

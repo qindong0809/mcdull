@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
 
-import javax.annotation.Resource;
-import javax.servlet.MultipartConfigElement;
+import jakarta.annotation.Resource;
+import jakarta.servlet.MultipartConfigElement;
 
 /**
  * multipart file config

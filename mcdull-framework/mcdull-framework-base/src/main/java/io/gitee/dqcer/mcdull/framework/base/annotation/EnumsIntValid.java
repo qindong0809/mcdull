@@ -3,8 +3,8 @@ package io.gitee.dqcer.mcdull.framework.base.annotation;
 
 import io.gitee.dqcer.mcdull.framework.base.validator.EnumsIntValidator;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 import java.lang.annotation.*;
 
 /**

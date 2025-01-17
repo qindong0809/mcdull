@@ -4,7 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * 系统配置 接收客户端参数

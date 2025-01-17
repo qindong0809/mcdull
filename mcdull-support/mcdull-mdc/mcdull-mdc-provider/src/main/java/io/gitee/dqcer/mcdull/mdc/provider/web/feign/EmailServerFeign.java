@@ -5,7 +5,7 @@ import io.gitee.dqcer.mcdull.mdc.client.service.def.EmailApiDef;
 import io.gitee.dqcer.mcdull.mdc.provider.web.service.IEmailService;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 邮件服务 feign 实现层

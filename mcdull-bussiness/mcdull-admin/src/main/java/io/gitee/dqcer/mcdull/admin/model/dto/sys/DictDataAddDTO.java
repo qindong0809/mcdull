@@ -6,8 +6,8 @@ import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * 码表数据 接收客户端参数

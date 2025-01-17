@@ -13,8 +13,8 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 
 /**
 *  控制器

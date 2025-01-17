@@ -4,7 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

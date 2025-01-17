@@ -4,7 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * 单据序列号 生成表单

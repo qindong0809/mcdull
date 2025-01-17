@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.mdc.provider.web.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.common.collect.Lists;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -12,10 +11,10 @@ import io.gitee.dqcer.mcdull.mdc.provider.model.dto.SysLogFeignDTO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.entity.LogEntity;
 import io.gitee.dqcer.mcdull.mdc.provider.model.vo.LogVO;
 import io.gitee.dqcer.mcdull.uac.client.service.UserClientService;
+import jakarta.annotation.Resource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class LogService {
 
     public Result<Integer> batchSave(List<SysLogFeignDTO> dto) {
         threadPoolTaskExecutor.submit(() -> {
-            List<LogEntity> entities = Lists.newArrayList();
+            List<LogEntity> entities = new ArrayList<>();
             entities.addAll(dto);
 //            logRepository.saveBatch(entities, entities.size());
         });

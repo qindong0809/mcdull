@@ -4,7 +4,7 @@ import io.gitee.dqcer.mcdull.admin.model.entity.sys.LogEntity;
 import io.gitee.dqcer.mcdull.framework.web.async.BaseAsyncEvent;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 简单的基本事件监听器

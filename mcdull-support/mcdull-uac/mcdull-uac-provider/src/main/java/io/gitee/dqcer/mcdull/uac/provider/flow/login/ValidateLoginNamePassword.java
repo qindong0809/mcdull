@@ -16,7 +16,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.service.IPasswordPolicyService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Date;
 
 @Component(value = "ValidateLoginNamePassword")

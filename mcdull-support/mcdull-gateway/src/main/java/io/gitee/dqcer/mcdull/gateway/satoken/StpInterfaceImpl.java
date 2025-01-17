@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.gateway.satoken;
 
 import cn.dev33.satoken.stp.StpInterface;
 import cn.hutool.core.convert.Convert;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import cn.hutool.core.thread.ThreadFactoryBuilder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.gateway.utils.SpringUtils;
 import io.gitee.dqcer.mcdull.uac.client.service.AuthClientService;
@@ -18,7 +18,7 @@ import java.util.concurrent.*;
 public class StpInterfaceImpl implements StpInterface {
 
     private static final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3000, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1000), new ThreadFactoryBuilder()
-            .setNameFormat("auth-pool-%d").build());
+            .setNamePrefix("auth-pool-%d").build());
 
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {

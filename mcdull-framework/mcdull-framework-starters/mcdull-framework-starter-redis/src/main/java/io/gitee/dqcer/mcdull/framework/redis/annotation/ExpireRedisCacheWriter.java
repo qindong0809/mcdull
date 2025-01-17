@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -96,6 +97,11 @@ public class ExpireRedisCacheWriter implements RedisCacheWriter {
     }
 
     @Override
+    public CompletableFuture<Void> store(String name, byte[] key, byte[] value, Duration ttl) {
+        return null;
+    }
+
+    @Override
     public byte[] get(@NonNull String name, @NonNull byte[] key) {
         Assert.notNull(name, "Name must not be null!");
         Assert.notNull(key, "Key must not be null!");
@@ -107,6 +113,11 @@ public class ExpireRedisCacheWriter implements RedisCacheWriter {
             statistics.incMisses(name);
         }
         return result;
+    }
+
+    @Override
+    public CompletableFuture<byte[]> retrieve(String name, byte[] key, Duration ttl) {
+        return null;
     }
 
 
