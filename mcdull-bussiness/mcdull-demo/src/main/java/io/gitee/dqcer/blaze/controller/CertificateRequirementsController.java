@@ -42,9 +42,15 @@ public class CertificateRequirementsController extends BasicController {
         return Result.success(list);
     }
 
+    @Operation(summary = "全部数据")
+    @PostMapping("/CertificateRequirements/list")
+    public Result<List<LabelValueVO<Integer, String>>> list() {
+        return Result.success(certificateRequirementsService.list());
+    }
+
     @Operation(summary = "专业")
     @GetMapping("/CertificateRequirements/getMajorList/{code}")
-    public Result<List<LabelValueVO<Integer, String>>> getMajorList(@PathVariable Integer code) {
+    public Result<List<LabelValueVO<Integer, String>>> getMajorList(@PathVariable(value = "code") Integer code) {
         Map<Integer, CertificateBO> certificateMap = CertificateUtil.getCertificateMap();
         return Result.success(certificateMap.get(code).getMajorList().stream()
                 .map(v -> new LabelValueVO<>(v.getCode(), v.getName())).collect(Collectors.toList()));
@@ -91,7 +97,7 @@ public class CertificateRequirementsController extends BasicController {
 
     @Operation(summary = "删除")
     @GetMapping("/CertificateRequirements/delete/{id}")
-    public Result<Boolean> batchDelete(@PathVariable Integer id) {
+    public Result<Boolean> batchDelete(@PathVariable(value = "id") Integer id) {
         certificateRequirementsService.batchDelete(ListUtil.of(id));
         return Result.success(true);
     }

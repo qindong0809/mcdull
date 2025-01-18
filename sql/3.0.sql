@@ -918,3 +918,18 @@ create table blaze_talent_certificate (
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间'
 ) comment='人才证书需求';
+
+drop table if exists `blaze_order`;
+create table blaze_order (
+`id` int auto_increment primary key,
+`talent_cert_id` int not null comment '所属人才证书',
+`customer_cert_id` int not null comment '所属企业证书',
+`contract_time` datetime not null comment '合同时间',
+`remarks` text comment '备注',
+`created_by` int not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` int default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）'
+) comment='订单合同';

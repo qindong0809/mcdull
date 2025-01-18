@@ -52,7 +52,7 @@ public class RoleController {
     @Operation(summary = "删除角色")
     @GetMapping("/role/delete/{roleId}")
     @SaCheckPermission("system:role:write")
-    public Result<Boolean> deleteRole(@PathVariable Integer roleId) {
+    public Result<Boolean> deleteRole(@PathVariable(value = "roleId") Integer roleId) {
         roleService.delete(roleId);
         return Result.success(true);
     }

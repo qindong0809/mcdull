@@ -91,7 +91,7 @@ public class UserController extends BasicController {
 
     @Operation(summary = "获取某个角色下的所有员工列表(无分页)")
     @GetMapping("/role/employee/getAllEmployeeByRoleId/{roleId}")
-    public Result<List<UserVO>> getAllRoleId(@PathVariable Integer roleId) {
+    public Result<List<UserVO>> getAllRoleId(@PathVariable(value = "roleId") Integer roleId) {
         return Result.success(userService.getAllByRoleId(roleId));
     }
 
@@ -106,7 +106,7 @@ public class UserController extends BasicController {
     @Operation(summary = "更新员工禁用/启用状态")
     @GetMapping("/employee/update/disabled/{userId}")
     @SaCheckPermission("system:employee:write")
-    public Result<Boolean> updateDisableFlag(@PathVariable Integer userId) {
+    public Result<Boolean> updateDisableFlag(@PathVariable(value = "userId") Integer userId) {
         userService.toggleActive(userId);
         return Result.success(true);
     }
@@ -143,7 +143,7 @@ public class UserController extends BasicController {
     @Operation(summary = "Reset Password")
     @PostMapping("/user/update/password/reset/{userId}")
     @SaCheckPermission("system:employee:password:reset")
-    public Result<String> resetPassword(@PathVariable Integer userId) {
+    public Result<String> resetPassword(@PathVariable(value = "userId") Integer userId) {
         return Result.success(userService.resetPassword(userId));
     }
 

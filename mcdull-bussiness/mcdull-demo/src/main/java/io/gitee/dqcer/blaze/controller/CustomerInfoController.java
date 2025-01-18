@@ -58,7 +58,7 @@ public class CustomerInfoController {
 
     @Operation(summary = "删除")
     @GetMapping("/customerInfo/delete/{id}")
-    public Result<Boolean> batchDelete(@PathVariable Integer id) {
+    public Result<Boolean> batchDelete(@PathVariable(value = "id") Integer id) {
         customerInfoService.batchDelete(ListUtil.of(id));
         return Result.success(true);
     }

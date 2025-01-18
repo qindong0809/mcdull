@@ -113,7 +113,7 @@ public class DictController extends BasicController {
 
     @Operation(summary = "Value list(by keyCode)")
     @GetMapping("/dict/value/list/{keyCode}")
-    public Result<List<DictValueVO>> valueList(@PathVariable String keyCode) {
+    public Result<List<DictValueVO>> valueList(@PathVariable(value = "keyCode") String keyCode) {
         List<DictValueVO> dictValueVOList = dictValueService.selectByKeyCode(keyCode);
         return Result.success(dictValueVOList);
     }

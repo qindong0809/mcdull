@@ -52,7 +52,7 @@ public class OperateLogController {
     @Operation(summary = "详情")
     @GetMapping("/operateLog/detail/{operateLogId}")
     @SaCheckPermission("support:operateLog:detail")
-    public Result<OperateLogVO> detail(@PathVariable Integer operateLogId) {
+    public Result<OperateLogVO> detail(@PathVariable(value = "operateLogId") Integer operateLogId) {
         return Result.success(operateLogService.detail(operateLogId));
     }
 

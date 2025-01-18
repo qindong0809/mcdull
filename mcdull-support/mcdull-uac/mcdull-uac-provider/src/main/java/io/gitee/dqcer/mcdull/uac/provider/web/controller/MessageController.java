@@ -42,7 +42,7 @@ public class MessageController extends BasicController {
 
     @Operation(summary = "更新已读")
     @GetMapping("/message/read/{messageId}")
-    public Result<Boolean> updateReadFlag(@PathVariable Integer messageId) {
+    public Result<Boolean> updateReadFlag(@PathVariable(value = "messageId") Integer messageId) {
         String key = "update_read:" + messageId;
         return Result.success(super.locker(key, () -> messageService.updateReadFlag(messageId,  UserContextHolder.userId())));
     }

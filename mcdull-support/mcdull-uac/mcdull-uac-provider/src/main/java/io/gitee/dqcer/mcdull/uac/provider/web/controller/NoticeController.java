@@ -49,7 +49,7 @@ public class NoticeController {
     @Operation(summary = "更新详情")
     @GetMapping("/notice/getUpdateVO/{noticeId}")
     @SaCheckPermission("oa:notice:update")
-    public Result<NoticeUpdateFormVO> getUpdateFormVO(@PathVariable Integer noticeId) {
+    public Result<NoticeUpdateFormVO> getUpdateFormVO(@PathVariable(value = "noticeId") Integer noticeId) {
         return Result.success(noticeService.getUpdateFormVO(noticeId));
     }
 
@@ -70,14 +70,14 @@ public class NoticeController {
 
     @Operation(summary = "删除")
     @GetMapping("/notice/delete/{id}")
-    public Result<Boolean> batchDelete(@PathVariable Integer id) {
+    public Result<Boolean> batchDelete(@PathVariable(value = "id") Integer id) {
         noticeService.batchDelete(ListUtil.of(id));
         return Result.success(true);
     }
 
     @Operation(summary = "【员工】通知公告-查看详情")
     @GetMapping("/notice/employee/view/{noticeId}")
-    public Result<NoticeDetailVO> view(@PathVariable Integer noticeId) {
+    public Result<NoticeDetailVO> view(@PathVariable(value = "noticeId") Integer noticeId) {
         return Result.success(noticeService.view(noticeId));
     }
 

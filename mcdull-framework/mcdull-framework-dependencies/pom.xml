@@ -28,7 +28,7 @@
         <hibernate-validator.version>6.1.0.Final</hibernate-validator.version>
         <knife4j.version>4.4.0</knife4j.version>
         <fastjson.version>1.2.83</fastjson.version>
-        <redisson.spring.boot.version>3.25.0</redisson.spring.boot.version>
+        <redisson.spring.boot.version>3.43.0</redisson.spring.boot.version>
         <hutool.version>5.8.28</hutool.version>
         <archunit.version>1.0.1</archunit.version>
         <druid.version>1.2.23</druid.version>

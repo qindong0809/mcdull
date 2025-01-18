@@ -44,9 +44,15 @@ public class TalentCertificateController extends BasicController {
         return Result.success(list);
     }
 
+    @Operation(summary = "全部数据")
+    @GetMapping("/talent-cert/list/{customerCertId}")
+    public Result<List<LabelValueVO<Integer, String>>> list(@PathVariable(value = "customerCertId") Integer customerCertId) {
+        return Result.success(talentCertificateService.list(customerCertId));
+    }
+
     @Operation(summary = "专业")
     @GetMapping("/talent-cert/getMajorList/{code}")
-    public Result<List<LabelValueVO<Integer, String>>> getMajorList(@PathVariable Integer code) {
+    public Result<List<LabelValueVO<Integer, String>>> getMajorList(@PathVariable(value = "code") Integer code) {
         Map<Integer, CertificateBO> certificateMap = CertificateUtil.getCertificateMap();
         return Result.success(certificateMap.get(code).getMajorList().stream()
                 .map(v -> new LabelValueVO<>(v.getCode(), v.getName())).collect(Collectors.toList()));
@@ -94,7 +100,7 @@ public class TalentCertificateController extends BasicController {
 
     @Operation(summary = "删除")
     @GetMapping("/talent-cert/delete/{id}")
-    public Result<Boolean> batchDelete(@PathVariable Integer id) {
+    public Result<Boolean> batchDelete(@PathVariable(value = "id") Integer id) {
         talentCertificateService.batchDelete(ListUtil.of(id));
         return Result.success(true);
     }

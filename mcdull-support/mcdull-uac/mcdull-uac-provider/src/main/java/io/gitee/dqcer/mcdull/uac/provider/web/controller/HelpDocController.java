@@ -8,19 +8,16 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.HelpDocViewRecordQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.HelpDocCatalogVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.HelpDocDetailVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.HelpDocVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.HelpDocViewRecordVO;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IHelpDocCatalogService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IHelpDocService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import java.util.List;
 
 
@@ -38,7 +35,7 @@ public class HelpDocController extends BasicController {
     @Operation(summary = "【用户】-查看详情")
     @GetMapping("/helpDoc/user/view/{helpDocId}")
 //    @RepeatSubmit
-    public Result<HelpDocDetailVO> view(@PathVariable Integer helpDocId) {
+    public Result<HelpDocDetailVO> view(@PathVariable(value = "helpDocId") Integer helpDocId) {
         return Result.success(helpDocService.view(helpDocId));
     }
 
@@ -67,7 +64,7 @@ public class HelpDocController extends BasicController {
     @Operation(summary = "【管理】-获取详情")
     @GetMapping("/helpDoc/getDetail/{helpDocId}")
     @SaCheckPermission("support:helpDoc:add")
-    public Result<HelpDocDetailVO> getDetail(@PathVariable Integer helpDocId) {
+    public Result<HelpDocDetailVO> getDetail(@PathVariable(value = "helpDocId") Integer helpDocId) {
         return Result.success(helpDocService.getDetail(helpDocId));
     }
 
@@ -89,14 +86,14 @@ public class HelpDocController extends BasicController {
 
     @Operation(summary = "【管理】-删除")
     @GetMapping("/helpDoc/delete/{helpDocId}")
-    public Result<Boolean> delete(@PathVariable Integer helpDocId) {
+    public Result<Boolean> delete(@PathVariable(value = "helpDocId") Integer helpDocId) {
         helpDocService.delete(helpDocId);
         return Result.success(true);
     }
 
     @Operation(summary = "【管理】-根据关联id查询")
     @GetMapping("/helpDoc/queryHelpDocByRelationId/{relationId}")
-    public Result<List<HelpDocVO>> queryHelpDocByRelationId(@PathVariable Integer relationId) {
+    public Result<List<HelpDocVO>> queryHelpDocByRelationId(@PathVariable(value = "relationId") Integer relationId) {
         return Result.success(helpDocService.queryHelpDocByRelationId(relationId));
     }
 

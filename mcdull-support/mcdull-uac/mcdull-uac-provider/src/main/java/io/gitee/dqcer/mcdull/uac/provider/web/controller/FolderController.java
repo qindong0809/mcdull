@@ -52,7 +52,7 @@ public class FolderController {
     @Operation(summary = "Delete ")
     @DeleteMapping("delete/{folderId}")
 //    @SaCheckPermission("system:department:write")
-    public Result<Boolean> deleteFolder(@PathVariable Integer folderId) {
+    public Result<Boolean> deleteFolder(@PathVariable(value = "folderId") Integer folderId) {
         return Result.success(folderService.delete(folderId));
     }
 

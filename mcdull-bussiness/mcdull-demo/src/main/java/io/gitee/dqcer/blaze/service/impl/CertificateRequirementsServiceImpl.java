@@ -25,13 +25,14 @@ import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IAreaService;
 import io.gitee.dqcer.util.CertificateUtil;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -132,6 +133,10 @@ public class CertificateRequirementsServiceImpl
         }
         return PageUtil.toPage(voList, entityPage);
     }
+    public void demo() {
+        CertificateRequirementsEntity entity = new CertificateRequirementsEntity();
+
+    }
 
     @Override
     public void exportData() {
@@ -190,6 +195,40 @@ public class CertificateRequirementsServiceImpl
         fieldList.add(new DynamicFieldBO("remarks", "备注", true, FormItemControlTypeEnum.TEXTAREA));
         sheetHeaderMap.put("模板", fieldList);
         commonManager.downloadExcelTemplate(sheetHeaderMap, "证书需求模板");
+    }
+
+    @Override
+    public List<LabelValueVO<Integer, String>> list() {
+        CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
+        PageUtil.setMaxPageSize(dto);
+        PagedVO<CertificateRequirementsVO> page = this.queryPage(dto);
+        if (ObjUtil.isNotNull(page)) {
+            List<CertificateRequirementsVO> list = page.getList();
+            if (CollUtil.isNotEmpty(list)) {
+                List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
+                for (CertificateRequirementsVO vo : list) {
+                    voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
+                }
+                return voList;
+            }
+        }
+        return List.of();
+    }
+
+    @Override
+    public Map<Integer, CertificateRequirementsEntity> map(Set<Integer> set) {
+        if (CollUtil.isNotEmpty(set)) {
+            List<CertificateRequirementsEntity> list = baseRepository.listByIds(set);
+            if (CollUtil.isNotEmpty(list)) {
+                return list.stream().collect(Collectors.toMap(CertificateRequirementsEntity::getId, Function.identity()));
+            }
+        }
+        return Map.of();
+    }
+
+    @Override
+    public CertificateRequirementsEntity get(Integer id) {
+        return baseRepository.getById(id);
     }
 
     private DynamicFieldBO getProvinceFieldBO() {

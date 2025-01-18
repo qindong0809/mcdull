@@ -29,7 +29,7 @@ public class RoleDataScopeController {
 
     @Operation(summary = "获取某角色所设置的数据范围")
     @GetMapping("/role/dataScope/getRoleDataScopeList/{roleId}")
-    public Result<List<RoleDataScopeVO>> dataScopeListByRole(@PathVariable Integer roleId) {
+    public Result<List<RoleDataScopeVO>> dataScopeListByRole(@PathVariable(value = "roleId") Integer roleId) {
         return Result.success(roleDataScopeService.getListByRole(roleId));
     }
 

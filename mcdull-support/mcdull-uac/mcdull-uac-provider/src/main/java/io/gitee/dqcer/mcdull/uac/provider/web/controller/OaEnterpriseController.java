@@ -44,7 +44,7 @@ public class OaEnterpriseController {
     @Operation(summary = "查询企业详情")
     @GetMapping("/oa/enterprise/get/{enterpriseId}")
     @SaCheckPermission("oa:enterprise:detail")
-    public Result<EnterpriseVO> getDetail(@PathVariable Integer enterpriseId) {
+    public Result<EnterpriseVO> getDetail(@PathVariable(value = "enterpriseId") Integer enterpriseId) {
         return Result.success(enterpriseService.getDetail(enterpriseId));
     }
 
@@ -59,7 +59,7 @@ public class OaEnterpriseController {
     @Operation(summary = "删除")
     @GetMapping("/oa/enterprise/delete/{enterpriseId}")
     @SaCheckPermission("oa:enterprise:delete")
-    public Result<Boolean> deleteEnterprise(@PathVariable Integer enterpriseId) {
+    public Result<Boolean> deleteEnterprise(@PathVariable(value = "enterpriseId") Integer enterpriseId) {
         enterpriseService.delete(enterpriseId);
         return Result.success(true);
     }

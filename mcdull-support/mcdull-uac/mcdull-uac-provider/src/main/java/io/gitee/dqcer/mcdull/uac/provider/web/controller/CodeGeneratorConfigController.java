@@ -38,7 +38,7 @@ public class CodeGeneratorConfigController {
     @Operation(summary = "获取表的列")
     @GetMapping("/codeGenerator/table/getTableColumns/{table}")
     @ResponseBody
-    public Result<List<TableColumnVO>> getTableColumns(@PathVariable String table) {
+    public Result<List<TableColumnVO>> getTableColumns(@PathVariable(value = "table") String table) {
         return Result.success(codeGeneratorService.getTableColumns(table));
     }
 
@@ -55,7 +55,7 @@ public class CodeGeneratorConfigController {
     @Operation(summary = "获取配置")
     @GetMapping("/codeGenerator/table/getConfig/{table}")
     @ResponseBody
-    public Result<TableConfigVO> getTableConfig(@PathVariable String table) {
+    public Result<TableConfigVO> getTableConfig(@PathVariable(value = "table") String table) {
         return Result.success(codeGeneratorService.getTableConfig(table));
     }
 
@@ -81,7 +81,7 @@ public class CodeGeneratorConfigController {
     @Operation(summary = "下载")
     @SaCheckPermission("support:code_generator:write")
     @GetMapping(value = "/codeGenerator/code/download/{tableName}", produces = "application/octet-stream")
-    public void download(@PathVariable String tableName, HttpServletResponse response) throws IOException {
+    public void download(@PathVariable(value = "tableName") String tableName, HttpServletResponse response) throws IOException {
         byte[] dataStream = codeGeneratorService.download(tableName);
         ServletUtil.setDownloadFileHeader(response, tableName + "_code.zip");
         response.getOutputStream().write(dataStream);

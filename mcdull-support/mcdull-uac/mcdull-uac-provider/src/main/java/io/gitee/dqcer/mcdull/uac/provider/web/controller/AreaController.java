@@ -40,7 +40,7 @@ public class AreaController extends BasicController {
 
     @Operation(summary = "城市")
     @GetMapping("/area/{provinceCode}/city-list")
-    public Result<List<LabelValueVO<String, String>>> cityList(@PathVariable String provinceCode) {
+    public Result<List<LabelValueVO<String, String>>> cityList(@PathVariable(value = "provinceCode") String provinceCode) {
         return Result.success(areaService.cityList(provinceCode));
     }
 

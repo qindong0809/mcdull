@@ -1,13 +1,17 @@
 package io.gitee.dqcer.blaze.service;
 
+import io.gitee.dqcer.blaze.domain.entity.TalentCertificateEntity;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateAddDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.TalentCertificateVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -30,4 +34,8 @@ public interface ITalentCertificateService {
     void exportData();
 
     void downloadTemplate();
+
+    List<LabelValueVO<Integer, String>> list(Integer customerCertId);
+
+    Map<Integer, TalentCertificateEntity> map(Set<Integer> set);
 }

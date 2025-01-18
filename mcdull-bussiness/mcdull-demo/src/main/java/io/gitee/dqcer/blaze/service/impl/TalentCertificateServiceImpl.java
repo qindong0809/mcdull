@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.blaze.dao.repository.ITalentCertificateRepository;
 import io.gitee.dqcer.blaze.domain.bo.CertificateBO;
+import io.gitee.dqcer.blaze.domain.entity.CertificateRequirementsEntity;
 import io.gitee.dqcer.blaze.domain.entity.TalentCertificateEntity;
 import io.gitee.dqcer.blaze.domain.enums.*;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateAddDTO;
@@ -14,6 +15,7 @@ import io.gitee.dqcer.blaze.domain.form.TalentCertificateQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.FileVO;
 import io.gitee.dqcer.blaze.domain.vo.TalentCertificateVO;
+import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
 import io.gitee.dqcer.blaze.service.ITalentCertificateService;
 import io.gitee.dqcer.blaze.service.ITalentService;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
@@ -30,14 +32,15 @@ import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IAreaService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import io.gitee.dqcer.util.CertificateUtil;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -64,6 +67,9 @@ public class TalentCertificateServiceImpl
 
     @Resource
     private IFileService fileService;
+
+    @Resource
+    private ICertificateRequirementsService certificateRequirementsService;
 
     public PagedVO<TalentCertificateVO> queryPage(TalentCertificateQueryDTO dto) {
         List<TalentCertificateVO> voList = new ArrayList<>();
@@ -203,6 +209,42 @@ public class TalentCertificateServiceImpl
         fieldList.add(new DynamicFieldBO("remarks", "备注", true, FormItemControlTypeEnum.TEXTAREA));
         sheetHeaderMap.put("模板", fieldList);
         commonManager.downloadExcelTemplate(sheetHeaderMap, "证书需求模板");
+    }
+
+    @Override
+    public List<LabelValueVO<Integer, String>> list(Integer customerCertId) {
+        TalentCertificateQueryDTO dto = new TalentCertificateQueryDTO();
+        if (ObjUtil.isNotNull(customerCertId)) {
+            CertificateRequirementsEntity entity = certificateRequirementsService.get(customerCertId);
+            dto.setCertificateLevel(entity.getCertificateLevel());
+            dto.setBiddingExit(entity.getBiddingExit());
+            dto.setThreePersonnel(entity.getThreePersonnel());
+            dto.setSocialSecurityRequirement(entity.getSocialSecurityRequirement());
+        }
+        PageUtil.setMaxPageSize(dto);
+        PagedVO<TalentCertificateVO> page = this.queryPage(dto);
+        if (ObjUtil.isNotNull(page)) {
+            List<TalentCertificateVO> list = page.getList();
+            if (CollUtil.isNotEmpty(list)) {
+                List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
+                for (TalentCertificateVO vo : list) {
+                    voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
+                }
+                return voList;
+            }
+        }
+        return List.of();
+    }
+
+    @Override
+    public Map<Integer, TalentCertificateEntity> map(Set<Integer> set) {
+        if (CollUtil.isNotEmpty(set)) {
+            List<TalentCertificateEntity> list = baseRepository.listByIds(set);
+            if (CollUtil.isNotEmpty(list)) {
+                return list.stream().collect(Collectors.toMap(TalentCertificateEntity::getId, Function.identity()));
+            }
+        }
+        return Collections.emptyMap();
     }
 
     private DynamicFieldBO getProvinceFieldBO() {

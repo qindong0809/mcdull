@@ -53,7 +53,7 @@ public class FormController {
     @Operation(summary = "删除")
     @SaCheckPermission("support:form:delete")
     @GetMapping("/form/delete/{formId}")
-    public Result<Boolean> delete(@PathVariable Integer formId) {
+    public Result<Boolean> delete(@PathVariable(value = "formId") Integer formId) {
         formService.delete(formId);
         return Result.success(true);
     }
@@ -76,13 +76,13 @@ public class FormController {
 
     @Operation(summary = "表单JSON详情")
     @GetMapping("/form/detail/{formId}")
-    public Result<FormVO> detail(@PathVariable Integer formId) {
+    public Result<FormVO> detail(@PathVariable(value = "formId") Integer formId) {
         return Result.success(formService.detail(formId));
     }
 
     @Operation(summary = "表单字段详情")
     @GetMapping("/form/item-config-list/{formId}")
-    public Result<List<FormItemVO>> itemConfigList(@PathVariable Integer formId) {
+    public Result<List<FormItemVO>> itemConfigList(@PathVariable(value = "formId") Integer formId) {
         return Result.success(formService.itemConfigList(formId));
     }
 
@@ -111,7 +111,7 @@ public class FormController {
     @Operation(summary = "删除单条数据")
     @SaCheckPermission("support:form:record:delete")
     @GetMapping("/form/record-delete/{recordId}")
-    public Result<Boolean> deleteOneRecord(@PathVariable Integer recordId) {
+    public Result<Boolean> deleteOneRecord(@PathVariable(value = "recordId") Integer recordId) {
         formService.deleteOneRecord(recordId);
         return Result.success(true);
     }
@@ -126,7 +126,7 @@ public class FormController {
 
     @Operation(summary = "获取单条记录不用转")
     @GetMapping("/form/record-detail-no-convert/{recordId}")
-    public Result<Map<String, Object>> getOneRecordNoConvert(@PathVariable Integer recordId) {
+    public Result<Map<String, Object>> getOneRecordNoConvert(@PathVariable(value = "recordId") Integer recordId) {
         return Result.success(formService.getOneRecordNoConvert(recordId));
     }
 

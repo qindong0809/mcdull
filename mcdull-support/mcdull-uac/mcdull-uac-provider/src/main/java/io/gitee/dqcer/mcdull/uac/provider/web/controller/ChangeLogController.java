@@ -59,7 +59,7 @@ public class ChangeLogController extends BasicController {
     @Operation(summary = "单个删除")
     @GetMapping("/changeLog/delete/{changeLogId}")
     @SaCheckPermission("support:changeLog:delete")
-    public Result<Boolean> batchDelete(@PathVariable Integer changeLogId) {
+    public Result<Boolean> batchDelete(@PathVariable(value = "changeLogId") Integer changeLogId) {
         changeLogService.batchDelete(ListUtil.of(changeLogId));
         return Result.success(true);
     }
@@ -79,7 +79,7 @@ public class ChangeLogController extends BasicController {
 
     @Operation(summary = "变更内容详情")
     @GetMapping("/changeLog/getDetail/{changeLogId}")
-    public Result<ChangeLogVO> getDetail(@PathVariable Integer changeLogId) {
+    public Result<ChangeLogVO> getDetail(@PathVariable(value = "changeLogId") Integer changeLogId) {
         return Result.success(changeLogService.getById(changeLogId));
     }
 

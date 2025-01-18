@@ -48,7 +48,7 @@ public class GitController extends BasicController {
     }
 
     @GetMapping("{id}")
-    public Result<GitVO> detail(@PathVariable Long id) {
+    public Result<GitVO> detail(@PathVariable(value = "id") Long id) {
         return GitService.detail(id);
     }
 

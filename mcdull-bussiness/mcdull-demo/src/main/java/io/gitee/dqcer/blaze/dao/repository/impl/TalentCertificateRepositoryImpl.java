@@ -43,10 +43,13 @@ public class TalentCertificateRepositoryImpl extends
     @Override
     public Page<TalentCertificateEntity> selectPage(TalentCertificateQueryDTO param) {
         LambdaQueryWrapper<TalentCertificateEntity> lambda = Wrappers.lambdaQuery();
-        String keyword = param.getKeyword();
-        if (ObjUtil.isNotNull(keyword)) {
-            // TODO 组装查询条件
-        }
+        lambda.eq(ObjUtil.isNotNull(param.getCertificateLevel()), TalentCertificateEntity::getCertificateLevel, param.getCertificateLevel());
+        lambda.eq(ObjUtil.isNotNull(param.getSpecialty()), TalentCertificateEntity::getSpecialty, param.getSpecialty());
+        lambda.eq(ObjUtil.isNotNull(param.getBiddingExit()), TalentCertificateEntity::getBiddingExit, param.getBiddingExit());
+        lambda.eq(ObjUtil.isNotNull(param.getThreePersonnel()), TalentCertificateEntity::getThreePersonnel, param.getThreePersonnel());
+        lambda.eq(ObjUtil.isNotNull(param.getSocialSecurityRequirement()), TalentCertificateEntity::getSocialSecurityRequirement, param.getSocialSecurityRequirement());
+        lambda.eq(ObjUtil.isNotNull(param.getInitialOrTransfer()), TalentCertificateEntity::getInitialOrTransfer, param.getInitialOrTransfer());
+        lambda.eq(ObjUtil.isNotNull(param.getCertificateStatus()), TalentCertificateEntity::getCertificateStatus, param.getCertificateStatus());
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }

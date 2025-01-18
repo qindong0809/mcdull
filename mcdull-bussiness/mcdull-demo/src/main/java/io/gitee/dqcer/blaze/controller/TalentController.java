@@ -57,7 +57,7 @@ public class TalentController extends BasicController {
 
     @Operation(summary = "删除")
     @GetMapping("/talent/delete/{id}")
-    public Result<Boolean> batchDelete(@PathVariable Integer id) {
+    public Result<Boolean> batchDelete(@PathVariable(value = "id") Integer id) {
         talentService.delete(id);
         return Result.success(true);
     }

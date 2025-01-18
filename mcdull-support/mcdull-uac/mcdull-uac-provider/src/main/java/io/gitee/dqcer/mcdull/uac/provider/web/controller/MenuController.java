@@ -61,7 +61,7 @@ public class MenuController {
     }
     @Operation(summary = "获取角色关联菜单权限")
     @GetMapping("/menu/{roleId}/tree")
-    public Result<RoleMenuTreeVO> getTreeRoleId(@PathVariable Integer roleId) {
+    public Result<RoleMenuTreeVO> getTreeRoleId(@PathVariable(value = "roleId") Integer roleId) {
         return Result.success(menuService.getTreeRoleId(roleId));
     }
 

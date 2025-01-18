@@ -33,21 +33,21 @@ public class NoticeTypeController {
 
     @Operation(summary = "添加")
     @GetMapping("/oa/noticeType/add/{name}")
-    public Result<Boolean> add(@PathVariable String name) {
+    public Result<Boolean> add(@PathVariable(value = "name") String name) {
         noticeTypeService.add(name);
         return Result.success(true);
     }
 
     @Operation(summary = "修改")
     @GetMapping("/oa/noticeType/update/{id}/{name}")
-    public Result<Boolean> update(@PathVariable Integer id, @PathVariable String name) {
+    public Result<Boolean> update(@PathVariable(value = "id") Integer id, @PathVariable(value = "name") String name) {
         noticeTypeService.update(id, name);
         return Result.success(true);
     }
 
     @Operation(summary = "删除")
     @GetMapping("/oa/noticeType/delete/{id}")
-    public Result<Boolean> deleteNoticeType(@PathVariable Integer id) {
+    public Result<Boolean> deleteNoticeType(@PathVariable(value = "id") Integer id) {
         noticeTypeService.delete(id);
         return Result.success(true);
     }
