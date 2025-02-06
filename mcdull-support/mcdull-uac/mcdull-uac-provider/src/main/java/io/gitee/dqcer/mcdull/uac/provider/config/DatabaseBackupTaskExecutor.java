@@ -2,11 +2,11 @@ package io.gitee.dqcer.mcdull.uac.provider.config;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.cron.CronUtil;
 import io.gitee.dqcer.mcdull.business.common.dump.SqlDumper;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.component.ConcurrentRateLimiter;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
@@ -65,28 +65,26 @@ public class DatabaseBackupTaskExecutor {
 
     private boolean startBackup() {
         File file = null;
+        File zipFile = null;
         try (Connection connection = dataSource.getConnection()) {
            String schema = connection.getCatalog();
-            log.info("start backup database. schema:{}", schema);
+            LogHelp.info(log, "start backup database. schema:{}", schema);
             String tmpDirPath = FileUtil.getTmpDirPath();
             String dateTimeStr = commonManager.convertDateTimeStr(new Date());
             String fileName = schema + "_" + dateTimeStr + ".sql";
             file = SqlDumper.dumpDatabase(connection, new HashSet<>(ListUtil.of(schema)), tmpDirPath + File.separator + fileName);
-            byte[] gzip = ZipUtil.gzip(file);
-            String zipName = FileNameUtil.mainName(fileName) + ".zip";
+            zipFile = ZipUtil.zip(file);
             UserContextHolder.setDefaultSession();
-            File zipFile = FileUtil.writeBytes(gzip, tmpDirPath + File.separator + zipName);
             fileService.fileUpload(zipFile, FileFolderTypeEnum.SYSTEM_DATABASE_BACKUP.getValue());
-            log.info("end backup database.");
+            LogHelp.info(log, "backup database success. fileName:{}", fileName);
         } catch (SQLException e) {
             log.error("backup database error", e);
             throw new RuntimeException(e);
         } finally {
             FileUtil.del(file);
+            FileUtil.del(zipFile);
             UserContextHolder.clearSession();
         }
         return true;
     }
-
-
 }

@@ -363,6 +363,20 @@ index `module_id_module_type`(`folder_type`) using btree,
 index `module_type`(`folder_type`) using btree
 ) comment = '文件';
 
+drop table if exists `sys_file_biz`;
+create table `sys_file_biz`  (
+`id` int not null auto_increment comment '主键id',
+`file_id` int not null comment '文件id',
+`biz_id` int not null comment '业务id',
+`biz_code` varchar(32) not null comment '业务类型',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+primary key (`id`) using btree,
+unique index `uk_biz_id`(`biz_id`) using btree
+) comment = '文件与biz';
+
+
 drop table if exists `sys_folder`;
 create table `sys_folder`  (
 `id` int not null auto_increment comment '主键id',

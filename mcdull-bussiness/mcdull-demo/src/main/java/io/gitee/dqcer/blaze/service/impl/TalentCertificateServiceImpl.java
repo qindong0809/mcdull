@@ -1,7 +1,6 @@
 package io.gitee.dqcer.blaze.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -24,9 +23,10 @@ import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.FileEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileUploadVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileBizRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IAreaService;
@@ -71,6 +71,11 @@ public class TalentCertificateServiceImpl
     @Resource
     private ICertificateRequirementsService certificateRequirementsService;
 
+    @Resource
+    private IFileBizRepository fileBizRepository;
+
+    private static final String DEFAULT_BIZ_CODD = "blaze-talent-cert";
+
     public PagedVO<TalentCertificateVO> queryPage(TalentCertificateQueryDTO dto) {
         List<TalentCertificateVO> voList = new ArrayList<>();
         Page<TalentCertificateEntity> entityPage = baseRepository.selectPage(dto);
@@ -79,13 +84,25 @@ public class TalentCertificateServiceImpl
             String fileDomainName = commonManager.getConfig("file-domain-name");
             List<LabelValueVO<Integer, String>> talentList = talentService.list();
             Map<Integer, CertificateBO> certificateMap = CertificateUtil.getCertificateMap();
+            Map<Integer, List<Integer>> fileIdMap = fileBizRepository.mapByBizCode(DEFAULT_BIZ_CODD);
+            Map<Integer, FileEntity> fileEntityMap = fileService.map(fileIdMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet()));
             for (TalentCertificateEntity entity : recordList) {
                 TalentCertificateVO vo = this.convertToVO(entity);
-                FileVO fileVO = new FileVO();
-                fileVO.setUrl(fileDomainName + "/upload/public/common/b78c4a06ed2c4ee1a84a834b984120c4_20250112145154.jpg");
-                fileVO.setFileName("ddd.jpg");
-                fileVO.setId(1);
-                vo.setFileList(ListUtil.of(fileVO));
+                List<Integer> fileIdList = fileIdMap.get(entity.getId());
+                if (CollUtil.isNotEmpty(fileIdList)) {
+                    List<FileVO> fileList = new ArrayList<>();
+                    for (Integer fileId : fileIdList) {
+                        FileEntity fileEntity = fileEntityMap.get(fileId);
+                        if (ObjUtil.isNotNull(fileEntity)) {
+                            FileVO fileVO = new FileVO();
+                            fileVO.setUrl(fileDomainName + fileEntity.getFileKey());
+                            fileVO.setFileName(fileEntity.getFileName());
+                            fileVO.setId(fileEntity.getId());
+                            fileList.add(fileVO);
+                        }
+                    }
+                    vo.setFileList(fileList);
+                }
                 BigDecimal positionContractPrice = entity.getPositionContractPrice();
                 if (ObjUtil.isNotNull(positionContractPrice)) {
                     vo.setPositionContractPrice(positionContractPrice.setScale(2, RoundingMode.HALF_UP).toString());
@@ -362,12 +379,12 @@ public class TalentCertificateServiceImpl
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void insert(TalentCertificateAddDTO dto) {
+    public void insert(TalentCertificateAddDTO dto, MultipartFile file) {
         TalentCertificateEntity entity = this.convertToEntity(dto);
         entity.setPositionTitle(StrUtil.EMPTY);
         baseRepository.save(entity);
         this.builderPositionTitle(entity);
-
+        fileService.fileUpload(file, FileFolderTypeEnum.BIZ.getValue(), entity.getId(), DEFAULT_BIZ_CODD);
     }
 
     private void builderPositionTitle(TalentCertificateEntity entity) {
@@ -399,8 +416,7 @@ public class TalentCertificateServiceImpl
         this.setUpdateFieldValue(dto, entity);
         baseRepository.updateById(entity);
         this.builderPositionTitle(entity);
-        FileUploadVO fileUploadVO = fileService.fileUpload(file, FileFolderTypeEnum.BIZ.getValue());
-        System.out.println(fileUploadVO);
+        fileService.fileUpload(file, FileFolderTypeEnum.BIZ.getValue(), entity.getId(), DEFAULT_BIZ_CODD);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -410,5 +426,15 @@ public class TalentCertificateServiceImpl
             this.throwDataNotExistException(idList);
         }
         baseRepository.removeBatchByIds(idList);
+        Map<Integer, List<Integer>> map = fileBizRepository.mapByBizCode(DEFAULT_BIZ_CODD);
+        for (TalentCertificateEntity entity : entityList) {
+            Integer entityId = entity.getId();
+            List<Integer> fileIdList = map.get(entityId);
+            if (CollUtil.isNotEmpty(fileIdList)) {
+                for (Integer fileId : fileIdList) {
+                    fileService.removeByFileId(fileId, entityId, DEFAULT_BIZ_CODD);
+                }
+            }
+        }
     }
 }

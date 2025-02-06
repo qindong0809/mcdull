@@ -23,7 +23,7 @@ import java.util.Set;
 
 public interface ITalentCertificateService {
 
-    void insert(TalentCertificateAddDTO dto);
+    void insert(TalentCertificateAddDTO dto, MultipartFile file);
 
     void update(TalentCertificateUpdateDTO dto, MultipartFile file);
 

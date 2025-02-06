@@ -72,6 +72,6 @@ public class SerialNumberRecordRepositoryImpl
 
     @Override
     public void deleteBatchByIds(List<Integer> ids) {
-        baseMapper.deleteBatchIds(ids);
+        baseMapper.deleteByIds(ids);
     }
 }

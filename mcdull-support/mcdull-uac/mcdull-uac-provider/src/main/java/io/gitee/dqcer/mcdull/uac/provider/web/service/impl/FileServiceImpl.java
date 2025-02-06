@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -24,17 +25,20 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileDownloadVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileMetadataVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileUploadVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileBizRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileStorageService;
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.annotation.Resource;
 import java.io.File;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,6 +50,9 @@ public class FileServiceImpl
 
     @Resource
     private IUserManager userManager;
+
+    @Resource
+    private IFileBizRepository fileBizRepository;
 
     @Override
     public PagedVO<FileVO> queryPage(FileQueryDTO dto) {
@@ -121,6 +128,15 @@ public class FileServiceImpl
     }
 
     @Override
+    public FileUploadVO fileUpload(MultipartFile file, Integer folder, Integer bizId, String bizCode) {
+        FileUploadVO fileUploadVO = this.fileUpload(file, folder);
+        if (StringUtils.isNotBlank(bizCode)) {
+            fileBizRepository.save(ListUtil.of(fileUploadVO.getFileId()), fileUploadVO.getFileId(), bizCode);
+        }
+        return fileUploadVO;
+    }
+
+    @Override
     public FileUploadVO fileUpload(File file, Integer folder) {
         CustomMultipartFile multipartFile = new CustomMultipartFile(file.getName(), file.getName(), "application/zip", FileUtil.readBytes(file));
         return this.fileUpload(multipartFile, folder);
@@ -168,5 +184,26 @@ public class FileServiceImpl
             list.add(fileVO);
         }
         return list;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void removeByFileId(Integer fileId, Integer bizId, String bizCode) {
+        FileEntity byId = baseRepository.getById(fileId);
+        if (ObjectUtil.isNotNull(byId)) {
+            fileBizRepository.deleteByBizCode(bizId, bizCode);
+            baseRepository.removeById(fileId);
+        }
+    }
+
+    @Override
+    public Map<Integer, FileEntity> map(Set<Integer> fileIdSet) {
+        if (CollUtil.isNotEmpty(fileIdSet)) {
+            List<FileEntity> list = baseRepository.listByIds(fileIdSet);
+            if (CollUtil.isNotEmpty(list)) {
+                return list.stream().collect(Collectors.toMap(FileEntity::getId, Function.identity()));
+            }
+        }
+        return Map.of();
     }
 }

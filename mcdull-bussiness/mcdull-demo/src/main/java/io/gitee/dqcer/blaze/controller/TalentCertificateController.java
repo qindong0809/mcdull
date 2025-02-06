@@ -77,9 +77,10 @@ public class TalentCertificateController extends BasicController {
     }
 
     @Operation(summary = "添加")
-    @PostMapping("/talent-cert/add")
-    public Result<Boolean> add(@RequestBody @Valid TalentCertificateAddDTO dto) {
-        talentCertificateService.insert(dto);
+    @PostMapping(value ="/talent-cert/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result<Boolean> add(@Valid TalentCertificateAddDTO dto, @RequestPart("file") MultipartFile file) {
+        talentCertificateService.insert(dto, file);
         return Result.success(true);
     }
 
