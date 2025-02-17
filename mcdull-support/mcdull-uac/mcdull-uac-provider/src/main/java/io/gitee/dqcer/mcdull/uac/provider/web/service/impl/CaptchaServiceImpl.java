@@ -24,22 +24,18 @@ public class CaptchaServiceImpl
 
     @Resource
     private DefaultKaptcha defaultKaptcha;
-
     @Resource
     private RedisClient redisClient;
-
     @Resource
     private SystemEnvironment systemEnvironment;
 
     private static final String CAPTCHA_KEY = "login_captcha:{}";
-
     private static final int EXPIRE_SECOND = 65;
 
     @Override
     public CaptchaVO get() {
         String captchaText = defaultKaptcha.createText();
         BufferedImage image = defaultKaptcha.createImage(captchaText);
-
         String base64Code;
         try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
             ImageIO.write(image, "jpg", os);
@@ -48,10 +44,7 @@ public class CaptchaServiceImpl
             LogHelp.error(log, "generateCaptcha error:", e);
             throw new BusinessException("生成验证码错误");
         }
-
         String uuid = UUID.randomUUID().toString().replace("-", StrUtil.EMPTY);
-
-
         CaptchaVO captchaVO = new CaptchaVO();
         captchaVO.setCaptchaUuid(uuid);
         captchaVO.setCaptchaBase64Image("data:image/png;base64," + base64Code);
@@ -69,11 +62,8 @@ public class CaptchaServiceImpl
     public void checkCaptcha(String code, String uuid) {
         String key = StrUtil.format(CAPTCHA_KEY, uuid);
         String redisCaptchaCode = redisClient.get(key);
-        if (StrUtil.isBlank(redisCaptchaCode)) {
-            throw new BusinessException("验证码已过期");
-        }
-        if (!StrUtil.equals(redisCaptchaCode, code)) {
-            throw  new BusinessException("验证码错误，请输入正确的验证码");
+        if (StrUtil.isBlank(redisCaptchaCode) || !StrUtil.equals(redisCaptchaCode, code)) {
+            throw  new BusinessException("验证码错误或已过期，请输入正确的验证码或刷新后重新输入");
         }
         // 删除已使用的验证码
         redisClient.delete(key);
