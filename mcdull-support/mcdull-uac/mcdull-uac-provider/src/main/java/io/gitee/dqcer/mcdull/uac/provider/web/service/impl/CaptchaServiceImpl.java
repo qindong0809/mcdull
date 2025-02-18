@@ -9,13 +9,13 @@ import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.framework.web.config.SystemEnvironment;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.CaptchaVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ICaptchaService;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Base64Utils;
-
 import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 import java.util.UUID;
 
 @Service
@@ -39,7 +39,7 @@ public class CaptchaServiceImpl
         String base64Code;
         try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
             ImageIO.write(image, "jpg", os);
-            base64Code = Base64Utils.encodeToString(os.toByteArray());
+            base64Code = Base64.getEncoder().encodeToString(os.toByteArray());
         } catch (Exception e) {
             LogHelp.error(log, "generateCaptcha error:", e);
             throw new BusinessException("生成验证码错误");
