@@ -86,7 +86,8 @@ public class FileServiceImpl
     public FileUploadVO fileUpload(MultipartFile file, Integer folderType) {
         FileFolderTypeEnum folderTypeEnum = IEnum.getByCode(FileFolderTypeEnum.class, folderType);
         if (null == folderTypeEnum) {
-            throw new BusinessException("上传文件类型错误");
+            folderTypeEnum = FileFolderTypeEnum.COMMON;
+//            throw new BusinessException("上传文件类型错误");
         }
 
         if (null == file || file.getSize() == 0) {
@@ -115,7 +116,7 @@ public class FileServiceImpl
         FileUploadVO uploadVO = fileStorageService.upload(file, folderTypeEnum.getFolder());
         // 上传成功 保存记录数据库
         FileEntity fileEntity = new FileEntity();
-        fileEntity.setFolderType(folderTypeEnum.getValue());
+        fileEntity.setFolderType(folderType);
         fileEntity.setFileName(originalFilename);
         fileEntity.setFileSize(Convert.toInt(size));
         fileEntity.setFileKey(uploadVO.getFileKey());
@@ -137,7 +138,7 @@ public class FileServiceImpl
     }
 
     @Override
-    public FileUploadVO fileUpload(File file, Integer folder) {
+    public FileUploadVO fileUpload(File file, Integer folder, String fileLocalPath) {
         CustomMultipartFile multipartFile = new CustomMultipartFile(file.getName(), file.getName(), "application/zip", FileUtil.readBytes(file));
         return this.fileUpload(multipartFile, folder);
     }

@@ -402,8 +402,7 @@ create table `sys_table_column`  (
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
-primary key (`id`) using btree,
-unique index `uni_employee_table`(`user_id`, `table_id`) using btree
+primary key (`id`) using btree
 )  comment = '表格的自定义列存储';
 
 drop table if exists `sys_help_doc_catalog`;

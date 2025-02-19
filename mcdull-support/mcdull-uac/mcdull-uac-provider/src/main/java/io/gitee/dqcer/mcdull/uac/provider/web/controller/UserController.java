@@ -3,24 +3,22 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileUploadVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.annotation.Resource;
-import jakarta.validation.Valid;
 import java.util.List;
 
 /**
@@ -37,26 +35,26 @@ public class UserController extends BasicController {
     private IUserService userService;
 
 
+    @Operation(summary = "分页列表")
     @Authorized("sys:user:view")
-    @Operation(summary = "Query Page", description = "")
     @GetMapping("user/list")
-    @RedisLock(key = "'lock:uac:user:' + #dto.pageSize ", timeout = 3)
+//    @RedisLock(key = "'lock:uac:user:' + #dto.pageSize ", timeout = 3)
 //    @Transform
-    public Result<PagedVO<UserVO>> listByPage(@Validated(ValidGroup.Paged.class) UserListDTO dto) {
+    public Result<PagedVO<UserVO>> listByPage(@Validated UserListDTO dto) {
 //        ThreadUtil.sleep(8000);
         return Result.success(userService.listByPage(dto));
     }
 
     @Operation(summary = "导出数据")
     @SaCheckPermission("system:employee:export")
-    @PostMapping(value = "user/list/record-export", produces = "application/octet-stream")
+    @PostMapping(value = "user/list/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData() {
         userService.exportData();
     }
 
     @Operation(summary = "下载模板")
     @SaCheckPermission("system:employee:download_template")
-    @PostMapping(value = "user/list/download-template", produces = "application/octet-stream")
+    @PostMapping(value = "user/list/download-template", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void downloadTemplate() {
         userService.downloadTemplate();
     }

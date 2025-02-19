@@ -65,13 +65,13 @@ public class TalentCertificateController extends BasicController {
     }
 
     @Operation(summary = "导出数据")
-    @PostMapping(value = "/talent-cert/list/record-export", produces = "application/octet-stream")
+    @PostMapping(value = "/talent-cert/list/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData() {
         talentCertificateService.exportData();
     }
 
     @Operation(summary = "下载模板")
-    @PostMapping(value = "/talent-cert/list/download-template", produces = "application/octet-stream")
+    @PostMapping(value = "/talent-cert/list/download-template", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void downloadTemplate() {
         talentCertificateService.downloadTemplate();
     }

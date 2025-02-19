@@ -52,6 +52,18 @@ public class FolderRepositoryImpl
         return this.getChildNodeByParentId(parentDeptId);
     }
 
+    @Override
+    public FolderEntity getSystemFolderId(Integer parentId, String name) {
+        LambdaQueryWrapper<FolderEntity> query = Wrappers.lambdaQuery();
+        query.eq(FolderEntity::getParentId, parentId);
+        query.eq(FolderEntity::getName, name);
+        List<FolderEntity> list = super.list(query);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
     private List<FolderEntity> getChildNodeByParentId(Integer parentId) {
         List<FolderEntity> result = new ArrayList<>();
         List<FolderEntity> list = this.listByParentId(parentId);

@@ -37,20 +37,20 @@ import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileExtensionTypeEnum;
-import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.util.ExcelUtil;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IConfigRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IFolderService;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -66,15 +66,14 @@ public class CommonManagerImpl implements ICommonManager {
 
     @Resource
     private IUserManager userManager;
-
     @Resource
     private IFileService fileService;
-
     @Resource
     private IConfigRepository configRepository;
-
     @Resource
     private CacheChannel cacheChannel;
+    @Resource
+    private IFolderService folderService;
 
     private String getFileName(FileExtensionTypeEnum fileExtension, String... args) {
         if (ObjUtil.isNull(fileExtension) || ArrayUtil.isEmpty(args)) {
@@ -240,7 +239,9 @@ public class CommonManagerImpl implements ICommonManager {
             ArrayUtil.copy(byteArray, copiedBinaryData, byteArray.length);
             String tmpPath = FileUtil.getTmpDirPath() + File.separator + System.currentTimeMillis() + File.separator + fileName;
             FileUtil.writeBytes(copiedBinaryData, tmpPath);
-            fileService.fileUpload(FileUtil.writeBytes(copiedBinaryData, tmpPath), FileFolderTypeEnum.EXPORT.getValue());
+//            fileService.fileUpload(FileUtil.writeBytes(copiedBinaryData, tmpPath), FileFolderTypeEnum.EXPORT.getValue());
+            fileService.fileUpload(FileUtil.writeBytes(copiedBinaryData, tmpPath), folderService.getSystemExportFolderId(sheetName));
+
             FileUtil.del(tmpPath);
         }
         HttpServletResponse response = ServletUtil.getResponse();

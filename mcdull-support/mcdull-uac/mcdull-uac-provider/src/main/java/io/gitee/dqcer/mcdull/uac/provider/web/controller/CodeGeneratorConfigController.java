@@ -13,11 +13,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.TableVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ICodeGeneratorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
-
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -80,7 +81,7 @@ public class CodeGeneratorConfigController {
 
     @Operation(summary = "下载")
     @SaCheckPermission("support:code_generator:write")
-    @GetMapping(value = "/codeGenerator/code/download/{tableName}", produces = "application/octet-stream")
+    @GetMapping(value = "/codeGenerator/code/download/{tableName}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void download(@PathVariable(value = "tableName") String tableName, HttpServletResponse response) throws IOException {
         byte[] dataStream = codeGeneratorService.download(tableName);
         ServletUtil.setDownloadFileHeader(response, tableName + "_code.zip");

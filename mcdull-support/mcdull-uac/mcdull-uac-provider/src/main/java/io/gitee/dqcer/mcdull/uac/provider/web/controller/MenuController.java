@@ -12,11 +12,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleMenuTreeVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.annotation.Resource;
-import jakarta.validation.Valid;
 import java.util.List;
 
 /**
@@ -75,7 +76,7 @@ public class MenuController {
 
     @Operation(summary = "导出数据")
     @SaCheckPermission("system:menu:export")
-    @PostMapping(value = "/menu/record-export", produces = "application/octet-stream")
+    @PostMapping(value = "/menu/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@Validated MenuListDTO dto) {
         menuService.exportData(dto);
     }

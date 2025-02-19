@@ -13,21 +13,16 @@ import io.gitee.dqcer.mcdull.uac.provider.model.audit.FolderAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FolderInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FolderUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FolderEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderTreeInfoVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderTreeVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFolderRepository;
-import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFolderService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,11 +36,8 @@ import java.util.stream.Collectors;
 public class FolderServiceImpl
         extends BasicServiceImpl<IFolderRepository>  implements IFolderService {
 
-    @Resource
-    private IUserService userService;
-
-    @Resource
-    private IAuditManager auditManager;
+//    @Resource
+//    private IAuditManager auditManager;
 
     @Override
     public List<FolderInfoVO> getAll() {
@@ -62,21 +54,55 @@ public class FolderServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean insert(FolderInsertDTO dto) {
+    public Integer getSystemExportFolderId(String menuName) {
+        FolderEntity entity = baseRepository.getSystemFolderId(0, "系统文件");
+        Integer systemId = null;
+        if (ObjUtil.isNull(entity)) {
+            systemId = this.insert("系统文件", 0);
+        } else {
+            systemId = entity.getId();
+        }
+        FolderEntity menuFolder = baseRepository.getSystemFolderId(systemId, menuName);
+        if (ObjUtil.isNull(menuFolder)) {
+            return this.insert(menuName, systemId);
+        }
+        return menuFolder.getId();
+    }
+
+
+
+    @Transactional(rollbackFor = Exception.class)
+    public Integer insert(String name, Integer parentId) {
+        if (ObjUtil.isNull(name) || ObjUtil.isNull(parentId)) {
+            throw new BusinessException(I18nConstants.MISSING_PARAMETER);
+        }
+        FolderInsertDTO dto = new FolderInsertDTO();
+        dto.setName(name);
+        dto.setParentId(parentId);
+        return this.insert(dto, false);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Integer insert(FolderInsertDTO dto, boolean isSaveLog) {
         Integer parentId = dto.getParentId();
         List<FolderEntity> childList = baseRepository.listByParentId(parentId);
+        int sort = 1;
         if (CollUtil.isNotEmpty(childList)) {
             boolean anyMatch = childList.stream().anyMatch(i -> i.getName().equals(dto.getName()));
             if (anyMatch) {
                 throw new BusinessException(I18nConstants.NAME_DUPLICATED);
             }
+            sort = childList.stream().max(Comparator.comparingInt(FolderEntity::getSort)).map(FolderEntity::getSort).orElse(0) + 1;
         }
         FolderEntity menu = this.convertToEntity(dto);
-        menu.setSort(childList.size() + 1);
+        menu.setIdPath("1");
+        menu.setSort(sort);
         baseRepository.save(menu);
-
-        auditManager.saveByAddEnum(dto.getName(), menu.getId(), this.buildAuditLog(menu));
-        return true;
+        if (isSaveLog) {
+//            auditManager.saveByAddEnum(dto.getName(), menu.getId(), this.buildAuditLog(menu));
+        }
+        return menu.getId();
     }
 
     private Audit buildAuditLog(FolderEntity menu) {
@@ -117,8 +143,8 @@ public class FolderServiceImpl
         }
         this.settingUpdateValue(dto, entity);
         baseRepository.updateById(entity);
-        auditManager.saveByUpdateEnum(dto.getName(), id,
-                this.buildAuditLog(entity), this.buildAuditLog(baseRepository.getById(id)));
+//        auditManager.saveByUpdateEnum(dto.getName(), id,
+//                this.buildAuditLog(entity), this.buildAuditLog(baseRepository.getById(id)));
         return true;
     }
 
@@ -147,7 +173,7 @@ public class FolderServiceImpl
 //            }
         }
         baseRepository.removeById(id);
-        auditManager.saveByDeleteEnum(department.getName(), department.getId(), "");
+//        auditManager.saveByDeleteEnum(department.getName(), department.getId(), "");
         return true;
     }
 

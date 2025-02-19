@@ -51,5 +51,7 @@ public interface IFolderRepository extends IRepository<FolderEntity> {
      * @return int
      */
     List<FolderEntity> getTreeList(Integer folderId);
+
+    FolderEntity getSystemFolderId(Integer parentId, String name);
 }
 

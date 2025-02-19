@@ -5,15 +5,14 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.FolderInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FolderUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderTreeInfoVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderTreeVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFolderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.annotation.Resource;
-import jakarta.validation.Valid;
 import java.util.List;
 
 /**
@@ -38,8 +37,8 @@ public class FolderController {
 
     @Operation(summary = "Add")
     @PostMapping("insert")
-    public Result<Boolean> insert(@RequestBody @Validated FolderInsertDTO dto){
-        return Result.success(folderService.insert(dto));
+    public Result<Integer> insert(@RequestBody @Validated FolderInsertDTO dto){
+        return Result.success(folderService.insert(dto, true));
     }
 
     @Operation(summary = "Update")

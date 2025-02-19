@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,13 +64,13 @@ public class CertificateRequirementsController extends BasicController {
     }
 
     @Operation(summary = "导出数据")
-    @PostMapping(value = "CertificateRequirements/list/record-export", produces = "application/octet-stream")
+    @PostMapping(value = "CertificateRequirements/list/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData() {
         certificateRequirementsService.exportData();
     }
 
     @Operation(summary = "下载模板")
-    @PostMapping(value = "CertificateRequirements/list/download-template", produces = "application/octet-stream")
+    @PostMapping(value = "CertificateRequirements/list/download-template", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void downloadTemplate() {
         certificateRequirementsService.downloadTemplate();
     }

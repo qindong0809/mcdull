@@ -4,7 +4,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.FolderInsertDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.FolderUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderTreeInfoVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderTreeVO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,7 +19,10 @@ public interface IFolderService {
 
     List<FolderInfoVO> getAll();
 
-    boolean insert(FolderInsertDTO dto);
+    @Transactional(rollbackFor = Exception.class)
+    Integer getSystemExportFolderId(String menuName);
+
+    Integer insert(FolderInsertDTO dto, boolean isSaveLog);
 
     boolean update(Integer id, FolderUpdateDTO dto);
 

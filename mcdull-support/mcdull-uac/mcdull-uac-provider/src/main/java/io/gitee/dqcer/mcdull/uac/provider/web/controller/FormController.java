@@ -9,10 +9,11 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.FormVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFormService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
-
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
 
@@ -103,7 +104,7 @@ public class FormController {
 
     @Operation(summary = "导出数据")
     @SaCheckPermission("support:form:record:export")
-    @PostMapping(value = "/form/record-export", produces = "application/octet-stream")
+    @PostMapping(value = "/form/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid FormRecordQueryDTO dto) {
        formService.exportData(dto);
     }
