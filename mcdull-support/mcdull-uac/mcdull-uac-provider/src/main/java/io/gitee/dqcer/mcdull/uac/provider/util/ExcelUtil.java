@@ -55,8 +55,7 @@ public class ExcelUtil {
         exportExcelByMap(byteArrayOutputStreamMap, "map sheet",
                 StrUtil.EMPTY, StrUtil.EMPTY, StrUtil.EMPTY, map, dataMapList);
 
-        FileUtil.writeBytes(byteArrayOutputStream.toByteArray(), "D:/33.xlsx");
-
+        FileUtil.writeBytes(byteArrayOutputStreamMap.toByteArray(), "D:/33.xlsx");
     }
 
     private static List<List<String>> dataList() {
@@ -78,7 +77,7 @@ public class ExcelUtil {
                                    Map<String, String> titleMap,
                                    List<Map<String, String>> dataMapList) {
         exportExcel(outputStream, sheetName, filterConditions, exportBy, exportTime,
-                toTitleList(titleMap), toDataList(titleMap, dataMapList));
+                toTitleList(sheetName, exportBy, exportTime, titleMap), toDataList(titleMap, dataMapList));
     }
 
 
@@ -194,13 +193,15 @@ public class ExcelUtil {
 
 
 
-    private static List<List<String>> toTitleList(Map<String, String> titleMap) {
+    private static List<List<String>> toTitleList(String sheetName, String exportBy, String exportTime, Map<String, String> titleMap) {
         if (MapUtil.isEmpty(titleMap)) {
             return Collections.emptyList();
         }
         List<List<String>> titleList = new ArrayList<>();
         for (Map.Entry<String, String> entry : titleMap.entrySet()) {
             List<String> oneTitle = new ArrayList<>();
+//            oneTitle.add(sheetName);
+//            oneTitle.add("导出时间" + exportTime + "导出人" + exportBy);
             oneTitle.add(entry.getKey());
             titleList.add(oneTitle);
         }
