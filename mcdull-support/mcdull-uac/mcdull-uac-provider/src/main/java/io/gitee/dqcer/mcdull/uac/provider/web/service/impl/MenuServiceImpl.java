@@ -14,6 +14,9 @@ import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.audit.MenuAudit;
@@ -370,6 +373,45 @@ public class MenuServiceImpl
     @Override
     public List<LabelValueVO<String, String>> getDropdownOptions() {
         return menuManager.getNameCodeList();
+    }
+
+    private String getMenuNameByPermissionCode(String permissionCode) {
+        if (StrUtil.isNotBlank(permissionCode)) {
+            List<MenuEntity> all = baseRepository.all();
+            MenuEntity permissionEntity = all.stream()
+                    .filter(menuEntity -> StrUtil.equals(permissionCode, menuEntity.getApiPerms())).findFirst().orElse(null);
+            if (ObjUtil.isNotNull(permissionEntity)) {
+                return this.searchMenuName(all, permissionEntity.getId());
+            }
+        }
+        return StrUtil.EMPTY;
+    }
+
+    @Override
+    public String getCurrentMenuName() {
+        UnifySession<?> session = UserContextHolder.getSession();
+        String permissionCode = session.getPermissionCode();
+        if (StrUtil.isBlank(permissionCode)) {
+            throw new BusinessException(I18nConstants.MISSING_PARAMETER);
+        }
+        String menuName = this.getMenuNameByPermissionCode(permissionCode);
+        if (StrUtil.isBlank(menuName)) {
+            LogHelp.error(log, "menuName is not exist. permissionCode: {}", permissionCode);
+            throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
+        }
+        return menuName;
+    }
+
+    private String searchMenuName(List<MenuEntity> all, Integer id) {
+        MenuEntity menu = all.stream().
+                filter(menuEntity -> ObjUtil.equal(id, menuEntity.getId())).findFirst().orElse(null);
+        if (ObjUtil.isNotNull(menu)) {
+            if (ObjUtil.equal(MenuTypeEnum.MENU.getCode(), menu.getMenuType())) {
+                return menu.getMenuName();
+            }
+            return this.searchMenuName(all, menu.getParentId());
+        }
+        return StrUtil.EMPTY;
     }
 
     private Map<String, String> getTitleMap() {

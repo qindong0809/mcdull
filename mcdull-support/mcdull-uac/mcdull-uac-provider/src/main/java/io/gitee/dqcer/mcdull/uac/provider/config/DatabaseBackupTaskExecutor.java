@@ -9,9 +9,9 @@ import io.gitee.dqcer.mcdull.business.common.dump.SqlDumper;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.component.ConcurrentRateLimiter;
-import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IFolderService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -36,15 +36,14 @@ public class DatabaseBackupTaskExecutor {
 
     @Resource
     private DataSource dataSource;
-
     @Resource
     private ConcurrentRateLimiter concurrentRateLimiter;
-
     @Resource
     private IFileService fileService;
-
     @Resource
     private ICommonManager commonManager;
+    @Resource
+    private IFolderService folderService;
 
 
     @PostConstruct
@@ -75,7 +74,7 @@ public class DatabaseBackupTaskExecutor {
             file = SqlDumper.dumpDatabase(connection, new HashSet<>(ListUtil.of(schema)), tmpDirPath + File.separator + fileName);
             zipFile = ZipUtil.zip(file);
             UserContextHolder.setDefaultSession();
-            fileService.fileUpload(zipFile, FileFolderTypeEnum.SYSTEM_DATABASE_BACKUP.getValue());
+            fileService.fileUpload(zipFile, folderService.addIfAbsent("数据备份", 0));
             LogHelp.info(log, "backup database success. fileName:{}", fileName);
         } catch (SQLException e) {
             log.error("backup database error", e);

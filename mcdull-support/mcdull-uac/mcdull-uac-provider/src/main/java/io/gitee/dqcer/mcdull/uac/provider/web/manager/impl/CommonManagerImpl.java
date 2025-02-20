@@ -44,6 +44,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFolderService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
@@ -74,6 +75,8 @@ public class CommonManagerImpl implements ICommonManager {
     private CacheChannel cacheChannel;
     @Resource
     private IFolderService folderService;
+    @Resource
+    private IMenuService menuService;
 
     private String getFileName(FileExtensionTypeEnum fileExtension, String... args) {
         if (ObjUtil.isNull(fileExtension) || ArrayUtil.isEmpty(args)) {
@@ -230,18 +233,15 @@ public class CommonManagerImpl implements ICommonManager {
         ExcelUtil.exportExcelByMap(outputStream, sheetName,
                 conditions, actualName, s, titleMap, mapList);
         byte[] byteArray = outputStream.toByteArray();
-
-        String fileName = this.getFileName(FileExtensionTypeEnum.EXCEL_X, sheetName);
-
+        String menuName = menuService.getCurrentMenuName();
+        String fileName = this.getFileName(FileExtensionTypeEnum.EXCEL_X, menuName, sheetName);
         Boolean exportAutoStorage = this.getConfigToBool("export-auto-storage");
         if (BooleanUtil.isTrue(exportAutoStorage)) {
             byte[] copiedBinaryData = new byte[byteArray.length];
             ArrayUtil.copy(byteArray, copiedBinaryData, byteArray.length);
             String tmpPath = FileUtil.getTmpDirPath() + File.separator + System.currentTimeMillis() + File.separator + fileName;
             FileUtil.writeBytes(copiedBinaryData, tmpPath);
-//            fileService.fileUpload(FileUtil.writeBytes(copiedBinaryData, tmpPath), FileFolderTypeEnum.EXPORT.getValue());
-            fileService.fileUpload(FileUtil.writeBytes(copiedBinaryData, tmpPath), folderService.getSystemExportFolderId(sheetName));
-
+            fileService.fileUpload(FileUtil.writeBytes(copiedBinaryData, tmpPath), folderService.getSystemFolderId());
             FileUtil.del(tmpPath);
         }
         HttpServletResponse response = ServletUtil.getResponse();
@@ -252,6 +252,8 @@ public class CommonManagerImpl implements ICommonManager {
             throw new RuntimeException(e);
         }
     }
+
+
 
     @Override
     public String readTemplateFileContent(String path) {

@@ -11,7 +11,6 @@ import io.gitee.dqcer.mcdull.business.common.CustomMultipartFile;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -30,6 +29,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileStorageService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IFolderService;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -47,12 +47,12 @@ public class FileServiceImpl
 
     @Resource
     private IFileStorageService fileStorageService;
-
     @Resource
     private IUserManager userManager;
-
     @Resource
     private IFileBizRepository fileBizRepository;
+    @Resource
+    private IFolderService folderService;
 
     @Override
     public PagedVO<FileVO> queryPage(FileQueryDTO dto) {
@@ -84,12 +84,6 @@ public class FileServiceImpl
 
     @Override
     public FileUploadVO fileUpload(MultipartFile file, Integer folderType) {
-        FileFolderTypeEnum folderTypeEnum = IEnum.getByCode(FileFolderTypeEnum.class, folderType);
-        if (null == folderTypeEnum) {
-            folderTypeEnum = FileFolderTypeEnum.COMMON;
-//            throw new BusinessException("上传文件类型错误");
-        }
-
         if (null == file || file.getSize() == 0) {
             throw new BusinessException("上传文件不能为空");
         }
@@ -113,7 +107,8 @@ public class FileServiceImpl
         }
 
         // 进行上传
-        FileUploadVO uploadVO = fileStorageService.upload(file, folderTypeEnum.getFolder());
+        String rootToNodeName = folderService.getRootToNodeName(folderType);
+        FileUploadVO uploadVO = fileStorageService.upload(file, FileFolderTypeEnum.FOLDER_PUBLIC + "/" + rootToNodeName);
         // 上传成功 保存记录数据库
         FileEntity fileEntity = new FileEntity();
         fileEntity.setFolderType(folderType);
@@ -138,7 +133,7 @@ public class FileServiceImpl
     }
 
     @Override
-    public FileUploadVO fileUpload(File file, Integer folder, String fileLocalPath) {
+    public FileUploadVO fileUpload(File file, Integer folder) {
         CustomMultipartFile multipartFile = new CustomMultipartFile(file.getName(), file.getName(), "application/zip", FileUtil.readBytes(file));
         return this.fileUpload(multipartFile, folder);
     }

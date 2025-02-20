@@ -5,6 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
@@ -17,6 +18,8 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderTreeInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFolderRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFolderService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IMenuService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,16 +39,20 @@ import java.util.stream.Collectors;
 public class FolderServiceImpl
         extends BasicServiceImpl<IFolderRepository>  implements IFolderService {
 
+    public static final String SYSTEM_FOLDER = "系统文件";
+
 //    @Resource
 //    private IAuditManager auditManager;
+    @Resource
+    private IMenuService menuService;
 
     @Override
     public List<FolderInfoVO> getAll() {
         List<FolderInfoVO> list = new ArrayList<>();
         List<FolderEntity> entityList = baseRepository.list();
         if (CollUtil.isNotEmpty(entityList)) {
-            for (FolderEntity dept : entityList) {
-                FolderInfoVO vo = this.convertToVO(dept);
+            for (FolderEntity folder : entityList) {
+                FolderInfoVO vo = this.convertToVO(folder);
                 list.add(vo);
             }
         }
@@ -54,33 +61,63 @@ public class FolderServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Integer getSystemExportFolderId(String menuName) {
-        FolderEntity entity = baseRepository.getSystemFolderId(0, "系统文件");
-        Integer systemId = null;
+    public Integer getSystemFolderId() {
+        String menuName = menuService.getCurrentMenuName();
+        FolderEntity entity = baseRepository.getSystemFolderId(0, SYSTEM_FOLDER);
+        Integer systemId;
         if (ObjUtil.isNull(entity)) {
-            systemId = this.insert("系统文件", 0);
+            FolderInsertDTO dto = new FolderInsertDTO();
+            dto.setName(SYSTEM_FOLDER);
+            dto.setParentId(0);
+            systemId = this.insert(dto, false);
         } else {
             systemId = entity.getId();
         }
         FolderEntity menuFolder = baseRepository.getSystemFolderId(systemId, menuName);
+        Integer folderId;
         if (ObjUtil.isNull(menuFolder)) {
-            return this.insert(menuName, systemId);
+            FolderInsertDTO dto = new FolderInsertDTO();
+            dto.setName(menuName);
+            dto.setParentId(systemId);
+            folderId = this.insert(dto, false);
+        } else {
+            folderId = menuFolder.getId();
         }
-        return menuFolder.getId();
+        return folderId;
     }
 
+    @Override
+    public String getRootToNodeName(Integer folderId) {
+        FolderEntity folder = baseRepository.getById(folderId);
+        if (ObjUtil.isNotNull(folder)) {
+            String idPath = folder.getIdPath();
+            List<String> split = StrUtil.split(idPath, StrUtil.SLASH);
+            List<Integer> list = Convert.toList(Integer.class, split);
+            List<FolderEntity> folderEntities = baseRepository.listByIds(list);
+            if (CollUtil.isNotEmpty(folderEntities)) {
+                folderEntities.sort(Comparator.comparingInt(FolderEntity::getParentId));
+                return folderEntities.stream().map(FolderEntity::getName).collect(Collectors.joining(StrUtil.SLASH));
+            }
+        }
+        return StrUtil.EMPTY;
+    }
 
-
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer insert(String name, Integer parentId) {
-        if (ObjUtil.isNull(name) || ObjUtil.isNull(parentId)) {
-            throw new BusinessException(I18nConstants.MISSING_PARAMETER);
+    public Integer addIfAbsent(String name, Integer parentId) {
+        List<FolderEntity> childList = baseRepository.listByParentId(parentId);
+        if (CollUtil.isNotEmpty(childList)) {
+            FolderEntity folder = childList.stream().filter(i -> i.getName().equals(name)).findFirst().orElse(null);
+            if (ObjUtil.isNotNull(folder)) {
+                return folder.getId();
+            }
         }
         FolderInsertDTO dto = new FolderInsertDTO();
         dto.setName(name);
         dto.setParentId(parentId);
         return this.insert(dto, false);
     }
+
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -93,16 +130,32 @@ public class FolderServiceImpl
             if (anyMatch) {
                 throw new BusinessException(I18nConstants.NAME_DUPLICATED);
             }
-            sort = childList.stream().max(Comparator.comparingInt(FolderEntity::getSort)).map(FolderEntity::getSort).orElse(0) + 1;
+            sort = childList.stream().max(Comparator.comparingInt(FolderEntity::getSort))
+                    .map(FolderEntity::getSort).orElse(0) + 1;
         }
-        FolderEntity menu = this.convertToEntity(dto);
-        menu.setIdPath("1");
-        menu.setSort(sort);
-        baseRepository.save(menu);
+        FolderEntity folder = this.convertToEntity(dto);
+        List<FolderEntity> list = baseRepository.all();
+        List<Integer> integers = this.getParentIds(list, parentId, new ArrayList<>());
+        List<Integer> reverse = CollUtil.reverse(integers);
+        folder.setIdPath(reverse.stream().map(Convert::toStr).collect(Collectors.joining(StrUtil.SLASH)));
+        folder.setSort(sort);
+        baseRepository.save(folder);
         if (isSaveLog) {
 //            auditManager.saveByAddEnum(dto.getName(), menu.getId(), this.buildAuditLog(menu));
         }
-        return menu.getId();
+        return folder.getId();
+    }
+
+    private List<Integer> getParentIds(List<FolderEntity> all, Integer parentId, List<Integer> parentIds) {
+        parentIds.add(parentId);
+        FolderEntity folderEntity = all.stream().filter(i -> i.getId().equals(parentId)).findFirst().orElse(null);
+        if (ObjUtil.isNotNull(folderEntity)) {
+            Integer pId = folderEntity.getParentId();
+            if (ObjUtil.isNotNull(pId)) {
+                getParentIds(all, pId, parentIds);
+            }
+        }
+        return parentIds;
     }
 
     private Audit buildAuditLog(FolderEntity menu) {

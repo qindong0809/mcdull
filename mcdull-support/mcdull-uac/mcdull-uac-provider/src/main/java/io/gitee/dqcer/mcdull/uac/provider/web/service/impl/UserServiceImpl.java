@@ -83,33 +83,26 @@ public class UserServiceImpl
 
     @Resource
     private IUserRoleService userRoleService;
-
     @Resource
     private IRoleService roleService;
-
     @Resource
     private IMenuService menuService;
-
     @Resource
     private IDepartmentRepository departmentRepository;
-
     @Resource
     private IAuditManager auditManager;
-
     @Resource
     private IDictTypeManager dictTypeManager;
-
     @Resource
     private IEmailService emailService;
-
     @Resource
     private ICommonManager commonManager;
-
     @Resource
     private IFileService fileService;
-
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+    @Resource
+    private IFolderService folderService;
 
     private static final String AES_KEY = "1024abcd1024abcd1024abcd1024abcd";
 
@@ -226,7 +219,7 @@ public class UserServiceImpl
             String pafPathParent = FileUtil.getTmpDirPath() + File.separator + System.currentTimeMillis();
             String pdfPath = pafPathParent + File.separator + fileName;
             HtmlConvertPdf.updatePdfLeftFooter(byteArrayInOutStream.getInputStream(), pdfPath, message);
-            fileService.fileUpload(new File(pdfPath), FileFolderTypeEnum.USER.getValue());
+            fileService.fileUpload(new File(pdfPath), folderService.getSystemFolderId());
             FileUtil.del(pdfPath);
             FileUtil.del(pafPathParent);
         }
