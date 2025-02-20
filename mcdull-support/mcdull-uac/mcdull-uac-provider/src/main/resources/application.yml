@@ -1,6 +1,9 @@
 server:
   port: 8090
 spring:
+  main:
+    # 允许循环引用
+    allow-circular-references: true
   application:
     name: mcdull-uac-provider
   boot:

@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import io.gitee.dqcer.mcdull.framework.base.annotation.Authorized;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -36,7 +35,7 @@ public class UserController extends BasicController {
 
 
     @Operation(summary = "分页列表")
-    @Authorized("sys:user:view")
+//    @Authorized("sys:user:view")
     @GetMapping("user/list")
 //    @RedisLock(key = "'lock:uac:user:' + #dto.pageSize ", timeout = 3)
 //    @Transform
@@ -46,20 +45,21 @@ public class UserController extends BasicController {
     }
 
     @Operation(summary = "导出数据")
-    @SaCheckPermission("system:employee:export")
+    @SaCheckPermission("system:user:export")
     @PostMapping(value = "user/list/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData() {
         userService.exportData();
     }
 
     @Operation(summary = "下载模板")
-    @SaCheckPermission("system:employee:download_template")
+    @SaCheckPermission("system:user:download_template")
     @PostMapping(value = "user/list/download-template", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void downloadTemplate() {
         userService.downloadTemplate();
     }
 
     @Operation(summary = "上传数据")
+    @SaCheckPermission("system:user:download_template")
     @PostMapping("/user/list/import-data")
     public Result<Boolean> upload(@RequestParam MultipartFile file) {
         final String pre = "user_import_data";
@@ -75,7 +75,7 @@ public class UserController extends BasicController {
 
     @Operation(summary = "添加")
     @PostMapping("/user/add")
-    @SaCheckPermission("system:employee:write")
+    @SaCheckPermission("system:user:write")
     public Result<Integer> insert(@Valid @RequestBody UserAddDTO dto) {
         return Result.success(super.locker(dto.getLoginName(),
                 () -> userService.insert(dto)));
@@ -103,7 +103,7 @@ public class UserController extends BasicController {
 
     @Operation(summary = "更新员工禁用/启用状态")
     @GetMapping("/employee/update/disabled/{userId}")
-    @SaCheckPermission("system:employee:write")
+    @SaCheckPermission("system:user:write")
     public Result<Boolean> updateDisableFlag(@PathVariable(value = "userId") Integer userId) {
         userService.toggleActive(userId);
         return Result.success(true);
@@ -111,7 +111,7 @@ public class UserController extends BasicController {
 
     @Operation(summary = "批量删除员工")
     @PostMapping("/employee/update/batch/delete")
-    @SaCheckPermission("system:employee:write")
+    @SaCheckPermission("system:user:write")
     public Result<Boolean> batchUpdateDeleteFlag(@RequestBody List<Integer> userIdList) {
         userService.delete(userIdList);
         return Result.success(true);
@@ -119,7 +119,7 @@ public class UserController extends BasicController {
 
     @Operation(summary = "更新数据", description = "")
     @PostMapping("/user/update")
-    @SaCheckPermission("system:employee:write")
+    @SaCheckPermission("system:user:write")
     public Result<Integer> update(@RequestBody @Validated UserUpdateDTO dto){
         return Result.success(userService.update(dto.getEmployeeId(), dto));
     }
@@ -140,14 +140,14 @@ public class UserController extends BasicController {
 
     @Operation(summary = "Reset Password")
     @PostMapping("/user/update/password/reset/{userId}")
-    @SaCheckPermission("system:employee:password:reset")
+    @SaCheckPermission("system:user:password:reset")
     public Result<String> resetPassword(@PathVariable(value = "userId") Integer userId) {
         return Result.success(userService.resetPassword(userId));
     }
 
     @Operation(summary = "批量调整员工部门")
     @PostMapping("/user/update/batch/department")
-    @SaCheckPermission("system:employee:write")
+    @SaCheckPermission("system:user:write")
     public Result<Boolean> batchUpdateDepartment(@Valid @RequestBody UserBatchUpdateDepartmentDTO dto) {
         userService.batchUpdateDepartment(dto);
         return Result.success(true);
