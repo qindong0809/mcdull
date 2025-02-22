@@ -44,7 +44,6 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.DictSelectTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.EmailTypeEnum;
-import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.UserAllVO;
@@ -55,16 +54,16 @@ import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IDictTypeManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.annotation.Resource;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -656,28 +655,24 @@ public class UserServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void exportData() {
-        UserListDTO dto = new UserListDTO();
-        PageUtil.setMaxPageSize(dto);
-        List<UserVO> list = CollUtil.emptyIfNull(this.listByPage(dto).getList());
-        Map<String, String> titleMap = this.getTitleMap();
-        List<Map<String, String>> mapList = new ArrayList<>();
-        for (UserVO vo : list) {
-            Map<String, String> map = new HashMap<>();
-            map.put("username", vo.getActualName());
-            map.put("jobNumber", vo.getLoginName());
-            map.put("gender", StrUtil.toString(vo.getGender()));
-            map.put("phone", vo.getPhone());
-            map.put("email", vo.getEmail());
-            map.put("departmentName", vo.getDepartmentName());
-            map.put("roleName", StrUtil.join(StrUtil.COMMA, vo.getRoleNameList()));
-            map.put("createdByName", vo.getCreatedByName());
-            map.put("createdTime",commonManager.convertDateByUserTimezone(vo.getCreatedTime()));
-            map.put("updatedByName", vo.getUpdatedByName());
-            map.put("updatedTime", commonManager.convertDateByUserTimezone(vo.getUpdatedTime()));
-            map.put("inactive", IEnum.getTextByCode(InactiveEnum.class, vo.getInactive()));
-            mapList.add(map);
-        }
-        commonManager.exportExcel("部门人员", StrUtil.EMPTY, titleMap, mapList);
+        commonManager.exportExcel(new UserListDTO(), this::listByPage, "部门人员", this.getTitleMap(), this::convertMap);
+    }
+
+    private Map<String, String> convertMap(UserVO vo) {
+        Map<String, String> map = new HashMap<>();
+        map.put("username", vo.getActualName());
+        map.put("jobNumber", vo.getLoginName());
+        map.put("gender", StrUtil.toString(vo.getGender()));
+        map.put("phone", vo.getPhone());
+        map.put("email", vo.getEmail());
+        map.put("departmentName", vo.getDepartmentName());
+        map.put("roleName", StrUtil.join(StrUtil.COMMA, vo.getRoleNameList()));
+        map.put("createdByName", vo.getCreatedByName());
+        map.put("createdTime",commonManager.convertDateByUserTimezone(vo.getCreatedTime()));
+        map.put("updatedByName", vo.getUpdatedByName());
+        map.put("updatedTime", commonManager.convertDateByUserTimezone(vo.getUpdatedTime()));
+        map.put("inactive", IEnum.getTextByCode(InactiveEnum.class, vo.getInactive()));
+        return map;
     }
 
     @Override

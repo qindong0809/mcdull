@@ -3,6 +3,9 @@ package io.gitee.dqcer.mcdull.uac.provider.web.manager;
 import cn.hutool.core.lang.Pair;
 import io.gitee.dqcer.mcdull.business.common.excel.DataAnalysisListener;
 import io.gitee.dqcer.mcdull.business.common.excel.DynamicFieldTemplate;
+import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +32,10 @@ public interface ICommonManager {
 
     void importExcelData(MultipartFile file, Function<String, List<DynamicFieldTemplate>> function,
                          Consumer<List<Pair<String, DataAnalysisListener>>> consumer);
+
+    <D extends PagedDTO, V extends VO> void exportExcel(D dto, Function<D, PagedVO<V>> function,
+                                                        String sheetName, Map<String, String> titleMap,
+                                                        Function<V, Map<String, String>> mapFunction);
 
     void exportExcel(String sheetName, String conditions, Map<String, String> titleMap, List<Map<String, String>> mapList);
 

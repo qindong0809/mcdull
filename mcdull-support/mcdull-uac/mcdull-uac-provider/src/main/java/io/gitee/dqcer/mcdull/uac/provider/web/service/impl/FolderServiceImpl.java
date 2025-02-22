@@ -23,10 +23,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -62,7 +59,7 @@ public class FolderServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Integer getSystemFolderId() {
-        String menuName = menuService.getCurrentMenuName();
+        List<String> menuNameList = menuService.getCurrentMenuName();
         FolderEntity entity = baseRepository.getSystemFolderId(0, SYSTEM_FOLDER);
         Integer systemId;
         if (ObjUtil.isNull(entity)) {
@@ -73,15 +70,17 @@ public class FolderServiceImpl
         } else {
             systemId = entity.getId();
         }
-        FolderEntity menuFolder = baseRepository.getSystemFolderId(systemId, menuName);
-        Integer folderId;
-        if (ObjUtil.isNull(menuFolder)) {
-            FolderInsertDTO dto = new FolderInsertDTO();
-            dto.setName(menuName);
-            dto.setParentId(systemId);
-            folderId = this.insert(dto, false);
-        } else {
-            folderId = menuFolder.getId();
+        Integer folderId = systemId;
+        for (String menuName : menuNameList) {
+            FolderEntity menuFolder = baseRepository.getSystemFolderId(folderId, menuName);
+            if (ObjUtil.isNull(menuFolder)) {
+                FolderInsertDTO dto = new FolderInsertDTO();
+                dto.setName(menuName);
+                dto.setParentId(folderId);
+                folderId = this.insert(dto, false);
+            } else {
+                folderId = menuFolder.getId();
+            }
         }
         return folderId;
     }
@@ -243,6 +242,17 @@ public class FolderServiceImpl
             return convertTreeSelect(build);
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public Map<Integer, String> getMap(Set<Integer> folderSet) {
+        if (CollUtil.isNotEmpty(folderSet)) {
+            List<FolderEntity> folderEntities = baseRepository.listByIds(folderSet);
+            if (CollUtil.isNotEmpty(folderEntities)) {
+                return folderEntities.stream().collect(Collectors.toMap(FolderEntity::getId, FolderEntity::getName));
+            }
+        }
+        return Map.of();
     }
 
     private List<FolderTreeInfoVO> convertTreeSelect(List<Tree<Integer>> list) {

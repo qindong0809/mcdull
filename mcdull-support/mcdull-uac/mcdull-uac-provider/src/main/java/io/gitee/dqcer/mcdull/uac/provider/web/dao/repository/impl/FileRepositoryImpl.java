@@ -93,14 +93,13 @@ public class FileRepositoryImpl
     }
 
     @Override
-    public Page<FileEntity> selectPage(FileQueryDTO dto, List<Integer> userIdList) {
+    public Page<FileEntity> selectPage(FileQueryDTO dto, List<Integer> userIdList, List<Integer> childerList) {
         LambdaQueryWrapper<FileEntity> lambda = new QueryWrapper<FileEntity>().lambda();
         if (CollUtil.isNotEmpty(userIdList)) {
             lambda.in(BaseEntity::getCreatedBy, userIdList);
         }
-        Integer folderType = dto.getFolderType();
-        if (ObjUtil.isNotNull(folderType)) {
-            lambda.eq(FileEntity::getFolderType, folderType);
+        if (CollUtil.isNotEmpty(childerList)) {
+            lambda.in(FileEntity::getFolderType, childerList);
         }
         String fileName = dto.getFileName();
         if (StrUtil.isNotBlank(fileName)) {

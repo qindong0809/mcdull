@@ -140,35 +140,31 @@ public class CertificateRequirementsServiceImpl
 
     @Override
     public void exportData() {
-        CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
-        PageUtil.setMaxPageSize(dto);
-        Map<String, String> titleMap = this.getTitleMap();
-        List<CertificateRequirementsVO> list = CollUtil.emptyIfNull(this.queryPage(dto).getList());
-        List<Map<String, String>> mapList = new ArrayList<>();
-        for (CertificateRequirementsVO vo : list) {
-            Map<String, String> map = new HashMap<>();
-            map.put("customerName", vo.getCustomerName());
-            map.put("certificateLevelName", vo.getCertificateLevelName());
-            map.put("specialtyName", vo.getSpecialtyName());
-            map.put("provincesName", vo.getProvincesName());
-            map.put("cityName", vo.getCityName());
-            map.put("quantity", StrUtil.toString(vo.getQuantity()));
-            map.put("titleName", vo.getTitleName());
-            map.put("initialOrTransferName", vo.getInitialOrTransferName());
-            map.put("certificateStatusName", vo.getCertificateStatusName());
-            map.put("positionContractPrice", StrUtil.toString(vo.getPositionContractPrice()));
-            map.put("otherCosts", StrUtil.toString(vo.getOtherCosts()));
-            map.put("actualPositionPrice", StrUtil.toString(vo.getActualPositionPrice()));
-            map.put("duration", StrUtil.toString(vo.getDuration()));
-            map.put("biddingExitName", vo.getBiddingExitName());
-            map.put("threePersonnelName", vo.getThreePersonnelName());
-            map.put("socialSecurityRequirementName", vo.getSocialSecurityRequirementName());
-            map.put("positionSourceName", vo.getPositionSourceName());
-            map.put("remarks", vo.getRemarks());
-            map.put("createdTime", commonManager.convertDateByUserTimezone(vo.getCreatedTime()));
-            mapList.add(map);
-        }
-        commonManager.exportExcel("企业证书需求", "", titleMap, mapList);
+        commonManager.exportExcel(new CertificateRequirementsQueryDTO(), this::queryPage, "企业证书需求", this.getTitleMap(), this::convertMap);
+    }
+
+    private Map<String, String> convertMap(CertificateRequirementsVO vo) {
+        Map<String, String> map = new HashMap<>();
+        map.put("customerName", vo.getCustomerName());
+        map.put("certificateLevelName", vo.getCertificateLevelName());
+        map.put("specialtyName", vo.getSpecialtyName());
+        map.put("provincesName", vo.getProvincesName());
+        map.put("cityName", vo.getCityName());
+        map.put("quantity", StrUtil.toString(vo.getQuantity()));
+        map.put("titleName", vo.getTitleName());
+        map.put("initialOrTransferName", vo.getInitialOrTransferName());
+        map.put("certificateStatusName", vo.getCertificateStatusName());
+        map.put("positionContractPrice", StrUtil.toString(vo.getPositionContractPrice()));
+        map.put("otherCosts", StrUtil.toString(vo.getOtherCosts()));
+        map.put("actualPositionPrice", StrUtil.toString(vo.getActualPositionPrice()));
+        map.put("duration", StrUtil.toString(vo.getDuration()));
+        map.put("biddingExitName", vo.getBiddingExitName());
+        map.put("threePersonnelName", vo.getThreePersonnelName());
+        map.put("socialSecurityRequirementName", vo.getSocialSecurityRequirementName());
+        map.put("positionSourceName", vo.getPositionSourceName());
+        map.put("remarks", vo.getRemarks());
+        map.put("createdTime", commonManager.convertDateByUserTimezone(vo.getCreatedTime()));
+        return map;
     }
 
     @Override

@@ -375,43 +375,44 @@ public class MenuServiceImpl
         return menuManager.getNameCodeList();
     }
 
-    private String getMenuNameByPermissionCode(String permissionCode) {
+    private List<String> getMenuNameByPermissionCode(String permissionCode) {
         if (StrUtil.isNotBlank(permissionCode)) {
+            List<String> nameList = new ArrayList<>();
             List<MenuEntity> all = baseRepository.all();
             MenuEntity permissionEntity = all.stream()
                     .filter(menuEntity -> StrUtil.equals(permissionCode, menuEntity.getApiPerms())).findFirst().orElse(null);
             if (ObjUtil.isNotNull(permissionEntity)) {
-                return this.searchMenuName(all, permissionEntity.getId());
+                this.searchMenuName(all, permissionEntity.getParentId(), nameList);
+                return CollUtil.reverse(nameList);
             }
         }
-        return StrUtil.EMPTY;
+        return Collections.emptyList();
     }
 
     @Override
-    public String getCurrentMenuName() {
+    public List<String> getCurrentMenuName() {
         UnifySession<?> session = UserContextHolder.getSession();
         String permissionCode = session.getPermissionCode();
         if (StrUtil.isBlank(permissionCode)) {
             throw new BusinessException(I18nConstants.MISSING_PARAMETER);
         }
-        String menuName = this.getMenuNameByPermissionCode(permissionCode);
-        if (StrUtil.isBlank(menuName)) {
+        List<String> menuNameList = this.getMenuNameByPermissionCode(permissionCode);
+        if (CollUtil.isEmpty(menuNameList)) {
             LogHelp.error(log, "menuName is not exist. permissionCode: {}", permissionCode);
             throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
         }
-        return menuName;
+        return menuNameList;
     }
 
-    private String searchMenuName(List<MenuEntity> all, Integer id) {
+    private void searchMenuName(List<MenuEntity> all, Integer id, List<String> nameList) {
         MenuEntity menu = all.stream().
                 filter(menuEntity -> ObjUtil.equal(id, menuEntity.getId())).findFirst().orElse(null);
         if (ObjUtil.isNotNull(menu)) {
-            if (ObjUtil.equal(MenuTypeEnum.MENU.getCode(), menu.getMenuType())) {
-                return menu.getMenuName();
-            }
-            return this.searchMenuName(all, menu.getParentId());
+//            if (ObjUtil.equal(MenuTypeEnum.MENU.getCode(), menu.getMenuType())) {
+                nameList.add(menu.getMenuName());
+//            }
+            this.searchMenuName(all, menu.getParentId(), nameList);
         }
-        return StrUtil.EMPTY;
     }
 
     private Map<String, String> getTitleMap() {

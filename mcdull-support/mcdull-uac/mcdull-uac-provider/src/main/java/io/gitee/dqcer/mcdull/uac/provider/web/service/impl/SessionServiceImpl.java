@@ -9,14 +9,13 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.SessionQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.SessionVO;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ISessionService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -30,6 +29,8 @@ public class SessionServiceImpl implements ISessionService {
 
     @Resource
     private IUserService userService;
+    @Resource
+    private ICommonManager commonManager;
 
     @Override
     public PagedVO<SessionVO> queryPage(SessionQueryDTO dto) {
@@ -63,5 +64,28 @@ public class SessionServiceImpl implements ISessionService {
         for (Integer userId : loginIdList) {
             StpUtil.kickout(userId);
         }
+    }
+
+    @Override
+    public void exportData(SessionQueryDTO dto) {
+        commonManager.exportExcel(new SessionQueryDTO(), this::queryPage, "会话列表", this.getTitleMap(), this::convertMap);
+    }
+
+    private Map<String, String> getTitleMap() {
+        Map<String, String> titleMap = new HashMap<>(8);
+        titleMap.put("会话ID", "id");
+        titleMap.put("登录名", "loginName");
+        titleMap.put("用户名", "actualName");
+        titleMap.put("创建时间", "createTime");
+        return titleMap;
+    }
+
+    private Map<String, String> convertMap(SessionVO vo) {
+        Map<String, String> map = new HashMap<>(8);
+        map.put("id", vo.getId());
+        map.put("loginName", vo.getLoginName());
+        map.put("actualName", vo.getActualName());
+        map.put("createTime", commonManager.convertDateTimeStr(vo.getCreateTime()));
+        return map;
     }
 }

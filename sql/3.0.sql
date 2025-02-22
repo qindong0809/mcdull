@@ -3,7 +3,7 @@ create table if not exists `sys_user` (
 `id` int not null auto_increment comment '主键',
 `login_name` varchar(30)  not null comment '登录帐号',
 `login_pwd` varchar(50)  not null comment '登录密码',
-`actual_name` varchar(30)  not null comment '员工名称',
+`actual_name` varchar(30)  not null comment '用户名称',
 `email` varchar(300)  not null comment 'email',
 `gender` tinyint(1) not null default 0 comment '性别',
 `phone` varchar(15)  null default null comment '手机号码',
@@ -106,16 +106,27 @@ primary key (`id`) using btree
 
 INSERT INTO `sys_menu` VALUES (26, '菜单管理', 2, 50, 1, '/menu/list', '/system/menu/menu-list.vue', NULL, NULL, NULL, 'CopyOutlined', NULL, 0, NULL, 1, 1, 0, 0, 2, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (40, '写操作', 3, 26, NULL, NULL, NULL, 1, 'system:menu:write', 'system:menu:write', NULL, 26, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
-INSERT INTO `sys_menu` VALUES (41, '导出', 3, 26, NULL, NULL, NULL, 1, 'system:menu:export', 'system:menu:export', NULL, 26, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
-INSERT INTO `sys_menu` VALUES (45, '部门员工', 1, 0, 3, '/organization', NULL, NULL, NULL, NULL, 'UserSwitchOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
-INSERT INTO `sys_menu` VALUES (46, '部门员工', 2, 45, 1, '/employee/department', '/system/employee/department/index.vue', NULL, NULL, NULL, 'AuditOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
-INSERT INTO `sys_menu` VALUES (85, '部门读操作', 3, 46, 1, NULL, NULL, 1, 'system:department:read', 'system:department:read', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
-INSERT INTO `sys_menu` VALUES (86, '部门写操作', 3, 46, 1, NULL, NULL, 1, 'system:department:write', 'system:department:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
-INSERT INTO `sys_menu` VALUES (91, '员工写操作', 3, 46, NULL, NULL, NULL, 1, 'system:employee:write', 'system:employee:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (45, '部门用户', 1, 0, 3, '/organization', NULL, NULL, NULL, NULL, 'UserSwitchOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (46, '部门用户', 2, 45, 1, '/employee/department', '/system/employee/department/index.vue', NULL, NULL, NULL, 'AuditOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (85, '读操作', 3, 46, 1, NULL, NULL, 1, 'system:department:read', 'system:department:read', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (86, '写操作', 3, 46, 1, NULL, NULL, 1, 'system:department:write', 'system:department:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (91, '写操作', 3, 46, NULL, NULL, NULL, 1, 'system:user:write', 'system:user:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (76, '角色管理', 2, 45, 2, '/employee/role', '/system/employee/role/index.vue', NULL, NULL, NULL, 'SlidersOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (97, '写操作', 3, 76, NULL, NULL, NULL, 1, 'system:role:write', 'system:role:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (80, '日志审计', 2, 111, 3, '/support/audit-log/audit-log-list', '/support/audit-log/audit-log-list.vue', NULL, NULL, NULL, 'VideoCameraOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (87, '邮件记录', 2, 111, 3, '/support/email-history/email-history-list', '/support/email-history/email-history-list.vue', NULL, NULL, NULL, 'MailOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+
+INSERT INTO `sys_menu` VALUES (41, '导出', 3, 26, 3, NULL, NULL, 1, 'system:menu:export', 'system:menu:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (92, '导出', 3, 46, 3, NULL, NULL, 1, 'system:user:export', 'system:user:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (82, '导出', 3, 80, 3, NULL, NULL, 1, 'system:biz_audit:export', 'system:biz_audit:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (93, '导出', 3, 81, 3, NULL, NULL, 1, 'system:operateLog:export', 'system:operateLog:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (94, '导出', 3, 87, 3, NULL, NULL, 1, 'system:emails_send:export', 'system:emails_send:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (96, '导出', 3, 221, 3, NULL, NULL, 1, 'system:session:export', 'system:session:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (98, '导出', 3, 143, 3, NULL, NULL, 1, 'system:loginLog:export', 'system:loginLog:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (99, '导出', 3, 242, 3, NULL, NULL, 1, 'system:area:export', 'system:area:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (100, '导出', 3, 109, 3, NULL, NULL, 1, 'system:config:export', 'system:config:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (101, '导出', 3, 132, 3, NULL, NULL, 1, 'system:notice:export', 'system:notice:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+
 
 INSERT INTO `sys_menu` VALUES (47, '商品管理', 2, 48, 1, '/erp/goods/list', '/business/erp/goods/goods-list.vue', NULL, NULL, NULL, 'AliwangwangOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (48, '商品管理', 1, 137, 10, '/goods', NULL, NULL, NULL, NULL, 'BarcodeOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
@@ -123,7 +134,7 @@ INSERT INTO `sys_menu` VALUES (50, '系统设置', 1, 0, 6, '/setting', NULL, NU
 INSERT INTO `sys_menu` VALUES (78, '商品分类', 2, 48, 2, '/erp/catalog/goods', '/business/erp/catalog/goods-catalog.vue', NULL, NULL, NULL, 'ApartmentOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (79, '自定义分组', 2, 48, 3, '/erp/catalog/custom', '/business/erp/catalog/custom-catalog.vue', NULL, NULL, NULL, 'AppstoreAddOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (81, '请求监控', 2, 111, 3, '/support/operate-log/operate-log-list', '/support/operate-log/operate-log-list.vue', NULL, NULL, NULL, 'VideoCameraOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
-INSERT INTO `sys_menu` VALUES (95, '重置密码', 3, 46, NULL, NULL, NULL, 1, 'system:employee:password:reset', 'system:employee:password:reset', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (95, '重置密码', 3, 46, NULL, NULL, NULL, 1, 'system:user:password:reset', 'system:user:password:reset', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (109, '参数配置', 2, 50, 3, '/config/config-list', '/support/config/config-list.vue', NULL, NULL, NULL, 'AntDesignOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (110, '数据字典', 2, 50, 4, '/setting/dict', '/support/dict/index.vue', NULL, NULL, NULL, 'BarcodeOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (111, '监控服务', 1, 0, 100, '/monitor', NULL, NULL, NULL, NULL, 'BarChartOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
@@ -174,9 +185,9 @@ INSERT INTO `sys_menu` VALUES (182, '新建', 3, 144, NULL, NULL, NULL, 1, 'oa:e
 INSERT INTO `sys_menu` VALUES (183, '编辑', 3, 144, NULL, NULL, NULL, 1, 'oa:enterprise:update', 'oa:enterprise:update', NULL, 144, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (184, '删除', 3, 144, NULL, NULL, NULL, 1, 'oa:enterprise:delete', 'oa:enterprise:delete', NULL, 144, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (185, '查询', 3, 132, NULL, NULL, NULL, 1, 'oa:notice:query', 'oa:notice:query', NULL, 132, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
-INSERT INTO `sys_menu` VALUES (186, '新建', 3, 132, NULL, NULL, NULL, 1, 'oa:notice:add', 'oa:notice:add', NULL, 132, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
-INSERT INTO `sys_menu` VALUES (187, '编辑', 3, 132, NULL, NULL, NULL, 1, 'oa:notice:update', 'oa:notice:update', NULL, 132, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
-INSERT INTO `sys_menu` VALUES (188, '删除', 3, 132, NULL, NULL, NULL, 1, 'oa:notice:delete', 'oa:notice:delete', NULL, 132, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+
+INSERT INTO `sys_menu` VALUES (186, '写操作', 3, 132, NULL, NULL, NULL, 1, 'system:notice:write', 'system:notice:write', NULL, 132, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+
 INSERT INTO `sys_menu` VALUES (190, '查询', 3, 152, NULL, NULL, NULL, 1, '', 'support:changeLog:query', NULL, 152, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (191, '新建', 3, 152, NULL, NULL, NULL, 1, 'support:changeLog:add', 'support:changeLog:add', NULL, 152, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (192, '批量删除', 3, 152, NULL, NULL, NULL, 1, 'support:changeLog:batchDelete', 'support:changeLog:batchDelete', NULL, 152, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
@@ -251,7 +262,7 @@ drop table if exists `sys_role_user`;
 create table `sys_role_user`  (
 `id` int not null auto_increment,
 `role_id` int not null comment '角色id',
-`user_id` int not null comment '员工id',
+`user_id` int not null comment '用户id',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
@@ -472,7 +483,7 @@ create table `sys_help_doc_view_record`  (
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
 primary key (`id`, `help_doc_id`, `user_id`) using btree,
-unique index `uk_notice_employee`(`help_doc_id`, `user_id`) using btree comment '资讯员工'
+unique index `uk_notice_employee`(`help_doc_id`, `user_id`) using btree comment '资讯用户'
 ) comment = '帮助文档-查看记录';
 
 insert into `sys_help_doc_view_record` values (1, 31, 1,  3,  0, sysdate(), sysdate());
@@ -497,9 +508,9 @@ primary key (`id`) using btree,
 unique index `version_unique`(`version`) using btree
 ) comment = '系统更新日志';
 
-insert into `sys_change_log` values (1, 'v1.0.0', 1, '王大锤', sysdate(), 'v1.0.0 版本正式上线，内容如下：\n\n1.【新增】增加员工姓名查询\n\n2.【新增】增加文件预览组件\n\n3.【新增】新增四级菜单\n', '', 0, sysdate(), sysdate());
-insert into `sys_change_log` values (2, 'v1.0.1', 2, '王大锤', sysdate(), 'v1.0.1 版本正式更新上线，更新内容如下：\n\n1.【新增】增加员工姓名查询\n\n2.【新增】增加文件预览组件\n\n3.【新增】新增四级菜单\n', '', 0, sysdate(), sysdate());
-insert into `sys_change_log` values (3, 'v1.0.2', 3, '王大锤', sysdate(), 'v1.0.2 版本bug修复，更新内容如下：\n\n1.【新增】增加员工姓名查询\n\n2.【新增】增加文件预览组件\n\n3.【新增】新增四级菜单\n', '', 0, sysdate(), sysdate());
+insert into `sys_change_log` values (1, 'v1.0.0', 1, '王大锤', sysdate(), 'v1.0.0 版本正式上线，内容如下：\n\n1.【新增】增加用户姓名查询\n\n2.【新增】增加文件预览组件\n\n3.【新增】新增四级菜单\n', '', 0, sysdate(), sysdate());
+insert into `sys_change_log` values (2, 'v1.0.1', 2, '王大锤', sysdate(), 'v1.0.1 版本正式更新上线，更新内容如下：\n\n1.【新增】增加用户姓名查询\n\n2.【新增】增加文件预览组件\n\n3.【新增】新增四级菜单\n', '', 0, sysdate(), sysdate());
+insert into `sys_change_log` values (3, 'v1.0.2', 3, '王大锤', sysdate(), 'v1.0.2 版本bug修复，更新内容如下：\n\n1.【新增】增加用户姓名查询\n\n2.【新增】增加文件预览组件\n\n3.【新增】新增四级菜单\n', '', 0, sysdate(), sysdate());
 
 drop table if exists `sys_feedback`;
 create table `sys_feedback`  (
@@ -608,8 +619,8 @@ drop table if exists `sys_notice_visible_range`;
 create table `sys_notice_visible_range`  (
 `id` int(0) not null auto_increment comment '主键',
 `notice_id` int not null comment '通知id',
-`data_type` tinyint(0) not null comment '数据类型1员工 2部门',
-`data_id` int not null comment '员工or部门id',
+`data_type` tinyint(0) not null comment '数据类型1用户 2部门',
+`data_id` int not null comment '用户or部门id',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
@@ -624,7 +635,7 @@ drop table if exists `sys_notice_view_record`;
 create table `sys_notice_view_record`  (
 `id` int not null auto_increment comment '主键',
 `notice_id` int not null comment '通知公告id',
-`user_id` int not null comment '员工id',
+`user_id` int not null comment '用户id',
 `page_view_count` int(0) null default 0 comment '查看次数',
 `first_ip` varchar(255)  null default null comment '首次ip',
 `first_user_agent` varchar(1000) null default null comment '首次用户设备等标识',

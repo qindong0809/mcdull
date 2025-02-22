@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum;
@@ -19,7 +20,7 @@ import java.util.Date;
  * @since 2024/09/09
  */
 @Data
-public class LoginLogVO {
+public class LoginLogVO implements VO {
 
     private Integer loginLogId;
 
@@ -46,6 +47,8 @@ public class LoginLogVO {
 
     @SchemaEnum(LoginLogResultTypeEnum.class)
     private Integer loginResult;
+
+    private String loginResultName;
 
     @Schema(description = "创建时间")
     @DynamicDateFormat(enableTimezone = true)

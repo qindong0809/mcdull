@@ -29,6 +29,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.enums.NoticeVisitbleRangeDataTyp
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.INoticeRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,21 +53,18 @@ public class NoticeServiceImpl
 
     @Resource
     private IUserService userService;
-
     @Resource
     private INoticeTypeService noticeTypeService;
-
     @Resource
     private INoticeVisibleRangeService noticeVisibleRangeService;
-
     @Resource
     private IDepartmentService departmentService;
-
     @Resource
     private INoticeViewRecordService noticeViewRecordService;
-
     @Resource
     private IAuditManager auditManager;
+    @Resource
+    private ICommonManager commonManager;
 
     @Override
     public PagedVO<NoticeVO> queryPage(NoticeQueryDTO dto) {
@@ -288,6 +286,45 @@ public class NoticeServiceImpl
             vo.setNoticeTypeName(noticeTypeMap.get(noticeTypeId));
         }
         return vo;
+    }
+
+    @Override
+    public void exportData(NoticeQueryDTO dto) {
+        commonManager.exportExcel(dto, this::queryPage, "通知公告记录", this.getTitleMap(), this::convertMap);
+    }
+
+    private Map<String, String> convertMap(NoticeVO noticeVO) {
+        Map<String, String> map = new HashMap<>(8);
+        map.put("title", noticeVO.getTitle());
+        map.put("documentNumber", noticeVO.getDocumentNumber());
+        map.put("noticeTypeName", noticeVO.getNoticeTypeName());
+        map.put("author", noticeVO.getAuthor());
+        map.put("source", noticeVO.getSource());
+        map.put("allVisibleFlag", noticeVO.getAllVisibleFlag().toString());
+        map.put("scheduledPublishFlag", noticeVO.getScheduledPublishFlag().toString());
+        map.put("publishTime", noticeVO.getPublishTime().toString());
+        map.put("pageViewCount", Convert.toStr(noticeVO.getPageViewCount()));
+        map.put("userViewCount", Convert.toStr(noticeVO.getUserViewCount()));
+        map.put("createUserName", noticeVO.getCreateUserName());
+        map.put("createTime", commonManager.convertDateByUserTimezone(noticeVO.getCreateTime()));
+        return map;
+    }
+
+    private Map<String, String> getTitleMap() {
+        Map<String, String> titleMap = new HashMap<>(8);
+        titleMap.put("标题", "title");
+        titleMap.put("文号", "documentNumber");
+        titleMap.put("分类", "noticeTypeName");
+        titleMap.put("作者", "author");
+        titleMap.put("来源", "source");
+        titleMap.put("是否全部可见", "allVisibleFlag");
+        titleMap.put("是否定时发布", "scheduledPublishFlag");
+        titleMap.put("发布时间", "publishTime");
+        titleMap.put("页面浏览量", "pageViewCount");
+        titleMap.put("用户浏览量", "userViewCount");
+        titleMap.put("创建人", "createUserName");
+        titleMap.put("创建时间", "createTime");
+        return titleMap;
     }
 
     private NoticeDetailVO convertToDetailVo(NoticeEntity entity) {

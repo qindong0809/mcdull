@@ -28,6 +28,9 @@ public class FileVO implements VO {
     @SchemaEnum(FileFolderTypeEnum.class)
     private Integer folderType;
 
+    @Schema(description = "存储文件夹类型")
+    private String folderTypeName;
+
     @Schema(description = "文件名称")
     private String fileName;
 

@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.BizAuditQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigUpdateDTO;
@@ -10,6 +11,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +41,14 @@ public class ConfigController {
     public Result<PagedVO<ConfigInfoVO>> query(@RequestBody @Valid ConfigQueryDTO queryDTO) {
         return Result.success(configService.queryPage(queryDTO));
     }
+
+    @Operation(summary = "导出数据")
+    @SaCheckPermission("system:config:export")
+    @PostMapping(value = "/system/config/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void exportData(@RequestBody @Valid ConfigQueryDTO dto) {
+        configService.exportData(dto);
+    }
+
 
     @Operation(summary = "添加")
     @PostMapping("/config/add")

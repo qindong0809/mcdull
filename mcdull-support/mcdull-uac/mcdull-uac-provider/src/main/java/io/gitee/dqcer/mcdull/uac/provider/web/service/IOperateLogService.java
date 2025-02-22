@@ -25,4 +25,6 @@ public interface IOperateLogService extends IOperationLog {
     KeyValueVO<List<String>, List<Integer>> home();
 
     List<NameValueVO<String, Integer>> pieHome();
+
+    void exportData(OperateLogQueryDTO dto);
 }

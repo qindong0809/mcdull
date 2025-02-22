@@ -89,7 +89,10 @@ public class MenuRepositoryImpl
 
     @Override
     public List<MenuEntity> all() {
-        return this.list(Collections.emptyList(), true);
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(BaseEntity::getInactive, InactiveEnum.FALSE.getCode());
+        query.orderByAsc(ListUtil.of(MenuEntity::getParentId, MenuEntity::getSort));
+        return baseMapper.selectList(query);
     }
 
     private List<MenuEntity> list(Collection<Integer> idList, boolean isAll) {

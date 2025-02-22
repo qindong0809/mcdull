@@ -28,9 +28,13 @@ import io.gitee.dqcer.mcdull.business.common.excel.DataAnalysisListener;
 import io.gitee.dqcer.mcdull.business.common.excel.DynamicFieldTemplate;
 import io.gitee.dqcer.mcdull.business.common.excel.IndexStyleCellWriteHandler;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
@@ -50,6 +54,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
@@ -223,6 +228,24 @@ public class CommonManagerImpl implements ICommonManager {
         return nameMap.get(userId);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public <D extends PagedDTO, V extends VO> void exportExcel(D dto, Function<D, PagedVO<V>> function,
+                                                               String sheetName, Map<String, String> titleMap,
+                                                               Function<V, Map<String, String>> mapFunction) {
+        PageUtil.setMaxPageSize(dto);
+        PagedVO<V> page = function.apply(dto);
+        List<V> list = new ArrayList<>();
+        if (ObjUtil.isNotNull(page)) {
+            list = page.getList();
+        }
+        List<Map<String, String>> mapList = new ArrayList<>();
+        for (V vo : list) {
+            mapList.add(mapFunction.apply(vo));
+        }
+        this.exportExcel(sheetName, StrUtil.EMPTY, titleMap, mapList);
+    }
+
     @Override
     public void exportExcel(String sheetName, String conditions, Map<String, String> titleMap,
                             List<Map<String, String>> mapList) {
@@ -233,8 +256,8 @@ public class CommonManagerImpl implements ICommonManager {
         ExcelUtil.exportExcelByMap(outputStream, sheetName,
                 conditions, actualName, s, titleMap, mapList);
         byte[] byteArray = outputStream.toByteArray();
-        String menuName = menuService.getCurrentMenuName();
-        String fileName = this.getFileName(FileExtensionTypeEnum.EXCEL_X, menuName, sheetName);
+        List<String> menuName = menuService.getCurrentMenuName();
+        String fileName = this.getFileName(FileExtensionTypeEnum.EXCEL_X, StrUtil.join(StrUtil.UNDERLINE, menuName), sheetName);
         Boolean exportAutoStorage = this.getConfigToBool("export-auto-storage");
         if (BooleanUtil.isTrue(exportAutoStorage)) {
             byte[] copiedBinaryData = new byte[byteArray.length];

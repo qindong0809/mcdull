@@ -36,4 +36,6 @@ public interface INoticeService {
     PagedVO<NoticeUserVO> queryUserNotice(NoticeEmployeeQueryDTO dto);
 
     NoticeDetailVO view(Integer noticeId);
+
+    void exportData(NoticeQueryDTO dto);
 }

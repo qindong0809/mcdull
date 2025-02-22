@@ -25,4 +25,5 @@ public interface IConfigService {
 
     void delete(List<Integer> idList);
 
+    void exportData(ConfigQueryDTO dto);
 }

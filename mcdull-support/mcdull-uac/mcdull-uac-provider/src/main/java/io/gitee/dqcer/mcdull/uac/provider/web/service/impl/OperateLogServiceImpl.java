@@ -16,14 +16,15 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.OperateLogEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.OperateLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IOperateLogRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IOperateLogService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,9 +41,10 @@ public class OperateLogServiceImpl
 
     @Resource
     private IUserService userService;
-
     @Resource
     private IUserManager userManager;
+    @Resource
+    private ICommonManager commonManager;
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     @Override
@@ -143,5 +145,45 @@ public class OperateLogServiceImpl
             return voList;
         }
         return Collections.emptyList();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void exportData(OperateLogQueryDTO dto) {
+        commonManager.exportExcel(new OperateLogQueryDTO(), this::queryByPage, "请求监控报表", this.getTitleMap(), this::convertMap);
+    }
+
+    private Map<String, String> getTitleMap() {
+        Map<String, String> titleMap = new HashMap<>(8);
+        titleMap.put("用户", "operateUserName");
+        titleMap.put("操作模块", "module");
+        titleMap.put("操作内容", "content");
+        titleMap.put("请求路径", "url");
+        titleMap.put("IP", "ip");
+        titleMap.put("IP地区", "ipRegion");
+        titleMap.put("客户端", "userAgent");
+        titleMap.put("请求方法", "method");
+        titleMap.put("耗时(ms)", "timeTaken");
+        titleMap.put("链路标识", "traceId");
+        titleMap.put("请求结果", "successFlag");
+        titleMap.put("时间", "createTime");
+        return titleMap;
+    }
+
+    private Map<String, String> convertMap(OperateLogVO vo) {
+        Map<String, String> map = new HashMap<>(8);
+        map.put("operateUserName", vo.getOperateUserName());
+        map.put("module", vo.getModule());
+        map.put("content", vo.getContent());
+        map.put("url", vo.getUrl());
+        map.put("ip", vo.getIp());
+        map.put("ipRegion", vo.getIpRegion());
+        map.put("userAgent", vo.getUserAgent());
+        map.put("method", vo.getMethod());
+        map.put("timeTaken", vo.getTimeTaken().toString());
+        map.put("traceId", vo.getTraceId());
+        map.put("successFlag", vo.getSuccessFlag().toString());
+        map.put("createTime", commonManager.convertDateByUserTimezone(vo.getCreateTime()));
+        return map;
     }
 }

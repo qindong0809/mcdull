@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -11,12 +12,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.AreaQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.AreaEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.AreaVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IAreaRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IAreaService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Area Service
@@ -27,6 +28,9 @@ import java.util.List;
 @Service
 public class AreaServiceImpl
         extends BasicServiceImpl<IAreaRepository> implements IAreaService {
+
+    @Resource
+    private ICommonManager commonManager;
 
     public PagedVO<AreaVO> queryPage(AreaQueryDTO dto) {
         List<AreaVO> voList = new ArrayList<>();
@@ -53,6 +57,33 @@ public class AreaServiceImpl
             return Collections.emptyList();
         }
         return this.buildList(baseRepository.getByPid(areaEntity.getId()));
+    }
+
+    @Override
+    public void exportData(AreaQueryDTO dto) {
+        commonManager.exportExcel(dto, this::queryPage, "行政区域记录", this.getTitleMap(), this::convertMap);
+    }
+
+    private Map<String, String> convertMap(AreaVO areaVO) {
+        Map<String, String> map = new HashMap<>(8);
+        map.put("code", areaVO.getCode());
+        map.put("name", areaVO.getName());
+        map.put("fullname", areaVO.getFullname());
+        map.put("govcode", areaVO.getGovcode());
+        map.put("lat", Convert.toStr(areaVO.getLat()));
+        map.put("lng", Convert.toStr(areaVO.getLng()));
+        return map;
+    }
+
+    private Map<String, String> getTitleMap() {
+        Map<String, String> titleMap = new HashMap<>(8);
+        titleMap.put("区域编码", "code");
+        titleMap.put("地名简称", "name");
+        titleMap.put("全名", "fullname");
+        titleMap.put("邮政编码", "govcode");
+        titleMap.put("维度", "lat");
+        titleMap.put("经度", "lng");
+        return titleMap;
     }
 
     private List<LabelValueVO<String, String>> buildList(List<AreaEntity> list) {

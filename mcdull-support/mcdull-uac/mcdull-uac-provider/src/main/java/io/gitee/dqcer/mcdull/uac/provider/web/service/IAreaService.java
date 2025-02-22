@@ -21,4 +21,6 @@ public interface IAreaService {
     List<LabelValueVO<String, String>> provinceList();
 
     List<LabelValueVO<String, String>> cityList(String provinceCode);
+
+    void exportData(AreaQueryDTO dto);
 }

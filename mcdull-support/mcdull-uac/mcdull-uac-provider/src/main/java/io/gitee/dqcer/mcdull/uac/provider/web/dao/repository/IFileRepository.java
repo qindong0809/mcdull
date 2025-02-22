@@ -67,11 +67,12 @@ public interface IFileRepository extends IRepository<FileEntity> {
     /**
      * 分页查询
      *
-     * @param dto dto
-     * @param userIdList 用户id列表
+     * @param dto         dto
+     * @param userIdList  用户id列表
+     * @param childerList
      * @return {@link Page }
      */
-    Page<FileEntity> selectPage(FileQueryDTO dto, List<Integer> userIdList);
+    Page<FileEntity> selectPage(FileQueryDTO dto, List<Integer> userIdList, List<Integer> childerList);
 
     /**
      * 根据文件key获取文件信息

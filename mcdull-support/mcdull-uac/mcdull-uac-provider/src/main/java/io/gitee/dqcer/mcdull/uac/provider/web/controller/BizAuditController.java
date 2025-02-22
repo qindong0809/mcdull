@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -30,7 +31,7 @@ public class BizAuditController extends BasicController {
     }
 
     @Operation(summary = "导出数据")
-//    @SaCheckPermission("support:form:record:export")
+    @SaCheckPermission("system:biz_audit:export")
     @PostMapping(value = "/system/biz-audit/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid BizAuditQueryDTO dto) {
         bizAuditService.exportData(dto);

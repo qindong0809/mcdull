@@ -11,6 +11,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.OperateLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IOperateLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
@@ -47,6 +48,13 @@ public class OperateLogController {
     @SaCheckPermission("support:operateLog:query")
     public Result<PagedVO<OperateLogVO>> queryByPage(@RequestBody OperateLogQueryDTO dto) {
         return Result.success(operateLogService.queryByPage(dto));
+    }
+
+    @Operation(summary = "导出数据")
+    @PostMapping(value ="/system/operateLog/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @SaCheckPermission("system:operateLog:export")
+    public void exportData(@RequestBody OperateLogQueryDTO dto) {
+        operateLogService.exportData(dto);
     }
 
     @Operation(summary = "详情")

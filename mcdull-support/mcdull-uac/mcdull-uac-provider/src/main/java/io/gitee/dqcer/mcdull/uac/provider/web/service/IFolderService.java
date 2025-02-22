@@ -7,6 +7,8 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FolderTreeInfoVO;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * folder service
@@ -80,4 +82,6 @@ public interface IFolderService {
      * @return {@link List }<{@link FolderTreeInfoVO }>
      */
     List<FolderTreeInfoVO> getTree();
+
+    Map<Integer, String> getMap(Set<Integer> folderSet);
 }

@@ -117,5 +117,5 @@ public interface IMenuService {
      *
      * @return {@link String }
      */
-    String getCurrentMenuName();
+    List<String> getCurrentMenuName();
 }

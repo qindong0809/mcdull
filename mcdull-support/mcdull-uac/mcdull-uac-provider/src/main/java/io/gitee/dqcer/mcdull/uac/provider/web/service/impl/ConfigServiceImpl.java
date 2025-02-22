@@ -1,14 +1,11 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.audit.ConfigAudit;
 import io.gitee.dqcer.mcdull.uac.provider.model.convert.ConfigConvert;
@@ -19,14 +16,13 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IConfigRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -39,8 +35,8 @@ import java.util.List;
 public class ConfigServiceImpl
         extends BasicServiceImpl<IConfigRepository> implements IConfigService {
 
-
-
+    @Resource
+    private ICommonManager commonManager;
     @Resource
     private IAuditManager auditManager;
 
@@ -112,5 +108,33 @@ public class ConfigServiceImpl
             auditManager.saveByDeleteEnum(entity.getConfigName(), entity.getId(), null);
         }
     }
+
+    @Override
+    public void exportData(ConfigQueryDTO dto) {
+        commonManager.exportExcel(dto, this::queryPage, "参数配置", this.getTitleMap(), this::convertMap);
+    }
+
+    private Map<String, String> convertMap(ConfigInfoVO configInfoVO) {
+        Map<String, String> map = new HashMap<>(8);
+        map.put("configKey", configInfoVO.getConfigKey());
+        map.put("configName", configInfoVO.getConfigName());
+        map.put("configValue", configInfoVO.getConfigValue());
+        map.put("remark", configInfoVO.getRemark());
+        map.put("createTime", commonManager.convertDateTimeStr(configInfoVO.getCreateTime()));
+        map.put("updateTime", commonManager.convertDateTimeStr(configInfoVO.getUpdateTime()));
+        return map;
+    }
+
+    private Map<String, String> getTitleMap() {
+        Map<String, String> titleMap = new HashMap<>(8);
+        titleMap.put("参数key", "configKey");
+        titleMap.put("参数名称", "configName");
+        titleMap.put("参数值", "configValue");
+        titleMap.put("备注", "remark");
+        titleMap.put("创建时间", "createTime");
+        titleMap.put("更新时间", "updateTime");
+        return titleMap;
+    }
+
 
 }

@@ -20,10 +20,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.FileQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FileEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileDownloadVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileMetadataVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileUploadVO;
-import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileBizRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
@@ -65,21 +62,40 @@ public class FileServiceImpl
                 return PageUtil.empty(dto);
             }
         }
+        List<Integer> childerList = new ArrayList<>();
+        Integer folderId = dto.getFolderType();
+        if (ObjectUtil.isNotNull(folderId)) {
+            childerList.add(folderId);
+            List<FolderInfoVO> all = folderService.getAll();
+            this.searchChild(all, folderId, childerList);
+        }
 
-        Page<FileEntity> entityPage = baseRepository.selectPage(dto, userIdList);
+        Page<FileEntity> entityPage = baseRepository.selectPage(dto, userIdList, childerList);
         List<FileVO> voList = new ArrayList<>();
         List<FileEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
+            Map<Integer, String> folderMap = folderService.getMap(records.stream().map(FileEntity::getFolderType).collect(Collectors.toSet()));
             Set<Integer> userIdSet = records.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
             Map<Integer, String> userMap = userManager.getNameMap(new ArrayList<>(userIdSet));
             for (FileEntity entity : records) {
                 FileVO fileVO = FileConvert.convertToEntity(entity);
                 fileVO.setFileUrl(fileStorageService.getFileUrl(entity.getFileKey()));
                 fileVO.setCreatorName(userMap.get(entity.getCreatedBy()));
+                fileVO.setFolderTypeName(folderMap.get(entity.getFolderType()));
                 voList.add(fileVO);
             }
         }
         return PageUtil.toPage(voList, entityPage);
+    }
+
+    private void searchChild(List<FolderInfoVO> all, Integer folderId, List<Integer> childerList) {
+        for (FolderInfoVO folder : all) {
+            if (ObjectUtil.equal(folder.getParentId(), folderId)) {
+                Integer childId = folder.getId();
+                childerList.add(childId);
+                this.searchChild(all, childId, childerList);
+            }
+        }
     }
 
     @Override

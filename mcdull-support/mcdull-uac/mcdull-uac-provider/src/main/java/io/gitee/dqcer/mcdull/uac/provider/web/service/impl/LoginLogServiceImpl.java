@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
@@ -13,15 +14,18 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LoginLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.ILoginLogRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginLogService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -37,6 +41,8 @@ public class LoginLogServiceImpl
 
     @Resource
     private IUserService userService;
+    @Resource
+    private ICommonManager commonManager;
 
     @Transactional(readOnly = true)
     @Override
@@ -89,6 +95,35 @@ public class LoginLogServiceImpl
         return null;
     }
 
+    @Override
+    public void exportData(LoginLogQueryDTO dto) {
+        commonManager.exportExcel(dto, this::queryByPage, "登录日志", this.getTitleMap(), this::convertMap);
+    }
+
+    private Map<String, String> convertMap(LoginLogVO loginLogVO) {
+        Map<String, String> map = new HashMap<>();
+        map.put("loginName", loginLogVO.getLoginName());
+        map.put("loginIp", loginLogVO.getLoginIp());
+        map.put("loginIpRegion", loginLogVO.getLoginIpRegion());
+        map.put("userAgent", loginLogVO.getUserAgent());
+        map.put("loginResultName", loginLogVO.getLoginResultName());
+        map.put("remark", loginLogVO.getRemark());
+        map.put("createTime", commonManager.convertDateTimeStr(loginLogVO.getCreateTime()));
+        return map;
+    }
+
+    private Map<String, String> getTitleMap() {
+        Map<String, String> titleMap = new HashMap<>(8);
+        titleMap.put("登录名", "loginName");
+        titleMap.put("IP", "loginIp");
+        titleMap.put("IP地区", "loginIpRegion");
+        titleMap.put("设备信息", "userAgent");
+        titleMap.put("登录结果", "loginResultName");
+        titleMap.put("备注", "remark");
+        titleMap.put("时间", "createTime");
+        return titleMap;
+    }
+
     private LoginLogVO convertToConfigVO(LoginLogEntity entity) {
         LoginLogVO vo = new LoginLogVO();
         vo.setLoginLogId(entity.getId());
@@ -99,6 +134,7 @@ public class LoginLogServiceImpl
         vo.setUserAgent(entity.getUserAgent());
         vo.setRemark(entity.getRemark());
         vo.setLoginResult(entity.getLoginResult());
+        vo.setLoginResultName(IEnum.getTextByCode(LoginLogResultTypeEnum.class, entity.getLoginResult()));
         vo.setCreateTime(entity.getCreatedTime());
         return vo;
     }

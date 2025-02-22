@@ -8,10 +8,11 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.SessionVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ISessionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
-
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 /**
@@ -33,6 +34,14 @@ public class SessionController {
     public Result<PagedVO<SessionVO>> queryPage(@RequestBody @Valid SessionQueryDTO dto) {
         return Result.success(sessionService.queryPage(dto));
     }
+
+    @Operation(summary = "导出数据")
+    @SaCheckPermission("system:session:export")
+    @PostMapping(value = "/system/session/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void exportData(@RequestBody @Valid SessionQueryDTO dto) {
+        sessionService.exportData(dto);
+    }
+
 
     @Operation(summary = "批量强退")
     @GetMapping("/session/batchKickout")

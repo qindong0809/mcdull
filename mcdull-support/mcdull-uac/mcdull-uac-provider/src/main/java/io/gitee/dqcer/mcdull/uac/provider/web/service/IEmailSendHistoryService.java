@@ -44,4 +44,6 @@ public interface IEmailSendHistoryService {
      * @return {@link PagedVO }<{@link EmailSendHistoryVO }>
      */
     PagedVO<EmailSendHistoryVO> queryPage(EmailSendHistoryQueryDTO queryDTO);
+
+    void exportData(EmailSendHistoryQueryDTO dto);
 }

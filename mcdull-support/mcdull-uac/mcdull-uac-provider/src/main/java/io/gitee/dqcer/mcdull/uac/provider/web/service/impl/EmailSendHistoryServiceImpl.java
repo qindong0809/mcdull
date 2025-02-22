@@ -17,12 +17,16 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.EmailSendHistoryEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.EmailTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.EmailSendHistoryVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IEmailSendHistoryRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IEmailSendHistoryService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Email send history service impl
@@ -34,6 +38,8 @@ import java.util.List;
 public class EmailSendHistoryServiceImpl
         extends BasicServiceImpl<IEmailSendHistoryRepository> implements IEmailSendHistoryService {
 
+    @Resource
+    private ICommonManager commonManager;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -82,5 +88,33 @@ public class EmailSendHistoryServiceImpl
             }
         }
          return PageUtil.toPage(list, entityPage);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void exportData(EmailSendHistoryQueryDTO dto) {
+        commonManager.exportExcel(new EmailSendHistoryQueryDTO(), this::queryPage, "业务操作记录", this.getTitleMap(), this::convertMap);
+    }
+
+    private Map<String, String> getTitleMap() {
+        Map<String, String> titleMap = new HashMap<>(8);
+       titleMap.put("类型名称", "typeName");
+        titleMap.put("接收人", "sentTo");
+        titleMap.put("抄送人", "cc");
+        titleMap.put("标题", "title");
+        titleMap.put("内容", "content");
+        titleMap.put("发送时间", "createTime");
+        return titleMap;
+    }
+
+    private Map<String, String> convertMap(EmailSendHistoryVO vo) {
+        Map<String, String> map = new HashMap<>(8);
+        map.put("typeName", vo.getTypeName());
+        map.put("sentTo", vo.getSentTo());
+        map.put("cc", vo.getCc());
+        map.put("title", vo.getTitle());
+        map.put("content", vo.getContent());
+        map.put("createTime", commonManager.convertDateByUserTimezone(vo.getCreateTime()));
+        return map;
     }
 }

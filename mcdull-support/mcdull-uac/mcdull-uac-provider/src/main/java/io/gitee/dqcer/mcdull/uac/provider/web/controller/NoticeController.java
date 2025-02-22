@@ -4,10 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.ListUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeAddDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeEmployeeQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeQueryDTO;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.NoticeUpdateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeDetailVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeUpdateFormVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeUserVO;
@@ -15,6 +12,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.INoticeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
@@ -38,23 +36,30 @@ public class NoticeController {
         return Result.success(noticeService.queryPage(dto));
     }
 
+    @Operation(summary = "导出数据")
+    @SaCheckPermission("system:notice:export")
+    @PostMapping(value = "/system/notice/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void exportData(@RequestBody @Valid NoticeQueryDTO dto) {
+        noticeService.exportData(dto);
+    }
+
     @Operation(summary = "添加")
     @PostMapping("/notice/add")
+    @SaCheckPermission("system:notice:write")
     public Result<Boolean> add(@RequestBody @Valid NoticeAddDTO dto) {
         noticeService.insert(dto);
         return Result.success(true);
     }
 
-
     @Operation(summary = "更新详情")
     @GetMapping("/notice/getUpdateVO/{noticeId}")
-    @SaCheckPermission("oa:notice:update")
+    @SaCheckPermission("system:notice:write")
     public Result<NoticeUpdateFormVO> getUpdateFormVO(@PathVariable(value = "noticeId") Integer noticeId) {
         return Result.success(noticeService.getUpdateFormVO(noticeId));
     }
 
     @Operation(summary = "更新")
-    @SaCheckPermission("oa:notice:update")
+    @SaCheckPermission("system:notice:write")
     @PostMapping("/notice/update")
     public Result<Boolean> update(@RequestBody @Valid NoticeUpdateDTO dto) {
         noticeService.update(dto);
@@ -62,6 +67,7 @@ public class NoticeController {
     }
 
     @Operation(summary = "批量删除")
+    @SaCheckPermission("system:notice:write")
     @PostMapping("/notice/batchDelete")
     public Result<Boolean> batchDelete(@RequestBody List<Integer> idList) {
         noticeService.batchDelete(idList);
@@ -69,6 +75,7 @@ public class NoticeController {
     }
 
     @Operation(summary = "删除")
+    @SaCheckPermission("system:notice:write")
     @GetMapping("/notice/delete/{id}")
     public Result<Boolean> batchDelete(@PathVariable(value = "id") Integer id) {
         noticeService.batchDelete(ListUtil.of(id));
