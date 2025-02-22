@@ -257,7 +257,7 @@ public class CommonManagerImpl implements ICommonManager {
                 conditions, actualName, s, titleMap, mapList);
         byte[] byteArray = outputStream.toByteArray();
         List<String> menuName = menuService.getCurrentMenuName();
-        String fileName = this.getFileName(FileExtensionTypeEnum.EXCEL_X, StrUtil.join(StrUtil.UNDERLINE, menuName), sheetName);
+        String fileName = this.getFileName(FileExtensionTypeEnum.EXCEL_X, StrUtil.join(StrUtil.UNDERLINE, menuName));
         Boolean exportAutoStorage = this.getConfigToBool("export-auto-storage");
         if (BooleanUtil.isTrue(exportAutoStorage)) {
             byte[] copiedBinaryData = new byte[byteArray.length];

@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
+import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.ChangeLogTypeEnum;
@@ -17,7 +18,7 @@ import java.util.Date;
  */
 
 @Data
-public class ChangeLogVO {
+public class ChangeLogVO implements VO {
 
     private Integer changeLogId;
 
@@ -26,6 +27,9 @@ public class ChangeLogVO {
 
     @SchemaEnum(value = ChangeLogTypeEnum.class, desc = "更新类型:[1:特大版本功能更新;2:功能更新;3:bug修复]")
     private Integer type;
+
+    @Schema(description = "更新类型名称")
+    private String typeName;
 
     @Schema(description = "发布人")
     private String publishAuthor;

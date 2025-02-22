@@ -29,4 +29,6 @@ public interface IChangeLogService {
     ChangeLogVO getById(Integer id);
 
     ChangeLogAndVersionVO getChangeLogAndVersion();
+
+    void exportData(ChangeLogQueryDTO dto);
 }

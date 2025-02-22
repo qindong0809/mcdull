@@ -24,4 +24,6 @@ public interface IOaEnterpriseService {
     void delete(Integer enterpriseId);
 
     EnterpriseVO getDetail(Integer enterpriseId);
+
+    void exportData(EnterpriseQueryDTO dto);
 }

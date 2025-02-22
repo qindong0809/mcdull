@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
@@ -13,18 +14,21 @@ import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ChangeLogUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ChangeLogEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.ChangeLogTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogAndVersionVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IChangeLogRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IChangeLogService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -39,9 +43,10 @@ public class ChangeLogServiceImpl
 
     @Resource
     private IVersionInfoComponent versionInfoComponent;
-
     @Resource
     private IAuditManager auditManager;
+    @Resource
+    private ICommonManager commonManager;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -105,7 +110,9 @@ public class ChangeLogServiceImpl
         Page<ChangeLogEntity> entityPage = baseRepository.selectPage(dto);
         List<ChangeLogVO> voList = new ArrayList<>();
         for (ChangeLogEntity entity : entityPage.getRecords()) {
-            voList.add(this.convertToConfigVO(entity));
+            ChangeLogVO logVO = this.convertToConfigVO(entity);
+            logVO.setTypeName(IEnum.getTextByCode(ChangeLogTypeEnum.class, entity.getType()));
+            voList.add(logVO);
         }
         return PageUtil.toPage(voList, entityPage);
     }
@@ -134,6 +141,38 @@ public class ChangeLogServiceImpl
         changeLogAndVersion.setGitVersion(versionInfoComponent.getGitCurrentCommitInfo());
         changeLogAndVersion.setJarVersion(versionInfoComponent.getJarCurrentBuildInfo());
         return changeLogAndVersion;
+    }
+
+    @Override
+    public void exportData(ChangeLogQueryDTO dto) {
+        commonManager.exportExcel(dto, this::queryPage, "更新日志记录", this.getTitleMap(), this::convertMap);
+
+    }
+
+    private Map<String, String> convertMap(ChangeLogVO changeLogVO) {
+        Map<String, String> map = new HashMap<>();
+        map.put("version", changeLogVO.getVersion());
+        map.put("type", changeLogVO.getTypeName());
+        map.put("publishAuthor", changeLogVO.getPublishAuthor());
+        map.put("publicDate", changeLogVO.getPublicDate().toString());
+        map.put("content", changeLogVO.getContent());
+        map.put("link", changeLogVO.getLink());
+        map.put("createTime", changeLogVO.getCreateTime().toString());
+        map.put("updateTime", changeLogVO.getUpdateTime().toString());
+        return map;
+    }
+
+    private Map<String, String> getTitleMap() {
+        Map<String, String> titleMap = new HashMap<>(8);
+        titleMap.put("版本", "version");
+        titleMap.put("更新类型", "type");
+        titleMap.put("发布人", "publishAuthor");
+        titleMap.put("发布日期", "publicDate");
+        titleMap.put("更新内容", "content");
+        titleMap.put("跳转链接", "link");
+        titleMap.put("创建时间", "createTime");
+        titleMap.put("更新时间", "updateTime");
+        return titleMap;
     }
 
     private ChangeLogVO convertToConfigVO(ChangeLogEntity entity) {

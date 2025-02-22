@@ -13,10 +13,11 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.ChangeLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IChangeLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
-
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 /**
@@ -69,6 +70,14 @@ public class ChangeLogController extends BasicController {
     public Result<PagedVO<ChangeLogVO>> queryPage(@RequestBody @Valid ChangeLogQueryDTO queryForm) {
         return Result.success(changeLogService.queryPage(queryForm));
     }
+
+    @Operation(summary = "导出数据")
+    @SaCheckPermission("system:changeLog:export")
+    @PostMapping(value = "/system/changeLog/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void exportData(@RequestBody @Valid ChangeLogQueryDTO dto) {
+        changeLogService.exportData(dto);
+    }
+
 
     @Operation(summary = "查询全部和版本信息")
     @PostMapping("/changeLog-version")

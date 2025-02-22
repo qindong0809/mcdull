@@ -33,6 +33,9 @@ public class EnterpriseVO implements VO {
     @SchemaEnum(desc = "类型", value = EnterpriseTypeEnum.class)
     private Integer type;
 
+    @Schema(description = "类型名称")
+    private String typeName;
+
     @Schema(description = "联系人")
     private String contact;
 

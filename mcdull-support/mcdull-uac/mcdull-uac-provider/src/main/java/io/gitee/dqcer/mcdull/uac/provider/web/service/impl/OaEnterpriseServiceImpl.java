@@ -7,23 +7,25 @@ import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.EnterpriseAddDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.EnterpriseQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.EnterpriseUpdateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.OaEnterpriseEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.enums.EnterpriseTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.EnterpriseVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IOaEnterpriseRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IOaEnterpriseService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -39,6 +41,8 @@ public class OaEnterpriseServiceImpl
 
     @Resource
     private IUserService userService;
+    @Resource
+    private ICommonManager commonManager;
 
     @Override
     public PagedVO<EnterpriseVO> queryByPage(EnterpriseQueryDTO dto) {
@@ -54,6 +58,7 @@ public class OaEnterpriseServiceImpl
                 if (ObjUtil.isNotNull(createdBy)) {
                     vo.setCreateUserName(nameMap.get(createdBy));
                 }
+                vo.setTypeName(IEnum.getTextByCode(EnterpriseTypeEnum.class, entity.getType()));
                 voList.add(vo);
             }
         }
@@ -125,6 +130,37 @@ public class OaEnterpriseServiceImpl
             enterpriseVO.setCreateUserName(nameMap.get(createdBy));
         }
         return enterpriseVO;
+    }
+
+    @Override
+    public void exportData(EnterpriseQueryDTO dto) {
+        commonManager.exportExcel(dto, this::queryByPage, "企业信息记录", this.getTitleMap(), this::convertMap);
+    }
+
+    private Map<String, String> convertMap(EnterpriseVO enterpriseVO) {
+        Map<String, String> map = new HashMap<>(8);
+        map.put("enterpriseName", enterpriseVO.getEnterpriseName());
+        map.put("unifiedSocialCreditCode", enterpriseVO.getUnifiedSocialCreditCode());
+        map.put("typeName", enterpriseVO.getTypeName());
+        map.put("contact", enterpriseVO.getContact());
+        map.put("contactPhone", enterpriseVO.getContactPhone());
+        map.put("email", enterpriseVO.getEmail());
+        map.put("disabledFlag", enterpriseVO.getDisabledFlag() ? "禁用" : "正常");
+        map.put("createUserName", enterpriseVO.getCreateUserName());
+        return map;
+    }
+
+    private Map<String, String> getTitleMap() {
+        Map<String, String> titleMap = new HashMap<>(8);
+        titleMap.put("企业名称", "enterpriseName");
+        titleMap.put("统一社会信用代码", "unifiedSocialCreditCode");
+        titleMap.put("企业类型", "typeName");
+        titleMap.put("联系人", "contact");
+        titleMap.put("联系人电话", "contactPhone");
+        titleMap.put("邮箱", "email");
+        titleMap.put("状态", "disabledFlag");
+        titleMap.put("创建人", "createUserName");
+        return titleMap;
     }
 
     private OaEnterpriseEntity convertToEntity(EnterpriseAddDTO dto) {

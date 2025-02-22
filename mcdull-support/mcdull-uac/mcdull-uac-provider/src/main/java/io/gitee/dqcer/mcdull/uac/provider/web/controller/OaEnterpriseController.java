@@ -10,10 +10,10 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.EnterpriseVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IOaEnterpriseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
-
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author dqcer
@@ -31,6 +31,13 @@ public class OaEnterpriseController {
     @SaCheckPermission("oa:enterprise:query")
     public Result<PagedVO<EnterpriseVO>> queryByPage(@RequestBody @Valid EnterpriseQueryDTO queryForm) {
         return Result.success(enterpriseService.queryByPage(queryForm));
+    }
+
+    @Operation(summary = "导出数据")
+    @SaCheckPermission("system:enterprise:export")
+    @PostMapping(value = "/system/enterprise/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void exportData(@RequestBody @Valid EnterpriseQueryDTO dto) {
+        enterpriseService.exportData(dto);
     }
 
     @Operation(summary = "添加")
