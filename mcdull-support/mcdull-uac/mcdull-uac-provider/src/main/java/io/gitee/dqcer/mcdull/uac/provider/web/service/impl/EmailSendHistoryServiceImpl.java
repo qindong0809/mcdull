@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -90,31 +91,19 @@ public class EmailSendHistoryServiceImpl
          return PageUtil.toPage(list, entityPage);
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public void exportData(EmailSendHistoryQueryDTO dto) {
-        commonManager.exportExcel(new EmailSendHistoryQueryDTO(), this::queryPage, "业务操作记录", this.getTitleMap(), this::convertMap);
+        commonManager.exportExcel(new EmailSendHistoryQueryDTO(), this::queryPage, StrUtil.EMPTY, this.getTitleMap());
     }
 
-    private Map<String, String> getTitleMap() {
-        Map<String, String> titleMap = new HashMap<>(8);
-       titleMap.put("类型名称", "typeName");
-        titleMap.put("接收人", "sentTo");
-        titleMap.put("抄送人", "cc");
-        titleMap.put("标题", "title");
-        titleMap.put("内容", "content");
-        titleMap.put("发送时间", "createTime");
+    private Map<String, Func1<EmailSendHistoryVO, ?>> getTitleMap() {
+        Map<String, Func1<EmailSendHistoryVO, ?>> titleMap = new HashMap<>(8);
+        titleMap.put("类型名称", EmailSendHistoryVO::getTypeName);
+        titleMap.put("接收人", EmailSendHistoryVO::getSentTo);
+        titleMap.put("抄送人", EmailSendHistoryVO::getCc);
+        titleMap.put("标题", EmailSendHistoryVO::getTitle);
+        titleMap.put("内容", EmailSendHistoryVO::getContent);
+        titleMap.put("发送时间", EmailSendHistoryVO::getCreateTime);
         return titleMap;
-    }
-
-    private Map<String, String> convertMap(EmailSendHistoryVO vo) {
-        Map<String, String> map = new HashMap<>(8);
-        map.put("typeName", vo.getTypeName());
-        map.put("sentTo", vo.getSentTo());
-        map.put("cc", vo.getCc());
-        map.put("title", vo.getTitle());
-        map.put("content", vo.getContent());
-        map.put("createTime", commonManager.convertDateByUserTimezone(vo.getCreateTime()));
-        return map;
     }
 }

@@ -1,6 +1,7 @@
 package io.gitee.dqcer.blaze.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -139,32 +140,8 @@ public class CertificateRequirementsServiceImpl
     }
 
     @Override
-    public void exportData() {
-        commonManager.exportExcel(new CertificateRequirementsQueryDTO(), this::queryPage, "企业证书需求", this.getTitleMap(), this::convertMap);
-    }
-
-    private Map<String, String> convertMap(CertificateRequirementsVO vo) {
-        Map<String, String> map = new HashMap<>();
-        map.put("customerName", vo.getCustomerName());
-        map.put("certificateLevelName", vo.getCertificateLevelName());
-        map.put("specialtyName", vo.getSpecialtyName());
-        map.put("provincesName", vo.getProvincesName());
-        map.put("cityName", vo.getCityName());
-        map.put("quantity", StrUtil.toString(vo.getQuantity()));
-        map.put("titleName", vo.getTitleName());
-        map.put("initialOrTransferName", vo.getInitialOrTransferName());
-        map.put("certificateStatusName", vo.getCertificateStatusName());
-        map.put("positionContractPrice", StrUtil.toString(vo.getPositionContractPrice()));
-        map.put("otherCosts", StrUtil.toString(vo.getOtherCosts()));
-        map.put("actualPositionPrice", StrUtil.toString(vo.getActualPositionPrice()));
-        map.put("duration", StrUtil.toString(vo.getDuration()));
-        map.put("biddingExitName", vo.getBiddingExitName());
-        map.put("threePersonnelName", vo.getThreePersonnelName());
-        map.put("socialSecurityRequirementName", vo.getSocialSecurityRequirementName());
-        map.put("positionSourceName", vo.getPositionSourceName());
-        map.put("remarks", vo.getRemarks());
-        map.put("createdTime", commonManager.convertDateByUserTimezone(vo.getCreatedTime()));
-        return map;
+    public void exportData(CertificateRequirementsQueryDTO dto) {
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
     }
 
     @Override
@@ -251,28 +228,27 @@ public class CertificateRequirementsServiceImpl
         return fieldBO;
     }
 
-    private Map<String, String> getTitleMap() {
-        Map<String, String> titleMap = new LinkedHashMap<>();
-        titleMap.put("客户名称", "customerName");
-        titleMap.put("证书等级", "certificateLevelName");
-        titleMap.put("专业", "specialtyName");
-        titleMap.put("省份", "provincesName");
-        titleMap.put("城市", "cityName");
-        titleMap.put("数量", "quantity");
-        titleMap.put("职称", "titleName");
-        titleMap.put("初始/转正", "initialOrTransferName");
-        titleMap.put("证书状态", "certificateStatusName");
-        titleMap.put("合同价", "positionContractPrice");
-        titleMap.put("其他费用", "otherCosts");
-        titleMap.put("实际岗位价格", "actualPositionPrice");
-        titleMap.put("期限", "duration");
-        titleMap.put("招标出场", "biddingExitName");
-        titleMap.put("三类人员", "threePersonnelName");
-        titleMap.put("社保要求", "socialSecurityRequirementName");
-        titleMap.put("岗位来源", "positionSourceName");
-        titleMap.put("备注", "remark");
-        titleMap.put("创建时间", "createdTime");
-        titleMap.put("更新时间", "updatedTime");
+    private Map<String, Func1<CertificateRequirementsVO, ?>> getTitleMap() {
+        Map<String, Func1<CertificateRequirementsVO, ?>> titleMap = new LinkedHashMap<>();
+        titleMap.put("客户名称", CertificateRequirementsVO::getCustomerName);
+        titleMap.put("证书等级", CertificateRequirementsVO::getCertificateLevelName);
+        titleMap.put("专业", CertificateRequirementsVO::getSpecialtyName);
+        titleMap.put("省份", CertificateRequirementsVO::getProvincesName);
+        titleMap.put("城市", CertificateRequirementsVO::getCityName);
+        titleMap.put("数量", CertificateRequirementsVO::getQuantity);
+        titleMap.put("职称", CertificateRequirementsVO::getTitleName);
+        titleMap.put("初始/转正", CertificateRequirementsVO::getInitialOrTransferName);
+        titleMap.put("证书状态", CertificateRequirementsVO::getCertificateStatusName);
+        titleMap.put("合同价", CertificateRequirementsVO::getPositionContractPrice);
+        titleMap.put("其他费用", CertificateRequirementsVO::getOtherCosts);
+        titleMap.put("实际岗位价格", CertificateRequirementsVO::getActualPositionPrice);
+        titleMap.put("期限", CertificateRequirementsVO::getDuration);
+        titleMap.put("招标出场", CertificateRequirementsVO::getBiddingExitName);
+        titleMap.put("三类人员", CertificateRequirementsVO::getThreePersonnelName);
+        titleMap.put("社保要求", CertificateRequirementsVO::getSocialSecurityRequirementName);
+        titleMap.put("岗位来源", CertificateRequirementsVO::getPositionSourceName);
+        titleMap.put("备注", CertificateRequirementsVO::getRemarks);
+        titleMap.put("创建时间", CertificateRequirementsVO::getCreatedTime);
         return titleMap;
     }
 

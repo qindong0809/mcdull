@@ -1,8 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
@@ -61,28 +62,17 @@ public class AreaServiceImpl
 
     @Override
     public void exportData(AreaQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, "行政区域记录", this.getTitleMap(), this::convertMap);
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
     }
 
-    private Map<String, String> convertMap(AreaVO areaVO) {
-        Map<String, String> map = new HashMap<>(8);
-        map.put("code", areaVO.getCode());
-        map.put("name", areaVO.getName());
-        map.put("fullname", areaVO.getFullname());
-        map.put("govcode", areaVO.getGovcode());
-        map.put("lat", Convert.toStr(areaVO.getLat()));
-        map.put("lng", Convert.toStr(areaVO.getLng()));
-        return map;
-    }
-
-    private Map<String, String> getTitleMap() {
-        Map<String, String> titleMap = new HashMap<>(8);
-        titleMap.put("区域编码", "code");
-        titleMap.put("地名简称", "name");
-        titleMap.put("全名", "fullname");
-        titleMap.put("邮政编码", "govcode");
-        titleMap.put("维度", "lat");
-        titleMap.put("经度", "lng");
+    private Map<String, Func1<AreaVO, ?>> getTitleMap() {
+        Map<String, Func1<AreaVO, ?>> titleMap = new HashMap<>(8);
+        titleMap.put("区域编码", AreaVO::getCode);
+        titleMap.put("地名简称", AreaVO::getName);
+        titleMap.put("全名", AreaVO::getFullname);
+        titleMap.put("邮政编码", AreaVO::getGovcode);
+        titleMap.put("维度", AreaVO::getLat);
+        titleMap.put("经度", AreaVO::getLng);
         return titleMap;
     }
 

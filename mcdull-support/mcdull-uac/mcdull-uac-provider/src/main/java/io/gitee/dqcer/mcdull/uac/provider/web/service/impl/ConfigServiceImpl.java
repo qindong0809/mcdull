@@ -1,7 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -111,28 +113,18 @@ public class ConfigServiceImpl
 
     @Override
     public void exportData(ConfigQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, "参数配置", this.getTitleMap(), this::convertMap);
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
     }
 
-    private Map<String, String> convertMap(ConfigInfoVO configInfoVO) {
-        Map<String, String> map = new HashMap<>(8);
-        map.put("configKey", configInfoVO.getConfigKey());
-        map.put("configName", configInfoVO.getConfigName());
-        map.put("configValue", configInfoVO.getConfigValue());
-        map.put("remark", configInfoVO.getRemark());
-        map.put("createTime", commonManager.convertDateTimeStr(configInfoVO.getCreateTime()));
-        map.put("updateTime", commonManager.convertDateTimeStr(configInfoVO.getUpdateTime()));
-        return map;
-    }
 
-    private Map<String, String> getTitleMap() {
-        Map<String, String> titleMap = new HashMap<>(8);
-        titleMap.put("参数key", "configKey");
-        titleMap.put("参数名称", "configName");
-        titleMap.put("参数值", "configValue");
-        titleMap.put("备注", "remark");
-        titleMap.put("创建时间", "createTime");
-        titleMap.put("更新时间", "updateTime");
+    private Map<String, Func1<ConfigInfoVO, ?>> getTitleMap() {
+        Map<String, Func1<ConfigInfoVO, ?>> titleMap = new HashMap<>(8);
+        titleMap.put("参数key", ConfigInfoVO::getConfigKey);
+        titleMap.put("参数名称", ConfigInfoVO::getConfigName);
+        titleMap.put("参数值", ConfigInfoVO::getConfigValue);
+        titleMap.put("备注", ConfigInfoVO::getRemark);
+        titleMap.put("创建时间", ConfigInfoVO::getCreateTime);
+        titleMap.put("更新时间", ConfigInfoVO::getUpdateTime);
         return titleMap;
     }
 

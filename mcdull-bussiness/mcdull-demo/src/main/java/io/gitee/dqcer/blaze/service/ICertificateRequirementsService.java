@@ -32,7 +32,7 @@ public interface ICertificateRequirementsService {
 
     PagedVO<CertificateRequirementsVO> queryPage(CertificateRequirementsQueryDTO dto);
 
-    void exportData();
+    void exportData(CertificateRequirementsQueryDTO dto);
 
     void downloadTemplate();
 

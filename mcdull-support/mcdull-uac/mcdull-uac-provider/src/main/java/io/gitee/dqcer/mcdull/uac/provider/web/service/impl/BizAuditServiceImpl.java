@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.AuditUtil;
 import io.gitee.dqcer.mcdull.business.common.audit.OperationTypeEnum;
@@ -113,34 +115,21 @@ public class BizAuditServiceImpl
         return diffList;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public void exportData(BizAuditQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, "业务操作记录", this.getTitleMap(), this::convertMap);
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
     }
 
-    private Map<String, String> getTitleMap() {
-        Map<String, String> titleMap = new HashMap<>(8);
-        titleMap.put("业务类型", "bizTypeName");
-        titleMap.put("业务类型路径", "bizTypeRootName");
-        titleMap.put("业务索引", "bizIndex");
-        titleMap.put("业务动作", "operationName");
-        titleMap.put("业务内容", "comment");
-        titleMap.put("操作人", "operator");
-        titleMap.put("操作时间", "operationTime");
+    private Map<String, Func1<BizAuditVO, ?>> getTitleMap() {
+        Map<String, Func1<BizAuditVO, ?>> titleMap = new HashMap<>(8);
+        titleMap.put("业务类型", BizAuditVO::getBizTypeName);
+        titleMap.put("业务类型路径", BizAuditVO::getBizTypeRootName);
+        titleMap.put("业务索引", BizAuditVO::getBizIndex);
+        titleMap.put("业务动作", BizAuditVO::getOperationName);
+        titleMap.put("业务内容", BizAuditVO::getComment);
+        titleMap.put("操作人", BizAuditVO::getOperator);
+        titleMap.put("操作时间", BizAuditVO::getOperationTime);
         return titleMap;
-    }
-
-    private Map<String, String> convertMap(BizAuditVO vo) {
-        Map<String, String> map = new HashMap<>(8);
-        map.put("bizTypeName", vo.getBizTypeName());
-        map.put("bizTypeRootName", vo.getBizTypeRootName());
-        map.put("bizIndex", vo.getBizIndex());
-        map.put("operationName", vo.getOperationName());
-        map.put("comment", vo.getComment());
-        map.put("operator", vo.getOperator());
-        map.put("operationTime", commonManager.convertDateByUserTimezone(vo.getOperationTime()));
-        return map;
     }
 
     private BizAuditVO convertToVO(BizAuditEntity entity) {

@@ -4,9 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
@@ -290,40 +292,24 @@ public class NoticeServiceImpl
 
     @Override
     public void exportData(NoticeQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, "通知公告记录", this.getTitleMap(), this::convertMap);
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
     }
 
-    private Map<String, String> convertMap(NoticeVO noticeVO) {
-        Map<String, String> map = new HashMap<>(8);
-        map.put("title", noticeVO.getTitle());
-        map.put("documentNumber", noticeVO.getDocumentNumber());
-        map.put("noticeTypeName", noticeVO.getNoticeTypeName());
-        map.put("author", noticeVO.getAuthor());
-        map.put("source", noticeVO.getSource());
-        map.put("allVisibleFlag", noticeVO.getAllVisibleFlag().toString());
-        map.put("scheduledPublishFlag", noticeVO.getScheduledPublishFlag().toString());
-        map.put("publishTime", noticeVO.getPublishTime().toString());
-        map.put("pageViewCount", Convert.toStr(noticeVO.getPageViewCount()));
-        map.put("userViewCount", Convert.toStr(noticeVO.getUserViewCount()));
-        map.put("createUserName", noticeVO.getCreateUserName());
-        map.put("createTime", commonManager.convertDateByUserTimezone(noticeVO.getCreateTime()));
-        return map;
-    }
 
-    private Map<String, String> getTitleMap() {
-        Map<String, String> titleMap = new HashMap<>(8);
-        titleMap.put("标题", "title");
-        titleMap.put("文号", "documentNumber");
-        titleMap.put("分类", "noticeTypeName");
-        titleMap.put("作者", "author");
-        titleMap.put("来源", "source");
-        titleMap.put("是否全部可见", "allVisibleFlag");
-        titleMap.put("是否定时发布", "scheduledPublishFlag");
-        titleMap.put("发布时间", "publishTime");
-        titleMap.put("页面浏览量", "pageViewCount");
-        titleMap.put("用户浏览量", "userViewCount");
-        titleMap.put("创建人", "createUserName");
-        titleMap.put("创建时间", "createTime");
+    private Map<String, Func1<NoticeVO, ?>> getTitleMap() {
+        Map<String, Func1<NoticeVO, ?>> titleMap = new HashMap<>(8);
+        titleMap.put("标题", NoticeVO::getTitle);
+        titleMap.put("文号", NoticeVO::getDocumentNumber);
+        titleMap.put("分类", NoticeVO::getNoticeTypeName);
+        titleMap.put("作者", NoticeVO::getAuthor);
+        titleMap.put("来源", NoticeVO::getSource);
+        titleMap.put("是否全部可见", NoticeVO::getAllVisibleFlag);
+        titleMap.put("是否定时发布", NoticeVO::getScheduledPublishFlag);
+        titleMap.put("发布时间", NoticeVO::getPublishTime);
+        titleMap.put("页面浏览量", NoticeVO::getPageViewCount);
+        titleMap.put("用户浏览量", NoticeVO::getUserViewCount);
+        titleMap.put("创建人", NoticeVO::getCreateUserName);
+        titleMap.put("创建时间", NoticeVO::getCreateTime);
         return titleMap;
     }
 

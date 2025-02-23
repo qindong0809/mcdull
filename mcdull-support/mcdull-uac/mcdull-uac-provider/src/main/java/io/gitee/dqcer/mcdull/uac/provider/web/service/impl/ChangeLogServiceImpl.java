@@ -1,7 +1,9 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
@@ -145,33 +147,20 @@ public class ChangeLogServiceImpl
 
     @Override
     public void exportData(ChangeLogQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, "更新日志记录", this.getTitleMap(), this::convertMap);
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
 
     }
 
-    private Map<String, String> convertMap(ChangeLogVO changeLogVO) {
-        Map<String, String> map = new HashMap<>();
-        map.put("version", changeLogVO.getVersion());
-        map.put("type", changeLogVO.getTypeName());
-        map.put("publishAuthor", changeLogVO.getPublishAuthor());
-        map.put("publicDate", changeLogVO.getPublicDate().toString());
-        map.put("content", changeLogVO.getContent());
-        map.put("link", changeLogVO.getLink());
-        map.put("createTime", changeLogVO.getCreateTime().toString());
-        map.put("updateTime", changeLogVO.getUpdateTime().toString());
-        return map;
-    }
-
-    private Map<String, String> getTitleMap() {
-        Map<String, String> titleMap = new HashMap<>(8);
-        titleMap.put("版本", "version");
-        titleMap.put("更新类型", "type");
-        titleMap.put("发布人", "publishAuthor");
-        titleMap.put("发布日期", "publicDate");
-        titleMap.put("更新内容", "content");
-        titleMap.put("跳转链接", "link");
-        titleMap.put("创建时间", "createTime");
-        titleMap.put("更新时间", "updateTime");
+    private Map<String, Func1<ChangeLogVO, ?>> getTitleMap() {
+        Map<String, Func1<ChangeLogVO, ?>> titleMap = new HashMap<>(8);
+        titleMap.put("版本", ChangeLogVO::getVersion);
+        titleMap.put("更新类型", ChangeLogVO::getTypeName);
+        titleMap.put("发布人", ChangeLogVO::getPublishAuthor);
+        titleMap.put("发布日期", ChangeLogVO::getPublicDate);
+        titleMap.put("更新内容", ChangeLogVO::getContent);
+        titleMap.put("跳转链接", ChangeLogVO::getLink);
+        titleMap.put("创建时间", ChangeLogVO::getCreateTime);
+        titleMap.put("更新时间", ChangeLogVO::getUpdateTime);
         return titleMap;
     }
 

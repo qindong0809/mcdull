@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager;
 
 import cn.hutool.core.lang.Pair;
+import cn.hutool.core.lang.func.Func1;
 import io.gitee.dqcer.mcdull.business.common.excel.DataAnalysisListener;
 import io.gitee.dqcer.mcdull.business.common.excel.DynamicFieldTemplate;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
@@ -34,8 +35,7 @@ public interface ICommonManager {
                          Consumer<List<Pair<String, DataAnalysisListener>>> consumer);
 
     <D extends PagedDTO, V extends VO> void exportExcel(D dto, Function<D, PagedVO<V>> function,
-                                                        String sheetName, Map<String, String> titleMap,
-                                                        Function<V, Map<String, String>> mapFunction);
+                                                           String sheetName, Map<String, Func1<V, ?>> titleMap);
 
     void exportExcel(String sheetName, String conditions, Map<String, String> titleMap, List<Map<String, String>> mapList);
 

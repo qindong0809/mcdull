@@ -6,6 +6,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.Tuple;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
@@ -652,27 +653,26 @@ public class UserServiceImpl
         return StrUtil.EMPTY;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public void exportData() {
-        commonManager.exportExcel(new UserListDTO(), this::listByPage, "部门人员", this.getTitleMap(), this::convertMap);
+        commonManager.exportExcel(new UserListDTO(), this::listByPage, StrUtil.EMPTY, this.getTitleMap());
     }
 
-    private Map<String, String> convertMap(UserVO vo) {
-        Map<String, String> map = new HashMap<>();
-        map.put("username", vo.getActualName());
-        map.put("jobNumber", vo.getLoginName());
-        map.put("gender", StrUtil.toString(vo.getGender()));
-        map.put("phone", vo.getPhone());
-        map.put("email", vo.getEmail());
-        map.put("departmentName", vo.getDepartmentName());
-        map.put("roleName", StrUtil.join(StrUtil.COMMA, vo.getRoleNameList()));
-        map.put("createdByName", vo.getCreatedByName());
-        map.put("createdTime",commonManager.convertDateByUserTimezone(vo.getCreatedTime()));
-        map.put("updatedByName", vo.getUpdatedByName());
-        map.put("updatedTime", commonManager.convertDateByUserTimezone(vo.getUpdatedTime()));
-        map.put("inactive", IEnum.getTextByCode(InactiveEnum.class, vo.getInactive()));
-        return map;
+    private Map<String, Func1<UserVO, ?>> getTitleMap() {
+        Map<String, Func1<UserVO, ?>> titleMap = new LinkedHashMap<>();
+        titleMap.put("姓名", UserVO::getActualName);
+        titleMap.put("登录账号", UserVO::getLoginName);
+        titleMap.put("性别", UserVO::getGender);
+        titleMap.put("手机号", UserVO::getPhone);
+        titleMap.put("邮箱", UserVO::getEmail);
+        titleMap.put("部门名称", UserVO::getDepartmentName);
+        titleMap.put("角色名称", UserVO::getRoleNameList);
+        titleMap.put("创建人", UserVO::getCreatedByName);
+        titleMap.put("创建时间", UserVO::getCreatedTime);
+        titleMap.put("更新人", UserVO::getUpdatedByName);
+        titleMap.put("更新时间", UserVO::getUpdatedTime);
+        titleMap.put("状态", UserVO::getInactive);
+        return titleMap;
     }
 
     @Override
@@ -781,20 +781,4 @@ public class UserServiceImpl
 
 
 
-    private Map<String, String> getTitleMap() {
-        Map<String, String> titleMap = new LinkedHashMap<>();
-        titleMap.put("姓名", "username");
-        titleMap.put("登录账号", "jobNumber");
-        titleMap.put("性别", "gender");
-        titleMap.put("手机号", "phone");
-        titleMap.put("邮箱", "email");
-        titleMap.put("部门名称", "departmentName");
-        titleMap.put("角色名称", "roleName");
-        titleMap.put("创建人", "createdByName");
-        titleMap.put("创建时间", "createdTime");
-        titleMap.put("更新人", "updatedByName");
-        titleMap.put("更新时间", "updatedTime");
-        titleMap.put("状态", "inactive");
-        return titleMap;
-    }
 }

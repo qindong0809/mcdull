@@ -3,7 +3,9 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.SessionQueryDTO;
@@ -68,24 +70,15 @@ public class SessionServiceImpl implements ISessionService {
 
     @Override
     public void exportData(SessionQueryDTO dto) {
-        commonManager.exportExcel(new SessionQueryDTO(), this::queryPage, "会话列表", this.getTitleMap(), this::convertMap);
+        commonManager.exportExcel(new SessionQueryDTO(), this::queryPage, StrUtil.EMPTY, this.getTitleMap());
     }
 
-    private Map<String, String> getTitleMap() {
-        Map<String, String> titleMap = new HashMap<>(8);
-        titleMap.put("会话ID", "id");
-        titleMap.put("登录名", "loginName");
-        titleMap.put("用户名", "actualName");
-        titleMap.put("创建时间", "createTime");
+    private Map<String, Func1<SessionVO, ?>> getTitleMap() {
+        Map<String, Func1<SessionVO, ?>> titleMap = new HashMap<>(8);
+        titleMap.put("会话ID", SessionVO::getId);
+        titleMap.put("登录名", SessionVO::getLoginName);
+        titleMap.put("用户名", SessionVO::getActualName);
+        titleMap.put("创建时间", SessionVO::getCreateTime);
         return titleMap;
-    }
-
-    private Map<String, String> convertMap(SessionVO vo) {
-        Map<String, String> map = new HashMap<>(8);
-        map.put("id", vo.getId());
-        map.put("loginName", vo.getLoginName());
-        map.put("actualName", vo.getActualName());
-        map.put("createTime", commonManager.convertDateTimeStr(vo.getCreateTime()));
-        return map;
     }
 }

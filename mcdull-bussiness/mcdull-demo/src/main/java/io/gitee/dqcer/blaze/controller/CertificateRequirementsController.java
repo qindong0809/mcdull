@@ -65,8 +65,8 @@ public class CertificateRequirementsController extends BasicController {
 
     @Operation(summary = "导出数据")
     @PostMapping(value = "CertificateRequirements/list/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public void exportData() {
-        certificateRequirementsService.exportData();
+    public void exportData(@RequestBody @Valid CertificateRequirementsQueryDTO dto) {
+        certificateRequirementsService.exportData(dto);
     }
 
     @Operation(summary = "下载模板")

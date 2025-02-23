@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -147,43 +148,26 @@ public class OperateLogServiceImpl
         return Collections.emptyList();
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public void exportData(OperateLogQueryDTO dto) {
-        commonManager.exportExcel(new OperateLogQueryDTO(), this::queryByPage, "请求监控报表", this.getTitleMap(), this::convertMap);
+        commonManager.exportExcel(new OperateLogQueryDTO(), this::queryByPage, StrUtil.EMPTY, this.getTitleMap());
     }
 
-    private Map<String, String> getTitleMap() {
-        Map<String, String> titleMap = new HashMap<>(8);
-        titleMap.put("用户", "operateUserName");
-        titleMap.put("操作模块", "module");
-        titleMap.put("操作内容", "content");
-        titleMap.put("请求路径", "url");
-        titleMap.put("IP", "ip");
-        titleMap.put("IP地区", "ipRegion");
-        titleMap.put("客户端", "userAgent");
-        titleMap.put("请求方法", "method");
-        titleMap.put("耗时(ms)", "timeTaken");
-        titleMap.put("链路标识", "traceId");
-        titleMap.put("请求结果", "successFlag");
-        titleMap.put("时间", "createTime");
+    private Map<String, Func1<OperateLogVO, ?>> getTitleMap() {
+        Map<String, Func1<OperateLogVO, ?>> titleMap = new HashMap<>(8);
+        titleMap.put("用户", OperateLogVO::getOperateUserName);
+        titleMap.put("操作模块", OperateLogVO::getModule);
+        titleMap.put("操作内容", OperateLogVO::getContent);
+        titleMap.put("请求路径", OperateLogVO::getUrl);
+        titleMap.put("IP", OperateLogVO::getIp);
+        titleMap.put("IP地区", OperateLogVO::getIpRegion);
+        titleMap.put("客户端", OperateLogVO::getUserAgent);
+        titleMap.put("请求方法", OperateLogVO::getMethod);
+        titleMap.put("耗时(ms)", OperateLogVO::getTimeTaken);
+        titleMap.put("链路标识", OperateLogVO::getTraceId);
+        titleMap.put("请求结果", OperateLogVO::getSuccessFlag);
+        titleMap.put("时间", OperateLogVO::getCreateTime);
         return titleMap;
     }
 
-    private Map<String, String> convertMap(OperateLogVO vo) {
-        Map<String, String> map = new HashMap<>(8);
-        map.put("operateUserName", vo.getOperateUserName());
-        map.put("module", vo.getModule());
-        map.put("content", vo.getContent());
-        map.put("url", vo.getUrl());
-        map.put("ip", vo.getIp());
-        map.put("ipRegion", vo.getIpRegion());
-        map.put("userAgent", vo.getUserAgent());
-        map.put("method", vo.getMethod());
-        map.put("timeTaken", vo.getTimeTaken().toString());
-        map.put("traceId", vo.getTraceId());
-        map.put("successFlag", vo.getSuccessFlag().toString());
-        map.put("createTime", commonManager.convertDateByUserTimezone(vo.getCreateTime()));
-        return map;
-    }
 }

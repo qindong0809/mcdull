@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -97,30 +98,18 @@ public class LoginLogServiceImpl
 
     @Override
     public void exportData(LoginLogQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryByPage, "登录日志", this.getTitleMap(), this::convertMap);
+        commonManager.exportExcel(dto, this::queryByPage, StrUtil.EMPTY, this.getTitleMap());
     }
 
-    private Map<String, String> convertMap(LoginLogVO loginLogVO) {
-        Map<String, String> map = new HashMap<>();
-        map.put("loginName", loginLogVO.getLoginName());
-        map.put("loginIp", loginLogVO.getLoginIp());
-        map.put("loginIpRegion", loginLogVO.getLoginIpRegion());
-        map.put("userAgent", loginLogVO.getUserAgent());
-        map.put("loginResultName", loginLogVO.getLoginResultName());
-        map.put("remark", loginLogVO.getRemark());
-        map.put("createTime", commonManager.convertDateTimeStr(loginLogVO.getCreateTime()));
-        return map;
-    }
-
-    private Map<String, String> getTitleMap() {
-        Map<String, String> titleMap = new HashMap<>(8);
-        titleMap.put("登录名", "loginName");
-        titleMap.put("IP", "loginIp");
-        titleMap.put("IP地区", "loginIpRegion");
-        titleMap.put("设备信息", "userAgent");
-        titleMap.put("登录结果", "loginResultName");
-        titleMap.put("备注", "remark");
-        titleMap.put("时间", "createTime");
+    private Map<String, Func1<LoginLogVO, ?>> getTitleMap() {
+        Map<String, Func1<LoginLogVO, ?>> titleMap = new HashMap<>(8);
+        titleMap.put("登录名", LoginLogVO::getLoginName);
+        titleMap.put("IP", LoginLogVO::getLoginIp);
+        titleMap.put("IP地区", LoginLogVO::getLoginIpRegion);
+        titleMap.put("设备信息", LoginLogVO::getUserAgent);
+        titleMap.put("登录结果", LoginLogVO::getLoginResultName);
+        titleMap.put("备注", LoginLogVO::getRemark);
+        titleMap.put("时间", LoginLogVO::getCreateTime);
         return titleMap;
     }
 

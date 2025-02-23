@@ -3,18 +3,18 @@ package io.gitee.dqcer.mcdull.uac.provider.web.manager.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.Tuple;
+import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrJoiner;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.BooleanUtil;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.ExcelWriter;
@@ -231,17 +231,33 @@ public class CommonManagerImpl implements ICommonManager {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public <D extends PagedDTO, V extends VO> void exportExcel(D dto, Function<D, PagedVO<V>> function,
-                                                               String sheetName, Map<String, String> titleMap,
-                                                               Function<V, Map<String, String>> mapFunction) {
+                                                                  String sheetName, Map<String, Func1<V, ?>> titleFuncMap) {
+        sheetName = StrUtil.isNotBlank(sheetName) ? sheetName : "数据列表";
         PageUtil.setMaxPageSize(dto);
         PagedVO<V> page = function.apply(dto);
         List<V> list = new ArrayList<>();
         if (ObjUtil.isNotNull(page)) {
             list = page.getList();
         }
+        Map<String, String> titleMap = new HashMap<>();
+        for (Map.Entry<String, Func1<V, ?>> entry : titleFuncMap.entrySet()) {
+            titleMap.put(entry.getKey(), LambdaUtil.getFieldName(entry.getValue()));
+        }
         List<Map<String, String>> mapList = new ArrayList<>();
         for (V vo : list) {
-            mapList.add(mapFunction.apply(vo));
+            Map<String, String> hashMap = new HashMap<>();
+            for (Map.Entry<String, String> entry : titleMap.entrySet()) {
+                String fieldName = entry.getValue();
+                Object fieldValue = ReflectUtil.getFieldValue(vo, fieldName);
+                if (fieldValue instanceof Date) {
+                    fieldValue = this.convertDateByUserTimezone((Date) fieldValue);
+                }
+                if (fieldValue instanceof Boolean) {
+                    fieldValue = BooleanUtil.toString(Convert.toBool(fieldValue), "是", "否");
+                }
+                hashMap.put(entry.getKey(), Convert.toStr(fieldValue));
+            }
+            mapList.add(hashMap);
         }
         this.exportExcel(sheetName, StrUtil.EMPTY, titleMap, mapList);
     }

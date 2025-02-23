@@ -4,7 +4,9 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
@@ -134,32 +136,21 @@ public class OaEnterpriseServiceImpl
 
     @Override
     public void exportData(EnterpriseQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryByPage, "企业信息记录", this.getTitleMap(), this::convertMap);
+        commonManager.exportExcel(dto, this::queryByPage, StrUtil.EMPTY, this.getTitleMap());
     }
 
-    private Map<String, String> convertMap(EnterpriseVO enterpriseVO) {
-        Map<String, String> map = new HashMap<>(8);
-        map.put("enterpriseName", enterpriseVO.getEnterpriseName());
-        map.put("unifiedSocialCreditCode", enterpriseVO.getUnifiedSocialCreditCode());
-        map.put("typeName", enterpriseVO.getTypeName());
-        map.put("contact", enterpriseVO.getContact());
-        map.put("contactPhone", enterpriseVO.getContactPhone());
-        map.put("email", enterpriseVO.getEmail());
-        map.put("disabledFlag", enterpriseVO.getDisabledFlag() ? "禁用" : "正常");
-        map.put("createUserName", enterpriseVO.getCreateUserName());
-        return map;
-    }
 
-    private Map<String, String> getTitleMap() {
-        Map<String, String> titleMap = new HashMap<>(8);
-        titleMap.put("企业名称", "enterpriseName");
-        titleMap.put("统一社会信用代码", "unifiedSocialCreditCode");
-        titleMap.put("企业类型", "typeName");
-        titleMap.put("联系人", "contact");
-        titleMap.put("联系人电话", "contactPhone");
-        titleMap.put("邮箱", "email");
-        titleMap.put("状态", "disabledFlag");
-        titleMap.put("创建人", "createUserName");
+    private Map<String, Func1<EnterpriseVO, ?>> getTitleMap() {
+        Map<String, Func1<EnterpriseVO, ?>> titleMap = new HashMap<>(8);
+        titleMap.put("企业名称", EnterpriseVO::getEnterpriseName);
+        titleMap.put("企业logo", EnterpriseVO::getEnterpriseLogo);
+        titleMap.put("统一社会信用代码", EnterpriseVO::getUnifiedSocialCreditCode);
+        titleMap.put("企业类型", EnterpriseVO::getTypeName);
+        titleMap.put("联系人", EnterpriseVO::getContact);
+        titleMap.put("联系人电话", EnterpriseVO::getContactPhone);
+        titleMap.put("邮箱", EnterpriseVO::getEmail);
+        titleMap.put("状态", EnterpriseVO::getDisabledFlag);
+        titleMap.put("创建人", EnterpriseVO::getCreateUserName);
         return titleMap;
     }
 
