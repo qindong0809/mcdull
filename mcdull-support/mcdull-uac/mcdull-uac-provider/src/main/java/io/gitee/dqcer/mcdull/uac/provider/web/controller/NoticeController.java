@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.ListUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeDetailVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.NoticeUpdateFormVO;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 @RestController
 @Tag(name = "通知")
-public class NoticeController {
+public class NoticeController extends BasicController {
 
     @Resource
     private INoticeService noticeService;
@@ -40,7 +41,7 @@ public class NoticeController {
     @SaCheckPermission("system:notice:export")
     @PostMapping(value = "/system/notice/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid NoticeQueryDTO dto) {
-        noticeService.exportData(dto);
+        super.locker(null, () -> noticeService.exportData(dto));
     }
 
     @Operation(summary = "添加")

@@ -14,9 +14,26 @@ import java.util.List;
  */
 public interface ISessionService {
 
+    /**
+     * Query 页面
+     *
+     * @param dto DTO
+     * @return {@link PagedVO }<{@link SessionVO }>
+     */
     PagedVO<SessionVO> queryPage(SessionQueryDTO dto);
 
+    /**
+     * 批量踢出
+     *
+     * @param loginIdList 登录 ID 列表
+     */
     void batchKickout(List<Integer> loginIdList);
 
-    void exportData(SessionQueryDTO dto);
+    /**
+     * 导出数据
+     *
+     * @param dto DTO
+     * @return boolean
+     */
+    boolean exportData(SessionQueryDTO dto);
 }

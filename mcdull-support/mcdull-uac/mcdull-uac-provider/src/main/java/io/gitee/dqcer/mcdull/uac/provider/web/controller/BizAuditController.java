@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 业务审计控制器
+ * @author dqcer
+ * @since  2025/03/11
+ */
 @RestController
 @Tag(name = "业务操作记录")
 public class BizAuditController extends BasicController {
@@ -34,7 +39,7 @@ public class BizAuditController extends BasicController {
     @SaCheckPermission("system:biz_audit:export")
     @PostMapping(value = "/system/biz-audit/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid BizAuditQueryDTO dto) {
-        bizAuditService.exportData(dto);
+        super.locker(null, () -> bizAuditService.exportData(dto));
     }
 
     @Operation(summary = "分页查询")

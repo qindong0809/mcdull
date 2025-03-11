@@ -115,17 +115,18 @@ public class DictValueServiceImpl
     @Override
     public void delete(List<Integer> idList) {
         DictValueEntity entity = baseRepository.getById(idList.get(0));
-        if (ObjUtil.isNotNull(entity)) {
-            List<DictValueEntity> list = baseRepository.getListByDictKeyId(entity.getDictKeyId());
-            if (CollUtil.isNotEmpty(list)) {
-                List<Integer> collect = list.stream().map(IdEntity::getId).collect(Collectors.toList());
-                if (!CollUtil.containsAll(collect, idList)) {
-                    throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
-                }
-                baseRepository.removeByIds(idList);
-                for (Integer id : idList) {
-                    auditManager.saveByDeleteEnum(entity.getValueName(), id, null);
-                }
+        if (ObjUtil.isNull(entity)) {
+            super.throwDataNotExistException(idList.get(0));
+        }
+        List<DictValueEntity> list = baseRepository.getListByDictKeyId(entity.getDictKeyId());
+        if (CollUtil.isNotEmpty(list)) {
+            List<Integer> collect = list.stream().map(IdEntity::getId).collect(Collectors.toList());
+            if (!CollUtil.containsAll(collect, idList)) {
+                throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
+            }
+            baseRepository.removeByIds(idList);
+            for (Integer id : idList) {
+                auditManager.saveByDeleteEnum(entity.getValueName(), id, null);
             }
         }
     }

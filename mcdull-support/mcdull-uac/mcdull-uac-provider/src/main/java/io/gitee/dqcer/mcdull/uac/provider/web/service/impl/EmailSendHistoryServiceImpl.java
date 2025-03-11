@@ -92,8 +92,9 @@ public class EmailSendHistoryServiceImpl
     }
 
     @Override
-    public void exportData(EmailSendHistoryQueryDTO dto) {
+    public boolean exportData(EmailSendHistoryQueryDTO dto) {
         commonManager.exportExcel(new EmailSendHistoryQueryDTO(), this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        return true;
     }
 
     private Map<String, Func1<EmailSendHistoryVO, ?>> getTitleMap() {

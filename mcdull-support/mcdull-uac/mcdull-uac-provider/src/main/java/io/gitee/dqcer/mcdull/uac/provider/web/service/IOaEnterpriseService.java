@@ -15,15 +15,48 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.EnterpriseVO;
 
 public interface IOaEnterpriseService {
 
+    /**
+     * 按页查询
+     *
+     * @param dto DTO
+     * @return {@link PagedVO }<{@link EnterpriseVO }>
+     */
     PagedVO<EnterpriseVO> queryByPage(EnterpriseQueryDTO dto);
 
+    /**
+     * 加
+     *
+     * @param dto DTO
+     */
     void add(EnterpriseAddDTO dto);
 
+    /**
+     * 更新
+     *
+     * @param dto DTO
+     */
     void update(EnterpriseUpdateDTO dto);
 
+    /**
+     * 删除
+     *
+     * @param enterpriseId 企业 ID
+     */
     void delete(Integer enterpriseId);
 
+    /**
+     * 获取详细信息
+     *
+     * @param enterpriseId 企业 ID
+     * @return {@link EnterpriseVO }
+     */
     EnterpriseVO getDetail(Integer enterpriseId);
 
-    void exportData(EnterpriseQueryDTO dto);
+    /**
+     * 导出数据
+     *
+     * @param dto DTO
+     * @return boolean
+     */
+    boolean exportData(EnterpriseQueryDTO dto);
 }

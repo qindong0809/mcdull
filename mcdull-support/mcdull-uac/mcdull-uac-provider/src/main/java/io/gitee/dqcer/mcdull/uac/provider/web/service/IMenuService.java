@@ -103,7 +103,7 @@ public interface IMenuService {
      *
      * @param dto DTO
      */
-    void exportData(MenuListDTO dto);
+    boolean exportData(MenuListDTO dto);
 
     /**
      * 获取下拉选项

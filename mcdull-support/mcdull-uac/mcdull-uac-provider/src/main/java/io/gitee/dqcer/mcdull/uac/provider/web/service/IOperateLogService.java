@@ -18,13 +18,41 @@ import java.util.List;
 
 public interface IOperateLogService extends IOperationLog {
 
+    /**
+     * 按页查询
+     *
+     * @param dto DTO
+     * @return {@link PagedVO }<{@link OperateLogVO }>
+     */
     PagedVO<OperateLogVO> queryByPage(OperateLogQueryDTO dto);
 
+    /**
+     * 详情
+     *
+     * @param operateLogId 作日志 ID
+     * @return {@link OperateLogVO }
+     */
     OperateLogVO detail(Integer operateLogId);
 
-    KeyValueVO<List<String>, List<Integer>> home();
+    /**
+     * 首页
+     *
+     * @return {@link KeyValueVO }<{@link List }<{@link String }>, {@link List }<{@link Integer }>>
+     */
+    KeyValueVO<List<String>, List<Integer>> homePie();
 
+    /**
+     * 首页
+     *
+     * @return {@link List }<{@link NameValueVO }<{@link String }, {@link Integer }>>
+     */
     List<NameValueVO<String, Integer>> pieHome();
 
-    void exportData(OperateLogQueryDTO dto);
+    /**
+     * 导出数据
+     *
+     * @param dto DTO
+     * @return boolean
+     */
+    boolean exportData(OperateLogQueryDTO dto);
 }

@@ -22,5 +22,5 @@ public interface ILoginLogService {
 
     LoginLogEntity getLastLoginLog(String loginName);
 
-    void exportData(LoginLogQueryDTO dto);
+    boolean exportData(LoginLogQueryDTO dto);
 }

@@ -37,5 +37,5 @@ public interface INoticeService {
 
     NoticeDetailVO view(Integer noticeId);
 
-    void exportData(NoticeQueryDTO dto);
+    boolean exportData(NoticeQueryDTO dto);
 }

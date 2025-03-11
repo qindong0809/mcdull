@@ -335,7 +335,7 @@ public class MenuServiceImpl
     }
 
     @Override
-    public void exportData(MenuListDTO dto) {
+    public boolean exportData(MenuListDTO dto) {
         List<MenuVO> list = CollUtil.emptyIfNull(this.list(dto));
         List<Integer> parentList = list.stream().map(MenuVO::getParentId)
                 .distinct().collect(Collectors.toList());
@@ -368,6 +368,7 @@ public class MenuServiceImpl
             mapList.add(map);
         }
         commonManager.exportExcel("菜单列表", StrUtil.EMPTY, titleMap, mapList);
+        return true;
     }
 
     @Override

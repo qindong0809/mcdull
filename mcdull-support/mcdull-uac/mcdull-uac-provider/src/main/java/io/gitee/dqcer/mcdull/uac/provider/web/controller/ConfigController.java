@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.BizAuditQueryDTO;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.ConfigUpdateDTO;
@@ -11,14 +11,14 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.ConfigInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IConfigService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.annotation.Resource;
-import jakarta.validation.Valid;
 import java.util.List;
 
 /**
@@ -30,7 +30,7 @@ import java.util.List;
 @RestController
 @Tag(name = "系统配置")
 @RequestMapping
-public class ConfigController {
+public class ConfigController extends BasicController {
 
     @Resource
     private IConfigService configService;
@@ -46,9 +46,8 @@ public class ConfigController {
     @SaCheckPermission("system:config:export")
     @PostMapping(value = "/system/config/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid ConfigQueryDTO dto) {
-        configService.exportData(dto);
+        super.locker(null, () -> configService.exportData(dto));
     }
-
 
     @Operation(summary = "添加")
     @PostMapping("/config/add")

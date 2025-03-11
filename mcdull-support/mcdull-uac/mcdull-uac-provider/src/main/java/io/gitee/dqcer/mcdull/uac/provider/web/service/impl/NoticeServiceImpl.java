@@ -291,8 +291,9 @@ public class NoticeServiceImpl
     }
 
     @Override
-    public void exportData(NoticeQueryDTO dto) {
+    public boolean exportData(NoticeQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        return true;
     }
 
 

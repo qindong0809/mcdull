@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
-*
+* 更新日志
 * @author dqcer
 * @since 2024-04-29
 */
@@ -37,7 +37,7 @@ public class ChangeLogController extends BasicController {
     @PostMapping("/changeLog/add")
     @SaCheckPermission("support:changeLog:add")
     public Result<Boolean> add(@RequestBody @Valid ChangeLogAddDTO addForm) {
-        final String key = "changeLog:add:" + addForm.getVersion() + "_" + addForm.getType();
+        final String key =  addForm.getVersion() + "_" + addForm.getType();
         return Result.success(super.locker(key, () -> changeLogService.add(addForm)));
     }
 
@@ -75,9 +75,8 @@ public class ChangeLogController extends BasicController {
     @SaCheckPermission("system:changeLog:export")
     @PostMapping(value = "/system/changeLog/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid ChangeLogQueryDTO dto) {
-        changeLogService.exportData(dto);
+        super.locker(null, () -> changeLogService.exportData(dto));
     }
-
 
     @Operation(summary = "查询全部和版本信息")
     @PostMapping("/changeLog-version")
@@ -85,11 +84,9 @@ public class ChangeLogController extends BasicController {
         return Result.success(changeLogService.getChangeLogAndVersion());
     }
 
-
     @Operation(summary = "变更内容详情")
     @GetMapping("/changeLog/getDetail/{changeLogId}")
     public Result<ChangeLogVO> getDetail(@PathVariable(value = "changeLogId") Integer changeLogId) {
         return Result.success(changeLogService.getById(changeLogId));
     }
-
 }

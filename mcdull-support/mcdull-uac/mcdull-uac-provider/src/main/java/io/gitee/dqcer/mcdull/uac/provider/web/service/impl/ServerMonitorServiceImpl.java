@@ -2,6 +2,9 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.system.HostInfo;
+import cn.hutool.system.OsInfo;
+import cn.hutool.system.SystemUtil;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IServerMonitorService;
@@ -17,7 +20,7 @@ import oshi.software.os.OperatingSystem;
 import oshi.util.FormatUtil;
 import oshi.util.Util;
 
-import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -42,7 +45,7 @@ public class ServerMonitorServiceImpl
             OperatingSystem os = si.getOperatingSystem();
             HardwareAbstractionLayer hal = si.getHardware();
             // 系统信息
-            resultMap.put("sys", getSystemInfo(os));
+            resultMap.put("sys", getSystemInfo());
             // cpu 信息
             resultMap.put("cpu", getCpuInfo(hal.getProcessor()));
             // 内存信息
@@ -167,19 +170,21 @@ public class ServerMonitorServiceImpl
         return cpuInfo;
     }
 
-    private Map<String,Object> getSystemInfo(OperatingSystem os){
+    private Map<String,Object> getSystemInfo(){
         Map<String,Object> systemInfo = new LinkedHashMap<>();
         // jvm 运行时间
-        long time = ManagementFactory.getRuntimeMXBean().getStartTime();
+        RuntimeMXBean runtimeMXBean = SystemUtil.getRuntimeMXBean();
+        long time =  runtimeMXBean.getStartTime();
         Date date = new Date(time);
         // 计算项目运行时间
         String formatBetween = DateUtil.formatBetween(date, new Date(), Level.SECOND);
+        OsInfo osInfo = SystemUtil.getOsInfo();
         // 系统信息
-        systemInfo.put("os", os.toString());
+        systemInfo.put("os", osInfo.toString());
         systemInfo.put("day", formatBetween);
-        // FIXME: 2024/6/2
-//        systemInfo.put("ip", NetUtil.localIps().toString());
-        systemInfo.put("ip", "127.0.0.1");
+
+        HostInfo hostInfo = SystemUtil.getHostInfo();
+        systemInfo.put("ip",  hostInfo.getAddress());
 
         return systemInfo;
     }

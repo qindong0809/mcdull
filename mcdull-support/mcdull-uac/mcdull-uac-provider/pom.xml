@@ -18,11 +18,15 @@
 
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>io.github.minliuhua</groupId>-->
-<!--            <artifactId>warm-flow-mybatis-plus-sb-starter</artifactId>-->
-<!--            <version>1.2.4</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-system</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.warm</groupId>
+            <artifactId>warm-flow-mybatis-sb3-starter</artifactId>
+            <version>1.6.7</version>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-mysql</artifactId>

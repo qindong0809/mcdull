@@ -30,7 +30,7 @@ public interface IDictKeyService {
      * @param dto dto
      * @return {@link PagedVO}<{@link DictKeyVO}>
      */
-    PagedVO<DictKeyVO> getList(DictKeyQueryDTO dto);
+    PagedVO<DictKeyVO> queryPage(DictKeyQueryDTO dto);
 
     /**
      * 插入
@@ -68,4 +68,12 @@ public interface IDictKeyService {
      * @return {@link DictKeyEntity }
      */
     DictKeyEntity getById(Integer keyId);
+
+    /**
+     * 导出数据
+     *
+     * @param dto DTO
+     * @return boolean
+     */
+    boolean exportData(DictKeyQueryDTO dto);
 }

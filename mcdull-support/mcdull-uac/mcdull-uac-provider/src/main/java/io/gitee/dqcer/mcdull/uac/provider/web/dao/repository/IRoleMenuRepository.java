@@ -38,11 +38,4 @@ public interface IRoleMenuRepository extends IRepository<RoleMenuEntity> {
      */
     void insert(Integer roleId, List<Integer> menuIdList);
 
-    /**
-     * 按菜单id查询
-     *
-     * @param menuIdList 菜单id列表
-     * @return {@link Map}<{@link Integer}, {@link List}<{@link Integer}>>
-     */
-    Map<Integer, List<Integer>> listByMenuIdList(List<Integer> menuIdList);
 }

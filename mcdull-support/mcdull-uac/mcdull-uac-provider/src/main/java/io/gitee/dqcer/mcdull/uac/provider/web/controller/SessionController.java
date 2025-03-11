@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.SessionQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.SessionVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ISessionService;
@@ -16,14 +17,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
-*
+* 会话信息
 * @author dqcer
 * @since 2024-04-29
 */
 @RestController
 @Tag(name = "会话信息")
 @RequestMapping
-public class SessionController {
+public class SessionController extends BasicController {
 
     @Resource
     private ISessionService sessionService;
@@ -39,7 +40,7 @@ public class SessionController {
     @SaCheckPermission("system:session:export")
     @PostMapping(value = "/system/session/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid SessionQueryDTO dto) {
-        sessionService.exportData(dto);
+        super.locker(null, () -> sessionService.exportData(dto));
     }
 
 

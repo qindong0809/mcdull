@@ -22,5 +22,5 @@ public interface IAreaService {
 
     List<LabelValueVO<String, String>> cityList(String provinceCode);
 
-    void exportData(AreaQueryDTO dto);
+    boolean exportData(AreaQueryDTO dto);
 }

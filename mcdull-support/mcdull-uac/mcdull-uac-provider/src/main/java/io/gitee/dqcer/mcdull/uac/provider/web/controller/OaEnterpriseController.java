@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.EnterpriseAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.EnterpriseQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.EnterpriseUpdateDTO;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @Tag(name = "企业信息")
-public class OaEnterpriseController {
+public class OaEnterpriseController extends BasicController {
 
     @Resource
     private IOaEnterpriseService enterpriseService;

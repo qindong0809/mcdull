@@ -119,7 +119,7 @@ public class OperateLogServiceImpl
     }
 
     @Override
-    public KeyValueVO<List<String>, List<Integer>> home() {
+    public KeyValueVO<List<String>, List<Integer>> homePie() {
         List<String> key = new ArrayList<>();
         List<Integer> value = new ArrayList<>();
         List<Map<String, Object>> list = baseRepository.home();
@@ -149,8 +149,9 @@ public class OperateLogServiceImpl
     }
 
     @Override
-    public void exportData(OperateLogQueryDTO dto) {
-        commonManager.exportExcel(new OperateLogQueryDTO(), this::queryByPage, StrUtil.EMPTY, this.getTitleMap());
+    public boolean exportData(OperateLogQueryDTO dto) {
+        commonManager.exportExcel(dto, this::queryByPage, StrUtil.EMPTY, this.getTitleMap());
+        return true;
     }
 
     private Map<String, Func1<OperateLogVO, ?>> getTitleMap() {

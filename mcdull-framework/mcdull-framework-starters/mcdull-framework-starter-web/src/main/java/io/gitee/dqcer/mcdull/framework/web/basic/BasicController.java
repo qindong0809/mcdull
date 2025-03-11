@@ -1,9 +1,12 @@
 package io.gitee.dqcer.mcdull.framework.web.basic;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.web.component.ConcurrentRateLimiter;
 import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
@@ -89,8 +92,18 @@ public abstract class BasicController {
         return concurrentRateLimiter.locker(key, timeout, function);
     }
 
-    protected <T> T locker(String key, Supplier<T> function) {
+    protected <T> T locker1(String key, Supplier<T> function) {
+        UnifySession<?> session = UserContextHolder.getSession();
         return concurrentRateLimiter.locker(key, 0L, function);
+    }
+
+    protected <T> T locker(String key, Supplier<T> function) {
+        key = Convert.toStr(key, "blank");
+        UnifySession<?> session = UserContextHolder.getSession();
+        String permissionCode = session.getPermissionCode();
+        String loginName = session.getLoginName();
+        String bizKey = StrUtil.format("{}_{}_{}", loginName, permissionCode, key);
+        return concurrentRateLimiter.locker(bizKey, 0L, function);
     }
 
     protected <T, S> T locker(String key, Supplier<S> function, T defaultValue) {

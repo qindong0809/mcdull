@@ -146,9 +146,9 @@ public class ChangeLogServiceImpl
     }
 
     @Override
-    public void exportData(ChangeLogQueryDTO dto) {
+    public boolean exportData(ChangeLogQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
-
+        return true;
     }
 
     private Map<String, Func1<ChangeLogVO, ?>> getTitleMap() {

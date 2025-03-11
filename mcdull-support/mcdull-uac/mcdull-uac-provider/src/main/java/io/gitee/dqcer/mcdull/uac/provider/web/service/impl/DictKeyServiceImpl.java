@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -17,14 +18,13 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.DictKeyEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.DictKeyVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDictKeyRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDictKeyService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +39,8 @@ public class DictKeyServiceImpl
 
     @Resource
     private IAuditManager auditManager;
+    @Resource
+    private ICommonManager commonManager;
 
     @Transactional(readOnly = true)
     @Override
@@ -52,7 +54,7 @@ public class DictKeyServiceImpl
 
     @Transactional(readOnly = true)
     @Override
-    public PagedVO<DictKeyVO> getList(DictKeyQueryDTO dto) {
+    public PagedVO<DictKeyVO> queryPage(DictKeyQueryDTO dto) {
         Page<DictKeyEntity> entityPage = baseRepository.selectPage(dto);
         List<DictKeyVO> voList = new ArrayList<>();
         entityPage.getRecords().forEach(entity -> voList.add(this.buildVO(entity)));
@@ -133,6 +135,21 @@ public class DictKeyServiceImpl
     public DictKeyEntity getById(Integer keyId) {
         return baseRepository.getById(keyId);
     }
+
+    @Override
+    public boolean exportData(DictKeyQueryDTO dto) {
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        return true;
+    }
+
+    private Map<String, Func1<DictKeyVO, ?>> getTitleMap() {
+        Map<String, Func1<DictKeyVO, ?>> titleMap = new HashMap<>(8);
+        titleMap.put("字典编码", DictKeyVO::getKeyCode);
+        titleMap.put("字典名称", DictKeyVO::getKeyName);
+        titleMap.put("字典描述", DictKeyVO::getRemark);
+        return titleMap;
+    }
+
 
     private DictKeyVO buildVO(DictKeyEntity entity) {
         DictKeyVO vo = new DictKeyVO();

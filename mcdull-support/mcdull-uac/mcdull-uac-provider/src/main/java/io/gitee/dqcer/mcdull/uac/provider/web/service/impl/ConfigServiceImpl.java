@@ -112,8 +112,9 @@ public class ConfigServiceImpl
     }
 
     @Override
-    public void exportData(ConfigQueryDTO dto) {
+    public boolean exportData(ConfigQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        return true;
     }
 
 

@@ -17,13 +17,40 @@ import java.util.List;
 public interface IConfigService {
 
 
+    /**
+     * Query 页面
+     *
+     * @param dto DTO
+     * @return {@link PagedVO }<{@link ConfigInfoVO }>
+     */
     PagedVO<ConfigInfoVO> queryPage(ConfigQueryDTO dto);
 
+    /**
+     * 加
+     *
+     * @param dto DTO
+     */
     void add(ConfigAddDTO dto);
 
+    /**
+     * 更新
+     *
+     * @param dto DTO
+     */
     void update(ConfigUpdateDTO dto);
 
+    /**
+     * 删除
+     *
+     * @param idList ID 列表
+     */
     void delete(List<Integer> idList);
 
-    void exportData(ConfigQueryDTO dto);
+    /**
+     * 导出数据
+     *
+     * @param dto DTO
+     * @return boolean
+     */
+    boolean exportData(ConfigQueryDTO dto);
 }

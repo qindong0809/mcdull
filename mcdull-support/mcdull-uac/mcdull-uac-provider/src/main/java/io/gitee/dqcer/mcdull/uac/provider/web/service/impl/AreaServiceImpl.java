@@ -61,8 +61,9 @@ public class AreaServiceImpl
     }
 
     @Override
-    public void exportData(AreaQueryDTO dto) {
+    public boolean exportData(AreaQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        return true;
     }
 
     private Map<String, Func1<AreaVO, ?>> getTitleMap() {

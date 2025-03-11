@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.AntPathMatcher;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
@@ -13,6 +14,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedisClient;
 import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CacheQueryDTO;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ICacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
@@ -21,10 +23,8 @@ import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -39,12 +39,13 @@ public class CacheServiceImpl extends GenericLogic implements ICacheService {
 
     @Resource
     private CaffeineCacheManager cacheManager;
-
     @Resource
     private RedisClient redisClient;
+    @Resource
+    private ICommonManager commonManager;
 
     @Override
-    public PagedVO<KeyValueVO<String, String>> cacheNames(CacheQueryDTO dto) {
+    public PagedVO<KeyValueVO<String, String>> queryPage(CacheQueryDTO dto) {
         List<KeyValueVO<String, String>> cacheNameList = new ArrayList<>();
         Cache caffeineCache = cacheManager.getCache(GlobalConstant.CAFFEINE_CACHE);
         if (caffeineCache instanceof CaffeineCache) {
@@ -95,6 +96,19 @@ public class CacheServiceImpl extends GenericLogic implements ICacheService {
             return null;
         }
         return redisClient.get(cacheName);
+    }
+
+    @Override
+    public boolean exportData(CacheQueryDTO dto) {
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        return true;
+    }
+
+    private Map<String, Func1<KeyValueVO<String, String>, ?>> getTitleMap() {
+        Map<String, Func1<KeyValueVO<String, String>, ?>> titleMap = new LinkedHashMap<>();
+        titleMap.put("缓存名称", KeyValueVO::getKey);
+        titleMap.put("缓存值", KeyValueVO::getValue);
+        return titleMap;
     }
 
     @Override

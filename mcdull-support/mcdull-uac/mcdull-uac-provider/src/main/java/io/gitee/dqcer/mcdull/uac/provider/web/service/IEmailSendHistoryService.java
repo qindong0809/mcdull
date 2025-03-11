@@ -45,5 +45,5 @@ public interface IEmailSendHistoryService {
      */
     PagedVO<EmailSendHistoryVO> queryPage(EmailSendHistoryQueryDTO queryDTO);
 
-    void exportData(EmailSendHistoryQueryDTO dto);
+    boolean exportData(EmailSendHistoryQueryDTO dto);
 }

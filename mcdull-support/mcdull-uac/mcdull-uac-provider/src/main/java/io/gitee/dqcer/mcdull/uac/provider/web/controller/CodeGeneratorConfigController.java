@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeGeneratorConfigForm;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.CodeGeneratorPreviewForm;
@@ -23,14 +24,14 @@ import java.io.IOException;
 import java.util.List;
 
 /**
-*
+* 代码生成
 * @author dqcer
 * @since 2024-04-29
 */
 @RestController
 @Tag(name = "代码生成")
 @RequestMapping
-public class CodeGeneratorConfigController {
+public class CodeGeneratorConfigController extends BasicController {
     @Resource
     private ICodeGeneratorService codeGeneratorService;
 
@@ -83,9 +84,16 @@ public class CodeGeneratorConfigController {
     @SaCheckPermission("support:code_generator:write")
     @GetMapping(value = "/codeGenerator/code/download/{tableName}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void download(@PathVariable(value = "tableName") String tableName, HttpServletResponse response) throws IOException {
-        byte[] dataStream = codeGeneratorService.download(tableName);
-        ServletUtil.setDownloadFileHeader(response, tableName + "_code.zip");
-        response.getOutputStream().write(dataStream);
+        super.locker(tableName, () -> {
+            byte[] dataStream = codeGeneratorService.download(tableName);
+            ServletUtil.setDownloadFileHeader(response, tableName + "_code.zip");
+            try {
+                response.getOutputStream().write(dataStream);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return true;
+        });
     }
 
 }

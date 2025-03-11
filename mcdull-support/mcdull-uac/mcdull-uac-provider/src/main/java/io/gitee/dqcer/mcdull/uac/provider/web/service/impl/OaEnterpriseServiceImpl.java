@@ -135,8 +135,9 @@ public class OaEnterpriseServiceImpl
     }
 
     @Override
-    public void exportData(EnterpriseQueryDTO dto) {
+    public boolean exportData(EnterpriseQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryByPage, StrUtil.EMPTY, this.getTitleMap());
+        return true;
     }
 
 

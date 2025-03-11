@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
+ * 行政区域
  * @author dqcer
  * @since 2024-06-15 13:11:44
  */
@@ -38,7 +39,7 @@ public class AreaController extends BasicController {
     @SaCheckPermission("system:area:export")
     @PostMapping(value = "/system/area/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid AreaQueryDTO dto) {
-        areaService.exportData(dto);
+        super.locker(null, () -> areaService.exportData(dto));
     }
 
 

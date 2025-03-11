@@ -43,5 +43,5 @@ public interface IBizAuditService {
      *
      * @param dto DTO
      */
-    void exportData(BizAuditQueryDTO dto);
+    boolean exportData(BizAuditQueryDTO dto);
 }

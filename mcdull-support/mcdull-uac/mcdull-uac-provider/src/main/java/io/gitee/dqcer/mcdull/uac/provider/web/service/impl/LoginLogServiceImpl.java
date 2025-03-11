@@ -97,8 +97,9 @@ public class LoginLogServiceImpl
     }
 
     @Override
-    public void exportData(LoginLogQueryDTO dto) {
+    public boolean exportData(LoginLogQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryByPage, StrUtil.EMPTY, this.getTitleMap());
+        return true;
     }
 
     private Map<String, Func1<LoginLogVO, ?>> getTitleMap() {

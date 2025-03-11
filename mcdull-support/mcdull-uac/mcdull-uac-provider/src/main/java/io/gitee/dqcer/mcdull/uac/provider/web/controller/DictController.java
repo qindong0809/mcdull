@@ -12,6 +12,7 @@ import io.gitee.dqcer.mcdull.uac.provider.web.service.IDictKeyService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDictValueService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
@@ -23,6 +24,7 @@ import java.util.List;
  * Dict Info
  *
  * @author dqcer
+ * @since 2022/09/05
  */
 @Tag(name = "数据字典")
 @RestController
@@ -30,10 +32,8 @@ public class DictController extends BasicController {
 
     @Resource
     private IDictKeyService dictKeyService;
-
     @Resource
     private IDictValueService dictValueService;
-
     @Resource
     private IDictTypeManager dictTypeManager;
 
@@ -47,9 +47,15 @@ public class DictController extends BasicController {
     @Operation(summary = "分页列表")
     @PostMapping("/dict/key/query")
     public Result<PagedVO<DictKeyVO>> getKeyList(@Valid @RequestBody DictKeyQueryDTO queryDTO) {
-        return Result.success(dictKeyService.getList(queryDTO));
+        return Result.success(dictKeyService.queryPage(queryDTO));
     }
 
+    @Operation(summary = "导出数据")
+    @SaCheckPermission("support:dict:export")
+    @PostMapping(value = "/dict/key/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void exportData(@RequestBody @Valid DictKeyQueryDTO dto) {
+        super.locker(null, () -> dictKeyService.exportData(dto));
+    }
 
     @Operation(summary = "添加字典")
     @PostMapping("/dict/key/add")

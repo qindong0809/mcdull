@@ -69,8 +69,9 @@ public class SessionServiceImpl implements ISessionService {
     }
 
     @Override
-    public void exportData(SessionQueryDTO dto) {
+    public boolean exportData(SessionQueryDTO dto) {
         commonManager.exportExcel(new SessionQueryDTO(), this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        return true;
     }
 
     private Map<String, Func1<SessionVO, ?>> getTitleMap() {

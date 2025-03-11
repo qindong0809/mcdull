@@ -116,8 +116,9 @@ public class BizAuditServiceImpl
     }
 
     @Override
-    public void exportData(BizAuditQueryDTO dto) {
+    public boolean exportData(BizAuditQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        return true;
     }
 
     private Map<String, Func1<BizAuditVO, ?>> getTitleMap() {

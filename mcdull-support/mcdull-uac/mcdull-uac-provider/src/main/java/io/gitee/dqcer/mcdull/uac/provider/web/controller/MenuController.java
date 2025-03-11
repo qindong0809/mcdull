@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuAddDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuListDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.MenuUpdateDTO;
@@ -28,7 +29,7 @@ import java.util.List;
  */
 @Tag(name = "菜单管理")
 @RestController
-public class MenuController {
+public class MenuController extends BasicController {
 
     @Resource
     private IMenuService menuService;
@@ -78,7 +79,7 @@ public class MenuController {
     @SaCheckPermission("system:menu:export")
     @PostMapping(value = "/menu/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@Validated MenuListDTO dto) {
-        menuService.exportData(dto);
+        super.locker(null, () -> menuService.exportData(dto));
     }
 
     @Operation(summary = "下拉选项")

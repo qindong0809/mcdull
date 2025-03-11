@@ -4,20 +4,19 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.uac.provider.model.dto.BizAuditQueryDTO;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginLogQueryDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.LoginLogVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import jakarta.annotation.Resource;
 
 /**
 *
@@ -27,7 +26,7 @@ import jakarta.annotation.Resource;
 @RestController
 @Tag(name = "登录日志")
 @RequestMapping
-public class LoginLogController {
+public class LoginLogController extends BasicController {
 
     @Resource
     private ILoginLogService loginLogService;
@@ -44,9 +43,8 @@ public class LoginLogController {
     @SaCheckPermission("system:loginLog:export")
     @PostMapping(value = "/system/loginLog/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid LoginLogQueryDTO dto) {
-        loginLogService.exportData(dto);
+        super.locker(null, () -> loginLogService.exportData(dto));
     }
-
 
     @Operation(summary = "分页查询当前登录人信息")
     @PostMapping("/loginLog/page/query/login")
