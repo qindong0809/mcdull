@@ -128,6 +128,8 @@ INSERT INTO `sys_menu` VALUES (100, '导出', 3, 109, 3, NULL, NULL, 1, 'system:
 INSERT INTO `sys_menu` VALUES (101, '导出', 3, 132, 3, NULL, NULL, 1, 'system:notice:export', 'system:notice:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (102, '导出', 3, 144, 3, NULL, NULL, 1, 'system:enterprise:export', 'system:enterprise:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (103, '导出', 3, 152, 3, NULL, NULL, 1, 'system:changeLog:export', 'system:changeLog:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (104, '导出', 3, 110, 3, NULL, NULL, 1, 'support:dict:export', 'system:changeLog:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (105, '导出', 3, 133, 3, NULL, NULL, 1, 'support:cache:export', 'system:changeLog:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 
 
 INSERT INTO `sys_menu` VALUES (47, '商品管理', 2, 48, 1, '/erp/goods/list', '/business/erp/goods/goods-list.vue', NULL, NULL, NULL, 'AliwangwangOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);

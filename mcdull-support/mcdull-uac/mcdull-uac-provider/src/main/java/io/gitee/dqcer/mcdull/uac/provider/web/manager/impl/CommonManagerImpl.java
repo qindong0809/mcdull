@@ -255,7 +255,7 @@ public class CommonManagerImpl implements ICommonManager {
                 if (fieldValue instanceof Boolean) {
                     fieldValue = BooleanUtil.toString(Convert.toBool(fieldValue), "是", "否");
                 }
-                hashMap.put(entry.getKey(), Convert.toStr(fieldValue));
+                hashMap.put(titleMap.get(entry.getKey()), Convert.toStr(fieldValue));
             }
             mapList.add(hashMap);
         }
