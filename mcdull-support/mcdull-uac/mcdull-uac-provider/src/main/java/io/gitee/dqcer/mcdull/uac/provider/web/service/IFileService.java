@@ -40,4 +40,6 @@ public interface IFileService {
     void removeByFileId(Integer fileId, Integer bizId, String bizCode);
 
     Map<Integer, FileEntity> map(Set<Integer> fileIdSet);
+
+    void remove(Integer bizId, String bizCode);
 }

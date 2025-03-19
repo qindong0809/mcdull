@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -218,4 +219,18 @@ public class FileServiceImpl
         }
         return Map.of();
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void remove(Integer bizId, String bizCode) {
+        Map<Integer, List<Integer>> listMap = fileBizRepository.mapByBizCode(bizCode);
+        if (MapUtil.isNotEmpty(listMap)) {
+            List<Integer> integers = listMap.get(bizId);
+            if (CollUtil.isNotEmpty(integers)) {
+                baseRepository.removeByIds(integers);
+            }
+            fileBizRepository.deleteByBizCode(bizId, bizCode);
+        }
+    }
+
 }

@@ -87,7 +87,7 @@ public class TalentCertificateController extends BasicController {
     @Operation(summary = "更新")
     @PostMapping(value = "/talent-cert/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result<Boolean> update( @Valid TalentCertificateUpdateDTO dto, @RequestPart("file") MultipartFile file) {
+    public Result<Boolean> update( @Valid TalentCertificateUpdateDTO dto, @RequestPart(value = "file", required = false) MultipartFile file) {
         talentCertificateService.update(dto, file);
         return Result.success(true);
     }

@@ -391,7 +391,10 @@ public class TalentCertificateServiceImpl
         this.setUpdateFieldValue(dto, entity);
         baseRepository.updateById(entity);
         this.builderPositionTitle(entity);
-        fileService.fileUpload(file, FileFolderTypeEnum.BIZ.getValue(), entity.getId(), DEFAULT_BIZ_CODD);
+        fileService.remove(FileFolderTypeEnum.BIZ.getValue(), DEFAULT_BIZ_CODD);
+        if (ObjUtil.isNotNull(file)) {
+            fileService.fileUpload(file, FileFolderTypeEnum.BIZ.getValue(), entity.getId(), DEFAULT_BIZ_CODD);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
