@@ -357,7 +357,9 @@ public class TalentCertificateServiceImpl
         entity.setPositionTitle(StrUtil.EMPTY);
         baseRepository.save(entity);
         this.builderPositionTitle(entity);
-        fileService.fileUpload(file, FileFolderTypeEnum.BIZ.getValue(), entity.getId(), DEFAULT_BIZ_CODD);
+        if (ObjUtil.isNotNull(file)) {
+            fileService.fileUpload(file, FileFolderTypeEnum.BIZ.getValue(), entity.getId(), DEFAULT_BIZ_CODD);
+        }
     }
 
     private void builderPositionTitle(TalentCertificateEntity entity) {
