@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -24,10 +25,10 @@ import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IFormManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFormService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.*;
 
 /**
@@ -221,14 +222,14 @@ public class FormServiceImpl
     public void  exportData(FormRecordQueryDTO dto) {
         List<Map<String, String>> allRecord = this.getAllRecord(dto);
         List<FormItemVO> formItemVOS = this.itemConfigList(dto.getFormId());
-        Map<String, String> titleMap = new LinkedHashMap<>();
+        List<Pair<String, String>> pairList = new ArrayList<>();
         for (FormItemVO itemVO : formItemVOS) {
-            titleMap.put(itemVO.getName(), itemVO.getKey());
+            pairList.add(Pair.of(itemVO.getName(), itemVO.getKey()));
         }
         FormEntity form = baseRepository.getById(dto.getFormId());
         String conditions = this.filterConditionsStr(dto);
         String sheetName = form.getName();
-        commonManager.exportExcel(sheetName, conditions, titleMap, allRecord);
+        commonManager.exportExcel(sheetName, conditions, pairList, allRecord);
     }
 
 

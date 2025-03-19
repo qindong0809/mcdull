@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.flow.login;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
@@ -13,9 +14,9 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginDeviceEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.Locale;
 
 @Component(value = "Authority")
@@ -30,7 +31,12 @@ public class Authority implements ProcessHandler<LoginContext> {
         LoginDTO dto = context.getLoginDTO();
         Dict dict = context.getDict();
         UserEntity userEntity = dict.get("user", new UserEntity());
-        StpUtil.login(userEntity.getId(), IEnum.getByCode(LoginDeviceEnum.class, dto.getLoginDevice()).getText());
+        LoginDeviceEnum  deviceEnum = IEnum.getByCode(LoginDeviceEnum.class, dto.getLoginDevice());
+        String device = LoginDeviceEnum.PC.getText();
+        if (ObjUtil.isNotNull(deviceEnum)) {
+            device = deviceEnum.getText();
+        }
+        StpUtil.login(userEntity.getId(), device);
         CacheUser cache = this.buildCacheUser(userEntity);
         StpUtil.getSession().set(GlobalConstant.CACHE_CURRENT_USER, cache);
         context.setVo(loginService.buildLogonVo(userEntity));

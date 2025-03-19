@@ -1,6 +1,8 @@
 package io.gitee.dqcer.blaze.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -141,7 +143,7 @@ public class CertificateRequirementsServiceImpl
 
     @Override
     public void exportData(CertificateRequirementsQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
     }
 
     @Override
@@ -228,28 +230,28 @@ public class CertificateRequirementsServiceImpl
         return fieldBO;
     }
 
-    private Map<String, Func1<CertificateRequirementsVO, ?>> getTitleMap() {
-        Map<String, Func1<CertificateRequirementsVO, ?>> titleMap = new LinkedHashMap<>();
-        titleMap.put("客户名称", CertificateRequirementsVO::getCustomerName);
-        titleMap.put("证书等级", CertificateRequirementsVO::getCertificateLevelName);
-        titleMap.put("专业", CertificateRequirementsVO::getSpecialtyName);
-        titleMap.put("省份", CertificateRequirementsVO::getProvincesName);
-        titleMap.put("城市", CertificateRequirementsVO::getCityName);
-        titleMap.put("数量", CertificateRequirementsVO::getQuantity);
-        titleMap.put("职称", CertificateRequirementsVO::getTitleName);
-        titleMap.put("初始/转正", CertificateRequirementsVO::getInitialOrTransferName);
-        titleMap.put("证书状态", CertificateRequirementsVO::getCertificateStatusName);
-        titleMap.put("合同价", CertificateRequirementsVO::getPositionContractPrice);
-        titleMap.put("其他费用", CertificateRequirementsVO::getOtherCosts);
-        titleMap.put("实际岗位价格", CertificateRequirementsVO::getActualPositionPrice);
-        titleMap.put("期限", CertificateRequirementsVO::getDuration);
-        titleMap.put("招标出场", CertificateRequirementsVO::getBiddingExitName);
-        titleMap.put("三类人员", CertificateRequirementsVO::getThreePersonnelName);
-        titleMap.put("社保要求", CertificateRequirementsVO::getSocialSecurityRequirementName);
-        titleMap.put("岗位来源", CertificateRequirementsVO::getPositionSourceName);
-        titleMap.put("备注", CertificateRequirementsVO::getRemarks);
-        titleMap.put("创建时间", CertificateRequirementsVO::getCreatedTime);
-        return titleMap;
+    private List<Pair<String, Func1<CertificateRequirementsVO, ?>>> getTitleList() {
+        return ListUtil.toList(
+                Pair.of("客户名称", CertificateRequirementsVO::getCustomerName),
+                Pair.of("证书等级", CertificateRequirementsVO::getCertificateLevelName),
+                Pair.of("专业", CertificateRequirementsVO::getSpecialtyName),
+                Pair.of("省份", CertificateRequirementsVO::getProvincesName),
+                Pair.of("城市", CertificateRequirementsVO::getCityName),
+                Pair.of("数量", CertificateRequirementsVO::getQuantity),
+                Pair.of("职称", CertificateRequirementsVO::getTitleName),
+                Pair.of("初始/转正", CertificateRequirementsVO::getInitialOrTransferName),
+                Pair.of("证书状态", CertificateRequirementsVO::getCertificateStatusName),
+                Pair.of("合同价", CertificateRequirementsVO::getPositionContractPrice),
+                Pair.of("其他费用", CertificateRequirementsVO::getOtherCosts),
+                Pair.of("实际岗位价格", CertificateRequirementsVO::getActualPositionPrice),
+                Pair.of("期限", CertificateRequirementsVO::getDuration),
+                Pair.of("招标出场", CertificateRequirementsVO::getBiddingExitName),
+                Pair.of("三类人员", CertificateRequirementsVO::getThreePersonnelName),
+                Pair.of("社保要求", CertificateRequirementsVO::getSocialSecurityRequirementName),
+                Pair.of("岗位来源", CertificateRequirementsVO::getPositionSourceName),
+                Pair.of("备注", CertificateRequirementsVO::getRemarks),
+                Pair.of("创建时间", CertificateRequirementsVO::getCreatedTime)
+        );
     }
 
     private CertificateRequirementsVO convertToVO(CertificateRequirementsEntity item){

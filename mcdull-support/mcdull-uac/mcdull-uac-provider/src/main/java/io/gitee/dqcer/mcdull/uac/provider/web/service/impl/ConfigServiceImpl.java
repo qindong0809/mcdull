@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -113,20 +114,20 @@ public class ConfigServiceImpl
 
     @Override
     public boolean exportData(ConfigQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
         return true;
     }
 
 
-    private Map<String, Func1<ConfigInfoVO, ?>> getTitleMap() {
-        Map<String, Func1<ConfigInfoVO, ?>> titleMap = new HashMap<>(8);
-        titleMap.put("参数key", ConfigInfoVO::getConfigKey);
-        titleMap.put("参数名称", ConfigInfoVO::getConfigName);
-        titleMap.put("参数值", ConfigInfoVO::getConfigValue);
-        titleMap.put("备注", ConfigInfoVO::getRemark);
-        titleMap.put("创建时间", ConfigInfoVO::getCreateTime);
-        titleMap.put("更新时间", ConfigInfoVO::getUpdateTime);
-        return titleMap;
+    private List<Pair<String, Func1<ConfigInfoVO, ?>>> getTitleList() {
+        List<Pair<String, Func1<ConfigInfoVO, ?>>> titleList = new ArrayList<>(8);
+        titleList.add(Pair.of("参数key", ConfigInfoVO::getConfigKey));
+        titleList.add(Pair.of("参数名称", ConfigInfoVO::getConfigName));
+        titleList.add(Pair.of("参数值", ConfigInfoVO::getConfigValue));
+        titleList.add(Pair.of("备注", ConfigInfoVO::getRemark));
+        titleList.add(Pair.of("创建时间", ConfigInfoVO::getCreateTime));
+        titleList.add(Pair.of("更新时间", ConfigInfoVO::getUpdateTime));
+        return titleList;
     }
 
 

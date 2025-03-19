@@ -655,24 +655,24 @@ public class UserServiceImpl
 
     @Override
     public void exportData() {
-        commonManager.exportExcel(new UserListDTO(), this::listByPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(new UserListDTO(), this::listByPage, StrUtil.EMPTY, this.getTitleList());
     }
 
-    private Map<String, Func1<UserVO, ?>> getTitleMap() {
-        Map<String, Func1<UserVO, ?>> titleMap = new LinkedHashMap<>();
-        titleMap.put("姓名", UserVO::getActualName);
-        titleMap.put("登录账号", UserVO::getLoginName);
-        titleMap.put("性别", UserVO::getGender);
-        titleMap.put("手机号", UserVO::getPhone);
-        titleMap.put("邮箱", UserVO::getEmail);
-        titleMap.put("部门名称", UserVO::getDepartmentName);
-        titleMap.put("角色名称", UserVO::getRoleNameList);
-        titleMap.put("创建人", UserVO::getCreatedByName);
-        titleMap.put("创建时间", UserVO::getCreatedTime);
-        titleMap.put("更新人", UserVO::getUpdatedByName);
-        titleMap.put("更新时间", UserVO::getUpdatedTime);
-        titleMap.put("状态", UserVO::getInactive);
-        return titleMap;
+    private List<Pair<String, Func1<UserVO, ?>>> getTitleList() {
+        return Arrays.asList(
+                Pair.of("姓名", UserVO::getActualName),
+                Pair.of("登录账号", UserVO::getLoginName),
+                Pair.of("性别", UserVO::getGender),
+                Pair.of("手机号", UserVO::getPhone),
+                Pair.of("邮箱", UserVO::getEmail),
+                Pair.of("部门名称", UserVO::getDepartmentName),
+                Pair.of("角色名称", UserVO::getRoleNameList),
+                Pair.of("创建人", UserVO::getCreatedByName),
+                Pair.of("创建时间", UserVO::getCreatedTime),
+                Pair.of("更新人", UserVO::getUpdatedByName),
+                Pair.of("更新时间", UserVO::getUpdatedTime),
+                Pair.of("状态", UserVO::getInactive)
+        );
     }
 
     @Override

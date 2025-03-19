@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -117,20 +119,19 @@ public class BizAuditServiceImpl
 
     @Override
     public boolean exportData(BizAuditQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
         return true;
     }
 
-    private Map<String, Func1<BizAuditVO, ?>> getTitleMap() {
-        Map<String, Func1<BizAuditVO, ?>> titleMap = new HashMap<>(8);
-        titleMap.put("业务类型", BizAuditVO::getBizTypeName);
-        titleMap.put("业务类型路径", BizAuditVO::getBizTypeRootName);
-        titleMap.put("业务索引", BizAuditVO::getBizIndex);
-        titleMap.put("业务动作", BizAuditVO::getOperationName);
-        titleMap.put("业务内容", BizAuditVO::getComment);
-        titleMap.put("操作人", BizAuditVO::getOperator);
-        titleMap.put("操作时间", BizAuditVO::getOperationTime);
-        return titleMap;
+    private List<Pair<String, Func1<BizAuditVO, ?>>> getTitleList() {
+        return ListUtil.of(
+                Pair.of("业务类型", BizAuditVO::getBizTypeName),
+                Pair.of("业务类型路径", BizAuditVO::getBizTypeRootName),
+                Pair.of("业务索引", BizAuditVO::getBizIndex),
+                Pair.of("业务动作", BizAuditVO::getOperationName),
+                Pair.of("业务内容", BizAuditVO::getComment),
+                Pair.of("操作人", BizAuditVO::getOperator),
+                Pair.of("操作时间", BizAuditVO::getOperationTime));
     }
 
     private BizAuditVO convertToVO(BizAuditEntity entity) {

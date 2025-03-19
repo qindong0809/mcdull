@@ -231,7 +231,7 @@ public class CommonManagerImpl implements ICommonManager {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public <D extends PagedDTO, V extends VO> void exportExcel(D dto, Function<D, PagedVO<V>> function,
-                                                                  String sheetName, Map<String, Func1<V, ?>> titleFuncMap) {
+                                                                  String sheetName, List<Pair<String, Func1<V, ?>>> titleFuncList) {
         sheetName = StrUtil.isNotBlank(sheetName) ? sheetName : "数据列表";
         PageUtil.setMaxPageSize(dto);
         PagedVO<V> page = function.apply(dto);
@@ -239,14 +239,14 @@ public class CommonManagerImpl implements ICommonManager {
         if (ObjUtil.isNotNull(page)) {
             list = page.getList();
         }
-        Map<String, String> titleMap = new HashMap<>();
-        for (Map.Entry<String, Func1<V, ?>> entry : titleFuncMap.entrySet()) {
-            titleMap.put(entry.getKey(), LambdaUtil.getFieldName(entry.getValue()));
+        List<Pair<String, String>> pairList = new ArrayList<>();
+        for (Pair<String, Func1<V, ?>> entry : titleFuncList) {
+            pairList.add(Pair.of(entry.getKey(), LambdaUtil.getFieldName(entry.getValue())));
         }
         List<Map<String, String>> mapList = new ArrayList<>();
         for (V vo : list) {
             Map<String, String> hashMap = new HashMap<>();
-            for (Map.Entry<String, String> entry : titleMap.entrySet()) {
+            for (Pair<String, String> entry : pairList) {
                 String fieldName = entry.getValue();
                 Object fieldValue = ReflectUtil.getFieldValue(vo, fieldName);
                 if (fieldValue instanceof Date) {
@@ -255,22 +255,25 @@ public class CommonManagerImpl implements ICommonManager {
                 if (fieldValue instanceof Boolean) {
                     fieldValue = BooleanUtil.toString(Convert.toBool(fieldValue), "是", "否");
                 }
-                hashMap.put(titleMap.get(entry.getKey()), Convert.toStr(fieldValue));
+                Pair<String, String> pair = pairList.stream().filter(i -> i.getKey().equals(entry.getKey())).findFirst().orElse(null);
+                if (pair != null) {
+                    hashMap.put(pair.getValue(), Convert.toStr(fieldValue));
+                }
             }
             mapList.add(hashMap);
         }
-        this.exportExcel(sheetName, StrUtil.EMPTY, titleMap, mapList);
+        this.exportExcel(sheetName, StrUtil.EMPTY, pairList, mapList);
     }
 
     @Override
-    public void exportExcel(String sheetName, String conditions, Map<String, String> titleMap,
+    public void exportExcel(String sheetName, String conditions, List<Pair<String, String>> pairList,
                             List<Map<String, String>> mapList) {
         Integer userId = UserContextHolder.userId();
         String actualName = this.getUserName(userId);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         String s = this.convertDateByUserTimezone(new Date());
         ExcelUtil.exportExcelByMap(outputStream, sheetName,
-                conditions, actualName, s, titleMap, mapList);
+                conditions, actualName, s, pairList, mapList);
         byte[] byteArray = outputStream.toByteArray();
         List<String> menuName = menuService.getCurrentMenuName();
         String fileName = this.getFileName(FileExtensionTypeEnum.EXCEL_X, StrUtil.join(StrUtil.UNDERLINE, menuName));

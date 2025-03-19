@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -138,16 +140,16 @@ public class DictKeyServiceImpl
 
     @Override
     public boolean exportData(DictKeyQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
         return true;
     }
 
-    private Map<String, Func1<DictKeyVO, ?>> getTitleMap() {
-        Map<String, Func1<DictKeyVO, ?>> titleMap = new HashMap<>(8);
-        titleMap.put("字典编码", DictKeyVO::getKeyCode);
-        titleMap.put("字典名称", DictKeyVO::getKeyName);
-        titleMap.put("字典描述", DictKeyVO::getRemark);
-        return titleMap;
+    private List<Pair<String, Func1<DictKeyVO, ?>>> getTitleList() {
+        return ListUtil.of(
+                Pair.of("字典编码", DictKeyVO::getKeyCode),
+                Pair.of("字典名称", DictKeyVO::getKeyName),
+                Pair.of("字典描述", DictKeyVO::getRemark)
+        );
     }
 
 

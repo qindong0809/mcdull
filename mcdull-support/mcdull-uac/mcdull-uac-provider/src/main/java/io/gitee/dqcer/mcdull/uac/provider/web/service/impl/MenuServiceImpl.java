@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.map.MapUtil;
@@ -341,7 +342,7 @@ public class MenuServiceImpl
                 .distinct().collect(Collectors.toList());
         Map<Integer, MenuEntity> parentMap = baseRepository.listByIds(parentList).stream()
                 .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
-        Map<String, String> titleMap = this.getTitleMap();
+        List<Pair<String, String>> pairList = this.getTitleList();
         List<Map<String, String>> mapList = new ArrayList<>();
         for (MenuVO vo : list) {
             Map<String, String> map = new HashMap<>();
@@ -367,7 +368,7 @@ public class MenuServiceImpl
             map.put("visibleFlag", BooleanUtil.toStringYesNo(vo.getVisibleFlag()));
             mapList.add(map);
         }
-        commonManager.exportExcel("菜单列表", StrUtil.EMPTY, titleMap, mapList);
+        commonManager.exportExcel("菜单列表", StrUtil.EMPTY, pairList, mapList);
         return true;
     }
 
@@ -416,23 +417,23 @@ public class MenuServiceImpl
         }
     }
 
-    private Map<String, String> getTitleMap() {
-        Map<String, String> titleMap = new LinkedHashMap<>();
-        titleMap.put("菜单名称", "menuName");
-        titleMap.put("菜单类型", "menuType");
-        titleMap.put("父级", "parentName");
-        titleMap.put("排序", "sort");
-        titleMap.put("路由地址", "path");
-        titleMap.put("组件路径", "component");
-        titleMap.put("api权限", "apiPerms");
-        titleMap.put("web权限", "webPerms");
-        titleMap.put("图标", "icon");
-        titleMap.put("是否为上下文菜单", "contextMenu");
-        titleMap.put("是否为frame", "frameFlag");
-        titleMap.put("frame地址", "frameUrl");
-        titleMap.put("是否缓存", "cacheFlag");
-        titleMap.put("是否可见", "visibleFlag");
-        return titleMap;
+    private List<Pair<String, String>> getTitleList() {
+        List<Pair<String, String>> pairList = new ArrayList<>();
+        pairList.add(Pair.of("菜单名称", "menuName"));
+        pairList.add(Pair.of("菜单类型", "menuType"));
+        pairList.add(Pair.of("父级", "parentName"));
+        pairList.add(Pair.of("排序", "sort"));
+        pairList.add(Pair.of("路由地址", "path"));
+        pairList.add(Pair.of("组件路径", "component"));
+        pairList.add(Pair.of("api权限", "apiPerms"));
+        pairList.add(Pair.of("web权限", "webPerms"));
+        pairList.add(Pair.of("图标", "icon"));
+        pairList.add(Pair.of("是否为上下文菜单", "contextMenu"));
+        pairList.add(Pair.of("是否为frame", "frameFlag"));
+        pairList.add(Pair.of("frame地址", "frameUrl"));
+        pairList.add(Pair.of("是否缓存", "cacheFlag"));
+        pairList.add(Pair.of("是否可见", "visibleFlag"));
+        return pairList;
     }
 
     public List<MenuTreeVO> convertMenuTreeVO(List<Tree<Integer>> treeList) {

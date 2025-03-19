@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -25,9 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Email send history service impl
@@ -93,18 +92,18 @@ public class EmailSendHistoryServiceImpl
 
     @Override
     public boolean exportData(EmailSendHistoryQueryDTO dto) {
-        commonManager.exportExcel(new EmailSendHistoryQueryDTO(), this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(new EmailSendHistoryQueryDTO(), this::queryPage, StrUtil.EMPTY, this.getTitleList());
         return true;
     }
 
-    private Map<String, Func1<EmailSendHistoryVO, ?>> getTitleMap() {
-        Map<String, Func1<EmailSendHistoryVO, ?>> titleMap = new HashMap<>(8);
-        titleMap.put("类型名称", EmailSendHistoryVO::getTypeName);
-        titleMap.put("接收人", EmailSendHistoryVO::getSentTo);
-        titleMap.put("抄送人", EmailSendHistoryVO::getCc);
-        titleMap.put("标题", EmailSendHistoryVO::getTitle);
-        titleMap.put("内容", EmailSendHistoryVO::getContent);
-        titleMap.put("发送时间", EmailSendHistoryVO::getCreateTime);
-        return titleMap;
+    private List<Pair<String, Func1<EmailSendHistoryVO, ?>>> getTitleList() {
+        return ListUtil.of(
+                Pair.of("类型名称", EmailSendHistoryVO::getTypeName),
+                Pair.of("接收人", EmailSendHistoryVO::getSentTo),
+                Pair.of("抄送人", EmailSendHistoryVO::getCc),
+                Pair.of("标题", EmailSendHistoryVO::getTitle),
+                Pair.of("内容", EmailSendHistoryVO::getContent),
+                Pair.of("发送时间", EmailSendHistoryVO::getCreateTime)
+        );
     }
 }

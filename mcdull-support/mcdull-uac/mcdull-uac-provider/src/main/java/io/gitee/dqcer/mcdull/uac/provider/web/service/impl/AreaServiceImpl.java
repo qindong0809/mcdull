@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -62,19 +64,19 @@ public class AreaServiceImpl
 
     @Override
     public boolean exportData(AreaQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
         return true;
     }
 
-    private Map<String, Func1<AreaVO, ?>> getTitleMap() {
-        Map<String, Func1<AreaVO, ?>> titleMap = new HashMap<>(8);
-        titleMap.put("区域编码", AreaVO::getCode);
-        titleMap.put("地名简称", AreaVO::getName);
-        titleMap.put("全名", AreaVO::getFullname);
-        titleMap.put("邮政编码", AreaVO::getGovcode);
-        titleMap.put("维度", AreaVO::getLat);
-        titleMap.put("经度", AreaVO::getLng);
-        return titleMap;
+    private List<Pair<String, Func1<AreaVO, ?>>> getTitleList() {
+        return ListUtil.of(
+                Pair.of("区域编码", AreaVO::getCode),
+                Pair.of("地名简称", AreaVO::getName),
+                Pair.of("全名", AreaVO::getFullname),
+                Pair.of("邮政编码", AreaVO::getGovcode),
+                Pair.of("维度", AreaVO::getLat),
+                Pair.of("经度", AreaVO::getLng)
+        );
     }
 
     private List<LabelValueVO<String, String>> buildList(List<AreaEntity> list) {

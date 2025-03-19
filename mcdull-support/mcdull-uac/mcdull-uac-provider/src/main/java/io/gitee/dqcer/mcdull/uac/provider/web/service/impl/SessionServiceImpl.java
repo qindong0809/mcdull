@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -70,16 +71,16 @@ public class SessionServiceImpl implements ISessionService {
 
     @Override
     public boolean exportData(SessionQueryDTO dto) {
-        commonManager.exportExcel(new SessionQueryDTO(), this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(new SessionQueryDTO(), this::queryPage, StrUtil.EMPTY, this.getTitleList());
         return true;
     }
 
-    private Map<String, Func1<SessionVO, ?>> getTitleMap() {
-        Map<String, Func1<SessionVO, ?>> titleMap = new HashMap<>(8);
-        titleMap.put("会话ID", SessionVO::getId);
-        titleMap.put("登录名", SessionVO::getLoginName);
-        titleMap.put("用户名", SessionVO::getActualName);
-        titleMap.put("创建时间", SessionVO::getCreateTime);
-        return titleMap;
+    private List<Pair<String, Func1<SessionVO, ?>>> getTitleList() {
+        return Arrays.asList(
+                new Pair<>("会话ID", SessionVO::getId),
+                new Pair<>("登录名", SessionVO::getLoginName),
+                new Pair<>("用户名", SessionVO::getActualName),
+                new Pair<>("创建时间", SessionVO::getCreateTime)
+        );
     }
 }

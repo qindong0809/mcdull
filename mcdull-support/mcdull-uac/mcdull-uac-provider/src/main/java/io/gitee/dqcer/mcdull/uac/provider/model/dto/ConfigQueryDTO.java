@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.model.dto;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -11,6 +12,7 @@ import org.hibernate.validator.constraints.Length;
  * @author dqcer
  * @since 2024/04/29
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class ConfigQueryDTO extends PagedDTO {
 

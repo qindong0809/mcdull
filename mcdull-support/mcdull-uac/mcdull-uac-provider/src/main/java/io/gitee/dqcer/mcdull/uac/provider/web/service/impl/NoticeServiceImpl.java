@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
@@ -292,26 +293,26 @@ public class NoticeServiceImpl
 
     @Override
     public boolean exportData(NoticeQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
         return true;
     }
 
 
-    private Map<String, Func1<NoticeVO, ?>> getTitleMap() {
-        Map<String, Func1<NoticeVO, ?>> titleMap = new HashMap<>(8);
-        titleMap.put("标题", NoticeVO::getTitle);
-        titleMap.put("文号", NoticeVO::getDocumentNumber);
-        titleMap.put("分类", NoticeVO::getNoticeTypeName);
-        titleMap.put("作者", NoticeVO::getAuthor);
-        titleMap.put("来源", NoticeVO::getSource);
-        titleMap.put("是否全部可见", NoticeVO::getAllVisibleFlag);
-        titleMap.put("是否定时发布", NoticeVO::getScheduledPublishFlag);
-        titleMap.put("发布时间", NoticeVO::getPublishTime);
-        titleMap.put("页面浏览量", NoticeVO::getPageViewCount);
-        titleMap.put("用户浏览量", NoticeVO::getUserViewCount);
-        titleMap.put("创建人", NoticeVO::getCreateUserName);
-        titleMap.put("创建时间", NoticeVO::getCreateTime);
-        return titleMap;
+    private List<Pair<String, Func1<NoticeVO, ?>>> getTitleList() {
+        return ListUtil.of(
+                Pair.of("标题", NoticeVO::getTitle),
+                Pair.of("文号", NoticeVO::getDocumentNumber),
+                Pair.of("分类", NoticeVO::getNoticeTypeName),
+                Pair.of("作者", NoticeVO::getAuthor),
+                Pair.of("来源", NoticeVO::getSource),
+                Pair.of("是否全部可见", NoticeVO::getAllVisibleFlag),
+                Pair.of("是否定时发布", NoticeVO::getScheduledPublishFlag),
+                Pair.of("发布时间", NoticeVO::getPublishTime),
+                Pair.of("页面浏览量", NoticeVO::getPageViewCount),
+                Pair.of("用户浏览量", NoticeVO::getUserViewCount),
+                Pair.of("创建人", NoticeVO::getCreateUserName),
+                Pair.of("创建时间", NoticeVO::getCreateTime)
+        );
     }
 
     private NoticeDetailVO convertToDetailVo(NoticeEntity entity) {

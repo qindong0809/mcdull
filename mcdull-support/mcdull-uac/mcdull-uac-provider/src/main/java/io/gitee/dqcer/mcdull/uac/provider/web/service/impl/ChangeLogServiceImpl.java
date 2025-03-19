@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -28,9 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -147,21 +146,21 @@ public class ChangeLogServiceImpl
 
     @Override
     public boolean exportData(ChangeLogQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitlePairList());
         return true;
     }
 
-    private Map<String, Func1<ChangeLogVO, ?>> getTitleMap() {
-        Map<String, Func1<ChangeLogVO, ?>> titleMap = new HashMap<>(8);
-        titleMap.put("版本", ChangeLogVO::getVersion);
-        titleMap.put("更新类型", ChangeLogVO::getTypeName);
-        titleMap.put("发布人", ChangeLogVO::getPublishAuthor);
-        titleMap.put("发布日期", ChangeLogVO::getPublicDate);
-        titleMap.put("更新内容", ChangeLogVO::getContent);
-        titleMap.put("跳转链接", ChangeLogVO::getLink);
-        titleMap.put("创建时间", ChangeLogVO::getCreateTime);
-        titleMap.put("更新时间", ChangeLogVO::getUpdateTime);
-        return titleMap;
+    private List<Pair<String, Func1<ChangeLogVO, ?>>> getTitlePairList() {
+        List<Pair<String, Func1<ChangeLogVO, ?>>>  titleList = new ArrayList<>();
+        titleList.add(Pair.of("版本", ChangeLogVO::getVersion));
+        titleList.add(Pair.of("更新类型", ChangeLogVO::getTypeName));
+        titleList.add(Pair.of("发布人", ChangeLogVO::getPublishAuthor));
+        titleList.add(Pair.of("发布日期", ChangeLogVO::getPublicDate));
+        titleList.add(Pair.of("更新内容", ChangeLogVO::getContent));
+        titleList.add(Pair.of("跳转链接", ChangeLogVO::getLink));
+        titleList.add(Pair.of("创建时间", ChangeLogVO::getCreateTime));
+        titleList.add(Pair.of("更新时间", ChangeLogVO::getUpdateTime));
+        return titleList;
     }
 
     private ChangeLogVO convertToConfigVO(ChangeLogEntity entity) {

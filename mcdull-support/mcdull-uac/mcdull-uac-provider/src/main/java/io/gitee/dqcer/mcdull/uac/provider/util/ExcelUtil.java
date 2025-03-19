@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.uac.provider.util;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
@@ -44,16 +44,14 @@ public class ExcelUtil {
         FileUtil.writeBytes(byteArrayOutputStream.toByteArray(), "D:/22.xlsx");
 
         ByteArrayOutputStream byteArrayOutputStreamMap = new ByteArrayOutputStream();
-        Map<String, String> map = new TreeMap<>();
-        map.put("姓名", "name");
-        map.put("年龄", "age");
+        List<Pair<String, String>> list = ListUtil.of(Pair.of("姓名", "name"), Pair.of("年龄", "age"));
         List<Map<String, String>> dataMapList = new ArrayList<>();
         Map<String, String> dataMap =  new TreeMap<>();
         dataMap.put("name", "张三");
         dataMap.put("age", "33");
         dataMapList.add(dataMap);
         exportExcelByMap(byteArrayOutputStreamMap, "map sheet",
-                StrUtil.EMPTY, StrUtil.EMPTY, StrUtil.EMPTY, map, dataMapList);
+                StrUtil.EMPTY, StrUtil.EMPTY, StrUtil.EMPTY, list, dataMapList);
 
         FileUtil.writeBytes(byteArrayOutputStreamMap.toByteArray(), "D:/33.xlsx");
     }
@@ -73,11 +71,15 @@ public class ExcelUtil {
                                    String sheetName,
                                    String filterConditions,
                                    String exportBy,
-                                   String exportTime,
-                                   Map<String, String> titleMap,
+                                   String exportTime, List<Pair<String, String>> list ,
                                    List<Map<String, String>> dataMapList) {
+        List<String> titleList = new ArrayList<>();
+        for (Pair<String, String> pair : list) {
+            String key = pair.getKey();
+            titleList.add(key);
+        }
         exportExcel(outputStream, sheetName, filterConditions, exportBy, exportTime,
-                toTitleList(sheetName, exportBy, exportTime, titleMap), toDataList(titleMap, dataMapList));
+                toTitleList(sheetName, exportBy, exportTime, titleList), toDataList(list, dataMapList));
     }
 
 
@@ -193,30 +195,31 @@ public class ExcelUtil {
 
 
 
-    private static List<List<String>> toTitleList(String sheetName, String exportBy, String exportTime, Map<String, String> titleMap) {
-        if (MapUtil.isEmpty(titleMap)) {
+    private static List<List<String>> toTitleList(String sheetName, String exportBy, String exportTime, List<String> pairList) {
+        if (CollUtil.isEmpty(pairList)) {
             return Collections.emptyList();
         }
         List<List<String>> titleList = new ArrayList<>();
-        for (Map.Entry<String, String> entry : titleMap.entrySet()) {
+        for (String name : pairList) {
             List<String> oneTitle = new ArrayList<>();
 //            oneTitle.add(sheetName);
 //            oneTitle.add("导出时间" + exportTime + "导出人" + exportBy);
-            oneTitle.add(entry.getKey());
+            oneTitle.add(name);
             titleList.add(oneTitle);
         }
+
         return titleList;
     }
 
-    private static List<List<String>> toDataList(Map<String, String> titleMap, List<Map<String, String>> dataMapList) {
+    private static List<List<String>> toDataList(List<Pair<String, String>> titleList, List<Map<String, String>> dataMapList) {
         if (CollUtil.isEmpty(dataMapList)) {
             return Collections.emptyList();
         }
         List<List<String>> dataList = new ArrayList<>();
         for (Map<String, String> map : dataMapList) {
             List<String> oneData = new ArrayList<>();
-            for (Map.Entry<String, String> entry : titleMap.entrySet()) {
-                oneData.add(map.get(entry.getValue()));
+            for (Pair<String, String> pair : titleList) {
+                oneData.add(map.get(pair.getValue()));
             }
             dataList.add(oneData);
         }

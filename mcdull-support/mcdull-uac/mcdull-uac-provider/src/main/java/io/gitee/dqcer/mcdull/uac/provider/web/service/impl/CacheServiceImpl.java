@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.AntPathMatcher;
 import cn.hutool.core.util.BooleanUtil;
@@ -99,15 +100,15 @@ public class CacheServiceImpl extends GenericLogic implements ICacheService {
 
     @Override
     public boolean exportData(CacheQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
         return true;
     }
 
-    private Map<String, Func1<KeyValueVO<String, String>, ?>> getTitleMap() {
-        Map<String, Func1<KeyValueVO<String, String>, ?>> titleMap = new LinkedHashMap<>();
-        titleMap.put("缓存名称", KeyValueVO::getKey);
-        titleMap.put("缓存值", KeyValueVO::getValue);
-        return titleMap;
+    private List<Pair<String, Func1<KeyValueVO<String, String>, ?>>> getTitleList() {
+        return Arrays.asList(
+                new Pair<>("缓存名称", KeyValueVO::getKey),
+                new Pair<>("缓存值", KeyValueVO::getValue)
+        );
     }
 
     @Override

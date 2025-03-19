@@ -35,9 +35,9 @@ public interface ICommonManager {
                          Consumer<List<Pair<String, DataAnalysisListener>>> consumer);
 
     <D extends PagedDTO, V extends VO> void exportExcel(D dto, Function<D, PagedVO<V>> function,
-                                                           String sheetName, Map<String, Func1<V, ?>> titleMap);
+                                                           String sheetName, List<Pair<String, Func1<V, ?>>> titlePairList);
 
-    void exportExcel(String sheetName, String conditions, Map<String, String> titleMap, List<Map<String, String>> mapList);
+    void exportExcel(String sheetName, String conditions, List<Pair<String, String>> pairList, List<Map<String, String>> mapList);
 
     String readTemplateFileContent(String path);
 

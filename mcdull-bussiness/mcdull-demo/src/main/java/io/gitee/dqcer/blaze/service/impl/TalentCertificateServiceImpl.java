@@ -1,6 +1,7 @@
 package io.gitee.dqcer.blaze.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -174,30 +175,30 @@ public class TalentCertificateServiceImpl
 
     @Override
     public void exportData() {
-        commonManager.exportExcel(new TalentCertificateQueryDTO(), this::queryPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(new TalentCertificateQueryDTO(), this::queryPage, StrUtil.EMPTY, this.getTitleList());
     }
 
-    private Map<String, Func1<TalentCertificateVO, ?>> getTitleMap() {
-        Map<String, Func1<TalentCertificateVO, ?>> titleMap = new LinkedHashMap<>();
-        titleMap.put("客户名称", TalentCertificateVO::getTalentName);
-        titleMap.put("证书等级", TalentCertificateVO::getCertificateLevelName);
-        titleMap.put("专业", TalentCertificateVO::getSpecialtyName);
-        titleMap.put("省份", TalentCertificateVO::getProvincesName);
-        titleMap.put("城市", TalentCertificateVO::getCityName);
-        titleMap.put("职称", TalentCertificateVO::getTitleName);
-        titleMap.put("初始/转正", TalentCertificateVO::getInitialOrTransferName);
-        titleMap.put("证书状态", TalentCertificateVO::getCertificateStatusName);
-        titleMap.put("合同价", TalentCertificateVO::getPositionContractPrice);
-        titleMap.put("其他费用", TalentCertificateVO::getOtherCosts);
-        titleMap.put("实际岗位价格", TalentCertificateVO::getActualPositionPrice);
-        titleMap.put("期限", TalentCertificateVO::getDuration);
-        titleMap.put("招标出场", TalentCertificateVO::getBiddingExitName);
-        titleMap.put("三类人员", TalentCertificateVO::getThreePersonnelName);
-        titleMap.put("社保要求", TalentCertificateVO::getSocialSecurityRequirementName);
-        titleMap.put("岗位来源", TalentCertificateVO::getPositionSourceName);
-        titleMap.put("备注", TalentCertificateVO::getRemarks);
-        titleMap.put("创建时间", TalentCertificateVO::getCreatedTime);
-        return titleMap;
+    private List<Pair<String, Func1<TalentCertificateVO, ?>>> getTitleList() {
+        return Arrays.asList(
+                Pair.of("客户名称", TalentCertificateVO::getTalentName),
+                Pair.of("证书等级", TalentCertificateVO::getCertificateLevelName),
+                Pair.of("专业", TalentCertificateVO::getSpecialtyName),
+                Pair.of("省份", TalentCertificateVO::getProvincesName),
+                Pair.of("城市", TalentCertificateVO::getCityName),
+                Pair.of("职称", TalentCertificateVO::getTitleName),
+                Pair.of("初始/转正", TalentCertificateVO::getInitialOrTransferName),
+                Pair.of("证书状态", TalentCertificateVO::getCertificateStatusName),
+                Pair.of("合同价", TalentCertificateVO::getPositionContractPrice),
+                Pair.of("其他费用", TalentCertificateVO::getOtherCosts),
+                Pair.of("实际岗位价格", TalentCertificateVO::getActualPositionPrice),
+                Pair.of("期限", TalentCertificateVO::getDuration),
+                Pair.of("招标出场", TalentCertificateVO::getBiddingExitName),
+                Pair.of("三类人员", TalentCertificateVO::getThreePersonnelName),
+                Pair.of("社保要求", TalentCertificateVO::getSocialSecurityRequirementName),
+                Pair.of("岗位来源", TalentCertificateVO::getPositionSourceName),
+                Pair.of("备注", TalentCertificateVO::getRemarks),
+                Pair.of("创建时间", TalentCertificateVO::getCreatedTime)
+        );
     }
 
     @Override

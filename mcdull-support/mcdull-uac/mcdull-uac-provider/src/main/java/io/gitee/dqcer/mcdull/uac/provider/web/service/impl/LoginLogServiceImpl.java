@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -24,9 +26,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -98,20 +98,20 @@ public class LoginLogServiceImpl
 
     @Override
     public boolean exportData(LoginLogQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryByPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(dto, this::queryByPage, StrUtil.EMPTY, this.getTitleList());
         return true;
     }
 
-    private Map<String, Func1<LoginLogVO, ?>> getTitleMap() {
-        Map<String, Func1<LoginLogVO, ?>> titleMap = new HashMap<>(8);
-        titleMap.put("登录名", LoginLogVO::getLoginName);
-        titleMap.put("IP", LoginLogVO::getLoginIp);
-        titleMap.put("IP地区", LoginLogVO::getLoginIpRegion);
-        titleMap.put("设备信息", LoginLogVO::getUserAgent);
-        titleMap.put("登录结果", LoginLogVO::getLoginResultName);
-        titleMap.put("备注", LoginLogVO::getRemark);
-        titleMap.put("时间", LoginLogVO::getCreateTime);
-        return titleMap;
+    private List<Pair<String, Func1<LoginLogVO, ?>>> getTitleList() {
+        return ListUtil.of(
+                Pair.of("登录名", LoginLogVO::getLoginName),
+                Pair.of("IP", LoginLogVO::getLoginIp),
+                Pair.of("IP地区", LoginLogVO::getLoginIpRegion),
+                Pair.of("设备信息", LoginLogVO::getUserAgent),
+                Pair.of("登录结果", LoginLogVO::getLoginResultName),
+                Pair.of("备注", LoginLogVO::getRemark),
+                Pair.of("时间", LoginLogVO::getCreateTime)
+        );
     }
 
     private LoginLogVO convertToConfigVO(LoginLogEntity entity) {

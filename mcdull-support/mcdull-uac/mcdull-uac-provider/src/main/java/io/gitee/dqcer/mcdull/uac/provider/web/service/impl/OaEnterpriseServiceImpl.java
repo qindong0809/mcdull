@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -27,7 +28,10 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -136,23 +140,22 @@ public class OaEnterpriseServiceImpl
 
     @Override
     public boolean exportData(EnterpriseQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryByPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(dto, this::queryByPage, StrUtil.EMPTY, this.getTitleList());
         return true;
     }
 
 
-    private Map<String, Func1<EnterpriseVO, ?>> getTitleMap() {
-        Map<String, Func1<EnterpriseVO, ?>> titleMap = new HashMap<>(8);
-        titleMap.put("企业名称", EnterpriseVO::getEnterpriseName);
-        titleMap.put("企业logo", EnterpriseVO::getEnterpriseLogo);
-        titleMap.put("统一社会信用代码", EnterpriseVO::getUnifiedSocialCreditCode);
-        titleMap.put("企业类型", EnterpriseVO::getTypeName);
-        titleMap.put("联系人", EnterpriseVO::getContact);
-        titleMap.put("联系人电话", EnterpriseVO::getContactPhone);
-        titleMap.put("邮箱", EnterpriseVO::getEmail);
-        titleMap.put("状态", EnterpriseVO::getDisabledFlag);
-        titleMap.put("创建人", EnterpriseVO::getCreateUserName);
-        return titleMap;
+    private List<Pair<String, Func1<EnterpriseVO, ?>>> getTitleList() {
+        return ListUtil.of(
+                Pair.of("企业名称", EnterpriseVO::getEnterpriseName),
+                Pair.of("企业logo", EnterpriseVO::getEnterpriseLogo),
+                Pair.of("统一社会信用代码", EnterpriseVO::getUnifiedSocialCreditCode),
+                Pair.of("企业类型", EnterpriseVO::getTypeName),
+                Pair.of("联系人", EnterpriseVO::getContact),
+                Pair.of("联系人电话", EnterpriseVO::getContactPhone),
+                Pair.of("邮箱", EnterpriseVO::getEmail),
+                Pair.of("状态", EnterpriseVO::getDisabledFlag),
+                Pair.of("创建人", EnterpriseVO::getCreateUserName));
     }
 
     private OaEnterpriseEntity convertToEntity(EnterpriseAddDTO dto) {

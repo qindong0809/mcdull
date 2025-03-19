@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -150,25 +151,25 @@ public class OperateLogServiceImpl
 
     @Override
     public boolean exportData(OperateLogQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryByPage, StrUtil.EMPTY, this.getTitleMap());
+        commonManager.exportExcel(dto, this::queryByPage, StrUtil.EMPTY, this.getTitleList());
         return true;
     }
 
-    private Map<String, Func1<OperateLogVO, ?>> getTitleMap() {
-        Map<String, Func1<OperateLogVO, ?>> titleMap = new HashMap<>(8);
-        titleMap.put("用户", OperateLogVO::getOperateUserName);
-        titleMap.put("操作模块", OperateLogVO::getModule);
-        titleMap.put("操作内容", OperateLogVO::getContent);
-        titleMap.put("请求路径", OperateLogVO::getUrl);
-        titleMap.put("IP", OperateLogVO::getIp);
-        titleMap.put("IP地区", OperateLogVO::getIpRegion);
-        titleMap.put("客户端", OperateLogVO::getUserAgent);
-        titleMap.put("请求方法", OperateLogVO::getMethod);
-        titleMap.put("耗时(ms)", OperateLogVO::getTimeTaken);
-        titleMap.put("链路标识", OperateLogVO::getTraceId);
-        titleMap.put("请求结果", OperateLogVO::getSuccessFlag);
-        titleMap.put("时间", OperateLogVO::getCreateTime);
-        return titleMap;
+    private List<Pair<String, Func1<OperateLogVO, ?>>> getTitleList() {
+        return Arrays.asList(
+                Pair.of("用户", OperateLogVO::getOperateUserName),
+                Pair.of("操作模块", OperateLogVO::getModule),
+                Pair.of("操作内容", OperateLogVO::getContent),
+                Pair.of("请求路径", OperateLogVO::getUrl),
+                Pair.of("IP", OperateLogVO::getIp),
+                Pair.of("IP地区", OperateLogVO::getIpRegion),
+                Pair.of("客户端", OperateLogVO::getUserAgent),
+                Pair.of("请求方法", OperateLogVO::getMethod),
+                Pair.of("耗时(ms)", OperateLogVO::getTimeTaken),
+                Pair.of("链路标识", OperateLogVO::getTraceId),
+                Pair.of("请求结果", OperateLogVO::getSuccessFlag),
+                Pair.of("时间", OperateLogVO::getCreateTime)
+        );
     }
 
 }
