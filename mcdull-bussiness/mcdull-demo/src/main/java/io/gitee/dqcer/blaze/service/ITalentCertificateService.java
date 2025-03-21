@@ -31,11 +31,13 @@ public interface ITalentCertificateService {
 
     PagedVO<TalentCertificateVO> queryPage(TalentCertificateQueryDTO dto);
 
-    void exportData();
+    void exportData(TalentCertificateQueryDTO dto);
 
     void downloadTemplate();
 
     List<LabelValueVO<Integer, String>> list(Integer customerCertId);
 
     Map<Integer, TalentCertificateEntity> map(Set<Integer> set);
+
+    boolean existByTalentId(Integer talentId);
 }

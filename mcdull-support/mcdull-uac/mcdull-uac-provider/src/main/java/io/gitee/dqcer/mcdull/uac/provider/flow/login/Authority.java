@@ -10,9 +10,11 @@ import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
 import io.gitee.dqcer.mcdull.framework.flow.node.ProcessHandler;
 import io.gitee.dqcer.mcdull.framework.flow.node.TreeNode;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserConfigEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginDeviceEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.LoginLogResultTypeEnum;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IUserConfigRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ILoginService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,9 @@ public class Authority implements ProcessHandler<LoginContext> {
 
     @Resource
     private ILoginService loginService;
+
+    @Resource
+    private IUserConfigRepository userConfigRepository;
 
     @Override
     public void execute(LoginContext context) {
@@ -47,10 +52,16 @@ public class Authority implements ProcessHandler<LoginContext> {
     private CacheUser buildCacheUser(UserEntity entity) {
         CacheUser cache = new CacheUser();
         cache.setAdministratorFlag(entity.getAdministratorFlag());
-        cache.setDateFormat(DatePattern.NORM_DATETIME_PATTERN);
         cache.setLanguage(Locale.SIMPLIFIED_CHINESE.getLanguage());
-        cache.setZoneIdStr("Asia/Shanghai");
         cache.setLoginName(entity.getLoginName());
+        UserConfigEntity userConfig = userConfigRepository.getByUserId(entity.getId());
+        if (ObjUtil.isNotNull(userConfig)) {
+            cache.setDateFormat(userConfig.getDateFormat());
+            cache.setZoneIdStr(userConfig.getTimezone());
+        } else {
+            cache.setDateFormat(DatePattern.NORM_DATETIME_PATTERN);
+            cache.setZoneIdStr("Asia/Shanghai");
+        }
         return cache;
     }
 

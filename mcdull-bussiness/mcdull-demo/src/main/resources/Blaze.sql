@@ -1,15 +1,28 @@
 
-INSERT INTO `sys_menu` VALUES (257, '企业管理', 2, 256, 1, '/blaze/customer/customer-info-list', '/blaze/customer/customer-info-list.vue', 1, NULL, NULL, 'AppstoreOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, '2024-06-24 23:12:50', NULL, NULL);
-INSERT INTO `sys_menu` VALUES (256, '企业端', 1, 255, NULL, NULL, NULL, 1, NULL, NULL, 'AppstoreAddOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, '2024-06-24 23:10:15', NULL, NULL);
-INSERT INTO `sys_menu` VALUES (255, '慧联智配', 1, 0, 0, NULL, NULL, 1, NULL, NULL, 'DeploymentUnitOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, '2024-06-24 23:03:54', NULL, NULL);
+INSERT INTO `sys_menu` VALUES (257, '企业管理', 2, 256, 1, '/blaze/customer/customer-info-list', '/blaze/customer/customer-info-list.vue', 1, NULL, NULL, 'AppstoreOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (256, '企业端', 1, 255, NULL, NULL, NULL, 1, NULL, NULL, 'AppstoreAddOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (255, '慧联智配', 1, 0, 0, NULL, NULL, 1, NULL, NULL, 'DeploymentUnitOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 
-INSERT INTO sys_menu (id, menu_name, menu_type, parent_id, sort, `path`, component, perms_type, api_perms, web_perms, icon, context_menu_id, frame_flag, frame_url, cache_flag, visible_flag, inactive, del_flag, created_by, created_time, updated_by, updated_time) VALUES(262, '证书匹配', 2, 255, NULL, '/blaze/order/blaze-order-list', '/blaze/order/blaze-order-list.vue', 1, NULL, NULL, 'AlignCenterOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, '2025-03-19 13:25:09', NULL, NULL);
-INSERT INTO sys_menu (id, menu_name, menu_type, parent_id, sort, `path`, component, perms_type, api_perms, web_perms, icon, context_menu_id, frame_flag, frame_url, cache_flag, visible_flag, inactive, del_flag, created_by, created_time, updated_by, updated_time) VALUES(261, '证书需求', 2, 256, NULL, '/blaze/certificate/certificate-requirements-list', '/blaze/certificate/certificate-requirements-list.vue', 1, NULL, NULL, 'AppstoreOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, '2025-03-19 13:16:51', 1, '2025-03-19 13:17:59');
-INSERT INTO sys_menu (id, menu_name, menu_type, parent_id, sort, `path`, component, perms_type, api_perms, web_perms, icon, context_menu_id, frame_flag, frame_url, cache_flag, visible_flag, inactive, del_flag, created_by, created_time, updated_by, updated_time) VALUES(260, '证书管理', 2, 258, NULL, '/blaze/talent/certificate-list', '/blaze/talent/certificate-list.vue', 1, NULL, NULL, 'AuditOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, '2025-03-19 13:12:00', NULL, NULL);
-INSERT INTO sys_menu (id, menu_name, menu_type, parent_id, sort, `path`, component, perms_type, api_perms, web_perms, icon, context_menu_id, frame_flag, frame_url, cache_flag, visible_flag, inactive, del_flag, created_by, created_time, updated_by, updated_time) VALUES(259, '人才管理', 2, 258, NULL, '/blaze/talent/talent-list', '/blaze/talent/talent-list.vue', 1, NULL, NULL, 'BookOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, '2025-03-19 12:46:56', NULL, NULL);
-INSERT INTO sys_menu (id, menu_name, menu_type, parent_id, sort, `path`, component, perms_type, api_perms, web_perms, icon, context_menu_id, frame_flag, frame_url, cache_flag, visible_flag, inactive, del_flag, created_by, created_time, updated_by, updated_time) VALUES(258, '人才端', 1, 255, NULL, NULL, NULL, 1, NULL, NULL, 'ApartmentOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, '2025-03-19 12:32:40', NULL, NULL);
+INSERT INTO `sys_menu` VALUES (262, '证书匹配', 2, 255, NULL, '/blaze/order/blaze-order-list', '/blaze/order/blaze-order-list.vue', 1, NULL, NULL, 'AlignCenterOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (261, '证书需求', 2, 256, NULL, '/blaze/certificate/certificate-requirements-list', '/blaze/certificate/certificate-requirements-list.vue', 1, NULL, NULL, 'AppstoreOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), 1, sysdate());
+INSERT INTO `sys_menu` VALUES (260, '证书管理', 2, 258, NULL, '/blaze/talent/certificate-list', '/blaze/talent/certificate-list.vue', 1, NULL, NULL, 'AuditOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (259, '人才管理', 2, 258, NULL, '/blaze/talent/talent-list', '/blaze/talent/talent-list.vue', 1, NULL, NULL, 'BookOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (258, '人才端',   1, 255, NULL, NULL, NULL, 1, NULL, NULL, 'ApartmentOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 
-drop table if exists `blaze_customer_info`;
+INSERT INTO `sys_menu` VALUES (270, '导出', 3, 257, 3, NULL, NULL, 1, 'blaze:customer_info:export', 'blaze:customer_info:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (271, '写操作', 3, 257, 3, NULL, NULL, 1, 'blaze:customer_info:write', 'blaze:customer_info:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (272, '导出', 3, 259, 3, NULL, NULL, 1, 'blaze:talent:export', 'blaze:talent:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (273, '写操作', 3, 259, 3, NULL, NULL, 1, 'blaze:talent:write', 'blaze:talent:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (274, '导出', 3, 260, 3, NULL, NULL, 1, 'blaze:talent_certificate:export', 'blaze:talent_certificate:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (275, '写操作', 3, 260, 3, NULL, NULL, 1, 'blaze:talent_certificate:write', 'blaze:talent_certificate:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (276, '导出', 3, 261, 3, NULL, NULL, 1, 'blaze:certificate_requirements:export', 'blaze:certificate_requirements:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (277, '写操作', 3, 261, 3, NULL, NULL, 1, 'blaze:certificate_requirements:write', 'blaze:certificate_requirements:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (278, '导出', 3, 262, 3, NULL, NULL, 1, 'blaze:order:export', 'blaze:order:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (279, '写操作', 3, 262, 3, NULL, NULL, 1, 'blaze:order:write', 'blaze:order:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+
+
+
+drop table if exists
 create table if not exists `blaze_customer_info` (
 `id` int auto_increment comment '主键',
 `name` varchar(255) not null comment '企业名称',

@@ -961,3 +961,18 @@ create table blaze_order (
 `inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）'
 ) comment='订单合同';
+
+drop table if exists `sys_user_config`;
+create table if not exists `sys_user_config` (
+`id` int not null auto_increment comment '主键',
+`user_id` int not null comment 'user id',
+`date_format` varchar(16)  null default null comment '日期显示格式:yyyy-MM-dd',
+`timezone` varchar(16)  null default null comment '日期显示格式:Asia/Shanghai',
+`created_by` int not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` int default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+primary key (`id`)
+)  comment='用户个性化配置';

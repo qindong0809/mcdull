@@ -1,5 +1,6 @@
 package io.gitee.dqcer.blaze.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.ListUtil;
 import io.gitee.dqcer.blaze.domain.form.CustomerInfoAddDTO;
 import io.gitee.dqcer.blaze.domain.form.CustomerInfoQueryDTO;
@@ -8,14 +9,14 @@ import io.gitee.dqcer.blaze.domain.vo.CustomerInfoVO;
 import io.gitee.dqcer.blaze.service.ICustomerInfoService;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.base.vo.SelectOptionVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
-
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 /**
@@ -35,6 +36,13 @@ public class CustomerInfoController {
         return Result.success(customerInfoService.queryPage(dto));
     }
 
+    @Operation(summary = "导出数据")
+    @SaCheckPermission("blaze:customer_info:export")
+    @PostMapping(value = "/customerInfo/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void exportData(@RequestBody @Valid CustomerInfoQueryDTO dto) {
+        customerInfoService.exportData(dto);
+    }
+
     @Operation(summary = "全部数据")
     @PostMapping("/customerInfo/list")
     public Result<List<LabelValueVO<Integer, String>>> list() {
@@ -42,6 +50,7 @@ public class CustomerInfoController {
     }
 
     @Operation(summary = "添加")
+    @SaCheckPermission("blaze:customer_info:write")
     @PostMapping("/customerInfo/add")
     public Result<Boolean> add(@RequestBody @Valid CustomerInfoAddDTO dto) {
         customerInfoService.insert(dto);
@@ -49,6 +58,7 @@ public class CustomerInfoController {
     }
 
     @Operation(summary = "更新")
+    @SaCheckPermission("blaze:customer_info:write")
     @PostMapping("/customerInfo/update")
     public Result<Boolean> update(@RequestBody @Valid CustomerInfoUpdateDTO dto) {
         customerInfoService.update(dto);
@@ -57,6 +67,7 @@ public class CustomerInfoController {
 
 
     @Operation(summary = "删除")
+    @SaCheckPermission("blaze:customer_info:write")
     @GetMapping("/customerInfo/delete/{id}")
     public Result<Boolean> batchDelete(@PathVariable(value = "id") Integer id) {
         customerInfoService.batchDelete(ListUtil.of(id));

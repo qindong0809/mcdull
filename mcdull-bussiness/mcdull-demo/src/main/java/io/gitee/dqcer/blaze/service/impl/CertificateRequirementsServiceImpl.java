@@ -6,6 +6,8 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.blaze.dao.repository.ICertificateRequirementsRepository;
 import io.gitee.dqcer.blaze.domain.bo.CertificateBO;
@@ -15,6 +17,7 @@ import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsAddDTO;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.CertificateRequirementsVO;
+import io.gitee.dqcer.blaze.service.IBlazeOrderService;
 import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
 import io.gitee.dqcer.blaze.service.ICustomerInfoService;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
@@ -50,15 +53,14 @@ public class CertificateRequirementsServiceImpl
 
     @Resource
     private IAreaManager areaManager;
-
     @Resource
     private ICustomerInfoService customerInfoService;
-
     @Resource
     private ICommonManager commonManager;
-
     @Resource
     private IAreaService areaService;
+    @Resource
+    private IBlazeOrderService orderService;
 
     public PagedVO<CertificateRequirementsVO> queryPage(CertificateRequirementsQueryDTO dto) {
         List<CertificateRequirementsVO> voList = new ArrayList<>();
@@ -199,6 +201,16 @@ public class CertificateRequirementsServiceImpl
             }
         }
         return Map.of();
+    }
+
+    @Override
+    public boolean existByCustomerId(Integer customerId) {
+        if (ObjUtil.isNotNull(customerId)) {
+            LambdaQueryWrapper<CertificateRequirementsEntity> query = Wrappers.lambdaQuery();
+            query.eq(CertificateRequirementsEntity::getCustomerId, customerId);
+            return baseRepository.exists(query);
+        }
+        return false;
     }
 
     @Override
@@ -365,6 +377,10 @@ public class CertificateRequirementsServiceImpl
         List<CertificateRequirementsEntity> entityList = baseRepository.queryListByIds(idList);
         if (entityList.size() != idList.size()) {
             this.throwDataNotExistException(idList);
+        }
+        boolean exist = orderService.existByCertificateRequirementsIdList(idList);
+        if (exist) {
+            super.throwDataExistAssociated(idList);
         }
         baseRepository.removeBatchByIds(idList);
     }

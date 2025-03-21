@@ -31,4 +31,6 @@ public interface ITalentService {
     PagedVO<TalentVO> queryPage(TalentQueryDTO dto);
 
     List<LabelValueVO<Integer, String>> list();
+
+    void exportData(TalentQueryDTO dto);
 }

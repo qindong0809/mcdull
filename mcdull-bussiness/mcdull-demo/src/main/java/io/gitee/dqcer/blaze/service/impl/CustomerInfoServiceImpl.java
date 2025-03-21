@@ -1,7 +1,10 @@
 package io.gitee.dqcer.blaze.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Pair;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.blaze.dao.repository.ICustomerInfoRepository;
 import io.gitee.dqcer.blaze.domain.entity.CustomerInfoEntity;
@@ -9,6 +12,7 @@ import io.gitee.dqcer.blaze.domain.form.CustomerInfoAddDTO;
 import io.gitee.dqcer.blaze.domain.form.CustomerInfoQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.CustomerInfoUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.CustomerInfoVO;
+import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
 import io.gitee.dqcer.blaze.service.ICustomerInfoService;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
@@ -17,11 +21,14 @@ import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.DictSelectTypeEnum;
-import io.gitee.dqcer.mcdull.uac.provider.web.manager.*;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IDictTypeManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,12 +45,14 @@ public class CustomerInfoServiceImpl
 
     @Resource
     private IDictTypeManager dictTypeManager;
-
     @Resource
     private IUserManager userManager;
-
     @Resource
     private IAreaManager areaManager;
+    @Resource
+    private ICertificateRequirementsService certificateRequirementsService;
+    @Resource
+    private ICommonManager commonManager;
 
     public PagedVO<CustomerInfoVO> queryPage(CustomerInfoQueryDTO dto) {
         List<CustomerInfoVO> voList = new ArrayList<>();
@@ -85,6 +94,30 @@ public class CustomerInfoServiceImpl
             return voList;
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public void exportData(CustomerInfoQueryDTO dto) {
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+    }
+
+    private List<Pair<String, Func1<CustomerInfoVO, ?>>> getTitleList() {
+        List<Pair<String, Func1<CustomerInfoVO, ?>>> list = new ArrayList<>();
+        list.add(Pair.of("企业名称", CustomerInfoVO::getName));
+        list.add(Pair.of("所在地省代码", CustomerInfoVO::getProvincesCode));
+        list.add(Pair.of("所在地省名称", CustomerInfoVO::getProvincesName));
+        list.add(Pair.of("所在市代码", CustomerInfoVO::getCityCode));
+        list.add(Pair.of("所在市名称", CustomerInfoVO::getCityName));
+        list.add(Pair.of("联系人", CustomerInfoVO::getContactPerson));
+        list.add(Pair.of("联系电话", CustomerInfoVO::getPhoneNumber));
+        list.add(Pair.of("客户类型", CustomerInfoVO::getCustomerTypeName));
+        list.add(Pair.of("备注", CustomerInfoVO::getRemark));
+        list.add(Pair.of("创建人", CustomerInfoVO::getCreatedName));
+        list.add(Pair.of("创建时间", CustomerInfoVO::getCreatedTime));
+        list.add(Pair.of("更新人", CustomerInfoVO::getUpdatedName));
+        list.add(Pair.of("更新时间", CustomerInfoVO::getUpdatedTime));
+        list.add(Pair.of("状态", CustomerInfoVO::getInactiveName));
+        return list;
     }
 
     private CustomerInfoVO convertToVO(CustomerInfoEntity item){
@@ -168,6 +201,10 @@ public class CustomerInfoServiceImpl
         CustomerInfoEntity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
+        }
+        boolean exist = certificateRequirementsService.existByCustomerId(id);
+        if (exist) {
+            super.throwDataExistAssociated(id);
         }
         baseRepository.removeById(id);
     }

@@ -1,7 +1,10 @@
 package io.gitee.dqcer.blaze.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Pair;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.blaze.dao.repository.ITalentRepository;
 import io.gitee.dqcer.blaze.domain.entity.TalentEntity;
@@ -12,6 +15,7 @@ import io.gitee.dqcer.blaze.domain.form.TalentAddDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.TalentVO;
+import io.gitee.dqcer.blaze.service.ITalentCertificateService;
 import io.gitee.dqcer.blaze.service.ITalentService;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -20,10 +24,11 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.GenderEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +46,10 @@ public class TalentServiceImpl
 
     @Resource
     private IAreaManager areaManager;
+    @Resource
+    private ITalentCertificateService talentCertificateService;
+    @Resource
+    private ICommonManager commonManager;
 
     public PagedVO<TalentVO> queryPage(TalentQueryDTO dto) {
         List<TalentVO> voList = new ArrayList<>();
@@ -84,6 +93,29 @@ public class TalentServiceImpl
             return labelValueVOList;
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public void exportData(TalentQueryDTO dto) {
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+    }
+
+    private List<Pair<String, Func1<TalentVO, ?>>> getTitleList() {
+        List<Pair<String, Func1<TalentVO, ?>>> list = new ArrayList<>();
+        list.add(Pair.of("姓名", TalentVO::getName));
+        list.add(Pair.of("身份证号", TalentVO::getIdNumber));
+        list.add(Pair.of("联系电话", TalentVO::getContactNumber));
+        list.add(Pair.of("工作单位性质", TalentVO::getWorkUnitTypeName));
+        list.add(Pair.of("社保状态", TalentVO::getSocialSecurityStatusName));
+        list.add(Pair.of("所在地省代码", TalentVO::getProvincesCode));
+        list.add(Pair.of("所在地省名称", TalentVO::getProvincesName));
+        list.add(Pair.of("所在市代码", TalentVO::getCityCode));
+        list.add(Pair.of("所在市名称", TalentVO::getCityName));
+        list.add(Pair.of("性别", TalentVO::getGenderName));
+        list.add(Pair.of("职称", TalentVO::getTitleName));
+        list.add(Pair.of("创建时间", TalentVO::getCreatedTime));
+        list.add(Pair.of("更新时间", TalentVO::getUpdatedTime));
+        return list;
     }
 
     private TalentVO convertToVO(TalentEntity item){
@@ -162,6 +194,10 @@ public class TalentServiceImpl
         TalentEntity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
+        }
+        boolean exist = talentCertificateService.existByTalentId(id);
+        if (exist) {
+            super.throwDataExistAssociated(id);
         }
         baseRepository.removeById(id);
     }

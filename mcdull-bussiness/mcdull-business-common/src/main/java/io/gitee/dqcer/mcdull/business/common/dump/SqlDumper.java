@@ -14,6 +14,7 @@ import lombok.SneakyThrows;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -24,7 +25,7 @@ import java.util.Set;
 
 public class SqlDumper {
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         List<String> list = new ArrayList<>();
         list.add("mcdull-cloud-3");
@@ -32,7 +33,9 @@ public class SqlDumper {
         // 9e44c435d2498708c1781903c0bc753d
         Db db = MysqlUtil.getInstance("mcdull.io", 3306, "root", "123456", "mcdull-cloud-3");
         File file = dumpDatabase(db.getConnection(), new HashSet<>(list), "D://ddd-1.sql");
-        System.out.println(outputStream.toString());
+        outputStream.close();
+        System.out.println("dddd");
+//        System.out.println(outputStream.toString());
     }
 
 
@@ -78,6 +81,9 @@ public class SqlDumper {
 
         List<String> tableList = SqlShowUtility.listTable(connection, databaseName);
         for (String table : tableList) {
+            if (table.equals("sys_area")) {
+                continue;
+            }
             tableDumper.dump(table);
             List<String> triggerList = SqlShowUtility.listTriggerOfTable(connection, databaseName, table);
             for (String trigger : triggerList) {

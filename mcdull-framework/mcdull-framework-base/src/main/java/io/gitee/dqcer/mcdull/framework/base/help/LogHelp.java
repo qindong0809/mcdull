@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.base.help;
 
+import cn.hutool.core.lang.Console;
 import org.slf4j.Logger;
 
 import java.util.function.Supplier;

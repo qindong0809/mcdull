@@ -1,5 +1,6 @@
 package io.gitee.dqcer.blaze.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.ListUtil;
 import io.gitee.dqcer.blaze.domain.bo.CertificateBO;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsAddDTO;
@@ -64,6 +65,7 @@ public class CertificateRequirementsController extends BasicController {
     }
 
     @Operation(summary = "导出数据")
+    @SaCheckPermission("blaze:certificate_requirements:export")
     @PostMapping(value = "CertificateRequirements/list/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid CertificateRequirementsQueryDTO dto) {
         certificateRequirementsService.exportData(dto);
@@ -76,6 +78,7 @@ public class CertificateRequirementsController extends BasicController {
     }
 
     @Operation(summary = "添加")
+    @SaCheckPermission("blaze:certificate_requirements:write")
     @PostMapping("/CertificateRequirements/add")
     public Result<Boolean> add(@RequestBody @Valid CertificateRequirementsAddDTO dto) {
         certificateRequirementsService.insert(dto);
@@ -83,6 +86,7 @@ public class CertificateRequirementsController extends BasicController {
     }
 
     @Operation(summary = "更新")
+    @SaCheckPermission("blaze:certificate_requirements:write")
     @PostMapping("/CertificateRequirements/update")
     public Result<Boolean> update(@RequestBody @Valid CertificateRequirementsUpdateDTO dto) {
         certificateRequirementsService.update(dto);
@@ -90,6 +94,7 @@ public class CertificateRequirementsController extends BasicController {
     }
 
     @Operation(summary = "批量删除")
+    @SaCheckPermission("blaze:certificate_requirements:write")
     @PostMapping("/CertificateRequirements/batchDelete")
     public Result<Boolean> batchDelete(@RequestBody List<Integer> idList) {
         certificateRequirementsService.batchDelete(idList);
@@ -97,6 +102,7 @@ public class CertificateRequirementsController extends BasicController {
     }
 
     @Operation(summary = "删除")
+    @SaCheckPermission("blaze:certificate_requirements:write")
     @GetMapping("/CertificateRequirements/delete/{id}")
     public Result<Boolean> batchDelete(@PathVariable(value = "id") Integer id) {
         certificateRequirementsService.batchDelete(ListUtil.of(id));

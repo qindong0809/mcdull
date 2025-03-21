@@ -40,4 +40,5 @@ public interface ICertificateRequirementsService {
 
     Map<Integer, CertificateRequirementsEntity> map(Set<Integer> set);
 
+    boolean existByCustomerId(Integer customerId);
 }

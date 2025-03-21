@@ -6,6 +6,8 @@ import io.gitee.dqcer.blaze.domain.form.BlazeOrderUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 
+import java.util.List;
+
 
 /**
  * 订单合同 业务接口类
@@ -26,4 +28,10 @@ public interface IBlazeOrderService {
 
 
     PagedVO<BlazeOrderVO> queryPage(BlazeOrderQueryDTO dto);
+
+    boolean existByTalentCertificateId(List<Integer> talentCertificateIdList);
+
+    boolean existByCertificateRequirementsIdList(List<Integer> certificateRequirementsIdList);
+
+    void exportData(BlazeOrderQueryDTO dto);
 }

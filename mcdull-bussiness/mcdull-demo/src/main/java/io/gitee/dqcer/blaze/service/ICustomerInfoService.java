@@ -30,4 +30,6 @@ public interface ICustomerInfoService {
     PagedVO<CustomerInfoVO> queryPage(CustomerInfoQueryDTO dto);
 
     List<LabelValueVO<Integer, String>> list();
+
+    void exportData(CustomerInfoQueryDTO dto);
 }

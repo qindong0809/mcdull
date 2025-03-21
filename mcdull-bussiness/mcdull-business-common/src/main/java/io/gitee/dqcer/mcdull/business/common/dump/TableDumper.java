@@ -98,18 +98,20 @@ public class TableDumper extends Dumper {
                 // print start of an insert statement
                 String dataCommentHeader = String.format(COMMENT_RECORDS, tableName);
                 SqlCommentUtility.printCommentHeader(printWriter, dataCommentHeader);
-                String insertPrefix = String.format(COMPACT_INSERT_SQL_PREFIX_TEMPLATE, tableName);
-                printWriter.print(insertPrefix);
                 firstIteration = false;
             }
+            String insertPrefix = String.format(COMPACT_INSERT_SQL_PREFIX_TEMPLATE, tableName);
+            printWriter.print(insertPrefix);
+
             String value = nextValue(resultSet);
             printWriter.print(value);
+            printWriter.println(SQL_DELIMITER);
 
-            if (!resultSet.isLast()) {
-                printWriter.print(VALUE_DELIMITER);
-            } else { // print delimiter after last record
-                printWriter.println(SQL_DELIMITER);
-            }
+//            if (!resultSet.isLast()) {
+//                printWriter.print(VALUE_DELIMITER);
+//            } else { // print delimiter after last record
+//                printWriter.println(SQL_DELIMITER);
+//            }
         }
         resultSet.close();
         statement.close();

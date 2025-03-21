@@ -2,7 +2,12 @@ package io.gitee.dqcer.blaze.service.impl;
 
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Pair;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.blaze.dao.repository.IBlazeOrderRepository;
 import io.gitee.dqcer.blaze.domain.entity.BlazeOrderEntity;
@@ -19,6 +24,7 @@ import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,9 +47,10 @@ public class BlazeOrderServiceImpl
 
     @Resource
     private ICertificateRequirementsService certificateRequirementsService;
-
     @Resource
     private ITalentCertificateService talentCertificateService;
+    @Resource
+    private ICommonManager commonManager;
 
     public PagedVO<BlazeOrderVO> queryPage(BlazeOrderQueryDTO dto) {
         List<BlazeOrderVO> voList = new ArrayList<>();
@@ -66,6 +73,41 @@ public class BlazeOrderServiceImpl
             }
         }
         return PageUtil.toPage(voList, entityPage);
+    }
+
+    @Override
+    public boolean existByTalentCertificateId(List<Integer> talentCertificateIdList) {
+        if (CollUtil.isNotEmpty(talentCertificateIdList)) {
+            LambdaQueryWrapper<BlazeOrderEntity> query = Wrappers.lambdaQuery();
+            query.in(BlazeOrderEntity::getTalentCertId, talentCertificateIdList);
+            return baseRepository.exists(query);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean existByCertificateRequirementsIdList(List<Integer> certificateRequirementsIdList) {
+        if (CollUtil.isNotEmpty(certificateRequirementsIdList)) {
+            LambdaQueryWrapper<BlazeOrderEntity> query = Wrappers.lambdaQuery();
+            query.in(BlazeOrderEntity::getCustomerCertId, certificateRequirementsIdList);
+            return baseRepository.exists(query);
+        }
+        return false;
+    }
+
+    @Override
+    public void exportData(BlazeOrderQueryDTO dto) {
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+    }
+
+    private List<Pair<String, Func1<BlazeOrderVO, ?>>> getTitleList() {
+        List<Pair<String, Func1<BlazeOrderVO, ?>>> list = new ArrayList<>();
+        list.add(Pair.of("所属人才", BlazeOrderVO::getTalentCertName));
+        list.add(Pair.of("所属企业", BlazeOrderVO::getCustomerCertName));
+        list.add(Pair.of("人才合同金额", BlazeOrderVO::getTalentPayment));
+        list.add(Pair.of("企业合同金额", BlazeOrderVO::getEnterpriseCollection));
+        list.add(Pair.of("备注", BlazeOrderVO::getRemarks));
+        return list;
     }
 
     private BlazeOrderVO convertToVO(BlazeOrderEntity item){

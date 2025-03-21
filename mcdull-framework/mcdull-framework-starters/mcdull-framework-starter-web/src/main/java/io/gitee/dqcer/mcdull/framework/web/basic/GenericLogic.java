@@ -28,7 +28,7 @@ public abstract class GenericLogic {
     @Resource
     protected DynamicLocaleMessageSource dynamicLocaleMessageSource;
 
-    protected  Logger log = LoggerFactory.getLogger(getClass());
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     protected <T extends IdEntity<?>> void validNameExist(Serializable id,
                                                           String name,
@@ -47,6 +47,17 @@ public abstract class GenericLogic {
             this.throwDataExistException(name);
         }
     }
+
+    /**
+     * 数据存在关联
+     *
+     * @param data 数据
+     */
+    protected void throwDataExistAssociated(Object data) {
+        LogHelp.error(log, "Data associated need disassociate. data:{}", data);
+        throw new BusinessException(I18nConstants.DATA_ASSOCIATED_NEED_DISASSOCIATE);
+    }
+
 
 
     protected void throwDataNotExistException(Object data) {

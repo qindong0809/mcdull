@@ -5,6 +5,8 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.blaze.dao.repository.ITalentCertificateRepository;
 import io.gitee.dqcer.blaze.domain.bo.CertificateBO;
@@ -16,6 +18,7 @@ import io.gitee.dqcer.blaze.domain.form.TalentCertificateQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.FileVO;
 import io.gitee.dqcer.blaze.domain.vo.TalentCertificateVO;
+import io.gitee.dqcer.blaze.service.IBlazeOrderService;
 import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
 import io.gitee.dqcer.blaze.service.ITalentCertificateService;
 import io.gitee.dqcer.blaze.service.ITalentService;
@@ -75,6 +78,9 @@ public class TalentCertificateServiceImpl
 
     @Resource
     private IFileBizRepository fileBizRepository;
+
+    @Resource
+    private IBlazeOrderService orderService;
 
     private static final String DEFAULT_BIZ_CODD = "blaze-talent-cert";
 
@@ -174,8 +180,8 @@ public class TalentCertificateServiceImpl
     }
 
     @Override
-    public void exportData() {
-        commonManager.exportExcel(new TalentCertificateQueryDTO(), this::queryPage, StrUtil.EMPTY, this.getTitleList());
+    public void exportData(TalentCertificateQueryDTO dto) {
+        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
     }
 
     private List<Pair<String, Func1<TalentCertificateVO, ?>>> getTitleList() {
@@ -260,6 +266,16 @@ public class TalentCertificateServiceImpl
             }
         }
         return Collections.emptyMap();
+    }
+
+    @Override
+    public boolean existByTalentId(Integer talentId) {
+        if (ObjUtil.isNotNull(talentId)) {
+            LambdaQueryWrapper<TalentCertificateEntity> query = Wrappers.lambdaQuery();
+            query.eq(TalentCertificateEntity::getTalentId, talentId);
+            return baseRepository.exists(query);
+        }
+        return false;
     }
 
     private DynamicFieldBO getProvinceFieldBO() {
@@ -402,6 +418,10 @@ public class TalentCertificateServiceImpl
         List<TalentCertificateEntity> entityList = baseRepository.queryListByIds(idList);
         if (entityList.size() != idList.size()) {
             this.throwDataNotExistException(idList);
+        }
+        boolean exist = orderService.existByTalentCertificateId(idList);
+        if (exist) {
+            super.throwDataExistAssociated(idList);
         }
         baseRepository.removeBatchByIds(idList);
         Map<Integer, List<Integer>> map = fileBizRepository.mapByBizCode(DEFAULT_BIZ_CODD);
