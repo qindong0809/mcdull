@@ -48,7 +48,7 @@ public class TalentCertificateController extends BasicController {
     @Operation(summary = "全部数据")
     @GetMapping("/talent-cert/list/{customerCertId}")
     public Result<List<LabelValueVO<Integer, String>>> list(@PathVariable(value = "customerCertId") Integer customerCertId) {
-        return Result.success(talentCertificateService.list(customerCertId));
+        return Result.success(talentCertificateService.list(customerCertId, true));
     }
 
     @Operation(summary = "专业")

@@ -1,5 +1,6 @@
 package io.gitee.dqcer.blaze.service;
 
+import io.gitee.dqcer.blaze.domain.entity.BlazeOrderEntity;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderAddDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderUpdateDTO;
@@ -7,6 +8,8 @@ import io.gitee.dqcer.blaze.domain.vo.BlazeOrderVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -34,4 +37,8 @@ public interface IBlazeOrderService {
     boolean existByCertificateRequirementsIdList(List<Integer> certificateRequirementsIdList);
 
     void exportData(BlazeOrderQueryDTO dto);
+
+    Map<Integer, Boolean> getMap(Set<Integer> collect);
+
+    List<BlazeOrderEntity> list();
 }

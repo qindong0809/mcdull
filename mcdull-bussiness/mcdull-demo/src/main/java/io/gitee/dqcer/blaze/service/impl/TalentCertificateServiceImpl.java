@@ -3,6 +3,7 @@ package io.gitee.dqcer.blaze.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -60,25 +61,18 @@ public class TalentCertificateServiceImpl
 
     @Resource
     private IAreaManager areaManager;
-
     @Resource
     private ITalentService talentService;
-
     @Resource
     private ICommonManager commonManager;
-
     @Resource
     private IAreaService areaService;
-
     @Resource
     private IFileService fileService;
-
     @Resource
     private ICertificateRequirementsService certificateRequirementsService;
-
     @Resource
     private IFileBizRepository fileBizRepository;
-
     @Resource
     private IBlazeOrderService orderService;
 
@@ -233,7 +227,7 @@ public class TalentCertificateServiceImpl
     }
 
     @Override
-    public List<LabelValueVO<Integer, String>> list(Integer customerCertId) {
+    public List<LabelValueVO<Integer, String>> list(Integer customerCertId, boolean isFilter) {
         TalentCertificateQueryDTO dto = new TalentCertificateQueryDTO();
         if (ObjUtil.isNotNull(customerCertId)) {
             CertificateRequirementsEntity entity = certificateRequirementsService.get(customerCertId);
@@ -247,9 +241,18 @@ public class TalentCertificateServiceImpl
         if (ObjUtil.isNotNull(page)) {
             List<TalentCertificateVO> list = page.getList();
             if (CollUtil.isNotEmpty(list)) {
+                Map<Integer, Boolean> map = orderService.getMap(list.stream().map(TalentCertificateVO::getId).collect(Collectors.toSet()));
                 List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
                 for (TalentCertificateVO vo : list) {
-                    voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
+                    Integer id = vo.getId();
+                    Boolean exist = map.get(id);
+                    if (BooleanUtil.isTrue(isFilter)) {
+                        if (BooleanUtil.isFalse(exist)) {
+                            voList.add(new LabelValueVO<>(id, vo.getPositionTitle()));
+                        }
+                    } else {
+                        voList.add(new LabelValueVO<>(id, vo.getPositionTitle()));
+                    }
                 }
                 return voList;
             }

@@ -20,18 +20,19 @@ import io.gitee.dqcer.blaze.domain.vo.BlazeOrderVO;
 import io.gitee.dqcer.blaze.service.IBlazeOrderService;
 import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
 import io.gitee.dqcer.blaze.service.ITalentCertificateService;
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -51,15 +52,22 @@ public class BlazeOrderServiceImpl
     private ITalentCertificateService talentCertificateService;
     @Resource
     private ICommonManager commonManager;
+    @Resource
+    private IUserManager userManager;
 
     public PagedVO<BlazeOrderVO> queryPage(BlazeOrderQueryDTO dto) {
         List<BlazeOrderVO> voList = new ArrayList<>();
         Page<BlazeOrderEntity> entityPage = baseRepository.selectPage(dto);
         List<BlazeOrderEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
-            List<LabelValueVO<Integer, String>> list = CollUtil.emptyIfNull(certificateRequirementsService.list());
+            Set<Integer> createSet = recordList.stream().map(BlazeOrderEntity::getCreatedBy).collect(Collectors.toSet());
+            Set<Integer> updateSet = recordList.stream().map(BlazeOrderEntity::getUpdatedBy).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+            createSet.addAll(updateSet);
+            Map<Integer, String> nameMap = userManager.getNameMap(new ArrayList<>(createSet));
+
+            List<LabelValueVO<Integer, String>> list = CollUtil.emptyIfNull(certificateRequirementsService.list(false));
             Map<Integer, String> map = list.stream().collect(Collectors.toMap(LabelValueVO::getValue, LabelValueVO::getLabel));
-            List<LabelValueVO<Integer, String>> talentList = CollUtil.emptyIfNull(talentCertificateService.list(null));
+            List<LabelValueVO<Integer, String>> talentList = CollUtil.emptyIfNull(talentCertificateService.list(null, false));
             Map<Integer, String> talentMap = talentList.stream().collect(Collectors.toMap(LabelValueVO::getValue, LabelValueVO::getLabel));
             Map<Integer, CertificateRequirementsEntity> custMap = certificateRequirementsService.map(recordList.stream().map(BlazeOrderEntity::getCustomerCertId).collect(Collectors.toSet()));
             Map<Integer, TalentCertificateEntity> talentEntityMap = talentCertificateService.map(recordList.stream().map(BlazeOrderEntity::getTalentCertId).collect(Collectors.toSet()));
@@ -69,6 +77,18 @@ public class BlazeOrderServiceImpl
                 vo.setTalentCertName(talentMap.get(entity.getTalentCertId()));
                 vo.setEnterpriseCollection(custMap.get(entity.getCustomerCertId()).getPositionContractPrice().toString());
                 vo.setTalentPayment(talentEntityMap.get(entity.getTalentCertId()).getPositionContractPrice().toString());
+                if (ObjUtil.isNotNull(entity.getContractTime())) {
+                    vo.setContractTimeStr(entity.getContractTime());
+                }
+                if (ObjUtil.isNotNull(entity.getInactive())) {
+                    vo.setInactiveStr(IEnum.getTextByCode(InactiveEnum.class, entity.getInactive()));
+                }
+                if (ObjUtil.isNotNull(entity.getCreatedBy())) {
+                    vo.setCreatedByStr(nameMap.get(entity.getCreatedBy()));
+                }
+                if (ObjUtil.isNotNull(entity.getUpdatedBy())) {
+                    vo.setUpdatedByStr(nameMap.get(entity.getUpdatedBy()));
+                }
                 voList.add(vo);
             }
         }
@@ -100,6 +120,29 @@ public class BlazeOrderServiceImpl
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
     }
 
+    @Override
+    public Map<Integer, Boolean> getMap(Set<Integer> collect) {
+        if (CollUtil.isNotEmpty(collect)) {
+            LambdaQueryWrapper<BlazeOrderEntity> query = Wrappers.lambdaQuery();
+            query.in(BlazeOrderEntity::getTalentCertId, collect);
+            List<BlazeOrderEntity> list = baseRepository.list(query);
+            if (CollUtil.isNotEmpty(list)) {
+                Map<Integer, Boolean> map = new HashMap<>();
+                for (Integer id : collect) {
+                    boolean exist = list.stream().anyMatch(entity -> entity.getTalentCertId().equals(id));
+                    map.put(id, exist);
+                }
+                return map;
+            }
+        }
+        return Map.of();
+    }
+
+    @Override
+    public List<BlazeOrderEntity> list() {
+        return baseRepository.list();
+    }
+
     private List<Pair<String, Func1<BlazeOrderVO, ?>>> getTitleList() {
         List<Pair<String, Func1<BlazeOrderVO, ?>>> list = new ArrayList<>();
         list.add(Pair.of("所属人才", BlazeOrderVO::getTalentCertName));
@@ -116,12 +159,14 @@ public class BlazeOrderServiceImpl
         vo.setTalentCertId(item.getTalentCertId());
         vo.setCustomerCertId(item.getCustomerCertId());
         vo.setContractTime(item.getContractTime());
+        vo.setContractTimeStr(item.getContractTime());
         vo.setRemarks(item.getRemarks());
         vo.setCreatedBy(item.getCreatedBy());
         vo.setCreatedTime(item.getCreatedTime());
         vo.setUpdatedBy(item.getUpdatedBy());
         vo.setUpdatedTime(item.getUpdatedTime());
         vo.setInactive(item.getInactive());
+        vo.setInactiveStr(IEnum.getTextByCode(InactiveEnum.class, item.getInactive()));
         return vo;
     }
 

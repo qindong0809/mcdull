@@ -35,7 +35,7 @@ public interface ITalentCertificateService {
 
     void downloadTemplate();
 
-    List<LabelValueVO<Integer, String>> list(Integer customerCertId);
+    List<LabelValueVO<Integer, String>> list(Integer customerCertId, boolean isFilter);
 
     Map<Integer, TalentCertificateEntity> map(Set<Integer> set);
 

@@ -2,8 +2,10 @@ package io.gitee.dqcer.blaze.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -11,6 +13,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.blaze.dao.repository.ICertificateRequirementsRepository;
 import io.gitee.dqcer.blaze.domain.bo.CertificateBO;
+import io.gitee.dqcer.blaze.domain.entity.BlazeOrderEntity;
 import io.gitee.dqcer.blaze.domain.entity.CertificateRequirementsEntity;
 import io.gitee.dqcer.blaze.domain.enums.*;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsAddDTO;
@@ -175,16 +178,31 @@ public class CertificateRequirementsServiceImpl
     }
 
     @Override
-    public List<LabelValueVO<Integer, String>> list() {
+    public List<LabelValueVO<Integer, String>> list(boolean isFilter) {
         CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
         PageUtil.setMaxPageSize(dto);
         PagedVO<CertificateRequirementsVO> page = this.queryPage(dto);
         if (ObjUtil.isNotNull(page)) {
+            List<BlazeOrderEntity> orderEntityList = CollUtil.defaultIfEmpty(orderService.list(), new ArrayList<>());
+            Map<Integer, Boolean> map = orderService.getMap(orderEntityList.stream().map(BlazeOrderEntity::getCustomerCertId).collect(Collectors.toSet()));
             List<CertificateRequirementsVO> list = page.getList();
             if (CollUtil.isNotEmpty(list)) {
                 List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
                 for (CertificateRequirementsVO vo : list) {
-                    voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
+                    if (BooleanUtil.isFalse(isFilter)) {
+                        voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
+                        continue;
+                    }
+                    Boolean exist = map.get(vo.getId());
+                    if (BooleanUtil.isFalse(exist)) {
+                        voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
+                        continue;
+                    }
+                    Integer count = Convert.toInt(orderEntityList.stream().filter(item -> item.getCustomerCertId().equals(vo.getId())).count(), 0);
+                    Integer quantity = vo.getQuantity();
+                    if (quantity > count) {
+                        voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
+                    }
                 }
                 return voList;
             }

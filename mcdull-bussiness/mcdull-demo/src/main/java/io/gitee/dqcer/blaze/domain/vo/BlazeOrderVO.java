@@ -35,16 +35,20 @@ public class BlazeOrderVO implements VO {
 
     private String enterpriseCollection;
 
-    @DynamicDateFormat(enableTimezone = true)
-    @JsonSerialize(using = DynamicDateSerialize.class)
     @Schema(description = "合同时间")
     private Date contractTime;
+
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date contractTimeStr;
 
     @Schema(description = "备注")
     private String remarks;
 
     @Schema(description = "创建人")
     private Integer createdBy;
+
+    private String createdByStr;
 
     @DynamicDateFormat(enableTimezone = true)
     @JsonSerialize(using = DynamicDateSerialize.class)
@@ -54,6 +58,8 @@ public class BlazeOrderVO implements VO {
     @Schema(description = "更新人")
     private Integer updatedBy;
 
+    private String updatedByStr;
+
     @DynamicDateFormat(enableTimezone = true)
     @JsonSerialize(using = DynamicDateSerialize.class)
     @Schema(description = "更新时间")
@@ -61,5 +67,8 @@ public class BlazeOrderVO implements VO {
 
     @Schema(description = "状态（true/已失活 false/未失活）")
     private Boolean inactive;
+
+    @Schema(description = "状态（true/已失活 false/未失活）")
+    private String inactiveStr;
 
 }

@@ -36,7 +36,7 @@ public interface ICertificateRequirementsService {
 
     void downloadTemplate();
 
-    List<LabelValueVO<Integer, String>> list();
+    List<LabelValueVO<Integer, String>> list(boolean isFilter);
 
     Map<Integer, CertificateRequirementsEntity> map(Set<Integer> set);
 
