@@ -2,7 +2,10 @@ package io.gitee.dqcer.mcdull.framework.web.util;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.time.ZoneId;
@@ -20,17 +23,17 @@ import java.util.TimeZone;
  */
 public class TimeZoneUtil {
 
-    public static String serializeDate(Date date, String dateFormat) {
-        return serializeDate(date, dateFormat, LocaleContextHolder.getLocale(), null, true);
-    }
-
+//    public static String serializeDate(Date date, String dateFormat) {
+//        return serializeDate(date, dateFormat, LocaleContextHolder.getLocale(), null, true);
+//    }
+//
     public static String serializeDate(Date date, String dateFormat, boolean splicingTimezone) {
         return serializeDate(date, dateFormat, LocaleContextHolder.getLocale(), null, splicingTimezone);
     }
-
-    public static String serializeDate(Date date, String dateFormat, Locale locale, String zoneIdStr) {
-        return serializeDate(date, dateFormat, locale, zoneIdStr, true);
-    }
+//
+//    public static String serializeDate(Date date, String dateFormat, Locale locale, String zoneIdStr) {
+//        return serializeDate(date, dateFormat, locale, zoneIdStr, true);
+//    }
 
     public static String serializeDate(Date date, String dateFormat, String zoneIdStr, boolean appendTimezoneStyle) {
         Locale locale = LocaleContextHolder.getLocale();
@@ -53,14 +56,24 @@ public class TimeZoneUtil {
                                        String dateFormat,
                                        Locale locale,
                                        String zoneIdStr,
-                                       boolean splicingTimezone) {
+                                       Boolean splicingTimezone) {
         DateTime dateTime = DateTime.of(date);
+        UnifySession session = UserContextHolder.getSession();
         if (StrUtil.isBlank(zoneIdStr)) {
-            zoneIdStr = "UTC";
+            zoneIdStr = session.getZoneIdStr();
         }
         ZoneId zoneId = ZoneId.of(zoneIdStr);
         TimeZone timeZone = TimeZone.getTimeZone(zoneId);
         DateTime convertTimeZone = DateUtil.convertTimeZone(dateTime, timeZone);
+        if (StrUtil.isBlank(dateFormat)) {
+            dateFormat = session.getDateFormat();
+        }
+        if (ObjUtil.isNull(locale)) {
+            locale = session.getLocale();
+        }
+        if (ObjUtil.isNull(splicingTimezone)) {
+            splicingTimezone = session.getAppendTimezoneStyle();
+        }
         String result = convertTimeZone.toString(DateUtil.newSimpleFormat(dateFormat, locale, timeZone));
         if (splicingTimezone) {
             ZoneRules rules = zoneId.getRules();

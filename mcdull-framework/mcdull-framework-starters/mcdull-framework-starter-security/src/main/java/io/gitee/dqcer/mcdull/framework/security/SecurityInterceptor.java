@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.framework.security;
 import cn.dev33.satoken.fun.SaParamFunction;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.convert.Convert;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.enums.LanguageEnum;
@@ -41,7 +42,7 @@ public class SecurityInterceptor extends SaInterceptor {
         String tokenValue = StpUtil.getTokenValue();
         Object userId = StpUtil.getLoginIdByToken(tokenValue);
 
-        UnifySession<Object> unifySession = new UnifySession<>();
+        UnifySession unifySession = new UnifySession();
         String language = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
         if (language == null) {
             language = LanguageEnum.ZH_CN.getCode();
@@ -49,7 +50,7 @@ public class SecurityInterceptor extends SaInterceptor {
             language = language.substring(0, language.indexOf(','));
         }
         unifySession.setLanguage(language);
-        unifySession.setUserId(userId);
+        unifySession.setUserId(Convert.toStr(userId));
         unifySession.setTraceId(request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER));
         Boolean administratorFlag = StpUtil.getSession().get(GlobalConstant.ADMINISTRATOR_FLAG, false);
         unifySession.setAdministratorFlag(administratorFlag);

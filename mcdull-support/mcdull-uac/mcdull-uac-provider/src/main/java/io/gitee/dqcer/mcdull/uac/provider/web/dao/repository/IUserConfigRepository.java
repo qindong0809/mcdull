@@ -19,7 +19,7 @@ public interface IUserConfigRepository extends IRepository<UserConfigEntity> {
      * @param dateFormat 日期格式
      * @param timezone   时区
      */
-    void saveOrUpdate(Integer userId, String dateFormat, String timezone);
+    void saveOrUpdate(Integer userId, String dateFormat, String timezone, Boolean appendTimezoneStyle);
 
     /**
      * 按用户 ID 获取

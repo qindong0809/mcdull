@@ -393,7 +393,7 @@ public class MenuServiceImpl
 
     @Override
     public List<String> getCurrentMenuName() {
-        UnifySession<?> session = UserContextHolder.getSession();
+        UnifySession session = UserContextHolder.getSession();
         String permissionCode = session.getPermissionCode();
         if (StrUtil.isBlank(permissionCode)) {
             throw new BusinessException(I18nConstants.MISSING_PARAMETER);

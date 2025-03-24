@@ -41,7 +41,7 @@ public class AuditAspect {
             if (null != annotation) {
                 String[] value = annotation.value();
                 if (value.length > 0) {
-                    UnifySession<?> session = UserContextHolder.getSession();
+                    UnifySession session = UserContextHolder.getSession();
                     if (ObjUtil.isNotNull(session)) {
                         session.setPermissionCode(value[0]);
                     }

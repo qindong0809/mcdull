@@ -968,6 +968,7 @@ create table if not exists `sys_user_config` (
 `user_id` int not null comment 'user id',
 `date_format` varchar(16)  null default null comment '日期显示格式:yyyy-MM-dd',
 `timezone` varchar(16)  null default null comment '日期显示格式:Asia/Shanghai',
+`append_timezone_style` tinyint(0) not null default 0 comment 'eg: 2025-03-21 15:52:55(+08:00)',
 `created_by` int not null comment '创建人',
 `created_time` datetime not null comment '创建时间',
 `updated_by` int default null comment '更新人',

@@ -7,6 +7,8 @@ import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.flow.node.ProcessHandler;
 import io.gitee.dqcer.mcdull.framework.flow.node.TreeNode;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.LoginDTO;
@@ -43,14 +45,23 @@ public class Authority implements ProcessHandler<LoginContext> {
         }
         StpUtil.login(userEntity.getId(), device);
         CacheUser cache = this.buildCacheUser(userEntity);
+        updateUserSession(cache);
         StpUtil.getSession().set(GlobalConstant.CACHE_CURRENT_USER, cache);
         context.setVo(loginService.buildLogonVo(userEntity));
         dict.put("typeEnum", LoginLogResultTypeEnum.LOGIN_SUCCESS);
         context.setDict(dict);
     }
 
+    private static void updateUserSession(CacheUser cacheUser) {
+        UnifySession session = UserContextHolder.getSession();
+        session.copyCommon(cacheUser, session);
+        UserContextHolder.setSession(session);
+    }
+
     private CacheUser buildCacheUser(UserEntity entity) {
         CacheUser cache = new CacheUser();
+        cache.setUserId(String.valueOf(entity.getId()));
+        cache.setTenantId(entity.getDepartmentId());
         cache.setAdministratorFlag(entity.getAdministratorFlag());
         cache.setLanguage(Locale.SIMPLIFIED_CHINESE.getLanguage());
         cache.setLoginName(entity.getLoginName());
@@ -58,9 +69,11 @@ public class Authority implements ProcessHandler<LoginContext> {
         if (ObjUtil.isNotNull(userConfig)) {
             cache.setDateFormat(userConfig.getDateFormat());
             cache.setZoneIdStr(userConfig.getTimezone());
+            cache.setAppendTimezoneStyle(userConfig.getAppendTimezoneStyle());
         } else {
             cache.setDateFormat(DatePattern.NORM_DATETIME_PATTERN);
             cache.setZoneIdStr("Asia/Shanghai");
+            cache.setAppendTimezoneStyle(false);
         }
         return cache;
     }

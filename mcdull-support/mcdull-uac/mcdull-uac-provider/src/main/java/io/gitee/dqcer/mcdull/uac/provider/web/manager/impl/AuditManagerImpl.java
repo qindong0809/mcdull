@@ -57,7 +57,7 @@ public class AuditManagerImpl implements IAuditManager {
         if (ObjUtil.isNull(bizId) || StrUtil.isBlank(bizIndex)) {
             throw new IllegalArgumentException();
         }
-        UnifySession<?> session = UserContextHolder.getSession();
+        UnifySession session = UserContextHolder.getSession();
         if (ObjUtil.isNull(session)) {
             return;
         }

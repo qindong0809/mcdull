@@ -12,6 +12,10 @@ public class CacheUser implements ICurrentUser, Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private String userId;
+
+    private String loginName;
+
     private Integer tenantId;
 
     private Boolean administratorFlag;
@@ -22,7 +26,27 @@ public class CacheUser implements ICurrentUser, Serializable {
 
     private String dateFormat;
 
-    private String loginName;
+    private Boolean appendTimezoneStyle;
+
+    @Override
+    public String getUserId() {
+        return userId;
+    }
+
+    @Override
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public Boolean getAppendTimezoneStyle() {
+        return appendTimezoneStyle;
+    }
+
+    @Override
+    public void setAppendTimezoneStyle(Boolean appendTimezoneStyle) {
+        this.appendTimezoneStyle = appendTimezoneStyle;
+    }
 
     public String getLoginName() {
         return loginName;
@@ -30,6 +54,16 @@ public class CacheUser implements ICurrentUser, Serializable {
 
     public void setLoginName(String loginName) {
         this.loginName = loginName;
+    }
+
+    @Override
+    public Integer getUserType() {
+        return 0;
+    }
+
+    @Override
+    public void setUserType(Integer userType) {
+
     }
 
     @Override

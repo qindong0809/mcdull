@@ -197,7 +197,7 @@ public class Result<T> implements Serializable {
     }
 
     public String getTraceId() {
-        UnifySession<?> session = UserContextHolder.getSession();
+        UnifySession session = UserContextHolder.getSession();
         if (ObjUtil.isNotNull(session)) {
             return session.getTraceId();
         }

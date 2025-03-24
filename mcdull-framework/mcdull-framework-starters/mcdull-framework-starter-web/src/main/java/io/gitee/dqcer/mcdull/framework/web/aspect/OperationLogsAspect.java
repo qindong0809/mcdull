@@ -69,9 +69,9 @@ public class OperationLogsAspect {
         if (!bean.needInterceptor(request, method)) {
             return joinPoint.proceed();
         }
-        UnifySession<?> unifySession = UserContextHolder.getSession();
-        if (unifySession != null) {
-            LogHelp.info(log, "Operation Logs Url:{}", unifySession.getRequestUrl());
+        UnifySession session = UserContextHolder.getSession();
+        if (session != null) {
+            LogHelp.info(log, "Operation Logs Url:{}", session.getRequestUrl());
         }
 
         long startTime = System.currentTimeMillis();

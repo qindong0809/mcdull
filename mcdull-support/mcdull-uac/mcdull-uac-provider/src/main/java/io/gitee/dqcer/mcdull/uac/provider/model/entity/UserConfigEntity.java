@@ -21,4 +21,6 @@ public class UserConfigEntity extends BaseEntity<Integer> {
     private String dateFormat;
 
     private String timezone;
+
+    private Boolean appendTimezoneStyle;
 }

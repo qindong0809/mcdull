@@ -20,11 +20,11 @@ public class UserContextHolder {
     /**
      * 统一的会话
      */
-    static InheritableThreadLocal<UnifySession<?>> UNIFY_SESSION = new InheritableThreadLocal<>();
+    static InheritableThreadLocal<UnifySession> UNIFY_SESSION = new InheritableThreadLocal<>();
 
 
     public static void setDefaultSession() {
-        UnifySession<Integer> session = new UnifySession<>();
+        UnifySession session = new UnifySession();
             session.setTraceId(RandomUtil.uuid());
             session.setNow(new Date());
             session.setDateFormat(DatePattern.NORM_DATETIME_PATTERN);
@@ -32,7 +32,7 @@ public class UserContextHolder {
             session.setZoneIdStr("Asia/Shanghai");
             session.setTenantId(0);
             session.setLoginName("system");
-            session.setUserId(0);
+            session.setUserId("0");
             UserContextHolder.setSession(session);
     }
 
@@ -41,7 +41,7 @@ public class UserContextHolder {
      *
      * @return {@link UnifySession}
      */
-    public static UnifySession<?> getSession() {
+    public static UnifySession getSession() {
         return UNIFY_SESSION.get();
     }
 
@@ -50,7 +50,7 @@ public class UserContextHolder {
      *
      * @param box 盒子
      */
-    public static void setSession(UnifySession<?> box) {
+    public static void setSession(UnifySession box) {
         UNIFY_SESSION.set(box);
     }
 
@@ -67,7 +67,7 @@ public class UserContextHolder {
      * @return boolean
      */
     public static boolean isAdmin() {
-        UnifySession<?> session = UNIFY_SESSION.get();
+        UnifySession session = UNIFY_SESSION.get();
         return session.getAdministratorFlag();
     }
 
@@ -104,7 +104,7 @@ public class UserContextHolder {
     }
 
     public static String print() {
-        UnifySession<?> session = getSession();
+        UnifySession session = getSession();
         if (ObjUtil.isNotNull(session)) {
             return StrUtil.format("url: {}. userId: {}", session.getRequestUrl(), session.getUserId());
         }

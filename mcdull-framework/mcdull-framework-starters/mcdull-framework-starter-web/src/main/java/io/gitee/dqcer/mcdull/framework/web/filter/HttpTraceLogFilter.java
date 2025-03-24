@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.web.filter;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.convert.Convert;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
@@ -8,20 +9,19 @@ import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * http日志
@@ -45,19 +45,14 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
             }
             MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
             LogHelp.debug(log, "Build UnifySession And Initializing TraceId.");
-            UnifySession<Object> unifySession = new UnifySession<>();
+            UnifySession unifySession = new UnifySession();
             unifySession.setTraceId(traceId);
             unifySession.setRequestUrl(requestUrl);
             unifySession.setNow(new Date());
             if (StpUtil.isLogin()) {
-                unifySession.setUserId(StpUtil.isLogin() ? StpUtil.getLoginId() : null);
+                unifySession.setUserId(StpUtil.isLogin() ? Convert.toStr(StpUtil.getLoginId()) : null);
                 CacheUser cacheUser = StpUtil.getSession().get(GlobalConstant.CACHE_CURRENT_USER, new CacheUser());
-                unifySession.setAdministratorFlag(cacheUser.getAdministratorFlag());
-                unifySession.setDateFormat(cacheUser.getDateFormat());
-                unifySession.setZoneIdStr(cacheUser.getZoneIdStr());
-                unifySession.setLocale(new Locale(cacheUser.getLanguage()));
-                unifySession.setTenantId(cacheUser.getTenantId());
-                unifySession.setLoginName(cacheUser.getLoginName());
+                unifySession.copyCommon(cacheUser, unifySession);
             }
             UserContextHolder.setSession(unifySession);
 

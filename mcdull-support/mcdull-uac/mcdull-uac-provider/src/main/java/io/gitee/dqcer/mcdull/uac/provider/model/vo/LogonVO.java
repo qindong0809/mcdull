@@ -41,7 +41,7 @@ public class LogonVO extends UserBO implements VO {
     private String lastLoginUserAgent;
 
     @Schema(description = "上次登录时间")
-    @DynamicDateFormat(enableTimezone = true, dateFormat = DatePattern.NORM_DATETIME_PATTERN)
+    @DynamicDateFormat(dateFormat = DatePattern.NORM_DATETIME_PATTERN)
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date lastLoginTime;
 }

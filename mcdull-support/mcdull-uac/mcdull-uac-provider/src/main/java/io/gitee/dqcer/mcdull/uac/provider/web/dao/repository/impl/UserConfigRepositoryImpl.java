@@ -22,11 +22,12 @@ public class UserConfigRepositoryImpl extends
         CrudRepository<UserConfigMapper, UserConfigEntity> implements IUserConfigRepository {
 
     @Override
-    public void saveOrUpdate(Integer userId, String dateFormat, String timezone) {
+    public void saveOrUpdate(Integer userId, String dateFormat, String timezone, Boolean appendTimezoneStyle) {
         UserConfigEntity userConfig = this.getByUserId(userId);
         if (ObjUtil.isNotNull(userConfig)) {
             userConfig.setDateFormat(dateFormat);
             userConfig.setTimezone(timezone);
+            userConfig.setAppendTimezoneStyle(appendTimezoneStyle);
             this.updateById(userConfig);
             return;
         }
@@ -34,6 +35,7 @@ public class UserConfigRepositoryImpl extends
         userConfig.setUserId(userId);
         userConfig.setDateFormat(dateFormat);
         userConfig.setTimezone(timezone);
+        userConfig.setAppendTimezoneStyle(appendTimezoneStyle);
         this.save(userConfig);
     }
 

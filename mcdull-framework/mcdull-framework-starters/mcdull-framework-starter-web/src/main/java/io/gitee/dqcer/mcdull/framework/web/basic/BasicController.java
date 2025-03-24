@@ -93,13 +93,13 @@ public abstract class BasicController {
     }
 
     protected <T> T locker1(String key, Supplier<T> function) {
-        UnifySession<?> session = UserContextHolder.getSession();
+        UnifySession session = UserContextHolder.getSession();
         return concurrentRateLimiter.locker(key, 0L, function);
     }
 
     protected <T> T locker(String key, Supplier<T> function) {
         key = Convert.toStr(key, "blank");
-        UnifySession<?> session = UserContextHolder.getSession();
+        UnifySession session = UserContextHolder.getSession();
         String permissionCode = session.getPermissionCode();
         String loginName = session.getLoginName();
         String bizKey = StrUtil.format("{}_{}_{}", loginName, permissionCode, key);

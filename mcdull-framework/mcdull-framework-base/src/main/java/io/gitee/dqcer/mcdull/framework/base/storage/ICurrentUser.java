@@ -9,6 +9,18 @@ package io.gitee.dqcer.mcdull.framework.base.storage;
  */
 public interface ICurrentUser {
 
+    String getUserId();
+
+    void setUserId(String userId);
+
+    String getLoginName();
+
+    void setLoginName(String loginName);
+
+    Integer getUserType();
+
+    void setUserType(Integer userType);
+
     Integer getTenantId();
 
     void setTenantId(Integer tenantId);
@@ -33,5 +45,9 @@ public interface ICurrentUser {
     String getDateFormat();
 
     void setDateFormat(String dateFormat);
+
+    Boolean getAppendTimezoneStyle();
+
+    void setAppendTimezoneStyle(Boolean appendTimezoneStyle);
 
 }

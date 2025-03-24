@@ -34,7 +34,7 @@ public @interface DynamicDateFormat {
      *
      * @return boolean
      */
-    boolean appendTimezoneStyle() default true;
+//    boolean appendTimezoneStyle() default true;
 
     /**
      * 日期格式
