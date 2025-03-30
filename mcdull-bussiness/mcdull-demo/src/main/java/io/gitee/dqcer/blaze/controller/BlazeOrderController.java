@@ -6,6 +6,8 @@ import io.gitee.dqcer.blaze.domain.form.BlazeOrderQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderVO;
 import io.gitee.dqcer.blaze.service.IBlazeOrderService;
+import io.gitee.dqcer.mcdull.framework.base.dto.PkDTO;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
@@ -15,6 +17,8 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author dqcer
@@ -55,6 +59,21 @@ public class BlazeOrderController extends BasicController {
         blazeOrderService.update(dto);
         return Result.success(true);
     }
+
+    @Operation(summary = "企业证书列表")
+    @PostMapping("/blazeOrder/customer-cert")
+    public Result<List<LabelValueVO<Integer, String>>> getCustomerCertListByOrderId(@RequestBody @Valid PkDTO pkDTO) {
+        List<LabelValueVO<Integer, String>> list = blazeOrderService.getCustomerCertListByOrderId(pkDTO.getId());
+        return Result.success(list);
+    }
+
+    @Operation(summary = "人才证书列表(根据企业证书匹配)")
+    @PostMapping("/blazeOrder/talent-cert/{customerCertId}")
+    public Result<List<LabelValueVO<Integer, String>>> getTalentCertListByOrderId(@RequestBody @Valid PkDTO pkDTO, @PathVariable(value = "customerCertId") Integer customerCertId) {
+        List<LabelValueVO<Integer, String>> list = blazeOrderService.getTalentCertListByOrderId(customerCertId, pkDTO.getId());
+        return Result.success(list);
+    }
+
 
     @Operation(summary = "删除")
     @SaCheckPermission("blaze:order:write")

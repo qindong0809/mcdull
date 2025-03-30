@@ -696,6 +696,7 @@ primary key (`id`) using btree
 )comment = '单号生成器定义表';
 
 insert into `sys_serial_number` values (1, 1, 'FDBK.{yyyy}{mm}{dd}{nnnnn}', 1, 'FDBK.20201101321',  0, sysdate(), sysdate());
+insert into `sys_serial_number` values (2, 2, 'OD{yyyy}{mm}{dd}{nnnnn}', 1, 'OD20201101321',  0, sysdate(), sysdate());
 
 drop table if exists `sys_serial_number_record`;
 create table `sys_serial_number_record`  (
@@ -950,6 +951,7 @@ create table blaze_talent_certificate (
 drop table if exists `blaze_order`;
 create table blaze_order (
 `id` int auto_increment primary key,
+`order_no` varchar(32) null default null comment '订单号',
 `talent_cert_id` int not null comment '所属人才证书',
 `customer_cert_id` int not null comment '所属企业证书',
 `contract_time` datetime not null comment '合同时间',
@@ -977,3 +979,21 @@ create table if not exists `sys_user_config` (
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 primary key (`id`)
 )  comment='用户个性化配置';
+
+drop table if exists `blaze_order_detail`;
+create table if not exists `blaze_order_detail` (
+`id` int not null auto_increment comment '主键',
+`blaze_order_id` int not null comment 'blaze order id',
+`is_talent` tinyint(0) not null default 0 comment 'true/人才 false/企业',
+`responsible_user_id` int not null comment '负责人',
+`operation_time` datetime not null comment '操作时间',
+`price` decimal(10, 2) not null comment '金额',
+`remarks` text comment '备注',
+`created_by` int not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` int default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+primary key (`id`)
+)  comment='订单流水';

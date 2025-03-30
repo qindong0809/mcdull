@@ -178,18 +178,18 @@ public class CertificateRequirementsServiceImpl
     }
 
     @Override
-    public List<LabelValueVO<Integer, String>> list(boolean isFilter) {
+    public List<LabelValueVO<Integer, String>> all(boolean isOrder) {
         CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
         PageUtil.setMaxPageSize(dto);
         PagedVO<CertificateRequirementsVO> page = this.queryPage(dto);
         if (ObjUtil.isNotNull(page)) {
             List<BlazeOrderEntity> orderEntityList = CollUtil.defaultIfEmpty(orderService.list(), new ArrayList<>());
-            Map<Integer, Boolean> map = orderService.getMap(orderEntityList.stream().map(BlazeOrderEntity::getCustomerCertId).collect(Collectors.toSet()));
+            Map<Integer, Boolean> map = orderService.getMapByCustomerCertId(orderEntityList.stream().map(BlazeOrderEntity::getCustomerCertId).collect(Collectors.toSet()));
             List<CertificateRequirementsVO> list = page.getList();
             if (CollUtil.isNotEmpty(list)) {
                 List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
                 for (CertificateRequirementsVO vo : list) {
-                    if (BooleanUtil.isFalse(isFilter)) {
+                    if (BooleanUtil.isFalse(isOrder)) {
                         voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
                         continue;
                     }

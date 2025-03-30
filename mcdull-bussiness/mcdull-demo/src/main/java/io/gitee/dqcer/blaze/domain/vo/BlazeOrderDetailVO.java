@@ -17,32 +17,31 @@ import java.util.Date;
  */
 
 @Data
-public class BlazeOrderVO implements VO {
+public class BlazeOrderDetailVO implements VO {
 
     private Integer id;
 
+    private Integer blazeOrderId;
+
     private String orderNo;
 
-    @Schema(description = "所属人才证书")
-    private Integer talentCertId;
+    private String talentCertTitle;
 
-    private String talentCertName;
+    private String customerCertTitle;
 
-    private String talentPayment;
+    private Boolean isTalent;
 
-    @Schema(description = "所属企业证书")
-    private Integer customerCertId;
+    private Integer responsibleUserId;
 
-    private String customerCertName;
+    private String responsibleUserName;
 
-    private String enterpriseCollection;
-
-    @Schema(description = "合同时间")
-    private Date contractTime;
+    private Date operationTime;
 
     @DynamicDateFormat(enableTimezone = true)
     @JsonSerialize(using = DynamicDateSerialize.class)
-    private Date contractTimeStr;
+    private Date operationTimeStr;
+
+    private String price;
 
     @Schema(description = "备注")
     private String remarks;

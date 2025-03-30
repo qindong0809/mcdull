@@ -47,7 +47,7 @@ public class CertificateRequirementsController extends BasicController {
     @Operation(summary = "全部数据")
     @PostMapping("/CertificateRequirements/list")
     public Result<List<LabelValueVO<Integer, String>>> list() {
-        return Result.success(certificateRequirementsService.list(true));
+        return Result.success(certificateRequirementsService.all(true));
     }
 
     @Operation(summary = "专业")

@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager;
 
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 
 import java.util.List;
@@ -45,4 +46,6 @@ public interface IUserManager {
     * @return {@link Map }<{@link Integer }, {@link UserEntity }>
     */
    Map<Integer, UserEntity> getEntityMap(List<Integer> userIdList);
+
+   List<LabelValueVO<Integer, String>> getResponsibleList();
 }

@@ -241,13 +241,13 @@ public class TalentCertificateServiceImpl
         if (ObjUtil.isNotNull(page)) {
             List<TalentCertificateVO> list = page.getList();
             if (CollUtil.isNotEmpty(list)) {
-                Map<Integer, Boolean> map = orderService.getMap(list.stream().map(TalentCertificateVO::getId).collect(Collectors.toSet()));
+                Map<Integer, Boolean> map = orderService.getMapByTalentCertId(list.stream().map(TalentCertificateVO::getId).collect(Collectors.toSet()));
                 List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
                 for (TalentCertificateVO vo : list) {
                     Integer id = vo.getId();
                     Boolean exist = map.get(id);
                     if (BooleanUtil.isTrue(isFilter)) {
-                        if (BooleanUtil.isFalse(exist)) {
+                        if (BooleanUtil.isFalse(exist) || ObjUtil.isNull(exist)) {
                             voList.add(new LabelValueVO<>(id, vo.getPositionTitle()));
                         }
                     } else {

@@ -26,8 +26,10 @@ import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.uac.provider.model.dto.SerialNumberGenerateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.ISerialNumberService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +56,8 @@ public class BlazeOrderServiceImpl
     private ICommonManager commonManager;
     @Resource
     private IUserManager userManager;
+    @Resource
+    private ISerialNumberService serialNumberService;
 
     public PagedVO<BlazeOrderVO> queryPage(BlazeOrderQueryDTO dto) {
         List<BlazeOrderVO> voList = new ArrayList<>();
@@ -65,7 +69,7 @@ public class BlazeOrderServiceImpl
             createSet.addAll(updateSet);
             Map<Integer, String> nameMap = userManager.getNameMap(new ArrayList<>(createSet));
 
-            List<LabelValueVO<Integer, String>> list = CollUtil.emptyIfNull(certificateRequirementsService.list(false));
+            List<LabelValueVO<Integer, String>> list = CollUtil.emptyIfNull(certificateRequirementsService.all(false));
             Map<Integer, String> map = list.stream().collect(Collectors.toMap(LabelValueVO::getValue, LabelValueVO::getLabel));
             List<LabelValueVO<Integer, String>> talentList = CollUtil.emptyIfNull(talentCertificateService.list(null, false));
             Map<Integer, String> talentMap = talentList.stream().collect(Collectors.toMap(LabelValueVO::getValue, LabelValueVO::getLabel));
@@ -73,6 +77,7 @@ public class BlazeOrderServiceImpl
             Map<Integer, TalentCertificateEntity> talentEntityMap = talentCertificateService.map(recordList.stream().map(BlazeOrderEntity::getTalentCertId).collect(Collectors.toSet()));
             for (BlazeOrderEntity entity : recordList) {
                 BlazeOrderVO vo = this.convertToVO(entity);
+                vo.setOrderNo(entity.getOrderNo());
                 vo.setCustomerCertName(map.get(entity.getCustomerCertId()));
                 vo.setTalentCertName(talentMap.get(entity.getTalentCertId()));
                 vo.setEnterpriseCollection(custMap.get(entity.getCustomerCertId()).getPositionContractPrice().toString());
@@ -121,7 +126,7 @@ public class BlazeOrderServiceImpl
     }
 
     @Override
-    public Map<Integer, Boolean> getMap(Set<Integer> collect) {
+    public Map<Integer, Boolean> getMapByTalentCertId(Set<Integer> collect) {
         if (CollUtil.isNotEmpty(collect)) {
             LambdaQueryWrapper<BlazeOrderEntity> query = Wrappers.lambdaQuery();
             query.in(BlazeOrderEntity::getTalentCertId, collect);
@@ -139,8 +144,82 @@ public class BlazeOrderServiceImpl
     }
 
     @Override
+    public Map<Integer, Boolean> getMapByCustomerCertId(Collection<Integer> collect) {
+        if (CollUtil.isNotEmpty(collect)) {
+            LambdaQueryWrapper<BlazeOrderEntity> query = Wrappers.lambdaQuery();
+            query.in(BlazeOrderEntity::getTalentCertId, collect);
+            List<BlazeOrderEntity> list = baseRepository.list(query);
+            if (CollUtil.isNotEmpty(list)) {
+                Map<Integer, Boolean> map = new HashMap<>();
+                for (Integer id : collect) {
+                    boolean exist = list.stream().anyMatch(entity -> entity.getCustomerCertId().equals(id));
+                    map.put(id, exist);
+                }
+                return map;
+            }
+        }
+        return Map.of();
+    }
+
+    @Override
     public List<BlazeOrderEntity> list() {
         return baseRepository.list();
+    }
+
+    @Override
+    public List<LabelValueVO<Integer, String>> getCustomerCertListByOrderId(Integer orderId) {
+        List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
+        if (ObjUtil.isNotNull(orderId)) {
+            BlazeOrderEntity blazeOrder = baseRepository.getById(orderId);
+            if (ObjUtil.isNotNull(blazeOrder)) {
+                Integer customerCertId = blazeOrder.getCustomerCertId();
+                Map<Integer, CertificateRequirementsEntity> requirementsEntityMap = certificateRequirementsService.map(Set.of(customerCertId));
+                CertificateRequirementsEntity entity = requirementsEntityMap.get(customerCertId);
+                if (ObjUtil.isNotNull(entity)) {
+                    LabelValueVO<Integer, String> vo = new LabelValueVO<>(entity.getId(), entity.getPositionTitle());
+                    voList.add(vo);
+                }
+            }
+        }
+        List<LabelValueVO<Integer, String>> list = certificateRequirementsService.all(true);
+        if (CollUtil.isNotEmpty(list)) {
+            for (LabelValueVO<Integer, String> vo : list) {
+                if (!voList.contains(vo)) {
+                    voList.add(vo);
+                }
+            }
+        }
+        return voList;
+    }
+
+    @Override
+    public List<LabelValueVO<Integer, String>> getTalentCertListByOrderId(Integer customerCertId, Integer orderId) {
+        List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
+        if (ObjUtil.isNotNull(customerCertId)) {
+            if (ObjUtil.isNotNull(orderId)) {
+                BlazeOrderEntity blazeOrder = baseRepository.getById(orderId);
+                if (ObjUtil.isNotNull(blazeOrder)) {
+                    Integer talentCertId = blazeOrder.getTalentCertId();
+                    Map<Integer, TalentCertificateEntity> entityMap = talentCertificateService.map(Set.of(talentCertId));
+                    if (ObjUtil.isNotNull(entityMap)) {
+                        TalentCertificateEntity entity = entityMap.get(talentCertId);
+                        if (ObjUtil.isNotNull(entity)) {
+                            LabelValueVO<Integer, String> vo = new LabelValueVO<>(entity.getId(), entity.getPositionTitle());
+                            voList.add(vo);
+                        }
+                    }
+                }
+            }
+            List<LabelValueVO<Integer, String>> list = talentCertificateService.list(customerCertId, true);
+            if (CollUtil.isNotEmpty(list)) {
+                for (LabelValueVO<Integer, String> vo : list) {
+                    if (!voList.contains(vo)) {
+                        voList.add(vo);
+                    }
+                }
+            }
+        }
+        return voList;
     }
 
     private List<Pair<String, Func1<BlazeOrderVO, ?>>> getTitleList() {
@@ -192,6 +271,11 @@ public class BlazeOrderServiceImpl
     @Transactional(rollbackFor = Exception.class)
     public void insert(BlazeOrderAddDTO dto) {
         BlazeOrderEntity entity = this.convertToEntity(dto);
+        SerialNumberGenerateDTO generateDTO = new SerialNumberGenerateDTO();
+        generateDTO.setCount(1);
+        generateDTO.setSerialNumberId(2);
+        List<String> generate = serialNumberService.generate(generateDTO);
+        entity.setOrderNo(generate.get(0));
         baseRepository.save(entity);
     }
 

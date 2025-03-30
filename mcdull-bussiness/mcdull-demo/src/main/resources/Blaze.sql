@@ -20,6 +20,7 @@ INSERT INTO `sys_menu` VALUES (277, '写操作', 3, 261, 3, NULL, NULL, 1, 'blaz
 INSERT INTO `sys_menu` VALUES (278, '导出', 3, 262, 3, NULL, NULL, 1, 'blaze:order:export', 'blaze:order:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (279, '写操作', 3, 262, 3, NULL, NULL, 1, 'blaze:order:write', 'blaze:order:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 
+INSERT INTO `sys_menu` VALUES (280, '订单打款', 2, 258, 3, '/blaze/talent/talent-order-detail-list', '/blaze/talent/talent-order-detail-list.vue', 1, NULL, NULL, 'AuditOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 
 
 drop table if exists
