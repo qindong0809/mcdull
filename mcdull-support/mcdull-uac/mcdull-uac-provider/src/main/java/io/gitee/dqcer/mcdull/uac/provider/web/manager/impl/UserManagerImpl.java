@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.manager.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjUtil;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
@@ -10,10 +12,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -69,5 +68,16 @@ public class UserManagerImpl implements IUserManager {
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public Map<Integer, String> getMap(List<? extends BaseEntity<Integer>> list) {
+        if (CollUtil.isNotEmpty(list)) {
+            Set<Integer> createSet = list.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
+            Set<Integer> updateSet = list.stream().map(BaseEntity::getUpdatedBy).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+            createSet.addAll(updateSet);
+            return this.getNameMap(new ArrayList<>(createSet));
+        }
+        return Map.of();
     }
 }

@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.blaze.dao.repository.IBlazeOrderRepository;
+import io.gitee.dqcer.blaze.domain.entity.BlazeOrderDetailEntity;
 import io.gitee.dqcer.blaze.domain.entity.BlazeOrderEntity;
 import io.gitee.dqcer.blaze.domain.entity.CertificateRequirementsEntity;
 import io.gitee.dqcer.blaze.domain.entity.TalentCertificateEntity;
@@ -17,6 +18,7 @@ import io.gitee.dqcer.blaze.domain.form.BlazeOrderAddDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderVO;
+import io.gitee.dqcer.blaze.service.IBlazeOrderDetailService;
 import io.gitee.dqcer.blaze.service.IBlazeOrderService;
 import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
 import io.gitee.dqcer.blaze.service.ITalentCertificateService;
@@ -58,16 +60,15 @@ public class BlazeOrderServiceImpl
     private IUserManager userManager;
     @Resource
     private ISerialNumberService serialNumberService;
+    @Resource
+    private IBlazeOrderDetailService blazeOrderDetailService;
 
     public PagedVO<BlazeOrderVO> queryPage(BlazeOrderQueryDTO dto) {
         List<BlazeOrderVO> voList = new ArrayList<>();
         Page<BlazeOrderEntity> entityPage = baseRepository.selectPage(dto);
         List<BlazeOrderEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
-            Set<Integer> createSet = recordList.stream().map(BlazeOrderEntity::getCreatedBy).collect(Collectors.toSet());
-            Set<Integer> updateSet = recordList.stream().map(BlazeOrderEntity::getUpdatedBy).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
-            createSet.addAll(updateSet);
-            Map<Integer, String> nameMap = userManager.getNameMap(new ArrayList<>(createSet));
+            Map<Integer, String> nameMap = userManager.getMap(recordList);
 
             List<LabelValueVO<Integer, String>> list = CollUtil.emptyIfNull(certificateRequirementsService.all(false));
             Map<Integer, String> map = list.stream().collect(Collectors.toMap(LabelValueVO::getValue, LabelValueVO::getLabel));
@@ -287,6 +288,13 @@ public class BlazeOrderServiceImpl
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
         }
+        if (!ObjUtil.equals(entity.getCustomerCertId(), dto.getCustomerCertId())
+                || !ObjUtil.equals(entity.getTalentCertId(), dto.getTalentCertId())) {
+            BlazeOrderDetailEntity detailEntity = blazeOrderDetailService.getByOrderId(id);
+            if (ObjUtil.isNotNull(detailEntity)) {
+                super.throwDataExistAssociated(id);
+            }
+        }
         this.setUpdateFieldValue(dto, entity);
         baseRepository.updateById(entity);
     }
@@ -305,6 +313,10 @@ public class BlazeOrderServiceImpl
         BlazeOrderEntity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
+        }
+        BlazeOrderDetailEntity detailEntity = blazeOrderDetailService.getByOrderId(id);
+        if (ObjUtil.isNotNull(detailEntity)) {
+            super.throwDataExistAssociated(id);
         }
         baseRepository.removeById(id);
     }

@@ -20,7 +20,16 @@ INSERT INTO `sys_menu` VALUES (277, '写操作', 3, 261, 3, NULL, NULL, 1, 'blaz
 INSERT INTO `sys_menu` VALUES (278, '导出', 3, 262, 3, NULL, NULL, 1, 'blaze:order:export', 'blaze:order:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (279, '写操作', 3, 262, 3, NULL, NULL, 1, 'blaze:order:write', 'blaze:order:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 
-INSERT INTO `sys_menu` VALUES (280, '订单打款', 2, 258, 3, '/blaze/talent/talent-order-detail-list', '/blaze/talent/talent-order-detail-list.vue', 1, NULL, NULL, 'AuditOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (280, '人才打款', 2, 258, 3, '/blaze/talent/talent-order-detail-list', '/blaze/talent/talent-order-detail-list.vue', 1, NULL, NULL, 'AuditOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (281, '企业回款', 2, 256, 3, '/blaze/certificate/cust-order-detail-list', '/blaze/certificate/cust-order-detail-list.vue', 1, NULL, NULL, 'AreaChartOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, '2025-03-31 14:02:09', NULL, NULL);
+
+INSERT INTO `sys_menu` VALUES (282, '导出', 3, 280, 3, NULL, NULL, 1, 'blaze:order_detail_talent:export', 'blaze:order_detail_talent:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (283, '写操作', 3, 280, 3, NULL, NULL, 1, 'blaze:order_detail_talent:write', 'blaze:order_detail_talent:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+
+
+INSERT INTO `sys_menu` VALUES (284, '导出', 3, 281, 3, NULL, NULL, 1, 'blaze:order_detail_customer:export', 'blaze:order_detail_customer:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (285, '写操作', 3, 281, 3, NULL, NULL, 1, 'blaze:order_detail_customer:write', 'blaze:order_detail_customer:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+
 
 
 drop table if exists

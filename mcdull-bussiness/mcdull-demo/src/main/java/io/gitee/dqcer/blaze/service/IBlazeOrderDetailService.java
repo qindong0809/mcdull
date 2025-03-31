@@ -1,5 +1,6 @@
 package io.gitee.dqcer.blaze.service;
 
+import io.gitee.dqcer.blaze.domain.entity.BlazeOrderDetailEntity;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderDetailAddDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderDetailQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderDetailUpdateDTO;
@@ -27,8 +28,13 @@ public interface IBlazeOrderDetailService {
 
     void delete(Integer id);
 
-    List<BlazeOrderDetailListVO> getOderList();
+    List<BlazeOrderDetailListVO> getOderListByTalent();
+
+    List<BlazeOrderDetailListVO> getOderListByCustomer();
+
+    boolean isTalent(Integer id);
 
     List<LabelValueVO<Integer, String>> getResponsibleList();
 
+    BlazeOrderDetailEntity getByOrderId(Integer id);
 }

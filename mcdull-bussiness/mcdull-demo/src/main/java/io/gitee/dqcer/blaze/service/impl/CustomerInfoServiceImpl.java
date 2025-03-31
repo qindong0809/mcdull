@@ -15,7 +15,6 @@ import io.gitee.dqcer.blaze.domain.vo.CustomerInfoVO;
 import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
 import io.gitee.dqcer.blaze.service.ICustomerInfoService;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -30,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 企业信息 Service
@@ -59,10 +57,7 @@ public class CustomerInfoServiceImpl
         Page<CustomerInfoEntity> entityPage = baseRepository.selectPage(dto);
         List<CustomerInfoEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
-            Set<Integer> userIdSet = recordList.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
-            Set<Integer> collect = recordList.stream().map(BaseEntity::getUpdatedBy).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
-            userIdSet.addAll(collect);
-            Map<Integer, String> nameMap = userManager.getNameMap(new ArrayList<>(userIdSet));
+            Map<Integer, String> nameMap = userManager.getMap(recordList);
             for (CustomerInfoEntity entity : recordList) {
                 CustomerInfoVO vo = this.convertToVO(entity);
                 KeyValueBO<String, String> keyValue = dictTypeManager.dictVO(DictSelectTypeEnum.CUSTOMER_TYPE, vo.getCustomerType());

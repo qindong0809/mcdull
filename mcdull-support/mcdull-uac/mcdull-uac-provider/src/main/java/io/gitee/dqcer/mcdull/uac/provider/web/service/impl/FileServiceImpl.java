@@ -77,7 +77,7 @@ public class FileServiceImpl
         if (CollUtil.isNotEmpty(records)) {
             Map<Integer, String> folderMap = folderService.getMap(records.stream().map(FileEntity::getFolderType).collect(Collectors.toSet()));
             Set<Integer> userIdSet = records.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
-            Map<Integer, String> userMap = userManager.getNameMap(new ArrayList<>(userIdSet));
+            Map<Integer, String> userMap = userManager.getMap(records);
             for (FileEntity entity : records) {
                 FileVO fileVO = FileConvert.convertToEntity(entity);
                 fileVO.setFileUrl(fileStorageService.getFileUrl(entity.getFileKey()));
