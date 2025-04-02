@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.uac.provider.web.service.impl;
 
+import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
@@ -7,6 +8,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.CustomMultipartFile;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
@@ -25,6 +27,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileBizRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileBizService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileStorageService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFolderService;
@@ -51,6 +54,8 @@ public class FileServiceImpl
     private IFileBizRepository fileBizRepository;
     @Resource
     private IFolderService folderService;
+    @Resource
+    private IFileBizService fileBizService;
 
     @Override
     public PagedVO<FileVO> queryPage(FileQueryDTO dto) {
@@ -125,7 +130,7 @@ public class FileServiceImpl
 
         // 进行上传
         String rootToNodeName = folderService.getRootToNodeName(folderType);
-        FileUploadVO uploadVO = fileStorageService.upload(file, FileFolderTypeEnum.FOLDER_PUBLIC + "/" + rootToNodeName);
+        FileUploadVO uploadVO = fileStorageService.upload(file, FileFolderTypeEnum.FOLDER_PUBLIC + "/" + rootToNodeName + "/");
         // 上传成功 保存记录数据库
         FileEntity fileEntity = new FileEntity();
         fileEntity.setFolderType(folderType);
@@ -141,11 +146,9 @@ public class FileServiceImpl
     }
 
     @Override
-    public FileUploadVO fileUpload(MultipartFile file, Integer folder, Integer bizId, String bizCode) {
+    public FileUploadVO fileUpload(MultipartFile file, Integer folder, Integer bizId, Class<?> clazz) {
         FileUploadVO fileUploadVO = this.fileUpload(file, folder);
-        if (StringUtils.isNotBlank(bizCode)) {
-            fileBizRepository.save(ListUtil.of(fileUploadVO.getFileId()), fileUploadVO.getFileId(), bizCode);
-        }
+        fileBizRepository.save(ListUtil.of(fileUploadVO.getFileId()), bizId, this.getTableName(clazz));
         return fileUploadVO;
     }
 
@@ -222,15 +225,55 @@ public class FileServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void remove(Integer bizId, String bizCode) {
-        Map<Integer, List<Integer>> listMap = fileBizRepository.mapByBizCode(bizCode);
+    public void remove(Integer fileId, Integer bizId, Class<?> clazz) {
+        String tableName = this.getTableName(clazz);
+        Map<Integer, List<Integer>> listMap = fileBizService.get(tableName);
         if (MapUtil.isNotEmpty(listMap)) {
-            List<Integer> integers = listMap.get(bizId);
-            if (CollUtil.isNotEmpty(integers)) {
-                baseRepository.removeByIds(integers);
+            List<Integer> fileIdList = listMap.get(bizId);
+            if (CollUtil.isNotEmpty(fileIdList)) {
+                if (fileIdList.contains(fileId)) {
+                    baseRepository.removeById(fileId);
+                }
             }
-            fileBizRepository.deleteByBizCode(bizId, bizCode);
+            fileBizRepository.deleteByBizCode(bizId, tableName);
         }
+    }
+
+    @Override
+    public Map<Integer, List<FileEntity>> get(List<Integer> bizIdList, Class<?> aClass) {
+        String tableName = this.getTableName(aClass);
+        Map<Integer, List<Integer>> bizFileMap = fileBizService.get(tableName);
+        if (MapUtil.isNotEmpty(bizFileMap)) {
+            List<Integer> fileIdList = bizFileMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+            if (CollUtil.isNotEmpty(fileIdList)) {
+                List<FileEntity> list = baseRepository.listByIds(fileIdList);
+                if (CollUtil.isNotEmpty(list)) {
+                    Map<Integer, List<FileEntity>> map = new HashMap<>();
+                    for (Map.Entry<Integer, List<Integer>> entry : bizFileMap.entrySet()) {
+                        Integer bizId = entry.getKey();
+                        if (bizIdList.contains(bizId)) {
+                            List<Integer> fileList = entry.getValue();
+                            List<FileEntity> collect = list.stream().filter(fileEntity -> fileList.contains(fileEntity.getId())).collect(Collectors.toList());
+                            if (CollUtil.isNotEmpty(collect)) {
+                                map.put(bizId, collect);
+                            }
+
+                        }
+                    }
+                    return map;
+                }
+            }
+        }
+        return Map.of();
+    }
+
+    private String getTableName(Class<?> clazz) {
+        // 获取类上的注解值
+        TableName annotation = AnnotationUtil.getAnnotation(clazz, TableName.class);
+        if (annotation == null) {
+            throw new RuntimeException("类上没有TableName注解");
+        }
+        return annotation.value();
     }
 
 }

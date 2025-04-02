@@ -33,6 +33,13 @@ public class BlazeOrderUpdateDTO implements DTO {
     @NotNull(message = "合同时间 不能为空")
     private Date contractTime;
 
+
+    private Date startDate;
+
+    private Date endDate;
+
+    private Boolean approve;
+
     @Schema(description = "备注")
     private String remarks;
 

@@ -2,10 +2,9 @@ package io.gitee.dqcer.blaze.domain.form;
 
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -92,5 +91,7 @@ public class TalentCertificateUpdateDTO implements DTO {
 
     @Schema(description = "备注")
     private String remarks;
+
+    private Integer delFileId;
 
 }

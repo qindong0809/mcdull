@@ -387,8 +387,7 @@ create table `sys_file_biz`  (
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
-primary key (`id`) using btree,
-unique index `uk_biz_id`(`biz_id`) using btree
+primary key (`id`) using btree
 ) comment = '文件与biz';
 
 
@@ -955,6 +954,9 @@ create table blaze_order (
 `talent_cert_id` int not null comment '所属人才证书',
 `customer_cert_id` int not null comment '所属企业证书',
 `contract_time` datetime not null comment '合同时间',
+`start_date` datetime not null comment '开始时间',
+`end_date` datetime not null comment '结束时间',
+`approve` tinyint(0) not null default 0 comment '审批状态',
 `remarks` text comment '备注',
 `created_by` int not null comment '创建人',
 `created_time` datetime not null comment '创建时间',

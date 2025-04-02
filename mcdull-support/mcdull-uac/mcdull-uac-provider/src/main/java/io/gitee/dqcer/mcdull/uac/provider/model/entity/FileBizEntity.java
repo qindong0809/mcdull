@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * system config
- *
  * @author dqcer
  * @since 2022/11/07
  */

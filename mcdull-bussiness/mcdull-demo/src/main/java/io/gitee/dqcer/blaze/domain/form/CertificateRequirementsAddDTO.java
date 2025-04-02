@@ -85,6 +85,8 @@ public class CertificateRequirementsAddDTO implements DTO {
     @NotNull(message = "职位来源 不能为空")
     private Integer positionSource;
 
+    private String positionTitle;
+
     @Schema(description = "备注")
     private String remarks;
 

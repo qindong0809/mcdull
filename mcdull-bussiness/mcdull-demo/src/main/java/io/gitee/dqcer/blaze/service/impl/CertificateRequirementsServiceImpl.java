@@ -326,6 +326,7 @@ public class CertificateRequirementsServiceImpl
         entity.setThreePersonnel(item.getThreePersonnel());
         entity.setSocialSecurityRequirement(item.getSocialSecurityRequirement());
         entity.setPositionSource(item.getPositionSource());
+        entity.setPositionTitle(item.getPositionTitle());
         entity.setRemarks(item.getRemarks());
     }
 
@@ -348,6 +349,7 @@ public class CertificateRequirementsServiceImpl
         entity.setThreePersonnel(item.getThreePersonnel());
         entity.setSocialSecurityRequirement(item.getSocialSecurityRequirement());
         entity.setPositionSource(item.getPositionSource());
+        entity.setPositionTitle(item.getPositionTitle());
         entity.setRemarks(item.getRemarks());
         return entity;
     }
@@ -357,7 +359,10 @@ public class CertificateRequirementsServiceImpl
         CertificateRequirementsEntity entity = this.convertToEntity(dto);
         entity.setPositionTitle(StrUtil.EMPTY);
         baseRepository.save(entity);
-        this.builderPositionTitle(entity);
+        String positionTitle = dto.getPositionTitle();
+        if (StrUtil.isBlank(positionTitle)) {
+            this.builderPositionTitle(entity);
+        }
     }
 
     private void builderPositionTitle(CertificateRequirementsEntity entity) {
@@ -387,7 +392,10 @@ public class CertificateRequirementsServiceImpl
         }
         this.setUpdateFieldValue(dto, entity);
         baseRepository.updateById(entity);
-        this.builderPositionTitle(entity);
+        String positionTitle = dto.getPositionTitle();
+        if (StrUtil.isBlank(positionTitle)) {
+            this.builderPositionTitle(entity);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)

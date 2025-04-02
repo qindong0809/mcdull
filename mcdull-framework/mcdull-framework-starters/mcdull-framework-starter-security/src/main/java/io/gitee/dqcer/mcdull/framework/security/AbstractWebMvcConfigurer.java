@@ -39,6 +39,7 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
             "/swagger-resources/**",
             "/webjars/**",
             "/error",
+            "/home/upload" + GlobalConstant.ALL_PATTERNS,
             "/v3/api-docs/**"};
 
     @Override

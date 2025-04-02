@@ -6,6 +6,7 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -23,6 +24,7 @@ import io.gitee.dqcer.blaze.service.IBlazeOrderService;
 import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
 import io.gitee.dqcer.blaze.service.ITalentCertificateService;
 import io.gitee.dqcer.blaze.service.ITalentService;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
@@ -30,13 +32,13 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.FileEntity;
-import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileBizRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IAreaService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IFolderService;
 import io.gitee.dqcer.util.CertificateUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -75,6 +77,8 @@ public class TalentCertificateServiceImpl
     private IFileBizRepository fileBizRepository;
     @Resource
     private IBlazeOrderService orderService;
+    @Resource
+    private IFolderService folderService;
 
     private static final String DEFAULT_BIZ_CODD = "blaze-talent-cert";
 
@@ -86,25 +90,22 @@ public class TalentCertificateServiceImpl
             String fileDomainName = commonManager.getConfig("file-domain-name");
             List<LabelValueVO<Integer, String>> talentList = talentService.list();
             Map<Integer, CertificateBO> certificateMap = CertificateUtil.getCertificateMap();
-            Map<Integer, List<Integer>> fileIdMap = fileBizRepository.mapByBizCode(DEFAULT_BIZ_CODD);
-            Map<Integer, FileEntity> fileEntityMap = fileService.map(fileIdMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet()));
+            List<Integer> idList = recordList.stream().map(IdEntity::getId).collect(Collectors.toList());
+            Map<Integer, List<FileEntity>> fileEntityMap = fileService.get(idList, TalentCertificateEntity.class);
             for (TalentCertificateEntity entity : recordList) {
                 TalentCertificateVO vo = this.convertToVO(entity);
-                List<Integer> fileIdList = fileIdMap.get(entity.getId());
-                if (CollUtil.isNotEmpty(fileIdList)) {
-                    List<FileVO> fileList = new ArrayList<>();
-                    for (Integer fileId : fileIdList) {
-                        FileEntity fileEntity = fileEntityMap.get(fileId);
-                        if (ObjUtil.isNotNull(fileEntity)) {
-                            FileVO fileVO = new FileVO();
-                            fileVO.setUrl(fileDomainName + fileEntity.getFileKey());
-                            fileVO.setFileName(fileEntity.getFileName());
-                            fileVO.setId(fileEntity.getId());
-                            fileList.add(fileVO);
-                        }
+                List<FileEntity> fileEntityList = fileEntityMap.get(entity.getId());
+                List<FileVO> fileList = new ArrayList<>();
+                if (CollUtil.isNotEmpty(fileEntityList)) {
+                    for (FileEntity fileEntity : fileEntityList) {
+                        FileVO fileVO = new FileVO();
+                        fileVO.setUrl(URLUtil.encodeBlank(fileDomainName + "/upload/" + fileEntity.getFileKey()));
+                        fileVO.setFileName(fileEntity.getFileName());
+                        fileVO.setId(fileEntity.getId());
+                        fileList.add(fileVO);
                     }
-                    vo.setFileList(fileList);
                 }
+                vo.setFileList(fileList);
                 BigDecimal positionContractPrice = entity.getPositionContractPrice();
                 if (ObjUtil.isNotNull(positionContractPrice)) {
                     vo.setPositionContractPrice(positionContractPrice.setScale(2, RoundingMode.HALF_UP).toString());
@@ -232,8 +233,9 @@ public class TalentCertificateServiceImpl
         if (ObjUtil.isNotNull(customerCertId)) {
             CertificateRequirementsEntity entity = certificateRequirementsService.get(customerCertId);
             dto.setCertificateLevel(entity.getCertificateLevel());
-            dto.setBiddingExit(entity.getBiddingExit());
-            dto.setThreePersonnel(entity.getThreePersonnel());
+            dto.setSpecialty(entity.getSpecialty());
+//            dto.setBiddingExit(entity.getBiddingExit());
+//            dto.setThreePersonnel(entity.getThreePersonnel());
             dto.setSocialSecurityRequirement(entity.getSocialSecurityRequirement());
         }
         PageUtil.setMaxPageSize(dto);
@@ -377,7 +379,7 @@ public class TalentCertificateServiceImpl
         baseRepository.save(entity);
         this.builderPositionTitle(entity);
         if (ObjUtil.isNotNull(file)) {
-            fileService.fileUpload(file, FileFolderTypeEnum.BIZ.getValue(), entity.getId(), DEFAULT_BIZ_CODD);
+            fileService.fileUpload(file, folderService.getSystemFolderId(), entity.getId(), TalentCertificateEntity.class);
         }
     }
 
@@ -410,9 +412,14 @@ public class TalentCertificateServiceImpl
         this.setUpdateFieldValue(dto, entity);
         baseRepository.updateById(entity);
         this.builderPositionTitle(entity);
-        fileService.remove(FileFolderTypeEnum.BIZ.getValue(), DEFAULT_BIZ_CODD);
+
+        Integer delFileId = dto.getDelFileId();
+        if (ObjUtil.isNotNull(delFileId)) {
+            fileService.remove(delFileId, id, TalentCertificateEntity.class);
+        }
+
         if (ObjUtil.isNotNull(file)) {
-            fileService.fileUpload(file, FileFolderTypeEnum.BIZ.getValue(), entity.getId(), DEFAULT_BIZ_CODD);
+            fileService.fileUpload(file, folderService.getSystemFolderId(), entity.getId(), TalentCertificateEntity.class);
         }
     }
 

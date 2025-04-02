@@ -95,6 +95,7 @@ public class BlazeOrderServiceImpl
                 if (ObjUtil.isNotNull(entity.getUpdatedBy())) {
                     vo.setUpdatedByStr(nameMap.get(entity.getUpdatedBy()));
                 }
+
                 voList.add(vo);
             }
         }
@@ -247,6 +248,11 @@ public class BlazeOrderServiceImpl
         vo.setUpdatedTime(item.getUpdatedTime());
         vo.setInactive(item.getInactive());
         vo.setInactiveStr(IEnum.getTextByCode(InactiveEnum.class, item.getInactive()));
+        vo.setApprove(item.getApprove());
+        vo.setStartDate(item.getStartDate());
+        vo.setEndDate(item.getEndDate());
+        vo.setStartDateStr(item.getStartDate());
+        vo.setEndDateStr(item.getEndDate());
         return vo;
     }
 
@@ -257,15 +263,20 @@ public class BlazeOrderServiceImpl
         entity.setContractTime(item.getContractTime());
         entity.setRemarks(item.getRemarks());
         entity.setInactive(item.getInactive());
+        entity.setStartDate(item.getStartDate());
+        entity.setEndDate(item.getEndDate());
     }
 
     private BlazeOrderEntity convertToEntity(BlazeOrderAddDTO item){
-            BlazeOrderEntity entity = new BlazeOrderEntity();
+        BlazeOrderEntity entity = new BlazeOrderEntity();
         entity.setTalentCertId(item.getTalentCertId());
         entity.setCustomerCertId(item.getCustomerCertId());
         entity.setContractTime(item.getContractTime());
         entity.setRemarks(item.getRemarks());
         entity.setInactive(item.getInactive());
+        entity.setStartDate(item.getStartDate());
+        entity.setEndDate(item.getEndDate());
+        entity.setApprove(item.getApprove());
         return entity;
     }
 

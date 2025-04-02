@@ -2,10 +2,9 @@ package io.gitee.dqcer.blaze.domain.form;
 
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -89,6 +88,8 @@ public class CertificateRequirementsUpdateDTO implements DTO {
     @Schema(description = "职位来源", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "职位来源 不能为空")
     private Integer positionSource;
+    private String positionTitle;
+
 
     @Schema(description = "备注")
     private String remarks;

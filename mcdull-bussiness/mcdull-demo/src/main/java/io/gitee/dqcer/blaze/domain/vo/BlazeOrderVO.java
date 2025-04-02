@@ -73,4 +73,18 @@ public class BlazeOrderVO implements VO {
     @Schema(description = "状态（true/已失活 false/未失活）")
     private String inactiveStr;
 
+    private Date startDate;
+
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date startDateStr;
+
+    private Date endDate;
+
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date endDateStr;
+
+    private Boolean approve;
+
 }

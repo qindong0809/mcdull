@@ -37,4 +37,10 @@ public class BlazeOrderEntity extends BaseEntity<Integer> {
      * 备注
      */
     private String remarks;
+
+    private Date startDate;
+
+    private Date endDate;
+
+    private Boolean approve;
 }
