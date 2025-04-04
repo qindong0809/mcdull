@@ -14,6 +14,7 @@ import io.gitee.dqcer.blaze.domain.entity.BlazeOrderDetailEntity;
 import io.gitee.dqcer.blaze.domain.entity.BlazeOrderEntity;
 import io.gitee.dqcer.blaze.domain.entity.CertificateRequirementsEntity;
 import io.gitee.dqcer.blaze.domain.entity.TalentCertificateEntity;
+import io.gitee.dqcer.blaze.domain.enums.ApproveEnum;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderAddDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderUpdateDTO;
@@ -22,6 +23,7 @@ import io.gitee.dqcer.blaze.service.IBlazeOrderDetailService;
 import io.gitee.dqcer.blaze.service.IBlazeOrderService;
 import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
 import io.gitee.dqcer.blaze.service.ITalentCertificateService;
+import io.gitee.dqcer.mcdull.framework.base.dto.IdRemarkDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -224,6 +226,20 @@ public class BlazeOrderServiceImpl
         return voList;
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void approve(IdRemarkDTO dto) {
+        Integer id = dto.getId();
+        if (ObjUtil.isNotNull(id)) {
+            BlazeOrderEntity entity = baseRepository.getById(id);
+            if (ObjUtil.isNotNull(entity)) {
+                if (ObjUtil.equal(entity.getApprove(), ApproveEnum.NOT_APPROVE)) {
+                    
+                }
+            }
+        }
+    }
+
     private List<Pair<String, Func1<BlazeOrderVO, ?>>> getTitleList() {
         List<Pair<String, Func1<BlazeOrderVO, ?>>> list = new ArrayList<>();
         list.add(Pair.of("所属人才", BlazeOrderVO::getTalentCertName));
@@ -249,6 +265,7 @@ public class BlazeOrderServiceImpl
         vo.setInactive(item.getInactive());
         vo.setInactiveStr(IEnum.getTextByCode(InactiveEnum.class, item.getInactive()));
         vo.setApprove(item.getApprove());
+        vo.setApproveStr(IEnum.getTextByCode(ApproveEnum.class, item.getApprove()));
         vo.setStartDate(item.getStartDate());
         vo.setEndDate(item.getEndDate());
         vo.setStartDateStr(item.getStartDate());
@@ -283,6 +300,7 @@ public class BlazeOrderServiceImpl
     @Transactional(rollbackFor = Exception.class)
     public void insert(BlazeOrderAddDTO dto) {
         BlazeOrderEntity entity = this.convertToEntity(dto);
+        entity.setApprove(ApproveEnum.NOT_APPROVE.getCode());
         SerialNumberGenerateDTO generateDTO = new SerialNumberGenerateDTO();
         generateDTO.setCount(1);
         generateDTO.setSerialNumberId(2);

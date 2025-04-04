@@ -42,5 +42,10 @@ public class BlazeOrderEntity extends BaseEntity<Integer> {
 
     private Date endDate;
 
-    private Boolean approve;
+    /**
+     * {@link io.gitee.dqcer.blaze.domain.enums.ApproveEnum}
+     */
+    private Integer approve;
+
+    private String approveRemarks;
 }

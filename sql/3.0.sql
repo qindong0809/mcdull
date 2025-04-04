@@ -957,6 +957,7 @@ create table blaze_order (
 `start_date` datetime not null comment '开始时间',
 `end_date` datetime not null comment '结束时间',
 `approve` tinyint(0) not null default 0 comment '审批状态',
+`approve_remarks` varchar(32) comment '审批备注',
 `remarks` text comment '备注',
 `created_by` int not null comment '创建人',
 `created_time` datetime not null comment '创建时间',

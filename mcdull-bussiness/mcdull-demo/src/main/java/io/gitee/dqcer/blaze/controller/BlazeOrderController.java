@@ -6,6 +6,7 @@ import io.gitee.dqcer.blaze.domain.form.BlazeOrderQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderVO;
 import io.gitee.dqcer.blaze.service.IBlazeOrderService;
+import io.gitee.dqcer.mcdull.framework.base.dto.IdRemarkDTO;
 import io.gitee.dqcer.mcdull.framework.base.dto.PkDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -57,6 +58,14 @@ public class BlazeOrderController extends BasicController {
     @PostMapping("/blazeOrder/update")
     public Result<Boolean> update(@RequestBody @Valid BlazeOrderUpdateDTO dto) {
         blazeOrderService.update(dto);
+        return Result.success(true);
+    }
+
+    @Operation(summary = "审批")
+    @SaCheckPermission("blaze:order:approve")
+    @PostMapping("/blazeOrder/approve")
+    public Result<Boolean> approve(@RequestBody @Valid IdRemarkDTO dto) {
+        blazeOrderService.approve(dto);
         return Result.success(true);
     }
 

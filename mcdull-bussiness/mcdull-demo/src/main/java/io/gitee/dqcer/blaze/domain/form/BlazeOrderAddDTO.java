@@ -35,7 +35,7 @@ public class BlazeOrderAddDTO implements DTO {
 
     private Date endDate;
 
-    private Boolean approve;
+    private Integer approve;
 
     private String remarks;
 

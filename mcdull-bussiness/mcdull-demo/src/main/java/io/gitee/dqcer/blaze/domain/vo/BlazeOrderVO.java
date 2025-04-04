@@ -85,6 +85,11 @@ public class BlazeOrderVO implements VO {
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date endDateStr;
 
-    private Boolean approve;
+    /**
+     * {@link io.gitee.dqcer.blaze.domain.enums.ApproveEnum}
+     */
+    private Integer approve;
+
+    private String approveStr;
 
 }
