@@ -47,4 +47,7 @@ public class BlazeOrderUpdateDTO implements DTO {
     @NotNull(message = "状态（true/已失活 false/未失活） 不能为空")
     private Boolean inactive;
 
+    @NotNull
+    private Integer responsibleUserId;
+
 }

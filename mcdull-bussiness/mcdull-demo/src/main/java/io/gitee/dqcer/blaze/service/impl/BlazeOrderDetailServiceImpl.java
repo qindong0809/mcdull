@@ -251,4 +251,9 @@ public class BlazeOrderDetailServiceImpl
     public BlazeOrderDetailEntity getByOrderId(Integer id) {
         return baseRepository.getById(id);
     }
+
+    @Override
+    public List<BlazeOrderDetailEntity> getByOrderId(List<Integer> orderIdList) {
+        return baseRepository.getByOrderId(orderIdList);
+    }
 }

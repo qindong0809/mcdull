@@ -4,6 +4,7 @@ package io.gitee.dqcer.blaze.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -23,7 +24,8 @@ import io.gitee.dqcer.blaze.service.IBlazeOrderDetailService;
 import io.gitee.dqcer.blaze.service.IBlazeOrderService;
 import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
 import io.gitee.dqcer.blaze.service.ITalentCertificateService;
-import io.gitee.dqcer.mcdull.framework.base.dto.IdRemarkDTO;
+import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -38,6 +40,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,7 +74,11 @@ public class BlazeOrderServiceImpl
         List<BlazeOrderEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
             Map<Integer, String> nameMap = userManager.getMap(recordList);
+            Set<Integer> collect = recordList.stream().map(BlazeOrderEntity::getResponsibleUserId).collect(Collectors.toSet());
+            Map<Integer, String> responsibleUserMap = userManager.getNameMap(new ArrayList<>(collect));
 
+            List<Integer> orderIdList = recordList.stream().map(IdEntity::getId).toList();
+            List<BlazeOrderDetailEntity> orderDetailList = blazeOrderDetailService.getByOrderId(orderIdList);
             List<LabelValueVO<Integer, String>> list = CollUtil.emptyIfNull(certificateRequirementsService.all(false));
             Map<Integer, String> map = list.stream().collect(Collectors.toMap(LabelValueVO::getValue, LabelValueVO::getLabel));
             List<LabelValueVO<Integer, String>> talentList = CollUtil.emptyIfNull(talentCertificateService.list(null, false));
@@ -97,7 +104,17 @@ public class BlazeOrderServiceImpl
                 if (ObjUtil.isNotNull(entity.getUpdatedBy())) {
                     vo.setUpdatedByStr(nameMap.get(entity.getUpdatedBy()));
                 }
-
+                vo.setResponsibleUserIdStr(responsibleUserMap.get(entity.getResponsibleUserId()));
+                BigDecimal talent = orderDetailList.stream()
+                        .filter(i-> i.getBlazeOrderId().equals(entity.getId()) && BooleanUtil.isTrue(i.getIsTalent()))
+                        .map(BlazeOrderDetailEntity::getPrice)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                vo.setNowTalentPayment(talent.toString());
+                BigDecimal customer = orderDetailList.stream()
+                        .filter(i-> i.getBlazeOrderId().equals(entity.getId()) && BooleanUtil.isFalse(i.getIsTalent()))
+                        .map(BlazeOrderDetailEntity::getPrice)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                vo.setNowEnterpriseCollection(customer.toString());
                 voList.add(vo);
             }
         }
@@ -228,14 +245,14 @@ public class BlazeOrderServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void approve(IdRemarkDTO dto) {
+    public void approve(ApproveDTO dto) {
         Integer id = dto.getId();
         if (ObjUtil.isNotNull(id)) {
             BlazeOrderEntity entity = baseRepository.getById(id);
             if (ObjUtil.isNotNull(entity)) {
-                if (ObjUtil.equal(entity.getApprove(), ApproveEnum.NOT_APPROVE)) {
-                    
-                }
+                entity.setApprove(dto.getApprove());
+                entity.setApproveRemarks(dto.getRemark());
+                baseRepository.updateById(entity);
             }
         }
     }
@@ -266,10 +283,12 @@ public class BlazeOrderServiceImpl
         vo.setInactiveStr(IEnum.getTextByCode(InactiveEnum.class, item.getInactive()));
         vo.setApprove(item.getApprove());
         vo.setApproveStr(IEnum.getTextByCode(ApproveEnum.class, item.getApprove()));
+        vo.setApproveRemark(item.getApproveRemarks());
         vo.setStartDate(item.getStartDate());
         vo.setEndDate(item.getEndDate());
         vo.setStartDateStr(item.getStartDate());
         vo.setEndDateStr(item.getEndDate());
+        vo.setResponsibleUserId(item.getResponsibleUserId());
         return vo;
     }
 
@@ -282,6 +301,7 @@ public class BlazeOrderServiceImpl
         entity.setInactive(item.getInactive());
         entity.setStartDate(item.getStartDate());
         entity.setEndDate(item.getEndDate());
+        entity.setResponsibleUserId(item.getResponsibleUserId());
     }
 
     private BlazeOrderEntity convertToEntity(BlazeOrderAddDTO item){
@@ -294,6 +314,7 @@ public class BlazeOrderServiceImpl
         entity.setStartDate(item.getStartDate());
         entity.setEndDate(item.getEndDate());
         entity.setApprove(item.getApprove());
+        entity.setResponsibleUserId(item.getResponsibleUserId());
         return entity;
     }
 

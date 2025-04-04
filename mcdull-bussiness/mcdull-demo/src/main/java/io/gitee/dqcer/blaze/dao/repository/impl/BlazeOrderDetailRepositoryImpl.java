@@ -1,5 +1,6 @@
 package io.gitee.dqcer.blaze.dao.repository.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -12,6 +13,8 @@ import io.gitee.dqcer.blaze.domain.entity.BlazeOrderDetailEntity;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderDetailQueryDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -35,5 +38,14 @@ public class BlazeOrderDetailRepositoryImpl extends
         }
         query.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
+    }
+
+    @Override
+    public List<BlazeOrderDetailEntity> getByOrderId(List<Integer> orderIdList) {
+        LambdaQueryWrapper<BlazeOrderDetailEntity> query = Wrappers.lambdaQuery();
+        if (CollUtil.isNotEmpty(orderIdList)) {
+            query.in(BlazeOrderDetailEntity::getBlazeOrderId, orderIdList);
+        }
+        return baseMapper.selectList(query);
     }
 }

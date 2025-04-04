@@ -30,12 +30,16 @@ public class BlazeOrderVO implements VO {
 
     private String talentPayment;
 
+    private String nowTalentPayment;
+
     @Schema(description = "所属企业证书")
     private Integer customerCertId;
 
     private String customerCertName;
 
     private String enterpriseCollection;
+
+    private String nowEnterpriseCollection;
 
     @Schema(description = "合同时间")
     private Date contractTime;
@@ -91,5 +95,11 @@ public class BlazeOrderVO implements VO {
     private Integer approve;
 
     private String approveStr;
+
+    private String approveRemark;
+
+    private Integer responsibleUserId;
+
+    private String responsibleUserIdStr;
 
 }

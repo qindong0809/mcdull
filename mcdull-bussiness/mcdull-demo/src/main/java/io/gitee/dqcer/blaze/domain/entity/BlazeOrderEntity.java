@@ -48,4 +48,6 @@ public class BlazeOrderEntity extends BaseEntity<Integer> {
     private Integer approve;
 
     private String approveRemarks;
+
+    private Integer responsibleUserId;
 }

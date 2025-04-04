@@ -37,4 +37,6 @@ public interface IBlazeOrderDetailService {
     List<LabelValueVO<Integer, String>> getResponsibleList();
 
     BlazeOrderDetailEntity getByOrderId(Integer id);
+
+    List<BlazeOrderDetailEntity> getByOrderId(List<Integer> orderIdList);
 }

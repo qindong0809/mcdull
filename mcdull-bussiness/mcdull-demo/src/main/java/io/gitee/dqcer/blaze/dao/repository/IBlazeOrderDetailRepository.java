@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.blaze.domain.entity.BlazeOrderDetailEntity;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderDetailQueryDTO;
 
+import java.util.List;
+
 
 /**
  * @author dqcer
@@ -14,4 +16,6 @@ public interface IBlazeOrderDetailRepository extends IService<BlazeOrderDetailEn
 
 
     Page<BlazeOrderDetailEntity> selectPage(BlazeOrderDetailQueryDTO dto);
+
+    List<BlazeOrderDetailEntity> getByOrderId(List<Integer> orderIdList);
 }

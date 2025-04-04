@@ -5,7 +5,7 @@ import io.gitee.dqcer.blaze.domain.form.BlazeOrderAddDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderVO;
-import io.gitee.dqcer.mcdull.framework.base.dto.IdRemarkDTO;
+import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 
@@ -51,5 +51,5 @@ public interface IBlazeOrderService {
 
     List<LabelValueVO<Integer, String>> getTalentCertListByOrderId(Integer customerCertId, Integer orderId);
 
-    void approve(IdRemarkDTO dto);
+    void approve(ApproveDTO dto);
 }
