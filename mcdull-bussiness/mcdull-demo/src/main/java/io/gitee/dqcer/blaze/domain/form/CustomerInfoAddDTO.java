@@ -48,4 +48,7 @@ public class CustomerInfoAddDTO implements DTO {
     @NotNull(message = "状态 不能为空")
     private Boolean inactive;
 
+
+    @NotNull
+    private Integer responsibleUserId;
 }

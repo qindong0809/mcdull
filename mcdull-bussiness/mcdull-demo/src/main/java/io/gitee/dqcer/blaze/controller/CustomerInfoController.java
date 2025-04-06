@@ -65,6 +65,13 @@ public class CustomerInfoController {
         return Result.success(true);
     }
 
+    @Operation(summary = "查询")
+    @SaCheckPermission("blaze:customer_info:write")
+    @PostMapping("/customerInfo/{id}")
+    public Result<CustomerInfoVO> update(@PathVariable(value = "id") Integer id) {
+        return Result.success(customerInfoService.detail(id));
+    }
+
 
     @Operation(summary = "删除")
     @SaCheckPermission("blaze:customer_info:write")

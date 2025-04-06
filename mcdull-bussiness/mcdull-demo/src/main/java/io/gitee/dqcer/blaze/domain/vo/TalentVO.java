@@ -82,4 +82,8 @@ public class TalentVO implements IArea, VO {
     @Schema(description = "更新时间")
     private Date updatedTime;
 
+    private Integer responsibleUserId;
+
+    private String responsibleUserIdStr;
+
 }

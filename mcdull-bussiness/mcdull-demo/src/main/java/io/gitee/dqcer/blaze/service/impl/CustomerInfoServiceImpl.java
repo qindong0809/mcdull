@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 企业信息 Service
@@ -57,6 +58,8 @@ public class CustomerInfoServiceImpl
         Page<CustomerInfoEntity> entityPage = baseRepository.selectPage(dto);
         List<CustomerInfoEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
+            Set<Integer> collect = recordList.stream().map(CustomerInfoEntity::getResponsibleUserId).collect(Collectors.toSet());
+            Map<Integer, String> nameMap1 = userManager.getNameMap(new ArrayList<>(collect));
             Map<Integer, String> nameMap = userManager.getMap(recordList);
             for (CustomerInfoEntity entity : recordList) {
                 CustomerInfoVO vo = this.convertToVO(entity);
@@ -68,8 +71,11 @@ public class CustomerInfoServiceImpl
                 if (ObjUtil.isNotNull(inactiveKeyValue)) {
                     vo.setInactiveName(inactiveKeyValue.getValue());
                 }
+                vo.setResponsibleUserId(entity.getResponsibleUserId());
+                vo.setResponsibleUserIdStr(nameMap1.get(vo.getResponsibleUserId()));
                 vo.setCreatedName(nameMap.get(vo.getCreatedBy()));
                 vo.setUpdatedName(nameMap.get(vo.getUpdatedBy()));
+                vo.setPhoneNumber("");
                 voList.add(vo);
             }
             areaManager.set(voList);
@@ -104,7 +110,6 @@ public class CustomerInfoServiceImpl
         list.add(Pair.of("所在市代码", CustomerInfoVO::getCityCode));
         list.add(Pair.of("所在市名称", CustomerInfoVO::getCityName));
         list.add(Pair.of("联系人", CustomerInfoVO::getContactPerson));
-        list.add(Pair.of("联系电话", CustomerInfoVO::getPhoneNumber));
         list.add(Pair.of("客户类型", CustomerInfoVO::getCustomerTypeName));
         list.add(Pair.of("备注", CustomerInfoVO::getRemark));
         list.add(Pair.of("创建人", CustomerInfoVO::getCreatedName));
@@ -155,6 +160,7 @@ public class CustomerInfoServiceImpl
         entity.setCustomerType(item.getCustomerType());
         entity.setRemark(item.getRemark());
         entity.setInactive(item.getInactive());
+        entity.setResponsibleUserId(item.getResponsibleUserId());
         return entity;
     }
 

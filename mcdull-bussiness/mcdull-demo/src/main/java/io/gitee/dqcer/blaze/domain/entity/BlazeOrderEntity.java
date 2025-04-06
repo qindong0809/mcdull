@@ -50,4 +50,6 @@ public class BlazeOrderEntity extends BaseEntity<Integer> implements Approve {
     private String approveRemarks;
 
     private Integer responsibleUserId;
+
+    private Boolean firstIsTalent;
 }

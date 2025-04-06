@@ -919,6 +919,7 @@ create table `blaze_talent` (
 `city_code` varchar(64) not null comment '社保所在市',
 `gender` int not null comment '性别 0、未知 1、男 2、女 9、不明',
 `title` varchar(100) not null comment '职称 1/无 2/初级 3/中级 4/高级 5/不限',
+`responsible_user_id` int not null comment '负责人',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间'
@@ -966,6 +967,7 @@ create table blaze_order (
 `approve` tinyint(0) not null default 0 comment '审批状态',
 `approve_remarks` varchar(32) comment '审批备注',
 `remarks` text comment '备注',
+`first_is_talent` tinyint(0) not null default 0 comment 'true/人才 false/企业',
 `created_by` int not null comment '创建人',
 `created_time` datetime not null comment '创建时间',
 `updated_by` int default null comment '更新人',

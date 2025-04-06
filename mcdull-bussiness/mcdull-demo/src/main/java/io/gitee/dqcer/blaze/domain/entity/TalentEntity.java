@@ -54,4 +54,6 @@ public class TalentEntity  extends RelEntity<Integer> {
      * 职称
      */
     private Integer title;
+
+    private Integer responsibleUserId;
 }

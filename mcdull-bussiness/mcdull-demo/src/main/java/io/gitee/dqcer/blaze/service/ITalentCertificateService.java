@@ -43,4 +43,8 @@ public interface ITalentCertificateService {
     boolean existByTalentId(Integer talentId);
 
     void approve(ApproveDTO dto);
+
+    List<LabelValueVO<Integer, String>> getList(Integer customerCertId);
+
+    TalentCertificateEntity get(Integer talentCertId);
 }

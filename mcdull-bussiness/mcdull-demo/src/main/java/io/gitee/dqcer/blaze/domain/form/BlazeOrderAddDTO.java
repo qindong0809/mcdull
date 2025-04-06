@@ -47,4 +47,7 @@ public class BlazeOrderAddDTO implements DTO {
     @NotNull
     private Integer responsibleUserId;
 
+    @NotNull
+    private Boolean firstIsTalent;
+
 }

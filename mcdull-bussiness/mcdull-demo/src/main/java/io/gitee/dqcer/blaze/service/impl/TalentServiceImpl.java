@@ -26,13 +26,13 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.GenderEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 人才表 Service
@@ -51,12 +51,16 @@ public class TalentServiceImpl
     private ITalentCertificateService talentCertificateService;
     @Resource
     private ICommonManager commonManager;
+    @Resource
+    private IUserManager userManager;
 
     public PagedVO<TalentVO> queryPage(TalentQueryDTO dto) {
         List<TalentVO> voList = new ArrayList<>();
         Page<TalentEntity> entityPage = baseRepository.selectPage(dto);
         List<TalentEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
+            Set<Integer> collect = recordList.stream().map(TalentEntity::getResponsibleUserId).collect(Collectors.toSet());
+            Map<Integer, String> map = userManager.getNameMap(new ArrayList<>(collect));
             for (TalentEntity entity : recordList) {
                 TalentVO vo = this.convertToVO(entity);
                 Integer gender = vo.getGender();
@@ -74,6 +78,11 @@ public class TalentServiceImpl
                 Integer title = vo.getTitle();
                 if (ObjUtil.isNotNull(title)) {
                     vo.setTitleName(IEnum.getTextByCode(CertificateTitleEnum.class, title));
+                }
+                Integer responsibleUserId = entity.getResponsibleUserId();
+                if (ObjUtil.isNotNull(responsibleUserId)) {
+                    vo.setResponsibleUserId(responsibleUserId);
+                    vo.setResponsibleUserIdStr(map.get(responsibleUserId));
                 }
                 String s = DesensitizedUtil.idCardNum(vo.getIdNumber(), 3, 2);
                 vo.setIdNumber(s);
@@ -147,6 +156,7 @@ public class TalentServiceImpl
         entity.setCityCode(item.getCityCode());
         entity.setGender(item.getGender());
         entity.setTitle(item.getTitle());
+        entity.setResponsibleUserId(item.getResponsibleUserId());
     }
 
     private TalentEntity convertToEntity(TalentAddDTO item){
@@ -160,6 +170,7 @@ public class TalentServiceImpl
         entity.setCityCode(item.getCityCode());
         entity.setGender(item.getGender());
         entity.setTitle(item.getTitle());
+        entity.setResponsibleUserId(item.getResponsibleUserId());
         return entity;
     }
 

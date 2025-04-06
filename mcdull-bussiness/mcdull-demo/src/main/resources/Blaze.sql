@@ -32,7 +32,7 @@ INSERT INTO `sys_menu` VALUES (285, '写操作', 3, 281, 3, NULL, NULL, 1, 'blaz
 
 
 
-drop table if exists
+drop table if exists `blaze_customer_info`;
 create table if not exists `blaze_customer_info` (
 `id` int auto_increment comment '主键',
 `name` varchar(255) not null comment '企业名称',
@@ -42,6 +42,7 @@ create table if not exists `blaze_customer_info` (
 `phone_number` varchar(20) not null comment '联系电话',
 `customer_type` varchar(100) not null comment '客户类型',
 `remark` varchar(200)  null default null comment '备注',
+`responsible_user_id` int not null comment '负责人',
 `created_by` int not null comment '创建人',
 `created_time` datetime not null comment '创建时间',
 `updated_by` int default null comment '更新人',

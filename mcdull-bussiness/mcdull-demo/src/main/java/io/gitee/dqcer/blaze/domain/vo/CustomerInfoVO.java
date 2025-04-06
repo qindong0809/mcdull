@@ -80,4 +80,8 @@ public class CustomerInfoVO implements IArea, VO {
     @Schema(description = "状态名称")
     private String inactiveName;
 
+    private Integer responsibleUserId;
+
+    private String responsibleUserIdStr;
+
 }

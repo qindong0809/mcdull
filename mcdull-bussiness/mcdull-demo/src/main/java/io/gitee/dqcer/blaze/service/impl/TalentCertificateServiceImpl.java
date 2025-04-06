@@ -291,6 +291,37 @@ public class TalentCertificateServiceImpl
         approveService.approve(dto, baseRepository);
     }
 
+    @Override
+    public List<LabelValueVO<Integer, String>> getList(Integer customerCertId) {
+        TalentCertificateQueryDTO dto = new TalentCertificateQueryDTO();
+        if (ObjUtil.isNotNull(customerCertId)) {
+            CertificateRequirementsEntity entity = certificateRequirementsService.get(customerCertId);
+            dto.setCertificateLevel(entity.getCertificateLevel());
+            dto.setSpecialty(entity.getSpecialty());
+            dto.setSocialSecurityRequirement(entity.getSocialSecurityRequirement());
+            dto.setApprove(ApproveEnum.APPROVE.getCode());
+        }
+        PageUtil.setMaxPageSize(dto);
+        PagedVO<TalentCertificateVO> page = this.queryPage(dto);
+        if (ObjUtil.isNotNull(page)) {
+            List<TalentCertificateVO> list = page.getList();
+            if (CollUtil.isNotEmpty(list)) {
+                List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
+                for (TalentCertificateVO vo : list) {
+                    Integer id = vo.getId();
+                    voList.add(new LabelValueVO<>(id, vo.getPositionTitle()));
+                }
+                return voList;
+            }
+        }
+        return List.of();
+    }
+
+    @Override
+    public TalentCertificateEntity get(Integer talentCertId) {
+        return baseRepository.getById(talentCertId);
+    }
+
     private DynamicFieldBO getProvinceFieldBO() {
         DynamicFieldBO fieldBO = new DynamicFieldBO("provincesName", "省份", true, FormItemControlTypeEnum.SELECT);
         List<LabelValueVO<String, String>> list = areaService.provinceList();

@@ -45,4 +45,6 @@ public class CustomerInfoEntity extends BaseEntity<Integer> {
      * 备注
      */
     private String remark;
+
+    private Integer responsibleUserId;
 }

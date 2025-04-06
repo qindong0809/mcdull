@@ -3,6 +3,7 @@ package io.gitee.dqcer.blaze.service;
 import io.gitee.dqcer.blaze.domain.entity.BlazeOrderEntity;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderAddDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderQueryDTO;
+import io.gitee.dqcer.blaze.domain.form.BlazeOrderSearchDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderVO;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
@@ -52,4 +53,8 @@ public interface IBlazeOrderService {
     List<LabelValueVO<Integer, String>> getTalentCertListByOrderId(Integer customerCertId, Integer orderId);
 
     void approve(ApproveDTO dto);
+
+    List<LabelValueVO<Integer, String>> getTalentCertList(BlazeOrderSearchDTO searchDTO);
+
+    List<LabelValueVO<Integer, String>> getCustomCertList(BlazeOrderSearchDTO pkDTO);
 }

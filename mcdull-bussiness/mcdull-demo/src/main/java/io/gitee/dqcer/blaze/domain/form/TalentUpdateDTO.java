@@ -57,4 +57,7 @@ public class TalentUpdateDTO implements DTO {
     @NotNull(message = "职称 1/无 2/初级 3/中级 4/高级 5/不限 不能为空")
     private Integer title;
 
+    @NotNull
+    private Integer responsibleUserId;
+
 }

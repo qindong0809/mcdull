@@ -15,15 +15,13 @@ import io.gitee.dqcer.blaze.dao.repository.ICertificateRequirementsRepository;
 import io.gitee.dqcer.blaze.domain.bo.CertificateBO;
 import io.gitee.dqcer.blaze.domain.entity.BlazeOrderEntity;
 import io.gitee.dqcer.blaze.domain.entity.CertificateRequirementsEntity;
+import io.gitee.dqcer.blaze.domain.entity.TalentCertificateEntity;
 import io.gitee.dqcer.blaze.domain.enums.*;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsAddDTO;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.CertificateRequirementsVO;
-import io.gitee.dqcer.blaze.service.IApproveService;
-import io.gitee.dqcer.blaze.service.IBlazeOrderService;
-import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
-import io.gitee.dqcer.blaze.service.ICustomerInfoService;
+import io.gitee.dqcer.blaze.service.*;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -68,6 +66,8 @@ public class CertificateRequirementsServiceImpl
     private IBlazeOrderService orderService;
     @Resource
     private IApproveService approveService;
+    @Resource
+    private ITalentCertificateService talentCertificateService;
 
     public PagedVO<CertificateRequirementsVO> queryPage(CertificateRequirementsQueryDTO dto) {
         List<CertificateRequirementsVO> voList = new ArrayList<>();
@@ -263,6 +263,34 @@ public class CertificateRequirementsServiceImpl
                     if (configCount > currentCount) {
                         voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
                     }
+                }
+                return voList;
+            }
+        }
+        return List.of();
+    }
+
+    @Override
+    public List<LabelValueVO<Integer, String>> getList(Integer talentCertId) {
+        CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
+        dto.setApprove(ApproveEnum.APPROVE.getCode());
+        if (ObjUtil.isNotNull(talentCertId)) {
+            TalentCertificateEntity talentCertificateEntity = talentCertificateService.get(talentCertId);
+            if (ObjUtil.isNotNull(talentCertificateEntity)) {
+                dto.setSpecialty(talentCertificateEntity.getSpecialty());
+                dto.setCertificateLevel(talentCertificateEntity.getCertificateLevel());
+                dto.setSocialSecurityRequirement(talentCertificateEntity.getSocialSecurityRequirement());
+            }
+        }
+        PageUtil.setMaxPageSize(dto);
+        PagedVO<CertificateRequirementsVO> page = this.queryPage(dto);
+        if (ObjUtil.isNotNull(page)) {
+            List<CertificateRequirementsVO> list = page.getList();
+            if (CollUtil.isNotEmpty(list)) {
+                List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
+                for (CertificateRequirementsVO vo : list) {
+                    voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
+
                 }
                 return voList;
             }

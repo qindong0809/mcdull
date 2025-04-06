@@ -47,4 +47,5 @@ public interface ICertificateRequirementsService {
 
     List<LabelValueVO<Integer, String>> okList();
 
+    List<LabelValueVO<Integer, String>> getList(Integer talentCertId);
 }

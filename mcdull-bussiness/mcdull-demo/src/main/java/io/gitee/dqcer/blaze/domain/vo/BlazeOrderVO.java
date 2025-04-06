@@ -88,4 +88,6 @@ public class BlazeOrderVO extends ApproveVO implements VO {
     @DynamicDateFormat(enableTimezone = true)
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date endDateStr;
+
+    private Boolean firstIsTalent;
 }

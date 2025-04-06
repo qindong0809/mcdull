@@ -3,6 +3,7 @@ package io.gitee.dqcer.blaze.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderAddDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderQueryDTO;
+import io.gitee.dqcer.blaze.domain.form.BlazeOrderSearchDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderVO;
 import io.gitee.dqcer.blaze.service.IBlazeOrderService;
@@ -73,6 +74,20 @@ public class BlazeOrderController extends BasicController {
     @PostMapping("/blazeOrder/customer-cert")
     public Result<List<LabelValueVO<Integer, String>>> getCustomerCertListByOrderId(@RequestBody @Valid PkDTO pkDTO) {
         List<LabelValueVO<Integer, String>> list = blazeOrderService.getCustomerCertListByOrderId(pkDTO.getId());
+        return Result.success(list);
+    }
+
+    @Operation(summary = "人才证书列表")
+    @PostMapping("/blazeOrder/talent-cert-list")
+    public Result<List<LabelValueVO<Integer, String>>> getTalentCertList(@RequestBody @Valid BlazeOrderSearchDTO pkDTO) {
+        List<LabelValueVO<Integer, String>> list = blazeOrderService.getTalentCertList(pkDTO);
+        return Result.success(list);
+    }
+
+    @Operation(summary = "企业证书列表")
+    @PostMapping("/blazeOrder/custom-cert-list")
+    public Result<List<LabelValueVO<Integer, String>>> getCustomCertList(@RequestBody @Valid BlazeOrderSearchDTO pkDTO) {
+        List<LabelValueVO<Integer, String>> list = blazeOrderService.getCustomCertList(pkDTO);
         return Result.success(list);
     }
 

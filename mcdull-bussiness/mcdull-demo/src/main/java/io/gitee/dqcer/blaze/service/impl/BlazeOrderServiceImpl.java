@@ -2,6 +2,7 @@ package io.gitee.dqcer.blaze.service.impl;
 
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.BooleanUtil;
@@ -18,6 +19,7 @@ import io.gitee.dqcer.blaze.domain.entity.TalentCertificateEntity;
 import io.gitee.dqcer.blaze.domain.enums.ApproveEnum;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderAddDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderQueryDTO;
+import io.gitee.dqcer.blaze.domain.form.BlazeOrderSearchDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderVO;
 import io.gitee.dqcer.blaze.service.*;
@@ -251,6 +253,73 @@ public class BlazeOrderServiceImpl
         approveService.approve(dto, baseRepository);
     }
 
+    @Override
+    public List<LabelValueVO<Integer, String>> getTalentCertList(BlazeOrderSearchDTO searchDTO) {
+        List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
+        Integer customerCertId = searchDTO.getCustomerCertId();
+        Integer orderId = searchDTO.getOrderId();
+        // 编辑回显
+        if (ObjUtil.isNotNull(orderId)) {
+            BlazeOrderEntity blazeOrder = baseRepository.getById(orderId);
+            if (ObjUtil.isNotNull(blazeOrder)) {
+                Integer talentCertId = blazeOrder.getTalentCertId();
+                Map<Integer, TalentCertificateEntity> entityMap = talentCertificateService.map(Set.of(talentCertId));
+                if (ObjUtil.isNotNull(entityMap)) {
+                    TalentCertificateEntity entity = entityMap.get(talentCertId);
+                    if (ObjUtil.isNotNull(entity)) {
+                        LabelValueVO<Integer, String> vo = new LabelValueVO<>(entity.getId(), entity.getPositionTitle());
+                        voList.add(vo);
+                    }
+                }
+            }
+        }
+        List<LabelValueVO<Integer, String>> list = talentCertificateService.getList(customerCertId);
+        if (CollUtil.isNotEmpty(list)) {
+            Map<Integer, Boolean> existMap = this.getMapByTalentCertId(list.stream().map(LabelValueVO::getValue).collect(Collectors.toSet()));
+            for (LabelValueVO<Integer, String> vo : list) {
+                if (!voList.contains(vo)) {
+                    if (BooleanUtil.isFalse(existMap.getOrDefault(vo.getValue(), false))) {
+                        voList.add(vo);
+                    }
+                }
+            }
+        }
+        return voList;
+    }
+
+    @Override
+    public List<LabelValueVO<Integer, String>> getCustomCertList(BlazeOrderSearchDTO pkDTO) {
+        List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
+        Integer orderId = pkDTO.getOrderId();
+        Integer talentCertId = pkDTO.getTalentCertId();
+        if (ObjUtil.isNotNull(orderId)) {
+            BlazeOrderEntity blazeOrder = baseRepository.getById(orderId);
+            if (ObjUtil.isNotNull(blazeOrder)) {
+                Integer customerCertId = blazeOrder.getCustomerCertId();
+                Map<Integer, CertificateRequirementsEntity> requirementsEntityMap = certificateRequirementsService.map(Set.of(customerCertId));
+                CertificateRequirementsEntity entity = requirementsEntityMap.get(customerCertId);
+                if (ObjUtil.isNotNull(entity)) {
+                    LabelValueVO<Integer, String> vo = new LabelValueVO<>(entity.getId(), entity.getPositionTitle());
+                    voList.add(vo);
+                }
+            }
+        }
+        List<LabelValueVO<Integer, String>> list = certificateRequirementsService.getList(talentCertId);
+        if (CollUtil.isNotEmpty(list)) {
+            List<BlazeOrderEntity> orderEntityList = CollUtil.defaultIfEmpty(this.list(), new ArrayList<>());
+            for (LabelValueVO<Integer, String> vo : list) {
+                if (!voList.contains(vo)) {
+                    Integer currentCount = Convert.toInt(orderEntityList.stream().filter(item -> item.getCustomerCertId().equals(vo.getValue())).count(), 0);
+                    CertificateRequirementsEntity entity = certificateRequirementsService.get(vo.getValue());
+                    if (entity.getQuantity() > currentCount) {
+                        voList.add(new LabelValueVO<>(vo.getValue(), entity.getPositionTitle()));
+                    }
+                }
+            }
+        }
+        return voList;
+    }
+
     private List<Pair<String, Func1<BlazeOrderVO, ?>>> getTitleList() {
         List<Pair<String, Func1<BlazeOrderVO, ?>>> list = new ArrayList<>();
         list.add(Pair.of("所属人才", BlazeOrderVO::getTalentCertName));
@@ -282,6 +351,7 @@ public class BlazeOrderServiceImpl
         vo.setStartDateStr(item.getStartDate());
         vo.setEndDateStr(item.getEndDate());
         vo.setResponsibleUserId(item.getResponsibleUserId());
+        vo.setFirstIsTalent(item.getFirstIsTalent());
         return vo;
     }
 
@@ -308,6 +378,7 @@ public class BlazeOrderServiceImpl
         entity.setEndDate(item.getEndDate());
         entity.setApprove(item.getApprove());
         entity.setResponsibleUserId(item.getResponsibleUserId());
+        entity.setFirstIsTalent(item.getFirstIsTalent());
         return entity;
     }
 
