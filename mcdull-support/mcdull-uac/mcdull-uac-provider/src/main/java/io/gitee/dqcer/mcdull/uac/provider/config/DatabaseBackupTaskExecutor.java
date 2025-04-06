@@ -66,6 +66,7 @@ public class DatabaseBackupTaskExecutor {
         File file = null;
         File zipFile = null;
         try (Connection connection = dataSource.getConnection()) {
+            UserContextHolder.setDefaultSession();
            String schema = connection.getCatalog();
             LogHelp.info(log, "start backup database. schema:{}", schema);
             String tmpDirPath = FileUtil.getTmpDirPath();
@@ -73,7 +74,6 @@ public class DatabaseBackupTaskExecutor {
             String fileName = schema + "_" + dateTimeStr + ".sql";
             file = SqlDumper.dumpDatabase(connection, new HashSet<>(ListUtil.of(schema)), tmpDirPath + File.separator + fileName);
             zipFile = ZipUtil.zip(file);
-            UserContextHolder.setDefaultSession();
             fileService.fileUpload(zipFile, folderService.addIfAbsent("数据备份", 0));
             LogHelp.info(log, "backup database success. fileName:{}", fileName);
         } catch (SQLException e) {
