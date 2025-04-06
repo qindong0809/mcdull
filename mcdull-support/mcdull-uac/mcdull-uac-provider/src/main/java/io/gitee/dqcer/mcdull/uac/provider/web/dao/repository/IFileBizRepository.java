@@ -21,4 +21,6 @@ public interface IFileBizRepository extends IRepository<FileBizEntity> {
 
     void deleteByBizCode(Integer bizId, String bizCode);
 
+    void deleteByBizCode(Integer fileId, Integer bizId, String bizCode);
+
 }

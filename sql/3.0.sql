@@ -942,6 +942,9 @@ create table blaze_talent_certificate (
 `position_source` int not null comment '证书来源（1、企业直签 2、同行中介）',
 `position_title` varchar(255) not null comment '证书标题',
 `remarks` text comment '备注',
+`responsible_user_id` int not null comment '负责人',
+`approve` tinyint(0) not null default 0 comment '审批状态',
+`approve_remarks` varchar(32) comment '审批备注',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间'

@@ -235,7 +235,7 @@ public class FileServiceImpl
                     baseRepository.removeById(fileId);
                 }
             }
-            fileBizRepository.deleteByBizCode(bizId, tableName);
+            fileBizRepository.deleteByBizCode(fileId, bizId, tableName);
         }
     }
 

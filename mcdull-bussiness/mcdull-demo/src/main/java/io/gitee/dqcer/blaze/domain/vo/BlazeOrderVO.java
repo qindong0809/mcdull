@@ -17,7 +17,7 @@ import java.util.Date;
  */
 
 @Data
-public class BlazeOrderVO implements VO {
+public class BlazeOrderVO extends ApproveVO implements VO {
 
     private Integer id;
 
@@ -88,18 +88,4 @@ public class BlazeOrderVO implements VO {
     @DynamicDateFormat(enableTimezone = true)
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date endDateStr;
-
-    /**
-     * {@link io.gitee.dqcer.blaze.domain.enums.ApproveEnum}
-     */
-    private Integer approve;
-
-    private String approveStr;
-
-    private String approveRemark;
-
-    private Integer responsibleUserId;
-
-    private String responsibleUserIdStr;
-
 }

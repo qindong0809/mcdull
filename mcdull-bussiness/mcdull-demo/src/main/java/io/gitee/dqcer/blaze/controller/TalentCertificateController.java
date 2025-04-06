@@ -2,12 +2,15 @@ package io.gitee.dqcer.blaze.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.blaze.domain.bo.CertificateBO;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateAddDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.TalentCertificateVO;
 import io.gitee.dqcer.blaze.service.ITalentCertificateService;
+import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -21,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,6 +53,28 @@ public class TalentCertificateController extends BasicController {
     @GetMapping("/talent-cert/list/{customerCertId}")
     public Result<List<LabelValueVO<Integer, String>>> list(@PathVariable(value = "customerCertId") Integer customerCertId) {
         return Result.success(talentCertificateService.list(customerCertId, true));
+    }
+
+    @Operation(summary = "公共专业")
+    @GetMapping("/pub/CertificateLevelList")
+    public Result<List<LabelValueVO<Integer, String>>> getPubCertificateLevelList() {
+        List<CertificateBO> certificate = CertificateUtil.getCertificate();
+        return Result.success(certificate.stream()
+                .map(v -> new LabelValueVO<>(Convert.toInt(v.getCode()), v.getName())).collect(Collectors.toList()));
+    }
+
+    @Operation(summary = "公共职称")
+    @GetMapping("/pub/majorList")
+    public Result<List<LabelValueVO<Integer, String>>> getPubMajorList() {
+        List<CertificateBO> certificate = CertificateUtil.getCertificate();
+        List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
+        for (CertificateBO certificateBO : certificate) {
+            List<CertificateBO.Major> majorList = certificateBO.getMajorList();
+            for (CertificateBO.Major major : majorList) {
+                voList.add(new LabelValueVO<>(major.getCode(), StrUtil.format("({}){}", certificateBO.getName(), major.getName())));
+            }
+        }
+        return Result.success(voList);
     }
 
     @Operation(summary = "专业")
@@ -82,7 +108,7 @@ public class TalentCertificateController extends BasicController {
     @SaCheckPermission("blaze:talent_certificate:write")
     @PostMapping(value ="/talent-cert/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result<Boolean> add(@Valid TalentCertificateAddDTO dto, @RequestPart(value = "file", required = false) MultipartFile file) {
+    public Result<Boolean> add(@Valid TalentCertificateAddDTO dto, @RequestPart(value = "file", required = false) List<MultipartFile> file) {
         talentCertificateService.insert(dto, file);
         return Result.success(true);
     }
@@ -91,10 +117,19 @@ public class TalentCertificateController extends BasicController {
     @SaCheckPermission("blaze:talent_certificate:write")
     @PostMapping(value = "/talent-cert/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result<Boolean> update( @Valid TalentCertificateUpdateDTO dto, @RequestPart(value = "file", required = false) MultipartFile file) {
-        talentCertificateService.update(dto, file);
+    public Result<Boolean> update( @Valid TalentCertificateUpdateDTO dto, @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
+        talentCertificateService.update(dto, fileList);
         return Result.success(true);
     }
+
+    @Operation(summary = "审批")
+    @SaCheckPermission("blaze:talent_certificate:approve")
+    @PostMapping("/talent-cert/approve")
+    public Result<Boolean> approve(@RequestBody @Valid ApproveDTO dto) {
+        talentCertificateService.approve(dto);
+        return Result.success(true);
+    }
+
 
     @Operation(summary = "批量删除")
     @SaCheckPermission("blaze:talent_certificate:write")

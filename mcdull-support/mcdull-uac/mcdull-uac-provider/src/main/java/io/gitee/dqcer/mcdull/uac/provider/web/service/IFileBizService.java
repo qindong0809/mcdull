@@ -11,8 +11,6 @@ import java.util.Map;
 public interface IFileBizService {
 
 
-    void save(List<Integer> fileIdList, Integer bizId, String bizCode);
-
     Map<Integer, List<Integer>> get(String bizCode);
 
     void remove(Integer bizId, String bizCode);

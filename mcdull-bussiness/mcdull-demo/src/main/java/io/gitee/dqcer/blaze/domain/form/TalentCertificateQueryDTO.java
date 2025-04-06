@@ -35,4 +35,6 @@ public class TalentCertificateQueryDTO extends PagedDTO {
     @Schema(description = "初始/转注（1/无 2/初始 3/转注 4/其它）")
     private Integer initialOrTransfer;
 
+    private Integer approve;
+
 }

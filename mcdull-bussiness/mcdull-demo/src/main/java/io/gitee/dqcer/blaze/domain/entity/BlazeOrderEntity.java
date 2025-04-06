@@ -17,7 +17,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("blaze_order")
-public class BlazeOrderEntity extends BaseEntity<Integer> {
+public class BlazeOrderEntity extends BaseEntity<Integer> implements Approve {
 
     private String orderNo;
 

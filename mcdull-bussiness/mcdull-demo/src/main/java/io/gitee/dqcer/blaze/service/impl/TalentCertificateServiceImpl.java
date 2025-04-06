@@ -20,10 +20,8 @@ import io.gitee.dqcer.blaze.domain.form.TalentCertificateQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.FileVO;
 import io.gitee.dqcer.blaze.domain.vo.TalentCertificateVO;
-import io.gitee.dqcer.blaze.service.IBlazeOrderService;
-import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
-import io.gitee.dqcer.blaze.service.ITalentCertificateService;
-import io.gitee.dqcer.blaze.service.ITalentService;
+import io.gitee.dqcer.blaze.service.*;
+import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -79,6 +77,8 @@ public class TalentCertificateServiceImpl
     private IBlazeOrderService orderService;
     @Resource
     private IFolderService folderService;
+    @Resource
+    private IApproveService approveService;
 
     private static final String DEFAULT_BIZ_CODD = "blaze-talent-cert";
 
@@ -170,6 +170,7 @@ public class TalentCertificateServiceImpl
                 areaManager.set(voList);
 
             }
+            approveService.setApproveVO(voList, recordList);
         }
         return PageUtil.toPage(voList, entityPage);
     }
@@ -237,6 +238,7 @@ public class TalentCertificateServiceImpl
 //            dto.setBiddingExit(entity.getBiddingExit());
 //            dto.setThreePersonnel(entity.getThreePersonnel());
             dto.setSocialSecurityRequirement(entity.getSocialSecurityRequirement());
+            dto.setApprove(ApproveEnum.APPROVE.getCode());
         }
         PageUtil.setMaxPageSize(dto);
         PagedVO<TalentCertificateVO> page = this.queryPage(dto);
@@ -281,6 +283,12 @@ public class TalentCertificateServiceImpl
             return baseRepository.exists(query);
         }
         return false;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void approve(ApproveDTO dto) {
+        approveService.approve(dto, baseRepository);
     }
 
     private DynamicFieldBO getProvinceFieldBO() {
@@ -348,6 +356,7 @@ public class TalentCertificateServiceImpl
         entity.setSocialSecurityRequirement(item.getSocialSecurityRequirement());
         entity.setPositionSource(item.getPositionSource());
         entity.setRemarks(item.getRemarks());
+        entity.setResponsibleUserId(item.getResponsibleUserId());
     }
 
     private TalentCertificateEntity convertToEntity(TalentCertificateAddDTO item){
@@ -369,17 +378,21 @@ public class TalentCertificateServiceImpl
         entity.setSocialSecurityRequirement(item.getSocialSecurityRequirement());
         entity.setPositionSource(item.getPositionSource());
         entity.setRemarks(item.getRemarks());
+        entity.setResponsibleUserId(item.getResponsibleUserId());
         return entity;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void insert(TalentCertificateAddDTO dto, MultipartFile file) {
+    public void insert(TalentCertificateAddDTO dto, List<MultipartFile> fileList) {
         TalentCertificateEntity entity = this.convertToEntity(dto);
         entity.setPositionTitle(StrUtil.EMPTY);
+        entity.setApprove(ApproveEnum.NOT_APPROVE.getCode());
         baseRepository.save(entity);
         this.builderPositionTitle(entity);
-        if (ObjUtil.isNotNull(file)) {
-            fileService.fileUpload(file, folderService.getSystemFolderId(), entity.getId(), TalentCertificateEntity.class);
+        if (CollUtil.isNotEmpty(fileList)) {
+            for (MultipartFile file : fileList) {
+                fileService.fileUpload(file, folderService.getSystemFolderId(), entity.getId(), TalentCertificateEntity.class);
+            }
         }
     }
 
@@ -403,7 +416,7 @@ public class TalentCertificateServiceImpl
 
 
     @Transactional(rollbackFor = Exception.class)
-    public void update(TalentCertificateUpdateDTO dto, MultipartFile file) {
+    public void update(TalentCertificateUpdateDTO dto, List<MultipartFile> fileList) {
         Integer id = dto.getId();
         TalentCertificateEntity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
@@ -418,9 +431,12 @@ public class TalentCertificateServiceImpl
             fileService.remove(delFileId, id, TalentCertificateEntity.class);
         }
 
-        if (ObjUtil.isNotNull(file)) {
-            fileService.fileUpload(file, folderService.getSystemFolderId(), entity.getId(), TalentCertificateEntity.class);
+        if (CollUtil.isNotEmpty(fileList)) {
+            for (MultipartFile file : fileList) {
+                fileService.fileUpload(file, folderService.getSystemFolderId(), entity.getId(), TalentCertificateEntity.class);
+            }
         }
+
     }
 
     @Transactional(rollbackFor = Exception.class)

@@ -20,10 +20,7 @@ import io.gitee.dqcer.blaze.domain.form.BlazeOrderAddDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderVO;
-import io.gitee.dqcer.blaze.service.IBlazeOrderDetailService;
-import io.gitee.dqcer.blaze.service.IBlazeOrderService;
-import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
-import io.gitee.dqcer.blaze.service.ITalentCertificateService;
+import io.gitee.dqcer.blaze.service.*;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
@@ -67,6 +64,8 @@ public class BlazeOrderServiceImpl
     private ISerialNumberService serialNumberService;
     @Resource
     private IBlazeOrderDetailService blazeOrderDetailService;
+    @Resource
+    private IApproveService approveService;
 
     public PagedVO<BlazeOrderVO> queryPage(BlazeOrderQueryDTO dto) {
         List<BlazeOrderVO> voList = new ArrayList<>();
@@ -74,9 +73,6 @@ public class BlazeOrderServiceImpl
         List<BlazeOrderEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
             Map<Integer, String> nameMap = userManager.getMap(recordList);
-            Set<Integer> collect = recordList.stream().map(BlazeOrderEntity::getResponsibleUserId).collect(Collectors.toSet());
-            Map<Integer, String> responsibleUserMap = userManager.getNameMap(new ArrayList<>(collect));
-
             List<Integer> orderIdList = recordList.stream().map(IdEntity::getId).toList();
             List<BlazeOrderDetailEntity> orderDetailList = blazeOrderDetailService.getByOrderId(orderIdList);
             List<LabelValueVO<Integer, String>> list = CollUtil.emptyIfNull(certificateRequirementsService.all(false));
@@ -90,8 +86,14 @@ public class BlazeOrderServiceImpl
                 vo.setOrderNo(entity.getOrderNo());
                 vo.setCustomerCertName(map.get(entity.getCustomerCertId()));
                 vo.setTalentCertName(talentMap.get(entity.getTalentCertId()));
-                vo.setEnterpriseCollection(custMap.get(entity.getCustomerCertId()).getPositionContractPrice().toString());
-                vo.setTalentPayment(talentEntityMap.get(entity.getTalentCertId()).getPositionContractPrice().toString());
+                CertificateRequirementsEntity requirementsEntity = custMap.get(entity.getCustomerCertId());
+                if (ObjUtil.isNotNull(requirementsEntity)) {
+                    vo.setEnterpriseCollection(requirementsEntity.getPositionContractPrice().toString());
+                }
+                TalentCertificateEntity talentCertificateEntity = talentEntityMap.get(entity.getTalentCertId());
+                if (ObjUtil.isNotNull(talentCertificateEntity)) {
+                    vo.setTalentPayment(talentCertificateEntity.getPositionContractPrice().toString());
+                }
                 if (ObjUtil.isNotNull(entity.getContractTime())) {
                     vo.setContractTimeStr(entity.getContractTime());
                 }
@@ -104,7 +106,6 @@ public class BlazeOrderServiceImpl
                 if (ObjUtil.isNotNull(entity.getUpdatedBy())) {
                     vo.setUpdatedByStr(nameMap.get(entity.getUpdatedBy()));
                 }
-                vo.setResponsibleUserIdStr(responsibleUserMap.get(entity.getResponsibleUserId()));
                 BigDecimal talent = orderDetailList.stream()
                         .filter(i-> i.getBlazeOrderId().equals(entity.getId()) && BooleanUtil.isTrue(i.getIsTalent()))
                         .map(BlazeOrderDetailEntity::getPrice)
@@ -117,6 +118,7 @@ public class BlazeOrderServiceImpl
                 vo.setNowEnterpriseCollection(customer.toString());
                 voList.add(vo);
             }
+            approveService.setApproveVO(voList, recordList);
         }
         return PageUtil.toPage(voList, entityPage);
     }
@@ -246,15 +248,7 @@ public class BlazeOrderServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void approve(ApproveDTO dto) {
-        Integer id = dto.getId();
-        if (ObjUtil.isNotNull(id)) {
-            BlazeOrderEntity entity = baseRepository.getById(id);
-            if (ObjUtil.isNotNull(entity)) {
-                entity.setApprove(dto.getApprove());
-                entity.setApproveRemarks(dto.getRemark());
-                baseRepository.updateById(entity);
-            }
-        }
+        approveService.approve(dto, baseRepository);
     }
 
     private List<Pair<String, Func1<BlazeOrderVO, ?>>> getTitleList() {
@@ -282,8 +276,7 @@ public class BlazeOrderServiceImpl
         vo.setInactive(item.getInactive());
         vo.setInactiveStr(IEnum.getTextByCode(InactiveEnum.class, item.getInactive()));
         vo.setApprove(item.getApprove());
-        vo.setApproveStr(IEnum.getTextByCode(ApproveEnum.class, item.getApprove()));
-        vo.setApproveRemark(item.getApproveRemarks());
+        vo.setApproveRemarks(item.getApproveRemarks());
         vo.setStartDate(item.getStartDate());
         vo.setEndDate(item.getEndDate());
         vo.setStartDateStr(item.getStartDate());

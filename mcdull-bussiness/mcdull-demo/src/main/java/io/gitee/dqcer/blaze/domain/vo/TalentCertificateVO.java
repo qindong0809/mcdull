@@ -7,6 +7,7 @@ import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.IArea;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 import java.util.List;
@@ -18,8 +19,9 @@ import java.util.List;
  * @since 2025-01-07 21:32:34
  */
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class TalentCertificateVO implements IArea, VO {
+public class TalentCertificateVO extends ApproveVO implements IArea, VO {
 
 
     @Schema(description = "id")

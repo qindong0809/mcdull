@@ -31,12 +31,6 @@ public class FileBizRepositoryImpl extends
 
     @Override
     public void save(List<Integer> fileIdList, Integer bizId, String bizCode) {
-        if (ObjUtil.isNotNull(bizId) && StrUtil.isNotBlank(bizCode)) {
-            LambdaQueryWrapper<FileBizEntity> query = Wrappers.lambdaQuery();
-            query.eq(FileBizEntity::getBizId, bizId);
-            query.eq(FileBizEntity::getBizCode, bizCode);
-            baseMapper.delete(query);
-        }
         if (CollUtil.isNotEmpty(fileIdList) && ObjUtil.isNotNull(bizId) && StrUtil.isNotBlank(bizCode)) {
             List<FileBizEntity> entityList = new ArrayList<>();
             for (Integer fileId : fileIdList) {
@@ -69,6 +63,17 @@ public class FileBizRepositoryImpl extends
     public void deleteByBizCode(Integer bizId, String bizCode) {
         if (ObjUtil.isNotNull(bizId) && StrUtil.isNotBlank(bizCode)) {
             LambdaQueryWrapper<FileBizEntity> query = Wrappers.lambdaQuery();
+            query.eq(FileBizEntity::getBizId, bizId);
+            query.eq(FileBizEntity::getBizCode, bizCode);
+            baseMapper.delete(query);
+        }
+    }
+
+    @Override
+    public void deleteByBizCode(Integer fileId, Integer bizId, String bizCode) {
+        if (ObjUtil.isNotNull(fileId) && ObjUtil.isNotNull(bizId) && StrUtil.isNotBlank(bizCode)) {
+            LambdaQueryWrapper<FileBizEntity> query = Wrappers.lambdaQuery();
+            query.eq(FileBizEntity::getFileId, fileId);
             query.eq(FileBizEntity::getBizId, bizId);
             query.eq(FileBizEntity::getBizCode, bizCode);
             baseMapper.delete(query);

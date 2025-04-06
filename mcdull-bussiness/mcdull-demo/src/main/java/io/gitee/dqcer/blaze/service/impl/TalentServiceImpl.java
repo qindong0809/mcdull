@@ -3,6 +3,7 @@ package io.gitee.dqcer.blaze.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -74,6 +75,8 @@ public class TalentServiceImpl
                 if (ObjUtil.isNotNull(title)) {
                     vo.setTitleName(IEnum.getTextByCode(CertificateTitleEnum.class, title));
                 }
+                String s = DesensitizedUtil.idCardNum(vo.getIdNumber(), 3, 2);
+                vo.setIdNumber(s);
                 voList.add(vo);
             }
             areaManager.set(voList);
@@ -104,7 +107,6 @@ public class TalentServiceImpl
         List<Pair<String, Func1<TalentVO, ?>>> list = new ArrayList<>();
         list.add(Pair.of("姓名", TalentVO::getName));
         list.add(Pair.of("身份证号", TalentVO::getIdNumber));
-        list.add(Pair.of("联系电话", TalentVO::getContactNumber));
         list.add(Pair.of("工作单位性质", TalentVO::getWorkUnitTypeName));
         list.add(Pair.of("社保状态", TalentVO::getSocialSecurityStatusName));
         list.add(Pair.of("所在地省代码", TalentVO::getProvincesCode));
@@ -123,7 +125,6 @@ public class TalentServiceImpl
         vo.setId(item.getId());
         vo.setName(item.getName());
         vo.setIdNumber(item.getIdNumber());
-        vo.setContactNumber(item.getContactNumber());
         vo.setWorkUnitType(item.getWorkUnitType());
         vo.setSocialSecurityStatus(item.getSocialSecurityStatus());
         vo.setProvincesCode(item.getProvincesCode());
@@ -185,7 +186,9 @@ public class TalentServiceImpl
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
         }
-        return this.convertToVO(entity);
+        TalentVO vo = this.convertToVO(entity);
+        vo.setContactNumber(entity.getContactNumber());
+        return vo;
     }
 
 

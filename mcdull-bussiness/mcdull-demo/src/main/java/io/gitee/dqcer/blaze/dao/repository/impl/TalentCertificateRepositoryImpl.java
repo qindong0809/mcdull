@@ -50,6 +50,7 @@ public class TalentCertificateRepositoryImpl extends
         lambda.eq(ObjUtil.isNotNull(param.getSocialSecurityRequirement()), TalentCertificateEntity::getSocialSecurityRequirement, param.getSocialSecurityRequirement());
         lambda.eq(ObjUtil.isNotNull(param.getInitialOrTransfer()), TalentCertificateEntity::getInitialOrTransfer, param.getInitialOrTransfer());
         lambda.eq(ObjUtil.isNotNull(param.getCertificateStatus()), TalentCertificateEntity::getCertificateStatus, param.getCertificateStatus());
+        lambda.eq(ObjUtil.isNotNull(param.getApprove()), TalentCertificateEntity::getApprove, param.getApprove());
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }

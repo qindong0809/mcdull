@@ -94,4 +94,7 @@ public class TalentCertificateUpdateDTO implements DTO {
 
     private Integer delFileId;
 
+    @Schema(description = "审批人id", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Integer responsibleUserId;
+
 }

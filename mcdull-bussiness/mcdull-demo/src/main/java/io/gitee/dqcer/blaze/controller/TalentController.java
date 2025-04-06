@@ -65,6 +65,13 @@ public class TalentController extends BasicController {
         return Result.success(true);
     }
 
+    @Operation(summary = "详情")
+    @SaCheckPermission("blaze:talent:write")
+    @GetMapping(value ="/talent/{id}")
+    public Result<TalentVO> update(@PathVariable(value = "id") Integer id) {
+        return Result.success(talentService.detail(id));
+    }
+
     @Operation(summary = "删除")
     @SaCheckPermission("blaze:talent:write")
     @GetMapping("/talent/delete/{id}")

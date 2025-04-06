@@ -21,4 +21,9 @@ public class CertificateUtil {
         List<CertificateBO> list = JSONUtil.toList(sJson, CertificateBO.class);
         return list.stream().collect(Collectors.toMap(CertificateBO::getCode, v -> v));
     }
+
+    public static List<CertificateBO> getCertificate() {
+        String sJson = ResourceUtil.readUtf8Str("certificate.json");
+        return JSONUtil.toList(sJson, CertificateBO.class);
+    }
 }

@@ -4,39 +4,39 @@
     "name": "一级建造师",
     "majorList": [
       {
-        "code": 1,
+        "code": 11,
         "name": "建筑工程"
       },
       {
-        "code": 2,
+        "code": 12,
         "name": "市政工用"
       },
       {
-        "code": 3,
+        "code": 13,
         "name": "机电工程"
       },
       {
-        "code": 4,
+        "code": 14,
         "name": "水利水电"
       },
       {
-        "code": 5,
+        "code": 15,
         "name": "矿业工程"
       },
       {
-        "code": 6,
+        "code": 16,
         "name": "港口与航道"
       },
       {
-        "code": 7,
+        "code": 17,
         "name": "通信与广电"
       },
       {
-        "code": 8,
+        "code": 18,
         "name": "铁路工程"
       },
       {
-        "code": 9,
+        "code": 19,
         "name": "民航机场"
       }
     ]
@@ -46,23 +46,23 @@
     "name": "二级建造师",
     "majorList": [
       {
-        "code": 1,
+        "code": 21,
         "name": "建筑工程"
       },
       {
-        "code": 2,
+        "code": 22,
         "name": "公路工程"
       },
       {
-        "code": 3,
+        "code": 23,
         "name": "水利水电工程"
       },
       {
-        "code": 4,
+        "code": 24,
         "name": "机电工程"
       },
       {
-        "code": 5,
+        "code": 25,
         "name": "市政公用工程"
       }
     ]
@@ -72,11 +72,11 @@
     "name": "结构师",
     "majorList": [
       {
-        "code": 1,
+        "code": 31,
         "name": "一级结构师"
       },
       {
-        "code": 2,
+        "code": 32,
         "name": "二级结构师"
       }
     ]
@@ -86,15 +86,15 @@
     "name": "公用设备工程师",
     "majorList": [
       {
-        "code": 1,
+        "code": 41,
         "name": "暖通空调"
       },
       {
-        "code": 2,
+        "code": 42,
         "name": "给水排水"
       },
       {
-        "code": 3,
+        "code": 43,
         "name": "动力"
       }
     ]
@@ -104,11 +104,11 @@
     "name": "电气工程师",
     "majorList": [
       {
-        "code": 1,
+        "code": 51,
         "name": "供配电"
       },
       {
-        "code": 2,
+        "code": 52,
         "name": "发输变电"
       }
     ]
@@ -118,15 +118,15 @@
     "name": "监理师",
     "majorList": [
       {
-        "code": 1,
+        "code": 61,
         "name": "建设部"
       },
       {
-        "code": 2,
+        "code": 62,
         "name": "水利部"
       },
       {
-        "code": 3,
+        "code": 63,
         "name": "交通部"
       }
     ]
@@ -136,15 +136,15 @@
     "name": "造价师",
     "majorList": [
       {
-        "code": 1,
+        "code": 71,
         "name": "建设部"
       },
       {
-        "code": 2,
+        "code": 72,
         "name": "水利部"
       },
       {
-        "code": 3,
+        "code": 73,
         "name": "交通部"
       }
     ]
@@ -154,11 +154,11 @@
     "name": "安全评价师",
     "majorList": [
       {
-        "code": 1,
+        "code": 81,
         "name": "一级安全评价师"
       },
       {
-        "code": 2,
+        "code": 82,
         "name": "二级安全评价师"
       }
     ]
@@ -168,87 +168,87 @@
     "name": "注册咨询师",
     "majorList": [
         {
-          "code": 1,
+          "code": 91,
           "name": "市政公用工程"
         },
         {
-          "code": 2,
+          "code": 92,
           "name": "环境工程和生态建设"
         },
         {
-          "code": 3,
+          "code": 93,
           "name": "建筑/建筑材料"
         },
         {
-          "code": 4,
+          "code": 94,
           "name": "水电/核电/火电"
         },
         {
-          "code": 5,
+          "code": 95,
           "name": "农业/林业"
         },
         {
-          "code": 6,
+          "code": 96,
           "name": "化工"
         },
         {
-          "code": 7,
+          "code": 97,
           "name": "医药"
         },
         {
-          "code": 8,
+          "code": 98,
           "name": "公路/铁路/民航"
         },
         {
-          "code": 9,
+          "code": 99,
           "name": "机械/电子"
         },
         {
-          "code": 10,
+          "code": 910,
           "name": "轻工/纺织"
         },
         {
-          "code": 11,
+          "code": 911,
           "name": "化纤"
         },
         {
-          "code": 12,
+          "code": 912,
           "name": "石油天然气"
         },
         {
-          "code": 13,
+          "code": 913,
           "name": "城市规划"
         },
         {
-          "code": 14,
+          "code": 914,
           "name": "通信/广播电影电视"
         },
         {
-          "code": 15,
+          "code": 915,
           "name": "地质/测量/岩土工程"
         },
         {
-          "code": 16,
+          "code": 916,
           "name": "媒体/石化"
         },
         {
-          "code": 17,
+          "code": 917,
           "name": "城市轨道交通"
         },
         {
-          "code": 18,
+          "code": 918,
           "name": "钢铁/有色冶金"
         },
         {
-          "code": 19,
+          "code": 919,
           "name": "综合经济"
         },
         {
-          "code": 20,
+          "code": 920,
           "name": "港口河海工程"
         },
         {
-          "code": 21,
+          "code": 921,
           "name": "其他"
         }
     ]
@@ -258,11 +258,11 @@
     "name": "建筑师",
     "majorList": [
       {
-        "code": 1,
+        "code": 101,
         "name": "一级建筑师"
       },
       {
-        "code": 2,
+        "code": 102,
         "name": "二级建筑师"
       }
     ]
