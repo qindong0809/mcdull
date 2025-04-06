@@ -43,10 +43,7 @@ public class BlazeOrderRepositoryImpl extends
     @Override
     public Page<BlazeOrderEntity> selectPage(BlazeOrderQueryDTO param) {
         LambdaQueryWrapper<BlazeOrderEntity> lambda = Wrappers.lambdaQuery();
-        String keyword = param.getKeyword();
-        if (ObjUtil.isNotNull(keyword)) {
-            // TODO 组装查询条件
-        }
+        lambda.eq(ObjUtil.isNotNull(param.getApprove()), BlazeOrderEntity::getApprove, param.getApprove());
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }

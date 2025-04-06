@@ -29,4 +29,6 @@ public class BlazeOrderQueryDTO extends PagedDTO {
     @Schema(description = "合同时间")
     private Date contractTimeEnd;
 
+    private Integer approve;
+
 }

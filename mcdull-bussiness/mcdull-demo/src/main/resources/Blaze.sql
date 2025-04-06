@@ -30,7 +30,12 @@ INSERT INTO `sys_menu` VALUES (283, '写操作', 3, 280, 3, NULL, NULL, 1, 'blaz
 INSERT INTO `sys_menu` VALUES (284, '导出', 3, 281, 3, NULL, NULL, 1, 'blaze:order_detail_customer:export', 'blaze:order_detail_customer:export', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (285, '写操作', 3, 281, 3, NULL, NULL, 1, 'blaze:order_detail_customer:write', 'blaze:order_detail_customer:write', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 
+INSERT INTO `sys_menu` VALUES (290, '审批', 3, 281, 3, NULL, NULL, 1, 'blaze:order_detail_customer:approve', 'blaze:order_detail_customer:approve', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (291, '审批', 3, 280, 3, NULL, NULL, 1, 'blaze:order_detail_talent:approve', 'blaze:order_detail_talent:approve', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 
+INSERT INTO `sys_menu` VALUES (293, '审批', 3, 260, 3, NULL, NULL, 1, 'blaze:talent_certificate:approve', 'blaze:talent_certificate:approve', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (294, '审批', 3, 261, 3, NULL, NULL, 1, 'blaze:certificate_requirements:approve', 'blaze:certificate_requirements:approve', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES (295, '审批', 3, 262, 3, NULL, NULL, 1, 'blaze:order:approve', 'blaze:order:approve', NULL, NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), NULL, NULL);
 
 drop table if exists `blaze_customer_info`;
 create table if not exists `blaze_customer_info` (

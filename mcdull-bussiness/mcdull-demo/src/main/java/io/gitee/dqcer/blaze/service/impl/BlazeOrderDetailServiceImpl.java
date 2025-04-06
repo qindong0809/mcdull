@@ -9,6 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.blaze.dao.repository.IBlazeOrderDetailRepository;
 import io.gitee.dqcer.blaze.domain.entity.BlazeOrderDetailEntity;
+import io.gitee.dqcer.blaze.domain.enums.ApproveEnum;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderDetailAddDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderDetailQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderDetailUpdateDTO;
@@ -151,6 +152,7 @@ public class BlazeOrderDetailServiceImpl
     @Override
     public void insert(BlazeOrderDetailAddDTO dto) {
         BlazeOrderDetailEntity entity = this.convertToEntity(dto);
+        entity.setApprove(ApproveEnum.NOT_APPROVE.getCode());
         baseRepository.save(entity);
     }
 
@@ -197,8 +199,8 @@ public class BlazeOrderDetailServiceImpl
     @Override
     public List<BlazeOrderDetailListVO> getOderListByTalent() {
         BlazeOrderQueryDTO dto = new BlazeOrderQueryDTO();
+        dto.setApprove(ApproveEnum.APPROVE.getCode());
         PageUtil.setMaxPageSize(dto);
-        // todo 状态过滤，打款完成过滤
         PagedVO<BlazeOrderVO> page = blazeOrderService.queryPage(dto);
         if (CollUtil.isNotEmpty(page.getList())) {
             List<BlazeOrderDetailListVO> voList = new ArrayList<>();
