@@ -8,6 +8,7 @@ import io.gitee.dqcer.blaze.domain.form.BlazeOrderDetailUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderDetailListVO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderDetailVO;
 import io.gitee.dqcer.blaze.service.IBlazeOrderDetailService;
+import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
@@ -78,6 +79,15 @@ public class BlazeOrderDetailController extends BasicController {
     public Result<Boolean> add(@RequestBody @Valid BlazeOrderDetailAddDTO dto) {
         this.setUnifySession(dto.getIsTalent());
         blazeOrderDetailService.insert(dto);
+        return Result.success(true);
+    }
+
+    @Operation(summary = "审批")
+    @SaCheckPermission(value = {"blaze:order_detail_talent:approve", "blaze:order_detail_customer:approve"}, mode = SaMode.OR)
+    @PostMapping("/blazeOrderDetail/approve")
+    public Result<Boolean> approve(@RequestBody @Valid ApproveDTO dto) {
+        this.setUnifySession(blazeOrderDetailService.isTalent(dto.getId()));
+        blazeOrderDetailService.approve(dto);
         return Result.success(true);
     }
 

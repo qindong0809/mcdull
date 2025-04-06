@@ -20,9 +20,11 @@ import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsAddDTO;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.CertificateRequirementsVO;
+import io.gitee.dqcer.blaze.service.IApproveService;
 import io.gitee.dqcer.blaze.service.IBlazeOrderService;
 import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
 import io.gitee.dqcer.blaze.service.ICustomerInfoService;
+import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
@@ -64,6 +66,8 @@ public class CertificateRequirementsServiceImpl
     private IAreaService areaService;
     @Resource
     private IBlazeOrderService orderService;
+    @Resource
+    private IApproveService approveService;
 
     public PagedVO<CertificateRequirementsVO> queryPage(CertificateRequirementsQueryDTO dto) {
         List<CertificateRequirementsVO> voList = new ArrayList<>();
@@ -136,8 +140,8 @@ public class CertificateRequirementsServiceImpl
                 }
                 voList.add(vo);
                 areaManager.set(voList);
-
             }
+            approveService.setApproveVO(voList, recordList);
         }
         return PageUtil.toPage(voList, entityPage);
     }
@@ -229,6 +233,41 @@ public class CertificateRequirementsServiceImpl
             return baseRepository.exists(query);
         }
         return false;
+    }
+
+    @Override
+    public void approve(ApproveDTO dto) {
+        approveService.approve(dto, baseRepository);
+    }
+
+    @Override
+    public List<LabelValueVO<Integer, String>> okList() {
+        CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
+        dto.setApprove(ApproveEnum.APPROVE.getCode());
+        PageUtil.setMaxPageSize(dto);
+        PagedVO<CertificateRequirementsVO> page = this.queryPage(dto);
+        if (ObjUtil.isNotNull(page)) {
+            List<BlazeOrderEntity> orderEntityList = CollUtil.defaultIfEmpty(orderService.list(), new ArrayList<>());
+            Map<Integer, Boolean> map = orderService.getMapByCustomerCertId(orderEntityList.stream().map(BlazeOrderEntity::getCustomerCertId).collect(Collectors.toSet()));
+            List<CertificateRequirementsVO> list = page.getList();
+            if (CollUtil.isNotEmpty(list)) {
+                List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
+                for (CertificateRequirementsVO vo : list) {
+                    Boolean exist = map.get(vo.getId());
+                    if (BooleanUtil.isFalse(exist)) {
+                        voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
+                        continue;
+                    }
+                    Integer currentCount = Convert.toInt(orderEntityList.stream().filter(item -> item.getCustomerCertId().equals(vo.getId())).count(), 0);
+                    Integer configCount = vo.getQuantity();
+                    if (configCount > currentCount) {
+                        voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
+                    }
+                }
+                return voList;
+            }
+        }
+        return List.of();
     }
 
     @Override
@@ -351,12 +390,14 @@ public class CertificateRequirementsServiceImpl
         entity.setPositionSource(item.getPositionSource());
         entity.setPositionTitle(item.getPositionTitle());
         entity.setRemarks(item.getRemarks());
+        entity.setResponsibleUserId(item.getResponsibleUserId());
         return entity;
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void insert(CertificateRequirementsAddDTO dto) {
         CertificateRequirementsEntity entity = this.convertToEntity(dto);
+        entity.setApprove(ApproveEnum.NOT_APPROVE.getCode());
         entity.setPositionTitle(StrUtil.EMPTY);
         baseRepository.save(entity);
         String positionTitle = dto.getPositionTitle();

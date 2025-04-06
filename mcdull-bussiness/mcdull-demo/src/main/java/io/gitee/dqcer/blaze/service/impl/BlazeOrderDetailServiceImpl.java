@@ -16,8 +16,10 @@ import io.gitee.dqcer.blaze.domain.form.BlazeOrderQueryDTO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderDetailListVO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderDetailVO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderVO;
+import io.gitee.dqcer.blaze.service.IApproveService;
 import io.gitee.dqcer.blaze.service.IBlazeOrderDetailService;
 import io.gitee.dqcer.blaze.service.IBlazeOrderService;
+import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -52,6 +54,8 @@ public class BlazeOrderDetailServiceImpl
     private IUserManager userManager;
     @Resource
     private ICommonManager commonManager;
+    @Resource
+    private IApproveService approveService;
 
     @Override
     public PagedVO<BlazeOrderDetailVO> queryPage(BlazeOrderDetailQueryDTO dto) {
@@ -95,6 +99,7 @@ public class BlazeOrderDetailServiceImpl
             vo.setOperationTimeStr(vo.getOperationTime());
             voList.add(vo);
         }
+        approveService.setApproveVO(voList, records);
         return PageUtil.toPage(voList, entityPage);
     }
 
@@ -255,5 +260,11 @@ public class BlazeOrderDetailServiceImpl
     @Override
     public List<BlazeOrderDetailEntity> getByOrderId(List<Integer> orderIdList) {
         return baseRepository.getByOrderId(orderIdList);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void approve(ApproveDTO dto) {
+        approveService.approve(dto, baseRepository);
     }
 }

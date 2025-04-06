@@ -1,22 +1,20 @@
 package io.gitee.dqcer.blaze.dao.repository.impl;
 
-import io.gitee.dqcer.blaze.dao.mapper.CertificateRequirementsMapper;
-import io.gitee.dqcer.blaze.dao.repository.ICertificateRequirementsRepository;
-import io.gitee.dqcer.blaze.domain.entity.CertificateRequirementsEntity;
-
-import java.util.List;
-
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.gitee.dqcer.blaze.dao.mapper.CertificateRequirementsMapper;
+import io.gitee.dqcer.blaze.dao.repository.ICertificateRequirementsRepository;
+import io.gitee.dqcer.blaze.domain.entity.CertificateRequirementsEntity;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsQueryDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -45,10 +43,11 @@ public class CertificateRequirementsRepositoryImpl extends
     @Override
     public Page<CertificateRequirementsEntity> selectPage(CertificateRequirementsQueryDTO param) {
         LambdaQueryWrapper<CertificateRequirementsEntity> lambda = Wrappers.lambdaQuery();
-        String keyword = param.getKeyword();
-        if (ObjUtil.isNotNull(keyword)) {
-            // TODO 组装查询条件
-        }
+        lambda.eq(ObjUtil.isNotNull(param.getCertificateLevel()), CertificateRequirementsEntity::getCertificateLevel, param.getCertificateLevel());
+        lambda.eq(ObjUtil.isNotNull(param.getInitialOrTransfer()), CertificateRequirementsEntity::getInitialOrTransfer, param.getInitialOrTransfer());
+        lambda.eq(ObjUtil.isNotNull(param.getSpecialty()), CertificateRequirementsEntity::getSpecialty, param.getSpecialty());
+        lambda.eq(ObjUtil.isNotNull(param.getSocialSecurityRequirement()), CertificateRequirementsEntity::getSocialSecurityRequirement, param.getSocialSecurityRequirement());
+        lambda.eq(ObjUtil.isNotNull(param.getApprove()), CertificateRequirementsEntity::getApprove, param.getApprove());
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }

@@ -107,12 +107,12 @@ public class BlazeOrderServiceImpl
                     vo.setUpdatedByStr(nameMap.get(entity.getUpdatedBy()));
                 }
                 BigDecimal talent = orderDetailList.stream()
-                        .filter(i-> i.getBlazeOrderId().equals(entity.getId()) && BooleanUtil.isTrue(i.getIsTalent()))
+                        .filter(i-> i.getBlazeOrderId().equals(entity.getId()) && BooleanUtil.isTrue(i.getIsTalent()) && ObjUtil.equals(i.getApprove(), ApproveEnum.APPROVE.getCode()))
                         .map(BlazeOrderDetailEntity::getPrice)
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
                 vo.setNowTalentPayment(talent.toString());
                 BigDecimal customer = orderDetailList.stream()
-                        .filter(i-> i.getBlazeOrderId().equals(entity.getId()) && BooleanUtil.isFalse(i.getIsTalent()))
+                        .filter(i-> i.getBlazeOrderId().equals(entity.getId()) && BooleanUtil.isFalse(i.getIsTalent()) && ObjUtil.equals(i.getApprove(), ApproveEnum.APPROVE.getCode()))
                         .map(BlazeOrderDetailEntity::getPrice)
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
                 vo.setNowEnterpriseCollection(customer.toString());
@@ -204,7 +204,7 @@ public class BlazeOrderServiceImpl
                 }
             }
         }
-        List<LabelValueVO<Integer, String>> list = certificateRequirementsService.all(true);
+        List<LabelValueVO<Integer, String>> list = certificateRequirementsService.okList();
         if (CollUtil.isNotEmpty(list)) {
             for (LabelValueVO<Integer, String> vo : list) {
                 if (!voList.contains(vo)) {

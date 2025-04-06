@@ -6,6 +6,7 @@ import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
@@ -16,8 +17,9 @@ import java.util.Date;
  * @since 2025-01-18 11:33:31
  */
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class BlazeOrderDetailVO implements VO {
+public class BlazeOrderDetailVO extends ApproveVO implements VO {
 
     private Integer id;
 

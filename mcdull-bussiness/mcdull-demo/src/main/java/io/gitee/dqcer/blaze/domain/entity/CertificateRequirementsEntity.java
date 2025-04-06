@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("blaze_certificate_requirements")
-public class CertificateRequirementsEntity extends RelEntity<Integer> {
+public class CertificateRequirementsEntity extends RelEntity<Integer> implements Approve{
 
     private Integer customerId;
 
@@ -100,4 +100,13 @@ public class CertificateRequirementsEntity extends RelEntity<Integer> {
      * 备注
      */
     private String remarks;
+
+    /**
+     * {@link io.gitee.dqcer.blaze.domain.enums.ApproveEnum}
+     */
+    private Integer approve;
+
+    private String approveRemarks;
+
+    private Integer responsibleUserId;
 }

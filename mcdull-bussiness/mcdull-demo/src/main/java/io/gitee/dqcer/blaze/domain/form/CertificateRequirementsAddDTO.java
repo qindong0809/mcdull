@@ -90,4 +90,6 @@ public class CertificateRequirementsAddDTO implements DTO {
     @Schema(description = "备注")
     private String remarks;
 
+    private Integer responsibleUserId;
+
 }

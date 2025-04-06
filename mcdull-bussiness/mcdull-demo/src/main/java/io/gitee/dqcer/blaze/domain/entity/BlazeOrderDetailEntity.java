@@ -16,14 +16,13 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("blaze_order_detail")
-public class BlazeOrderDetailEntity extends BaseEntity<Integer> {
+public class BlazeOrderDetailEntity extends BaseEntity<Integer> implements Approve{
 
 
     private Integer blazeOrderId;
 
     private Boolean isTalent;
 
-    private Integer responsibleUserId;
 
     private Date operationTime;
 
@@ -33,4 +32,11 @@ public class BlazeOrderDetailEntity extends BaseEntity<Integer> {
      * 备注
      */
     private String remarks;
+
+    private Integer approve;
+
+    private String approveRemarks;
+
+    private Integer responsibleUserId;
+
 }

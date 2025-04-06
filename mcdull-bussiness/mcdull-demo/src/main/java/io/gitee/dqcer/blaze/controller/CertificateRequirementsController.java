@@ -8,6 +8,7 @@ import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.CertificateRequirementsVO;
 import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
+import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -84,6 +85,15 @@ public class CertificateRequirementsController extends BasicController {
         certificateRequirementsService.insert(dto);
         return Result.success(true);
     }
+
+    @Operation(summary = "审批")
+    @SaCheckPermission("blaze:certificate_requirements:approve")
+    @PostMapping("/CertificateRequirements/approve")
+    public Result<Boolean> approve(@RequestBody @Valid ApproveDTO dto) {
+        certificateRequirementsService.approve(dto);
+        return Result.success(true);
+    }
+
 
     @Operation(summary = "更新")
     @SaCheckPermission("blaze:certificate_requirements:write")

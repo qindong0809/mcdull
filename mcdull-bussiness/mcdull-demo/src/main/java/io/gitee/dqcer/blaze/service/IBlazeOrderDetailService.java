@@ -6,6 +6,7 @@ import io.gitee.dqcer.blaze.domain.form.BlazeOrderDetailQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderDetailUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderDetailListVO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderDetailVO;
+import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 
@@ -39,4 +40,6 @@ public interface IBlazeOrderDetailService {
     BlazeOrderDetailEntity getByOrderId(Integer id);
 
     List<BlazeOrderDetailEntity> getByOrderId(List<Integer> orderIdList);
+
+    void approve(ApproveDTO dto);
 }
