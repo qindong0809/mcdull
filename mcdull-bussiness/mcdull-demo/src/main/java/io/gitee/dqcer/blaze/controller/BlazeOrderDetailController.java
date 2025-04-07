@@ -2,6 +2,7 @@ package io.gitee.dqcer.blaze.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
+import cn.hutool.core.date.DateUtil;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderDetailAddDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderDetailQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderDetailUpdateDTO;
@@ -78,7 +79,8 @@ public class BlazeOrderDetailController extends BasicController {
     @SaCheckPermission(value = {"blaze:order_detail_talent:write", "blaze:order_detail_customer:write"}, mode = SaMode.OR)
     @PostMapping(value = "/blazeOrderDetail/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result<Boolean> add(@RequestBody @Valid BlazeOrderDetailAddDTO dto, @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
+    public Result<Boolean> add(@Valid BlazeOrderDetailAddDTO dto, @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
+        dto.setOperationTime(DateUtil.parseDate(dto.getOperationTimeStr()));
         this.setUnifySession(dto.getIsTalent());
         blazeOrderDetailService.insert(dto, fileList);
         return Result.success(true);
@@ -97,7 +99,8 @@ public class BlazeOrderDetailController extends BasicController {
     @SaCheckPermission(value = {"blaze:order_detail_talent:write", "blaze:order_detail_customer:write"}, mode = SaMode.OR)
     @PostMapping(value = "/blazeOrderDetail/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result<Boolean> update(@RequestBody @Valid BlazeOrderDetailUpdateDTO dto, @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
+    public Result<Boolean> update(@Valid BlazeOrderDetailUpdateDTO dto, @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
+        dto.setOperationTime(DateUtil.parseDate(dto.getOperationTimeStr()));
         this.setUnifySession(blazeOrderDetailService.isTalent(dto.getId()));
         blazeOrderDetailService.update(dto, fileList);
         return Result.success(true);

@@ -1,6 +1,5 @@
 package io.gitee.dqcer.blaze.domain.form;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -26,14 +25,22 @@ public class BlazeOrderAddDTO implements DTO {
     @NotNull(message = "所属企业证书 不能为空")
     private Integer customerCertId;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     @Schema(description = "合同时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "合同时间 不能为空")
     private Date contractTime;
 
+    private String contractTimeStr;
+
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 
+    private String startDateStr;
+
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
+
+    private String endDateStr;
 
     private Integer approve;
 

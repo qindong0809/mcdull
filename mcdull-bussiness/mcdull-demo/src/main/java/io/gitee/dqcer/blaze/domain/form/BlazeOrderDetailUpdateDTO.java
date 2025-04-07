@@ -21,6 +21,8 @@ public class BlazeOrderDetailUpdateDTO implements DTO {
 
     private Date operationTime;
 
+    private String operationTimeStr;
+
     private BigDecimal price;
 
     private String remarks;

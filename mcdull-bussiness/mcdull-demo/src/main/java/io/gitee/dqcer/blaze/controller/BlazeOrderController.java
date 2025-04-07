@@ -1,6 +1,8 @@
 package io.gitee.dqcer.blaze.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderAddDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderSearchDTO;
@@ -51,8 +53,17 @@ public class BlazeOrderController extends BasicController {
     @SaCheckPermission("blaze:order:write")
     @PostMapping(value = "/blazeOrder/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result<Boolean> add(@RequestBody @Valid BlazeOrderAddDTO dto,
+    public Result<Boolean> add(@Valid BlazeOrderAddDTO dto,
                                @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
+        dto.setContractTime(DateUtil.parseDate(dto.getContractTimeStr()));
+        String startDateStr = dto.getStartDateStr();
+        if (StrUtil.isNotBlank(startDateStr)) {
+            dto.setStartDate(DateUtil.parseDate(startDateStr));
+        }
+        String endDateStr = dto.getEndDateStr();
+        if (StrUtil.isNotBlank(endDateStr)) {
+            dto.setEndDate(DateUtil.parseDate(endDateStr));
+        }
         blazeOrderService.insert(dto, fileList);
         return Result.success(true);
     }
@@ -61,8 +72,17 @@ public class BlazeOrderController extends BasicController {
     @SaCheckPermission("blaze:order:write")
     @PostMapping(value = "/blazeOrder/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result<Boolean> update(@RequestBody @Valid BlazeOrderUpdateDTO dto,
+    public Result<Boolean> update(@Valid BlazeOrderUpdateDTO dto,
                                   @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
+        dto.setContractTime(DateUtil.parseDate(dto.getContractTimeStr()));
+        String startDateStr = dto.getStartDateStr();
+        if (StrUtil.isNotBlank(startDateStr)) {
+            dto.setStartDate(DateUtil.parseDate(startDateStr));
+        }
+        String endDateStr = dto.getEndDateStr();
+        if (StrUtil.isNotBlank(endDateStr)) {
+            dto.setEndDate(DateUtil.parseDate(endDateStr));
+        }
         blazeOrderService.update(dto, fileList);
         return Result.success(true);
     }

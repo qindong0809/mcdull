@@ -83,7 +83,7 @@ public class CertificateRequirementsController extends BasicController {
     @SaCheckPermission("blaze:certificate_requirements:write")
     @PostMapping(value = "/CertificateRequirements/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result<Boolean> add(@RequestBody @Valid CertificateRequirementsAddDTO dto,
+    public Result<Boolean> add(@Valid CertificateRequirementsAddDTO dto,
                                @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
         certificateRequirementsService.insert(dto, fileList);
         return Result.success(true);
@@ -102,7 +102,7 @@ public class CertificateRequirementsController extends BasicController {
     @SaCheckPermission("blaze:certificate_requirements:write")
     @PostMapping(value = "/CertificateRequirements/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result<Boolean> update(@RequestBody @Valid CertificateRequirementsUpdateDTO dto,
+    public Result<Boolean> update(@Valid CertificateRequirementsUpdateDTO dto,
                                   @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
         certificateRequirementsService.update(dto, fileList);
         return Result.success(true);
