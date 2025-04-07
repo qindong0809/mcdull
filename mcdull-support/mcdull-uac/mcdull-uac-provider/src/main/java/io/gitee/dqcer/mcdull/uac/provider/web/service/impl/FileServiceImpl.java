@@ -145,11 +145,21 @@ public class FileServiceImpl
         return uploadVO;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public FileUploadVO fileUpload(MultipartFile file, Integer folder, Integer bizId, Class<?> clazz) {
-        FileUploadVO fileUploadVO = this.fileUpload(file, folder);
-        fileBizRepository.save(ListUtil.of(fileUploadVO.getFileId()), bizId, this.getTableName(clazz));
-        return fileUploadVO;
+    public void batchFileUpload(List<MultipartFile> fileList, Integer bizId, Class<?> clazz, List<Integer> deleteFileIdList) {
+        if (CollUtil.isNotEmpty(deleteFileIdList)) {
+            for (Integer deletedFileId : deleteFileIdList) {
+                this.remove(deletedFileId, bizId, clazz);
+            }
+        }
+        if (CollUtil.isNotEmpty(fileList)) {
+            Integer systemFolderId = folderService.getSystemFolderId();
+            for (MultipartFile multipartFile : fileList) {
+                FileUploadVO fileUploadVO = this.fileUpload(multipartFile, systemFolderId);
+                fileBizRepository.save(ListUtil.of(fileUploadVO.getFileId()), bizId, this.getTableName(clazz));
+            }
+        }
     }
 
     @Override
@@ -202,15 +212,6 @@ public class FileServiceImpl
         return list;
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void removeByFileId(Integer fileId, Integer bizId, String bizCode) {
-        FileEntity byId = baseRepository.getById(fileId);
-        if (ObjectUtil.isNotNull(byId)) {
-            fileBizRepository.deleteByBizCode(bizId, bizCode);
-            baseRepository.removeById(fileId);
-        }
-    }
 
     @Override
     public Map<Integer, FileEntity> map(Set<Integer> fileIdSet) {
@@ -223,8 +224,6 @@ public class FileServiceImpl
         return Map.of();
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    @Override
     public void remove(Integer fileId, Integer bizId, Class<?> clazz) {
         String tableName = this.getTableName(clazz);
         Map<Integer, List<Integer>> listMap = fileBizService.get(tableName);
@@ -236,6 +235,20 @@ public class FileServiceImpl
                 }
             }
             fileBizRepository.deleteByBizCode(fileId, bizId, tableName);
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void remove(Integer bizId, Class<?> clazz) {
+        String tableName = this.getTableName(clazz);
+        Map<Integer, List<Integer>> listMap = fileBizService.get(tableName);
+        if (MapUtil.isNotEmpty(listMap)) {
+            List<Integer> fileIdList = listMap.get(bizId);
+            if (CollUtil.isNotEmpty(fileIdList)) {
+                baseRepository.removeByIds(fileIdList);
+            }
+            fileBizRepository.deleteByBizCode(bizId, tableName);
         }
     }
 

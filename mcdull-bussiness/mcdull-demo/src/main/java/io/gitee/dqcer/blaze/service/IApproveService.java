@@ -2,7 +2,7 @@ package io.gitee.dqcer.blaze.service;
 
 import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.blaze.domain.entity.Approve;
-import io.gitee.dqcer.blaze.domain.vo.ApproveVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.ApproveVO;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 
 import java.util.List;

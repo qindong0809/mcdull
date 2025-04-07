@@ -8,6 +8,8 @@ import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.ApproveVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.IFileVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
@@ -48,4 +50,8 @@ public interface ICommonManager {
     Boolean isCaptchaEnabled();
 
     Boolean getConfigToBool(String key);
+
+    void setFileVO(List<? extends IFileVO> voList, Class<?> clazz);
+
+    void setIsSameDepartment(List<? extends ApproveVO> voList, Integer userId);
 }

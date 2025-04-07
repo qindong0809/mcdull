@@ -48,6 +48,14 @@ public interface IUserManager {
     */
    Map<Integer, UserEntity> getEntityMap(List<Integer> userIdList);
 
+   /**
+    * 获取用户部门
+    *
+    * @param userIdList 用户 ID 列表
+    * @return {@link Map }<{@link Integer }, {@link Integer }>
+    */
+   Map<Integer, Integer> getUserDepartmentMap(List<Integer> userIdList);
+
    List<LabelValueVO<Integer, String>> getResponsibleList();
 
    Map<Integer, String> getMap(List<? extends BaseEntity<Integer>> list);

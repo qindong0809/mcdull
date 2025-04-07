@@ -4,12 +4,16 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.ApproveVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileSimpleVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.IArea;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.IFileVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 证书需求表 列表VO
@@ -20,7 +24,7 @@ import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class CertificateRequirementsVO extends ApproveVO implements IArea, VO {
+public class CertificateRequirementsVO extends ApproveVO implements IFileVO, IArea, VO {
 
 
     @Schema(description = "id")
@@ -123,5 +127,7 @@ public class CertificateRequirementsVO extends ApproveVO implements IArea, VO {
     @JsonSerialize(using = DynamicDateSerialize.class)
     @Schema(description = "创建时间")
     private Date createdTime;
+
+    private List<FileSimpleVO> fileList;
 
 }

@@ -27,6 +27,7 @@ import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -34,10 +35,12 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.SerialNumberGenerateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ISerialNumberService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -68,6 +71,8 @@ public class BlazeOrderServiceImpl
     private IBlazeOrderDetailService blazeOrderDetailService;
     @Resource
     private IApproveService approveService;
+    @Resource
+    private IFileService fileService;
 
     public PagedVO<BlazeOrderVO> queryPage(BlazeOrderQueryDTO dto) {
         List<BlazeOrderVO> voList = new ArrayList<>();
@@ -121,6 +126,8 @@ public class BlazeOrderServiceImpl
                 voList.add(vo);
             }
             approveService.setApproveVO(voList, recordList);
+            commonManager.setFileVO(voList, BlazeOrderEntity.class);
+            commonManager.setIsSameDepartment(voList, UserContextHolder.userId());
         }
         return PageUtil.toPage(voList, entityPage);
     }
@@ -383,7 +390,7 @@ public class BlazeOrderServiceImpl
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void insert(BlazeOrderAddDTO dto) {
+    public void insert(BlazeOrderAddDTO dto, List<MultipartFile> fileList) {
         BlazeOrderEntity entity = this.convertToEntity(dto);
         entity.setApprove(ApproveEnum.NOT_APPROVE.getCode());
         SerialNumberGenerateDTO generateDTO = new SerialNumberGenerateDTO();
@@ -392,11 +399,12 @@ public class BlazeOrderServiceImpl
         List<String> generate = serialNumberService.generate(generateDTO);
         entity.setOrderNo(generate.get(0));
         baseRepository.save(entity);
+        fileService.batchFileUpload(fileList, entity.getId(), BlazeOrderEntity.class, null);
     }
 
 
     @Transactional(rollbackFor = Exception.class)
-    public void update(BlazeOrderUpdateDTO dto) {
+    public void update(BlazeOrderUpdateDTO dto, List<MultipartFile> fileList) {
         Integer id = dto.getId();
         BlazeOrderEntity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
@@ -411,6 +419,7 @@ public class BlazeOrderServiceImpl
         }
         this.setUpdateFieldValue(dto, entity);
         baseRepository.updateById(entity);
+        fileService.batchFileUpload(fileList, entity.getId(), BlazeOrderEntity.class, dto.getDeleteFileIdList());
     }
     @Override
     public BlazeOrderVO detail(Integer id) {

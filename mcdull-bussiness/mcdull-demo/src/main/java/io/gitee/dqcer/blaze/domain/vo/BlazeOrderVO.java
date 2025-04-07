@@ -4,10 +4,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.ApproveVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileSimpleVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.IFileVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 订单合同 列表VO
@@ -17,7 +21,7 @@ import java.util.Date;
  */
 
 @Data
-public class BlazeOrderVO extends ApproveVO implements VO {
+public class BlazeOrderVO extends ApproveVO implements IFileVO, VO {
 
     private Integer id;
 
@@ -90,4 +94,8 @@ public class BlazeOrderVO extends ApproveVO implements VO {
     private Date endDateStr;
 
     private Boolean firstIsTalent;
+
+    @Schema(description = "附件列表")
+    private List<FileSimpleVO> fileList;
+
 }

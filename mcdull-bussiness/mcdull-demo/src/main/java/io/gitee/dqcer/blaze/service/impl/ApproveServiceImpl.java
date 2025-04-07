@@ -5,7 +5,7 @@ import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.blaze.domain.entity.Approve;
 import io.gitee.dqcer.blaze.domain.enums.ApproveEnum;
-import io.gitee.dqcer.blaze.domain.vo.ApproveVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.ApproveVO;
 import io.gitee.dqcer.blaze.service.IApproveService;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;

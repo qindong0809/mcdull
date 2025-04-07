@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author dqcer
@@ -23,6 +24,8 @@ public class BlazeOrderDetailUpdateDTO implements DTO {
     private BigDecimal price;
 
     private String remarks;
+
+    private List<Integer> deleteFileIdList;
 
 
 }

@@ -40,10 +40,17 @@ import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.ConfigEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.DepartmentEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.FileEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileExtensionTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.ApproveVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileSimpleVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.IFileVO;
 import io.gitee.dqcer.mcdull.uac.provider.util.ExcelUtil;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IConfigRepository;
+import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
@@ -65,6 +72,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -82,6 +90,8 @@ public class CommonManagerImpl implements ICommonManager {
     private IFolderService folderService;
     @Resource
     private IMenuService menuService;
+    @Resource
+    private IDepartmentRepository definitionRepository;
 
     private String getFileName(FileExtensionTypeEnum fileExtension, String... args) {
         if (ObjUtil.isNull(fileExtension) || ArrayUtil.isEmpty(args)) {
@@ -358,6 +368,63 @@ public class CommonManagerImpl implements ICommonManager {
         String config = this.getConfig(key);
         if (StrUtil.isNotBlank(config)) {
             return BooleanUtil.toBooleanObject(config);
+        }
+        return null;
+    }
+
+    @Override
+    public void setFileVO(List<? extends IFileVO> voList, Class<?> clazz) {
+        if (CollUtil.isNotEmpty(voList)) {
+            List<Integer> idList = voList.stream().map(IFileVO::getId).collect(Collectors.toList());
+            Map<Integer, List<FileEntity>> fileEntityMap = fileService.get(idList, clazz);
+            for (IFileVO vo : voList) {
+                List<FileEntity> fileEntityList = fileEntityMap.get(vo.getId());
+                if (CollUtil.isNotEmpty(fileEntityList)) {
+                    String fileDomainName = this.getConfig("file-domain-name");
+                    List<FileSimpleVO> fileList = new ArrayList<>();
+                    for (FileEntity fileEntity : fileEntityList) {
+                        FileSimpleVO fileVO = new FileSimpleVO();
+                        fileVO.setUrl(URLUtil.encodeBlank(fileDomainName + "/upload/" + fileEntity.getFileKey()));
+                        fileVO.setFileName(fileEntity.getFileName());
+                        fileVO.setId(fileEntity.getId());
+                        fileList.add(fileVO);
+                    }
+                    vo.setFileList(fileList);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void setIsSameDepartment(List<? extends ApproveVO> voList, Integer userId) {
+        if (CollUtil.isNotEmpty(voList)) {
+            List<DepartmentEntity> list = definitionRepository.list();
+            Set<Integer> userIdSet = voList.stream().map(ApproveVO::getResponsibleUserId).collect(Collectors.toSet());
+            userIdSet.add(userId);
+            Map<Integer, UserEntity> entityMap = userManager.getEntityMap(new ArrayList<>(userIdSet));
+            UserEntity user = entityMap.get(userId);
+            Integer userRootDepartmentId = this.getRootDepartmentId(list, user.getDepartmentId());
+
+            for (ApproveVO vo : voList) {
+                Integer responsibleUserId = vo.getResponsibleUserId();
+                if (ObjUtil.isNotNull(responsibleUserId)) {
+                    UserEntity responsibleUser = entityMap.get(responsibleUserId);
+                    Integer responsibleUserDepartmentId = responsibleUser.getDepartmentId();
+                    Integer rootDepartmentId = this.getRootDepartmentId(list, responsibleUserDepartmentId);
+                    vo.setIsSameDepartment(ObjUtil.equal(userRootDepartmentId, rootDepartmentId));
+                }
+            }
+        }
+    }
+
+    private Integer getRootDepartmentId(List<DepartmentEntity> list, Integer departmentId) {
+        for (DepartmentEntity entity : list) {
+            if (entity.getId().equals(departmentId)) {
+                if (entity.getParentId().equals(0)) {
+                    return entity.getId();
+                }
+                return getRootDepartmentId(list, entity.getParentId());
+            }
         }
         return null;
     }

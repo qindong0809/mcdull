@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 证书需求表 更新表单
@@ -96,4 +97,5 @@ public class CertificateRequirementsUpdateDTO implements DTO {
 
     private Integer responsibleUserId;
 
+    private List<Integer> deleteFileIdList;
 }

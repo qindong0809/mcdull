@@ -24,6 +24,7 @@ import io.gitee.dqcer.blaze.domain.vo.CertificateRequirementsVO;
 import io.gitee.dqcer.blaze.service.*;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -33,10 +34,12 @@ import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IAreaService;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import io.gitee.dqcer.util.CertificateUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -68,6 +71,8 @@ public class CertificateRequirementsServiceImpl
     private IApproveService approveService;
     @Resource
     private ITalentCertificateService talentCertificateService;
+    @Resource
+    private IFileService fileService;
 
     public PagedVO<CertificateRequirementsVO> queryPage(CertificateRequirementsQueryDTO dto) {
         List<CertificateRequirementsVO> voList = new ArrayList<>();
@@ -142,12 +147,10 @@ public class CertificateRequirementsServiceImpl
                 areaManager.set(voList);
             }
             approveService.setApproveVO(voList, recordList);
+            commonManager.setFileVO(voList, CertificateRequirementsEntity.class);
+            commonManager.setIsSameDepartment(voList, UserContextHolder.userId());
         }
         return PageUtil.toPage(voList, entityPage);
-    }
-    public void demo() {
-        CertificateRequirementsEntity entity = new CertificateRequirementsEntity();
-
     }
 
     @Override
@@ -423,7 +426,7 @@ public class CertificateRequirementsServiceImpl
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void insert(CertificateRequirementsAddDTO dto) {
+    public void insert(CertificateRequirementsAddDTO dto, List<MultipartFile> fileList) {
         CertificateRequirementsEntity entity = this.convertToEntity(dto);
         entity.setApprove(ApproveEnum.NOT_APPROVE.getCode());
         entity.setPositionTitle(StrUtil.EMPTY);
@@ -432,6 +435,7 @@ public class CertificateRequirementsServiceImpl
         if (StrUtil.isBlank(positionTitle)) {
             this.builderPositionTitle(entity);
         }
+        fileService.batchFileUpload(fileList, entity.getId(), CertificateRequirementsEntity.class, null);
     }
 
     private void builderPositionTitle(CertificateRequirementsEntity entity) {
@@ -453,7 +457,7 @@ public class CertificateRequirementsServiceImpl
 
 
     @Transactional(rollbackFor = Exception.class)
-    public void update(CertificateRequirementsUpdateDTO dto) {
+    public void update(CertificateRequirementsUpdateDTO dto, List<MultipartFile> fileList) {
         Integer id = dto.getId();
         CertificateRequirementsEntity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
@@ -465,6 +469,7 @@ public class CertificateRequirementsServiceImpl
         if (StrUtil.isBlank(positionTitle)) {
             this.builderPositionTitle(entity);
         }
+        fileService.batchFileUpload(fileList, entity.getId(), CertificateRequirementsEntity.class, dto.getDeleteFileIdList());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -478,5 +483,8 @@ public class CertificateRequirementsServiceImpl
             super.throwDataExistAssociated(idList);
         }
         baseRepository.removeBatchByIds(idList);
+        for (CertificateRequirementsEntity entity : entityList) {
+            fileService.remove(entity.getId(), CertificateRequirementsEntity.class);
+        }
     }
 }

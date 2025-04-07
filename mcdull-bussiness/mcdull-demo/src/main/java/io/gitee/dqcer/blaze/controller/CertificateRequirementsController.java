@@ -20,6 +20,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -80,9 +81,11 @@ public class CertificateRequirementsController extends BasicController {
 
     @Operation(summary = "添加")
     @SaCheckPermission("blaze:certificate_requirements:write")
-    @PostMapping("/CertificateRequirements/add")
-    public Result<Boolean> add(@RequestBody @Valid CertificateRequirementsAddDTO dto) {
-        certificateRequirementsService.insert(dto);
+    @PostMapping(value = "/CertificateRequirements/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result<Boolean> add(@RequestBody @Valid CertificateRequirementsAddDTO dto,
+                               @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
+        certificateRequirementsService.insert(dto, fileList);
         return Result.success(true);
     }
 
@@ -97,9 +100,11 @@ public class CertificateRequirementsController extends BasicController {
 
     @Operation(summary = "更新")
     @SaCheckPermission("blaze:certificate_requirements:write")
-    @PostMapping("/CertificateRequirements/update")
-    public Result<Boolean> update(@RequestBody @Valid CertificateRequirementsUpdateDTO dto) {
-        certificateRequirementsService.update(dto);
+    @PostMapping(value = "/CertificateRequirements/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result<Boolean> update(@RequestBody @Valid CertificateRequirementsUpdateDTO dto,
+                                  @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
+        certificateRequirementsService.update(dto, fileList);
         return Result.success(true);
     }
 

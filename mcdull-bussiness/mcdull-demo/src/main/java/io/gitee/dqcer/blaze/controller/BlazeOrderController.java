@@ -19,6 +19,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -48,17 +49,21 @@ public class BlazeOrderController extends BasicController {
 
     @Operation(summary = "添加")
     @SaCheckPermission("blaze:order:write")
-    @PostMapping("/blazeOrder/add")
-    public Result<Boolean> add(@RequestBody @Valid BlazeOrderAddDTO dto) {
-        blazeOrderService.insert(dto);
+    @PostMapping(value = "/blazeOrder/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result<Boolean> add(@RequestBody @Valid BlazeOrderAddDTO dto,
+                               @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
+        blazeOrderService.insert(dto, fileList);
         return Result.success(true);
     }
 
     @Operation(summary = "更新")
     @SaCheckPermission("blaze:order:write")
-    @PostMapping("/blazeOrder/update")
-    public Result<Boolean> update(@RequestBody @Valid BlazeOrderUpdateDTO dto) {
-        blazeOrderService.update(dto);
+    @PostMapping(value = "/blazeOrder/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result<Boolean> update(@RequestBody @Valid BlazeOrderUpdateDTO dto,
+                                  @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
+        blazeOrderService.update(dto, fileList);
         return Result.success(true);
     }
 

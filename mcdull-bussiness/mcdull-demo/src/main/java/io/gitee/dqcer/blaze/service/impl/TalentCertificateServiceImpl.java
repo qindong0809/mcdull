@@ -1,12 +1,12 @@
 package io.gitee.dqcer.blaze.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -18,25 +18,22 @@ import io.gitee.dqcer.blaze.domain.enums.*;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateAddDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateUpdateDTO;
-import io.gitee.dqcer.blaze.domain.vo.FileVO;
 import io.gitee.dqcer.blaze.domain.vo.TalentCertificateVO;
 import io.gitee.dqcer.blaze.service.*;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
-import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
-import io.gitee.dqcer.mcdull.uac.provider.model.entity.FileEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileBizRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IAreaService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
-import io.gitee.dqcer.mcdull.uac.provider.web.service.IFolderService;
 import io.gitee.dqcer.util.CertificateUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -76,8 +73,6 @@ public class TalentCertificateServiceImpl
     @Resource
     private IBlazeOrderService orderService;
     @Resource
-    private IFolderService folderService;
-    @Resource
     private IApproveService approveService;
 
     private static final String DEFAULT_BIZ_CODD = "blaze-talent-cert";
@@ -87,25 +82,10 @@ public class TalentCertificateServiceImpl
         Page<TalentCertificateEntity> entityPage = baseRepository.selectPage(dto);
         List<TalentCertificateEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
-            String fileDomainName = commonManager.getConfig("file-domain-name");
             List<LabelValueVO<Integer, String>> talentList = talentService.list();
             Map<Integer, CertificateBO> certificateMap = CertificateUtil.getCertificateMap();
-            List<Integer> idList = recordList.stream().map(IdEntity::getId).collect(Collectors.toList());
-            Map<Integer, List<FileEntity>> fileEntityMap = fileService.get(idList, TalentCertificateEntity.class);
             for (TalentCertificateEntity entity : recordList) {
                 TalentCertificateVO vo = this.convertToVO(entity);
-                List<FileEntity> fileEntityList = fileEntityMap.get(entity.getId());
-                List<FileVO> fileList = new ArrayList<>();
-                if (CollUtil.isNotEmpty(fileEntityList)) {
-                    for (FileEntity fileEntity : fileEntityList) {
-                        FileVO fileVO = new FileVO();
-                        fileVO.setUrl(URLUtil.encodeBlank(fileDomainName + "/upload/" + fileEntity.getFileKey()));
-                        fileVO.setFileName(fileEntity.getFileName());
-                        fileVO.setId(fileEntity.getId());
-                        fileList.add(fileVO);
-                    }
-                }
-                vo.setFileList(fileList);
                 BigDecimal positionContractPrice = entity.getPositionContractPrice();
                 if (ObjUtil.isNotNull(positionContractPrice)) {
                     vo.setPositionContractPrice(positionContractPrice.setScale(2, RoundingMode.HALF_UP).toString());
@@ -171,6 +151,8 @@ public class TalentCertificateServiceImpl
 
             }
             approveService.setApproveVO(voList, recordList);
+            commonManager.setFileVO(voList, TalentCertificateEntity.class);
+            commonManager.setIsSameDepartment(voList, UserContextHolder.userId());
         }
         return PageUtil.toPage(voList, entityPage);
     }
@@ -419,12 +401,11 @@ public class TalentCertificateServiceImpl
         entity.setPositionTitle(StrUtil.EMPTY);
         entity.setApprove(ApproveEnum.NOT_APPROVE.getCode());
         baseRepository.save(entity);
-        this.builderPositionTitle(entity);
-        if (CollUtil.isNotEmpty(fileList)) {
-            for (MultipartFile file : fileList) {
-                fileService.fileUpload(file, folderService.getSystemFolderId(), entity.getId(), TalentCertificateEntity.class);
-            }
+        String positionTitle = dto.getPositionTitle();
+        if (StrUtil.isBlank(positionTitle)) {
+            this.builderPositionTitle(entity);
         }
+        fileService.batchFileUpload(fileList, entity.getId(), TalentCertificateEntity.class, null);
     }
 
     private void builderPositionTitle(TalentCertificateEntity entity) {
@@ -455,19 +436,12 @@ public class TalentCertificateServiceImpl
         }
         this.setUpdateFieldValue(dto, entity);
         baseRepository.updateById(entity);
-        this.builderPositionTitle(entity);
-
+        String positionTitle = dto.getPositionTitle();
+        if (StrUtil.isBlank(positionTitle)) {
+            this.builderPositionTitle(entity);
+        }
         Integer delFileId = dto.getDelFileId();
-        if (ObjUtil.isNotNull(delFileId)) {
-            fileService.remove(delFileId, id, TalentCertificateEntity.class);
-        }
-
-        if (CollUtil.isNotEmpty(fileList)) {
-            for (MultipartFile file : fileList) {
-                fileService.fileUpload(file, folderService.getSystemFolderId(), entity.getId(), TalentCertificateEntity.class);
-            }
-        }
-
+        fileService.batchFileUpload(fileList, entity.getId(), TalentCertificateEntity.class, ListUtil.of(delFileId));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -481,15 +455,8 @@ public class TalentCertificateServiceImpl
             super.throwDataExistAssociated(idList);
         }
         baseRepository.removeBatchByIds(idList);
-        Map<Integer, List<Integer>> map = fileBizRepository.mapByBizCode(DEFAULT_BIZ_CODD);
         for (TalentCertificateEntity entity : entityList) {
-            Integer entityId = entity.getId();
-            List<Integer> fileIdList = map.get(entityId);
-            if (CollUtil.isNotEmpty(fileIdList)) {
-                for (Integer fileId : fileIdList) {
-                    fileService.removeByFileId(fileId, entityId, DEFAULT_BIZ_CODD);
-                }
-            }
+            fileService.remove(entity.getId(), TalentCertificateEntity.class);
         }
     }
 }

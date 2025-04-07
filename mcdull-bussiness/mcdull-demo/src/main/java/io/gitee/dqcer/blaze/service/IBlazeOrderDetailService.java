@@ -9,6 +9,7 @@ import io.gitee.dqcer.blaze.domain.vo.BlazeOrderDetailVO;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,9 +24,9 @@ public interface IBlazeOrderDetailService {
 
     void exportData(BlazeOrderDetailQueryDTO dto);
 
-    void insert(BlazeOrderDetailAddDTO dto);
+    void insert(BlazeOrderDetailAddDTO dto, List<MultipartFile> fileList);
 
-    void update(BlazeOrderDetailUpdateDTO dto);
+    void update(BlazeOrderDetailUpdateDTO dto, List<MultipartFile> fileList);
 
     void delete(Integer id);
 

@@ -21,6 +21,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -75,10 +76,11 @@ public class BlazeOrderDetailController extends BasicController {
 
     @Operation(summary = "添加")
     @SaCheckPermission(value = {"blaze:order_detail_talent:write", "blaze:order_detail_customer:write"}, mode = SaMode.OR)
-    @PostMapping("/blazeOrderDetail/add")
-    public Result<Boolean> add(@RequestBody @Valid BlazeOrderDetailAddDTO dto) {
+    @PostMapping(value = "/blazeOrderDetail/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result<Boolean> add(@RequestBody @Valid BlazeOrderDetailAddDTO dto, @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
         this.setUnifySession(dto.getIsTalent());
-        blazeOrderDetailService.insert(dto);
+        blazeOrderDetailService.insert(dto, fileList);
         return Result.success(true);
     }
 
@@ -93,10 +95,11 @@ public class BlazeOrderDetailController extends BasicController {
 
     @Operation(summary = "更新")
     @SaCheckPermission(value = {"blaze:order_detail_talent:write", "blaze:order_detail_customer:write"}, mode = SaMode.OR)
-    @PostMapping("/blazeOrderDetail/update")
-    public Result<Boolean> update(@RequestBody @Valid BlazeOrderDetailUpdateDTO dto) {
+    @PostMapping(value = "/blazeOrderDetail/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result<Boolean> update(@RequestBody @Valid BlazeOrderDetailUpdateDTO dto, @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
         this.setUnifySession(blazeOrderDetailService.isTalent(dto.getId()));
-        blazeOrderDetailService.update(dto);
+        blazeOrderDetailService.update(dto, fileList);
         return Result.success(true);
     }
 

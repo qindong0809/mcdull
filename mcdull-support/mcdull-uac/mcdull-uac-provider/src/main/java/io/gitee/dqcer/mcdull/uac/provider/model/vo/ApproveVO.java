@@ -1,4 +1,4 @@
-package io.gitee.dqcer.blaze.domain.vo;
+package io.gitee.dqcer.mcdull.uac.provider.model.vo;
 
 import lombok.Data;
 
@@ -19,4 +19,6 @@ public class ApproveVO {
     private Integer responsibleUserId;
 
     private String responsibleUserIdStr;
+
+    private Boolean isSameDepartment;
 }

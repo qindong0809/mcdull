@@ -8,6 +8,7 @@ import io.gitee.dqcer.blaze.domain.vo.CertificateRequirementsVO;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -25,9 +26,9 @@ public interface ICertificateRequirementsService {
 
     CertificateRequirementsEntity get(Integer id);
 
-    void insert(CertificateRequirementsAddDTO dto);
+    void insert(CertificateRequirementsAddDTO dto, List<MultipartFile> fileList);
 
-    void update(CertificateRequirementsUpdateDTO dto);
+    void update(CertificateRequirementsUpdateDTO dto, List<MultipartFile> fileList);
 
     void batchDelete(List<Integer> idList);
 

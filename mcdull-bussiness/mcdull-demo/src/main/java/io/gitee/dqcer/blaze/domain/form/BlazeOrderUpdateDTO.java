@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 订单合同 更新表单
@@ -49,5 +50,7 @@ public class BlazeOrderUpdateDTO implements DTO {
 
     @NotNull
     private Integer responsibleUserId;
+
+    private List<Integer> deleteFileIdList;
 
 }

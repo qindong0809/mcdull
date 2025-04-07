@@ -85,6 +85,9 @@ public class TalentCertificateAddDTO implements DTO {
     @NotNull(message = "职位来源 不能为空")
     private Integer positionSource;
 
+    @Schema(description = "职位标题")
+    private String positionTitle;
+
     @Schema(description = "备注")
     private String remarks;
 

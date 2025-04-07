@@ -108,8 +108,8 @@ public class TalentCertificateController extends BasicController {
     @SaCheckPermission("blaze:talent_certificate:write")
     @PostMapping(value ="/talent-cert/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result<Boolean> add(@Valid TalentCertificateAddDTO dto, @RequestPart(value = "file", required = false) List<MultipartFile> file) {
-        talentCertificateService.insert(dto, file);
+    public Result<Boolean> add(@Valid TalentCertificateAddDTO dto, @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
+        talentCertificateService.insert(dto, fileList);
         return Result.success(true);
     }
 

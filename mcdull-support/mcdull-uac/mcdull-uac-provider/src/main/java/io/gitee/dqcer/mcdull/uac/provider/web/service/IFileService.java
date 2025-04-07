@@ -27,7 +27,7 @@ public interface IFileService {
 
     FileUploadVO fileUpload(MultipartFile file, Integer folder);
 
-    FileUploadVO fileUpload(MultipartFile file, Integer folder, Integer bizId, Class<?> clazz);
+    void batchFileUpload(List<MultipartFile> fileList, Integer bizId, Class<?> clazz, List<Integer> deleteFileIdList);
 
     FileUploadVO fileUpload(File file, Integer folder);
 
@@ -37,11 +37,9 @@ public interface IFileService {
 
     List<FileVO> getFileList(List<String> fileKeyList);
 
-    void removeByFileId(Integer fileId, Integer bizId, String bizCode);
-
     Map<Integer, FileEntity> map(Set<Integer> fileIdSet);
 
-    void remove(Integer fileId, Integer bizId, Class<?> clazz);
+    void remove(Integer bizId, Class<?> clazz);
 
     Map<Integer, List<FileEntity>> get(List<Integer> idList, Class<?> aClass);
 }

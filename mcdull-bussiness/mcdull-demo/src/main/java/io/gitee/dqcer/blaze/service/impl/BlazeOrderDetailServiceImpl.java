@@ -23,6 +23,7 @@ import io.gitee.dqcer.blaze.service.IBlazeOrderService;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
@@ -30,9 +31,11 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +60,8 @@ public class BlazeOrderDetailServiceImpl
     private ICommonManager commonManager;
     @Resource
     private IApproveService approveService;
+    @Resource
+    private IFileService fileService;
 
     @Override
     public PagedVO<BlazeOrderDetailVO> queryPage(BlazeOrderDetailQueryDTO dto) {
@@ -101,6 +106,8 @@ public class BlazeOrderDetailServiceImpl
             voList.add(vo);
         }
         approveService.setApproveVO(voList, records);
+        commonManager.setFileVO(voList, BlazeOrderDetailEntity.class);
+        commonManager.setIsSameDepartment(voList, UserContextHolder.userId());
         return PageUtil.toPage(voList, entityPage);
     }
 
@@ -150,10 +157,11 @@ public class BlazeOrderDetailServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void insert(BlazeOrderDetailAddDTO dto) {
+    public void insert(BlazeOrderDetailAddDTO dto, List<MultipartFile> fileList) {
         BlazeOrderDetailEntity entity = this.convertToEntity(dto);
         entity.setApprove(ApproveEnum.NOT_APPROVE.getCode());
         baseRepository.save(entity);
+        fileService.batchFileUpload(fileList, entity.getId(), BlazeOrderDetailEntity.class, null);
     }
 
     private BlazeOrderDetailEntity convertToEntity(BlazeOrderDetailAddDTO dto) {
@@ -169,7 +177,7 @@ public class BlazeOrderDetailServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void update(BlazeOrderDetailUpdateDTO dto) {
+    public void update(BlazeOrderDetailUpdateDTO dto, List<MultipartFile> fileList) {
         Integer id = dto.getId();
         BlazeOrderDetailEntity entity = baseRepository.getById(id);
         if (ObjUtil.isNull(entity)) {
@@ -177,6 +185,7 @@ public class BlazeOrderDetailServiceImpl
         }
         this.settingUpdateValue(dto, entity);
         baseRepository.updateById(entity);
+        fileService.batchFileUpload(fileList, id, BlazeOrderDetailEntity.class, dto.getDeleteFileIdList());
     }
 
     private void settingUpdateValue(BlazeOrderDetailUpdateDTO dto, BlazeOrderDetailEntity entity) {
@@ -194,6 +203,7 @@ public class BlazeOrderDetailServiceImpl
             this.throwDataNotExistException(id);
         }
         baseRepository.removeById(id);
+        fileService.remove(id, BlazeOrderDetailEntity.class);
     }
 
     @Override
