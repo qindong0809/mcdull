@@ -98,4 +98,17 @@ public class BlazeOrderVO extends ApproveVO implements IFileVO, VO {
     @Schema(description = "附件列表")
     private List<FileSimpleVO> fileList;
 
+    private Integer talentResponsibleUserId;
+
+    @Schema(description = "人才负责人")
+    private String talentResponsibleUserIdStr;
+
+    private String talentResponsibleUserPhone;
+
+    private Integer customerResponsibleUserId;
+
+    @Schema(description = "企业负责人")
+    private String customerResponsibleUserIdStr;
+
+    private String customerResponsibleUserPhone;
 }

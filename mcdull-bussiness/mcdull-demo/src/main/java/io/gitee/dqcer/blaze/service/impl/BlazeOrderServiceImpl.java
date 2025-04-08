@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -33,6 +34,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.SerialNumberGenerateDTO;
+import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
@@ -96,10 +98,12 @@ public class BlazeOrderServiceImpl
                 CertificateRequirementsEntity requirementsEntity = custMap.get(entity.getCustomerCertId());
                 if (ObjUtil.isNotNull(requirementsEntity)) {
                     vo.setEnterpriseCollection(requirementsEntity.getPositionContractPrice().toString());
+                    vo.setCustomerResponsibleUserId(requirementsEntity.getResponsibleUserId());
                 }
                 TalentCertificateEntity talentCertificateEntity = talentEntityMap.get(entity.getTalentCertId());
                 if (ObjUtil.isNotNull(talentCertificateEntity)) {
                     vo.setTalentPayment(talentCertificateEntity.getPositionContractPrice().toString());
+                    vo.setTalentResponsibleUserId(talentCertificateEntity.getResponsibleUserId());
                 }
                 if (ObjUtil.isNotNull(entity.getContractTime())) {
                     vo.setContractTimeStr(entity.getContractTime());
@@ -125,6 +129,25 @@ public class BlazeOrderServiceImpl
                 vo.setNowEnterpriseCollection(customer.toString());
                 voList.add(vo);
             }
+            Set<Integer> collect = voList.stream().map(BlazeOrderVO::getTalentResponsibleUserId).collect(Collectors.toSet());
+            collect.addAll(voList.stream().map(BlazeOrderVO::getCustomerResponsibleUserId).collect(Collectors.toSet()));
+            Map<Integer, UserEntity> userMap = userManager.getEntityMap(new ArrayList<>(collect));
+            for (BlazeOrderVO orderVO : voList) {
+                if (MapUtil.isNotEmpty(userMap)) {
+                    UserEntity user = userMap.get(orderVO.getTalentResponsibleUserId());
+                    if (ObjUtil.isNotNull(user)) {
+                        orderVO.setTalentResponsibleUserPhone(user.getPhone());
+                        orderVO.setTalentResponsibleUserIdStr(user.getActualName());
+                    }
+                    UserEntity customerUser =  userMap.get(orderVO.getCustomerResponsibleUserId());
+                    if (ObjUtil.isNotNull(customerUser)) {
+                        orderVO.setCustomerResponsibleUserPhone(customerUser.getPhone());
+                        orderVO.setCustomerResponsibleUserIdStr(customerUser.getActualName());
+                    }
+                }
+            }
+
+
             approveService.setApproveVO(voList, recordList);
             commonManager.setFileVO(voList, BlazeOrderEntity.class);
             commonManager.setIsSameDepartment(voList, UserContextHolder.userId());
@@ -331,8 +354,10 @@ public class BlazeOrderServiceImpl
         List<Pair<String, Func1<BlazeOrderVO, ?>>> list = new ArrayList<>();
         list.add(Pair.of("所属人才", BlazeOrderVO::getTalentCertName));
         list.add(Pair.of("所属企业", BlazeOrderVO::getCustomerCertName));
-        list.add(Pair.of("人才合同金额", BlazeOrderVO::getTalentPayment));
-        list.add(Pair.of("企业合同金额", BlazeOrderVO::getEnterpriseCollection));
+        list.add(Pair.of("应人才打款", BlazeOrderVO::getTalentPayment));
+        list.add(Pair.of("现人才打款", BlazeOrderVO::getNowTalentPayment));
+        list.add(Pair.of("应企业回款", BlazeOrderVO::getEnterpriseCollection));
+        list.add(Pair.of("现企业回款", BlazeOrderVO::getNowEnterpriseCollection));
         list.add(Pair.of("备注", BlazeOrderVO::getRemarks));
         return list;
     }
