@@ -396,7 +396,7 @@ public class CommonManagerImpl implements ICommonManager {
     }
 
     @Override
-    public void setIsSameDepartment(List<? extends ApproveVO> voList, Integer userId) {
+    public void setDepartment(List<? extends ApproveVO> voList, Integer userId) {
         if (CollUtil.isNotEmpty(voList)) {
             List<DepartmentEntity> list = definitionRepository.list();
             Set<Integer> userIdSet = voList.stream().map(ApproveVO::getResponsibleUserId).collect(Collectors.toSet());
@@ -409,9 +409,17 @@ public class CommonManagerImpl implements ICommonManager {
                 Integer responsibleUserId = vo.getResponsibleUserId();
                 if (ObjUtil.isNotNull(responsibleUserId)) {
                     UserEntity responsibleUser = entityMap.get(responsibleUserId);
-                    Integer responsibleUserDepartmentId = responsibleUser.getDepartmentId();
-                    Integer rootDepartmentId = this.getRootDepartmentId(list, responsibleUserDepartmentId);
-                    vo.setIsSameDepartment(ObjUtil.equal(userRootDepartmentId, rootDepartmentId));
+                    if (ObjUtil.isNotNull(responsibleUser)) {
+                        Integer responsibleUserDepartmentId = responsibleUser.getDepartmentId();
+                        Integer rootDepartmentId = this.getRootDepartmentId(list, responsibleUserDepartmentId);
+                        vo.setIsSameDepartment(ObjUtil.equal(userRootDepartmentId, rootDepartmentId));
+                        DepartmentEntity rootDepartment = list.stream().filter(item -> item.getId().equals(rootDepartmentId)).findFirst().orElse(null);
+                        if (ObjUtil.isNotNull(rootDepartment)) {
+                            vo.setResponsibleUserDepartmentId(rootDepartment.getId());
+                            vo.setResponsibleUserDepartmentName(rootDepartment.getName());
+                        }
+                        vo.setResponsibleUserPhone(responsibleUser.getPhone());
+                    }
                 }
             }
         }
@@ -420,7 +428,7 @@ public class CommonManagerImpl implements ICommonManager {
     private Integer getRootDepartmentId(List<DepartmentEntity> list, Integer departmentId) {
         for (DepartmentEntity entity : list) {
             if (entity.getId().equals(departmentId)) {
-                if (entity.getParentId().equals(0)) {
+                if (entity.getParentId().equals(1)) {
                     return entity.getId();
                 }
                 return getRootDepartmentId(list, entity.getParentId());

@@ -107,7 +107,7 @@ public class BlazeOrderDetailServiceImpl
         }
         approveService.setApproveVO(voList, records);
         commonManager.setFileVO(voList, BlazeOrderDetailEntity.class);
-        commonManager.setIsSameDepartment(voList, UserContextHolder.userId());
+        commonManager.setDepartment(voList, UserContextHolder.userId());
         return PageUtil.toPage(voList, entityPage);
     }
 

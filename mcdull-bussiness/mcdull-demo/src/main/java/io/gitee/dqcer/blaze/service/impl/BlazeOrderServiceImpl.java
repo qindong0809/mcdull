@@ -3,6 +3,7 @@ package io.gitee.dqcer.blaze.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.map.MapUtil;
@@ -35,8 +36,10 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.dto.SerialNumberGenerateDTO;
 import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.DepartmentInfoVO;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IUserManager;
+import io.gitee.dqcer.mcdull.uac.provider.web.service.IDepartmentService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.ISerialNumberService;
 import jakarta.annotation.Resource;
@@ -75,6 +78,8 @@ public class BlazeOrderServiceImpl
     private IApproveService approveService;
     @Resource
     private IFileService fileService;
+    @Resource
+    private IDepartmentService departmentService;
 
     public PagedVO<BlazeOrderVO> queryPage(BlazeOrderQueryDTO dto) {
         List<BlazeOrderVO> voList = new ArrayList<>();
@@ -146,11 +151,19 @@ public class BlazeOrderServiceImpl
                     }
                 }
             }
-
-
+            Set<Integer> collect1 = voList.stream().map(BlazeOrderVO::getTalentResponsibleDepartmentId).collect(Collectors.toSet());
+            collect1.addAll(voList.stream().map(BlazeOrderVO::getCustomerResponsibleDepartmentId).collect(Collectors.toSet()));
+            List<DepartmentInfoVO> all = departmentService.getAll();
+            Map<Integer, String> departmentMap = all.stream().collect(Collectors.toMap(DepartmentInfoVO::getDepartmentId, DepartmentInfoVO::getName));
+            for (BlazeOrderVO orderVO : voList) {
+                if (MapUtil.isNotEmpty(departmentMap)) {
+                    orderVO.setTalentResponsibleDepartment(departmentMap.get(orderVO.getTalentResponsibleDepartmentId()));
+                    orderVO.setCustomerResponsibleDepartment(departmentMap.get(orderVO.getCustomerResponsibleDepartmentId()));
+                }
+            }
             approveService.setApproveVO(voList, recordList);
             commonManager.setFileVO(voList, BlazeOrderEntity.class);
-            commonManager.setIsSameDepartment(voList, UserContextHolder.userId());
+            commonManager.setDepartment(voList, UserContextHolder.userId());
         }
         return PageUtil.toPage(voList, entityPage);
     }
@@ -352,12 +365,23 @@ public class BlazeOrderServiceImpl
 
     private List<Pair<String, Func1<BlazeOrderVO, ?>>> getTitleList() {
         List<Pair<String, Func1<BlazeOrderVO, ?>>> list = new ArrayList<>();
+        list.add(Pair.of("订单编号", BlazeOrderVO::getOrderNo));
+        list.add(Pair.of("人才归属", BlazeOrderVO::getTalentResponsibleDepartment));
+        list.add(Pair.of("人才负责人", BlazeOrderVO::getTalentResponsibleUserIdStr));
+        list.add(Pair.of("人才负责人电话", BlazeOrderVO::getTalentResponsibleUserPhone));
         list.add(Pair.of("所属人才", BlazeOrderVO::getTalentCertName));
-        list.add(Pair.of("所属企业", BlazeOrderVO::getCustomerCertName));
         list.add(Pair.of("应人才打款", BlazeOrderVO::getTalentPayment));
         list.add(Pair.of("现人才打款", BlazeOrderVO::getNowTalentPayment));
+        list.add(Pair.of("企业归属", BlazeOrderVO::getCustomerResponsibleDepartment));
+        list.add(Pair.of("企业负责人", BlazeOrderVO::getCustomerResponsibleUserIdStr));
+        list.add(Pair.of("企业负责人电话", BlazeOrderVO::getCustomerResponsibleUserPhone));
+        list.add(Pair.of("所属企业", BlazeOrderVO::getCustomerCertName));
         list.add(Pair.of("应企业回款", BlazeOrderVO::getEnterpriseCollection));
         list.add(Pair.of("现企业回款", BlazeOrderVO::getNowEnterpriseCollection));
+        list.add(Pair.of("合同日期", BlazeOrderVO::getContractTime));
+        list.add(Pair.of("开始日期", BlazeOrderVO::getStartDate));
+        list.add(Pair.of("结束日期", BlazeOrderVO::getEndDate));
+        list.add(Pair.of("距今剩余", BlazeOrderVO::getDaysUntilDue));
         list.add(Pair.of("备注", BlazeOrderVO::getRemarks));
         return list;
     }
@@ -384,6 +408,18 @@ public class BlazeOrderServiceImpl
         vo.setEndDateStr(item.getEndDate());
         vo.setResponsibleUserId(item.getResponsibleUserId());
         vo.setFirstIsTalent(item.getFirstIsTalent());
+        Date endDate = vo.getEndDate();
+        if (ObjUtil.isNotNull(endDate)) {
+            if (new Date().before(endDate)) {
+                long day = DateUtil.betweenDay(new Date(), endDate, false);
+                long l = day / 31;
+                if (l > 0) {
+                    vo.setDaysUntilDue(l + "个月" + (day % 31) + "天");
+                } else {
+                    vo.setDaysUntilDue(day + "天");
+                }
+            }
+        }
         return vo;
     }
 

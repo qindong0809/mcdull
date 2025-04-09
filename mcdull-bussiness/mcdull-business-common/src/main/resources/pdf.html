@@ -1,0 +1,176 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Email letter pdf template</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width"/>
+    <style>
+        body {
+            font-family: Roboto-Regular, Roboto;
+            font-size: 14px;
+            color: #212121;
+        }
+
+        html {
+            height: 100%;
+            background-color: white;
+        }
+
+        body {
+            height: 100%;
+            overflow: hidden;
+            max-width: 800px;
+            margin: 14px auto 0 auto;
+            background-color: white;
+        }
+
+        .content_container {
+            height: calc(100% - 72px);
+
+        }
+
+        .page_top {
+            border-bottom: 1px solid #BDBDBD;
+            padding: 14px;
+        }
+
+        .page_top_info_item {
+            margin-top: 14px;
+        }
+
+        .page_top_info_title {
+            color: #757575;
+            font-size: 12px;
+            float: left;
+            width: 80px;
+        }
+
+        .page_top_info_title_r {
+            color: #757575;
+            font-size: 10px;
+            float: left;
+            width: 80px;
+        }
+
+        .page_top_info_content {
+            font-size: 12px;
+            word-break: break-word;
+            width: calc(100% - 80px)
+        }
+
+        .page_content {
+            padding: 24px;
+        }
+
+        .page_content_container_item {
+            line-height: 24px;
+            word-break: break-word;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .field {
+            flex: 1;
+            min-width: 200px;
+            margin-right: 15px;
+            margin-bottom: 10px;
+        }
+        .field-name {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        .field-value {
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+        .descriptions {
+            width: 100%;
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.12), 0 3px 6px 0 rgba(0, 0, 0, 0.08), 0 5px 12px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .descriptions-title {
+            padding: 16px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .descriptions-content {
+            padding: 0 24px;
+        }
+
+        .descriptions-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .descriptions-label {
+            flex: 0 0 100px;
+            color: #595959;
+            font-weight: 500;
+        }
+
+        .descriptions-value {
+            flex: 1;
+            color: #333;
+        }
+
+        /* 最后一个描述项不需要底部边框 */
+        .descriptions-item:last-child {
+            border-bottom: none;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="content_container">
+    <div class="page_top">
+        <h3>${customerName}</h3>
+        <div class="page_top_info">
+            <div class="row">
+                <div class="field">
+                    <div class="field-name">负责人</div>
+                    <div class="field-value">${responsibleUserIdStr}</div>
+                </div>
+                <div class="field">
+                    <div class="field-name">电话</div>
+                    <div class="field-value">${responsibleUserPhone}</div>
+                </div>
+                <div class="field">
+                    <div class="field-name">所属</div>
+                    <div class="field-value">${responsibleUserDepartmentName}</div>
+                </div>
+            </div>
+           <table>
+               <tr class="page_top_info_item">
+                   <td class="page_top_info_title">证书级别：</td>
+                   <td class="page_top_info_content">${certificateLevelName}</td>
+                   <td class="page_top_info_title">专业：</td>
+                   <td class="page_top_info_content">${specialtyName}</td>
+                   <td class="page_top_info_title">社保要求：</td>
+                   <td class="page_top_info_content">${socialSecurityRequirementName}</td>
+               </tr>
+           </table>
+        </div>
+    </div>
+    <div class="page_content">
+        <div class="page_content_container">
+            <div class="page_content_container_item">{}
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

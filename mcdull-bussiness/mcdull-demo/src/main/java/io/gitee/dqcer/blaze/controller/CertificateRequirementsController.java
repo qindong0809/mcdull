@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -71,6 +72,13 @@ public class CertificateRequirementsController extends BasicController {
     @PostMapping(value = "CertificateRequirements/list/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid CertificateRequirementsQueryDTO dto) {
         certificateRequirementsService.exportData(dto);
+    }
+
+    @Operation(summary = "导出数据企业pdf")
+    @SaCheckPermission("blaze:certificate_requirements:export")
+    @PostMapping(value = "/{customerId}/blazeOrder/record-export-pdf", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void getExportCustomerOrderDetailPdf(@PathVariable(value = "customerId") Integer customerId) throws IOException {
+        certificateRequirementsService.getExportCustomerOrderDetailPdf(customerId);
     }
 
     @Operation(summary = "下载模板")

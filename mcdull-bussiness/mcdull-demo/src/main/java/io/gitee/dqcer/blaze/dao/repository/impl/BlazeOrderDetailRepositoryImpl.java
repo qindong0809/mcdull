@@ -36,6 +36,7 @@ public class BlazeOrderDetailRepositoryImpl extends
         if (ObjUtil.isNotNull(responsibleUserId)) {
             query.eq(BlazeOrderDetailEntity::getResponsibleUserId, responsibleUserId);
         }
+        query.in(CollUtil.isNotEmpty(dto.getOrderIdList()), BlazeOrderDetailEntity::getBlazeOrderId, dto.getOrderIdList());
         query.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
     }

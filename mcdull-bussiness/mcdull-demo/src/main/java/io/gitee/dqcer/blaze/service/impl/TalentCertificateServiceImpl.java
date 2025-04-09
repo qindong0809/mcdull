@@ -152,7 +152,7 @@ public class TalentCertificateServiceImpl
             }
             approveService.setApproveVO(voList, recordList);
             commonManager.setFileVO(voList, TalentCertificateEntity.class);
-            commonManager.setIsSameDepartment(voList, UserContextHolder.userId());
+            commonManager.setDepartment(voList, UserContextHolder.userId());
         }
         return PageUtil.toPage(voList, entityPage);
     }

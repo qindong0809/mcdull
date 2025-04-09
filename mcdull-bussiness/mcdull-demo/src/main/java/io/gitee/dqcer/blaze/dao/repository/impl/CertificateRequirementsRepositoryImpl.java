@@ -48,6 +48,7 @@ public class CertificateRequirementsRepositoryImpl extends
         lambda.eq(ObjUtil.isNotNull(param.getSpecialty()), CertificateRequirementsEntity::getSpecialty, param.getSpecialty());
         lambda.eq(ObjUtil.isNotNull(param.getSocialSecurityRequirement()), CertificateRequirementsEntity::getSocialSecurityRequirement, param.getSocialSecurityRequirement());
         lambda.eq(ObjUtil.isNotNull(param.getApprove()), CertificateRequirementsEntity::getApprove, param.getApprove());
+        lambda.eq(ObjUtil.isNotNull(param.getId()), CertificateRequirementsEntity::getId, param.getId());
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }

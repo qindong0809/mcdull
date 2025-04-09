@@ -27,4 +27,6 @@ public class CertificateRequirementsQueryDTO extends PagedDTO {
 
     private Integer approve;
 
+    private Integer id;
+
 }

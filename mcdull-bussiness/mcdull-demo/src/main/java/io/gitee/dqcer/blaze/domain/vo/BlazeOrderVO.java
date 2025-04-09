@@ -93,6 +93,9 @@ public class BlazeOrderVO extends ApproveVO implements IFileVO, VO {
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date endDateStr;
 
+    @Schema(description = "剩余日期")
+    private String daysUntilDue;
+
     private Boolean firstIsTalent;
 
     @Schema(description = "附件列表")
@@ -105,10 +108,18 @@ public class BlazeOrderVO extends ApproveVO implements IFileVO, VO {
 
     private String talentResponsibleUserPhone;
 
+    private Integer talentResponsibleDepartmentId;
+
+    private String talentResponsibleDepartment;
+
     private Integer customerResponsibleUserId;
 
     @Schema(description = "企业负责人")
     private String customerResponsibleUserIdStr;
 
     private String customerResponsibleUserPhone;
+
+    private Integer customerResponsibleDepartmentId;
+
+    private String customerResponsibleDepartment;
 }

@@ -53,5 +53,5 @@ public interface ICommonManager {
 
     void setFileVO(List<? extends IFileVO> voList, Class<?> clazz);
 
-    void setIsSameDepartment(List<? extends ApproveVO> voList, Integer userId);
+    void setDepartment(List<? extends ApproveVO> voList, Integer userId);
 }

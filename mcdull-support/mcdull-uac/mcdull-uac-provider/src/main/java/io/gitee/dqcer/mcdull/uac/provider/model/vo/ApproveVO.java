@@ -20,5 +20,11 @@ public class ApproveVO {
 
     private String responsibleUserIdStr;
 
+    private String responsibleUserDepartmentName;
+
+    private Integer responsibleUserDepartmentId;
+
+    private String responsibleUserPhone;
+
     private Boolean isSameDepartment;
 }

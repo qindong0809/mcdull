@@ -3,8 +3,10 @@ package io.gitee.dqcer.blaze.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -17,11 +19,13 @@ import io.gitee.dqcer.blaze.domain.entity.BlazeOrderEntity;
 import io.gitee.dqcer.blaze.domain.entity.CertificateRequirementsEntity;
 import io.gitee.dqcer.blaze.domain.entity.TalentCertificateEntity;
 import io.gitee.dqcer.blaze.domain.enums.*;
-import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsAddDTO;
-import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsQueryDTO;
-import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsUpdateDTO;
+import io.gitee.dqcer.blaze.domain.form.*;
+import io.gitee.dqcer.blaze.domain.vo.BlazeOrderDetailVO;
+import io.gitee.dqcer.blaze.domain.vo.BlazeOrderVO;
 import io.gitee.dqcer.blaze.domain.vo.CertificateRequirementsVO;
 import io.gitee.dqcer.blaze.service.*;
+import io.gitee.dqcer.mcdull.business.common.pdf.ByteArrayInOutConvert;
+import io.gitee.dqcer.mcdull.business.common.pdf.HtmlConvertPdf;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -29,6 +33,7 @@ import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
@@ -37,10 +42,13 @@ import io.gitee.dqcer.mcdull.uac.provider.web.service.IAreaService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IFileService;
 import io.gitee.dqcer.util.CertificateUtil;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -73,6 +81,8 @@ public class CertificateRequirementsServiceImpl
     private ITalentCertificateService talentCertificateService;
     @Resource
     private IFileService fileService;
+    @Resource
+    private IBlazeOrderDetailService orderDetailsService;
 
     public PagedVO<CertificateRequirementsVO> queryPage(CertificateRequirementsQueryDTO dto) {
         List<CertificateRequirementsVO> voList = new ArrayList<>();
@@ -148,7 +158,7 @@ public class CertificateRequirementsServiceImpl
             }
             approveService.setApproveVO(voList, recordList);
             commonManager.setFileVO(voList, CertificateRequirementsEntity.class);
-            commonManager.setIsSameDepartment(voList, UserContextHolder.userId());
+            commonManager.setDepartment(voList, UserContextHolder.userId());
         }
         return PageUtil.toPage(voList, entityPage);
     }
@@ -299,6 +309,91 @@ public class CertificateRequirementsServiceImpl
             }
         }
         return List.of();
+    }
+
+    @Override
+    public void getExportCustomerOrderDetailPdf(Integer customerId) throws IOException {
+        CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
+        dto.setId(customerId);
+        PagedVO<CertificateRequirementsVO> certificateRequirementsVOPagedVO = this.queryPage(dto);
+        if (ObjUtil.isNotNull(certificateRequirementsVOPagedVO)) {
+            List<CertificateRequirementsVO> list = certificateRequirementsVOPagedVO.getList();
+            if (CollUtil.isNotEmpty(list)) {
+                CertificateRequirementsVO vo = list.get(0);
+                Map<String, String> map = new HashMap<>();
+                map.put(LambdaUtil.getFieldName(CertificateRequirementsVO::getCustomerName), vo.getCustomerName());
+                map.put(LambdaUtil.getFieldName(CertificateRequirementsVO::getResponsibleUserIdStr), vo.getResponsibleUserIdStr());
+                map.put(LambdaUtil.getFieldName(CertificateRequirementsVO::getResponsibleUserPhone), vo.getResponsibleUserPhone());
+                map.put(LambdaUtil.getFieldName(CertificateRequirementsVO::getResponsibleUserDepartmentName), vo.getResponsibleUserDepartmentName());
+                map.put(LambdaUtil.getFieldName(CertificateRequirementsVO::getCertificateLevelName), vo.getCertificateLevelName());
+                map.put(LambdaUtil.getFieldName(CertificateRequirementsVO::getSpecialtyName), vo.getSpecialtyName());
+                map.put(LambdaUtil.getFieldName(CertificateRequirementsVO::getSocialSecurityRequirementName), vo.getSocialSecurityRequirementName());
+                String body = "";
+
+                BlazeOrderQueryDTO orderDto = new BlazeOrderQueryDTO();
+                orderDto.setCustomerCertId(vo.getId());
+                PagedVO<BlazeOrderVO> voPagedVO = orderService.queryPage(orderDto);
+                if (ObjUtil.isNotNull(voPagedVO)) {
+                    List<BlazeOrderVO> orderList = voPagedVO.getList();
+                    if (CollUtil.isNotEmpty(orderList)) {
+                        for (BlazeOrderVO orderVO : orderList) {
+                            body += " <div class=\"descriptions\">\n" +
+                                    "                    <div class=\"descriptions-title\">匹配人才订单号:" + orderVO.getOrderNo()+"</div>\n" +
+                                    "                    <div class=\"descriptions-content\">\n" +
+                                    "                        <div class=\"descriptions-item\">\n" +
+                                    "                            <div class=\"descriptions-label\">对接人</div>\n" +
+                                    "                            <div class=\"descriptions-value\">"+orderVO.getTalentResponsibleUserIdStr()+"</div>\n" +
+                                    "                        </div>\n" +
+                                    "                        <div class=\"descriptions-item\">\n" +
+                                    "                            <div class=\"descriptions-label\">电话</div>\n" +
+                                    "                            <div class=\"descriptions-value\">"+orderVO.getTalentResponsibleUserPhone()+"</div>\n" +
+                                    "                        </div>\n" +
+                                    "                        <div class=\"descriptions-item\">\n" +
+                                    "                            <div class=\"descriptions-label\">所属</div>\n" +
+                                    "                            <div class=\"descriptions-value\">" +orderVO.getTalentResponsibleDepartment()+ "</div>\n" +
+                                    "                        </div>\n" +
+                                    "                        <div class=\"descriptions-item\">\n" +
+                                    "                            <div class=\"descriptions-label\">人才</div>\n" +
+                                    "                            <div class=\"descriptions-value\">" +orderVO.getTalentCertName()+ "</div>\n" +
+                                    "                        </div>\n" +
+                                    "                    </div>\n" +
+                                    "                </div> <br /> <br /> <br />";
+                        }
+                        List<Integer> orderIdList = orderList.stream().map(BlazeOrderVO::getId).collect(Collectors.toList());
+                        BlazeOrderDetailQueryDTO detailQueryDTO = new BlazeOrderDetailQueryDTO();
+                        detailQueryDTO.setOrderIdList(orderIdList);
+                        detailQueryDTO.setIsTalent(false);
+                        PagedVO<BlazeOrderDetailVO> orderDetailVOPagedVO = orderDetailsService.queryPage(detailQueryDTO);
+                        if (ObjUtil.isNotNull(orderDetailVOPagedVO)) {
+                            List<BlazeOrderDetailVO> orderDetailList = orderDetailVOPagedVO.getList();
+                            if (CollUtil.isNotEmpty(orderDetailList)) {
+                                StringJoiner joiner = new StringJoiner("。<br /> <br />");
+                                for (BlazeOrderDetailVO orderDetailVO : orderDetailList) {
+                                    String date = commonManager.convertDateByUserTimezone(orderDetailVO.getOperationTimeStr());
+                                    String format = StrUtil.format("日期：{} 操作人【{}】收到回款【{}】元", date, orderDetailVO.getResponsibleUserName(), orderDetailVO.getPrice());
+                                    joiner.add(format);
+                                }
+                                body += joiner.toString();
+                            }
+                        }
+                    }
+                }
+                String html = HtmlConvertPdf.getHtml(body, "pdf.html");
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    html = StrUtil.replace(html, StrUtil.format("${{}}", entry.getKey()), entry.getValue());
+                }
+
+                ByteArrayInOutConvert byteArrayInOutStream = new HtmlConvertPdf().generatePdf(html);
+                String message =  commonManager.convertDateTimeStr(new Date());
+                String fileName = StrUtil.format("{}_{}_{}_{}.pdf", vo.getCustomerName(), vo.getCertificateLevelName(), vo.getSpecialtyName(), message);
+                String pafPathParent = FileUtil.getTmpDirPath() + File.separator + System.currentTimeMillis();
+                String pdfPath = pafPathParent + File.separator + fileName;
+                HtmlConvertPdf.updatePdfLeftFooter(byteArrayInOutStream.getInputStream(), pdfPath, message);
+                HttpServletResponse response = ServletUtil.getResponse();
+                ServletUtil.setDownloadFileHeader(response, fileName);
+                response.getOutputStream().write(FileUtil.readBytes(pdfPath));
+            }
+        }
     }
 
     @Override

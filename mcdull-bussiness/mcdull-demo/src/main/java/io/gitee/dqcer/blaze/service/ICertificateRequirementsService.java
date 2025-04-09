@@ -10,6 +10,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,4 +50,6 @@ public interface ICertificateRequirementsService {
     List<LabelValueVO<Integer, String>> okList();
 
     List<LabelValueVO<Integer, String>> getList(Integer talentCertId);
+
+    void getExportCustomerOrderDetailPdf(Integer customerId) throws IOException;
 }

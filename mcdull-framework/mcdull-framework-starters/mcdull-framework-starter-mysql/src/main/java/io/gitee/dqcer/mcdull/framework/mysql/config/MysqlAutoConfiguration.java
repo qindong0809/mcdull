@@ -50,7 +50,7 @@ import java.util.Map;
 @EnableConfigurationProperties(DataSourceProperties.class)
 public class MysqlAutoConfiguration {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Resource
     private ApplicationContext context;

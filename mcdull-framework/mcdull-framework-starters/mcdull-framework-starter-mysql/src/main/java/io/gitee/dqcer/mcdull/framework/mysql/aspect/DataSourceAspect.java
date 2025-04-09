@@ -47,7 +47,7 @@ public class DataSourceAspect {
         DynamicDataSource annotation = method.getAnnotation(DynamicDataSource.class);
         if (null != annotation) {
             String value = calculateValue(annotation.value(),method, joinPoint.getArgs());
-            if (value == null || value.trim().length() == 0) {
+            if (value == null || value.trim().isEmpty()) {
                 throw new IllegalArgumentException("没有对应的数据源key");
             }
             Deque<String> deque = DynamicContextHolder.getAll();

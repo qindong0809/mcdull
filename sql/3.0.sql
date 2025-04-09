@@ -66,15 +66,9 @@ primary key (`id`) using btree,
 index `parent_id`(`parent_id`) using btree
 ) comment = '部门';
 
-insert into `sys_department` values(1, 'xx集团', 1, 0, 1, 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_department` values(1, '四方合创', 1, 0, 1, 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_department` values(2, '四川壹把火工程咨询有限公司', 1, 1, 1, 0, sysdate(), 0, sysdate(), 0, 0);
 
-insert into `sys_department` values(2, '研发部', 1, 1, 1, 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_department` values(3, '总经办',    1, 1, 2, 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_department` values(4, '财务部',    1, 1, 3, 0, sysdate(), 0, sysdate(), 0, 0);
-
-insert into `sys_department` values(5, '物资部',    2, 3, 2, 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_department` values(6, '营销中心',    3, 3, 3, 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_department` values(7, '行政部',    4, 3, 4, 0, sysdate(), 0, sysdate(), 0, 0);
 
 
 drop table if exists `sys_menu`;

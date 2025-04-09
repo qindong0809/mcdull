@@ -101,4 +101,16 @@ public class HtmlConvertPdf {
         return StrUtil.format(htmlFormat, subject, String.join(",", sendTos),
                 String.join(",", ccs) , DateUtil.formatDateTime(sendTime), body);
     }
+
+    public static String getHtml( String body, String templateName) {
+        ClassPathResource resource = new ClassPathResource(templateName);
+        InputStream stream = null;
+        try {
+            stream = resource.getInputStream();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+        return IoUtil.readUtf8(stream);
+    }
 }
