@@ -95,7 +95,7 @@ public class RightFooterHandler implements IEventHandler {
         canvas.showTextAligned(rightParagraph, x, y, TextAlignment.RIGHT);
 
         // 右页眉
-        Paragraph rightHeaderParagraph = new Paragraph("www.keda.com").setFontSize(10f);
+        Paragraph rightHeaderParagraph = new Paragraph("四象合创").setFontSize(10f);
         canvas.showTextAligned(rightHeaderParagraph, x, pdfHeight -24, TextAlignment.RIGHT);
 
         // 为分页准备的占位符

@@ -143,11 +143,13 @@ public class BlazeOrderServiceImpl
                     if (ObjUtil.isNotNull(user)) {
                         orderVO.setTalentResponsibleUserPhone(user.getPhone());
                         orderVO.setTalentResponsibleUserIdStr(user.getActualName());
+                        orderVO.setTalentResponsibleDepartmentId(user.getDepartmentId());
                     }
                     UserEntity customerUser =  userMap.get(orderVO.getCustomerResponsibleUserId());
                     if (ObjUtil.isNotNull(customerUser)) {
                         orderVO.setCustomerResponsibleUserPhone(customerUser.getPhone());
                         orderVO.setCustomerResponsibleUserIdStr(customerUser.getActualName());
+                        orderVO.setCustomerResponsibleDepartmentId(customerUser.getDepartmentId());
                     }
                 }
             }

@@ -382,7 +382,7 @@ public class CertificateRequirementsServiceImpl
                 for (Map.Entry<String, String> entry : map.entrySet()) {
                     html = StrUtil.replace(html, StrUtil.format("${{}}", entry.getKey()), entry.getValue());
                 }
-
+                html = StrUtil.format(html, body);
                 ByteArrayInOutConvert byteArrayInOutStream = new HtmlConvertPdf().generatePdf(html);
                 String message =  commonManager.convertDateTimeStr(new Date());
                 String fileName = StrUtil.format("{}_{}_{}_{}.pdf", vo.getCustomerName(), vo.getCertificateLevelName(), vo.getSpecialtyName(), message);
@@ -493,6 +493,7 @@ public class CertificateRequirementsServiceImpl
         entity.setPositionSource(item.getPositionSource());
         entity.setPositionTitle(item.getPositionTitle());
         entity.setRemarks(item.getRemarks());
+        entity.setResponsibleUserId(item.getResponsibleUserId());
     }
 
     private CertificateRequirementsEntity convertToEntity(CertificateRequirementsAddDTO item){

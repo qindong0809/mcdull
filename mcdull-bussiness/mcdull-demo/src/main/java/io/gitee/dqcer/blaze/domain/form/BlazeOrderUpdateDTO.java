@@ -44,7 +44,7 @@ public class BlazeOrderUpdateDTO implements DTO {
 
     private String endDateStr;
 
-    private Boolean approve;
+    private Integer approve;
 
     @Schema(description = "备注")
     private String remarks;

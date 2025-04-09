@@ -21,12 +21,11 @@ import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IDepartmentReposito
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IDepartmentService;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IUserService;
+import jakarta.annotation.Resource;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,7 +45,7 @@ public class DepartmentServiceImpl
     @Resource
     private IAuditManager auditManager;
 
-    @Cacheable(cacheNames = "caffeineCache", key = "'department-all'")
+//    @Cacheable(cacheNames = "caffeineCache", key = "'department-all'")
     @Override
     public List<DepartmentInfoVO> getAll() {
         List<DepartmentInfoVO> list = new ArrayList<>();
