@@ -20,6 +20,7 @@ import io.gitee.dqcer.blaze.domain.form.TalentCertificateQueryDTO;
 import io.gitee.dqcer.blaze.domain.form.TalentCertificateUpdateDTO;
 import io.gitee.dqcer.blaze.domain.vo.TalentCertificateVO;
 import io.gitee.dqcer.blaze.service.*;
+import io.gitee.dqcer.mcdull.business.common.CustomMultipartFile;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -302,6 +303,56 @@ public class TalentCertificateServiceImpl
     @Override
     public TalentCertificateEntity get(Integer talentCertId) {
         return baseRepository.getById(talentCertId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Integer copy(Integer id) {
+        TalentCertificateEntity entity = baseRepository.getById(id);
+        if (ObjUtil.isNull(entity)) {
+            this.throwDataNotExistException(id);
+        }
+        TalentCertificateAddDTO addDTO = this.convertAddDTO(entity);
+        addDTO.setResponsibleUserId(entity.getResponsibleUserId());
+        addDTO.setPositionTitle(StrUtil.format("{}({})", entity.getPositionTitle(), 1));
+        List<MultipartFile> multipartFileList = this.convertFileList(id);
+        this.insert(addDTO, multipartFileList);
+       return id;
+    }
+
+    private List<MultipartFile> convertFileList(Integer id) {
+        List<MultipartFile> fileList = new ArrayList<>();
+        List<Pair<String, byte[]>> fileDateList = commonManager.getFileDateList(id, TalentCertificateEntity.class);
+        if (CollUtil.isNotEmpty(fileDateList)) {
+            for (Pair<String, byte[]> pair : fileDateList) {
+                MultipartFile multipartFile = new CustomMultipartFile(pair.getKey(), pair.getValue());
+                fileList.add(multipartFile);
+            }
+        }
+        return fileList;
+    }
+
+    private TalentCertificateAddDTO convertAddDTO(TalentCertificateEntity entity) {
+        TalentCertificateAddDTO addDTO = new TalentCertificateAddDTO();
+        addDTO.setTalentId(entity.getTalentId());
+        addDTO.setCertificateLevel(entity.getCertificateLevel());
+        addDTO.setSpecialty(entity.getSpecialty());
+        addDTO.setProvincesCode(entity.getProvincesCode());
+        addDTO.setCityCode(entity.getCityCode());
+        addDTO.setTitle(entity.getTitle());
+        addDTO.setInitialOrTransfer(entity.getInitialOrTransfer());
+        addDTO.setCertificateStatus(entity.getCertificateStatus());
+        addDTO.setPositionContractPrice(entity.getPositionContractPrice());
+        addDTO.setOtherCosts(entity.getOtherCosts());
+        addDTO.setActualPositionPrice(entity.getActualPositionPrice());
+        addDTO.setDuration(entity.getDuration());
+        addDTO.setBiddingExit(entity.getBiddingExit());
+        addDTO.setThreePersonnel(entity.getThreePersonnel());
+        addDTO.setSocialSecurityRequirement(entity.getSocialSecurityRequirement());
+        addDTO.setPositionSource(entity.getPositionSource());
+        addDTO.setPositionTitle(entity.getPositionTitle());
+        addDTO.setRemarks(entity.getRemarks());
+        return addDTO;
     }
 
     private DynamicFieldBO getProvinceFieldBO() {

@@ -52,4 +52,6 @@ public interface ICertificateRequirementsService {
     List<LabelValueVO<Integer, String>> getList(Integer talentCertId);
 
     void getExportCustomerOrderDetailPdf(Integer customerId) throws IOException;
+
+    Integer copy(Integer id);
 }

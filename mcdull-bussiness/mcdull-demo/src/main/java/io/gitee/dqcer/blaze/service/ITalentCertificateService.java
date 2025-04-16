@@ -47,4 +47,6 @@ public interface ITalentCertificateService {
     List<LabelValueVO<Integer, String>> getList(Integer customerCertId);
 
     TalentCertificateEntity get(Integer talentCertId);
+
+    Integer copy(Integer id);
 }

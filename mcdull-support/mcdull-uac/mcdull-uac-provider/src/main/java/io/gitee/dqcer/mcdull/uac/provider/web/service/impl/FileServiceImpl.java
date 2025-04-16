@@ -180,7 +180,7 @@ public class FileServiceImpl
     }
 
     @Override
-    public FileDownloadVO getDownloadFile(String fileKey, String userAgent) {
+    public FileDownloadVO getDownloadFile(String fileKey) {
         FileEntity fileEntity = baseRepository.getByFileKey(fileKey);
         if (ObjectUtil.isNull(fileEntity)) {
            this.throwDataExistException(fileKey);

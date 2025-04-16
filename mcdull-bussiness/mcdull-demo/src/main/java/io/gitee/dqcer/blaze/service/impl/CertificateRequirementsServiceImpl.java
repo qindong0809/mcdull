@@ -24,6 +24,7 @@ import io.gitee.dqcer.blaze.domain.vo.BlazeOrderDetailVO;
 import io.gitee.dqcer.blaze.domain.vo.BlazeOrderVO;
 import io.gitee.dqcer.blaze.domain.vo.CertificateRequirementsVO;
 import io.gitee.dqcer.blaze.service.*;
+import io.gitee.dqcer.mcdull.business.common.CustomMultipartFile;
 import io.gitee.dqcer.mcdull.business.common.pdf.ByteArrayInOutConvert;
 import io.gitee.dqcer.mcdull.business.common.pdf.HtmlConvertPdf;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
@@ -84,6 +85,7 @@ public class CertificateRequirementsServiceImpl
     @Resource
     private IBlazeOrderDetailService orderDetailsService;
 
+    @Override
     public PagedVO<CertificateRequirementsVO> queryPage(CertificateRequirementsQueryDTO dto) {
         List<CertificateRequirementsVO> voList = new ArrayList<>();
         Page<CertificateRequirementsEntity> entityPage = baseRepository.selectPage(dto);
@@ -168,6 +170,7 @@ public class CertificateRequirementsServiceImpl
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
     }
 
+    @SuppressWarnings({"all"})
     @Override
     public void downloadTemplate() {
         Map<String, List<DynamicFieldBO>> sheetHeaderMap = new HashMap<>(8);
@@ -394,6 +397,56 @@ public class CertificateRequirementsServiceImpl
                 response.getOutputStream().write(FileUtil.readBytes(pdfPath));
             }
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Integer copy(Integer id) {
+        CertificateRequirementsEntity entity = baseRepository.getById(id);
+        if (ObjUtil.isNull(entity)) {
+            this.throwDataNotExistException(id);
+        }
+        CertificateRequirementsAddDTO addDTO = this.convertAddDTO(entity);
+        addDTO.setResponsibleUserId(entity.getResponsibleUserId());
+        addDTO.setPositionTitle(StrUtil.format("{}({})", entity.getPositionTitle(), 1));
+        List<MultipartFile> multipartFileList = this.convertFileList(id);
+        this.insert(addDTO, multipartFileList);
+        return id;
+    }
+
+    private List<MultipartFile> convertFileList(Integer id) {
+        List<MultipartFile> fileList = new ArrayList<>();
+        List<Pair<String, byte[]>> fileDateList = commonManager.getFileDateList(id, CertificateRequirementsEntity.class);
+        if (CollUtil.isNotEmpty(fileDateList)) {
+            for (Pair<String, byte[]> pair : fileDateList) {
+                MultipartFile multipartFile = new CustomMultipartFile(pair.getKey(), pair.getValue());
+                fileList.add(multipartFile);
+            }
+        }
+        return fileList;
+    }
+
+    private CertificateRequirementsAddDTO convertAddDTO(CertificateRequirementsEntity entity) {
+        CertificateRequirementsAddDTO addDTO = new CertificateRequirementsAddDTO();
+        addDTO.setCustomerId(entity.getCustomerId());
+        addDTO.setCertificateLevel(entity.getCertificateLevel());
+        addDTO.setSpecialty(entity.getSpecialty());
+        addDTO.setProvincesCode(entity.getProvincesCode());
+        addDTO.setCityCode(entity.getCityCode());
+        addDTO.setQuantity(entity.getQuantity());
+        addDTO.setTitle(entity.getTitle());
+        addDTO.setInitialOrTransfer(entity.getInitialOrTransfer());
+        addDTO.setCertificateStatus(entity.getCertificateStatus());
+        addDTO.setPositionContractPrice(entity.getPositionContractPrice());
+        addDTO.setOtherCosts(entity.getOtherCosts());
+        addDTO.setActualPositionPrice(entity.getActualPositionPrice());
+        addDTO.setDuration(entity.getDuration());
+        addDTO.setBiddingExit(entity.getBiddingExit());
+        addDTO.setThreePersonnel(entity.getThreePersonnel());
+        addDTO.setSocialSecurityRequirement(entity.getSocialSecurityRequirement());
+        addDTO.setPositionSource(entity.getPositionSource());
+        addDTO.setRemarks(entity.getRemarks());
+        return addDTO;
     }
 
     @Override

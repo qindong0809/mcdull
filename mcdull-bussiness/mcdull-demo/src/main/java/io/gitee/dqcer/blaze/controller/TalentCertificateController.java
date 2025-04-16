@@ -113,6 +113,13 @@ public class TalentCertificateController extends BasicController {
         return Result.success(true);
     }
 
+    @Operation(summary = "复制")
+    @SaCheckPermission("blaze:talent_certificate:write")
+    @PostMapping(value = "/talent-cert/{id}/copy")
+    public Result<Integer> copy(@PathVariable(value = "id") Integer id) {
+        return Result.success(super.locker(null,  () -> talentCertificateService.copy(id)));
+    }
+
     @Operation(summary = "更新")
     @SaCheckPermission("blaze:talent_certificate:write")
     @PostMapping(value = "/talent-cert/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,

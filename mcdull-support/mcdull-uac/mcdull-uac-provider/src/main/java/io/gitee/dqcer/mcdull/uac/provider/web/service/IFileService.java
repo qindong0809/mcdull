@@ -33,7 +33,7 @@ public interface IFileService {
 
     String getFileUrl(String fileKey);
 
-    FileDownloadVO getDownloadFile(String fileKey, String userAgent);
+    FileDownloadVO getDownloadFile(String fileKey);
 
     List<FileVO> getFileList(List<String> fileKeyList);
 

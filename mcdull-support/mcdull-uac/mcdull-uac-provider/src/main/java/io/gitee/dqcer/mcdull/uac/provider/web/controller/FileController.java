@@ -56,8 +56,7 @@ public class FileController {
     @Operation(summary = "下载")
     @GetMapping("/file/downLoad")
     public void downLoad(@RequestParam String fileKey, HttpServletResponse response) throws IOException {
-        String userAgent = null;
-        FileDownloadVO fileDownloadVO = fileService.getDownloadFile(fileKey, userAgent);
+        FileDownloadVO fileDownloadVO = fileService.getDownloadFile(fileKey);
         // 设置下载消息头
         ServletUtil.setDownloadFileHeader(response, fileDownloadVO.getMetadata().getFileName());
         // 下载

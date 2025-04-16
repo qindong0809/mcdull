@@ -11,4 +11,12 @@ import io.gitee.dqcer.blaze.domain.vo.ReportViewVO;
 public interface IReportService {
 
     ReportViewVO getReportView();
+
+    Integer getMatchSuccessCountTotal();
+
+    Integer getEnterpriseCertificateDemandPendingMatchCount();
+
+    Integer getTalentCertificatePendingMatchCount();
+
+    Integer getEnterpriseTalentCountTotal();
 }

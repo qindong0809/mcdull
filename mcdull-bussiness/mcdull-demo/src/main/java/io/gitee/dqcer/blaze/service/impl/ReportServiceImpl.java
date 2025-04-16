@@ -3,14 +3,10 @@ package io.gitee.dqcer.blaze.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
-import io.gitee.dqcer.blaze.domain.form.CertificateRequirementsQueryDTO;
-import io.gitee.dqcer.blaze.domain.form.TalentCertificateQueryDTO;
-import io.gitee.dqcer.blaze.domain.vo.CertificateRequirementsVO;
-import io.gitee.dqcer.blaze.domain.vo.ReportViewVO;
-import io.gitee.dqcer.blaze.domain.vo.TalentCertificateVO;
-import io.gitee.dqcer.blaze.service.ICertificateRequirementsService;
-import io.gitee.dqcer.blaze.service.IReportService;
-import io.gitee.dqcer.blaze.service.ITalentCertificateService;
+import io.gitee.dqcer.blaze.domain.enums.ApproveEnum;
+import io.gitee.dqcer.blaze.domain.form.*;
+import io.gitee.dqcer.blaze.domain.vo.*;
+import io.gitee.dqcer.blaze.service.*;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import jakarta.annotation.Resource;
@@ -28,6 +24,12 @@ public class ReportServiceImpl implements IReportService {
     private ICertificateRequirementsService certificateRequirementsService;
     @Resource
     private ITalentCertificateService talentCertificateService;
+    @Resource
+    private IBlazeOrderService orderService;;
+    @Resource
+    private ITalentService talentService;
+    @Resource
+    private ICustomerInfoService customerInfoService;
 
     @Override
     public ReportViewVO getReportView() {
@@ -35,7 +37,6 @@ public class ReportServiceImpl implements IReportService {
         PageUtil.setMaxPageSize(certificateRequirementsQueryDTO);
         PagedVO<CertificateRequirementsVO> page = certificateRequirementsService.queryPage(certificateRequirementsQueryDTO);
         Map<String, Long> customerMap = new HashMap<>();
-        List<CertificateRequirementsVO> customerList = new ArrayList<>();
         if (ObjUtil.isNotNull(page)) {
             List<CertificateRequirementsVO> list = page.getList();
             if (CollUtil.isNotEmpty(list)) {
@@ -93,5 +94,37 @@ public class ReportServiceImpl implements IReportService {
         reportViewVO.setCustomerValue(customerValue);
         reportViewVO.setTalentValue(talentValue);
         return reportViewVO;
+    }
+
+    @Override
+    public Integer getMatchSuccessCountTotal() {
+        BlazeOrderQueryDTO dto = new BlazeOrderQueryDTO();
+        dto.setApprove(ApproveEnum.APPROVE.getCode());
+        List<BlazeOrderVO> list = PageUtil.getAllList(dto, d -> orderService.queryPage(d));
+        return list.size();
+    }
+
+
+    @Override
+    public Integer getEnterpriseCertificateDemandPendingMatchCount() {
+        CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
+        dto.setApprove(ApproveEnum.APPROVE.getCode());
+        List<CertificateRequirementsVO> list = PageUtil.getAllList(dto, d -> certificateRequirementsService.queryPage(d));
+        return list.size();
+    }
+
+    @Override
+    public Integer getTalentCertificatePendingMatchCount() {
+        TalentCertificateQueryDTO dto = new TalentCertificateQueryDTO();
+        dto.setApprove(ApproveEnum.APPROVE.getCode());
+        List<TalentCertificateVO> list = PageUtil.getAllList(dto, d -> talentCertificateService.queryPage(d));
+        return list.size();
+    }
+
+    @Override
+    public Integer getEnterpriseTalentCountTotal() {
+        List<TalentVO> talentList = PageUtil.getAllList(new TalentQueryDTO(), d -> talentService.queryPage(d));
+        List<CustomerInfoVO> customerList = PageUtil.getAllList(new CustomerInfoQueryDTO(), d -> customerInfoService.queryPage(d));
+        return talentList.size() + customerList.size();
     }
 }

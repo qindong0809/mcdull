@@ -46,6 +46,7 @@ import io.gitee.dqcer.mcdull.uac.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FileExtensionTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.ApproveVO;
+import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileDownloadVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.FileSimpleVO;
 import io.gitee.dqcer.mcdull.uac.provider.model.vo.IFileVO;
 import io.gitee.dqcer.mcdull.uac.provider.util.ExcelUtil;
@@ -393,6 +394,20 @@ public class CommonManagerImpl implements ICommonManager {
                 }
             }
         }
+    }
+
+    @Override
+    public List<Pair<String, byte[]>> getFileDateList(Integer bizId, Class<?> clazz) {
+        List<Pair<String, byte[]>> fileDateList = new ArrayList<>();
+        Map<Integer, List<FileEntity>> fileEntityMap = fileService.get(ListUtil.of(bizId), clazz);
+        if (CollUtil.isNotEmpty(fileEntityMap)) {
+            List<FileEntity> fileEntityList = fileEntityMap.get(bizId);
+            for (FileEntity fileEntity : fileEntityList) {
+                FileDownloadVO downloadVO = fileService.getDownloadFile(fileEntity.getFileKey());
+                fileDateList.add(Pair.of(fileEntity.getFileName(), downloadVO.getData()));
+            }
+        }
+        return fileDateList;
     }
 
     @Override

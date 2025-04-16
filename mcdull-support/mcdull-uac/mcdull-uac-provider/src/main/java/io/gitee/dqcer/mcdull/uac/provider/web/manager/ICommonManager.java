@@ -53,5 +53,7 @@ public interface ICommonManager {
 
     void setFileVO(List<? extends IFileVO> voList, Class<?> clazz);
 
+    List<Pair<String, byte[]>> getFileDateList(Integer bizId, Class<?> clazz);
+
     void setDepartment(List<? extends ApproveVO> voList, Integer userId);
 }

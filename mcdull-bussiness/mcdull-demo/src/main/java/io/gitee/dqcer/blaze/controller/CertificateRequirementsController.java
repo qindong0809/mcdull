@@ -97,6 +97,13 @@ public class CertificateRequirementsController extends BasicController {
         return Result.success(true);
     }
 
+    @Operation(summary = "复制")
+    @SaCheckPermission("blaze:certificate_requirements:write")
+    @PostMapping(value = "/CertificateRequirements/{id}/copy")
+    public Result<Integer> copy(@PathVariable(value = "id") Integer id) {
+        return Result.success(super.locker(null,  () -> certificateRequirementsService.copy(id)));
+    }
+
     @Operation(summary = "审批")
     @SaCheckPermission("blaze:certificate_requirements:approve")
     @PostMapping("/CertificateRequirements/approve")

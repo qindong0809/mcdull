@@ -24,4 +24,35 @@ public class ReportController {
         return Result.success(vo);
     }
 
+    @Operation(summary = "领导驾驶舱-累计匹配成功数")
+    @GetMapping("/report/match-success-count-total")
+    public Result<Integer> getMatchSuccessCountTotal() {
+        Integer count = reportService.getMatchSuccessCountTotal();
+        return Result.success(count);
+    }
+
+    @Operation(summary = "领导驾驶舱-企业证书需求待匹配数")
+    @GetMapping("/report/enterprise-certificate-count-total")
+    public Result<Integer> getEnterpriseCertificateDemandPendingMatchCount() {
+        Integer count = reportService.getEnterpriseCertificateDemandPendingMatchCount();
+        return Result.success(count);
+    }
+
+    @Operation(summary = "领导驾驶舱-人才证书待匹配数")
+    @GetMapping("/report/talent-certificate-count-total")
+    public Result<Integer> getTalentCertificatePendingMatchCount() {
+        Integer count = reportService.getTalentCertificatePendingMatchCount();
+        return Result.success(count);
+    }
+
+    @Operation(summary = "领导驾驶舱-累计企业、人才数")
+    @GetMapping("/report/enterprise-talent-count-total")
+    public Result<Integer> getEnterpriseTalentCountTotal() {
+        Integer count = reportService.getEnterpriseTalentCountTotal();
+        return Result.success(count);
+    }
+
+
+
+
 }

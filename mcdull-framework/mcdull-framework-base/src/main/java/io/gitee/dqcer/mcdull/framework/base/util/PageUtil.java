@@ -10,6 +10,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * 分页工具
@@ -92,5 +93,15 @@ public class PageUtil {
     public static <D extends PagedDTO> void setMaxPageSize(D dto) {
         dto.setPageSize(Integer.MAX_VALUE);
         dto.setPageNum(GlobalConstant.Number.NUMBER_1);
+    }
+
+    public static <T> List<T> getList(PagedVO<T> pagedVO) {
+        return CollUtil.isEmpty(pagedVO.getList()) ? Collections.emptyList() : pagedVO.getList();
+    }
+
+    public static <D extends PagedDTO, V> List<V> getAllList(D dto, Function<D, PagedVO<V>> function) {
+        PageUtil.setMaxPageSize(dto);
+        PagedVO<V> apply = function.apply(dto);
+        return CollUtil.isEmpty(apply.getList()) ? Collections.emptyList() : apply.getList();
     }
 }
