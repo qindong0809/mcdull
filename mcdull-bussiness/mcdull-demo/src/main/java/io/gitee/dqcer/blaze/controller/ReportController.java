@@ -1,6 +1,7 @@
 package io.gitee.dqcer.blaze.controller;
 
 
+import cn.hutool.core.lang.Pair;
 import io.gitee.dqcer.blaze.domain.vo.ReportViewVO;
 import io.gitee.dqcer.blaze.service.IReportService;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -47,8 +48,8 @@ public class ReportController {
 
     @Operation(summary = "领导驾驶舱-累计企业、人才数")
     @GetMapping("/report/enterprise-talent-count-total")
-    public Result<Integer> getEnterpriseTalentCountTotal() {
-        Integer count = reportService.getEnterpriseTalentCountTotal();
+    public Result<Pair<Integer, Integer>> getEnterpriseTalentCountTotal() {
+        Pair<Integer, Integer> count = reportService.getEnterpriseTalentCountTotal();
         return Result.success(count);
     }
 

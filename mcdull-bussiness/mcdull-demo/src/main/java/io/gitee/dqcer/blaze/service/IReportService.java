@@ -1,5 +1,6 @@
 package io.gitee.dqcer.blaze.service;
 
+import cn.hutool.core.lang.Pair;
 import io.gitee.dqcer.blaze.domain.vo.ReportViewVO;
 
 /**
@@ -18,5 +19,5 @@ public interface IReportService {
 
     Integer getTalentCertificatePendingMatchCount();
 
-    Integer getEnterpriseTalentCountTotal();
+    Pair<Integer, Integer> getEnterpriseTalentCountTotal();
 }

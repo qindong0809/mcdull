@@ -1,14 +1,13 @@
 package io.gitee.dqcer.blaze.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.blaze.domain.enums.ApproveEnum;
 import io.gitee.dqcer.blaze.domain.form.*;
 import io.gitee.dqcer.blaze.domain.vo.*;
 import io.gitee.dqcer.blaze.service.*;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
-import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,29 +32,23 @@ public class ReportServiceImpl implements IReportService {
 
     @Override
     public ReportViewVO getReportView() {
-        CertificateRequirementsQueryDTO certificateRequirementsQueryDTO = new CertificateRequirementsQueryDTO();
-        PageUtil.setMaxPageSize(certificateRequirementsQueryDTO);
-        PagedVO<CertificateRequirementsVO> page = certificateRequirementsService.queryPage(certificateRequirementsQueryDTO);
         Map<String, Long> customerMap = new HashMap<>();
-        if (ObjUtil.isNotNull(page)) {
-            List<CertificateRequirementsVO> list = page.getList();
-            if (CollUtil.isNotEmpty(list)) {
-                // 根据certificateLevelName + specialtyName 分组
-                customerMap = list.stream().collect(Collectors
-                        .groupingBy(item -> item.getCertificateLevelName() + " + " + item.getSpecialtyName(), Collectors.counting()));
-            }
+        CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
+        dto.setApprove(ApproveEnum.APPROVE.getCode());
+        List<CertificateRequirementsVO> list = PageUtil.getAllList(dto, d -> certificateRequirementsService.queryPage(d));
+        if (CollUtil.isNotEmpty(list)) {
+            // 根据certificateLevelName + specialtyName 分组
+            customerMap = list.stream().collect(Collectors
+                    .groupingBy(item -> item.getCertificateLevelName() + "\n" + item.getSpecialtyName(), Collectors.counting()));
         }
-        TalentCertificateQueryDTO talentCertificateQueryDTO = new TalentCertificateQueryDTO();
-        PageUtil.setMaxPageSize(talentCertificateQueryDTO);
-        PagedVO<TalentCertificateVO> talentCertificateVOPagedVO = talentCertificateService.queryPage(talentCertificateQueryDTO);
         Map<String, Long> talentMap = new HashMap<>();
-        if (ObjUtil.isNotNull(talentCertificateVOPagedVO)) {
-            List<TalentCertificateVO> list = talentCertificateVOPagedVO.getList();
-            if (CollUtil.isNotEmpty(list)) {
-                // 根据certificateLevelName + specialtyName 分组
-                talentMap = list.stream().collect(Collectors
-                        .groupingBy(item -> item.getCertificateLevelName() + " + " + item.getSpecialtyName(), Collectors.counting()));
-            }
+        TalentCertificateQueryDTO talentCertificateQueryDTO = new TalentCertificateQueryDTO();
+        talentCertificateQueryDTO.setApprove(ApproveEnum.APPROVE.getCode());
+        List<TalentCertificateVO> talentList = PageUtil.getAllList(talentCertificateQueryDTO, d -> talentCertificateService.queryPage(d));
+        if (CollUtil.isNotEmpty(talentList)) {
+            // 根据certificateLevelName + specialtyName 分组
+            talentMap = talentList.stream().collect(Collectors
+                    .groupingBy(item -> item.getCertificateLevelName() + "\n" + item.getSpecialtyName(), Collectors.counting()));
         }
         List<String> typeName = new ArrayList<>();
         if (MapUtil.isNotEmpty(customerMap)) {
@@ -122,9 +115,9 @@ public class ReportServiceImpl implements IReportService {
     }
 
     @Override
-    public Integer getEnterpriseTalentCountTotal() {
+    public Pair<Integer, Integer> getEnterpriseTalentCountTotal() {
         List<TalentVO> talentList = PageUtil.getAllList(new TalentQueryDTO(), d -> talentService.queryPage(d));
         List<CustomerInfoVO> customerList = PageUtil.getAllList(new CustomerInfoQueryDTO(), d -> customerInfoService.queryPage(d));
-        return talentList.size() + customerList.size();
+        return Pair.of(talentList.size(), customerList.size());
     }
 }
