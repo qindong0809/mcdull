@@ -253,35 +253,32 @@ public class CertificateRequirementsServiceImpl
 
     @Override
     public void approve(ApproveDTO dto) {
-        approveService.approve(dto, baseRepository);
+        BlazeOrderEntity entity = orderService.getByCustomerCertId(dto.getId());
+        approveService.approve(dto, baseRepository, ObjUtil.isNotNull(entity));
     }
 
     @Override
     public List<LabelValueVO<Integer, String>> okList() {
         CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
         dto.setApprove(ApproveEnum.APPROVE.getCode());
-        PageUtil.setMaxPageSize(dto);
-        PagedVO<CertificateRequirementsVO> page = this.queryPage(dto);
-        if (ObjUtil.isNotNull(page)) {
-            List<BlazeOrderEntity> orderEntityList = CollUtil.defaultIfEmpty(orderService.list(), new ArrayList<>());
-            Map<Integer, Boolean> map = orderService.getMapByCustomerCertId(orderEntityList.stream().map(BlazeOrderEntity::getCustomerCertId).collect(Collectors.toSet()));
-            List<CertificateRequirementsVO> list = page.getList();
-            if (CollUtil.isNotEmpty(list)) {
-                List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
-                for (CertificateRequirementsVO vo : list) {
-                    Boolean exist = map.get(vo.getId());
-                    if (BooleanUtil.isFalse(exist)) {
-                        voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
-                        continue;
-                    }
-                    Integer currentCount = Convert.toInt(orderEntityList.stream().filter(item -> item.getCustomerCertId().equals(vo.getId())).count(), 0);
-                    Integer configCount = vo.getQuantity();
-                    if (configCount > currentCount) {
-                        voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
-                    }
+        List<CertificateRequirementsVO> list = PageUtil.getAllList(dto, this::queryPage);
+        List<BlazeOrderEntity> orderEntityList = CollUtil.defaultIfEmpty(orderService.list(), new ArrayList<>());
+        Map<Integer, Boolean> map = orderService.getMapByCustomerCertId(orderEntityList.stream().map(BlazeOrderEntity::getCustomerCertId).collect(Collectors.toSet()));
+        if (CollUtil.isNotEmpty(list)) {
+            List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
+            for (CertificateRequirementsVO vo : list) {
+                Boolean exist = map.get(vo.getId());
+                if (BooleanUtil.isFalse(exist)) {
+                    voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
+                    continue;
                 }
-                return voList;
+                Integer currentCount = Convert.toInt(orderEntityList.stream().filter(item -> item.getCustomerCertId().equals(vo.getId())).count(), 0);
+                Integer configCount = vo.getQuantity();
+                if (configCount > currentCount) {
+                    voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
+                }
             }
+            return voList;
         }
         return List.of();
     }
@@ -293,23 +290,16 @@ public class CertificateRequirementsServiceImpl
         if (ObjUtil.isNotNull(talentCertId)) {
             TalentCertificateEntity talentCertificateEntity = talentCertificateService.get(talentCertId);
             if (ObjUtil.isNotNull(talentCertificateEntity)) {
-                dto.setSpecialty(talentCertificateEntity.getSpecialty());
                 dto.setCertificateLevel(talentCertificateEntity.getCertificateLevel());
-                dto.setSocialSecurityRequirement(talentCertificateEntity.getSocialSecurityRequirement());
             }
         }
-        PageUtil.setMaxPageSize(dto);
-        PagedVO<CertificateRequirementsVO> page = this.queryPage(dto);
-        if (ObjUtil.isNotNull(page)) {
-            List<CertificateRequirementsVO> list = page.getList();
-            if (CollUtil.isNotEmpty(list)) {
-                List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
-                for (CertificateRequirementsVO vo : list) {
-                    voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
-
-                }
-                return voList;
+        List<CertificateRequirementsVO> list = PageUtil.getAllList(dto, this::queryPage);
+        if (CollUtil.isNotEmpty(list)) {
+            List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
+            for (CertificateRequirementsVO vo : list) {
+                voList.add(new LabelValueVO<>(vo.getId(), vo.getPositionTitle()));
             }
+            return voList;
         }
         return List.of();
     }

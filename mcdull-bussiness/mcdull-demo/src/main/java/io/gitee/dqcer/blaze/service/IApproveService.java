@@ -16,7 +16,7 @@ import java.util.List;
 
 public interface IApproveService {
 
-    <T extends Approve> void approve(ApproveDTO dto, IRepository<T> baseRepository);
+    <T extends Approve> void approve(ApproveDTO dto, IRepository<T> baseRepository, Boolean existReferencedData);
 
     void setApproveVO(List< ? extends ApproveVO> list, List<? extends Approve> entityList);
 }

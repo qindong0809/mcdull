@@ -277,6 +277,6 @@ public class BlazeOrderDetailServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void approve(ApproveDTO dto) {
-        approveService.approve(dto, baseRepository);
+        approveService.approve(dto, baseRepository, null);
     }
 }

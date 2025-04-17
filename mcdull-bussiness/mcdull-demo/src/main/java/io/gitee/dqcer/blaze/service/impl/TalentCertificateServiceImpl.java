@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.blaze.dao.repository.ITalentCertificateRepository;
 import io.gitee.dqcer.blaze.domain.bo.CertificateBO;
+import io.gitee.dqcer.blaze.domain.entity.BlazeOrderEntity;
 import io.gitee.dqcer.blaze.domain.entity.CertificateRequirementsEntity;
 import io.gitee.dqcer.blaze.domain.entity.TalentCertificateEntity;
 import io.gitee.dqcer.blaze.domain.enums.*;
@@ -30,7 +31,6 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.uac.provider.model.bo.DynamicFieldBO;
 import io.gitee.dqcer.mcdull.uac.provider.model.enums.FormItemControlTypeEnum;
-import io.gitee.dqcer.mcdull.uac.provider.web.dao.repository.IFileBizRepository;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.IAreaManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.uac.provider.web.service.IAreaService;
@@ -70,13 +70,9 @@ public class TalentCertificateServiceImpl
     @Resource
     private ICertificateRequirementsService certificateRequirementsService;
     @Resource
-    private IFileBizRepository fileBizRepository;
-    @Resource
     private IBlazeOrderService orderService;
     @Resource
     private IApproveService approveService;
-
-    private static final String DEFAULT_BIZ_CODD = "blaze-talent-cert";
 
     public PagedVO<TalentCertificateVO> queryPage(TalentCertificateQueryDTO dto) {
         List<TalentCertificateVO> voList = new ArrayList<>();
@@ -218,8 +214,6 @@ public class TalentCertificateServiceImpl
             CertificateRequirementsEntity entity = certificateRequirementsService.get(customerCertId);
             dto.setCertificateLevel(entity.getCertificateLevel());
             dto.setSpecialty(entity.getSpecialty());
-//            dto.setBiddingExit(entity.getBiddingExit());
-//            dto.setThreePersonnel(entity.getThreePersonnel());
             dto.setSocialSecurityRequirement(entity.getSocialSecurityRequirement());
             dto.setApprove(ApproveEnum.APPROVE.getCode());
         }
@@ -271,31 +265,26 @@ public class TalentCertificateServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void approve(ApproveDTO dto) {
-        approveService.approve(dto, baseRepository);
+        BlazeOrderEntity entity = orderService.getByTalentCertId(dto.getId());
+        approveService.approve(dto, baseRepository, ObjUtil.isNotNull(entity));
     }
 
     @Override
     public List<LabelValueVO<Integer, String>> getList(Integer customerCertId) {
         TalentCertificateQueryDTO dto = new TalentCertificateQueryDTO();
+        dto.setApprove(ApproveEnum.APPROVE.getCode());
         if (ObjUtil.isNotNull(customerCertId)) {
             CertificateRequirementsEntity entity = certificateRequirementsService.get(customerCertId);
             dto.setCertificateLevel(entity.getCertificateLevel());
-            dto.setSpecialty(entity.getSpecialty());
-            dto.setSocialSecurityRequirement(entity.getSocialSecurityRequirement());
-            dto.setApprove(ApproveEnum.APPROVE.getCode());
         }
-        PageUtil.setMaxPageSize(dto);
-        PagedVO<TalentCertificateVO> page = this.queryPage(dto);
-        if (ObjUtil.isNotNull(page)) {
-            List<TalentCertificateVO> list = page.getList();
-            if (CollUtil.isNotEmpty(list)) {
-                List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
-                for (TalentCertificateVO vo : list) {
-                    Integer id = vo.getId();
-                    voList.add(new LabelValueVO<>(id, vo.getPositionTitle()));
-                }
-                return voList;
+        List<TalentCertificateVO> list = PageUtil.getAllList(dto, this::queryPage);
+        if (CollUtil.isNotEmpty(list)) {
+            List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
+            for (TalentCertificateVO vo : list) {
+                Integer id = vo.getId();
+                voList.add(new LabelValueVO<>(id, vo.getPositionTitle()));
             }
+            return voList;
         }
         return List.of();
     }
@@ -452,14 +441,13 @@ public class TalentCertificateServiceImpl
         entity.setPositionTitle(StrUtil.EMPTY);
         entity.setApprove(ApproveEnum.NOT_APPROVE.getCode());
         baseRepository.save(entity);
-        String positionTitle = dto.getPositionTitle();
-        if (StrUtil.isBlank(positionTitle)) {
-            this.builderPositionTitle(entity);
-        }
+        String positionTitle = StrUtil.isBlank(dto.getPositionTitle()) ? this.builderPositionTitle(entity) : dto.getPositionTitle();
+        entity.setPositionTitle(positionTitle);
+        baseRepository.updateById(entity);
         fileService.batchFileUpload(fileList, entity.getId(), TalentCertificateEntity.class, null);
     }
 
-    private void builderPositionTitle(TalentCertificateEntity entity) {
+    private String builderPositionTitle(TalentCertificateEntity entity) {
         TalentCertificateQueryDTO dto = new TalentCertificateQueryDTO();
         PageUtil.setMaxPageSize(dto);
         PagedVO<TalentCertificateVO> page = this.queryPage(dto);
@@ -467,14 +455,12 @@ public class TalentCertificateServiceImpl
             List<TalentCertificateVO> list = page.getList();
             TalentCertificateVO vo = list.stream().filter(i -> i.getId().equals(entity.getId())).findFirst().orElse(null);
             if (ObjUtil.isNotNull(vo)) {
-                String positionTitle = StrUtil.format("{}|{}|{}|{}|{}|{}|{}|{}", vo.getTalentName(), vo.getCertificateLevelName(),
+                return StrUtil.format("{}|{}|{}|{}|{}|{}|{}|{}", vo.getTalentName(), vo.getCertificateLevelName(),
                         vo.getSpecialtyName(), vo.getSocialSecurityRequirementName(), vo.getActualPositionPrice(),
                         vo.getDuration(), vo.getInitialOrTransferName(), vo.getThreePersonnelName());
-
-                entity.setPositionTitle(positionTitle);
-                baseRepository.updateById(entity);
             }
         }
+        return StrUtil.EMPTY;
     }
 
 
@@ -487,10 +473,9 @@ public class TalentCertificateServiceImpl
         }
         this.setUpdateFieldValue(dto, entity);
         baseRepository.updateById(entity);
-        String positionTitle = dto.getPositionTitle();
-        if (StrUtil.isBlank(positionTitle)) {
-            this.builderPositionTitle(entity);
-        }
+        String positionTitle = StrUtil.isBlank(dto.getPositionTitle()) ? this.builderPositionTitle(entity) : dto.getPositionTitle();
+        entity.setPositionTitle(positionTitle);
+        baseRepository.updateById(entity);
         Integer delFileId = dto.getDelFileId();
         fileService.batchFileUpload(fileList, entity.getId(), TalentCertificateEntity.class, ListUtil.of(delFileId));
     }

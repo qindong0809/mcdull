@@ -1,7 +1,9 @@
 package io.gitee.dqcer.blaze.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderAddDTO;
 import io.gitee.dqcer.blaze.domain.form.BlazeOrderQueryDTO;
@@ -106,6 +108,7 @@ public class BlazeOrderController extends BasicController {
     @PostMapping("/blazeOrder/talent-cert-list")
     public Result<List<LabelValueVO<Integer, String>>> getTalentCertList(@RequestBody @Valid BlazeOrderSearchDTO pkDTO) {
         List<LabelValueVO<Integer, String>> list = blazeOrderService.getTalentCertList(pkDTO);
+        CollUtil.sort(list, (o1, o2) -> NumberUtil.compare(o1.getValue(), o2.getValue()));
         return Result.success(list);
     }
 
@@ -113,6 +116,7 @@ public class BlazeOrderController extends BasicController {
     @PostMapping("/blazeOrder/custom-cert-list")
     public Result<List<LabelValueVO<Integer, String>>> getCustomCertList(@RequestBody @Valid BlazeOrderSearchDTO pkDTO) {
         List<LabelValueVO<Integer, String>> list = blazeOrderService.getCustomCertList(pkDTO);
+        CollUtil.sort(list, (o1, o2) -> NumberUtil.compare(o1.getValue(), o2.getValue()));
         return Result.success(list);
     }
 

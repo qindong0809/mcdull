@@ -58,4 +58,8 @@ public interface IBlazeOrderService {
     List<LabelValueVO<Integer, String>> getTalentCertList(BlazeOrderSearchDTO searchDTO);
 
     List<LabelValueVO<Integer, String>> getCustomCertList(BlazeOrderSearchDTO pkDTO);
+
+    BlazeOrderEntity getByCustomerCertId(Integer customerCertId);
+
+    BlazeOrderEntity getByTalentCertId(Integer talentCertId);
 }

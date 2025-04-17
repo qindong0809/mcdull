@@ -14,7 +14,7 @@ UPDATE sys_menu SET sort=2 WHERE id=261;
 UPDATE sys_menu SET sort=3 WHERE id=281;
 
 
-insert into `sys_change_log` values (3, 'v1.1.1', 3, '麦兜', sysdate(), 'v1.1.1 版本，更新内容如下：\n\n1.【优化】人才管理将不必要的字段改为选填\n\n2.【优化】调整人才端、企业端子菜单顺序\n\n3.【新增】新增四级菜单\n', '', 0, sysdate(), sysdate());
+insert into `sys_change_log` values (3, 'v1.1.1', 3, '麦兜', sysdate(), 'v1.1.1 版本，更新内容如下：\n\n1.【优化】人才管理将不必要的字段改为选填\n\n2.【优化】调整人才端、企业端子菜单顺序\n\n3.【新增】所有证书级别追加其它选项\n\n4.【修复】证书标题显示异常', '', 0, sysdate(), sysdate());
 
 
 -- 领导驾驶舱

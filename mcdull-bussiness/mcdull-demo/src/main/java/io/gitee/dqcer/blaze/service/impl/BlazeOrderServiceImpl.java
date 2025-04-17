@@ -295,7 +295,8 @@ public class BlazeOrderServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void approve(ApproveDTO dto) {
-        approveService.approve(dto, baseRepository);
+        BlazeOrderDetailEntity entity = blazeOrderDetailService.getByOrderId(dto.getId());
+        approveService.approve(dto, baseRepository, ObjUtil.isNotNull(entity));
     }
 
     @Override
@@ -363,6 +364,28 @@ public class BlazeOrderServiceImpl
             }
         }
         return voList;
+    }
+
+    @Override
+    public BlazeOrderEntity getByCustomerCertId(Integer customerCertId) {
+        LambdaQueryWrapper<BlazeOrderEntity> query = Wrappers.lambdaQuery();
+        query.eq(BlazeOrderEntity::getCustomerCertId, customerCertId);
+        List<BlazeOrderEntity> list = baseRepository.list(query);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public BlazeOrderEntity getByTalentCertId(Integer talentCertId) {
+        LambdaQueryWrapper<BlazeOrderEntity> query = Wrappers.lambdaQuery();
+        query.eq(BlazeOrderEntity::getTalentCertId, talentCertId);
+        List<BlazeOrderEntity> list = baseRepository.list(query);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
     }
 
     private List<Pair<String, Func1<BlazeOrderVO, ?>>> getTitleList() {
