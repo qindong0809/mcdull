@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.gateway;
 
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
@@ -8,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +20,6 @@ import java.util.stream.Collectors;
  * @author dqcer
  * @since 2022/10/24
  */
-@EnableFeignClients(basePackages = GlobalConstant.BASE_PACKAGE + ".uac.client.service")
 @RestController
 @EnableDiscoveryClient
 @SpringBootApplication

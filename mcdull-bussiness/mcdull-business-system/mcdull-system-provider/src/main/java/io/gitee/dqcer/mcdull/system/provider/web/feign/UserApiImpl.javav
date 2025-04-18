@@ -1,0 +1,43 @@
+package io.gitee.dqcer.mcdull.system.provider.web.feign;
+
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
+import io.gitee.dqcer.mcdull.uac.def.service.io.gitee.dqcer.mcdull.system.client.UserApiDef;
+import io.gitee.dqcer.mcdull.uac.vo.io.gitee.dqcer.mcdull.system.client.RemoteUserVO;
+import io.gitee.dqcer.mcdull.uac.service.web.io.gitee.dqcer.mcdull.system.provider.IUserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 用户 feign 实现层
+ *
+ * @author dqcer
+ * @since 2022/12/25
+ */
+@Slf4j
+@Tag(name = "User Api")
+@RestController
+public class UserApiImpl implements UserApiDef {
+
+    @Resource
+    private IUserService userService;
+
+    @Override
+    public ResultApi<List<RemoteUserVO>> getList() {
+        // todo 获取用户列表
+        return ResultApi.success(Collections.emptyList());
+    }
+
+    @Override
+    public ResultApi<Map<Integer, RemoteUserVO>> getMapByIdList(List<Integer> userIdList) {
+        LogHelp.info(log, "UserApiDef#getMapByUserIdList: {}", userIdList);
+        // todo 获取用户列表
+        return ResultApi.success(Collections.emptyMap());
+    }
+}

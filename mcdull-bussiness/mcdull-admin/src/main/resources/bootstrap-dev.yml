@@ -1,8 +1,0 @@
-spring:
-  cloud:
-    nacos:
-      server-addr: mcdull.io:8848
-      config:
-        file-extension: yaml
-      discovery:
-        heart-beat-interval: 1

@@ -23,12 +23,6 @@ spring:
             - Path=/mdc/**
           filters:
             - StripPrefix=1
-mcdull:
-  filter:
-    noAuth:
-      - /uac/login
-  feign:
-    uac: mcdull-uac-provider
 #请勿使用相对路径
 logging:
   file:

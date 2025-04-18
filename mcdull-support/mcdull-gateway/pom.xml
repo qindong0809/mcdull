@@ -12,19 +12,6 @@
     <name>${project.artifactId} v${project.version}</name>
 
     <dependencies>
-        <!-- Sa-Token 权限认证（Reactor响应式集成）, 在线文档：https://sa-token.cc -->
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-reactor-spring-boot3-starter</artifactId>
-            <version>1.37.0</version>
-        </dependency>
-
-        <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-redis-jackson</artifactId>
-            <version>1.37.0</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
@@ -41,16 +28,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-base</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-uac-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-feign</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

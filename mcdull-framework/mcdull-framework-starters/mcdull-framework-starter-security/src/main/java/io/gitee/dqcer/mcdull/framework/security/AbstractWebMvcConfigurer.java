@@ -40,7 +40,7 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
             "/webjars/**",
             "/error",
             "/home/upload" + GlobalConstant.ALL_PATTERNS,
-            "/v3/api-docs/**"};
+            "/v3/def-docs/**"};
 
     @Override
     public void addInterceptors(InterceptorRegistry registry){

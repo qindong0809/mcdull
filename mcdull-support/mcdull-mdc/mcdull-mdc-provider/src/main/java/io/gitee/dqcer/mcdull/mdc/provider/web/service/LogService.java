@@ -4,13 +4,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.feign.ResultApiParse;
 import io.gitee.dqcer.mcdull.mdc.provider.model.convert.LogConvert;
 import io.gitee.dqcer.mcdull.mdc.provider.model.dto.LogLiteDTO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.dto.SysLogFeignDTO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.entity.LogEntity;
 import io.gitee.dqcer.mcdull.mdc.provider.model.vo.LogVO;
-import io.gitee.dqcer.mcdull.uac.client.service.UserClientService;
+import io.gitee.dqcer.mcdull.uac.client.service.UserAip;
 import jakarta.annotation.Resource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,7 @@ public class LogService {
 //    private ILogRepository logRepository;
 
     @Resource
-    private UserClientService userClientService;
+    private UserAip userClientService;
 
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
@@ -50,8 +49,8 @@ public class LogService {
         List<LogVO> voList = new ArrayList<>();
         for (LogEntity entity : entityPage.getRecords()) {
             LogVO logVO = LogConvert.entity2Vo(entity);
-            String nickname = ResultApiParse.getInstance(userClientService.getDetail(logVO.getAccountId())).getNickname();
-            logVO.setAccountIdStr(nickname);
+//            String nickname = ResultApiParse.getInstance(userClientService.getDetail(logVO.getAccountId())).getNickname();
+//            logVO.setAccountIdStr(nickname);
             voList.add(logVO);
         }
         return Result.success(PageUtil.toPage(voList, entityPage));

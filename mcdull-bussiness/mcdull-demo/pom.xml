@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-uac-provider</artifactId>
+            <artifactId>mcdull-system-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
