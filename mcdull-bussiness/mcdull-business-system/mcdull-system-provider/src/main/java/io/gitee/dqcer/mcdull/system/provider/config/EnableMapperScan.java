@@ -18,6 +18,5 @@ import java.lang.annotation.*;
 public @interface EnableMapperScan {
 
     @SuppressWarnings("unused")
-    String[] basePackages() default {GlobalConstant.BASE_PACKAGE + ".**.mapper"};
-//    String[] basePackages() default {GlobalConstant.BASE_PACKAGE + ".system.provider.web.dao.mapper"};
+    String[] basePackages() default {GlobalConstant.MAPPER_PACKAGE};
 }

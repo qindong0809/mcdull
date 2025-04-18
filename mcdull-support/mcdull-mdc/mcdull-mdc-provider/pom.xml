@@ -58,7 +58,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-uac-client</artifactId>
+            <artifactId>mcdull-system-client</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

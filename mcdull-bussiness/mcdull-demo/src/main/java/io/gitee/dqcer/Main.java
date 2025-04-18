@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableWebCore
 //@EnableMapperScan(basePackages = {GlobalConstant.BASE_PACKAGE + ".uac.provider.web.dao.mapper",
 //         "io.gitee.dqcer.blaze.dao.mapper", })
-@MapperScan(basePackages = {GlobalConstant.BASE_PACKAGE + ".**.mapper",})
+@MapperScan(basePackages = {GlobalConstant.MAPPER_PACKAGE,})
 //@EnableMapperScan
 @EnableDynamicDataSource
 @EnableCache

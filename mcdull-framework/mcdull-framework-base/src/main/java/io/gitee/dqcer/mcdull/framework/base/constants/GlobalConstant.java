@@ -16,6 +16,8 @@ public class GlobalConstant {
     public static final String ADMINISTRATOR_FLAG = "administratorFlag";
     public static final String CACHE_CURRENT_USER = "cacheCurrentUser";
 
+    public static final String MAPPER_PACKAGE = BASE_PACKAGE + ".**.mapper";
+
     /**
      * 内部接口调用 前缀
      */

@@ -18,3 +18,4 @@ insert into `sys_change_log` values (4, 'v1.1.1', 3, '麦兜', sysdate(), 'v1.1.
 
 
 -- 领导驾驶舱
+INSERT INTO sys_menu (id, menu_name, menu_type, parent_id, sort, `path`, component, perms_type, api_perms, web_perms, icon, context_menu_id, frame_flag, frame_url, cache_flag, visible_flag, inactive, del_flag, created_by, created_time, updated_by, updated_time) VALUES(296, '领导驾驶舱', 2, 255, 4, '/blaze/report/index', '/blaze/report/index.vue', 1, NULL, NULL, 'AppstoreOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, '2025-04-13 13:59:08', NULL, NULL);

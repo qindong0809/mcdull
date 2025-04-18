@@ -23,10 +23,10 @@ import org.springframework.web.filter.CorsFilter;
 @EnableCache
 @SpringBootApplication
 @RestController
-public class UserDataContentApplication {
+public class SystemApplication {
 
     public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(UserDataContentApplication.class);
+        SpringApplication application = new SpringApplication(SystemApplication.class);
         application.addListeners(new Ip2RegionListener());
         application.run(args);
     }
