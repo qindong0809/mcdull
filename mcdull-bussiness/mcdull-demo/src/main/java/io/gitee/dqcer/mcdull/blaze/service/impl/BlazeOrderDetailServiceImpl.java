@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.blaze.service.impl;
 
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
@@ -266,7 +267,8 @@ public class BlazeOrderDetailServiceImpl
 
     @Override
     public BlazeOrderDetailEntity getByOrderId(Integer id) {
-        return baseRepository.getById(id);
+        List<BlazeOrderDetailEntity> list = baseRepository.getByOrderId(ListUtil.of(id));
+        return CollUtil.isEmpty(list) ? null : list.get(0);
     }
 
     @Override

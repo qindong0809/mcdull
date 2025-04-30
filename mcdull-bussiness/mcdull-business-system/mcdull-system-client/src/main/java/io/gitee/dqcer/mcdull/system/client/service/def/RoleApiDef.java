@@ -17,10 +17,10 @@ import java.util.Map;
  */
 public interface RoleApiDef {
 
-    @PostMapping(GlobalConstant.INNER_API + "/role/list")
+    @PostMapping(GlobalConstant.INNER_API + GlobalConstant.SYSTEM + "/role/list")
     ResultApi<List<RemoteRoleVO>> getList();
 
-    @PostMapping(GlobalConstant.INNER_API + "/role/by-id/list")
+    @PostMapping(GlobalConstant.INNER_API + GlobalConstant.SYSTEM + "/role/by-id/list")
     ResultApi<Map<Integer, RemoteRoleVO>> getMapByIdList(@RequestBody List<Integer> userIdList);
 
 }

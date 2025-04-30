@@ -22,6 +22,7 @@ public class GlobalConstant {
      * 内部接口调用 前缀
      */
     public static final String INNER_API = "/interior-def";
+    public static final String SYSTEM = "/system";
 
     public static final String FAVICON_ICO = "/favicon.ico";
     public static final String ACTUATOR_ALL = "/actuator/**";

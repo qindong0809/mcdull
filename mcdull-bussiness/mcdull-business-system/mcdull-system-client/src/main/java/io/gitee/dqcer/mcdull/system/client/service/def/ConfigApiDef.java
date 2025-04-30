@@ -17,10 +17,10 @@ import java.util.Map;
  */
 public interface ConfigApiDef {
 
-    @PostMapping(GlobalConstant.INNER_API + "/config/list")
+    @PostMapping(GlobalConstant.INNER_API + GlobalConstant.SYSTEM +"/config/list")
     ResultApi<List<RemoteConfigVO>> getList();
 
-    @PostMapping(GlobalConstant.INNER_API + "/config/by-key/list")
+    @PostMapping(GlobalConstant.INNER_API + GlobalConstant.SYSTEM + "/config/by-key/list")
     ResultApi<Map<String, RemoteConfigVO>> getMapByKeyList(@RequestBody List<String> keyList);
 
 }

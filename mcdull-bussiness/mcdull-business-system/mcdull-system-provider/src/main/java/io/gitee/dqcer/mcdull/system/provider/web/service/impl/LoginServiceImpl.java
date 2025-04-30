@@ -3,8 +3,10 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
@@ -19,15 +21,16 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.LogonVO;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.MenuVO;
 import io.gitee.dqcer.mcdull.system.provider.util.Ip2RegionUtil;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;
+import jakarta.annotation.Resource;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -155,6 +158,8 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
         if (ObjUtil.isNotNull(cache)) {
             LogonVO vo = cache.get(key, LogonVO.class);
             if (ObjUtil.isNotNull(vo)) {
+                List<MenuVO> menuList = vo.getMenuList();
+                menuList.sort((o1, o2) -> NumberUtil.compare(Convert.toInt(o1.getSort(),0), Convert.toInt(o2.getSort(), 0)));
                 return vo;
             }
         }
@@ -165,6 +170,8 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
             if (ObjUtil.isNotNull(cache)) {
                 cache.put(key, vo);
             }
+            List<MenuVO> menuList = vo.getMenuList();
+            menuList.sort((o1, o2) -> NumberUtil.compare(Convert.toInt(o1.getSort(),0), Convert.toInt(o2.getSort(), 0)));
             return vo;
         }
         LogHelp.error(log, "getCurrentUserInfo error, userId: {}", userId);

@@ -77,7 +77,6 @@ public class LoginController extends BasicController {
 
     /**
      * 与login返回一致，待确认是否重复
-     * @return
      */
     @Deprecated
     @GetMapping("/current/user-info")
