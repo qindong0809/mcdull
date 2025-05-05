@@ -6,6 +6,9 @@ import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.config.properties.ThreadPoolProperties;
+import io.gitee.dqcer.mcdull.framework.mysql.config.DynamicContextHolder;
+import io.gitee.dqcer.mcdull.framework.mysql.datasource.GlobalDataRoutingDataSource;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -15,8 +18,9 @@ import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import jakarta.annotation.Resource;
+import java.util.Deque;
 import java.util.Map;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -34,8 +38,11 @@ public class ThreadPoolConfig {
     @Resource
     private McdullProperties mcdullProperties;
 
+    @Resource
+    private GlobalDataRoutingDataSource globalDataRoutingDataSource;
+
     @Bean
-    public ThreadPoolTaskExecutor threadPoolTaskExecutor(){
+    public Executor threadPoolTaskExecutor(){
         ThreadPoolProperties threadPool = mcdullProperties.getThreadPool();
         LogHelp.info(log, "Init Thread Pool Config: {}", threadPool);
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -63,21 +70,21 @@ public class ThreadPoolConfig {
     static class ThreadPoolDecorator implements TaskDecorator {
         @Override
         public Runnable decorate(Runnable runnable) {
-//            RequestAttributes context = RequestContextHolder.currentRequestAttributes();
             UnifySession session = UserContextHolder.getSession();
             Map<String,String> previous = MDC.getCopyOfContextMap();
+            Deque<String> deque = DynamicContextHolder.getAll();
             return () -> {
                 try {
                     UserContextHolder.setSession(session);
-//                    RequestContextHolder.setRequestAttributes(context);
                     if (previous != null && !previous.isEmpty()) {
                         MDC.setContextMap(previous);
                     }
+                    DynamicContextHolder.setAll(deque);
                     runnable.run();
                 } catch (Exception e) {
                     LogHelp.error(log, "ThreadPoolDecorator error.", e);
                 } finally {
-//                    RequestContextHolder.resetRequestAttributes();
+                    DynamicContextHolder.clear();
                     UserContextHolder.clearSession();
                     MDC.clear();
                 }

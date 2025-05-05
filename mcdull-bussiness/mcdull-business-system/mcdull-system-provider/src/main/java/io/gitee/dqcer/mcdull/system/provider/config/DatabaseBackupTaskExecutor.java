@@ -8,6 +8,7 @@ import cn.hutool.cron.CronUtil;
 import io.gitee.dqcer.mcdull.business.common.dump.SqlDumper;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.framework.mysql.datasource.GlobalDataRoutingDataSource;
 import io.gitee.dqcer.mcdull.framework.web.component.ConcurrentRateLimiter;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
@@ -44,45 +45,56 @@ public class DatabaseBackupTaskExecutor {
     private ICommonManager commonManager;
     @Resource
     private IFolderService folderService;
-
+    @Resource
+    private GlobalDataRoutingDataSource globalDataRoutingDataSource;
 
     @PostConstruct
     public void init() {
-        final String key = "task-database-backup";
-        String value = commonManager.getConfig(key);
-        log.info("task-database-backup: {}", value);
-        if (StrUtil.isNotBlank(value)) {
-            // 创建并注册定时任务
-            CronUtil.schedule(value, (Runnable) () ->
-                    concurrentRateLimiter.locker(key, 0, this::startBackup, false));
-            // 秒级别定时任务
-            CronUtil.setMatchSecond(true);
-            // 启动定时任务调度器
-            CronUtil.start();
+        try {
+            globalDataRoutingDataSource.switchDataSource();
+            final String key = "task-database-backup";
+            String value = commonManager.getConfig(key);
+            log.info("task-database-backup: {}", value);
+            if (StrUtil.isNotBlank(value)) {
+                // 创建并注册定时任务
+                CronUtil.schedule(value, (Runnable) () ->
+                        concurrentRateLimiter.locker(key, 0,  this::startBackup, false));
+                // 秒级别定时任务
+                CronUtil.setMatchSecond(true);
+                // 启动定时任务调度器
+                CronUtil.start();
+            }
+        }finally {
+            globalDataRoutingDataSource.removeDataSource();
         }
     }
 
     private boolean startBackup() {
-        File file = null;
-        File zipFile = null;
-        try (Connection connection = dataSource.getConnection()) {
-            UserContextHolder.setDefaultSession();
-           String schema = connection.getCatalog();
-            LogHelp.info(log, "start backup database. schema:{}", schema);
-            String tmpDirPath = FileUtil.getTmpDirPath();
-            String dateTimeStr = commonManager.convertDateTimeStr(new Date());
-            String fileName = schema + "_" + dateTimeStr + ".sql";
-            file = SqlDumper.dumpDatabase(connection, new HashSet<>(ListUtil.of(schema)), tmpDirPath + File.separator + fileName);
-            zipFile = ZipUtil.zip(file);
-            fileService.fileUpload(zipFile, folderService.addIfAbsent("数据备份", 0));
-            LogHelp.info(log, "backup database success. fileName:{}", fileName);
-        } catch (SQLException e) {
-            log.error("backup database error", e);
-            throw new RuntimeException(e);
-        } finally {
-            FileUtil.del(file);
-            FileUtil.del(zipFile);
-            UserContextHolder.clearSession();
+        try {
+            globalDataRoutingDataSource.switchDataSource();
+            File file = null;
+            File zipFile = null;
+            try (Connection connection = globalDataRoutingDataSource.getConnection()) {
+                UserContextHolder.setDefaultSession();
+                String schema = connection.getCatalog();
+                LogHelp.info(log, "start backup database. schema:{}", schema);
+                String tmpDirPath = FileUtil.getTmpDirPath();
+                String dateTimeStr = commonManager.convertDateTimeStr(new Date());
+                String fileName = schema + "_" + dateTimeStr + ".sql";
+                file = SqlDumper.dumpDatabase(connection, new HashSet<>(ListUtil.of(schema)), tmpDirPath + File.separator + fileName);
+                zipFile = ZipUtil.zip(file);
+                fileService.fileUpload(zipFile, folderService.addIfAbsent("数据备份", 0));
+                LogHelp.info(log, "backup database success. fileName:{}", fileName);
+            } catch (SQLException e) {
+                log.error("backup database error", e);
+                throw new RuntimeException(e);
+            } finally {
+                FileUtil.del(file);
+                FileUtil.del(zipFile);
+                UserContextHolder.clearSession();
+            }
+        }finally {
+            globalDataRoutingDataSource.removeDataSource();
         }
         return true;
     }

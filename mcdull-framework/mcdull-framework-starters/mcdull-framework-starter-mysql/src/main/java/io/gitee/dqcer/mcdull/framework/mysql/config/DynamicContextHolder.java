@@ -29,6 +29,15 @@ public final class DynamicContextHolder {
     }
 
     /**
+     * 设置所有
+     *
+     * @param deque deque
+     */
+    public static void setAll(Deque<String> deque) {
+        DS_CONTEXT_HOLDER.set(deque);
+    }
+
+    /**
      * 获得当前线程数据源
      *
      * @return 数据源名称
@@ -64,5 +73,12 @@ public final class DynamicContextHolder {
      */
     public static void clear() {
         DS_CONTEXT_HOLDER.remove();
+    }
+
+    public static void remove(String key) {
+        Deque<String> deque = DS_CONTEXT_HOLDER.get();
+        if (!deque.isEmpty()) {
+            deque.remove(key);
+        }
     }
 }

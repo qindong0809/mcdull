@@ -9,6 +9,7 @@ import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
+import io.gitee.dqcer.mcdull.framework.mysql.datasource.GlobalDataRoutingDataSource;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +33,13 @@ import java.util.Date;
 public class HttpTraceLogFilter extends OncePerRequestFilter {
 
     protected Logger log = LoggerFactory.getLogger(getClass());
+
+
+    private final GlobalDataRoutingDataSource globalDataRoutingDataSource;
+
+    public HttpTraceLogFilter(GlobalDataRoutingDataSource globalDataRoutingDataSource) {
+        this.globalDataRoutingDataSource = globalDataRoutingDataSource;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -61,9 +69,11 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
+            globalDataRoutingDataSource.switchDataSource();
 
             filterChain.doFilter(request, response);
         } finally {
+            globalDataRoutingDataSource.removeDataSource();
             LogHelp.debug(log, "Clean UnifySession.");
             UserContextHolder.clearSession();
             MDC.remove(HttpHeaderConstants.LOG_TRACE_ID);

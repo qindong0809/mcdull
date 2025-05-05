@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.mysql.aspect.DataSourceAspect;
+import io.gitee.dqcer.mcdull.framework.mysql.datasource.GlobalDataRoutingDataSource;
 import io.gitee.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
 import jakarta.annotation.Resource;
 import jakarta.servlet.*;
@@ -34,6 +35,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -46,6 +49,7 @@ import java.util.Map;
  * @author dqcer
  * @since 2021/10/09
  */
+@EnableTransactionManagement
 @Configuration
 @EnableConfigurationProperties(DataSourceProperties.class)
 public class MysqlAutoConfiguration {
@@ -130,17 +134,17 @@ public class MysqlAutoConfiguration {
      * @param dataSourceProperties 数据源属性
      * @return {@link RoutingDataSource}
      */
-    @Bean
+//    @Bean
     public RoutingDataSource routingDataSource(DataSourceProperties dataSourceProperties) {
-        RoutingDataSource routingDataSource = new RoutingDataSource();
+        RoutingDataSource routingDataSource = new GlobalDataRoutingDataSource();
         //  默认数据源
-        DataSource dataSource = DataSourceBuilder.builder(dataSourceProperties);
-        DataSource wrapDataSource = this.wrapDataSource(dataSource);
-        if (wrapDataSource != null) {
-            routingDataSource.setDefaultTargetDataSource(wrapDataSource);
-        }
-        //  其它数据源集
-        routingDataSource.setTargetDataSources(multipleDataSources());
+//        DataSource dataSource = DataSourceBuilder.builder(dataSourceProperties);
+//        DataSource wrapDataSource = this.wrapDataSource(dataSource);
+//        if (wrapDataSource != null) {
+//            routingDataSource.setDefaultTargetDataSource(wrapDataSource);
+//        }
+//        //  其它数据源集
+//        routingDataSource.setTargetDataSources(multipleDataSources());
         return routingDataSource;
     }
 
@@ -151,23 +155,23 @@ public class MysqlAutoConfiguration {
      * @param dataSource 数据源
      * @return {@link DataSource}
      */
-    private DataSource wrapDataSource(DataSource dataSource) {
-        // TODO: 2021/10/9
-        return dataSource;
-    }
+//    private DataSource wrapDataSource(DataSource dataSource) {
+//        // TODO: 2021/10/9
+//        return dataSource;
+//    }
 
     /**
      * 多个数据源 DataSourceBuilder.builder(从配置文件/数据库加载其它数据源)
      *
      * @return {@link Map}
      */
-    private Map<Object, Object> multipleDataSources() {
-        // TODO: 2021/10/9
-        return new HashMap<>(2);
-    }
+//    private Map<Object, Object> multipleDataSources() {
+//        // TODO: 2021/10/9
+//        return new HashMap<>(2);
+//    }
 
     @Bean
-    public DataSourceTransactionManager transactionManager(RoutingDataSource dynamicDataSource) {
+    public PlatformTransactionManager transactionManager(RoutingDataSource dynamicDataSource) {
         return new DataSourceTransactionManager(dynamicDataSource);
     }
 
@@ -180,8 +184,8 @@ public class MysqlAutoConfiguration {
         // 这些参数可以在 com.alibaba.druid.support.http.StatViewServlet
         // 的父类 com.alibaba.druid.support.http.ResourceServlet 中找到
         Map<String, String> initParams = new HashMap<>(100);
-        initParams.put("loginUsername", dataSourceProperties.getDruidUsername());
-        initParams.put("loginPassword", dataSourceProperties.getDruidPassword());
+        initParams.put("loginUsername", dataSourceProperties.getAdminUser());
+        initParams.put("loginPassword", dataSourceProperties.getAdminPassword());
 
         //后台允许谁可以访问
         //initParams.put("allow", "localhost")：表示只有本机可以访问

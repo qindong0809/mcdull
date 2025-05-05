@@ -4,6 +4,8 @@ package io.gitee.dqcer.mcdull.framework.feign;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +38,15 @@ public class FeignConfiguration implements RequestInterceptor {
         }
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes != null) {
+            UnifySession session = UserContextHolder.getSession();
+            if (session != null) {
+                requestTemplate.header(HttpHeaderConstants.U_ID, session.getUserId());
+                requestTemplate.header(HttpHeaderConstants.T_ID, session.getTenantId() + "");
+                requestTemplate.header(HttpHeaderConstants.TRACE_ID_HEADER, session.getTraceId());
+
+
+                return;
+            }
             HttpServletRequest request = attributes.getRequest();
             requestTemplate.header(HttpHeaderConstants.U_ID, request.getHeader(HttpHeaderConstants.U_ID));
             requestTemplate.header(HttpHeaderConstants.T_ID, request.getHeader(HttpHeaderConstants.T_ID));

@@ -1,17 +1,18 @@
 package io.gitee.dqcer.mcdull.framework.mysql.config;
 
+import com.alibaba.druid.pool.DruidDataSource;
+import io.gitee.dqcer.mcdull.framework.mysql.Database;
 import io.gitee.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
-import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.jmx.export.annotation.ManagedOperation;
+import org.springframework.jmx.export.annotation.ManagedOperationParameter;
+import org.springframework.jmx.export.annotation.ManagedOperationParameters;
 
-import jakarta.annotation.Resource;
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,94 +22,66 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author dqcer
  * @since 2021/10/09
  */
-public class RoutingDataSource extends AbstractRoutingDataSource {
+public abstract class RoutingDataSource extends AbstractRoutingDataSource {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+    protected Map<Object, Object> dataSourceMap = new ConcurrentHashMap<>();
+
     @Resource
-    private DataSourceProperties properties;
-
-    private final Map<Object, Object> objectObjectMap  = new ConcurrentHashMap<>();
-
-
-    private final Map<String, DataSource> dataSourceMap = new ConcurrentHashMap<>();
+    protected DataSourceProperties dataSourceProperties;
 
     @Override
     protected Object determineCurrentLookupKey() {
-        String peek = DynamicContextHolder.peek();
-        if (null == peek || peek.trim().length() == 0) {
-            return properties.getDefaultName();
-        }
-        DataSource dataSource = dataSourceMap.get(peek);
-        if (null == dataSource) {
-            loadDataSource(peek, DataSourceBuilder.builder(properties));
-            dataSource = dataSourceMap.get(peek);
-            if (null == dataSource) {
-                log.error("determineCurrentLookupKey key: {}", peek);
-                throw new IllegalArgumentException(peek + " 库未找到" );
-            }
-        }
-        return peek;
+        return DynamicContextHolder.peek();
     }
 
-
-    /**
-     * 加载数据来源
-     *
-     * @param lookupKey  查找关键
-     * @param dataSource 数据源
-     */
-    public void loadDataSource(String lookupKey, DataSource dataSource) {
-        DataSourceProperties dataSourceProperties = new DataSourceProperties();
-
-        Connection conn = null;
-        Statement stmt = null;
-        try {
-            conn = dataSource.getConnection();
-            stmt = conn.createStatement();
-
-            // TODO: 2022/12/14
-            /*
-                select * from information_schema.TABLES
-                where TABLE_NAME = '需要查询的数据表名';
-             */
-
-            String sql = properties.getTenantSql() + " where tenant_id = ?";
-
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, lookupKey);
-            ResultSet rs = preparedStatement.executeQuery();
-
-            while (rs.next()) {
-                String name = rs.getString("database");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                String host = rs.getString("host");
-                String port = rs.getString("port");
-                String param = rs.getString("param");
-                dataSourceProperties.setUsername(username);
-                dataSourceProperties.setPassword(password);
-                dataSourceProperties.setUrl("jdbc:mysql://" + host + ":" + port + "/" + name + param);
-                dataSourceProperties.setDriverClassName(properties.getDriverClassName());
-            }
-        } catch (Exception e) {
-            log.error("初始化数据库失败", e);
-        } finally {
-            JdbcUtils.closeConnection(conn);
-            JdbcUtils.closeStatement(stmt);
-        }
-
-        if (null == dataSourceProperties.getDriverClassName()) {
-            // 表示未进入到while中
-            throw new IllegalArgumentException("租户库: [" + lookupKey + "] 找不到，请检查该库是否存在或long类型的精度丢失");
-        }
-
-        DataSource ds = DataSourceBuilder.builder(dataSourceProperties);
-        dataSourceMap.put(lookupKey, dataSource);
-
-        objectObjectMap.put(lookupKey, ds);
-        setTargetDataSources(objectObjectMap);
+    @Override
+    public void afterPropertiesSet() {
+        this.setTargetDataSources(dataSourceMap);
         super.afterPropertiesSet();
+    }
+
+    public boolean containsDataSource(String lookupKey) {
+        return dataSourceMap.containsKey(lookupKey);
+    }
+
+    public synchronized void addDataSource(String lookupKey, DataSource dataSource) {
+        dataSourceMap.put(lookupKey, dataSource);
+        this.afterPropertiesSet();
+    }
+
+    @ManagedOperation(description = "remove dataSource")
+    @ManagedOperationParameters({
+            @ManagedOperationParameter(name = "lookupKey", description = "lookupKey")
+    })
+    public synchronized void removeDataSource(String lookupKey) {
+        dataSourceMap.remove(lookupKey);
+        this.afterPropertiesSet();
+    }
+
+    @ManagedOperation(description = "get dataSourceMap")
+    public Map<Object, Object> getDataSourceMap() {
+        Map<Object, Object> map = new HashMap<>();
+        for (Map.Entry<Object, Object> entry : dataSourceMap.entrySet()) {
+            Object object = entry.getValue();
+            if (object instanceof DruidDataSource) {
+                map.put(entry.getKey(), ((DruidDataSource) object).getRawJdbcUrl());
+            } else {
+                // 打印类型
+                log.error("DataSource type error. current type: {}", object.getClass().getName());
+            }
+        }
+        return map;
+    }
+
+    public void loadDataSource(String lookupKey, Database database) {
+        if (this.containsDataSource(lookupKey)) {
+            log.debug("DataSource [{}] already exists", lookupKey);
+            return;
+        }
+        DataSource dataSource = DataSourceBuilder.convertDruid(dataSourceProperties, database);
+        this.addDataSource(lookupKey, dataSource);
     }
 
 }

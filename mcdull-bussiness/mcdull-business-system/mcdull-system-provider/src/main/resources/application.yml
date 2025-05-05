@@ -6,6 +6,28 @@ spring:
     allow-circular-references: true
   application:
     name: mcdull-uac-provider
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    #driver-class-name: net.sf.log4jdbc.DriverSpy
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #driver-class-name: com.mysql.jdbc.Driver
+    #filters: stat,slf4j because OOM
+    maxActive: 10
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+    logSlowSql: true
+    allow:
+    adminUser: root
+    adminPassword: 8YTJWOuA7XRK17wRQnw4
   boot:
     admin:
       client:

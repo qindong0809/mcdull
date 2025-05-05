@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.mysql.properties;
 
 
+import io.gitee.dqcer.mcdull.framework.mysql.Database;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 
@@ -11,12 +12,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @since 2021/08/31
  */
 @ConfigurationProperties(prefix = "spring.datasource")
-public class DataSourceProperties {
+public class DataSourceProperties extends Database {
 
     public static final String DRUID = "Druid";
 
     public static final String HIKARI = "Hikari";
-
 
     /**
      * 默认的key
@@ -24,68 +24,34 @@ public class DataSourceProperties {
     private String defaultName = "master";
 
     /**
-     * JDBC driver
-     */
-    private String driverClassName;
-    /**
-     * JDBC url 地址
-     */
-    private String url;
-    /**
-     * JDBC 用户名
-     */
-    private String username;
-    /**
-     * JDBC 密码
-     */
-    private String password;
-
-    /**
      * 连接池类型 默认 Hikari / Druid
      */
     private String poolType = HIKARI;
 
-    private String druidUsername;
+    private String driverClassName;
+    private int initialSize;
+    private int minIdle;
+    private int maxActive;
+    private long maxWait;
+    private long timeBetweenEvictionRunsMillis;
+    private long minEvictableIdleTimeMillis;
+    private String validationQuery;
+    /** Seconds */
+    private int validationQueryTimeout = 2;
+    private boolean testWhileIdle;
+    private boolean testOnBorrow;
+    private boolean testOnReturn;
+    private String filters;
 
-    private String druidPassword;
 
-    /**
-     * 租户sql
-     */
-    private String tenantSql;
 
-    public String getDruidUsername() {
-        return druidUsername;
-    }
-
-    public void setDruidUsername(String druidUsername) {
-        this.druidUsername = druidUsername;
-    }
-
-    public String getDruidPassword() {
-        return druidPassword;
-    }
-
-    public void setDruidPassword(String druidPassword) {
-        this.druidPassword = druidPassword;
-    }
-
-    public String getPoolType() {
-        return poolType;
-    }
-
-    public DataSourceProperties setPoolType(String poolType) {
-        this.poolType = poolType;
-        return this;
-    }
-
-    public String getTenantSql() {
-        return tenantSql;
-    }
-
-    public void setTenantSql(String tenantSql) {
-        this.tenantSql = tenantSql;
-    }
+    /***/
+    private String logSlowSql;
+    private String allow;
+    private String adminUser;
+    private String adminPassword;
+    private String urlSuffix;
+    private Boolean allowMultiQueries = true;
 
     public String getDefaultName() {
         return defaultName;
@@ -93,6 +59,14 @@ public class DataSourceProperties {
 
     public void setDefaultName(String defaultName) {
         this.defaultName = defaultName;
+    }
+
+    public String getPoolType() {
+        return poolType;
+    }
+
+    public void setPoolType(String poolType) {
+        this.poolType = poolType;
     }
 
     public String getDriverClassName() {
@@ -103,28 +77,147 @@ public class DataSourceProperties {
         this.driverClassName = driverClassName;
     }
 
-    public String getUrl() {
-        return url;
+    public int getInitialSize() {
+        return initialSize;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setInitialSize(int initialSize) {
+        this.initialSize = initialSize;
     }
 
-    public String getUsername() {
-        return username;
+    public int getMinIdle() {
+        return minIdle;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setMinIdle(int minIdle) {
+        this.minIdle = minIdle;
     }
 
-    public String getPassword() {
-        return password;
+    public int getMaxActive() {
+        return maxActive;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setMaxActive(int maxActive) {
+        this.maxActive = maxActive;
     }
 
+    public long getMaxWait() {
+        return maxWait;
+    }
+
+    public void setMaxWait(long maxWait) {
+        this.maxWait = maxWait;
+    }
+
+    public long getTimeBetweenEvictionRunsMillis() {
+        return timeBetweenEvictionRunsMillis;
+    }
+
+    public void setTimeBetweenEvictionRunsMillis(long timeBetweenEvictionRunsMillis) {
+        this.timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
+    }
+
+    public long getMinEvictableIdleTimeMillis() {
+        return minEvictableIdleTimeMillis;
+    }
+
+    public void setMinEvictableIdleTimeMillis(long minEvictableIdleTimeMillis) {
+        this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
+    }
+
+    public String getValidationQuery() {
+        return validationQuery;
+    }
+
+    public void setValidationQuery(String validationQuery) {
+        this.validationQuery = validationQuery;
+    }
+
+    public int getValidationQueryTimeout() {
+        return validationQueryTimeout;
+    }
+
+    public void setValidationQueryTimeout(int validationQueryTimeout) {
+        this.validationQueryTimeout = validationQueryTimeout;
+    }
+
+    public boolean isTestWhileIdle() {
+        return testWhileIdle;
+    }
+
+    public void setTestWhileIdle(boolean testWhileIdle) {
+        this.testWhileIdle = testWhileIdle;
+    }
+
+    public boolean isTestOnBorrow() {
+        return testOnBorrow;
+    }
+
+    public void setTestOnBorrow(boolean testOnBorrow) {
+        this.testOnBorrow = testOnBorrow;
+    }
+
+    public boolean isTestOnReturn() {
+        return testOnReturn;
+    }
+
+    public void setTestOnReturn(boolean testOnReturn) {
+        this.testOnReturn = testOnReturn;
+    }
+
+    public String getFilters() {
+        return filters;
+    }
+
+    public void setFilters(String filters) {
+        this.filters = filters;
+    }
+
+    public String getLogSlowSql() {
+        return logSlowSql;
+    }
+
+    public void setLogSlowSql(String logSlowSql) {
+        this.logSlowSql = logSlowSql;
+    }
+
+    public String getAllow() {
+        return allow;
+    }
+
+    public void setAllow(String allow) {
+        this.allow = allow;
+    }
+
+    public String getAdminUser() {
+        return adminUser;
+    }
+
+    public void setAdminUser(String adminUser) {
+        this.adminUser = adminUser;
+    }
+
+    public String getAdminPassword() {
+        return adminPassword;
+    }
+
+    public void setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
+    }
+
+    public String getUrlSuffix() {
+        return urlSuffix;
+    }
+
+    public void setUrlSuffix(String urlSuffix) {
+        this.urlSuffix = urlSuffix;
+    }
+
+    public Boolean getAllowMultiQueries() {
+        return allowMultiQueries;
+    }
+
+    public void setAllowMultiQueries(Boolean allowMultiQueries) {
+        this.allowMultiQueries = allowMultiQueries;
+    }
 }
