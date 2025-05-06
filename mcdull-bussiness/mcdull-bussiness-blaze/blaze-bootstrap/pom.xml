@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.gitee.dqcer</groupId>
+        <artifactId>mcdull-bussiness-blaze</artifactId>
+        <version>0.2.0</version>
+    </parent>
+    <artifactId>blaze-bootstrap</artifactId>
+    <name>Archetype - demo-bootstrap</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.gitee.dqcer</groupId>
+            <artifactId>blaze-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+</project>

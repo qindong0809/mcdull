@@ -1,0 +1,38 @@
+
+spring:
+  data:
+    redis:
+      # Redis服务器地址
+      host: mcdull.io
+      # Redis服务器连接端口
+      port: 6379
+  datasource:
+    url: jdbc:mysql://mcdull.io:3306/mcdull-cloud-3?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    poolType: Druid
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  undertow:
+    buffer-size: 1024
+    io-threads: 4
+    worker-threads: 20
+    max-initial-line-length: 10MB
+    max-parameter-size: 10MB
+    max-header-size: 10MB
+    max-post-size: 10MB
+sa-token:
+  # token 最低活跃频率（单位：秒），如果 token 超过此时间没有访问系统就会被冻结，默认-1 代表不限制，永不冻结
+  active-timeout: 1800
+  # token 有效期（单位：秒） 1天（86400秒），-1 代表永久有效
+  timeout: 86400
+mcdull:
+  oss:
+    access-key:
+    secret-key:
+    max-file-size: 10000
+    max-request-size: 10000

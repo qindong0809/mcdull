@@ -24,6 +24,7 @@
         <module>mcdull-business-common</module>
         <module>mcdull-demo</module>
         <module>mcdull-business-system</module>
+        <module>mcdull-bussiness-blaze</module>
     </modules>
 
     <dependencyManagement>
