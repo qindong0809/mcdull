@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.gitee.dqcer</groupId>
-        <artifactId>mcdull-bussiness-blaze</artifactId>
+        <artifactId>mcdull-business-blaze</artifactId>
         <version>0.2.0</version>
     </parent>
     <artifactId>blaze-bootstrap</artifactId>
@@ -20,4 +20,21 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!--生成包含所有必要属性的 MANIFEST.MF 文件-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

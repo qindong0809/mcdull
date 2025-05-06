@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @EnableWebCore
-@MapperScan(basePackages = {GlobalConstant.MAPPER_PACKAGE,})
+@MapperScan(basePackages = {GlobalConstant.MAPPER_PACKAGE})
 @EnableDynamicDataSource
 @EnableCache
 @SpringBootApplication(scanBasePackages = "io.gitee")

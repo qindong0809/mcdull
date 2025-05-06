@@ -45,6 +45,8 @@ public class BlazeOrderVO extends ApproveVO implements IFileVO, VO {
 
     private String nowEnterpriseCollection;
 
+    private String performance;
+
     @Schema(description = "合同时间")
     private Date contractTime;
 

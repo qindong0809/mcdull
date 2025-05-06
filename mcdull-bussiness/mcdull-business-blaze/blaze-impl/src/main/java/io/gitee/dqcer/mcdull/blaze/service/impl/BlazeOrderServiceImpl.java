@@ -8,6 +8,7 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -110,6 +111,19 @@ public class BlazeOrderServiceImpl
                     vo.setTalentPayment(talentCertificateEntity.getPositionContractPrice().toString());
                     vo.setTalentResponsibleUserId(talentCertificateEntity.getResponsibleUserId());
                 }
+                if (ObjUtil.isNotNull(requirementsEntity) && ObjUtil.isNotNull(talentCertificateEntity)) {
+                    BigDecimal actualPositionPrice = requirementsEntity.getActualPositionPrice();
+                    if (ObjUtil.isNotNull(actualPositionPrice)) {
+                        // 单本价格
+                        BigDecimal div = NumberUtil.div(actualPositionPrice, requirementsEntity.getQuantity(), 2);
+                        BigDecimal talentCertificateEntityActualPositionPrice = talentCertificateEntity.getActualPositionPrice();
+                        if (ObjUtil.isNotNull(talentCertificateEntityActualPositionPrice)) {
+                            String performance = NumberUtil.sub(div, talentCertificateEntityActualPositionPrice).toString();
+                            vo.setPerformance(performance);
+                        }
+                    }
+                }
+
                 if (ObjUtil.isNotNull(entity.getContractTime())) {
                     vo.setContractTimeStr(entity.getContractTime());
                 }
@@ -397,6 +411,7 @@ public class BlazeOrderServiceImpl
         list.add(Pair.of("所属人才", BlazeOrderVO::getTalentCertName));
         list.add(Pair.of("应人才打款", BlazeOrderVO::getTalentPayment));
         list.add(Pair.of("现人才打款", BlazeOrderVO::getNowTalentPayment));
+        list.add(Pair.of("业绩", BlazeOrderVO::getPerformance));
         list.add(Pair.of("企业归属", BlazeOrderVO::getCustomerResponsibleDepartment));
         list.add(Pair.of("企业负责人", BlazeOrderVO::getCustomerResponsibleUserIdStr));
         list.add(Pair.of("企业负责人电话", BlazeOrderVO::getCustomerResponsibleUserPhone));
