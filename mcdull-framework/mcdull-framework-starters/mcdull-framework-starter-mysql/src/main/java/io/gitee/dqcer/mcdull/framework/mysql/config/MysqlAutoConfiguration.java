@@ -10,10 +10,7 @@ import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.DataChangeRecorderInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.*;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.mysql.aspect.DataSourceAspect;
@@ -106,7 +103,7 @@ public class MysqlAutoConfiguration {
         // 防止全部更新删除
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
         // SQL规范检查
-        interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
+//        interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
         // 数据变更记录（数据审计）
 //        interceptor.addInnerInterceptor(new DataChangeRecorderInnerInterceptor(context));
         interceptor.addInnerInterceptor(new DataChangeRecorderInnerInterceptor());

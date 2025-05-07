@@ -7,7 +7,7 @@
         <version>0.2.0</version>
     </parent>
     <artifactId>blaze-bootstrap</artifactId>
-    <name>Archetype - demo-bootstrap</name>
+    <name>blaze-bootstrap</name>
 
     <dependencies>
         <dependency>
@@ -23,7 +23,6 @@
 
     <build>
         <plugins>
-            <!--生成包含所有必要属性的 MANIFEST.MF 文件-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -31,6 +30,7 @@
                     <execution>
                         <goals>
                             <goal>repackage</goal>
+                            <goal>build-info</goal>
                         </goals>
                     </execution>
                 </executions>

@@ -7,7 +7,7 @@
         <version>0.2.0</version>
     </parent>
     <artifactId>blaze-impl</artifactId>
-    <name>demo-impl</name>
+    <name>blaze-impl</name>
 
     <dependencies>
         <dependency>
@@ -17,25 +17,13 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-mysql</artifactId>
+            <artifactId>mcdull-framework-starter-web</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-swagger</artifactId>
+            <artifactId>mcdull-business-common</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-extension</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.oshi</groupId>
-            <artifactId>oshi-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-crypto</artifactId>
         </dependency>
     </dependencies>
 </project>
