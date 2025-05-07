@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.business.common.pdf;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
 import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.kernel.font.PdfFont;
@@ -49,11 +50,14 @@ public class FontUtils {
                 FileUtil.mkdir(FONT_DIR);
                 for (Resource resource : resources) {
                     String fielName = String.join(File.separator, FONT_DIR, resource.getFilename());
-                    FileUtil.copy(resource.getFile(), new File(fielName), true);
+                    byte[] bytes = ResourceUtil.readBytes(FONTS + File.separator + resource.getFilename());
+                    FileUtil.writeBytes(bytes, fielName);
                 }
+
             }
             FontProgramFactory.registerFontDirectory(FONT_DIR);
         } catch (IOException e) {
+            log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -73,7 +77,7 @@ public class FontUtils {
         try {
             return PdfFontFactory.createRegisteredFont(path, PdfName.IdentityH.getValue(), PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             throw new RuntimeException();
         }
     }
@@ -92,8 +96,8 @@ public class FontUtils {
         FontProvider pro = new DefaultFontProvider();
         try {
             log.info("Font directory: " + FontUtils.FONT_DIR);
-            pro.addFont(FontProgramFactory.createFont(FontUtils.FONT_DIR + File.separator + Arial));
             pro.addFont(FontProgramFactory.createFont(FontUtils.FONT_DIR + File.separator + STSONG));
+            pro.addFont(FontProgramFactory.createFont(FontUtils.FONT_DIR + File.separator + Arial));
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new BusinessException("Set Font Provider error");

@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class HtmlConvertPdf {
             ConverterProperties converterProperties = new ConverterProperties();
             // 添加字体
             converterProperties.setFontProvider(FontUtils.getFontProvider());
-            Document doc = HtmlConverter.convertToDocument(new ByteArrayInputStream(htmlStr.getBytes()), pdfDocument, converterProperties);
+            Document doc = HtmlConverter.convertToDocument(new ByteArrayInputStream(htmlStr.getBytes(StandardCharsets.UTF_8)), pdfDocument, converterProperties);
             doc.flush();
             rightFooterHandler.writeTotal(pdfDocument);
             doc.close();

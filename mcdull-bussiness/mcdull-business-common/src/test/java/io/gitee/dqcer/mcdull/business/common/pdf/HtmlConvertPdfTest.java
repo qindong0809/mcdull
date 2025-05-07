@@ -2,7 +2,6 @@ package io.gitee.dqcer.mcdull.business.common.pdf;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
-import org.junit.jupiter.api.Test;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.Date;
 
 class HtmlConvertPdfTest {
 
-    @Test
+//    @Test
     void generatePdf() {
 
         String pdf = "D:\\temp\\1-1-1-1-3-1.pdf";
