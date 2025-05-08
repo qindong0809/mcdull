@@ -115,10 +115,9 @@ public class BlazeOrderServiceImpl
                     BigDecimal actualPositionPrice = requirementsEntity.getActualPositionPrice();
                     if (ObjUtil.isNotNull(actualPositionPrice)) {
                         // 单本价格
-                        BigDecimal div = NumberUtil.div(actualPositionPrice, requirementsEntity.getQuantity(), 2);
                         BigDecimal talentCertificateEntityActualPositionPrice = talentCertificateEntity.getActualPositionPrice();
                         if (ObjUtil.isNotNull(talentCertificateEntityActualPositionPrice)) {
-                            String performance = NumberUtil.sub(div, talentCertificateEntityActualPositionPrice).toString();
+                            String performance = NumberUtil.sub(actualPositionPrice, talentCertificateEntityActualPositionPrice).toString();
                             vo.setPerformance(performance);
                         }
                     }

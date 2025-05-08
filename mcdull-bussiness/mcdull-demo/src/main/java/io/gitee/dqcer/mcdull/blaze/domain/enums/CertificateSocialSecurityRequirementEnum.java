@@ -14,6 +14,7 @@ public enum CertificateSocialSecurityRequirementEnum implements IEnum<Integer> {
     ONLY_STOP(3, "唯一社保可停"),
     PUBLIC_SECURITY_NOT_UNIQUE(4, "国企社保非唯一"),
     PRIVATE_SECURITY_NOT_UNIQUE(5, "私企社保非唯一"),
+    PRIVATE_SECURITY_NOT_UNIQUE(5, "退休"),
     ;
     CertificateSocialSecurityRequirementEnum(Integer code, String message) {
         init(code, message);

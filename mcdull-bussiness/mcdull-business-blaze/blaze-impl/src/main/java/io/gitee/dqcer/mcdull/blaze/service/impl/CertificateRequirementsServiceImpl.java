@@ -573,6 +573,9 @@ public class CertificateRequirementsServiceImpl
         String positionTitle = dto.getPositionTitle();
         if (StrUtil.isBlank(positionTitle)) {
             this.builderPositionTitle(entity);
+        } else {
+            entity.setPositionTitle(positionTitle);
+            baseRepository.updateById(entity);
         }
         fileService.batchFileUpload(fileList, entity.getId(), CertificateRequirementsEntity.class, null);
     }
