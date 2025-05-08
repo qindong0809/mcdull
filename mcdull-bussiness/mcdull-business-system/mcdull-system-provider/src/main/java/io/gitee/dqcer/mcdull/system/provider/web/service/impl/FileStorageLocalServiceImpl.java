@@ -13,19 +13,18 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.FileDownloadVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileMetadataVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileUploadVO;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileStorageService;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -82,9 +81,9 @@ public class FileStorageLocalServiceImpl implements IFileStorageService {
         //原文件名
         String originalFileName = multipartFile.getOriginalFilename();
         //新文件名
-        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+//        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         String time = LocalDateTimeUtil.format(LocalDateTime.now(), DatePattern.PURE_DATETIME_FORMATTER);
-        String newFileName = uuid + "_" + time;
+        String newFileName = time + "_" + originalFileName;
 //        String fileType = FilenameUtils.getExtension(originalFileName);
         String fileType = FileNameUtil.extName(originalFileName);
         if (StrUtil.isNotEmpty(fileType)) {

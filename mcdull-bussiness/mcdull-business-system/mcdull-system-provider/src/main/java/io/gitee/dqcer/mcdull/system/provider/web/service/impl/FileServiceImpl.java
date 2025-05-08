@@ -4,6 +4,8 @@ import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -38,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -130,7 +133,8 @@ public class FileServiceImpl
 
         // 进行上传
         String rootToNodeName = folderService.getRootToNodeName(folderType);
-        FileUploadVO uploadVO = fileStorageService.upload(file, FileFolderTypeEnum.FOLDER_PUBLIC + "/" + rootToNodeName + "/");
+        String month = LocalDateTimeUtil.format(LocalDateTime.now(), DatePattern.NORM_MONTH_FORMATTER);
+        FileUploadVO uploadVO = fileStorageService.upload(file, FileFolderTypeEnum.FOLDER_PUBLIC + File.separator + rootToNodeName + File.separator + month + File.separator);
         // 上传成功 保存记录数据库
         FileEntity fileEntity = new FileEntity();
         fileEntity.setFolderType(folderType);
@@ -155,8 +159,10 @@ public class FileServiceImpl
         }
         if (CollUtil.isNotEmpty(fileList)) {
             Integer systemFolderId = folderService.getSystemFolderId();
+            String month = DatePattern.NORM_MONTH_FORMAT.format(new Date());
+            Integer bizFolderId = folderService.addIfAbsent(month, systemFolderId);
             for (MultipartFile multipartFile : fileList) {
-                FileUploadVO fileUploadVO = this.fileUpload(multipartFile, systemFolderId);
+                FileUploadVO fileUploadVO = this.fileUpload(multipartFile, bizFolderId);
                 fileBizRepository.save(ListUtil.of(fileUploadVO.getFileId()), bizId, this.getTableName(clazz));
             }
         }
