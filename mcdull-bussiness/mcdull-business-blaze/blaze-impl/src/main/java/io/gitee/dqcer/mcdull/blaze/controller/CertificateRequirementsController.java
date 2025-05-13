@@ -10,10 +10,10 @@ import io.gitee.dqcer.mcdull.blaze.domain.vo.CertificateRequirementsVO;
 import io.gitee.dqcer.mcdull.blaze.service.ICertificateRequirementsService;
 import io.gitee.dqcer.mcdull.blaze.util.CertificateUtil;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
+import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @Tag(name = "证书需求表")
-public class CertificateRequirementsController extends BasicController {
+public class CertificateRequirementsController extends BlazeBasicController {
 
     @Resource
     private ICertificateRequirementsService certificateRequirementsService;
@@ -64,14 +64,16 @@ public class CertificateRequirementsController extends BasicController {
     @Operation(summary = "分页")
     @PostMapping("/CertificateRequirements/queryPage")
     public Result<PagedVO<CertificateRequirementsVO>> queryPage(@RequestBody @Valid CertificateRequirementsQueryDTO dto) {
-        return Result.success(certificateRequirementsService.queryPage(dto));
+        return Result.success(super.executeByPermission("blaze:certificate_requirements:approve", PageUtil.empty(dto), dto,
+                r -> certificateRequirementsService.queryPage(r)));
     }
 
     @Operation(summary = "导出数据")
     @SaCheckPermission("blaze:certificate_requirements:export")
     @PostMapping(value = "CertificateRequirements/list/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid CertificateRequirementsQueryDTO dto) {
-        certificateRequirementsService.exportData(dto);
+        super.executeByPermission("blaze:certificate_requirements:approve", true, dto,
+                r -> certificateRequirementsService.exportData(r));
     }
 
     @Operation(summary = "导出数据企业pdf")

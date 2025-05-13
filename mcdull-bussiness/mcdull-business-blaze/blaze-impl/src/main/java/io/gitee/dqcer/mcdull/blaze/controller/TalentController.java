@@ -6,10 +6,10 @@ import io.gitee.dqcer.mcdull.blaze.domain.form.TalentQueryDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.form.TalentUpdateDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.vo.TalentVO;
 import io.gitee.dqcer.mcdull.blaze.service.ITalentService;
+import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -25,7 +25,7 @@ import java.util.List;
  */
 @RestController
 @Tag(name = "人才表")
-public class TalentController extends BasicController {
+public class TalentController extends BlazeBasicController {
 
     @Resource
     private ITalentService talentService;
@@ -33,14 +33,14 @@ public class TalentController extends BasicController {
     @Operation(summary = "分页")
     @PostMapping("/talent/queryPage")
     public Result<PagedVO<TalentVO>> queryPage(@RequestBody @Valid TalentQueryDTO dto) {
-        return Result.success(talentService.queryPage(dto));
+        return Result.success(super.executeByPermission(null, PageUtil.empty(dto), dto, r -> talentService.queryPage(r)));
     }
 
     @Operation(summary = "导出数据")
     @SaCheckPermission("blaze:talent:export")
     @PostMapping(value = "/talent/list/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid TalentQueryDTO dto) {
-        talentService.exportData(dto);
+        super.executeByPermission(null, true, dto, r -> talentService.exportData(r));
     }
 
     @Operation(summary = "全部数据")

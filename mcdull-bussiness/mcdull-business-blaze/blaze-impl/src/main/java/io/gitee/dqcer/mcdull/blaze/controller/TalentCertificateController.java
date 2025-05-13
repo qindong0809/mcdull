@@ -12,10 +12,10 @@ import io.gitee.dqcer.mcdull.blaze.domain.vo.TalentCertificateVO;
 import io.gitee.dqcer.mcdull.blaze.service.ITalentCertificateService;
 import io.gitee.dqcer.mcdull.blaze.util.CertificateUtil;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
+import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -35,10 +35,11 @@ import java.util.stream.Collectors;
  */
 @RestController
 @Tag(name = "人才证书需求表")
-public class TalentCertificateController extends BasicController {
+public class TalentCertificateController extends BlazeBasicController {
 
     @Resource
     private ITalentCertificateService talentCertificateService;
+
 
     @Operation(summary = "人才证书级别")
     @GetMapping("/talent-cert/getCertificateLevelList")
@@ -88,14 +89,17 @@ public class TalentCertificateController extends BasicController {
     @Operation(summary = "分页")
     @PostMapping("/talent-cert/queryPage")
     public Result<PagedVO<TalentCertificateVO>> queryPage(@RequestBody @Valid TalentCertificateQueryDTO dto) {
-        return Result.success(talentCertificateService.queryPage(dto));
+        PagedVO<TalentCertificateVO> pagedVO = super.executeByPermission("blaze:talent_certificate:approve", PageUtil.empty(dto), dto,
+                r -> talentCertificateService.queryPage(r));
+        return Result.success(pagedVO);
     }
 
     @Operation(summary = "导出数据")
     @SaCheckPermission("blaze:talent_certificate:export")
     @PostMapping(value = "/talent-cert/list/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid TalentCertificateQueryDTO dto) {
-        talentCertificateService.exportData(dto);
+       super.executeByPermission("blaze:talent_certificate:approve", true, dto,
+                r -> talentCertificateService.exportData(r));
     }
 
     @Operation(summary = "下载模板")

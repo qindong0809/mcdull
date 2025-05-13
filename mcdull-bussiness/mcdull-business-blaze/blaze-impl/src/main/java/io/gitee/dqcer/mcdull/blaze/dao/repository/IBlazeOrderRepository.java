@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.blaze.dao.repository;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.BlazeOrderEntity;
 import io.gitee.dqcer.mcdull.blaze.domain.form.BlazeOrderQueryDTO;
@@ -19,6 +18,6 @@ public interface IBlazeOrderRepository extends IService<BlazeOrderEntity> {
 
     List<BlazeOrderEntity> queryListByIds(List<Integer> idList);
 
-    Page<BlazeOrderEntity> selectPage(BlazeOrderQueryDTO dto);
+    List<BlazeOrderEntity> selectList(BlazeOrderQueryDTO dto);
 
 }

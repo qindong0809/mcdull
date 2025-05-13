@@ -41,7 +41,7 @@ public interface IBlazeOrderService {
 
     boolean existByCertificateRequirementsIdList(List<Integer> certificateRequirementsIdList);
 
-    void exportData(BlazeOrderQueryDTO dto);
+    boolean exportData(BlazeOrderQueryDTO dto);
 
     Map<Integer, Boolean> getMapByTalentCertId(Set<Integer> collect);
 

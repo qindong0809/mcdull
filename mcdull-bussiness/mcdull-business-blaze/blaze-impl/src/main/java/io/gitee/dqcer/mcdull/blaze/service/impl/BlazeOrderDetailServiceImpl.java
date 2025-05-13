@@ -132,8 +132,9 @@ public class BlazeOrderDetailServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void exportData(BlazeOrderDetailQueryDTO dto) {
+    public boolean exportData(BlazeOrderDetailQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList(dto.getIsTalent()));
+        return true;
     }
 
     private List<Pair<String, Func1<BlazeOrderDetailVO, ?>>> getTitleList(Boolean isTalent) {

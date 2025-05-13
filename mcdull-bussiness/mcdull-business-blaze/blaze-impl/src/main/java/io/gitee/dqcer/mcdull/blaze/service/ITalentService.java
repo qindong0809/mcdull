@@ -32,5 +32,5 @@ public interface ITalentService {
 
     List<LabelValueVO<Integer, String>> list();
 
-    void exportData(TalentQueryDTO dto);
+    boolean exportData(TalentQueryDTO dto);
 }

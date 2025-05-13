@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 订单合同 分页查询表单
@@ -15,7 +16,7 @@ import java.util.Date;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class BlazeOrderQueryDTO extends PagedDTO {
+public class BlazeOrderQueryDTO extends PagedDTO implements PermissionDTO{
 
     @Schema(description = "所属人才证书")
     private Integer talentCertId;
@@ -31,4 +32,5 @@ public class BlazeOrderQueryDTO extends PagedDTO {
 
     private Integer approve;
 
+    private List<Integer> responsibleUserIdList;
 }

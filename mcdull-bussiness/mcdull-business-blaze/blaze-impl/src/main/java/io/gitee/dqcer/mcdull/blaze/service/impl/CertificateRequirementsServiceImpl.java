@@ -166,8 +166,9 @@ public class CertificateRequirementsServiceImpl
     }
 
     @Override
-    public void exportData(CertificateRequirementsQueryDTO dto) {
+    public boolean exportData(CertificateRequirementsQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+        return true;
     }
 
     @SuppressWarnings({"all"})

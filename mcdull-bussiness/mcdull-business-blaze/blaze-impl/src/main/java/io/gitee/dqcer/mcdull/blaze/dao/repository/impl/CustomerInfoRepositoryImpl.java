@@ -45,6 +45,7 @@ public class CustomerInfoRepositoryImpl extends
     @Override
     public Page<CustomerInfoEntity> selectPage(CustomerInfoQueryDTO param) {
         LambdaQueryWrapper<CustomerInfoEntity> lambda = Wrappers.lambdaQuery();
+        lambda.in(CustomerInfoEntity::getResponsibleUserId, param.getResponsibleUserIdList());
         lambda.eq(StrUtil.isNotBlank(param.getCustomerType()), CustomerInfoEntity::getCustomerType, param.getCustomerType());
         lambda.eq(StrUtil.isNotBlank(param.getName()), CustomerInfoEntity::getName, param.getName());
         lambda.eq(ObjUtil.isNotNull(param.getInactive()), BaseEntity::getInactive, param.getInactive());

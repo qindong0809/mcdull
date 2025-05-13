@@ -35,7 +35,7 @@ public interface ICertificateRequirementsService {
 
     PagedVO<CertificateRequirementsVO> queryPage(CertificateRequirementsQueryDTO dto);
 
-    void exportData(CertificateRequirementsQueryDTO dto);
+    boolean exportData(CertificateRequirementsQueryDTO dto);
 
     void downloadTemplate();
 

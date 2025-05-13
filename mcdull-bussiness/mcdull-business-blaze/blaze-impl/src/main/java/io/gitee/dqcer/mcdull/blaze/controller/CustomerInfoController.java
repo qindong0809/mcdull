@@ -7,6 +7,7 @@ import io.gitee.dqcer.mcdull.blaze.domain.form.CustomerInfoQueryDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.form.CustomerInfoUpdateDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.vo.CustomerInfoVO;
 import io.gitee.dqcer.mcdull.blaze.service.ICustomerInfoService;
+import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 @RestController
 @Tag(name = "企业端信息")
-public class CustomerInfoController {
+public class CustomerInfoController extends BlazeBasicController{
 
     @Resource
     private ICustomerInfoService customerInfoService;
@@ -33,14 +34,15 @@ public class CustomerInfoController {
     @Operation(summary = "分页")
     @PostMapping("/customerInfo/queryPage")
     public Result<PagedVO<CustomerInfoVO>> queryPage(@RequestBody @Valid CustomerInfoQueryDTO dto) {
-        return Result.success(customerInfoService.queryPage(dto));
+        return Result.success(super.executeByPermission(null, PageUtil.empty(dto), dto,
+                r -> customerInfoService.queryPage(r)));
     }
 
     @Operation(summary = "导出数据")
     @SaCheckPermission("blaze:customer_info:export")
     @PostMapping(value = "/customerInfo/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid CustomerInfoQueryDTO dto) {
-        customerInfoService.exportData(dto);
+        super.executeByPermission(null, true, dto, r -> customerInfoService.exportData(r));
     }
 
     @Operation(summary = "全部数据")

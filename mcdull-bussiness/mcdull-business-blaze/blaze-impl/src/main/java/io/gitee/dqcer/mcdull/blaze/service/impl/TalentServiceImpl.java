@@ -108,8 +108,9 @@ public class TalentServiceImpl
     }
 
     @Override
-    public void exportData(TalentQueryDTO dto) {
+    public boolean exportData(TalentQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+        return true;
     }
 
     private List<Pair<String, Func1<TalentVO, ?>>> getTitleList() {

@@ -13,10 +13,10 @@ import io.gitee.dqcer.mcdull.blaze.domain.vo.BlazeOrderVO;
 import io.gitee.dqcer.mcdull.blaze.service.IBlazeOrderService;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.dto.PkDTO;
+import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -33,7 +33,7 @@ import java.util.List;
  */
 @RestController
 @Tag(name = "订单合同")
-public class BlazeOrderController extends BasicController {
+public class BlazeOrderController extends BlazeBasicController {
 
     @Resource
     private IBlazeOrderService blazeOrderService;
@@ -41,14 +41,16 @@ public class BlazeOrderController extends BasicController {
     @Operation(summary = "分页")
     @PostMapping("/blazeOrder/queryPage")
     public Result<PagedVO<BlazeOrderVO>> queryPage(@RequestBody @Valid BlazeOrderQueryDTO dto) {
-        return Result.success(blazeOrderService.queryPage(dto));
+        return Result.success(super.executeByPermission("blaze:order:approve", PageUtil.empty(dto), dto,
+                r -> blazeOrderService.queryPage(r)));
     }
 
     @Operation(summary = "导出数据")
     @SaCheckPermission("blaze:order:export")
     @PostMapping(value = "/blazeOrder/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid BlazeOrderQueryDTO dto) {
-        blazeOrderService.exportData(dto);
+        super.executeByPermission("blaze:order:approve", true, dto,
+                r -> blazeOrderService.exportData(r));
     }
 
     @Operation(summary = "添加")

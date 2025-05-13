@@ -4,7 +4,6 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.blaze.dao.mapper.BlazeOrderMapper;
 import io.gitee.dqcer.mcdull.blaze.dao.repository.IBlazeOrderRepository;
@@ -41,11 +40,11 @@ public class BlazeOrderRepositoryImpl extends
 
 
     @Override
-    public Page<BlazeOrderEntity> selectPage(BlazeOrderQueryDTO param) {
+    public List<BlazeOrderEntity> selectList(BlazeOrderQueryDTO param) {
         LambdaQueryWrapper<BlazeOrderEntity> lambda = Wrappers.lambdaQuery();
         lambda.eq(ObjUtil.isNotNull(param.getApprove()), BlazeOrderEntity::getApprove, param.getApprove());
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
-        return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
+        return baseMapper.selectList(lambda);
     }
 
 }

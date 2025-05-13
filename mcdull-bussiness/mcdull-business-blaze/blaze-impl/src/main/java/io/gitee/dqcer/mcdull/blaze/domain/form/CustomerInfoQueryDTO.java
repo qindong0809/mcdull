@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 /**
  * 企业信息 分页查询表单
  *
@@ -13,7 +15,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class CustomerInfoQueryDTO extends PagedDTO {
+public class CustomerInfoQueryDTO extends PagedDTO implements PermissionDTO {
 
     @Schema(description = "企业名称")
     private String name;
@@ -24,4 +26,5 @@ public class CustomerInfoQueryDTO extends PagedDTO {
     @Schema(description = "状态（true/已失活 false/未失活）")
     private Boolean inactive;
 
+    private List<Integer> responsibleUserIdList;
 }

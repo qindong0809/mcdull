@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Audit service
+ * user manager service
  *
  * @author dqcer
  * @since 2024/7/25 9:19
@@ -56,7 +56,26 @@ public interface IUserManager {
     */
    Map<Integer, Integer> getUserDepartmentMap(List<Integer> userIdList);
 
+   /**
+    * 获取负责人列表
+    *
+    * @return {@link List }<{@link LabelValueVO }<{@link Integer }, {@link String }>>
+    */
    List<LabelValueVO<Integer, String>> getResponsibleList();
 
+   /**
+    * 获取用户 ID 列表
+    *
+    * @param departmentId 部门 ID
+    * @return {@link List }<{@link Integer }>
+    */
+   List<Integer> getUserIdList(Integer departmentId);
+
+   /**
+    * 获取地图
+    *
+    * @param list 列表
+    * @return {@link Map }<{@link Integer }, {@link String }>
+    */
    Map<Integer, String> getMap(List<? extends BaseEntity<Integer>> list);
 }

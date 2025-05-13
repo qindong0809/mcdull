@@ -43,10 +43,7 @@ public class TalentRepositoryImpl extends
     @Override
     public Page<TalentEntity> selectPage(TalentQueryDTO param) {
         LambdaQueryWrapper<TalentEntity> lambda = Wrappers.lambdaQuery();
-        String keyword = param.getKeyword();
-        if (ObjUtil.isNotNull(keyword)) {
-            // TODO 组装查询条件
-        }
+        lambda.in(TalentEntity::getResponsibleUserId, param.getResponsibleUserIdList());
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }

@@ -98,8 +98,9 @@ public class CustomerInfoServiceImpl
     }
 
     @Override
-    public void exportData(CustomerInfoQueryDTO dto) {
+    public boolean exportData(CustomerInfoQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+        return true;
     }
 
     private List<Pair<String, Func1<CustomerInfoVO, ?>>> getTitleList() {

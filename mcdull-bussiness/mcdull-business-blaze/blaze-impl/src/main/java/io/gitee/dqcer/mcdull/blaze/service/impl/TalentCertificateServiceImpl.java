@@ -155,8 +155,9 @@ public class TalentCertificateServiceImpl
     }
 
     @Override
-    public void exportData(TalentCertificateQueryDTO dto) {
+    public boolean exportData(TalentCertificateQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+        return true;
     }
 
     private List<Pair<String, Func1<TalentCertificateVO, ?>>> getTitleList() {

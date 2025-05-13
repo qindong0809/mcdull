@@ -43,6 +43,7 @@ public class CertificateRequirementsRepositoryImpl extends
     @Override
     public Page<CertificateRequirementsEntity> selectPage(CertificateRequirementsQueryDTO param) {
         LambdaQueryWrapper<CertificateRequirementsEntity> lambda = Wrappers.lambdaQuery();
+        lambda.in(CertificateRequirementsEntity::getResponsibleUserId, param.getResponsibleUserIdList());
         lambda.eq(ObjUtil.isNotNull(param.getCertificateLevel()), CertificateRequirementsEntity::getCertificateLevel, param.getCertificateLevel());
         lambda.eq(ObjUtil.isNotNull(param.getInitialOrTransfer()), CertificateRequirementsEntity::getInitialOrTransfer, param.getInitialOrTransfer());
         lambda.eq(ObjUtil.isNotNull(param.getSpecialty()), CertificateRequirementsEntity::getSpecialty, param.getSpecialty());

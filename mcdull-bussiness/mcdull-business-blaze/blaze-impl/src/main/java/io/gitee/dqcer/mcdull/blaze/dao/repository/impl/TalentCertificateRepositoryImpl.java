@@ -43,6 +43,7 @@ public class TalentCertificateRepositoryImpl extends
     @Override
     public Page<TalentCertificateEntity> selectPage(TalentCertificateQueryDTO param) {
         LambdaQueryWrapper<TalentCertificateEntity> lambda = Wrappers.lambdaQuery();
+        lambda.in(TalentCertificateEntity::getResponsibleUserId, param.getResponsibleUserIdList());
         lambda.eq(ObjUtil.isNotNull(param.getCertificateLevel()), TalentCertificateEntity::getCertificateLevel, param.getCertificateLevel());
         lambda.eq(ObjUtil.isNotNull(param.getSpecialty()), TalentCertificateEntity::getSpecialty, param.getSpecialty());
         lambda.eq(ObjUtil.isNotNull(param.getBiddingExit()), TalentCertificateEntity::getBiddingExit, param.getBiddingExit());

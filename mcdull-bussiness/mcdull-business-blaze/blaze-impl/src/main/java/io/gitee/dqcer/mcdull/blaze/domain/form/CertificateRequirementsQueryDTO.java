@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 /**
  * 证书需求表 分页查询表单
  *
@@ -13,7 +15,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class CertificateRequirementsQueryDTO extends PagedDTO {
+public class CertificateRequirementsQueryDTO extends PagedDTO implements PermissionDTO{
 
     @Schema(description = "证书级别")
     private Integer certificateLevel;
@@ -29,4 +31,5 @@ public class CertificateRequirementsQueryDTO extends PagedDTO {
 
     private Integer id;
 
+    private List<Integer> responsibleUserIdList;
 }

@@ -13,7 +13,6 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.blaze.dao.repository.IBlazeOrderRepository;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.BlazeOrderDetailEntity;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.BlazeOrderEntity;
@@ -84,8 +83,7 @@ public class BlazeOrderServiceImpl
 
     public PagedVO<BlazeOrderVO> queryPage(BlazeOrderQueryDTO dto) {
         List<BlazeOrderVO> voList = new ArrayList<>();
-        Page<BlazeOrderEntity> entityPage = baseRepository.selectPage(dto);
-        List<BlazeOrderEntity> recordList = entityPage.getRecords();
+        List<BlazeOrderEntity> recordList = baseRepository.selectList(dto);
         if (CollUtil.isNotEmpty(recordList)) {
             Map<Integer, String> nameMap = userManager.getMap(recordList);
             List<Integer> orderIdList = recordList.stream().map(IdEntity::getId).toList();
@@ -180,7 +178,12 @@ public class BlazeOrderServiceImpl
             commonManager.setFileVO(voList, BlazeOrderEntity.class);
             commonManager.setDepartment(voList, UserContextHolder.userId());
         }
-        return PageUtil.toPage(voList, entityPage);
+        List<Integer> userIdList = CollUtil.defaultIfEmpty(dto.getResponsibleUserIdList(), new ArrayList<>());
+        voList = voList.stream()
+                .filter(i -> userIdList.contains(i.getResponsibleUserId())
+                        || userIdList.contains(i.getTalentResponsibleUserId())
+                        || userIdList.contains(i.getCustomerResponsibleUserId())).collect(Collectors.toList());
+        return PageUtil.of(voList, dto);
     }
 
     @Override
@@ -204,8 +207,9 @@ public class BlazeOrderServiceImpl
     }
 
     @Override
-    public void exportData(BlazeOrderQueryDTO dto) {
+    public boolean exportData(BlazeOrderQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+        return true;
     }
 
     @Override

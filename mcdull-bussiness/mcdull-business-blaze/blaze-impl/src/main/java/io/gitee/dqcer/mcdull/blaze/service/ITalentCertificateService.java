@@ -32,7 +32,7 @@ public interface ITalentCertificateService {
 
     PagedVO<TalentCertificateVO> queryPage(TalentCertificateQueryDTO dto);
 
-    void exportData(TalentCertificateQueryDTO dto);
+    boolean exportData(TalentCertificateQueryDTO dto);
 
     void downloadTemplate();
 

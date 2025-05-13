@@ -22,7 +22,7 @@ public interface IBlazeOrderDetailService {
 
     PagedVO<BlazeOrderDetailVO> queryPage(BlazeOrderDetailQueryDTO dto);
 
-    void exportData(BlazeOrderDetailQueryDTO dto);
+    boolean exportData(BlazeOrderDetailQueryDTO dto);
 
     void insert(BlazeOrderDetailAddDTO dto, List<MultipartFile> fileList);
 

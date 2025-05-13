@@ -31,5 +31,5 @@ public interface ICustomerInfoService {
 
     List<LabelValueVO<Integer, String>> list();
 
-    void exportData(CustomerInfoQueryDTO dto);
+    boolean exportData(CustomerInfoQueryDTO dto);
 }

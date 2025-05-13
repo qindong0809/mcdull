@@ -8,6 +8,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IUserRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IDepartmentService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ public class UserManagerImpl implements IUserManager {
 
     @Resource
     private IUserRepository userRepository;
+    @Resource
+    private IDepartmentService departmentService;
 
     @Override
     public Map<Integer, String> getNameMap(List<Integer> userIdList) {
@@ -83,6 +86,18 @@ public class UserManagerImpl implements IUserManager {
                     .map(i -> new LabelValueVO<>(i.getId(), i.getActualName()))
                     .sorted(Comparator.comparing(LabelValueVO::getLabel))
                     .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<Integer> getUserIdList(Integer departmentId) {
+        List<Integer> childrenIdList = departmentService.getChildrenIdList(departmentId);
+        if (CollUtil.isNotEmpty(childrenIdList)) {
+            List<UserEntity> list = userRepository.listByDeptList(childrenIdList);
+            if (CollUtil.isNotEmpty(list)) {
+                return list.stream().map(UserEntity::getId).collect(Collectors.toList());
+            }
         }
         return Collections.emptyList();
     }
