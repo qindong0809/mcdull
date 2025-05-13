@@ -92,12 +92,11 @@ public class UserManagerImpl implements IUserManager {
 
     @Override
     public List<Integer> getUserIdList(Integer departmentId) {
-        List<Integer> childrenIdList = departmentService.getChildrenIdList(departmentId);
-        if (CollUtil.isNotEmpty(childrenIdList)) {
-            List<UserEntity> list = userRepository.listByDeptList(childrenIdList);
-            if (CollUtil.isNotEmpty(list)) {
-                return list.stream().map(UserEntity::getId).collect(Collectors.toList());
-            }
+        List<Integer> childrenIdList = CollUtil.defaultIfEmpty(departmentService.getChildrenIdList(departmentId), new ArrayList<>());
+        childrenIdList.add(departmentId);
+        List<UserEntity> list = userRepository.listByDeptList(childrenIdList);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.stream().map(UserEntity::getId).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }

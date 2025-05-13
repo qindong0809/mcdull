@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.blaze.dao.repository.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -43,7 +44,7 @@ public class CertificateRequirementsRepositoryImpl extends
     @Override
     public Page<CertificateRequirementsEntity> selectPage(CertificateRequirementsQueryDTO param) {
         LambdaQueryWrapper<CertificateRequirementsEntity> lambda = Wrappers.lambdaQuery();
-        lambda.in(CertificateRequirementsEntity::getResponsibleUserId, param.getResponsibleUserIdList());
+        lambda.in(CollUtil.isNotEmpty(param.getResponsibleUserIdList()), CertificateRequirementsEntity::getResponsibleUserId, param.getResponsibleUserIdList());
         lambda.eq(ObjUtil.isNotNull(param.getCertificateLevel()), CertificateRequirementsEntity::getCertificateLevel, param.getCertificateLevel());
         lambda.eq(ObjUtil.isNotNull(param.getInitialOrTransfer()), CertificateRequirementsEntity::getInitialOrTransfer, param.getInitialOrTransfer());
         lambda.eq(ObjUtil.isNotNull(param.getSpecialty()), CertificateRequirementsEntity::getSpecialty, param.getSpecialty());

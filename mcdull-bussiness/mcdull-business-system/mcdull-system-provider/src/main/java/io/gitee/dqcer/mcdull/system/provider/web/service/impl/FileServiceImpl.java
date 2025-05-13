@@ -134,7 +134,7 @@ public class FileServiceImpl
         // 进行上传
         String rootToNodeName = folderService.getRootToNodeName(folderType);
         String month = LocalDateTimeUtil.format(LocalDateTime.now(), DatePattern.NORM_MONTH_FORMATTER);
-        FileUploadVO uploadVO = fileStorageService.upload(file, FileFolderTypeEnum.FOLDER_PUBLIC + File.separator + rootToNodeName + File.separator + month + File.separator);
+        FileUploadVO uploadVO = fileStorageService.upload(file, FileFolderTypeEnum.FOLDER_PUBLIC + "/" + rootToNodeName + "/" + month + "/");
         // 上传成功 保存记录数据库
         FileEntity fileEntity = new FileEntity();
         fileEntity.setFolderType(folderType);

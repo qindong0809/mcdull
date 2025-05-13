@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.blaze.dao.repository.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -43,7 +44,7 @@ public class TalentCertificateRepositoryImpl extends
     @Override
     public Page<TalentCertificateEntity> selectPage(TalentCertificateQueryDTO param) {
         LambdaQueryWrapper<TalentCertificateEntity> lambda = Wrappers.lambdaQuery();
-        lambda.in(TalentCertificateEntity::getResponsibleUserId, param.getResponsibleUserIdList());
+        lambda.in(CollUtil.isNotEmpty(param.getResponsibleUserIdList()), TalentCertificateEntity::getResponsibleUserId, param.getResponsibleUserIdList());
         lambda.eq(ObjUtil.isNotNull(param.getCertificateLevel()), TalentCertificateEntity::getCertificateLevel, param.getCertificateLevel());
         lambda.eq(ObjUtil.isNotNull(param.getSpecialty()), TalentCertificateEntity::getSpecialty, param.getSpecialty());
         lambda.eq(ObjUtil.isNotNull(param.getBiddingExit()), TalentCertificateEntity::getBiddingExit, param.getBiddingExit());

@@ -11,6 +11,7 @@ import org.springdoc.core.GroupedOpenApi;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 
 /**
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
  * @author dqcer
  * @since  2023/12/13
  */
+@Profile("prod")
 @Configuration
 @ConditionalOnProperty(name = "swagger.enable", havingValue = "true")
 public class OpenApiConfig {
