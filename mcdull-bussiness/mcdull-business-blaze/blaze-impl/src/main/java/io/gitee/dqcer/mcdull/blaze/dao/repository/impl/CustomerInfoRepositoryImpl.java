@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.blaze.dao.repository.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -45,7 +46,7 @@ public class CustomerInfoRepositoryImpl extends
     @Override
     public Page<CustomerInfoEntity> selectPage(CustomerInfoQueryDTO param) {
         LambdaQueryWrapper<CustomerInfoEntity> lambda = Wrappers.lambdaQuery();
-        lambda.in(CustomerInfoEntity::getResponsibleUserId, param.getResponsibleUserIdList());
+        lambda.in(CollUtil.isNotEmpty(param.getResponsibleUserIdList()), CustomerInfoEntity::getResponsibleUserId, param.getResponsibleUserIdList());
         lambda.eq(StrUtil.isNotBlank(param.getCustomerType()), CustomerInfoEntity::getCustomerType, param.getCustomerType());
         lambda.eq(StrUtil.isNotBlank(param.getName()), CustomerInfoEntity::getName, param.getName());
         lambda.eq(ObjUtil.isNotNull(param.getInactive()), BaseEntity::getInactive, param.getInactive());

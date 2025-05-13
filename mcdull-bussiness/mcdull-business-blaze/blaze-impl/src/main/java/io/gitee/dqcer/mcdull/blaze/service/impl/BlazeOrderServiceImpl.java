@@ -179,10 +179,12 @@ public class BlazeOrderServiceImpl
             commonManager.setDepartment(voList, UserContextHolder.userId());
         }
         List<Integer> userIdList = CollUtil.defaultIfEmpty(dto.getResponsibleUserIdList(), new ArrayList<>());
-        voList = voList.stream()
-                .filter(i -> userIdList.contains(i.getResponsibleUserId())
-                        || userIdList.contains(i.getTalentResponsibleUserId())
-                        || userIdList.contains(i.getCustomerResponsibleUserId())).collect(Collectors.toList());
+        if (CollUtil.isNotEmpty(userIdList)) {
+            voList = voList.stream()
+                    .filter(i -> userIdList.contains(i.getResponsibleUserId())
+                            || userIdList.contains(i.getTalentResponsibleUserId())
+                            || userIdList.contains(i.getCustomerResponsibleUserId())).collect(Collectors.toList());
+        }
         return PageUtil.of(voList, dto);
     }
 

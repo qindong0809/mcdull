@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.blaze.dao.repository.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -43,7 +44,7 @@ public class TalentRepositoryImpl extends
     @Override
     public Page<TalentEntity> selectPage(TalentQueryDTO param) {
         LambdaQueryWrapper<TalentEntity> lambda = Wrappers.lambdaQuery();
-        lambda.in(TalentEntity::getResponsibleUserId, param.getResponsibleUserIdList());
+        lambda.in(CollUtil.isNotEmpty(param.getResponsibleUserIdList()), TalentEntity::getResponsibleUserId, param.getResponsibleUserIdList());
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
