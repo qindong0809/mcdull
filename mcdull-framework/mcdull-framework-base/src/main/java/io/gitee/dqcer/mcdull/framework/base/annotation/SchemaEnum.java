@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 枚举类字段属性的 自定义 swagger 注解
+ * 枚举类字段属性的 自定义 doc 注解
  *
  * @author dqcer
  * @since 2024/04/24

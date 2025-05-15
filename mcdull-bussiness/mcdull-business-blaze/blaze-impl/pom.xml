@@ -7,12 +7,12 @@
         <version>0.2.0</version>
     </parent>
     <artifactId>blaze-impl</artifactId>
-    <name>blaze-impl</name>
+    <name>${project.artifactId} v${project.version}</name>
 
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-system-provider</artifactId>
+            <artifactId>system-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

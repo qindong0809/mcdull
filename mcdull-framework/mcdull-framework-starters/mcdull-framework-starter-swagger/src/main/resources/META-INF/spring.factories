@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    io.gitee.dqcer.mcdull.framework.swagger.OpenApiConfig,\
-    io.gitee.dqcer.mcdull.framework.swagger.SchemaEnumPropertyCustomizer
-

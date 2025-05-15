@@ -8,10 +8,11 @@
     </parent>
     <artifactId>mcdull-business-system</artifactId>
     <packaging>pom</packaging>
-    <name>mcdull-business-system</name>
+    <name>${project.artifactId} v${project.version}</name>
 
     <modules>
-        <module>mcdull-system-provider</module>
-        <module>mcdull-system-client</module>
+        <module>system-bootstrap</module>
+        <module>system-facade</module>
+        <module>system-impl</module>
     </modules>
 </project>
