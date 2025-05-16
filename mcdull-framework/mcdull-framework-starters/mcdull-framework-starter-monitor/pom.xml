@@ -17,11 +17,19 @@
       <groupId>de.codecentric</groupId>
       <artifactId>spring-boot-admin-starter-client</artifactId>
     </dependency>
-    <!--springboot-admin: JMX-Bean Management 暴露http接口-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <!--springboot-admin: JMX-Bean Management 暴露http接口 springboot3已不支持jolokia-->
+<!--    <dependency>-->
+<!--      <groupId>org.jolokia</groupId>-->
+<!--      <artifactId>jolokia-core</artifactId>-->
+<!--      <version>1.7.2</version>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.jolokia</groupId>
-      <artifactId>jolokia-core</artifactId>
-      <version>1.7.2</version>
+      <artifactId>jolokia-support-spring</artifactId>
     </dependency>
   </dependencies>
 

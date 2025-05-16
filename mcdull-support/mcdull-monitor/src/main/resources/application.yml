@@ -3,6 +3,10 @@ server:
 spring:
   boot:
     admin:
+      instance-auth:
+        enabled: true
+        default-user-name: admin
+        default-user-password: admin
       ui:
         title: ${UI_TITLE:Mcdull Monitor}
         brand: <img src="assets/img/icon-spring-boot-admin.svg"><span>${spring.boot.admin.ui.title}</span>

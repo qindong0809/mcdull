@@ -72,8 +72,10 @@
         <poi.version>4.1.2</poi.version>
         <itext7.version>7.2.5</itext7.version>
         <html2pdf.version>4.0.5</html2pdf.version>
-        <sa-token.version>1.37.0</sa-token.version>
+        <sa-token.version>1.42.0</sa-token.version>
         <oshi.version>6.1.4</oshi.version>
+        <!--https://jolokia.org/reference/html/manual/spring.html-->
+        <jolokia.support.spring.version>2.2.9</jolokia.support.spring.version>
     </properties>
 
     <dependencyManagement>
@@ -209,9 +211,30 @@
                 <version>${sa-token.version}</version>
             </dependency>
             <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot3-starter</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+            <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-redis-jackson</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-quick-login</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.github.oshi</groupId>
                 <artifactId>oshi-core</artifactId>
                 <version>${oshi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jolokia</groupId>
+                <artifactId>jolokia-support-spring</artifactId>
+                <version>${jolokia.support.spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

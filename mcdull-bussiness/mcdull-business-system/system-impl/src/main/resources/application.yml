@@ -42,7 +42,7 @@ logging:
   file:
     path: /var/log
     # springboot admin 监控指定log文件
-    name: /var/log/mcdull-uac/out.log
+    name: /var/log/mcdull-uac-provider/out.log
 mybatis-plus:
   global-config:
     db-config:

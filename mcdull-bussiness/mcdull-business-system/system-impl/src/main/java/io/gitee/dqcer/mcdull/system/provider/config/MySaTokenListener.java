@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.system.provider.config;
 
 import cn.dev33.satoken.listener.SaTokenListener;
-import cn.dev33.satoken.stp.SaLoginModel;
+import cn.dev33.satoken.stp.parameter.SaLoginParameter;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -16,10 +16,10 @@ import io.gitee.dqcer.mcdull.system.provider.web.service.ILoginLogService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IMessageService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IPasswordPolicyService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.Date;
 
 /**
@@ -48,7 +48,7 @@ public class MySaTokenListener implements SaTokenListener {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void doLogin(String loginType, Object loginId, String tokenValue, SaLoginModel loginModel) {
+    public void doLogin(String loginType, Object loginId, String tokenValue, SaLoginParameter loginModel) {
         Integer userId = (Integer) loginId;
         UserEntity user = userService.get(userId);
         if (ObjUtil.isNotNull(user)) {
