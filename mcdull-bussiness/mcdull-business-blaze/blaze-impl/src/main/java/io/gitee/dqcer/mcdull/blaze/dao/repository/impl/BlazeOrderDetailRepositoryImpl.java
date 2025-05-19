@@ -28,7 +28,7 @@ public class BlazeOrderDetailRepositoryImpl extends
     @Override
     public Page<BlazeOrderDetailEntity> selectPage(BlazeOrderDetailQueryDTO dto) {
         LambdaQueryWrapper<BlazeOrderDetailEntity> query = Wrappers.lambdaQuery();
-        query.in(BlazeOrderDetailEntity::getResponsibleUserId, dto.getResponsibleUserIdList());
+        query.in(CollUtil.isNotEmpty(dto.getResponsibleUserIdList()), BlazeOrderDetailEntity::getResponsibleUserId, dto.getResponsibleUserIdList());
         Boolean isTalent = dto.getIsTalent();
         if (ObjUtil.isNotNull(isTalent)) {
             query.eq(BlazeOrderDetailEntity::getIsTalent, isTalent);
