@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.gitee.dqcer</groupId>
         <artifactId>mcdull-framework-starters</artifactId>
-        <version>0.2.0</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>mcdull-framework-starter-web</artifactId>
     <name>${project.artifactId} v${project.version}</name>

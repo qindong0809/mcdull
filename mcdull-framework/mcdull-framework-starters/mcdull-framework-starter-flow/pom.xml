@@ -6,7 +6,7 @@
     <parent>
         <artifactId>mcdull-framework-starters</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.2.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>mcdull-framework-starter-flow</artifactId>

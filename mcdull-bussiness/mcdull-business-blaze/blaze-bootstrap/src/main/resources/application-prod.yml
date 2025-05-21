@@ -32,3 +32,8 @@ mcdull:
     secret-key:
     max-file-size: 10000
     max-request-size: 10000
+knife4j:
+  # 开启增强配置
+  enable: true
+  # 开启生产环境屏蔽
+  production: true

@@ -6,7 +6,7 @@
     <parent>
         <artifactId>mcdull-mdc</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.2.0</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>mcdull-mdc-client</artifactId>
     <name>${project.artifactId} v${project.version}</name>

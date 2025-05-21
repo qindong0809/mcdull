@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.gitee.dqcer</groupId>
         <artifactId>mcdull-business-blaze</artifactId>
-        <version>0.2.0</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>blaze-impl</artifactId>
     <name>${project.artifactId} v${project.version}</name>

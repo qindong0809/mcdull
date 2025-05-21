@@ -3,18 +3,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>mcdull</artifactId>
+        <groupId>io.gitee.dqcer</groupId>
+        <version>${revision}</version>
+    </parent>
+
     <modules>
         <module>mcdull-gateway</module>
         <module>mcdull-mdc</module>
         <module>mcdull-monitor</module>
-<!--        <module>mcdull-uac</module>-->
-<!--        <module>mcdull-generator</module>-->
     </modules>
-    <parent>
-        <artifactId>mcdull</artifactId>
-        <groupId>io.gitee.dqcer</groupId>
-        <version>0.2.0</version>
-    </parent>
 
     <artifactId>mcdull-support</artifactId>
     <name>${project.artifactId} v${project.version}</name>

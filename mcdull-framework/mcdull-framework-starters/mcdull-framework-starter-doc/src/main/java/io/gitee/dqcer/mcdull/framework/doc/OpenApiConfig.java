@@ -8,10 +8,8 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.GroupedOpenApi;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 
 /**
@@ -21,9 +19,7 @@ import org.springframework.context.annotation.Profile;
  * @author dqcer
  * @since  2023/12/13
  */
-@Profile("prod")
 @Configuration
-@ConditionalOnProperty(name = "doc.enable", havingValue = "true")
 public class OpenApiConfig {
 
     public static final String SAME_TOKEN = "SA-SAME-TOKEN";

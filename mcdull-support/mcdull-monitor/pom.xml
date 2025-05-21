@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mcdull-support</artifactId>
         <groupId>io.gitee.dqcer</groupId>
-        <version>0.2.0</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>mcdull-monitor</artifactId>
     <name>${project.artifactId} v${project.version}</name>

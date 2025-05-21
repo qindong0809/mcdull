@@ -14,7 +14,7 @@
     <groupId>io.gitee.dqcer</groupId>
     <artifactId>mcdull-framework-dependencies</artifactId>
     <packaging>pom</packaging>
-    <version>0.2.0</version>
+    <version>${mcdull.version}</version>
     <name>${project.artifactId} v${project.version}</name>
     <description>Based on Spring Cloud dependencies</description>
     <url>https://gitee.com/dqcer/mcdull</url>
@@ -41,7 +41,7 @@
     </developers>
 
     <properties>
-        <mcdull.version>0.2.0</mcdull.version>
+        <mcdull.version>1.0.0</mcdull.version>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
