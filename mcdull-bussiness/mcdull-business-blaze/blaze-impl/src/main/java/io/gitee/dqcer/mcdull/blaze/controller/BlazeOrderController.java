@@ -41,12 +41,7 @@ public class BlazeOrderController extends BlazeBasicController {
     @Resource
     private OssService ossService;
 
-    @Operation(summary = "删除")
-    @PostMapping(value = "/blazeOrder/1", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result<?> dd( @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
-       return Result.success(ossService.upload(fileList.get(0), "order/"));
-    }
+
     @Operation(summary = "分页")
     @PostMapping("/blazeOrder/queryPage")
     public Result<PagedVO<BlazeOrderVO>> queryPage(@RequestBody @Valid BlazeOrderQueryDTO dto) {

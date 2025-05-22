@@ -7,6 +7,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -14,27 +15,30 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.CustomMultipartFile;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.oss.OssService;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.convert.FileConvert;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.FileQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FileEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.FileFolderTypeEnum;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.*;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.FileUploadVO;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.FileVO;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.FolderInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IFileBizRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IFileRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileBizService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IFileLocalStorageService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFolderService;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
+import org.dromara.x.file.storage.core.Downloader;
+import org.dromara.x.file.storage.core.FileInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,7 +54,7 @@ public class FileServiceImpl
         extends BasicServiceImpl<IFileRepository> implements IFileService {
 
     @Resource
-    private IFileLocalStorageService fileLocalStorageService;
+    private OssService ossService;
     @Resource
     private IUserManager userManager;
     @Resource
@@ -59,6 +63,7 @@ public class FileServiceImpl
     private IFolderService folderService;
     @Resource
     private IFileBizService fileBizService;
+
 
     @Override
     public PagedVO<FileVO> queryPage(FileQueryDTO dto) {
@@ -84,11 +89,10 @@ public class FileServiceImpl
         List<FileEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
             Map<Integer, String> folderMap = folderService.getMap(records.stream().map(FileEntity::getFolderType).collect(Collectors.toSet()));
-            Set<Integer> userIdSet = records.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
             Map<Integer, String> userMap = userManager.getMap(records);
             for (FileEntity entity : records) {
                 FileVO fileVO = FileConvert.convertToEntity(entity);
-                fileVO.setFileUrl(fileLocalStorageService.getFileUrl(entity.getFileKey()));
+                fileVO.setFileUrl(ossService.getUrl(entity.getFileKey()));
                 fileVO.setCreatorName(userMap.get(entity.getCreatedBy()));
                 fileVO.setFolderTypeName(folderMap.get(entity.getFolderType()));
                 voList.add(fileVO);
@@ -134,19 +138,23 @@ public class FileServiceImpl
         // 进行上传
         String rootToNodeName = folderService.getRootToNodeName(folderType);
         String month = LocalDateTimeUtil.format(LocalDateTime.now(), DatePattern.NORM_MONTH_FORMATTER);
-        FileUploadVO uploadVO = fileLocalStorageService.upload(file, FileFolderTypeEnum.FOLDER_PUBLIC + "/" + rootToNodeName + "/" + month + "/");
+        FileInfo upload = ossService.upload(file, folderType, FileFolderTypeEnum.FOLDER_PUBLIC + "/" + rootToNodeName + "/" + month + "/");
         // 上传成功 保存记录数据库
-        FileEntity fileEntity = new FileEntity();
-        fileEntity.setFolderType(folderType);
-        fileEntity.setFileName(originalFilename);
-        fileEntity.setFileSize(Convert.toInt(size));
-        fileEntity.setFileKey(uploadVO.getFileKey());
-        fileEntity.setFileType(uploadVO.getFileType());
-        baseRepository.insert(fileEntity);
+        String id = upload.getId();
+        FileEntity entity = baseRepository.getById(Convert.toInt(id));
+        return this.convertToVO(upload, entity);
+    }
 
-        // 将fileId 返回给前端
-        uploadVO.setFileId(fileEntity.getId());
-        return uploadVO;
+
+    private FileUploadVO convertToVO(FileInfo upload, FileEntity fileEntity) {
+        FileUploadVO vo = new FileUploadVO();
+        vo.setFileId(fileEntity.getId());
+        vo.setFileUrl(upload.getUrl());
+        vo.setFileSize(fileEntity.getFileSize());
+        vo.setFileType(fileEntity.getFileType());
+        vo.setFileName(fileEntity.getFileName());
+        vo.setFileKey(fileEntity.getFileKey());
+        return vo;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -169,9 +177,9 @@ public class FileServiceImpl
     }
 
     @Override
-    public FileUploadVO fileUpload(File file, Integer folder) {
+    public void fileUpload(File file, Integer folder) {
         CustomMultipartFile multipartFile = new CustomMultipartFile(file.getName(), file.getName(), "application/zip", FileUtil.readBytes(file));
-        return this.fileUpload(multipartFile, folder);
+        this.fileUpload(multipartFile, folder);
     }
 
     @Override
@@ -179,24 +187,22 @@ public class FileServiceImpl
         List<String> fileKeyArray = StrUtil.split(fileKeyList, StrUtil.C_COMMA);
         List<String> fileUrlList = new ArrayList<>(fileKeyArray.size());
         for (String fileKey : fileKeyArray) {
-            String fileUrl = fileLocalStorageService.getFileUrl(fileKey);
+            String fileUrl = ossService.getUrl(fileKey);
             fileUrlList.add(fileUrl);
         }
         return StrUtil.join(",", fileUrlList);
     }
 
     @Override
-    public FileDownloadVO getDownloadFile(String fileKey) {
+    public Pair<String, byte[]> getDownloadFile(String fileKey) {
         FileEntity fileEntity = baseRepository.getByFileKey(fileKey);
         if (ObjectUtil.isNull(fileEntity)) {
            this.throwDataExistException(fileKey);
         }
 
         // 根据文件服务类 获取对应文件服务 查询 url
-        FileDownloadVO download = fileLocalStorageService.download(fileKey);
-        FileMetadataVO metadata = download.getMetadata();
-        metadata.setFileName(fileEntity.getFileName());
-        return download;
+        Downloader download = ossService.downloadByKey(fileKey);
+        return new Pair<>(fileEntity.getFileName(), download.bytes());
     }
 
     @Override

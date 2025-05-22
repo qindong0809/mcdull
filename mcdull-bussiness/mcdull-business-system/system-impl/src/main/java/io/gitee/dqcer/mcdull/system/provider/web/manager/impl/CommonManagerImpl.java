@@ -46,7 +46,6 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.FileExtensionTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ApproveVO;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.FileDownloadVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileSimpleVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.IFileVO;
 import io.gitee.dqcer.mcdull.system.provider.util.ExcelUtil;
@@ -403,8 +402,8 @@ public class CommonManagerImpl implements ICommonManager {
         if (CollUtil.isNotEmpty(fileEntityMap)) {
             List<FileEntity> fileEntityList = fileEntityMap.get(bizId);
             for (FileEntity fileEntity : fileEntityList) {
-                FileDownloadVO downloadVO = fileService.getDownloadFile(fileEntity.getFileKey());
-                fileDateList.add(Pair.of(fileEntity.getFileName(), downloadVO.getData()));
+                Pair<String, byte[]> pair = fileService.getDownloadFile(fileEntity.getFileKey());
+                fileDateList.add(Pair.of(fileEntity.getFileName(), pair.getValue()));
             }
         }
         return fileDateList;

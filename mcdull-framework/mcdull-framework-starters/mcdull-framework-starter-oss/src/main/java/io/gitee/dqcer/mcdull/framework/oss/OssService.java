@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface OssService {
 
-    FileInfo upload(MultipartFile multipartFile, String path);
+    FileInfo upload(MultipartFile multipartFile, Integer folderType, String path);
 
     Downloader download(String url);
 
@@ -15,4 +15,8 @@ public interface OssService {
     void delete(String url);
 
     void deleteByKey(String url);
+
+    String getUrl(String key);
+
+    String getKey(String url);
 }

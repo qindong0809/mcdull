@@ -1,22 +1,22 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.lang.Pair;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.FileQueryDTO;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.FileDownloadVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileUploadVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileVO;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 
 /**
@@ -55,11 +55,9 @@ public class FileController {
 
     @Operation(summary = "下载")
     @GetMapping("/file/downLoad")
-    public void downLoad(@RequestParam String fileKey, HttpServletResponse response) throws IOException {
-        FileDownloadVO fileDownloadVO = fileService.getDownloadFile(fileKey);
-        // 设置下载消息头
-        ServletUtil.setDownloadFileHeader(response, fileDownloadVO.getMetadata().getFileName());
-        // 下载
-        response.getOutputStream().write(fileDownloadVO.getData());
+    public void downLoad(@RequestParam(name = "fileKey") String fileKey, HttpServletResponse response) throws IOException {
+        Pair<String, byte[]> pair = fileService.getDownloadFile(fileKey);
+        ServletUtil.setDownloadFileHeader(response, pair.getKey());
+        response.getOutputStream().write(pair.getValue());
     }
 }

@@ -1,10 +1,10 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
 
+import cn.hutool.core.lang.Pair;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.FileQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FileEntity;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.FileDownloadVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileUploadVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,11 +29,11 @@ public interface IFileService {
 
     void batchFileUpload(List<MultipartFile> fileList, Integer bizId, Class<?> clazz, List<Integer> deleteFileIdList);
 
-    FileUploadVO fileUpload(File file, Integer folder);
+    void fileUpload(File file, Integer folder);
 
     String getFileUrl(String fileKey);
 
-    FileDownloadVO getDownloadFile(String fileKey);
+    Pair<String, byte[]> getDownloadFile(String fileKey);
 
     List<FileVO> getFileList(List<String> fileKeyList);
 

@@ -463,6 +463,14 @@ public class BlazeOrderServiceImpl
                 } else {
                     vo.setDaysUntilDue(day + "天");
                 }
+            } else {
+                long day = DateUtil.betweenDay(new Date(), endDate, false);
+                long l = day / 31;
+                if (l > 0) {
+                    vo.setDaysUntilDue("已过期：" +l + "个月" + (day % 31) + "天");
+                } else {
+                    vo.setDaysUntilDue("已过期：" + day + "天");
+                }
             }
         }
         return vo;
