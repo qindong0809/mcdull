@@ -76,6 +76,7 @@
         <oshi.version>6.1.4</oshi.version>
         <!--https://jolokia.org/reference/html/manual/spring.html-->
         <jolokia.support.spring.version>2.2.9</jolokia.support.spring.version>
+        <x-file-storage.version>2.2.1</x-file-storage.version>
     </properties>
 
     <dependencyManagement>
@@ -235,6 +236,11 @@
                 <groupId>org.jolokia</groupId>
                 <artifactId>jolokia-support-spring</artifactId>
                 <version>${jolokia.support.spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dromara.x-file-storage</groupId>
+                <artifactId>x-file-storage-spring</artifactId>
+                <version>${x-file-storage.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

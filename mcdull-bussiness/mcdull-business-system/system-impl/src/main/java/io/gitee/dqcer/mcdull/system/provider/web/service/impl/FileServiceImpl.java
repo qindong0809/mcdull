@@ -31,7 +31,7 @@ import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IFileRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileBizService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IFileStorageService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IFileLocalStorageService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFolderService;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +50,7 @@ public class FileServiceImpl
         extends BasicServiceImpl<IFileRepository> implements IFileService {
 
     @Resource
-    private IFileStorageService fileStorageService;
+    private IFileLocalStorageService fileLocalStorageService;
     @Resource
     private IUserManager userManager;
     @Resource
@@ -88,7 +88,7 @@ public class FileServiceImpl
             Map<Integer, String> userMap = userManager.getMap(records);
             for (FileEntity entity : records) {
                 FileVO fileVO = FileConvert.convertToEntity(entity);
-                fileVO.setFileUrl(fileStorageService.getFileUrl(entity.getFileKey()));
+                fileVO.setFileUrl(fileLocalStorageService.getFileUrl(entity.getFileKey()));
                 fileVO.setCreatorName(userMap.get(entity.getCreatedBy()));
                 fileVO.setFolderTypeName(folderMap.get(entity.getFolderType()));
                 voList.add(fileVO);
@@ -134,7 +134,7 @@ public class FileServiceImpl
         // 进行上传
         String rootToNodeName = folderService.getRootToNodeName(folderType);
         String month = LocalDateTimeUtil.format(LocalDateTime.now(), DatePattern.NORM_MONTH_FORMATTER);
-        FileUploadVO uploadVO = fileStorageService.upload(file, FileFolderTypeEnum.FOLDER_PUBLIC + "/" + rootToNodeName + "/" + month + "/");
+        FileUploadVO uploadVO = fileLocalStorageService.upload(file, FileFolderTypeEnum.FOLDER_PUBLIC + "/" + rootToNodeName + "/" + month + "/");
         // 上传成功 保存记录数据库
         FileEntity fileEntity = new FileEntity();
         fileEntity.setFolderType(folderType);
@@ -179,7 +179,7 @@ public class FileServiceImpl
         List<String> fileKeyArray = StrUtil.split(fileKeyList, StrUtil.C_COMMA);
         List<String> fileUrlList = new ArrayList<>(fileKeyArray.size());
         for (String fileKey : fileKeyArray) {
-            String fileUrl = fileStorageService.getFileUrl(fileKey);
+            String fileUrl = fileLocalStorageService.getFileUrl(fileKey);
             fileUrlList.add(fileUrl);
         }
         return StrUtil.join(",", fileUrlList);
@@ -193,7 +193,7 @@ public class FileServiceImpl
         }
 
         // 根据文件服务类 获取对应文件服务 查询 url
-        FileDownloadVO download = fileStorageService.download(fileKey);
+        FileDownloadVO download = fileLocalStorageService.download(fileKey);
         FileMetadataVO metadata = download.getMetadata();
         metadata.setFileName(fileEntity.getFileName());
         return download;

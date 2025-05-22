@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @since 2024/7/25 9:22
  */
 
-public interface IFileStorageService {
+public interface IFileLocalStorageService {
 
     /**
      * 文件上传

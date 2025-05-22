@@ -12,7 +12,7 @@ import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileDownloadVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileMetadataVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileUploadVO;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IFileStorageService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IFileLocalStorageService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +28,7 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Service
-public class FileStorageLocalServiceImpl implements IFileStorageService {
+public class FileStorageLocalServiceImpl implements IFileLocalStorageService {
 
     public static final String UPLOAD_MAPPING = "/upload";
 

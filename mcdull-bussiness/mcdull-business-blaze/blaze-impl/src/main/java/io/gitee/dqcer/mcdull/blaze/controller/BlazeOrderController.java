@@ -17,6 +17,7 @@ import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.oss.OssService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -37,7 +38,15 @@ public class BlazeOrderController extends BlazeBasicController {
 
     @Resource
     private IBlazeOrderService blazeOrderService;
+    @Resource
+    private OssService ossService;
 
+    @Operation(summary = "删除")
+    @PostMapping(value = "/blazeOrder/1", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result<?> dd( @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
+       return Result.success(ossService.upload(fileList.get(0), "order/"));
+    }
     @Operation(summary = "分页")
     @PostMapping("/blazeOrder/queryPage")
     public Result<PagedVO<BlazeOrderVO>> queryPage(@RequestBody @Valid BlazeOrderQueryDTO dto) {
