@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.web.aspect;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
@@ -62,7 +63,7 @@ public class OperationLogsAspect {
         String requestUrl = request.getRequestURI();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-        if (method.isAnnotationPresent(UnAuthorize.class) || this.ignoreFilter(requestUrl, PATH_LIST)) {
+        if (method.isAnnotationPresent(UnAuthorize.class) || this.ignoreFilter(requestUrl, PATH_LIST) || method.isAnnotationPresent(SaIgnore.class)) {
             return joinPoint.proceed();
         }
         OperationLogsService bean = SpringContextHolder.getBean(OperationLogsService.class);
