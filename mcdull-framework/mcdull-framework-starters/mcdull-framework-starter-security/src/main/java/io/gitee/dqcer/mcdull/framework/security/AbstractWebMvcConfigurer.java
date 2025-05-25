@@ -75,8 +75,10 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            String path = uploadPath.endsWith("/") ? uploadPath : uploadPath + "/";
-            registry.addResourceHandler("/upload" + GlobalConstant.ALL_PATTERNS).addResourceLocations("file:" + path);
+        String path = uploadPath.endsWith("/") ? uploadPath : uploadPath + "/";
+        registry.addResourceHandler("/upload" + GlobalConstant.ALL_PATTERNS).addResourceLocations("file:" + path);
+        // 运行访问 static  目录下的资源
+        registry.addResourceHandler("/static" + GlobalConstant.ALL_PATTERNS).addResourceLocations("classpath:/static/");
     }
 
     /**

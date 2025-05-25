@@ -1,0 +1,37 @@
+server:
+    port: 7080
+spring:
+  data:
+    redis:
+      # Redis服务器地址
+      host: mcdull.io
+      # Redis服务器连接端口
+      port: 6379
+  datasource:
+    url: jdbc:mysql://mcdull.io:3306/mcdull-cloud-3?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    maxActive: 10
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+    logSlowSql: true
+    allow:
+    adminUser: root
+    adminPassword: 8YTJWOuA7XRK17wRQnw4
+  thymeleaf:
+    enabled: true
+    cache: false
+    encoding: UTF-8
+    mode: HTML
+    suffix: .html
+    prefix: classpath:/static/

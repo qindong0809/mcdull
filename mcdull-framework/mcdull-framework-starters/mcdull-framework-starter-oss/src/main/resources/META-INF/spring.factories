@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    io.gitee.dqcer.mcdull.framework.oss.component.OssFactory
-
