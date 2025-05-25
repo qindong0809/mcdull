@@ -2,94 +2,239 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>layout 管理界面大布局示例 - Layui</title>
+    <title>研发日常工具系统</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="//unpkg.com/layui@2.11.2/dist/css/layui.css" rel="stylesheet">
+    <link href="dist/css/layui.css" rel="stylesheet">
 </head>
 <body>
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-
+        <ul class="layui-nav">
+            <li class="layui-nav-item layui-this" data-content="backup">数据库脱敏导入</li>
+            <li class="layui-nav-item" data-content="log">日志查看</li>
+        </ul>
     </div>
-    <div class="layui-side layui-bg-black">
-        <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-            <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">menu group 1</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">menu 1</a></dd>
-                        <dd><a href="javascript:;">menu 2</a></dd>
-                        <dd><a href="javascript:;">menu 3</a></dd>
-                        <dd><a href="javascript:;">the links</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">menu group 2</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">list 1</a></dd>
-                        <dd><a href="javascript:;">list 2</a></dd>
-                        <dd><a href="javascript:;">超链接</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item"><a href="javascript:;">click menu item</a></li>
-                <li class="layui-nav-item"><a href="javascript:;">the links</a></li>
-            </ul>
-        </div>
-    </div>
+<!--    <div class="layui-side layui-bg-black">-->
+<!--        <div class="layui-side-scroll">-->
+<!--        </div>-->
+<!--    </div>-->
     <div class="layui-body">
         <!-- 内容主体区域 -->
-        <div style="padding: 15px;">
-            <blockquote class="layui-elem-quote layui-text">
-                Layui 框体布局内容主体区域
-            </blockquote>
-            <div class="layui-card layui-panel">
-                <div class="layui-card-header">
-                    下面是充数内容，为的是出现滚动条
-                </div>
-                <div class="layui-card-body">
-                    充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>你还真滑到了底部呀
+        <div id="main-content" style="padding: 15px;">
+            <!-- 数据库脱敏导入静态内容 -->
+            <div id="backup-content" style="display: none;">
+                <form class="layui-form" action="">
+                    <div class="layui-row">
+                        <div class="layui-col-xs3">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">IP地址:</label>
+                                <div class="layui-input-block">
+                                    <input autocomplete="off" class="layui-input" lay-verify="required" name="ip" value="127.0.0.1" placeholder="请输入IP地址"
+                                           required type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs3">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">端口:</label>
+                                <div class="layui-input-block">
+                                    <input autocomplete="off"  class="layui-input" lay-verify="required" name="port" value="3306" placeholder="请输入端口"
+                                           required type="number">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs3">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">用户名:</label>
+                                <div class="layui-input-block">
+                                    <input autocomplete="off" class="layui-input" lay-verify="required" name="username" value="root"
+                                           placeholder="请输入用户名" required type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs3">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">密码:</label>
+                                <div class="layui-input-block">
+                                    <input autocomplete="off" class="layui-input" lay-verify="required" name="password" value="123456"
+                                           placeholder="请输入密码" required type="password">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row">
+                        <div class="layui-col-xs4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">导入文件:</label>
+                                <div class="layui-upload-drag" id="ID-upload-demo-drag">
+                                    <i class="layui-icon layui-icon-upload"></i>
+                                    <div>点击上传，或将文件拖拽到此处</div>
+                                    <div class="layui-hide" id="ID-upload-demo-preview">
+                                        <hr>
+                                        <img alt="上传成功后渲染" src="" style="max-width: 80%">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">脱敏SQL:</label>
+                                <div class="layui-input-block">
+                                    <textarea class="layui-textarea" style="font-size: 11px;"  name="sql" ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs4">
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button type="submit" class="layui-btn" lay-submit lay-filter="import-btn" >导入</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <textarea class="layui-textarea"  id="import-log" placeholder="日志内容" readonly></textarea>
+                    </div>
                 </div>
             </div>
-            <br><br>
+            <!-- 日志查看静态内容 -->
+            <div id="log-content" style="display: none;">
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <textarea class="layui-textarea"  placeholder="日志内容" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            底部固定区域
         </div>
     </div>
-    <div class="layui-footer">
-        <!-- 底部固定区域 -->
-        底部固定区域
-    </div>
-</div>
 
-<script src="//unpkg.com/layui@2.11.2/dist/layui.js"></script>
-<script>
-    //JS
-    layui.use(['element', 'layer', 'util'], function(){
-      var element = layui.element;
-      var layer = layui.layer;
-      var util = layui.util;
-      var $ = layui.$;
+    <script src="dist/layui.js"></script>
+    <script>
+        layui.use(['jquery'], function(){
+            var $ = layui.$; // 引入jquery模块
 
-      //头部事件
-      util.event('lay-header-event', {
-        menuLeft: function(othis){ // 左侧菜单事件
-          layer.msg('展开左侧菜单的操作', {icon: 0});
-        },
-        menuRight: function(){  // 右侧菜单事件
-          layer.open({
-            type: 1,
-            title: '更多',
-            content: '<div style="padding: 15px;">处理右侧面板的操作</div>',
-            area: ['260px', '100%'],
-            offset: 'rt', // 右上角
-            anim: 'slideLeft', // 从右侧抽屉滑出
-            shadeClose: true,
-            scrollbar: false
+             // 页面加载时默认显示数据库脱敏导入内容
+            $(document).ready(function() {
+                $('#backup-content').show(); // 显示数据库脱敏导入内容
+                $('.layui-nav-item[data-content="backup"]').addClass('layui-this'); // 设置“数据库脱敏导入”菜单为选中状态
+            });
+
+            // 根据导航菜单显示对应内容
+            $('.layui-nav-item').click(function(){
+                var content = $(this).data('content');
+                if(content === 'backup'){
+                    $('#backup-content').show();
+                    $('#log-content').hide();
+                }else if(content === 'log'){
+                    $('#backup-content').hide();
+                    $('#log-content').show();
+                }
+            });
+
+        var form = layui.form;
+          // 提交事件
+          form.on('submit(import-btn)', function(data){
+            var field = data.field; // 获取表单字段值
+            $('#import-log').val('导入开始...\n');
+            $('#import-log').val($('#import-log').val() + '连接数据库中...\n');
+            // 显示填写结果，仅作演示用
+            layer.alert(JSON.stringify(field), {
+              title: '当前填写的字段值'
+            });
+
+            // 创建 FormData 对象
+            var formData = new FormData();
+
+            // 遍历 data 对象，将每个字段添加到 FormData 中
+            for (var key in field) {
+                if (field.hasOwnProperty(key)) { // 确保是对象自身的属性
+                    formData.append(key, field[key]);
+                }
+            }
+
+             // 添加其他参数
+            formData.append('ip', $('#ip').val());
+            formData.append('port', $('#port').val());
+            formData.append('username', $('#username').val());
+            formData.append('password', $('#password').val());
+            formData.append('sql', $('#sql').val());
+<!--            formData.append('file', $('#ID-upload-demo-drag')[0].querySelector('input[type="file"]').files[0]);-->
+
+
+
+            // 此处可执行 Ajax 等操作
+            $.ajax({
+                url: '/import',
+                type: 'POST',
+                data: formData,
+                processData: false, // 告诉 jQuery 不要去处理发送的数据
+                contentType: false, // 告诉 jQuery 不要去设置 Content-Type 请求头
+                success: function(response) {
+                    // 处理服务器返回的数据
+                    console.log(response);
+                    $('#import-log').val($('#import-log').val() + response + '\n');
+                },
+                error: function(xhr, status, error) {
+                    // 处理请求失败的情况
+                    console.log(error);
+                    $('#import-log').val($('#import-log').val() + '导入失败。\n');
+                }
+            })
+
+
+            // …
+            return false; // 阻止默认 form 跳转
           });
-        }
-      });
-    });
-</script>
+
+<!--            // 模拟导入按钮点击事件-->
+<!--            $('#import-btn').click(function(){-->
+<!--            console.log('模拟导入按钮点击事件');-->
+<!--                // 模拟导入过程-->
+<!--                $('#import-log').val('导入开始...\n');-->
+<!--                setTimeout(function(){-->
+<!--                    $('#import-log').val($('#import-log').val() + '连接数据库中...\n');-->
+<!--                    setTimeout(function(){-->
+<!--                        $('#import-log').val($('#import-log').val() + '导入文件...\n');-->
+<!--                        setTimeout(function(){-->
+<!--                            $('#import-log').val($('#import-log').val() + '导入完成。\n');-->
+<!--                        }, 1000);-->
+<!--                    }, 1000);-->
+<!--                }, 1000);-->
+<!--            });-->
+         var upload = layui.upload;
+         var $ = layui.$;
+         upload.render({
+            elem: '#ID-upload-demo-drag',
+            accept: 'file', //普通文件
+            auto: false, //选择文件后不自动上传
+            url: '', // 实际使用时改成您自己的上传接口即可。
+            done: function(res){
+              layer.msg('上传成功');
+              $('#ID-upload-demo-preview').removeClass('layui-hide')
+              .find('img').attr('src', res.files.file);
+              console.log(res)
+            }
+          });
+        });
+    </script>
+    <style>
+        .layui-nav-item {
+           cursor: pointer; /* 鼠标悬停时显示手形图标 */
+       }
+       .layui-nav .layui-nav-item {
+           margin-left: 184px;
+       }
+       .layui-row {
+           margin-left: 30px;
+       }
+    </style>
 </body>
 </html>
