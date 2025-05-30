@@ -67,7 +67,6 @@
         <archunit.version>1.0.1</archunit.version>
         <druid.version>1.2.23</druid.version>
         <kaptcha.version>2.3.3</kaptcha.version>
-        <qiniu.version>[7.7.0, 7.7.99]</qiniu.version>
         <easyexcel.version>4.0.1</easyexcel.version>
         <poi.version>4.1.2</poi.version>
         <itext7.version>7.2.5</itext7.version>
@@ -164,11 +163,6 @@
                 <groupId>pro.fessional</groupId>
                 <artifactId>kaptcha</artifactId>
                 <version>${kaptcha.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.qiniu</groupId>
-                <artifactId>qiniu-java-sdk</artifactId>
-                <version>${qiniu.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>

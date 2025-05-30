@@ -24,7 +24,7 @@ primary key (`id`)
 
 insert into `sys_user` values(1, 'admin', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', 'Terry',  '1@sina.com', 0, '13800000000', 1, 1, null, null, null, '超级管理员', 0, sysdate(), 0, sysdate(), 0, 0);
 insert into `sys_user` values(2, 'dev',  'a29c57c6894dee6e8251510d58c07078ee3f49bf', '王大锤',    '1@sina.com',  0, '13800000000', 1, 0, null, null, null, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
-insert into `sys_user` values(3, 'demo', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '演示账号（只读）',   '1@sina.com',   0, '13800000000', 1, 0, null, null, null, '只读用户', 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `sys_user` values(3, 'blaze', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '演示账号（只读）',   '1@sina.com',   0, '13800000000', 1, 0, null, null, null, '只读用户', 0, sysdate(), 0, sysdate(), 0, 0);
 insert into `sys_user` values(4, 'zhaoming', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '赵敏',   '1@sina.com',   0, '13800000000', 1, 0, null, null, null, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
 insert into `sys_user` values(5, 'qiangang', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '钱刚',   '1@sina.com',   0, '13800000000', 1, 0, null, null, null, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);
 insert into `sys_user` values(6, 'sunli', 'a29c57c6894dee6e8251510d58c07078ee3f49bf', '孙丽',    '1@sina.com',  0, '13800000000', 1, 0, null, null, null, '普通用户', 0, sysdate(), 0, sysdate(), 0, 0);

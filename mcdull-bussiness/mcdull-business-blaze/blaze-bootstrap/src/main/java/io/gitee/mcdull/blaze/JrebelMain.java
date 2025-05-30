@@ -1,4 +1,4 @@
-package io.gitee.mcdull.demo;
+package io.gitee.mcdull.blaze;
 
 import javax.swing.*;
 import java.awt.*;

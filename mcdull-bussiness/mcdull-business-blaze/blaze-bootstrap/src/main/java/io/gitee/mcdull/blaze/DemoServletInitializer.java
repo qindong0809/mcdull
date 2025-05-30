@@ -1,4 +1,4 @@
-package io.gitee.mcdull.demo;
+package io.gitee.mcdull.blaze;
 
 import com.sun.tools.javac.Main;
 import org.springframework.boot.builder.SpringApplicationBuilder;

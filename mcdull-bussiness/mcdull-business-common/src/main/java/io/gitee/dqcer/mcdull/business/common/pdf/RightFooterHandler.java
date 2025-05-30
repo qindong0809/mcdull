@@ -75,7 +75,7 @@ public class RightFooterHandler implements IEventHandler {
 //        Cell cell = newCell(null, true, true, new Integer[]{1, 2});
 //        cell.setVerticalAlignment(VerticalAlignment.TOP);
 //        Paragraph paragraph = new Paragraph();
-//        paragraph.add(new Paragraph("demo").setFontSize(10).setMarginLeft(24).setTextAlignment(TextAlignment.LEFT));
+//        paragraph.add(new Paragraph("blaze").setFontSize(10).setMarginLeft(24).setTextAlignment(TextAlignment.LEFT));
 //        cell.add(paragraph);
 //
 //        Cell cell1 = newCell(null, true, true, new Integer[]{2, 2});

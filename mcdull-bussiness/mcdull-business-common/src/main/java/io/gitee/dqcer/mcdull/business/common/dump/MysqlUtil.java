@@ -12,10 +12,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.sql.DataSource;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -93,7 +90,8 @@ public class MysqlUtil {
     }
 
     @SneakyThrows(Exception.class)
-    public static void runScript(Db db, Reader reader){
+    public static String runScript(Db db, Reader reader){
+        StringWriter logWriter = new StringWriter();
         Connection connection = db.getConnection();
 
         try {
@@ -104,20 +102,16 @@ public class MysqlUtil {
             scriptRunner.setSendFullScript(false);
             scriptRunner.setAutoCommit(false);
             scriptRunner.setStopOnError(true);
-
             // 分隔符，还未验证具体功能
             scriptRunner.setFullLineDelimiter(false);
             // 每条命令间的分隔符，注意这个不建议用分号分隔
             // 因为SQL脚本中可以写存储过程，中间存在分号，导致存储过程执行失败
             scriptRunner.setDelimiter(";");
-
-
-            scriptRunner.setLogWriter(null);
-
+            scriptRunner.setLogWriter(new PrintWriter(logWriter));
             // 读取SQL文件路径获取SQL文件执行
             scriptRunner.runScript(reader);
-
             connection.commit();
+            return logWriter.toString();
         } catch (Exception e) {
             connection.rollback();
             throw e;
@@ -126,9 +120,18 @@ public class MysqlUtil {
         }
     }
 
-    public static void runSql(Db db, String sql){
+    public static String runSql(Db db, String sql){
         BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(
                 sql.getBytes(StandardCharsets.UTF_8))));
-        runScript(db, reader);
+        return runScript(db, reader);
+    }
+
+    public static String runSql(String host, Integer port, String username, String password, String databaseName, String sql){
+        String jdbc = StrUtil.format(JDBC_FORMAT, host, port, databaseName);
+        DataSource ds = new SimpleDataSource(jdbc, username, password);
+        Db db = DbUtil.use(ds);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(
+                sql.getBytes(StandardCharsets.UTF_8))));
+        return runScript(db, reader);
     }
 }

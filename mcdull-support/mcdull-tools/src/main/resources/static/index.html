@@ -73,7 +73,8 @@
                                     <div>点击上传，或将文件拖拽到此处</div>
                                     <div class="layui-hide" id="ID-upload-demo-preview">
                                         <hr>
-                                        <img alt="上传成功后渲染" src="" style="max-width: 80%">
+                                        <!-- 文件名将显示在这里 -->
+                                        <div id="file-name-container" style="padding: 10px;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -103,11 +104,12 @@
             </div>
             <!-- 日志查看静态内容 -->
             <div id="log-content" style="display: none;">
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <textarea class="layui-textarea"  placeholder="日志内容" readonly></textarea>
-                    </div>
-                </div>
+<!--                <div class="layui-form-item">-->
+<!--                    <div class="layui-input-block">-->
+<!--                        <textarea class="layui-textarea"  placeholder="日志内容" readonly></textarea>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <div id="log-container"></div>
             </div>
         </div>
         <div class="layui-footer">
@@ -120,6 +122,7 @@
     <script>
         layui.use(['jquery'], function(){
             var $ = layui.$; // 引入jquery模块
+            var selectedFile = null;
 
              // 页面加载时默认显示数据库脱敏导入内容
             $(document).ready(function() {
@@ -136,6 +139,17 @@
                 }else if(content === 'log'){
                     $('#backup-content').hide();
                     $('#log-content').show();
+                    const  logContainer = document.getElementById('log-container');
+                    const  eventSource = new EventSource('/logs-stream');
+                    eventSource.onmessage = function(e) {
+                        logContainer.textContent += e.data;
+                        // 自动滚动
+                        logContainer.scrollTop = logContainer.scrollHeight;
+                    };
+                    eventSource.onerror = function(e) {
+                        console.error('EventSource failed:', e);
+                        eventSource.close();
+                    };
                 }
             });
 
@@ -155,20 +169,12 @@
 
             // 遍历 data 对象，将每个字段添加到 FormData 中
             for (var key in field) {
-                if (field.hasOwnProperty(key)) { // 确保是对象自身的属性
+                if (field.hasOwnProperty(key) && key !== 'file') { // 确保是对象自身的属性
                     formData.append(key, field[key]);
                 }
             }
-
              // 添加其他参数
-            formData.append('ip', $('#ip').val());
-            formData.append('port', $('#port').val());
-            formData.append('username', $('#username').val());
-            formData.append('password', $('#password').val());
-            formData.append('sql', $('#sql').val());
-<!--            formData.append('file', $('#ID-upload-demo-drag')[0].querySelector('input[type="file"]').files[0]);-->
-
-
+            formData.append('file', selectedFile);
 
             // 此处可执行 Ajax 等操作
             $.ajax({
@@ -215,12 +221,17 @@
             elem: '#ID-upload-demo-drag',
             accept: 'file', //普通文件
             auto: false, //选择文件后不自动上传
-            url: '', // 实际使用时改成您自己的上传接口即可。
-            done: function(res){
-              layer.msg('上传成功');
-              $('#ID-upload-demo-preview').removeClass('layui-hide')
-              .find('img').attr('src', res.files.file);
-              console.log(res)
+            url: '',
+            choose: function(obj){
+               // 正确获取文件的方式
+                obj.preview(function(index, file, result){
+                    selectedFile = file;
+                    // 显示预览区域
+                    $('#ID-upload-demo-preview').removeClass('layui-hide');
+                    var fileSize = (file.size/1024).toFixed(2) + ' KB';
+                    $('#file-name-container')
+                    .html(`<span style="color: #666; font-size: 12px;">${file.name}${fileSize}</span>`);
+                });
             }
           });
         });
@@ -235,6 +246,15 @@
        .layui-row {
            margin-left: 30px;
        }
+         #log-container {
+            font-family: monospace;
+            white-space: pre;
+            height: 80vh;
+            overflow-y: auto;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 10px;
+        }
     </style>
 </body>
 </html>

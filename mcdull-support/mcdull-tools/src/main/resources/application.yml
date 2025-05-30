@@ -35,3 +35,5 @@ spring:
     mode: HTML
     suffix: .html
     prefix: classpath:/static/
+log:
+  enable: false

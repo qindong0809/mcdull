@@ -42,6 +42,7 @@ public class BlazeOrderRepositoryImpl extends
     @Override
     public List<BlazeOrderEntity> selectList(BlazeOrderQueryDTO param) {
         LambdaQueryWrapper<BlazeOrderEntity> lambda = Wrappers.lambdaQuery();
+        lambda.eq(ObjUtil.isNotNull(param.getCustomerCertId()), BlazeOrderEntity::getCustomerCertId, param.getCustomerCertId());
         lambda.eq(ObjUtil.isNotNull(param.getApprove()), BlazeOrderEntity::getApprove, param.getApprove());
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectList(lambda);
