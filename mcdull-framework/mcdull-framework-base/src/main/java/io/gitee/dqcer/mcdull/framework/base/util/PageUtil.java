@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
+import io.gitee.dqcer.mcdull.framework.base.support.Paged;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 
 import java.util.Collections;
@@ -45,7 +46,7 @@ public class PageUtil {
                 Convert.toInt(iPage.getSize()), Convert.toInt(iPage.getCurrent()));
     }
 
-    public static <T, D extends PagedDTO> PagedVO<T> empty(D iPage) {
+    public static <T, D extends Paged> PagedVO<T> empty(D iPage) {
         return new PagedVO<>(Collections.emptyList(), 0,
                 Convert.toInt(iPage.getPageSize()), Convert.toInt(iPage.getPageNum()));
     }
