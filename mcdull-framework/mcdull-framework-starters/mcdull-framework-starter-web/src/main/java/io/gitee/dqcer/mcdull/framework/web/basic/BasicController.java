@@ -30,13 +30,13 @@ import java.util.function.Supplier;
 public abstract class BasicController {
 
     @Resource
-    private ConcurrentRateLimiter concurrentRateLimiter;
+    protected ConcurrentRateLimiter concurrentRateLimiter;
 
     @Resource
-    private DynamicLocaleMessageSource dynamicLocaleMessageSource;
+    protected DynamicLocaleMessageSource dynamicLocaleMessageSource;
 
     @Resource
-    private McdullProperties mcdullProperties;
+    protected McdullProperties mcdullProperties;
 
     protected Logger log = LoggerFactory.getLogger(getClass());
     protected HttpServletRequest getRequest() {

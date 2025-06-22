@@ -1,0 +1,26 @@
+# warm-flow工作流配置
+warm-flow:
+  # 是否开启工作流，默认true
+  enabled: true
+  # 是否显示banner图，默认是
+  banner: true
+  # 是否开启设计器ui，默认true
+  ui: true
+  # id生成器类型, 不填默认为orm扩展自带生成器或者warm-flow内置的19位雪花算法, SnowId14:14位，SnowId15:15位， SnowFlake19：19位
+  key_type: SnowId19
+  # 填充器，内部有默认实现，如果不满足实际业务，可通过此配置自定义实现
+#  data-fill-handler-path: io.gitee.dqcer.mcdull.workflow.config.MybatisMetaObjectHandlerConfig
+  # 全局租户处理器，有多租户需要，可以配置自定义实现
+#  tenant_handler_path: com.ruoyi.system.handle.CustomTenantHandler
+  # 是否开启逻辑删除（orm框架本身不支持逻辑删除，可通过这种方式开启）
+  logic_delete: true
+  # 逻辑删除字段值（开启后默认为2）
+  logic_delete_value: 1
+  ## 如果需要工作流共享业务系统权限，默认Authorization，如果有多个token，用逗号分隔
+  token-name: Authorization1
+  # 逻辑未删除字段（开启后默认为0）
+  logic_not_delete_value: 0
+  # 当使用JPA时指定JpaPersistenceProvider
+  jpa_persistence_provider: org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider
+  # 内部已实现自动获取，失效时使用此配置（在使用mybatis扩展包时, 由于各数据库sql语句存在差异, 通过此配置兼容，默认为mysql）
+  data_source_type: mysql

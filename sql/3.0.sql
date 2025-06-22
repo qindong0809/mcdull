@@ -243,6 +243,8 @@ INSERT INTO `sys_menu` VALUES (252, '导出', 3, 243, NULL, NULL, NULL, 1, 'supp
 INSERT INTO `sys_menu` VALUES (253, '删除', 3, 243, NULL, NULL, NULL, 1, 'support:form:record:delete', 'support:form:record:delete', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 INSERT INTO `sys_menu` VALUES (254, '更新', 3, 243, NULL, NULL, NULL, 1, 'support:form:record:update', 'support:form:record:update', NULL, NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
 
+INSERT INTO `sys_menu` VALUES(297, '流程管理', 1, 0, 99, NULL, NULL, 1, NULL, NULL, 'AuditOutlined', NULL, 0, NULL, 1, 1, 0, 0, 1, sysdate(), NULL, NULL);
+INSERT INTO `sys_menu` VALUES(298, '流程定义', 2, 297, 1, '/system/workflow/def/def-list', '/system/workflow/def/def-list.vue', 1, NULL, NULL, 'BookOutlined', NULL, 0, NULL, 0, 1, 0, 0, 1, sysdate(), 1, NULL);
 
 
 drop table if exists `sys_role_menu`;
