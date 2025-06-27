@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.repository.CrudRepository;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.ConfigEntity;
@@ -49,6 +48,17 @@ public class ConfigRepositoryImpl
         }
         lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
+    }
+
+    @Override
+    public List<ConfigEntity> selectList(ConfigQueryDTO param) {
+        LambdaQueryWrapper<ConfigEntity> lambda = new QueryWrapper<ConfigEntity>().lambda();
+        String configKey = param.getConfigKey();
+        if (StrUtil.isNotBlank(configKey)) {
+            lambda.like(ConfigEntity::getConfigKey, configKey);
+        }
+        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        return baseMapper.selectList(lambda);
     }
 
     @Override

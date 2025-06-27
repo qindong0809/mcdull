@@ -32,6 +32,14 @@ public interface IConfigRepository extends IRepository<ConfigEntity> {
     Page<ConfigEntity> selectPage(ConfigQueryDTO param);
 
     /**
+     * 选择列表
+     *
+     * @param param 参数
+     * @return {@link List }<{@link ConfigEntity }>
+     */
+    List<ConfigEntity> selectList(ConfigQueryDTO param);
+
+    /**
      * 根据ID获取单条数据
      *
      * @param id 主键

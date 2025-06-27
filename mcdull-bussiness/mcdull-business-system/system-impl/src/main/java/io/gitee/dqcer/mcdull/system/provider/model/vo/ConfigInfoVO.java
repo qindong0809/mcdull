@@ -37,6 +37,9 @@ public class ConfigInfoVO implements VO {
     @Schema(description = "备注")
     private String remark;
 
+    @Schema(description = "附件名称")
+    private String attachmentName;
+
     @Schema(description = "创建时间")
     @DynamicDateFormat(enableTimezone = true)
     @JsonSerialize(using = DynamicDateSerialize.class)

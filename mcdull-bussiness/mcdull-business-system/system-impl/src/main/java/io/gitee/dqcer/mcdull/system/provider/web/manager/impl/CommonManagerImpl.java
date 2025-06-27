@@ -66,7 +66,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -296,13 +295,7 @@ public class CommonManagerImpl implements ICommonManager {
             fileService.fileUpload(FileUtil.writeBytes(copiedBinaryData, tmpPath), folderService.getSystemFolderId());
             FileUtil.del(tmpPath);
         }
-        HttpServletResponse response = ServletUtil.getResponse();
-        ServletUtil.setDownloadFileHeader(response, fileName);
-        try {
-            response.getOutputStream().write(byteArray);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ServletUtil.download(fileName, byteArray);
     }
 
 
@@ -393,6 +386,21 @@ public class CommonManagerImpl implements ICommonManager {
                 }
             }
         }
+    }
+
+    @Override
+    public Map<Integer, List<FileEntity>> getFileList(List<Integer> idList, Class<?> clazz) {
+        Map<Integer, List<FileEntity>> fileEntityMap = new HashMap<>();
+        if (CollUtil.isNotEmpty(idList)) {
+           return fileService.get(idList, clazz);
+        }
+        return fileEntityMap;
+    }
+
+    @Override
+    public void uploadFile(MultipartFile file, Integer bizId, Class<?> clazz) {
+        fileService.remove(bizId, clazz);
+        fileService.batchFileUpload(List.of(file), bizId, clazz, null);
     }
 
     @Override

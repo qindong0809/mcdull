@@ -14,8 +14,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 
 /**
@@ -66,17 +69,30 @@ public class ServletUtil {
 
     public static void setDownloadFileHeader(HttpServletResponse response, String fileName) {
         response.setCharacterEncoding("utf-8");
-        try {
-            if (StrUtil.isNotEmpty(fileName)) {
-                response.setHeader(HttpHeaders.CONTENT_TYPE,
-                        MediaTypeFactory.getMediaType(fileName).orElse(MediaType.APPLICATION_OCTET_STREAM) + ";charset=utf-8");
-                response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" +
-                        URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20"));
-                response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION);
+        if (StrUtil.isNotEmpty(fileName)) {
+            response.setHeader(HttpHeaders.CONTENT_TYPE,
+                    MediaTypeFactory.getMediaType(fileName).orElse(MediaType.APPLICATION_OCTET_STREAM) + ";charset=utf-8");
+            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" +
+                    URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20"));
+            response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION);
+        }
+    }
+
+    public static void download(String fileName, byte[] byteArray) {
+        HttpServletResponse response = ServletUtil.getResponse();
+        response.setCharacterEncoding("utf-8");
+        if (StrUtil.isNotEmpty(fileName)) {
+            response.setHeader(HttpHeaders.CONTENT_TYPE,
+                    MediaTypeFactory.getMediaType(fileName).orElse(MediaType.APPLICATION_OCTET_STREAM) + ";charset=utf-8");
+            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" +
+                    URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20"));
+            response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION);
+            try {
+                response.getOutputStream().write(byteArray);
+            } catch (IOException e) {
+                LogHelp.error(log, e.getMessage(), e);
+                throw new RuntimeException(e);
             }
-        } catch (UnsupportedEncodingException e) {
-            LogHelp.error(log, e.getMessage(), e);
-            throw new RuntimeException(e);
         }
     }
 

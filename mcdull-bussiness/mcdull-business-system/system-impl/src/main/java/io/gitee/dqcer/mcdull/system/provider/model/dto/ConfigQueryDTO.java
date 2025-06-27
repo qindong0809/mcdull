@@ -19,4 +19,8 @@ public class ConfigQueryDTO extends PagedDTO {
     @Schema(description = "参数KEY")
     @Length(max = 50, message = "参数Key最多50字符")
     private String configKey;
+
+    @Schema(description = "附件名称")
+    @Length(max = 50, message = "附件名称最多50字符")
+    private String attachmentName;
 }

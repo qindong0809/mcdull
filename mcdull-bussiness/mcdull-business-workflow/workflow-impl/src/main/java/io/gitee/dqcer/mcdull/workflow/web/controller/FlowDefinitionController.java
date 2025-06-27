@@ -11,14 +11,12 @@ import io.gitee.dqcer.mcdull.workflow.model.vo.FlowDefinitionVO;
 import io.gitee.dqcer.mcdull.workflow.web.service.IFlowDefinitionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.dromara.warm.flow.core.entity.Definition;
 import org.dromara.warm.flow.core.service.DefService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -91,14 +89,7 @@ public class FlowDefinitionController extends BasicController {
         // 要导出的字符串
         String content = defService.exportJson(id);
         Definition definition = defService.getById(id);
-
-        HttpServletResponse response = ServletUtil.getResponse();
-        ServletUtil.setDownloadFileHeader(response, definition.getFlowName() + ".json");
-        try {
-            response.getOutputStream().write(content.getBytes(StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ServletUtil.download(definition.getFlowName() + ".json", content.getBytes(StandardCharsets.UTF_8));
     }
 
     @GetMapping("/active/{definitionId}")

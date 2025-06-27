@@ -14,10 +14,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -56,6 +54,23 @@ public class ConfigController extends BasicController {
         configService.add(configAddDTO);
         return Result.success(true);
     }
+
+    @Operation(summary = "导出附件")
+    @SaCheckPermission("system:config:export")
+    @PostMapping(value = "/system/config/${id}/export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void exportAttachmentData(@PathVariable("id") Integer id) {
+        super.locker(null, () -> configService.exportAttachmentData(id));
+    }
+
+    @Operation(summary = "导入附件")
+    @SaCheckPermission("system:config:update")
+    @PostMapping("/system/config/${id}/import")
+    public Result<Boolean> importAttachmentData(@PathVariable("id") Integer id,
+                                                @RequestParam("file") MultipartFile file) {
+        configService.importAttachmentData(id, file);
+        return Result.success(true);
+    }
+
 
     @Operation(summary = "更新")
     @PostMapping("/config/update")

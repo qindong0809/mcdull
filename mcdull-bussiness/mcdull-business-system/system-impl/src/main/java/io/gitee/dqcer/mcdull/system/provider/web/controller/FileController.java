@@ -57,7 +57,6 @@ public class FileController {
     @GetMapping("/file/downLoad")
     public void downLoad(@RequestParam(name = "fileKey") String fileKey, HttpServletResponse response) throws IOException {
         Pair<String, byte[]> pair = fileService.getDownloadFile(fileKey);
-        ServletUtil.setDownloadFileHeader(response, pair.getKey());
-        response.getOutputStream().write(pair.getValue());
+        ServletUtil.download(pair.getKey(), pair.getValue());
     }
 }

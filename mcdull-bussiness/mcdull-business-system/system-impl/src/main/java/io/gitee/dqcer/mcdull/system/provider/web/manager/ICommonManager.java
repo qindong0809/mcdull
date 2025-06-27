@@ -8,6 +8,7 @@ import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.bo.DynamicFieldBO;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.FileEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ApproveVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.IFileVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,6 +53,10 @@ public interface ICommonManager {
     Boolean getConfigToBool(String key);
 
     void setFileVO(List<? extends IFileVO> voList, Class<?> clazz);
+
+    Map<Integer, List<FileEntity>> getFileList(List<Integer> idList, Class<?> clazz);
+
+    void uploadFile(MultipartFile file, Integer bizId, Class<?> clazz);
 
     List<Pair<String, byte[]>> getFileDateList(Integer bizId, Class<?> clazz);
 

@@ -5,6 +5,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.ConfigAddDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.ConfigUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ConfigInfoVO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -53,4 +54,20 @@ public interface IConfigService {
      * @return boolean
      */
     boolean exportData(ConfigQueryDTO dto);
+
+    /**
+     * 导出附件数据
+     *
+     * @param id 身份证
+     * @return {@link Boolean }
+     */
+    Boolean exportAttachmentData(Integer id);
+
+    /**
+     * 导入附件数据
+     *
+     * @param id   身份证
+     * @param file 文件
+     */
+    void importAttachmentData(Integer id, MultipartFile file);
 }

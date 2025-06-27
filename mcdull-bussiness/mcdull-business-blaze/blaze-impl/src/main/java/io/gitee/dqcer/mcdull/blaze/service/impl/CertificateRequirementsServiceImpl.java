@@ -43,7 +43,6 @@ import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IAreaService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -383,9 +382,7 @@ public class CertificateRequirementsServiceImpl
                 String pafPathParent = FileUtil.getTmpDirPath() + File.separator + System.currentTimeMillis();
                 String pdfPath = pafPathParent + File.separator + fileName;
                 HtmlConvertPdf.updatePdfLeftFooter(byteArrayInOutStream.getInputStream(), pdfPath, message);
-                HttpServletResponse response = ServletUtil.getResponse();
-                ServletUtil.setDownloadFileHeader(response, fileName);
-                response.getOutputStream().write(FileUtil.readBytes(pdfPath));
+                ServletUtil.download(fileName, FileUtil.readBytes(pdfPath));
             }
         }
     }

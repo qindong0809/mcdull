@@ -5,17 +5,19 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.ConfigAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.convert.ConfigConvert;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.ConfigAddDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.ConfigUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.ConfigEntity;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.FileEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ConfigInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IConfigRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
@@ -24,8 +26,13 @@ import io.gitee.dqcer.mcdull.system.provider.web.service.IConfigService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -43,14 +50,30 @@ public class ConfigServiceImpl
     @Resource
     private IAuditManager auditManager;
 
+
     @Override
     public PagedVO<ConfigInfoVO> queryPage(ConfigQueryDTO dto) {
-        Page<ConfigEntity> entityPage = baseRepository.selectPage(dto);
         List<ConfigInfoVO> voList = new ArrayList<>();
-        for (ConfigEntity entity : entityPage.getRecords()) {
-            voList.add(ConfigConvert.convertToConfigVO(entity));
+        List<ConfigEntity> records = baseRepository.selectList(dto);
+        if (CollUtil.isNotEmpty(records)) {
+            List<Integer> idList = records.stream().map(IdEntity::getId).collect(Collectors.toList());
+            Map<Integer, List<FileEntity>> fileMap = commonManager.getFileList(idList, ConfigEntity.class);
+            for (ConfigEntity entity : records) {
+                ConfigInfoVO vo = ConfigConvert.convertToConfigVO(entity);
+                List<FileEntity> fileEntityList = fileMap.get(entity.getId());
+                if (CollUtil.isNotEmpty(fileEntityList)) {
+                    vo.setAttachmentName(fileEntityList.stream().map(FileEntity::getFileName).collect(Collectors.joining(",")));
+                }
+                String attachmentName = dto.getAttachmentName();
+                if (StrUtil.isNotBlank(attachmentName)) {
+                    if (!StrUtil.containsIgnoreCase(vo.getAttachmentName(), attachmentName)) {
+                        continue;
+                    }
+                }
+                voList.add(vo);
+            }
         }
-        return PageUtil.toPage(voList, entityPage);
+        return  PageUtil.ofSub(voList, dto);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -116,6 +139,26 @@ public class ConfigServiceImpl
     public boolean exportData(ConfigQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
         return true;
+    }
+
+    @Override
+    public Boolean exportAttachmentData(Integer id) {
+        List<Pair<String, byte[]>> fileDateList = commonManager.getFileDateList(id, ConfigEntity.class);
+        if (CollUtil.isNotEmpty(fileDateList)) {
+            Pair<String, byte[]> pair = fileDateList.get(0);
+            ServletUtil.download(pair.getKey(), pair.getValue());
+        }
+        return true;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void importAttachmentData(Integer id, MultipartFile file) {
+        ConfigEntity config = baseRepository.getById(id);
+        if (ObjUtil.isNull(config) || !config.getDelFlag()) {
+            this.throwDataNotExistException(id);
+        }
+        commonManager.uploadFile(file, id, ConfigEntity.class);
     }
 
 
