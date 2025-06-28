@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.collection.ListUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
@@ -16,8 +17,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 /**
 * 系统配置 控制器
@@ -56,15 +55,15 @@ public class ConfigController extends BasicController {
     }
 
     @Operation(summary = "导出附件")
-    @SaCheckPermission("system:config:export")
-    @PostMapping(value = "/system/config/${id}/export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @SaCheckPermission("support:config:update")
+    @PostMapping(value = "/system/config/{id}/export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportAttachmentData(@PathVariable("id") Integer id) {
         super.locker(null, () -> configService.exportAttachmentData(id));
     }
 
     @Operation(summary = "导入附件")
-    @SaCheckPermission("system:config:update")
-    @PostMapping("/system/config/${id}/import")
+    @SaCheckPermission("support:config:update")
+    @PostMapping("/system/config/{id}/import")
     public Result<Boolean> importAttachmentData(@PathVariable("id") Integer id,
                                                 @RequestParam("file") MultipartFile file) {
         configService.importAttachmentData(id, file);
@@ -81,10 +80,10 @@ public class ConfigController extends BasicController {
     }
 
     @Operation(summary = "删除")
-    @PostMapping("/config/delete")
+    @PostMapping("/system/config/{id}/delete")
     @SaCheckPermission("support:config:delete")
-    public Result<Boolean> delete(@RequestBody List<Integer> configIdList) {
-        configService.delete(configIdList);
+    public Result<Boolean> delete(@PathVariable("id") Integer id) {
+        configService.delete(ListUtil.of(id));
         return Result.success(true);
     }
 }

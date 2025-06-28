@@ -50,5 +50,4 @@ public class ConfigInfoVO implements VO {
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date updateTime;
 
-
 }

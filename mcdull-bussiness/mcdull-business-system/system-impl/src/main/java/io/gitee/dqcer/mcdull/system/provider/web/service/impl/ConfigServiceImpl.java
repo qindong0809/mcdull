@@ -23,6 +23,7 @@ import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IConfigRepositor
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IConfigService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +50,8 @@ public class ConfigServiceImpl
     private ICommonManager commonManager;
     @Resource
     private IAuditManager auditManager;
+    @Resource
+    private IFileService fileService;
 
 
     @Override
@@ -130,7 +133,9 @@ public class ConfigServiceImpl
             this.throwDataNotExistException(idList);
         }
         baseRepository.deleteBatchByIds(idList);
+
         for (ConfigEntity entity : entityList) {
+            fileService.remove(entity.getId(), ConfigEntity.class);
             auditManager.saveByDeleteEnum(entity.getConfigName(), entity.getId(), null);
         }
     }
@@ -155,7 +160,7 @@ public class ConfigServiceImpl
     @Override
     public void importAttachmentData(Integer id, MultipartFile file) {
         ConfigEntity config = baseRepository.getById(id);
-        if (ObjUtil.isNull(config) || !config.getDelFlag()) {
+        if (ObjUtil.isNull(config) || config.getDelFlag()) {
             this.throwDataNotExistException(id);
         }
         commonManager.uploadFile(file, id, ConfigEntity.class);

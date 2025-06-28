@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.workflow.model.vo;
 
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.warm.flow.orm.entity.FlowTask;
@@ -11,6 +12,7 @@ import org.dromara.warm.flow.orm.entity.FlowTask;
  * @author qin.dong
  * @since 2025/06/23
  */
+@Builder
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class FlowTaskVO extends FlowTask implements VO {
@@ -33,7 +35,7 @@ public class FlowTaskVO extends FlowTask implements VO {
     /**
      * 委派人
      */
-    private String flowStatus;
+//    private String flowStatus;
 
     /**
      * 激活状态

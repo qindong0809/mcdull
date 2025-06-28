@@ -23,7 +23,7 @@ import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import io.gitee.dqcer.mcdull.workflow.model.dto.FlowTaskDTO;
 import io.gitee.dqcer.mcdull.workflow.model.vo.FlowHisTaskVO;
 import io.gitee.dqcer.mcdull.workflow.model.vo.FlowTaskVO;
-import io.gitee.dqcer.mcdull.workflow.web.dao.ExecuteMapper;
+import io.gitee.dqcer.mcdull.workflow.web.mapper.ExecuteMapper;
 import io.gitee.dqcer.mcdull.workflow.web.service.IExecuteService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;

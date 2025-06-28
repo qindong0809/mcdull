@@ -10,8 +10,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.warm.flow.orm.entity.FlowTask;
 
-import java.util.List;
-
 /**
  * Task DTO
  *
@@ -47,5 +45,5 @@ public class FlowTaskDTO extends FlowTask implements Paged {
     @EnumsStrValid(required = false, value = SortOrderEnum.class, message = "排序类型 枚举值错误")
     protected String sortOrder;
 
-    protected List<String> permissionList;
+//    protected List<String> permissionList;
 }
