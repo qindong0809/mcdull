@@ -40,6 +40,8 @@ public interface ICommonManager {
     <D extends PagedDTO, V extends VO> void exportExcel(D dto, Function<D, PagedVO<V>> function,
                                                            String sheetName, List<Pair<String, Func1<V, ?>>> titlePairList);
 
+    <V extends VO> void exportExcel(List<V> list, String sheetName, List<Pair<String, Func1<V, ?>>> titleFuncList);
+
     void exportExcel(String sheetName, String conditions, List<Pair<String, String>> pairList, List<Map<String, String>> mapList);
 
     String readTemplateFileContent(String path);

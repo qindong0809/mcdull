@@ -248,6 +248,14 @@ public class CommonManagerImpl implements ICommonManager {
         if (ObjUtil.isNotNull(page)) {
             list = page.getList();
         }
+        this.exportExcel(list, sheetName, titleFuncList);
+
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public <V extends VO> void exportExcel(List<V> list, String sheetName, List<Pair<String, Func1<V, ?>>> titleFuncList) {
+        sheetName = StrUtil.isNotBlank(sheetName) ? sheetName : "数据列表";
         List<Pair<String, String>> pairList = new ArrayList<>();
         for (Pair<String, Func1<V, ?>> entry : titleFuncList) {
             pairList.add(Pair.of(entry.getKey(), LambdaUtil.getFieldName(entry.getValue())));

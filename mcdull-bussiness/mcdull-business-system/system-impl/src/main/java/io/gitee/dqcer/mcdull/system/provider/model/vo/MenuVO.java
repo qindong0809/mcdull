@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.system.provider.model.vo;
 
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.MenuEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -11,7 +12,7 @@ import lombok.Data;
  * @since  2022/11/27
  */
 @Data
-public class MenuVO implements VO {
+public class MenuVO extends MenuEntity implements VO {
 
     @Schema(description = "菜单id")
     private Integer menuId;

@@ -4,13 +4,21 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Pair;
+import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.event.AnalysisEventListener;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
+import io.gitee.dqcer.mcdull.business.common.excel.ExcelUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
@@ -37,12 +45,13 @@ import io.gitee.dqcer.mcdull.system.provider.web.manager.IMenuManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IMenuService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleMenuService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.annotation.Resource;
+import java.io.IOException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -337,39 +346,30 @@ public class MenuServiceImpl
 
     @Override
     public boolean exportData(MenuListDTO dto) {
-        List<MenuVO> list = CollUtil.emptyIfNull(this.list(dto));
-        List<Integer> parentList = list.stream().map(MenuVO::getParentId)
-                .distinct().collect(Collectors.toList());
-        Map<Integer, MenuEntity> parentMap = baseRepository.listByIds(parentList).stream()
-                .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
-        List<Pair<String, String>> pairList = this.getTitleList();
-        List<Map<String, String>> mapList = new ArrayList<>();
-        for (MenuVO vo : list) {
-            Map<String, String> map = new HashMap<>();
-            map.put("menuName", vo.getMenuName());
-            map.put("menuType", Convert.toStr(vo.getMenuType()));
-            Integer parentId = vo.getParentId();
-            if (ObjUtil.isNotNull(parentId)) {
-                MenuEntity menuEntity = parentMap.get(parentId);
-                if (ObjUtil.isNotNull(menuEntity)) {
-                    map.put("parentName", menuEntity.getMenuName());
-                }
-            }
-            map.put("sort", Convert.toStr(vo.getSort()));
-            map.put("path", StrUtil.isEmpty(vo.getPath()) ? StrUtil.EMPTY : vo.getPath());
-            map.put("component", vo.getComponent());
-            map.put("apiPerms", vo.getApiPerms());
-            map.put("webPerms", vo.getWebPerms());
-            map.put("icon", vo.getIcon());
-            map.put("contextMenu", this.convertContextMenuId(vo.getContextMenuId()));
-            map.put("frameFlag", BooleanUtil.toStringYesNo(vo.getFrameFlag()));
-            map.put("frameUrl", vo.getFrameUrl());
-            map.put("cacheFlag", BooleanUtil.toStringYesNo(vo.getCacheFlag()));
-            map.put("visibleFlag", BooleanUtil.toStringYesNo(vo.getVisibleFlag()));
-            mapList.add(map);
-        }
-        commonManager.exportExcel("菜单列表", StrUtil.EMPTY, pairList, mapList);
+        List<MenuVO> voList = CollUtil.emptyIfNull(this.list(dto));
+        commonManager.exportExcel(voList, StrUtil.EMPTY, this.getTitleList());
         return true;
+    }
+
+    private List<Pair<String, Func1<MenuVO, ?>>> getTitleList() {
+        List<Pair<String, Func1<MenuVO, ?>>> list = new ArrayList<>();
+        list.add(Pair.of("ID", MenuVO::getMenuId));
+        list.add(Pair.of("菜单名称", MenuVO::getMenuName));
+        list.add(Pair.of("菜单类型", MenuVO::getMenuType));
+        list.add(Pair.of("父级", MenuVO::getParentId));
+        list.add(Pair.of("排序", MenuVO::getSort));
+        list.add(Pair.of("路由地址", MenuVO::getPath));
+        list.add(Pair.of("组件路径", MenuVO::getComponent));
+        list.add(Pair.of("权限类型", MenuVO::getPermsType));
+        list.add(Pair.of("api权限", MenuVO::getApiPerms));
+        list.add(Pair.of("web权限", MenuVO::getWebPerms));
+        list.add(Pair.of("图标", MenuVO::getIcon));
+        list.add(Pair.of("是否为上下文菜单", MenuVO::getContextMenuId));
+        list.add(Pair.of("是否为frame", MenuVO::getFrameFlag));
+        list.add(Pair.of("frame地址", MenuVO::getFrameUrl));
+        list.add(Pair.of("是否缓存", MenuVO::getCacheFlag));
+        list.add(Pair.of("是否可见", MenuVO::getVisibleFlag));
+        return list;
     }
 
     @Override
@@ -406,6 +406,83 @@ public class MenuServiceImpl
         return menuNameList;
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Boolean importMenu(MultipartFile file) throws IOException {
+        List<MenuEntity> list = new ArrayList<>();
+        ExcelUtil.readExcel(file.getInputStream(), () -> new AnalysisEventListener<>() {
+            @Override
+            public void invoke(Object o, AnalysisContext analysisContext) {
+                List<Pair<String, Func1<MenuVO, ?>>> titleList = getTitleList();
+                JSONObject jsonObject = JSONUtil.parseObj(o);
+                MenuEntity entity = new MenuEntity();
+                for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
+                    String key = entry.getKey();
+                    Pair<String, Func1<MenuVO, ?>> pari = titleList.get(Convert.toInt(key));
+                    if (pari != null) {
+                        String fieldName = LambdaUtil.getFieldName(pari.getValue());
+                        Object value = entry.getValue();
+                        if (!StrUtil.equalsIgnoreCase(fieldName, "menuId")) {
+                            ReflectUtil.setFieldValue(entity, fieldName, value);
+                        } else {
+                            entity.setId(Convert.toInt(value));
+                        }
+                    }
+                }
+                list.add(entity);
+            }
+
+            @Override
+            public void doAfterAllAnalysed(AnalysisContext analysisContext) {
+
+            }
+        });
+        List<MenuEntity> menuList = baseRepository.allAndButton();
+        List<Integer> importIdList = list.stream().map(IdEntity::getId).collect(Collectors.toList());
+        List<Integer> dbIdList = menuList.stream().map(IdEntity::getId).collect(Collectors.toList());
+
+        List<Integer> deleteIdList = dbIdList.stream().filter(i -> !importIdList.contains(i)).collect(Collectors.toList());
+        if (CollUtil.isNotEmpty(deleteIdList)) {
+            baseRepository.removeByIds(deleteIdList);
+        }
+        List<Integer> insertIdList = importIdList.stream().filter(i -> !dbIdList.contains(i)).collect(Collectors.toList());
+        if (CollUtil.isNotEmpty(insertIdList)) {
+            for (MenuEntity entity : list) {
+                if (insertIdList.contains(entity.getId())) {
+                    baseRepository.save(entity);
+                }
+            }
+        }
+        // 交集
+        Collection<Integer> intersection = CollUtil.intersection(importIdList, dbIdList);
+        if (CollUtil.isNotEmpty(intersection)) {
+            for (MenuEntity entity : menuList) {
+                if (intersection.contains(entity.getId())) {
+                    MenuEntity newEntity = list.stream().filter(i -> i.getId().equals(entity.getId())).findFirst().orElse(null);
+                    if (ObjUtil.isNotNull(newEntity)) {
+                        entity.setMenuName(newEntity.getMenuName());
+                        entity.setMenuType(newEntity.getMenuType());
+                        entity.setParentId(newEntity.getParentId());
+                        entity.setSort(newEntity.getSort());
+                        entity.setPath(newEntity.getPath());
+                        entity.setComponent(newEntity.getComponent());
+                        entity.setPermsType(newEntity.getPermsType());
+                        entity.setApiPerms(newEntity.getApiPerms());
+                        entity.setWebPerms(newEntity.getWebPerms());
+                        entity.setIcon(newEntity.getIcon());
+                        entity.setContextMenuId(newEntity.getContextMenuId());
+                        entity.setFrameFlag(newEntity.getFrameFlag());
+                        entity.setFrameUrl(newEntity.getFrameUrl());
+                        entity.setCacheFlag(newEntity.getCacheFlag());
+                        entity.setVisibleFlag(newEntity.getVisibleFlag());
+                        baseRepository.updateById(entity);
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     private void searchMenuName(List<MenuEntity> all, Integer id, List<String> nameList) {
         MenuEntity menu = all.stream().
                 filter(menuEntity -> ObjUtil.equal(id, menuEntity.getId())).findFirst().orElse(null);
@@ -415,25 +492,6 @@ public class MenuServiceImpl
 //            }
             this.searchMenuName(all, menu.getParentId(), nameList);
         }
-    }
-
-    private List<Pair<String, String>> getTitleList() {
-        List<Pair<String, String>> pairList = new ArrayList<>();
-        pairList.add(Pair.of("菜单名称", "menuName"));
-        pairList.add(Pair.of("菜单类型", "menuType"));
-        pairList.add(Pair.of("父级", "parentName"));
-        pairList.add(Pair.of("排序", "sort"));
-        pairList.add(Pair.of("路由地址", "path"));
-        pairList.add(Pair.of("组件路径", "component"));
-        pairList.add(Pair.of("api权限", "apiPerms"));
-        pairList.add(Pair.of("web权限", "webPerms"));
-        pairList.add(Pair.of("图标", "icon"));
-        pairList.add(Pair.of("是否为上下文菜单", "contextMenu"));
-        pairList.add(Pair.of("是否为frame", "frameFlag"));
-        pairList.add(Pair.of("frame地址", "frameUrl"));
-        pairList.add(Pair.of("是否缓存", "cacheFlag"));
-        pairList.add(Pair.of("是否可见", "visibleFlag"));
-        return pairList;
     }
 
     public List<MenuTreeVO> convertMenuTreeVO(List<Tree<Integer>> treeList) {

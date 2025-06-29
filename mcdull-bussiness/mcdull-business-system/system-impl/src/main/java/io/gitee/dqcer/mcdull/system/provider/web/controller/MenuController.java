@@ -18,7 +18,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -80,6 +82,19 @@ public class MenuController extends BasicController {
     @PostMapping(value = "/menu/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@Validated MenuListDTO dto) {
         super.locker(null, () -> menuService.exportData(dto));
+    }
+
+    @Operation(summary = "导入数据")
+    @SaCheckPermission("system:menu:export")
+    @PostMapping("/menu/record-import")
+    public Result<Boolean> importMenu(@RequestParam("file") MultipartFile file) {
+        return Result.success(super.locker(null, () -> {
+            try {
+                return menuService.importMenu(file);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }));
     }
 
     @Operation(summary = "下拉选项")

@@ -8,7 +8,9 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.MenuEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.MenuTreeVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.MenuVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.RoleMenuTreeVO;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -118,4 +120,12 @@ public interface IMenuService {
      * @return {@link String }
      */
     List<String> getCurrentMenuName();
+
+    /**
+     * 导入数据
+     *
+     * @param file file
+     * @return <{@link Boolean }>
+     */
+    Boolean importMenu(MultipartFile file) throws IOException;
 }
