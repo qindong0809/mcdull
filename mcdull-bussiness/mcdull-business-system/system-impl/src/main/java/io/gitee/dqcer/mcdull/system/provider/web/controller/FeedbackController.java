@@ -29,13 +29,13 @@ public class FeedbackController {
     private IFeedbackService feedbackService;
 
     @Operation(summary = "分页查询")
-    @PostMapping("/feedback/query")
+    @PostMapping("/support/feedback/query")
     public Result<PagedVO<FeedbackVO>> query(@RequestBody @Valid FeedbackQueryDTO dto) {
         return Result.success(feedbackService.query(dto));
     }
 
     @Operation(summary = "新增")
-    @PostMapping("/feedback/add")
+    @PostMapping("/support/feedback/add")
     public Result<Boolean> add(@RequestBody @Valid FeedbackAddDTO dto) {
         feedbackService.add(dto);
         return Result.success(true);

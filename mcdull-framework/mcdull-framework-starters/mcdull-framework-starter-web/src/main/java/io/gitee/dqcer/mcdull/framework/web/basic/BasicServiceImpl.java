@@ -1,7 +1,9 @@
 package io.gitee.dqcer.mcdull.framework.web.basic;
 
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.repository.IRepository;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
@@ -18,11 +20,17 @@ public abstract class BasicServiceImpl<R extends IRepository> extends GenericLog
     @Autowired
     protected R baseRepository;
 
-    protected Object checkDataExistById(Serializable id) {
+    protected <T> T mustGet(Serializable id, Class<T> clazz) {
         Object obj = baseRepository.getById(id);
         if (ObjUtil.isNull(obj)) {
             this.throwDataNotExistException(id);
         }
-        return obj;
+        if (obj instanceof RelEntity<?>) {
+            RelEntity entity = (RelEntity) obj;
+            if (BooleanUtil.isTrue(entity.getDelFlag())) {
+                this.throwDataNotExistException(id);
+            }
+        }
+        return clazz.cast(obj);
     }
 }

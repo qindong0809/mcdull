@@ -34,7 +34,7 @@ public class FileController {
     private IFileService fileService;
 
     @Operation(summary = "分页查询")
-    @PostMapping("/file/queryPage")
+    @PostMapping("/support/file/queryPage")
     @SaCheckPermission("support:file:query")
     public Result<PagedVO<FileVO>> queryPage(@RequestBody @Valid FileQueryDTO dto) {
         return Result.success(fileService.queryPage(dto));
@@ -42,19 +42,19 @@ public class FileController {
 
 
     @Operation(summary = "上传")
-    @PostMapping("/file/upload")
+    @PostMapping("/support/file/upload")
     public Result<FileUploadVO> upload(@RequestParam MultipartFile file, @RequestParam Integer folder) {
         return Result.success(fileService.fileUpload(file, folder));
     }
 
     @Operation(summary = "获取URL")
-    @GetMapping("/file/getFileUrl")
+    @GetMapping("/support/file/getFileUrl")
     public Result<String> getUrl(@RequestParam String fileKey) {
         return Result.success(fileService.getFileUrl(fileKey));
     }
 
     @Operation(summary = "下载")
-    @GetMapping("/file/downLoad")
+    @GetMapping("/support/file/downLoad")
     public void downLoad(@RequestParam(name = "fileKey") String fileKey, HttpServletResponse response) throws IOException {
         Pair<String, byte[]> pair = fileService.getDownloadFile(fileKey);
         ServletUtil.download(pair.getKey(), pair.getValue());

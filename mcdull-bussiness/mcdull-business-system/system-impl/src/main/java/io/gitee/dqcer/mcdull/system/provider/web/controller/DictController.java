@@ -81,13 +81,12 @@ public class DictController extends BasicController {
         return Result.success(true);
     }
 
-
     @Operation(summary = "数据字典缓存-刷新- Result<")
     @GetMapping("/dict/cache/refresh")
     @SaCheckPermission("support:dict:refresh")
     public Result<String> cacheRefresh() {
         dictTypeManager.clean();
-        return null;
+        return Result.success();
     }
 
     @Operation(summary = "字典值分页类别")

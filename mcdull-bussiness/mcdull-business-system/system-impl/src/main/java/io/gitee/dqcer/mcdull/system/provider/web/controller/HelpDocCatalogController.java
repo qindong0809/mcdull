@@ -27,27 +27,27 @@ public class HelpDocCatalogController extends BasicController {
     private IHelpDocCatalogService helpDocCatalogService;
 
     @Operation(summary = "获取全部")
-    @GetMapping("/helpDoc/helpDocCatalog/getAll")
+    @GetMapping("/support/helpDoc/helpDocCatalog/getAll")
     public Result<List<HelpDocCatalogVO>> getAll() {
         return Result.success(helpDocCatalogService.getAll());
     }
 
     @Operation(summary = "添加")
-    @PostMapping("/helpDoc/helpDocCatalog/add")
+    @PostMapping("/support/helpDoc/helpDocCatalog/add")
     public Result<Boolean> addHelpDocCatalog(@RequestBody @Valid HelpDocCatalogAddDTO helpDocCatalogAddDTO) {
         helpDocCatalogService.add(helpDocCatalogAddDTO);
         return Result.success(true);
     }
 
     @Operation(summary = "更新")
-    @PostMapping("/helpDoc/helpDocCatalog/update")
+    @PostMapping("/support/helpDoc/helpDocCatalog/update")
     public Result<Boolean> updateHelpDocCatalog(@RequestBody @Valid HelpDocCatalogUpdateDTO helpDocCatalogUpdateForm) {
         helpDocCatalogService.update(helpDocCatalogUpdateForm);
         return Result.success(true);
     }
 
     @Operation(summary = "删除")
-    @GetMapping("/helpDoc/helpDocCatalog/delete/{helpDocCatalogId}")
+    @GetMapping("/support/helpDoc/helpDocCatalog/delete/{helpDocCatalogId}")
     public Result<Boolean> deleteHelpDocCatalog(@PathVariable(value = "helpDocCatalogId") Integer helpDocCatalogId) {
         helpDocCatalogService.delete(helpDocCatalogId);
         return Result.success(true);

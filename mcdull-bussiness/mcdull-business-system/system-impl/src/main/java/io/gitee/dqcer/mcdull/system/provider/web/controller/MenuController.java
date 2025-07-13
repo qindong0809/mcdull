@@ -37,7 +37,7 @@ public class MenuController extends BasicController {
     private IMenuService menuService;
 
     @Operation(summary = "列表")
-    @GetMapping("/menu/list")
+    @GetMapping("/menu/query")
     public Result<List<MenuVO>> list(@Validated MenuListDTO dto) {
         return Result.success(menuService.list(dto));
     }

@@ -60,7 +60,7 @@ public class SerialNumberServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public List<String> generate(SerialNumberGenerateDTO dto) {
-        SerialNumberEntity entity = (SerialNumberEntity) super.checkDataExistById(dto.getSerialNumberId());
+        SerialNumberEntity entity = super.mustGet(dto.getSerialNumberId(), SerialNumberEntity.class);
         Integer count = dto.getCount();
         String format = entity.getFormat();
         Date now = UserContextHolder.getSession().getNow();

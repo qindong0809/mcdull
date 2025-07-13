@@ -616,7 +616,7 @@ public class UserServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateLoginTime(Integer id) {
-        UserEntity entity = (UserEntity) this.checkDataExistById(id);
+        UserEntity entity = this.mustGet(id, UserEntity.class);
         entity.setLastLoginTime(UserContextHolder.getSession().getNow());
         baseRepository.updateById(entity);
     }
