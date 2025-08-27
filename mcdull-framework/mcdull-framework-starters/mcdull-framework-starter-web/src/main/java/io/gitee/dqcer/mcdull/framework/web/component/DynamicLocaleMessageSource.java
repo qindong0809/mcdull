@@ -5,6 +5,9 @@ package io.gitee.dqcer.mcdull.framework.web.component;
  * @since 2023/12/27
  */
 public interface DynamicLocaleMessageSource {
+
+    String getMessage(String languageStr, String code, Object[] args);
+
     String getMessage(String code, Object[] args);
 
     String getMessage(String code);

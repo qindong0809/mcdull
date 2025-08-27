@@ -22,6 +22,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -32,8 +33,7 @@ import java.util.Date;
  */
 public class HttpTraceLogFilter extends OncePerRequestFilter {
 
-    protected Logger log = LoggerFactory.getLogger(getClass());
-
+    private static final Logger log = LoggerFactory.getLogger(HttpTraceLogFilter.class);
 
     private final GlobalDataRoutingDataSource globalDataRoutingDataSource;
 
@@ -46,31 +46,16 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String requestUrl = request.getRequestURI();
-        try {
-            String traceId = request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER);
-            if(null == traceId || traceId.trim().isEmpty()) {
-                traceId = RandomUtil.uuid();
-            }
-            MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
-            LogHelp.debug(log, "Build UnifySession And Initializing TraceId.");
-            UnifySession unifySession = new UnifySession();
-            unifySession.setTraceId(traceId);
-            unifySession.setRequestUrl(requestUrl);
-            unifySession.setNow(new Date());
-            if (StpUtil.isLogin()) {
-                unifySession.setUserId(StpUtil.isLogin() ? Convert.toStr(StpUtil.getLoginId()) : null);
-                CacheUser cacheUser = StpUtil.getSession().get(GlobalConstant.CACHE_CURRENT_USER, new CacheUser());
-                unifySession.copyCommon(cacheUser, unifySession);
-            }
-            UserContextHolder.setSession(unifySession);
+        String traceId = this.getTraceId(request);
 
+        try {
+            this.setUserSession(traceId, requestUrl);
             if (!isRequestValid(request)) {
                 LogHelp.warn(log, "Illegal request. url: {}", requestUrl);
                 filterChain.doFilter(request, response);
                 return;
             }
             globalDataRoutingDataSource.switchDataSource();
-
             filterChain.doFilter(request, response);
         } finally {
             globalDataRoutingDataSource.removeDataSource();
@@ -78,6 +63,27 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
             UserContextHolder.clearSession();
             MDC.remove(HttpHeaderConstants.LOG_TRACE_ID);
         }
+    }
+
+    private String getTraceId(HttpServletRequest request) {
+        String header = request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER);
+        String traceId = (header == null || header.isBlank()) ? RandomUtil.uuid() : header.trim();
+        MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
+        return traceId;
+    }
+
+    private void setUserSession(String traceId, String requestUrl) {
+        LogHelp.debug(log, "Build UnifySession And Initializing TraceId.");
+        UnifySession unifySession = new UnifySession();
+        unifySession.setTraceId(traceId);
+        unifySession.setRequestUrl(requestUrl);
+        unifySession.setNow(Date.from(Instant.now()));
+        if (StpUtil.isLogin()) {
+            unifySession.setUserId(StpUtil.isLogin() ? Convert.toStr(StpUtil.getLoginId()) : null);
+            CacheUser cacheUser = StpUtil.getSession().get(GlobalConstant.CACHE_CURRENT_USER, new CacheUser());
+            unifySession.copyCommon(cacheUser, unifySession);
+        }
+        UserContextHolder.setSession(unifySession);
     }
 
     private boolean isRequestValid(HttpServletRequest request) {

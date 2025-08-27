@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.business.common.pdf;
 import com.itextpdf.kernel.events.Event;
 import com.itextpdf.kernel.events.IEventHandler;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
+import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfPage;
@@ -28,8 +29,15 @@ public class LeftFooterHandler implements IEventHandler {
 
     private String footerLeftMsg;
 
+    private PdfFont font;
+
     public LeftFooterHandler(String footerLeftMsg) {
         this.footerLeftMsg = footerLeftMsg;
+    }
+
+    public LeftFooterHandler(String footerLeftMsg, PdfFont font) {
+        this.footerLeftMsg = footerLeftMsg;
+        this.font = font;
     }
 
     @Override
@@ -43,7 +51,7 @@ public class LeftFooterHandler implements IEventHandler {
         Canvas canvas = new Canvas(pdfCanvas, pageSize);
 
         // 左页脚
-        Paragraph leftParagraph = new Paragraph(footerLeftMsg).setFontSize(10f);
+        Paragraph leftParagraph = new Paragraph(footerLeftMsg).setFontSize(10f).setFont(font);
         canvas.showTextAligned(leftParagraph, 25, y, TextAlignment.LEFT);
 
         canvas.close();

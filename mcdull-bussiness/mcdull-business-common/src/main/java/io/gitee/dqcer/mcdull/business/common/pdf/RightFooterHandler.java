@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.business.common.pdf;
 import com.itextpdf.kernel.events.Event;
 import com.itextpdf.kernel.events.IEventHandler;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
+import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -38,9 +39,16 @@ public class RightFooterHandler implements IEventHandler {
     protected float space = 4.5f;
     protected float descent = 3;
 
+    protected PdfFont font;
+
 
     public RightFooterHandler() {
         placeholder = new PdfFormXObject(new Rectangle(0, 0, side, side));
+    }
+
+    public RightFooterHandler(PdfFont font) {
+        placeholder = new PdfFormXObject(new Rectangle(0, 0, side, side));
+        this.font = font;
     }
 
     @Override
@@ -91,11 +99,11 @@ public class RightFooterHandler implements IEventHandler {
 //        canvas.add(div);
 
         // 右页脚
-        Paragraph rightParagraph = new Paragraph("Page " + pageNumber + " of").setFontSize(10f);
+        Paragraph rightParagraph = new Paragraph("Page " + pageNumber + " of").setFontSize(10f).setFont(font);
         canvas.showTextAligned(rightParagraph, x, y, TextAlignment.RIGHT);
 
         // 右页眉
-        Paragraph rightHeaderParagraph = new Paragraph("四象合创").setFontSize(10f);
+        Paragraph rightHeaderParagraph = new Paragraph("四象合创").setFontSize(10f).setFont(font);
         canvas.showTextAligned(rightHeaderParagraph, x, pdfHeight -24, TextAlignment.RIGHT);
 
         // 为分页准备的占位符
