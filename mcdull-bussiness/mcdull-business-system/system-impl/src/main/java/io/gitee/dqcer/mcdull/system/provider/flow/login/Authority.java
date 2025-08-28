@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
@@ -40,7 +41,7 @@ public class Authority implements ProcessHandler<LoginContext> {
         UserEntity userEntity = dict.get("user", new UserEntity());
         LoginDeviceEnum  deviceEnum = IEnum.getByCode(LoginDeviceEnum.class, dto.getLoginDevice());
         String device = LoginDeviceEnum.PC.getText();
-        if (ObjUtil.isNotNull(deviceEnum)) {
+        if (ObjectUtil.isNotNull(deviceEnum)) {
             device = deviceEnum.getText();
         }
         StpUtil.login(userEntity.getId(), device);

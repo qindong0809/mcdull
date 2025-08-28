@@ -10,6 +10,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 
 
 /**
@@ -22,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfig {
 
-    public static final String SAME_TOKEN = "SA-SAME-TOKEN";
+    public static final String SAME_TOKEN = "Authorization";
     @Bean
     public OpenAPI api() {
         return new OpenAPI()
@@ -43,13 +44,22 @@ public class OpenApiConfig {
                         .in(SecurityScheme.In.HEADER).name(SAME_TOKEN));
     }
 
-    @Bean
-    public GroupedOpenApi businessApi() {
-        return GroupedOpenApi.builder()
-                .group("业务接口")
-                .pathsToMatch(GlobalConstant.ALL_PATTERNS)
-                .addOperationCustomizer(new PermissionOperationCustomizer())
-                .build();
-    }
+//    @Bean
+//    public GroupedOpenApi businessApi() {
+//        return GroupedOpenApi.builder()
+//                .group("业务接口")
+//                .pathsToMatch(GlobalConstant.ALL_PATTERNS)
+//                .addOperationCustomizer(new PermissionOperationCustomizer())
+//                .addOpenApiCustomiser(openApi -> {
+//                    openApi.getPaths().forEach((s, pathItem) -> {
+//                        // 接口添加鉴权参数
+//                        pathItem.readOperations()
+//                            .forEach(operation ->
+//                                operation.addSecurityItem(new SecurityRequirement().addList(SAME_TOKEN))
+//                            );
+//                    });
+//                })
+//            .build();
+//    }
 
 }

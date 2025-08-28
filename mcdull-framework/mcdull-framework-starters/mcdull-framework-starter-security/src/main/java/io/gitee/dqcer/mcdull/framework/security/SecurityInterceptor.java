@@ -6,10 +6,9 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
-import io.gitee.dqcer.mcdull.framework.base.enums.LanguageEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import org.springframework.http.HttpHeaders;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,18 +37,11 @@ public class SecurityInterceptor extends SaInterceptor {
         return preHandle;
     }
 
-    private <T> void setUserContextHolder(HttpServletRequest request) {
+    private void setUserContextHolder(HttpServletRequest request) {
         String tokenValue = StpUtil.getTokenValue();
         Object userId = StpUtil.getLoginIdByToken(tokenValue);
-
         UnifySession unifySession = new UnifySession();
-        String language = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        if (language == null) {
-            language = LanguageEnum.ZH_CN.getCode();
-        } else {
-            language = language.substring(0, language.indexOf(','));
-        }
-        unifySession.setLanguage(language);
+        unifySession.setLanguage(LocaleContextHolder.getLocale().toString());
         unifySession.setUserId(Convert.toStr(userId));
         unifySession.setTraceId(request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER));
         Boolean administratorFlag = StpUtil.getSession().get(GlobalConstant.ADMINISTRATOR_FLAG, false);
