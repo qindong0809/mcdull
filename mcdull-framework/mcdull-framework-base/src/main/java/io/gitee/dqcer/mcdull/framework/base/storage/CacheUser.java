@@ -48,10 +48,12 @@ public class CacheUser implements ICurrentUser, Serializable {
         this.appendTimezoneStyle = appendTimezoneStyle;
     }
 
+    @Override
     public String getLoginName() {
         return loginName;
     }
 
+    @Override
     public void setLoginName(String loginName) {
         this.loginName = loginName;
     }

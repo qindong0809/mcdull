@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import cn.hutool.core.collection.ListUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -34,13 +34,13 @@ public class ConfigController extends BasicController {
 
     @Operation(summary = "分页查询")
     @PostMapping("/config/query")
-    @SaCheckPermission("support:config:query")
+    @SaCheckEL("stp.checkPermission('support:config:query')")
     public Result<PagedVO<ConfigInfoVO>> query(@RequestBody @Valid ConfigQueryDTO queryDTO) {
         return Result.success(configService.queryPage(queryDTO));
     }
 
     @Operation(summary = "导出数据")
-    @SaCheckPermission("system:config:export")
+    @SaCheckEL("stp.checkPermission('system:config:export')")
     @PostMapping(value = "/system/config/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid ConfigQueryDTO dto) {
         super.locker(null, () -> configService.exportData(dto));
@@ -48,21 +48,21 @@ public class ConfigController extends BasicController {
 
     @Operation(summary = "添加")
     @PostMapping("/config/add")
-    @SaCheckPermission("support:config:add")
+    @SaCheckEL("stp.checkPermission('support:config:add')")
     public Result<Boolean> add(@RequestBody @Valid ConfigAddDTO configAddDTO) {
         configService.add(configAddDTO);
         return Result.success(true);
     }
 
     @Operation(summary = "导出附件")
-    @SaCheckPermission("support:config:update")
+    @SaCheckEL("stp.checkPermission('support:config:update')")
     @PostMapping(value = "/system/config/{id}/export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportAttachmentData(@PathVariable("id") Integer id) {
         super.locker(null, () -> configService.exportAttachmentData(id));
     }
 
     @Operation(summary = "导入附件")
-    @SaCheckPermission("support:config:update")
+    @SaCheckEL("stp.checkPermission('support:config:update')")
     @PostMapping("/system/config/{id}/import")
     public Result<Boolean> importAttachmentData(@PathVariable("id") Integer id,
                                                 @RequestParam("file") MultipartFile file) {
@@ -73,7 +73,7 @@ public class ConfigController extends BasicController {
 
     @Operation(summary = "更新")
     @PostMapping("/config/update")
-    @SaCheckPermission("support:config:update")
+    @SaCheckEL("stp.checkPermission('support:config:update')")
     public Result<Boolean> update(@RequestBody @Valid ConfigUpdateDTO updateDTO) {
         configService.update(updateDTO);
         return Result.success(true);
@@ -81,7 +81,7 @@ public class ConfigController extends BasicController {
 
     @Operation(summary = "删除")
     @PostMapping("/system/config/{id}/delete")
-    @SaCheckPermission("support:config:delete")
+    @SaCheckEL("stp.checkPermission('support:config:delete')")
     public Result<Boolean> delete(@PathVariable("id") Integer id) {
         configService.delete(ListUtil.of(id));
         return Result.success(true);

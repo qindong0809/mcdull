@@ -5,6 +5,7 @@ import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -21,6 +22,11 @@ public class BaseExceptionAdvice extends AbstractExceptionAdvice{
 
     @ExceptionHandler(value = SaTokenException.class)
     public Result<?> handlerSaTokenException(SaTokenException exception) {
+        DynamicLocaleMessageSource dynamicLocaleMessageSource = super.dynamicLocaleMessageSource;
+        return getResult(exception, dynamicLocaleMessageSource);
+    }
+
+    public Result<Object> getResult(SaTokenException exception, DynamicLocaleMessageSource dynamicLocaleMessageSource) {
         LogHelp.error(log, "{}. handlerSaTokenException.", UserContextHolder.print(), exception);
         // 根据不同异常细分状态码返回不同的提示
         if(exception.getCode() == 11016) {

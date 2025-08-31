@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
@@ -38,7 +38,7 @@ public class EmailSendHistoryController extends BasicController {
     }
 
     @Operation(summary = "导出数据")
-    @SaCheckPermission("system:emails_send:export")
+    @SaCheckEL("stp.checkPermission('system:emails_send:export')")
     @PostMapping(value = "/system/emails-send/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid EmailSendHistoryQueryDTO dto) {
         super.locker(null, 1000, () -> emailSendHistoryService.exportData(dto));

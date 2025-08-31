@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.EmailConfigDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.EmailConfigVO;
@@ -26,14 +26,14 @@ public class EmailConfigController {
 
     @Operation(summary = "详情")
     @GetMapping("email-config/detail")
-    @SaCheckPermission("support:email_config:read")
+    @SaCheckEL("stp.checkPermission('support:email_config:read')")
     public Result<EmailConfigVO> detail() {
         return Result.success(sysInfoService.detail());
     }
 
     @Operation(summary = "更新")
     @PostMapping("email-config/update")
-    @SaCheckPermission("support:email_config:write")
+    @SaCheckEL("stp.checkPermission('support:email_config:write')")
     public Result<Boolean> update(@RequestBody @Valid EmailConfigDTO dto) {
         sysInfoService.update(dto);
         return Result.success(true);

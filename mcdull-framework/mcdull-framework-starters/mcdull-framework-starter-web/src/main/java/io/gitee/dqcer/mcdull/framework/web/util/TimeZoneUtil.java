@@ -69,7 +69,10 @@ public class TimeZoneUtil {
             dateFormat = session.getDateFormat();
         }
         if (ObjUtil.isNull(locale)) {
-            locale = session.getLocale();
+            String language = session.getLanguage();
+            if (StrUtil.isNotBlank(language)) {
+                locale = session.getLocale();
+            }
         }
         if (ObjUtil.isNull(splicingTimezone)) {
             splicingTimezone = session.getAppendTimezoneStyle();

@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -36,7 +36,7 @@ public class AreaController extends BasicController {
     }
 
     @Operation(summary = "导出数据")
-    @SaCheckPermission("system:area:export")
+    @SaCheckEL("stp.checkPermission('system:area:export')")
     @PostMapping(value = "/system/area/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid AreaQueryDTO dto) {
         super.locker(null, () -> areaService.exportData(dto));

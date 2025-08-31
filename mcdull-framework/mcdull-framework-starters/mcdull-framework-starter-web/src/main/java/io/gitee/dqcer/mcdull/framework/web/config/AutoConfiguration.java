@@ -3,7 +3,9 @@ package io.gitee.dqcer.mcdull.framework.web.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.mysql.datasource.GlobalDataRoutingDataSource;
+import io.gitee.dqcer.mcdull.framework.web.advice.BaseExceptionAdvice;
 import io.gitee.dqcer.mcdull.framework.web.aspect.AuditAspect;
 import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsAspect;
 import io.gitee.dqcer.mcdull.framework.web.aspect.TranslatorAspect;
@@ -31,6 +33,12 @@ public class AutoConfiguration {
 
     @Resource
     private GlobalDataRoutingDataSource globalDataRoutingDataSource;
+    @Resource
+    private McdullProperties mcdullProperties;
+    @Resource
+    private DynamicLocaleMessageSource dynamicLocaleMessageSource;
+    @Resource
+    private BaseExceptionAdvice baseExceptionAdvice;
 
     /**
      * 跟踪日志过滤器bean注册
@@ -40,7 +48,7 @@ public class AutoConfiguration {
     @Bean
     public FilterRegistrationBean<HttpTraceLogFilter> traceLogFilterRegistrationBean() {
         FilterRegistrationBean<HttpTraceLogFilter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new HttpTraceLogFilter(globalDataRoutingDataSource));
+        filterRegistrationBean.setFilter(new HttpTraceLogFilter(globalDataRoutingDataSource, mcdullProperties, dynamicLocaleMessageSource, baseExceptionAdvice));
         filterRegistrationBean.setOrder(2);
         filterRegistrationBean.setEnabled(true);
         filterRegistrationBean.addUrlPatterns("/*");

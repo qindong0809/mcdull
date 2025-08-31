@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.PasswordPolicyDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.PasswordPolicyVO;
@@ -28,14 +28,14 @@ public class PasswordPolicyController {
 
     @Operation(summary = "详情")
     @GetMapping("password-policy/detail")
-    @SaCheckPermission("support:password_policy:read")
+    @SaCheckEL("stp.checkPermission('support:password_policy:read')")
     public Result<PasswordPolicyVO> detail() {
         return Result.success(passwordPolicyService.detail());
     }
 
     @Operation(summary = "更新")
     @PostMapping("password-policy/update")
-    @SaCheckPermission("support:password_policy:write")
+    @SaCheckEL("stp.checkPermission('support:password_policy:write')")
     public Result<Boolean> update(@RequestBody @Valid PasswordPolicyDTO dto) {
         passwordPolicyService.update(dto);
         return Result.success(true);

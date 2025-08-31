@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.web.advice;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +28,11 @@ public abstract class AbstractExceptionAdvice {
         PrintWriter pw = new PrintWriter(stringWriter);
         exception.printStackTrace(pw);
         String errorStack = stringWriter.toString();
-        if (StrUtil.isNotBlank(errorStack)) {
+        if (CharSequenceUtil.isNotBlank(errorStack)) {
             if (errorStack.length() > 1000) {
                 return errorStack.substring(0, 1000);
             }
         }
-        return StrUtil.EMPTY;
+        return CharSequenceUtil.EMPTY;
     }
 }

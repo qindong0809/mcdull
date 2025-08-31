@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  * @author dqcer
  * @since 2022/05/10
  */
-@Configuration
+//@Configuration
 public class WebWebMvcConfigurer extends AbstractWebMvcConfigurer {
 
 

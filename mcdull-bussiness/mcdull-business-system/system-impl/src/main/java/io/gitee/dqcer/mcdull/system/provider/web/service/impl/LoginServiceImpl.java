@@ -124,7 +124,7 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
             if (ObjUtil.isNotNull(userDO)) {
                 Boolean administratorFlag = userDO.getAdministratorFlag();
                 if (BooleanUtil.isTrue(administratorFlag)) {
-                    return ListUtil.of("*:*:*");
+                    return ListUtil.of(GlobalConstant.ALL_CODE);
                 }
             }
         }

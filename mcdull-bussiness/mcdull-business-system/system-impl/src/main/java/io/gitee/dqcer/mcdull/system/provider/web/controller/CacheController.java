@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.json.JSON;
@@ -39,13 +39,13 @@ public class CacheController extends BasicController {
 
     @Operation(summary = "缓存列表")
     @PostMapping("/cache/names")
-    @SaCheckPermission("support:cache:list")
+    @SaCheckEL("stp.checkPermission('support:cache:list')")
     public Result<PagedVO<KeyValueVO<String, String>>> cacheNames(@RequestBody @Valid CacheQueryDTO dto) {
         return Result.success(cacheService.queryPage(dto));
     }
 
     @Operation(summary = "导出数据")
-    @SaCheckPermission("support:cache:export")
+    @SaCheckEL("stp.checkPermission('support:cache:export')")
     @PostMapping(value = "/cache/cache/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid CacheQueryDTO dto) {
         super.locker(null, () -> cacheService.exportData(dto));
@@ -53,7 +53,7 @@ public class CacheController extends BasicController {
 
     @Operation(summary = "移除缓存")
     @PostMapping("/cache/remove")
-    @SaCheckPermission("support:cache:delete")
+    @SaCheckEL("stp.checkPermission('support:cache:delete')")
     public Result<Boolean> removeCache(@RequestBody @Valid CacheDeleteDTO dto) {
         String key = dto.getKey();
         return Result.success(super.locker(key, () -> cacheService.removeCache(dto.getCaffeineCacheFlag(), key)));
@@ -61,7 +61,7 @@ public class CacheController extends BasicController {
 
     @Operation(summary = "对应value")
     @PostMapping("/cache/key/value")
-    @SaCheckPermission("support:cache:value")
+    @SaCheckEL("stp.checkPermission('support:cache:value')")
     public Result<JSON> cacheKeys(@RequestBody @Valid CacheDeleteDTO dto) {
         Object o = cacheService.cacheKey(dto.getCaffeineCacheFlag(), dto.getKey());
         if (o instanceof Collection) {

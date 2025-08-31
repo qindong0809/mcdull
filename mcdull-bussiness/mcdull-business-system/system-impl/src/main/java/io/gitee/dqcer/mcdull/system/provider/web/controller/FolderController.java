@@ -43,14 +43,14 @@ public class FolderController {
 
     @Operation(summary = "Update")
     @PostMapping("update")
-//    @SaCheckPermission("system:department:write")
+//    @SaCheckEL("stp.checkPermission('system:department:write')")
     public Result<Boolean> updateDepartment(@Valid @RequestBody FolderUpdateDTO dto) {
         return Result.success(folderService.update(dto.getId(), dto));
     }
 
     @Operation(summary = "Delete ")
     @DeleteMapping("delete/{folderId}")
-//    @SaCheckPermission("system:department:write")
+//    @SaCheckEL("stp.checkPermission('system:department:write')")
     public Result<Boolean> deleteFolder(@PathVariable(value = "folderId") Integer folderId) {
         return Result.success(folderService.delete(folderId));
     }

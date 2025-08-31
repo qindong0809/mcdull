@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import cn.hutool.core.collection.ListUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -43,7 +43,7 @@ public class RoleController {
 
     @Operation(summary = "添加角色")
     @PostMapping("/role/add")
-    @SaCheckPermission("system:role:write")
+    @SaCheckEL("stp.checkPermission('system:role:write')")
     public Result<Boolean> addRole(@Valid @RequestBody RoleAddDTO dto) {
         roleService.insert(dto);
         return Result.success(true);
@@ -51,7 +51,7 @@ public class RoleController {
 
     @Operation(summary = "删除角色")
     @GetMapping("/role/delete/{roleId}")
-    @SaCheckPermission("system:role:write")
+    @SaCheckEL("stp.checkPermission('system:role:write')")
     public Result<Boolean> deleteRole(@PathVariable(value = "roleId") Integer roleId) {
         roleService.delete(roleId);
         return Result.success(true);
@@ -59,7 +59,7 @@ public class RoleController {
 
     @Operation(summary = "更新角色")
     @PostMapping("/role/update")
-    @SaCheckPermission("system:role:write")
+    @SaCheckEL("stp.checkPermission('system:role:write')")
     public Result<Boolean> updateRole(@Valid @RequestBody RoleUpdateDTO dto) {
         roleService.updateRole(dto);
         return Result.success(true);
@@ -73,7 +73,7 @@ public class RoleController {
 
     @Operation(summary = "更新角色权限")
     @PostMapping("/role/menu/updateRoleMenu")
-    @SaCheckPermission("system:role:write")
+    @SaCheckEL("stp.checkPermission('system:role:write')")
     public Result<Boolean> updateRoleMenu(@Valid @RequestBody RoleMenuUpdateDTO dto) {
         roleService.updateRoleMenu(dto);
         return Result.success(true);
@@ -87,7 +87,7 @@ public class RoleController {
 
     @Operation(summary = "从角色成员列表中批量移除员工")
     @PostMapping("/role/user/batch-remove-user")
-    @SaCheckPermission("system:role:write")
+    @SaCheckEL("stp.checkPermission('system:role:write')")
     public Result<Boolean> batchRemoveEmployee(@Valid @RequestBody RoleEmployeeUpdateDTO dto) {
         roleService.batchRemoveRoleEmployee(dto);
         return Result.success(true);
@@ -95,7 +95,7 @@ public class RoleController {
 
     @Operation(summary = "从角色成员列表中移除员工")
     @GetMapping("/role/user/remove-user")
-    @SaCheckPermission("system:role:write")
+    @SaCheckEL("stp.checkPermission('system:role:write')")
     public Result<Boolean> removeEmployee(Integer userId, Integer roleId) {
         RoleEmployeeUpdateDTO dto = new RoleEmployeeUpdateDTO();
         dto.setEmployeeIdList(ListUtil.of(userId));

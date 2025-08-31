@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -34,13 +34,13 @@ public class LoginLogController extends BasicController {
 
     @Operation(summary = "分页查询")
     @PostMapping("/loginLog/page/query")
-    @SaCheckPermission("support:loginLog:query")
+    @SaCheckEL("stp.checkPermission('support:loginLog:query')")
     public Result<PagedVO<LoginLogVO>> queryByPage(@RequestBody LoginLogQueryDTO queryForm) {
         return Result.success(loginLogService.queryByPage(queryForm));
     }
 
     @Operation(summary = "导出数据")
-    @SaCheckPermission("system:loginLog:export")
+    @SaCheckEL("stp.checkPermission('system:loginLog:export')")
     @PostMapping(value = "/system/loginLog/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid LoginLogQueryDTO dto) {
         super.locker(null, () -> loginLogService.exportData(dto));

@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.flow.ProcessFlow;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
@@ -12,7 +12,6 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.CaptchaVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.LogonVO;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ICaptchaService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IConfigService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ILoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,7 +46,7 @@ public class LoginController extends BasicController {
     @GetMapping("/login/enabled-captcha")
     @SaIgnore
     public Result<Boolean> enabledCaptcha() {
-         String suffix = StrUtil.format("login:enabled_captcha:ip_addr:{}", IpUtil.getIpAddr(super.getRequest()));
+         String suffix = CharSequenceUtil.format("login:enabled_captcha:ip_addr:{}", IpUtil.getIpAddr(super.getRequest()));
         return Result.success(super.rateLimiter(suffix , 5, 1, () -> commonManager.isCaptchaEnabled()));
     }
 
@@ -55,7 +54,7 @@ public class LoginController extends BasicController {
     @GetMapping("/login/getCaptcha")
     @SaIgnore
     public Result<CaptchaVO> getCaptcha() {
-        String suffix = StrUtil.format("login:captcha:ip_addr:{}", IpUtil.getIpAddr(super.getRequest()));
+        String suffix = CharSequenceUtil.format("login:captcha:ip_addr:{}", IpUtil.getIpAddr(super.getRequest()));
         return Result.success(
                 super.rateLimiter(suffix , 5, 1, () -> captchaService.get()));
     }

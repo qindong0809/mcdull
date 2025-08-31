@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.framework.base.storage;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -65,8 +66,6 @@ public class UnifySession implements ICurrentUser, Serializable {
      */
     private String dateFormat;
 
-    private Locale locale;
-
     /**
      * 请求url
      */
@@ -86,19 +85,28 @@ public class UnifySession implements ICurrentUser, Serializable {
 
     private Boolean appendTimezoneStyle;
 
-    public void copyCommon(CacheUser cacheUser, UnifySession session) {
-        session.setUserId(cacheUser.getUserId());
-        session.setUserType(cacheUser.getUserType());
-        session.setAdministratorFlag(cacheUser.getAdministratorFlag());
-        session.setTenantId(cacheUser.getTenantId());
-        session.setLoginName(cacheUser.getLoginName());
-        session.setZoneIdStr(cacheUser.getZoneIdStr());
-        session.setDateFormat(cacheUser.getDateFormat());
-        session.setAppendTimezoneStyle(cacheUser.getAppendTimezoneStyle());
-        session.setLocale(new Locale(cacheUser.getLanguage()));
+    public void copyCommon(CacheUser cacheUser) {
+        this.setUserId(cacheUser.getUserId());
+        this.setUserType(cacheUser.getUserType());
+        this.setAdministratorFlag(cacheUser.getAdministratorFlag());
+        this.setTenantId(cacheUser.getTenantId());
+        this.setLoginName(cacheUser.getLoginName());
+        this.setZoneIdStr(cacheUser.getZoneIdStr());
+        this.setDateFormat(cacheUser.getDateFormat());
+        this.setAppendTimezoneStyle(cacheUser.getAppendTimezoneStyle());
+        this.setLanguage(cacheUser.getLanguage());
+    }
+
+    public TimeZone getTimeZone() {
+        return TimeZone.getTimeZone(this.getZoneIdStr());
+    }
+
+    public Locale getLocale() {
+        return Locale.forLanguageTag(this.getLanguage());
     }
 
 
+    @Override
     public Boolean getAppendTimezoneStyle() {
         return appendTimezoneStyle;
     }
@@ -108,10 +116,12 @@ public class UnifySession implements ICurrentUser, Serializable {
         this.appendTimezoneStyle = appendTimezoneStyle;
     }
 
+    @Override
     public String getLoginName() {
         return loginName;
     }
 
+    @Override
     public void setLoginName(String loginName) {
         this.loginName = loginName;
     }
@@ -124,14 +134,6 @@ public class UnifySession implements ICurrentUser, Serializable {
         this.permissionCode = permissionCode;
     }
 
-    public Locale getLocale() {
-        return locale;
-    }
-
-    public UnifySession setLocale(Locale locale) {
-        this.locale = locale;
-        return this;
-    }
 
     @Override
     public Integer getTenantId() {

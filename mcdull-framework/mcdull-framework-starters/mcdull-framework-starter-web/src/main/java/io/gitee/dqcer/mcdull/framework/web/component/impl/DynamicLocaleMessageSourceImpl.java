@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.framework.web.component.impl;
 
-import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
 import org.slf4j.Logger;
@@ -39,11 +38,11 @@ public class DynamicLocaleMessageSourceImpl implements DynamicLocaleMessageSourc
             return messageSource.getMessage(code, args, locale);
         } catch (NoSuchMessageException e) {
             LogHelp.warn(log, "code: {}",  code, e);
+            if (args == null) {
+                return code;
+            }
+            return MessageFormat.format(code, args);
         }
-        if (args == null) {
-            return code;
-        }
-        return MessageFormat.format(code, args);
     }
 
     @Override

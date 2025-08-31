@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import cn.hutool.core.lang.Pair;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -35,7 +35,7 @@ public class FileController {
 
     @Operation(summary = "分页查询")
     @PostMapping("/support/file/queryPage")
-    @SaCheckPermission("support:file:query")
+    @SaCheckEL("stp.checkPermission('support:file:query')")
     public Result<PagedVO<FileVO>> queryPage(@RequestBody @Valid FileQueryDTO dto) {
         return Result.success(fileService.queryPage(dto));
     }

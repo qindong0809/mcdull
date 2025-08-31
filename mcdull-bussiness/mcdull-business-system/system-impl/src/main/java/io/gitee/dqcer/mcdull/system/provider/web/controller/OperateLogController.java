@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.NameValueVO;
@@ -46,21 +46,21 @@ public class OperateLogController extends BasicController {
 
     @Operation(summary = "分页查询")
     @PostMapping("/support/operateLog/page/query")
-    @SaCheckPermission("support:operateLog:query")
+    @SaCheckEL("stp.checkPermission('support:operateLog:query')")
     public Result<PagedVO<OperateLogVO>> queryByPage(@RequestBody OperateLogQueryDTO dto) {
         return Result.success(operateLogService.queryByPage(dto));
     }
 
     @Operation(summary = "导出数据")
     @PostMapping(value ="/system/operateLog/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    @SaCheckPermission("system:operateLog:export")
+    @SaCheckEL("stp.checkPermission('system:operateLog:export')")
     public void exportData(@RequestBody OperateLogQueryDTO dto) {
         super.locker(null, () -> operateLogService.exportData(dto));
     }
 
     @Operation(summary = "详情")
     @GetMapping("/support/operateLog/detail/{operateLogId}")
-    @SaCheckPermission("support:operateLog:detail")
+    @SaCheckEL("stp.checkPermission('support:operateLog:detail')")
     public Result<OperateLogVO> detail(@PathVariable(value = "operateLogId") Integer operateLogId) {
         return Result.success(operateLogService.detail(operateLogId));
     }

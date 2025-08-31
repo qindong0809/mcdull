@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.blaze.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
@@ -95,7 +95,7 @@ public class TalentCertificateController extends BlazeBasicController {
     }
 
     @Operation(summary = "导出数据")
-    @SaCheckPermission("blaze:talent_certificate:export")
+    @SaCheckEL("stp.checkPermission('blaze:talent_certificate:export')")
     @PostMapping(value = "/talent-cert/list/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid TalentCertificateQueryDTO dto) {
        super.executeByPermission("blaze:talent_certificate:approve", true, dto,
@@ -109,7 +109,7 @@ public class TalentCertificateController extends BlazeBasicController {
     }
 
     @Operation(summary = "添加")
-    @SaCheckPermission("blaze:talent_certificate:write")
+    @SaCheckEL("stp.checkPermission('blaze:talent_certificate:write')")
     @PostMapping(value ="/talent-cert/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Result<Boolean> add(@Valid TalentCertificateAddDTO dto, @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
@@ -118,14 +118,14 @@ public class TalentCertificateController extends BlazeBasicController {
     }
 
     @Operation(summary = "复制")
-    @SaCheckPermission("blaze:talent_certificate:write")
+    @SaCheckEL("stp.checkPermission('blaze:talent_certificate:write')")
     @PostMapping(value = "/talent-cert/{id}/copy")
     public Result<Integer> copy(@PathVariable(value = "id") Integer id) {
         return Result.success(super.locker(null,  () -> talentCertificateService.copy(id)));
     }
 
     @Operation(summary = "更新")
-    @SaCheckPermission("blaze:talent_certificate:write")
+    @SaCheckEL("stp.checkPermission('blaze:talent_certificate:write')")
     @PostMapping(value = "/talent-cert/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Result<Boolean> update(@Valid TalentCertificateUpdateDTO dto, @RequestPart(value = "file", required = false) List<MultipartFile> fileList) {
@@ -134,7 +134,7 @@ public class TalentCertificateController extends BlazeBasicController {
     }
 
     @Operation(summary = "审批")
-    @SaCheckPermission("blaze:talent_certificate:approve")
+    @SaCheckEL("stp.checkPermission('blaze:talent_certificate:approve')")
     @PostMapping("/talent-cert/approve")
     public Result<Boolean> approve(@RequestBody @Valid ApproveDTO dto) {
         talentCertificateService.approve(dto);
@@ -143,7 +143,7 @@ public class TalentCertificateController extends BlazeBasicController {
 
 
     @Operation(summary = "批量删除")
-    @SaCheckPermission("blaze:talent_certificate:write")
+    @SaCheckEL("stp.checkPermission('blaze:talent_certificate:write')")
     @PostMapping("/talent-cert/batchDelete")
     public Result<Boolean> batchDelete(@RequestBody List<Integer> idList) {
         talentCertificateService.batchDelete(idList);
@@ -151,7 +151,7 @@ public class TalentCertificateController extends BlazeBasicController {
     }
 
     @Operation(summary = "删除")
-    @SaCheckPermission("blaze:talent_certificate:write")
+    @SaCheckEL("stp.checkPermission('blaze:talent_certificate:write')")
     @GetMapping("/talent-cert/delete/{id}")
     public Result<Boolean> batchDelete(@PathVariable(value = "id") Integer id) {
         talentCertificateService.batchDelete(ListUtil.of(id));

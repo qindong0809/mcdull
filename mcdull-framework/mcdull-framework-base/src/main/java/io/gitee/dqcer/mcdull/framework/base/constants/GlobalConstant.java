@@ -12,8 +12,8 @@ public class GlobalConstant {
     public static final String BASE_PACKAGE = "io.gitee.dqcer.mcdull";
     public static final String ROOT_PREFIX = "mcdull";
     public static final String UTF_8 = "UTF-8";
+    public static final String CUSTOMIZE_LANGUAGE_HEAD_NAME = "Language-Content";
 
-    public static final String ADMINISTRATOR_FLAG = "administratorFlag";
     public static final String CACHE_CURRENT_USER = "cacheCurrentUser";
 
     public static final String MAPPER_PACKAGE = BASE_PACKAGE + ".**.mapper";
@@ -22,6 +22,8 @@ public class GlobalConstant {
      * 内部接口调用 前缀
      */
     public static final String INNER_API = "/interior-def";
+    public static final String ADMINISTRATOR_PATH = "/administrator";
+    public static final String ALL_CODE = "*:*:*";
     public static final String SYSTEM = "/system";
 
     public static final String FAVICON_ICO = "/favicon.ico";

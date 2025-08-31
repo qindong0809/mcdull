@@ -47,7 +47,7 @@ public class Authority implements ProcessHandler<LoginContext> {
         StpUtil.login(userEntity.getId(), device);
         CacheUser cache = this.buildCacheUser(userEntity);
         updateUserSession(cache);
-        StpUtil.getSession().set(GlobalConstant.CACHE_CURRENT_USER, cache);
+        StpUtil.getSessionByLoginId(userEntity.getId(), true).set(GlobalConstant.CACHE_CURRENT_USER, cache);
         context.setVo(loginService.buildLogonVo(userEntity));
         dict.put("typeEnum", LoginLogResultTypeEnum.LOGIN_SUCCESS);
         context.setDict(dict);
@@ -55,7 +55,7 @@ public class Authority implements ProcessHandler<LoginContext> {
 
     private static void updateUserSession(CacheUser cacheUser) {
         UnifySession session = UserContextHolder.getSession();
-        session.copyCommon(cacheUser, session);
+        session.copyCommon(cacheUser);
         UserContextHolder.setSession(session);
     }
 

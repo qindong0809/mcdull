@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
@@ -56,14 +56,14 @@ public class HelpDocController extends BasicController {
 
     @Operation(summary = "【管理】-分页查询")
     @PostMapping("/support/helpDoc/query")
-    @SaCheckPermission("support:helpDoc:query")
+    @SaCheckEL("stp.checkPermission('support:helpDoc:query')")
     public Result<PagedVO<HelpDocVO>> query(@RequestBody @Valid HelpDocQueryDTO queryForm) {
         return Result.success(helpDocService.query(queryForm));
     }
 
     @Operation(summary = "【管理】-获取详情")
     @GetMapping("/support/helpDoc/getDetail/{helpDocId}")
-    @SaCheckPermission("support:helpDoc:add")
+    @SaCheckEL("stp.checkPermission('support:helpDoc:add')")
     public Result<HelpDocDetailVO> getDetail(@PathVariable(value = "helpDocId") Integer helpDocId) {
         return Result.success(helpDocService.getDetail(helpDocId));
     }

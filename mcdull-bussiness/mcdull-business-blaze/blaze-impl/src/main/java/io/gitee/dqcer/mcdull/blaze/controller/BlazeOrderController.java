@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.blaze.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -50,7 +50,7 @@ public class BlazeOrderController extends BlazeBasicController {
     }
 
     @Operation(summary = "导出数据")
-    @SaCheckPermission("blaze:order:export")
+    @SaCheckEL("stp.checkPermission('blaze:order:export')")
     @PostMapping(value = "/blazeOrder/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid BlazeOrderQueryDTO dto) {
         super.executeByPermission("blaze:order:approve", true, dto,
@@ -58,7 +58,7 @@ public class BlazeOrderController extends BlazeBasicController {
     }
 
     @Operation(summary = "添加")
-    @SaCheckPermission("blaze:order:write")
+    @SaCheckEL("stp.checkPermission('blaze:order:write')")
     @PostMapping(value = "/blazeOrder/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Result<Boolean> add(@Valid BlazeOrderAddDTO dto,
@@ -77,7 +77,7 @@ public class BlazeOrderController extends BlazeBasicController {
     }
 
     @Operation(summary = "更新")
-    @SaCheckPermission("blaze:order:write")
+    @SaCheckEL("stp.checkPermission('blaze:order:write')")
     @PostMapping(value = "/blazeOrder/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Result<Boolean> update(@Valid BlazeOrderUpdateDTO dto,
@@ -96,7 +96,7 @@ public class BlazeOrderController extends BlazeBasicController {
     }
 
     @Operation(summary = "审批")
-    @SaCheckPermission("blaze:order:approve")
+    @SaCheckEL("stp.checkPermission('blaze:order:approve')")
     @PostMapping("/blazeOrder/approve")
     public Result<Boolean> approve(@RequestBody @Valid ApproveDTO dto) {
         blazeOrderService.approve(dto);
@@ -135,7 +135,7 @@ public class BlazeOrderController extends BlazeBasicController {
 
 
     @Operation(summary = "删除")
-    @SaCheckPermission("blaze:order:write")
+    @SaCheckEL("stp.checkPermission('blaze:order:write')")
     @GetMapping("/blazeOrder/delete/{id}")
     public Result<Boolean> batchDelete(@PathVariable(value = "id") Integer id) {
         blazeOrderService.delete(id);

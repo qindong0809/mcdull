@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.web.config;
 
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import io.gitee.dqcer.mcdull.framework.web.i18n.CustomizeLocaleResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.SmartInitializingSingleton;
@@ -10,7 +11,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.web.servlet.LocaleResolver;
+
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -29,8 +33,15 @@ public class I18nConfig implements SmartInitializingSingleton {
         final String timeZone = "UTC";
         TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
         LogHelp.info(log, "setDefaultTimeZone: {}", timeZone);
-
     }
+
+    @Bean
+    public LocaleResolver localeResolver() {
+        CustomizeLocaleResolver localeResolver = new CustomizeLocaleResolver();
+        localeResolver.setDefaultLocale(Locale.US);
+        return localeResolver;
+    }
+
 
     @Bean
     public MessageSource messageSource() {

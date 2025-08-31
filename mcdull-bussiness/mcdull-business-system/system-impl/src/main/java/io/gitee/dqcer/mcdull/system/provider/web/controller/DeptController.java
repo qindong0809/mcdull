@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DeptUpdateDTO;
@@ -30,7 +30,7 @@ public class DeptController {
 
     @Operation(summary = "查询部门全部列表")
     @GetMapping("list-all")
-    @SaCheckPermission("system:department:read")
+    @SaCheckEL("stp.checkPermission('system:department:read')")
     public Result<List<DepartmentInfoVO>> getAll() {
         return Result.success(deptService.getAll());
     }
@@ -38,21 +38,21 @@ public class DeptController {
 
     @Operation(summary = "Add")
     @PostMapping("insert")
-    @SaCheckPermission("system:department:write")
+    @SaCheckEL("stp.checkPermission('system:department:write')")
     public Result<Boolean> insert(@RequestBody @Validated DeptInsertDTO dto){
         return Result.success(deptService.insert(dto));
     }
 
     @Operation(summary = "Update")
     @PostMapping("update")
-    @SaCheckPermission("system:department:write")
+    @SaCheckEL("stp.checkPermission('system:department:write')")
     public Result<Boolean> updateDepartment(@Valid @RequestBody DeptUpdateDTO dto) {
         return Result.success(deptService.update(dto.getDepartmentId(), dto));
     }
 
     @Operation(summary = "Delete ")
     @DeleteMapping("delete/{departmentId}")
-    @SaCheckPermission("system:department:write")
+    @SaCheckEL("stp.checkPermission('system:department:write')")
     public Result<Boolean> deleteDepartment(@PathVariable(value = "departmentId") Integer departmentId) {
         return Result.success(deptService.delete(departmentId));
     }

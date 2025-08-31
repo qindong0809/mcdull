@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
@@ -50,7 +50,7 @@ public class MenuController extends BasicController {
 
     @Operation(summary = "添加菜单")
     @PostMapping("/menu/add")
-    @SaCheckPermission("system:menu:write")
+    @SaCheckEL("stp.checkPermission('system:menu:write')")
     public Result<Boolean> addMenu(@RequestBody @Valid MenuAddDTO dto) {
         menuService.insert(dto);
         return Result.success(true);
@@ -58,7 +58,7 @@ public class MenuController extends BasicController {
 
     @Operation(summary = "更新菜单")
     @PostMapping("/menu/update")
-    @SaCheckPermission("system:menu:write")
+    @SaCheckEL("stp.checkPermission('system:menu:write')")
     public Result<Boolean> updateMenu(@RequestBody @Valid MenuUpdateDTO dto) {
         menuService.update(dto);
         return Result.success(true);
@@ -71,21 +71,21 @@ public class MenuController extends BasicController {
 
     @Operation(summary = "批量删除")
     @GetMapping("/menu/batchDelete")
-    @SaCheckPermission("system:menu:write")
+    @SaCheckEL("stp.checkPermission('system:menu:write')")
     public Result<Boolean> batchDeleteMenu(@RequestParam("menuIdList") List<Integer> menuIdList) {
         menuService.delete(menuIdList);
         return Result.success(true);
     }
 
     @Operation(summary = "导出数据")
-    @SaCheckPermission("system:menu:export")
+    @SaCheckEL("stp.checkPermission('system:menu:export')")
     @PostMapping(value = "/menu/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@Validated MenuListDTO dto) {
         super.locker(null, () -> menuService.exportData(dto));
     }
 
     @Operation(summary = "导入数据")
-    @SaCheckPermission("system:menu:export")
+    @SaCheckEL("stp.checkPermission('system:menu:export')")
     @PostMapping("/menu/record-import")
     public Result<Boolean> importMenu(@RequestParam("file") MultipartFile file) {
         return Result.success(super.locker(null, () -> {

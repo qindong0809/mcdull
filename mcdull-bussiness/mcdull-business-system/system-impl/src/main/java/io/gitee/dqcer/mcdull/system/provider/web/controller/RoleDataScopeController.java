@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.RoleDataScopeUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DataScopeAndViewTypeVO;
@@ -35,7 +35,7 @@ public class RoleDataScopeController {
 
     @Operation(summary = "批量设置某角色数据范围")
     @PostMapping("/role/dataScope/updateRoleDataScopeList")
-    @SaCheckPermission("system:role:write")
+    @SaCheckEL("stp.checkPermission('system:role:write')")
     public Result<Boolean> updateRoleDataScopeList(@RequestBody @Valid RoleDataScopeUpdateDTO dto) {
         roleDataScopeService.updateByRoleId(dto);
         return Result.success(true);

@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckEL;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
@@ -51,7 +51,7 @@ public class DictController extends BasicController {
     }
 
     @Operation(summary = "导出数据")
-    @SaCheckPermission("support:dict:export")
+    @SaCheckEL("stp.checkPermission('support:dict:export')")
     @PostMapping(value = "/dict/key/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid DictKeyQueryDTO dto) {
         super.locker(null, () -> dictKeyService.exportData(dto));
@@ -59,7 +59,7 @@ public class DictController extends BasicController {
 
     @Operation(summary = "添加字典")
     @PostMapping("/dict/key/add")
-    @SaCheckPermission("support:dict:add")
+    @SaCheckEL("stp.checkPermission('support:dict:add')")
     public Result<Boolean> keyAdd(@Valid @RequestBody DictKeyAddDTO keyAddDTO) {
         dictKeyService.insert(keyAddDTO);
         return Result.success(true);
@@ -67,7 +67,7 @@ public class DictController extends BasicController {
 
     @Operation(summary = "删除字典")
     @PostMapping("/dict/key/delete")
-    @SaCheckPermission("support:dict:delete")
+    @SaCheckEL("stp.checkPermission('support:dict:delete')")
     public Result<Boolean> keyDelete(@RequestBody List<Integer> keyIdList) {
         dictKeyService.delete(keyIdList);
         return Result.success(true);
@@ -75,7 +75,7 @@ public class DictController extends BasicController {
 
     @Operation(summary = "编辑字典")
     @PostMapping("/dict/key/edit")
-    @SaCheckPermission("support:dict:edit")
+    @SaCheckEL("stp.checkPermission('support:dict:edit')")
     public Result<Boolean> keyEdit(@Valid @RequestBody DictKeyUpdateDTO keyUpdateDTO) {
         dictKeyService.update(keyUpdateDTO);
         return Result.success(true);
@@ -83,7 +83,7 @@ public class DictController extends BasicController {
 
     @Operation(summary = "数据字典缓存-刷新- Result<")
     @GetMapping("/dict/cache/refresh")
-    @SaCheckPermission("support:dict:refresh")
+    @SaCheckEL("stp.checkPermission('support:dict:refresh')")
     public Result<String> cacheRefresh() {
         dictTypeManager.clean();
         return Result.success();

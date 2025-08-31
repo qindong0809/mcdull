@@ -59,7 +59,7 @@
         <mybatis-plus.version>3.5.10.1</mybatis-plus.version>
         <mybatis-plus-bom.version>3.5.10.1</mybatis-plus-bom.version>
         <mysql.version>8.3.0</mysql.version>
-        <hibernate-validator.version>6.1.0.Final</hibernate-validator.version>
+        <hibernate-validator.version>6.2.5.Final</hibernate-validator.version>
         <knife4j.version>4.4.0</knife4j.version>
         <fastjson.version>1.2.83</fastjson.version>
         <redisson.spring.boot.version>3.43.0</redisson.spring.boot.version>
@@ -211,6 +211,11 @@
                 <artifactId>sa-token-spring-boot3-starter</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
+          <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-el</artifactId>
+            <version>${sa-token.version}</version>
+          </dependency>
             <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
             <dependency>
                 <groupId>cn.dev33</groupId>
