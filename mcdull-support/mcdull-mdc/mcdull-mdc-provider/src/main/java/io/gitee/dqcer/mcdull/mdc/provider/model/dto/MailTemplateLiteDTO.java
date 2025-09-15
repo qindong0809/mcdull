@@ -1,8 +1,6 @@
 package io.gitee.dqcer.mcdull.mdc.provider.model.dto;
 
-import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
-import io.gitee.dqcer.mcdull.framework.base.enums.StatusEnum;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import org.hibernate.validator.constraints.Length;
 
@@ -33,7 +31,7 @@ public class MailTemplateLiteDTO extends PagedDTO {
      * 删除标识（1/正常 2/删除）
      */
     @NotNull(groups = {ValidGroup.Insert.class})
-    @EnumsStrValid(groups = {ValidGroup.Insert.class}, value = StatusEnum.class)
+//    @EnumsStrValid(groups = {ValidGroup.Insert.class}, value = StatusEnum.class)
     private Integer delFlag;
 
     /**

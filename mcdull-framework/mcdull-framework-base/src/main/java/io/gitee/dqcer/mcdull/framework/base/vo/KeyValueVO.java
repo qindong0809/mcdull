@@ -39,6 +39,7 @@ public class KeyValueVO<K, V> implements KeyValue<K, V> , VO {
                 .toString();
     }
 
+    @Override
     public K getKey() {
         return key;
     }
@@ -48,6 +49,7 @@ public class KeyValueVO<K, V> implements KeyValue<K, V> , VO {
         return this;
     }
 
+    @Override
     public V getValue() {
         return value;
     }

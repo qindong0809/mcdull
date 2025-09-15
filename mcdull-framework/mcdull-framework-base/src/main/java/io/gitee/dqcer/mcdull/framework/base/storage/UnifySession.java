@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author dqcer
  * @since 2021/11/13
  */
-public class UnifySession implements ICurrentUser, Serializable {
+public class UnifySession implements IUserSession, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -85,7 +85,7 @@ public class UnifySession implements ICurrentUser, Serializable {
 
     private Boolean appendTimezoneStyle;
 
-    public void copyCommon(CacheUser cacheUser) {
+    public void copyCommon(CacheUserSession cacheUser) {
         this.setUserId(cacheUser.getUserId());
         this.setUserType(cacheUser.getUserType());
         this.setAdministratorFlag(cacheUser.getAdministratorFlag());

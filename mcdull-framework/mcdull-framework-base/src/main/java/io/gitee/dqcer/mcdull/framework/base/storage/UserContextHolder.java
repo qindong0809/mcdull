@@ -17,9 +17,6 @@ import java.util.Locale;
  */
 public class UserContextHolder {
 
-    /**
-     * 统一的会话
-     */
     static InheritableThreadLocal<UnifySession> UNIFY_SESSION = new InheritableThreadLocal<>();
 
 

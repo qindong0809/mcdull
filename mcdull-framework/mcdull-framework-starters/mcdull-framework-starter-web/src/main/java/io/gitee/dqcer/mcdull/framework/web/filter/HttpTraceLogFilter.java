@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
+import io.gitee.dqcer.mcdull.framework.base.storage.CacheUserSession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
@@ -105,7 +105,7 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            CacheUser cacheUser = this.validateAndGetUser(requestUrl);
+            CacheUserSession cacheUser = this.validateAndGetUser(requestUrl);
             unifySession.copyCommon(cacheUser);
             filterChain.doFilter(request, response);
         } catch (SaTokenException exception) {
@@ -143,11 +143,11 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
         }
     }
 
-    private CacheUser validateAndGetUser(String requestUrl) {
+    private CacheUserSession validateAndGetUser(String requestUrl) {
         if (PATH_MATCHER.match(requestUrl, GlobalConstant.ADMINISTRATOR_PATH + GlobalConstant.ALL_PATTERNS)) {
-            return StpKit.ADMIN.getSession().get(GlobalConstant.CACHE_CURRENT_USER, new CacheUser());
+            return StpKit.ADMIN.getSession().get(GlobalConstant.CACHE_CURRENT_USER, new CacheUserSession());
         }
-        return StpKit.DEFAULT.getSession().get(GlobalConstant.CACHE_CURRENT_USER, new CacheUser());
+        return StpKit.DEFAULT.getSession().get(GlobalConstant.CACHE_CURRENT_USER, new CacheUserSession());
     }
 
 

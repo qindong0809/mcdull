@@ -7,7 +7,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
-import io.gitee.dqcer.mcdull.framework.base.storage.CacheUser;
+import io.gitee.dqcer.mcdull.framework.base.storage.CacheUserSession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.flow.node.ProcessHandler;
@@ -45,7 +45,7 @@ public class Authority implements ProcessHandler<LoginContext> {
             device = deviceEnum.getText();
         }
         StpUtil.login(userEntity.getId(), device);
-        CacheUser cache = this.buildCacheUser(userEntity);
+        CacheUserSession cache = this.buildCacheUser(userEntity);
         updateUserSession(cache);
         StpUtil.getSessionByLoginId(userEntity.getId(), true).set(GlobalConstant.CACHE_CURRENT_USER, cache);
         context.setVo(loginService.buildLogonVo(userEntity));
@@ -53,14 +53,14 @@ public class Authority implements ProcessHandler<LoginContext> {
         context.setDict(dict);
     }
 
-    private static void updateUserSession(CacheUser cacheUser) {
+    private static void updateUserSession(CacheUserSession cacheUser) {
         UnifySession session = UserContextHolder.getSession();
         session.copyCommon(cacheUser);
         UserContextHolder.setSession(session);
     }
 
-    private CacheUser buildCacheUser(UserEntity entity) {
-        CacheUser cache = new CacheUser();
+    private CacheUserSession buildCacheUser(UserEntity entity) {
+        CacheUserSession cache = new CacheUserSession();
         cache.setUserId(String.valueOf(entity.getId()));
         cache.setTenantId(entity.getDepartmentId());
         cache.setAdministratorFlag(entity.getAdministratorFlag());

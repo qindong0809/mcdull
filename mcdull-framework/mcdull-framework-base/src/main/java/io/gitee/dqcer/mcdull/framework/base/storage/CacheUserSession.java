@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author dqcer
  * @since 2021/11/14
  */
-public class CacheUser implements ICurrentUser, Serializable {
+public class CacheUserSession implements IUserSession, Serializable {
 
     private static final long serialVersionUID = 1L;
 

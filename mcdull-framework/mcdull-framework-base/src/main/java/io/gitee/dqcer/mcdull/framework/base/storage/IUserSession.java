@@ -7,7 +7,7 @@ package io.gitee.dqcer.mcdull.framework.base.storage;
  * @author dqcer
  * @since 2024/09/29
  */
-public interface ICurrentUser {
+public interface IUserSession {
 
     String getUserId();
 
