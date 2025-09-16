@@ -1,3 +1,21 @@
+drop table if exists `administrator_user`;
+create table if not exists `administrator_user` (
+`id` int not null auto_increment comment '主键',
+`login_name` varchar(30)  not null comment '登录帐号',
+`login_pwd` varchar(50)  not null comment '登录密码',
+`actual_name` varchar(30)  not null comment '用户名称',
+`email` varchar(300)  not null comment 'email',
+`administrator_flag` tinyint(0) not null default 0 comment '是否为超级管理员: 0 不是，1是',
+`last_login_time` datetime default null comment '最近一次登录时间',
+`created_by` int not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` int default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+primary key (`id`)
+)  comment='管理端 用户';
+
 drop table if exists `sys_user`;
 create table if not exists `sys_user` (
 `id` int not null auto_increment comment '主键',

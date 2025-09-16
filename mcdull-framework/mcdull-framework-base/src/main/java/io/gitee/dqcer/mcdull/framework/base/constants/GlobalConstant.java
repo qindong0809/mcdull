@@ -63,13 +63,11 @@ public class GlobalConstant {
 
     public static final String RATE_LIMITER = "rateLimiter:";
 
+    public static class PageSort {
 
-    public static class Environment {
+        public static final String ASC = "asc";
 
-        /**
-         * 生产环境
-         */
-        public static final String PROD = "prod";
+        public static final String DESC = "desc";
     }
 
 

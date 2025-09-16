@@ -4,11 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.Tuple;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.metadata.CellExtra;
-import io.gitee.dqcer.mcdull.framework.base.enums.FormItemControlTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -118,7 +118,7 @@ public class DataAnalysisListener extends AnalysisEventListener<Map<Integer, Str
 
     private boolean validate(DynamicFieldTemplate fieldTemplate, String value) {
         if (fieldTemplate.getRequired() != null && fieldTemplate.getRequired()) {
-            if (StrUtil.isBlank(value)) {
+            if (CharSequenceUtil.isBlank(value)) {
                 errorList.add(new Tuple(fieldTemplate.getName(), "不能为空"));
                 return false;
             }

@@ -1,4 +1,6 @@
-package io.gitee.dqcer.mcdull.framework.base.enums;
+package io.gitee.dqcer.mcdull.framework.web.enums;
+
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 
 /**
  * 语言枚举

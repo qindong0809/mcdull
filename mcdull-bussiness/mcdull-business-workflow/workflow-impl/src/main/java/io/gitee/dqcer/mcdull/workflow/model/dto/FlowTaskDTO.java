@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.workflow.model.dto;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
 import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
-import io.gitee.dqcer.mcdull.framework.base.enums.SortOrderEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.SortOrderEnum;
 import io.gitee.dqcer.mcdull.framework.base.support.Paged;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

@@ -17,7 +17,6 @@ import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.oss.OssService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -38,8 +37,6 @@ public class BlazeOrderController extends BlazeBasicController {
 
     @Resource
     private IBlazeOrderService blazeOrderService;
-    @Resource
-    private OssService ossService;
 
 
     @Operation(summary = "分页")

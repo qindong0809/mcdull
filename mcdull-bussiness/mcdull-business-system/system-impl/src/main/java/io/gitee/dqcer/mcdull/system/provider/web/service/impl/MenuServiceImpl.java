@@ -410,7 +410,7 @@ public class MenuServiceImpl
     @Override
     public Boolean importMenu(MultipartFile file) throws IOException {
         List<MenuEntity> list = new ArrayList<>();
-        ExcelUtil.readExcel(file.getInputStream(), () -> new AnalysisEventListener<>() {
+        ExcelUtil.readExcel(file.getInputStream(), () -> new AnalysisEventListener<Object>() {
             @Override
             public void invoke(Object o, AnalysisContext analysisContext) {
                 List<Pair<String, Func1<MenuVO, ?>>> titleList = getTitleList();

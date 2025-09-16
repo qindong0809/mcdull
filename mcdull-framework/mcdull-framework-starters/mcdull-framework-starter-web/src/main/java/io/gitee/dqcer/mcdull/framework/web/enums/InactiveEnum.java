@@ -1,4 +1,6 @@
-package io.gitee.dqcer.mcdull.framework.base.enums;
+package io.gitee.dqcer.mcdull.framework.web.enums;
+
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 
 /**
  *
@@ -6,7 +8,7 @@ package io.gitee.dqcer.mcdull.framework.base.enums;
  * @since 2024/01/29
  */
 
-public enum InactiveEnum implements IEnum<Boolean>{
+public enum InactiveEnum implements IEnum<Boolean> {
 
     TRUE(true, "已失活"),
 

@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
-import io.gitee.dqcer.mcdull.framework.base.enums.InactiveEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.MenuEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.MenuTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.MenuMapper;

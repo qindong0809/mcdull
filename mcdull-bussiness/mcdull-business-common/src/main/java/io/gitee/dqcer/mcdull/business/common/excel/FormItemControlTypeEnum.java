@@ -1,5 +1,7 @@
-package io.gitee.dqcer.mcdull.framework.base.enums;
+package io.gitee.dqcer.mcdull.business.common.excel;
 
+
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 
 /**
  * 登录设备类型

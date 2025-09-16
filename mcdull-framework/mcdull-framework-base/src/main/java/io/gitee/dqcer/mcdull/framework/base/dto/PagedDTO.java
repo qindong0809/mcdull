@@ -1,11 +1,9 @@
 package io.gitee.dqcer.mcdull.framework.base.dto;
 
 import cn.hutool.core.convert.Convert;
-import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsStrValid;
-import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
-import io.gitee.dqcer.mcdull.framework.base.enums.SortOrderEnum;
+import cn.hutool.core.text.CharSequenceUtil;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.support.Paged;
-
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
@@ -37,14 +35,12 @@ public class PagedDTO extends KeywordDTO implements Paged {
     protected String sortField;
 
     /**
-     * 排序方式
+     * 排序方式 asc / desc
      */
-    @SchemaEnum(SortOrderEnum.class)
-    @EnumsStrValid(required = false, value = SortOrderEnum.class, message = "排序类型 枚举值错误")
     protected String sortOrder;
 
     public boolean isAsc() {
-        return SortOrderEnum.ASC.getCode().equals(sortOrder);
+        return CharSequenceUtil.equalsIgnoreCase(GlobalConstant.PageSort.ASC, sortOrder);
     }
 
 

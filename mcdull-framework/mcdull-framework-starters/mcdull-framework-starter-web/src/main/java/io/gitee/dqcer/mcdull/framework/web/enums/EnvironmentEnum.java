@@ -1,4 +1,6 @@
-package io.gitee.dqcer.mcdull.framework.base.enums;
+package io.gitee.dqcer.mcdull.framework.web.enums;
+
+import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 
 /**
  * environment
@@ -6,7 +8,7 @@ package io.gitee.dqcer.mcdull.framework.base.enums;
  * @author dqcer
  * @since 2024/01/29
  */
-public enum EnvironmentEnum implements IEnum<String>{
+public enum EnvironmentEnum implements IEnum<String> {
 
     PROD("prod", "生产环境"),
     TEST("test", "测试环境"),
