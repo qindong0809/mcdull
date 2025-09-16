@@ -29,7 +29,7 @@ import io.gitee.dqcer.mcdull.business.common.CustomMultipartFile;
 import io.gitee.dqcer.mcdull.business.common.pdf.ByteArrayInOutConvert;
 import io.gitee.dqcer.mcdull.business.common.pdf.HtmlConvertPdf;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;

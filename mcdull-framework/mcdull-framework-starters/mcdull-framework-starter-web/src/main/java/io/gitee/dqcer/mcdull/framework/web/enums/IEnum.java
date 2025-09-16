@@ -1,6 +1,4 @@
-package io.gitee.dqcer.mcdull.framework.base.enums;
-
-import io.gitee.dqcer.mcdull.framework.base.vo.EnumVO;
+package io.gitee.dqcer.mcdull.framework.web.enums;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;

@@ -7,7 +7,7 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;

@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.model.dto;
 
-import io.gitee.dqcer.mcdull.business.common.audit.OperationTypeEnum;
+import io.gitee.dqcer.mcdull.system.provider.model.enums.OperationTypeEnum;
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
 import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;

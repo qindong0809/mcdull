@@ -8,7 +8,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;

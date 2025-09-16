@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.business.common.excel;
 
 
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 
 /**
  * 登录设备类型
@@ -9,7 +8,7 @@ import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
  * @author dqcer
  * @since 2024/04/24
  */
-public enum FormItemControlTypeEnum implements IEnum<String> {
+public enum FormItemControlTypeEnum {
 
     INPUT("input", "input"),
     TEXTAREA("textarea", "textarea"),
@@ -24,9 +23,18 @@ public enum FormItemControlTypeEnum implements IEnum<String> {
     FILE("file", "file"),
     ;
 
+    private String code;
+    private String text;
 
     FormItemControlTypeEnum(String code, String text) {
-        init(code, text);
+        this.code = code;
+        this.text = text;
+    }
+    public String getCode() {
+        return code;
+    }
+    public String getText() {
+        return text;
     }
 
 }

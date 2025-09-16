@@ -18,7 +18,7 @@ import io.gitee.dqcer.mcdull.blaze.domain.form.TalentUpdateDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.vo.TalentVO;
 import io.gitee.dqcer.mcdull.blaze.service.ITalentCertificateService;
 import io.gitee.dqcer.mcdull.blaze.service.ITalentService;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;

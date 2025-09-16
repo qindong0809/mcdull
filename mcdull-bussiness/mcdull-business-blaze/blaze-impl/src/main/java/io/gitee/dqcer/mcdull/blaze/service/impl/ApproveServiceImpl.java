@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.blaze.domain.entity.Approve;
 import io.gitee.dqcer.mcdull.blaze.domain.enums.ApproveEnum;
 import io.gitee.dqcer.mcdull.blaze.service.IApproveService;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ApproveVO;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;

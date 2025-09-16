@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
-import io.gitee.dqcer.mcdull.business.common.audit.OperationTypeEnum;
+import io.gitee.dqcer.mcdull.system.provider.model.enums.OperationTypeEnum;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.BizAuditQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.BizAuditVO;

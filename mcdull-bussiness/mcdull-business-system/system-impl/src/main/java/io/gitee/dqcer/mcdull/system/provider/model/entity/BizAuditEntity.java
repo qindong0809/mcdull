@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.system.provider.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.gitee.dqcer.mcdull.framework.base.entity.TimestampEntity;
+import io.gitee.dqcer.mcdull.system.provider.model.enums.OperationTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +26,7 @@ public class BizAuditEntity extends TimestampEntity<Integer> {
     private String bizTypeCode;
 
     /**
-     * {@link io.gitee.dqcer.mcdull.business.common.audit.OperationTypeEnum}
+     * {@link OperationTypeEnum}
      */
     private Integer operation;
 

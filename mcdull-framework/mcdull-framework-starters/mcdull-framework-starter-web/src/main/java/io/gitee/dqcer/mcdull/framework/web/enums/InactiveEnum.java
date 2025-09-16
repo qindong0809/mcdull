@@ -1,7 +1,5 @@
 package io.gitee.dqcer.mcdull.framework.web.enums;
 
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
-
 /**
  *
  * @author dqcer

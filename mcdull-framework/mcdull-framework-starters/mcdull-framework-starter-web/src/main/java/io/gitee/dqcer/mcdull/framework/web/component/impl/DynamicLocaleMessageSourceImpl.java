@@ -37,7 +37,7 @@ public class DynamicLocaleMessageSourceImpl implements DynamicLocaleMessageSourc
         try {
             return messageSource.getMessage(code, args, locale);
         } catch (NoSuchMessageException e) {
-            LogHelp.warn(log, "code: {}",  code, e);
+            LogHelp.info(log, "i18n key: {}",  code);
             if (args == null) {
                 return code;
             }

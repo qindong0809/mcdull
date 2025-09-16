@@ -25,7 +25,7 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.web.enums.SexEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;

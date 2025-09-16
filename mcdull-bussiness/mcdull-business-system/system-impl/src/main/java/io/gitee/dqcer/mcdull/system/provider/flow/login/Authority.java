@@ -6,7 +6,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.CacheUserSession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;

@@ -5,7 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.SerialNumberGenerateDTO;

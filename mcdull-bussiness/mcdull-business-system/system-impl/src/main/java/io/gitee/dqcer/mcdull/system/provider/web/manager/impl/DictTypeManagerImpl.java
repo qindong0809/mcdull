@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.system.provider.config.constants.CacheConstants;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DictValueVO;

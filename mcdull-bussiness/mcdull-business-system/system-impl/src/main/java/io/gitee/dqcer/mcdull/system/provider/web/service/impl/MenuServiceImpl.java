@@ -21,7 +21,7 @@ import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.business.common.excel.ExcelUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;

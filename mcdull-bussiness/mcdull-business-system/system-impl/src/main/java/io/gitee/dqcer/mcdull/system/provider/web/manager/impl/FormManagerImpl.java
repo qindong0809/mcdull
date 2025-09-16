@@ -11,7 +11,7 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;

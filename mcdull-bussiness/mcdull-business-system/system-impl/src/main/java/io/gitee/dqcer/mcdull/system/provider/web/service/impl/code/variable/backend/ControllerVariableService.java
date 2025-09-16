@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.bac
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigForm;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateField;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.CodeDeleteEnum;

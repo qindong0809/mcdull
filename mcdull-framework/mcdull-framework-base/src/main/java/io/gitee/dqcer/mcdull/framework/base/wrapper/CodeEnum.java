@@ -1,14 +1,12 @@
 package io.gitee.dqcer.mcdull.framework.base.wrapper;
 
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
-
 /**
  * 返回码实现
  *
  * @author dqcer
  * @since 2022/01/11
  */
-public enum CodeEnum implements ICode , IEnum<Integer> {
+public enum CodeEnum implements ICode {
 
 	/**
 	 * 操作成功
@@ -68,7 +66,6 @@ public enum CodeEnum implements ICode , IEnum<Integer> {
 	}
 
 	CodeEnum(int code, String message) {
-		init(code, message);
 		this.code = code;
 		this.message = message;
 	}

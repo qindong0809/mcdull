@@ -22,7 +22,7 @@ import io.gitee.dqcer.mcdull.blaze.service.IApproveService;
 import io.gitee.dqcer.mcdull.blaze.service.IBlazeOrderDetailService;
 import io.gitee.dqcer.mcdull.blaze.service.IBlazeOrderService;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;

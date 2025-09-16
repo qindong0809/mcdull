@@ -1,7 +1,5 @@
 package io.gitee.dqcer.mcdull.framework.base.annotation;
 
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,7 +19,7 @@ public @interface SchemaEnum {
      * 枚举类对象
      *
      */
-    Class<? extends IEnum<?>> value();
+    Class<? extends Enum> value();
 
     String example() default "";
 

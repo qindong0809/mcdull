@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.mdc.client.constants;
 
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 
 /**
  * @author dqcer

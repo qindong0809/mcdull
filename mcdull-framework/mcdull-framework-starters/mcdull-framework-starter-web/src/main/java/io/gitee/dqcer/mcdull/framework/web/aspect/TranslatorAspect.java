@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.framework.web.aspect;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.ITransformer;
 import io.gitee.dqcer.mcdull.framework.base.annotation.Transform;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;

@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.model.enums;
 
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 
 /**
  * 查询条件类型

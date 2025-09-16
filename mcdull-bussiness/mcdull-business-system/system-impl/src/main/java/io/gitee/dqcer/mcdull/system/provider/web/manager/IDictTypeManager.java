@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.system.provider.web.manager;
 
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.RemoteDictTypeVO;
 
 import java.util.Map;

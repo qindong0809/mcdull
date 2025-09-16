@@ -5,7 +5,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.business.common.audit.AuditUtil;
-import io.gitee.dqcer.mcdull.business.common.audit.OperationTypeEnum;
+import io.gitee.dqcer.mcdull.system.provider.model.enums.OperationTypeEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.BizAuditFieldEntity;
