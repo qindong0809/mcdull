@@ -26,14 +26,14 @@ public class MessageController extends BasicController {
     private IMessageService messageService;
 
     @Operation(summary = "查询我的消息")
-    @PostMapping("/support/message/queryMyMessage")
+    @PostMapping("/message/queryMyMessage")
     public Result<PagedVO<MessageVO>> query(@RequestBody @Valid MessageQueryDTO queryForm) {
         queryForm.setReceiverUserId(UserContextHolder.userId());
         return Result.success(messageService.query(queryForm));
     }
 
     @Operation(summary = "未读消息数量")
-    @GetMapping("/support/message/getUnreadCount")
+    @GetMapping("/message/getUnreadCount")
     public Result<Integer> getUnreadCount() {
         Integer userId = UserContextHolder.userId();
         String key = "unreadCount:" + userId;
@@ -41,7 +41,7 @@ public class MessageController extends BasicController {
     }
 
     @Operation(summary = "更新已读")
-    @GetMapping("/support/message/read/{messageId}")
+    @GetMapping("/message/read/{messageId}")
     public Result<Boolean> updateReadFlag(@PathVariable(value = "messageId") Integer messageId) {
         String key = "update_read:" + messageId;
         return Result.success(super.locker(key, () -> messageService.updateReadFlag(messageId,  UserContextHolder.userId())));

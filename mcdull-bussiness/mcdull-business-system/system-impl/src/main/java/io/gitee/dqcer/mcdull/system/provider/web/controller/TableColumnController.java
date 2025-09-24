@@ -23,7 +23,7 @@ public class TableColumnController extends BasicController {
     private ITableColumnService tableColumnService;
 
     @Operation(summary = "修改表格列")
-    @PostMapping("/support/tableColumn/update")
+    @PostMapping("/tableColumn/update")
 //    @RedisLock(key = "'lock:uac:user:' + #dto.tableId", timeout = 3)
     public Result<Boolean> updateTableColumn(@RequestBody @Valid TableColumnUpdateDTO dto) {
         tableColumnService.updateTableColumns(dto);
@@ -31,7 +31,7 @@ public class TableColumnController extends BasicController {
     }
 
     @Operation(summary = "恢复默认（删除） ")
-    @GetMapping("/support/tableColumn/delete/{tableId}")
+    @GetMapping("/tableColumn/delete/{tableId}")
 //    @RedisLock(key = "'lock:uac:user:' + #tableId", timeout = 3)
     public Result<Boolean> deleteTableColumn(@PathVariable(value = "tableId") Integer tableId) {
         tableColumnService.deleteTableColumn(tableId);
@@ -39,7 +39,7 @@ public class TableColumnController extends BasicController {
     }
 
     @Operation(summary = "查询表格列 ")
-    @GetMapping("/support/tableColumn/getColumns/{tableId}")
+    @GetMapping("/tableColumn/getColumns/{tableId}")
     public Result<String> getColumns(@PathVariable(value = "tableId") Integer tableId) {
         return Result.success(tableColumnService.getTableColumns(tableId));
     }
