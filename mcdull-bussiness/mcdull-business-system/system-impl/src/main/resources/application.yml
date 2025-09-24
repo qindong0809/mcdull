@@ -80,3 +80,8 @@ sa-token:
   is-print: false
   # 是否从cookie读取token
   is-read-cookie: false
+mcdull:
+  gateway:
+    noAuth:
+      - /administrator/auth/login
+      - /administrator/captcha/image

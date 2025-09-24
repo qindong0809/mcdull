@@ -8,6 +8,7 @@ import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -51,6 +52,15 @@ public class Result<T> implements Serializable {
      */
     private String exception;
 
+    private String timestamp = String.valueOf(new Date().getTime());
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
 
     /**
      * 初始化一个新创建的 Result 对象，使其表示一个空消息。
