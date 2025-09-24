@@ -1,0 +1,29 @@
+administration:
+  menu:
+    - name: 内部管理
+      id: 100
+      code: administrator
+      children:
+        - name: 人员管理
+          id: 100
+          code: administrator:user
+        - name: 部门管理
+          id: 101
+          code: administrator:dept
+  permission:
+    - id: 10001
+      parentId: 100
+      name: 人员读权限
+      code: administrator:user:read
+    - id: 10002
+      parentId: 100
+      name: 人员写权限
+      code: administrator:user:write
+    - id: 10101
+      parentId: 101
+      name: 部门读权限
+      code: administrator:dept:read
+    - id: 10102
+      parentId: 101
+      name: 部门写权限
+      code: administrator:dept:read

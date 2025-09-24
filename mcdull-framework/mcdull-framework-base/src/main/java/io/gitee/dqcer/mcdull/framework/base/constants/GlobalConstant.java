@@ -15,6 +15,7 @@ public class GlobalConstant {
     public static final String CUSTOMIZE_LANGUAGE_HEAD_NAME = "Language-Content";
 
     public static final String CACHE_CURRENT_USER = "cacheCurrentUser";
+    public static final String CACHE_CURRENT_ADMINISTRATOR_USER = "cacheCurrentAdministratorUser";
 
     public static final String MAPPER_PACKAGE = BASE_PACKAGE + ".**.mapper";
 

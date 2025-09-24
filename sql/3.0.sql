@@ -7,6 +7,8 @@ create table if not exists `administrator_user` (
 `email` varchar(300)  not null comment 'email',
 `administrator_flag` tinyint(0) not null default 0 comment '是否为超级管理员: 0 不是，1是',
 `last_login_time` datetime default null comment '最近一次登录时间',
+`pwd_reset_time` datetime default null comment '最后一次修改密码时间',
+ `dept_id` int not null comment '部门ID',
 `created_by` int not null comment '创建人',
 `created_time` datetime not null comment '创建时间',
 `updated_by` int default null comment '更新人',
@@ -15,6 +17,32 @@ create table if not exists `administrator_user` (
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 primary key (`id`)
 )  comment='管理端 用户';
+drop table if exists `administrator_dept`;
+create table if not exists `administrator_dept` (
+    `id`          int not null auto_increment comment '主键',
+    `name`        varchar(30)  not null                    comment '名称',
+    `parent_id`   int  not null default 0
+    `ancestors`   varchar(512) not null default ''         comment '祖级列表',
+    `description` varchar(200) default null                comment '描述',
+    `sort`        int          not null default 999        comment '排序',
+    `status`      tinyint(1)   unsigned not null default 1 comment '状态（1：启用；2：禁用）',
+    `is_system`   bit(1)       not null default b'0'       comment '是否为系统内置数据',
+    `created_by` int not null comment '创建人',
+    `created_time` datetime not null comment '创建时间',
+    `updated_by` int default null comment '更新人',
+    `updated_time` datetime default null comment '更新时间',
+    `inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
+    `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）'
+) comment='部门表';
+drop table if exists `administrator_user_menu`;
+create table if not exists `administrator_user_menu` (
+`id`  int not null auto_increment comment '主键',
+`user_id` int not null comment 'user id',
+`menu_id` int not null comment '菜单id',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）'
+)  comment='关联表';
 
 drop table if exists `sys_user`;
 create table if not exists `sys_user` (

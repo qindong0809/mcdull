@@ -9,15 +9,13 @@ import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("administrator_user")
-public class AdminUserEntity extends BaseEntity<Integer> {
-
-    private String loginName;
-    private String loginPwd;
-    private String actualName;
-    private String email;
-    private Boolean administratorFlag;
-    private Date lastLoginTime;
-    private Date pwdResetTime;
-
+@TableName("administrator_dept")
+public class AdminDeptEntity extends BaseEntity<Integer> {
+    private String name;
+    private Integer parentId;
+    private String ancestors;
+    private String description;
+    private Integer sort;
+    private Boolean status;
+    private Boolean isSystem;
 }

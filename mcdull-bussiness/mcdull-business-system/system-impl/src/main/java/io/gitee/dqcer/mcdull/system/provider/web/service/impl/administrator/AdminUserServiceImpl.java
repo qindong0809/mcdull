@@ -1,5 +1,12 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service.impl.administrator;
 
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.util.ObjectUtil;
+import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.storage.CacheUserSession;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.AdminVO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +28,8 @@ import io.gitee.dqcer.mcdull.system.provider.web.service.ICaptchaService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Locale;
 
 @Service
 public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUserEntity> implements IAdminUserService {
@@ -31,31 +40,57 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     @Transactional(rollbackFor = Exception.class)
     @Override
     public String auth(@Valid LogonDTO dto) {
-        // 1. 验证验证码
         this.validateCaptcha(dto.getCaptcha(), dto.getUuid());
-        
-        // 2. 查询管理员用户
         AdminUserEntity adminUser = this.getUserByLoginName(dto.getLoginName());
-        if (ObjUtil.isNull(adminUser)) {
+        if (ObjectUtil.isNull(adminUser)) {
             throw new BusinessException("管理员账号不存在");
         }
-        
-        // 3. 验证密码
         this.validatePassword(adminUser, dto.getLoginPwd());
-        
-        // 4. 检查账号状态
         this.validateAccountStatus(adminUser);
-        
-        // 5. 执行登录
         StpKit.ADMIN.login(adminUser.getId());
-        
-        // 6. 更新最后登录时间
+
+        CacheUserSession cache = this.getCacheUserSession(adminUser);
+        UnifySession session = UserContextHolder.getSession();
+        session.copyCommon(cache);
+        UserContextHolder.setSession(session);
+        StpKit.ADMIN.getSessionByLoginId(adminUser.getId(), true)
+            .set(GlobalConstant.CACHE_CURRENT_ADMINISTRATOR_USER, cache);
         this.updateLastLoginTime(adminUser.getId());
-        
-        // 7. 返回token
         return StpUtil.getTokenValue();
     }
-    
+
+    @Override
+    public AdminVO getAdminInfo(Integer userId) {
+        AdminUserEntity entity = super.getById(userId);
+        AdminVO vo = new AdminVO();
+        if (ObjectUtil.isNotNull(entity)) {
+            vo.setId(entity.getId());
+            vo.setUsername(entity.getLoginName());
+            vo.setNickname(entity.getActualName());
+            vo.setEmail(entity.getEmail());
+            vo.setCreateTime(entity.getCreatedTime());
+            vo.setRegistrationDate(entity.getCreatedTime());
+            vo.setRoles(new HashSet<>());
+//            vo.setPermissions();
+            // todo 动态读取配置参数
+            vo.setPwdExpired(false);
+        }
+        return vo;
+    }
+
+    private CacheUserSession getCacheUserSession(AdminUserEntity adminUser) {
+        CacheUserSession cache = new CacheUserSession();
+        cache.setUserId(adminUser.getId().toString());
+        cache.setTenantId(GlobalConstant.Number.NUMBER_0);
+        cache.setAdministratorFlag(adminUser.getAdministratorFlag());
+        cache.setLanguage(Locale.SIMPLIFIED_CHINESE.getLanguage());
+        cache.setLoginName(adminUser.getLoginName());
+        cache.setDateFormat(DatePattern.NORM_DATETIME_PATTERN);
+        cache.setZoneIdStr("Asia/Shanghai");
+        cache.setAppendTimezoneStyle(false);
+        return cache;
+    }
+
     /**
      * 验证验证码
      */
@@ -65,7 +100,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         }
         captchaService.checkCaptcha(captcha, uuid);
     }
-    
+
     /**
      * 验证密码
      */
@@ -73,14 +108,14 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         if (StrUtil.isBlank(inputPassword)) {
             throw new BusinessException("密码不能为空");
         }
-        
+
         // 对输入密码进行SHA1加密后与数据库中的密码比较
         String encryptedPassword = Sha1Util.getSha1(inputPassword);
         if (!adminUser.getLoginPwd().equals(encryptedPassword)) {
             throw new BusinessException("用户名或密码错误");
         }
     }
-    
+
     /**
      * 验证账号状态
      */
@@ -89,7 +124,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
             throw new BusinessException("账号已被禁用");
         }
     }
-    
+
     /**
      * 更新最后登录时间
      */
