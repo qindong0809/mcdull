@@ -27,8 +27,11 @@ public class BannerConfig implements ApplicationRunner {
                             "Druid monitor paged: \t{} \n\t" +
                             "H2 console: \t{} \n\t" +
                             "Swagger: \t{} \n\t" +
+                            "Actuator: \t{} \n\t" +
+                            "Monitoring: \t{} \n\t" +
                             "----------------------------------------------------------",
-                    "http://localhost:8090/druid","http://localhost:8090/h2", "http://localhost:8090/doc.html"
+                    "http://localhost:8090/druid","http://localhost:8090/h2", "http://localhost:8090/doc.html",
+                "http://localhost:8090/actuator", "http://localhost:8090/monitoring"
             );
         });
     }

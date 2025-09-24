@@ -11,9 +11,10 @@ import java.util.function.Supplier;
 @ManagedResource(
         objectName = "Customization:name=io.gitee.dqcer.mcdull.framework.mysql.datasource.GlobalDataRoutingDataSource",
         description = "GlobalDataRoutingDataSource")
-public class GlobalDataRoutingDataSource extends RoutingDataSource {
+public class GlobalDataRoutingDataSource extends RoutingDataSource implements SwitchableDataSource {
 
 
+    @Override
     public void switchDataSource() {
         String lookupKey = dataSourceProperties.getDefaultName();
         DynamicContextHolder.clear();
@@ -21,10 +22,12 @@ public class GlobalDataRoutingDataSource extends RoutingDataSource {
         DynamicContextHolder.push(lookupKey);
     }
 
+    @Override
     public void removeDataSource() {
         DynamicContextHolder.clear();
     }
 
+    @Override
     public <T> T get(Supplier<T> supplier) {
         try {
             this.switchDataSource();

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
-import io.gitee.dqcer.mcdull.framework.mysql.datasource.GlobalDataRoutingDataSource;
+import io.gitee.dqcer.mcdull.framework.mysql.datasource.SwitchableDataSource;
 import io.gitee.dqcer.mcdull.framework.web.advice.BaseExceptionAdvice;
 import io.gitee.dqcer.mcdull.framework.web.aspect.AuditAspect;
 import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsAspect;
@@ -32,7 +32,7 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 public class AutoConfiguration {
 
     @Resource
-    private GlobalDataRoutingDataSource globalDataRoutingDataSource;
+    private SwitchableDataSource globalDataRoutingDataSource;
     @Resource
     private McdullProperties mcdullProperties;
     @Resource

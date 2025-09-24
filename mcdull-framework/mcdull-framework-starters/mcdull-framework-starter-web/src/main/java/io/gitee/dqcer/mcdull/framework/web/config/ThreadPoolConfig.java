@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.config.properties.ThreadPoolProperties;
 import io.gitee.dqcer.mcdull.framework.mysql.config.DynamicContextHolder;
-import io.gitee.dqcer.mcdull.framework.mysql.datasource.GlobalDataRoutingDataSource;
+import io.gitee.dqcer.mcdull.framework.mysql.datasource.SwitchableDataSource;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ public class ThreadPoolConfig {
     private McdullProperties mcdullProperties;
 
     @Resource
-    private GlobalDataRoutingDataSource globalDataRoutingDataSource;
+    private SwitchableDataSource globalDataRoutingDataSource;
 
     @Bean
     public Executor threadPoolTaskExecutor(){

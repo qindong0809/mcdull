@@ -8,7 +8,7 @@ import cn.hutool.cron.CronUtil;
 import io.gitee.dqcer.mcdull.business.common.dump.SqlDumper;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.mysql.datasource.GlobalDataRoutingDataSource;
+import io.gitee.dqcer.mcdull.framework.mysql.datasource.SwitchableDataSource;
 import io.gitee.dqcer.mcdull.framework.web.component.ConcurrentRateLimiter;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
@@ -46,7 +46,7 @@ public class DatabaseBackupTaskExecutor {
     @Resource
     private IFolderService folderService;
     @Resource
-    private GlobalDataRoutingDataSource globalDataRoutingDataSource;
+    private SwitchableDataSource globalDataRoutingDataSource;
 
     @PostConstruct
     public void init() {

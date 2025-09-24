@@ -13,7 +13,7 @@ import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.config.properties.GatewayProperties;
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
-import io.gitee.dqcer.mcdull.framework.mysql.datasource.GlobalDataRoutingDataSource;
+import io.gitee.dqcer.mcdull.framework.mysql.datasource.SwitchableDataSource;
 import io.gitee.dqcer.mcdull.framework.security.StpKit;
 import io.gitee.dqcer.mcdull.framework.web.advice.BaseExceptionAdvice;
 import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
@@ -55,6 +55,7 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
         GlobalConstant.FAVICON_ICO,
         GlobalConstant.ACTUATOR_ALL,
         "/druid/**",
+        "/monitoring/**",
         "/upload" + GlobalConstant.ALL_PATTERNS,
         "/doc.html/**",
         "/doc-ui.html/**",
@@ -67,13 +68,13 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
         "/error",
     };
 
-    private final GlobalDataRoutingDataSource globalDataRoutingDataSource;
+    private final SwitchableDataSource globalDataRoutingDataSource;
     private final McdullProperties mcdullProperties;
     private final DynamicLocaleMessageSource dynamicLocaleMessageSource;
     private final BaseExceptionAdvice baseExceptionAdvice;
 
 
-    public HttpTraceLogFilter(GlobalDataRoutingDataSource globalDataRoutingDataSource,
+    public HttpTraceLogFilter(SwitchableDataSource globalDataRoutingDataSource,
                               McdullProperties mcdullProperties,
                               DynamicLocaleMessageSource dynamicLocaleMessageSource,
                               BaseExceptionAdvice baseExceptionAdvice) {

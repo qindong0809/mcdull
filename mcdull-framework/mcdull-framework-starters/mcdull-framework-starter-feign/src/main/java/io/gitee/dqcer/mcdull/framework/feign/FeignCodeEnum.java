@@ -1,9 +1,8 @@
 package io.gitee.dqcer.mcdull.framework.feign;
 
-import io.gitee.dqcer.mcdull.framework.base.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.ICode;
 
-public enum FeignCodeEnum implements ICode, IEnum<Integer> {
+public enum FeignCodeEnum implements ICode {
 
     /**
      * feign 调用异常
@@ -37,7 +36,6 @@ public enum FeignCodeEnum implements ICode, IEnum<Integer> {
     }
 
     FeignCodeEnum(int code, String message) {
-        init(code, message);
         this.code = code;
         this.message = message;
     }
