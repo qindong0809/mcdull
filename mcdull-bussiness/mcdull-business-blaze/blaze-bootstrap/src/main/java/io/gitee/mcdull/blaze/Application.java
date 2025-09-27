@@ -9,6 +9,8 @@ import org.dromara.x.file.storage.spring.EnableFileStorage;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @EnableFileStorage
 @EnableWebCore
@@ -16,6 +18,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableDynamicDataSource
 @EnableCache
 @SpringBootApplication(scanBasePackages = "io.gitee")
+@EnableConfigurationProperties
+@ConfigurationPropertiesScan
 public class Application {
 
     public static void main(String[] args) {

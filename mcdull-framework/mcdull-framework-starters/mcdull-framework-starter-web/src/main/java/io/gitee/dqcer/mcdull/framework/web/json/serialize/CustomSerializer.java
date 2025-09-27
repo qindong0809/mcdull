@@ -30,16 +30,15 @@ public class CustomSerializer {
         return null;
     }
 
-    public static String serializeDate(Date date, String dateFormat, Locale locale, String zoneIdStr) {
-        return TimeZoneUtil.serializeDate(date, dateFormat, locale, zoneIdStr, true);
+    public static String serializeDate(Date date, String dateFormat, Locale locale, String zoneIdStr, Boolean showTime) {
+        return TimeZoneUtil.serializeDate(date, dateFormat, locale, zoneIdStr, true, showTime);
     }
 
-    public static String serializeDate(UnifySession session, Date date, boolean splicingTimezone) {
-        String dateCellValue = CustomSerializer.serializeDate(UserContextHolder.getSession(), date, true);
+    public static String serializeDate(UnifySession session, Date date, boolean splicingTimezone, Boolean showTime) {
         String dateFormat = session.getDateFormat();
         String zoneIdStr = session.getZoneIdStr();
         Locale locale = session.getLocale();
-        return TimeZoneUtil.serializeDate(date, dateFormat, locale, zoneIdStr, splicingTimezone);
+        return TimeZoneUtil.serializeDate(date, dateFormat, locale, zoneIdStr, splicingTimezone, showTime);
     }
 
 

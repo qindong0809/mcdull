@@ -2,6 +2,9 @@
 package io.gitee.dqcer.mcdull.system.provider.model.vo.administrator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
+import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.GenderEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -79,8 +82,9 @@ public class AdminVO implements Serializable {
     /**
      * 最后一次修改密码时间
      */
-    @Schema(description = "最后一次修改密码时间", example = "2023-08-08 08:08:08", type = "string")
-    private LocalDateTime pwdResetTime;
+    @DynamicDateFormat(enableTimezone = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date pwdResetTime;
 
     /**
      * 密码是否已过期
@@ -91,13 +95,15 @@ public class AdminVO implements Serializable {
     /**
      * 创建时间
      */
-    @JsonIgnore
+    @DynamicDateFormat(enableTimezone = true, showTime = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
     private Date createTime;
 
     /**
      * 注册日期
      */
-    @Schema(description = "注册日期", example = "2023-08-08")
+    @DynamicDateFormat(enableTimezone = true, showTime = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
     private Date registrationDate;
 
     /**

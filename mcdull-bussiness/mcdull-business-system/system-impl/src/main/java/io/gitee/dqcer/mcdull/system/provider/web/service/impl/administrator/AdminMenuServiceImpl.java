@@ -1,28 +1,31 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service.impl.administrator;
 
-import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.MenuBO;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.PermissionBO;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.MenuInfoBO;
 import io.gitee.dqcer.mcdull.system.provider.web.service.administrator.IAdminMenuService;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@ConfigurationProperties(prefix = "administration")
-@Service
+@Data
+@Component
+@ConfigurationProperties(prefix = "administration.account")
 public class AdminMenuServiceImpl implements IAdminMenuService {
 
-    private List<MenuBO> menu;
+    private List<MenuInfoBO> menu;
 
-    private List<MenuBO> permission;
+    private List<PermissionBO> permission;
 
 
     @Override
-    public List<MenuBO> getMenuList() {
+    public List<MenuInfoBO> menuList() {
         return menu;
     }
 
     @Override
-    public List<MenuBO> getPermissionList() {
+    public List<PermissionBO> permissionList() {
         return permission;
     }
 }

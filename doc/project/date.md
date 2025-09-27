@@ -19,12 +19,20 @@
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date createTime;
 ```
+
 - 示例2：动态显示日期格式和时区转换后的日期
 ```java
     @DynamicDateFormat(enableTimezone = true)
     @JsonSerialize(using = DynamicDateSerialize.class)
     private Date updateTime;
 ```
+- 示例3：动态显示日期格式 + 时区转换后的日期 + 时分秒
+```java
+    @DynamicDateFormat(enableTimezone = true, showTime = true)
+    @JsonSerialize(using = DynamicDateSerialize.class)
+    private Date updateTime;
+```
+
 
 # 场景二： 接收参数
 

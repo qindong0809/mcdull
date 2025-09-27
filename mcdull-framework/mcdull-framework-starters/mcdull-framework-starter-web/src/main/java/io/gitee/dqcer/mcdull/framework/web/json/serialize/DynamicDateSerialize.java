@@ -43,7 +43,7 @@ public class DynamicDateSerialize extends DateSerializer implements ContextualSe
             return;
         }
         String pattern = dynamicDateFormat.dateFormat();
-        String result = TimeZoneUtil.serializeDate(date, pattern, null, null, null);
+        String result = TimeZoneUtil.serializeDate(date, pattern, null, null, null, dynamicDateFormat.showTime());
         jsonGenerator.writeString(result);
     }
 

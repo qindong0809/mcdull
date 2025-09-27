@@ -4,11 +4,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import io.gitee.dqcer.mcdull.system.provider.model.dto.administrator.LogonDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminUserEntity;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.AdminMenuVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.AdminVO;
+
+import java.util.List;
 
 public interface IAdminUserService extends IService<AdminUserEntity> {
 
     String auth(LogonDTO dto);
 
     AdminVO getAdminInfo(Integer userId);
+
+    List<AdminMenuVO> getUserRoute(Integer userId);
 }

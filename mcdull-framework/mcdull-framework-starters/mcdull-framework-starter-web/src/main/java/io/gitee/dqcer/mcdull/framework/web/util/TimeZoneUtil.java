@@ -2,6 +2,8 @@ package io.gitee.dqcer.mcdull.framework.web.util;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
@@ -28,7 +30,7 @@ public class TimeZoneUtil {
 //    }
 //
     public static String serializeDate(Date date, String dateFormat, boolean splicingTimezone) {
-        return serializeDate(date, dateFormat, LocaleContextHolder.getLocale(), null, splicingTimezone);
+        return serializeDate(date, dateFormat, LocaleContextHolder.getLocale(), null, splicingTimezone, true);
     }
 //
 //    public static String serializeDate(Date date, String dateFormat, Locale locale, String zoneIdStr) {
@@ -37,7 +39,7 @@ public class TimeZoneUtil {
 
     public static String serializeDate(Date date, String dateFormat, String zoneIdStr, boolean appendTimezoneStyle) {
         Locale locale = LocaleContextHolder.getLocale();
-        return serializeDate(date, dateFormat, locale, zoneIdStr, appendTimezoneStyle);
+        return serializeDate(date, dateFormat, locale, zoneIdStr, appendTimezoneStyle,  true);
     }
 
     /**
@@ -56,7 +58,7 @@ public class TimeZoneUtil {
                                        String dateFormat,
                                        Locale locale,
                                        String zoneIdStr,
-                                       Boolean splicingTimezone) {
+                                       Boolean splicingTimezone, Boolean showTime) {
         DateTime dateTime = DateTime.of(date);
         UnifySession session = UserContextHolder.getSession();
         if (StrUtil.isBlank(zoneIdStr)) {
@@ -78,6 +80,14 @@ public class TimeZoneUtil {
             splicingTimezone = session.getAppendTimezoneStyle();
         }
         String result = convertTimeZone.toString(DateUtil.newSimpleFormat(dateFormat, locale, timeZone));
+        if (BooleanUtil.isTrue(showTime)) {
+            if (!CharSequenceUtil.containsAnyIgnoreCase(dateFormat, "h")) {
+                // 追究 时间
+                String time = convertTimeZone.toString(DateUtil.newSimpleFormat("HH:mm:ss", locale, timeZone));
+                result = StrUtil.format("{} {}", result, time);
+            }
+        }
+
         if (splicingTimezone) {
             ZoneRules rules = zoneId.getRules();
             ZoneOffset offset = rules.getOffset(date.toInstant());
@@ -98,10 +108,10 @@ public class TimeZoneUtil {
     public static final String DATE_TIME_FORMAT_WITHOUT_SECOND = "yyyy-MM-dd HH:mm";
 
     public static void main(String[] args) {
-        System.out.println(serializeDate(new Date(),  DATE_TIME_FORMAT, Locale.ENGLISH, "Asia/Shanghai",true));
-        System.out.println(serializeDate(new Date(),  DATE_FORMAT_WITHOUT_YEAR, Locale.ENGLISH, "-05:00",false));
-        System.out.println(serializeDate(new Date(),  DATE_TIME_FORMAT, Locale.ENGLISH, "-01:00",true));
-        System.out.println(serializeDate(new Date(),  DATE_TIME_FORMAT, Locale.ENGLISH, "Asia/Ho_Chi_Minh",true));
-        System.out.println(serializeDate(new Date(),  DATE_TIME_FORMAT_WITHOUT_SECOND, Locale.ENGLISH, "Asia/Ho_Chi_Minh",false));
+        System.out.println(serializeDate(new Date(),  DATE_TIME_FORMAT, Locale.ENGLISH, "Asia/Shanghai",true, true));
+        System.out.println(serializeDate(new Date(),  DATE_FORMAT_WITHOUT_YEAR, Locale.ENGLISH, "-05:00",false, true));
+        System.out.println(serializeDate(new Date(),  DATE_TIME_FORMAT, Locale.ENGLISH, "-01:00",true, true));
+        System.out.println(serializeDate(new Date(),  DATE_TIME_FORMAT, Locale.ENGLISH, "Asia/Ho_Chi_Minh",true, true));
+        System.out.println(serializeDate(new Date(),  DATE_TIME_FORMAT_WITHOUT_SECOND, Locale.ENGLISH, "Asia/Ho_Chi_Minh",false, true));
     }
 }

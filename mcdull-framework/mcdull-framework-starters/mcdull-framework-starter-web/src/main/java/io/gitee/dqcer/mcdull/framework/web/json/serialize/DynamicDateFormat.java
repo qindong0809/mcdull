@@ -42,4 +42,11 @@ public @interface DynamicDateFormat {
      * @return {@link String }
      */
     String dateFormat() default DatePattern.NORM_DATE_PATTERN;
+
+    /**
+     * 显示时分秒
+     *
+     * @return boolean
+     */
+    boolean showTime() default false;
 }

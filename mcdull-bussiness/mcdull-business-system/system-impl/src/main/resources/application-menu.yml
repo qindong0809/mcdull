@@ -1,29 +1,61 @@
 administration:
-  menu:
-    - name: 内部管理
-      id: 100
-      code: administrator
-      children:
-        - name: 人员管理
-          id: 100
-          code: administrator:user
-        - name: 部门管理
-          id: 101
-          code: administrator:dept
-  permission:
-    - id: 10001
-      parentId: 100
-      name: 人员读权限
-      code: administrator:user:read
-    - id: 10002
-      parentId: 100
-      name: 人员写权限
-      code: administrator:user:write
-    - id: 10101
-      parentId: 101
-      name: 部门读权限
-      code: administrator:dept:read
-    - id: 10102
-      parentId: 101
-      name: 部门写权限
-      code: administrator:dept:read
+  account:
+    menu:
+      - title: 内部管理
+        id: 10
+        component: Layout
+        icon: settings
+        name: System
+        parentId: 0
+        path: /system
+        redirect: /system/user
+        type: 1
+        permission: administrator
+        sort: 1
+        isCache: false
+        isExternal: false
+        isHidden: false
+        children:
+          - title: 人员管理
+            id: 100
+            component: system/user/index
+            icon: user
+            name: SystemUser
+            parentId: 10
+            type: 2
+            path: /system/user
+            permission: administrator:user
+            sort: 1
+            isCache: false
+            isExternal: false
+            isHidden: false
+          - title: 部门管理
+            id: 101
+            component: system/dept/index
+            parentId: 10
+            type: 2
+            path: /system/dept
+            name: SystemDept
+            icon: mind-mapping
+            permission: administrator:dept
+            sort: 2
+            isCache: false
+            isExternal: false
+            isHidden: false
+    permission:
+      - id: 10001
+        parentId: 100
+        name: 人员读权限
+        code: administrator:user:read
+      - id: 10002
+        parentId: 100
+        name: 人员写权限
+        code: administrator:user:write
+      - id: 10101
+        parentId: 101
+        name: 部门读权限
+        code: administrator:dept:read
+      - id: 10102
+        parentId: 101
+        name: 部门写权限
+        code: administrator:dept:read

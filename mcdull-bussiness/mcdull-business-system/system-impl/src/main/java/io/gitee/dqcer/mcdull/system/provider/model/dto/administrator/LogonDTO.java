@@ -11,12 +11,12 @@ public class LogonDTO implements DTO {
 
     @NotBlank
     @Length(min = 1, max = 32)
-    private String loginName;
+    private String username;
 
     @NotBlank
-    private String loginPwd;
+    private String password;
 
-    @NotBlank
+//    @NotBlank
     private String captcha;
 
     @NotBlank

@@ -2,7 +2,7 @@ drop table if exists `administrator_user`;
 create table if not exists `administrator_user` (
 `id` int not null auto_increment comment '主键',
 `login_name` varchar(30)  not null comment '登录帐号',
-`login_pwd` varchar(50)  not null comment '登录密码',
+`login_pwd` varchar(64)  not null comment '登录密码',
 `actual_name` varchar(30)  not null comment '用户名称',
 `email` varchar(300)  not null comment 'email',
 `administrator_flag` tinyint(0) not null default 0 comment '是否为超级管理员: 0 不是，1是',
@@ -17,11 +17,16 @@ create table if not exists `administrator_user` (
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 primary key (`id`)
 )  comment='管理端 用户';
+insert into `administrator_user` values('administrator', '$2a$12$ZfcrKBFIrvg8U1WAzOK9NulftyscQQ/mxCb7gPw6epUh7CbQVaI1u', 'Terry',  '1@sina.com', 1, null, null, 1,  0, sysdate(), 0, sysdate(), 1, 0);
+
+
+
+
 drop table if exists `administrator_dept`;
 create table if not exists `administrator_dept` (
     `id`          int not null auto_increment comment '主键',
     `name`        varchar(30)  not null                    comment '名称',
-    `parent_id`   int  not null default 0
+    `parent_id`   int  not null default 0,
     `ancestors`   varchar(512) not null default ''         comment '祖级列表',
     `description` varchar(200) default null                comment '描述',
     `sort`        int          not null default 999        comment '排序',
@@ -32,8 +37,13 @@ create table if not exists `administrator_dept` (
     `updated_by` int default null comment '更新人',
     `updated_time` datetime default null comment '更新时间',
     `inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
-    `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）'
+    `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+    primary key (`id`)
 ) comment='部门表';
+
+insert into `administrator_dept` values(1, '系统内置部门', 0, '0', '系统内置部门', 999, 1, 0, 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `administrator_dept` values(2, '系统内置部门2', 1, '0,1', '系统内置部门2', 999, 1, 0, 0, sysdate(), 0, sysdate(), 0, 0);
+
 drop table if exists `administrator_user_menu`;
 create table if not exists `administrator_user_menu` (
 `id`  int not null auto_increment comment '主键',

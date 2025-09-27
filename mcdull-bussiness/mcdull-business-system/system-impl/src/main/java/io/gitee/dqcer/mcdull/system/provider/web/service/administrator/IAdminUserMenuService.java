@@ -6,7 +6,11 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminUse
 import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminUserMenuEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.AdminVO;
 
+import java.util.List;
+import java.util.Map;
+
 public interface IAdminUserMenuService extends IService<AdminUserMenuEntity> {
 
+    Map<Integer, List<Integer>> getUserMenu();
 
 }

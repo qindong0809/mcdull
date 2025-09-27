@@ -19,5 +19,6 @@ public class AdminUserEntity extends BaseEntity<Integer> {
     private Boolean administratorFlag;
     private Date lastLoginTime;
     private Date pwdResetTime;
+    private Integer deptId;
 
 }

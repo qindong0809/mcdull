@@ -117,7 +117,7 @@ public class CommonManagerImpl implements ICommonManager {
         if (ObjUtil.isNull(date)) {
             return StrUtil.EMPTY;
         }
-        return TimeZoneUtil.serializeDate(date, null, null, null, null);
+        return TimeZoneUtil.serializeDate(date, null, null, null, null, false);
     }
 
     @SneakyThrows

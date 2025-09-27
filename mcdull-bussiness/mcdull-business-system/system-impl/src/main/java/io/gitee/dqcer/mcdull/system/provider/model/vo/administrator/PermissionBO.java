@@ -1,8 +1,12 @@
 package io.gitee.dqcer.mcdull.system.provider.model.vo.administrator;
 
+import io.gitee.dqcer.mcdull.framework.base.support.BO;
+import lombok.Data;
+
 import java.util.List;
 
-public class MenuBO {
+@Data
+public class PermissionBO implements BO {
 
     private Integer id;
 
@@ -12,5 +16,5 @@ public class MenuBO {
 
     private Integer parentId;
 
-    private List<MenuBO> children;
+    private List<PermissionBO> children;
 }

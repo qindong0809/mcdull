@@ -8,6 +8,8 @@ import io.gitee.dqcer.mcdull.system.provider.config.Ip2RegionListener;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 
 @EnableWebCore
@@ -15,6 +17,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableDynamicDataSource
 @EnableCache
 @SpringBootApplication(scanBasePackages = "io.gitee")
+@EnableConfigurationProperties
+@ConfigurationPropertiesScan
 public class SystemApplication {
     public static void main( String[] args ) {
         SpringApplication application = new SpringApplication(SystemApplication.class);
