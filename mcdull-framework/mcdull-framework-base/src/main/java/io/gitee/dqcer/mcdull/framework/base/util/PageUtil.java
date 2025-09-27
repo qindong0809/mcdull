@@ -91,6 +91,10 @@ public class PageUtil {
         return new PagedVO<>(list, list.size(), dto.getPageSize(), dto.getPageNum());
     }
 
+    public static <T> PagedVO<T> of(List<T> list, Integer pageSize, Integer pageNum) {
+        return new PagedVO<>(list, list.size(), pageSize, pageNum);
+    }
+
     public static <D extends PagedDTO> void setMaxPageSize(D dto) {
         dto.setPageSize(Integer.MAX_VALUE);
         dto.setPageNum(GlobalConstant.Number.NUMBER_1);

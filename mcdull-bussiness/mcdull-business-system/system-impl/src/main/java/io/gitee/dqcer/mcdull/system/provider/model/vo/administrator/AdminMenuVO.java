@@ -19,6 +19,7 @@ public class AdminMenuVO implements VO {
     private String name;
     private String component;
     private String icon;
+    private String redirect;
 
     private Boolean isExternal = false;
     private Boolean isCache = false;

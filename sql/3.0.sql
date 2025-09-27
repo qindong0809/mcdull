@@ -17,7 +17,7 @@ create table if not exists `administrator_user` (
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 primary key (`id`)
 )  comment='管理端 用户';
-insert into `administrator_user` values('administrator', '$2a$12$ZfcrKBFIrvg8U1WAzOK9NulftyscQQ/mxCb7gPw6epUh7CbQVaI1u', 'Terry',  '1@sina.com', 1, null, null, 1,  0, sysdate(), 0, sysdate(), 1, 0);
+insert into `administrator_user` values(null, 'administrator', '$2a$12$ZfcrKBFIrvg8U1WAzOK9NulftyscQQ/mxCb7gPw6epUh7CbQVaI1u', 'Terry',  '1@sina.com', 1, null, null, 1,  0, sysdate(), 0, sysdate(), 0, 0);
 
 
 
@@ -41,7 +41,7 @@ create table if not exists `administrator_dept` (
     primary key (`id`)
 ) comment='部门表';
 
-insert into `administrator_dept` values(1, '系统内置部门', 0, '0', '系统内置部门', 999, 1, 0, 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `administrator_dept` values(1, '系统内置部门', 0, '0', '系统内置部门', 999, 1, 1, 0, sysdate(), 0, sysdate(), 0, 0);
 insert into `administrator_dept` values(2, '系统内置部门2', 1, '0,1', '系统内置部门2', 999, 1, 0, 0, sysdate(), 0, sysdate(), 0, 0);
 
 drop table if exists `administrator_user_menu`;
@@ -51,7 +51,8 @@ create table if not exists `administrator_user_menu` (
 `menu_id` int not null comment '菜单id',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
-`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）'
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+primary key (`id`)
 )  comment='关联表';
 
 drop table if exists `sys_user`;

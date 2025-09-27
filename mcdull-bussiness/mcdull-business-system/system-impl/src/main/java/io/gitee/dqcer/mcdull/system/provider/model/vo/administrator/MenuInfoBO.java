@@ -19,6 +19,8 @@ public class MenuInfoBO implements BO {
     private String name;
     private String component;
     private String icon;
+    private String redirect;
+
 
     private Boolean isExternal;
     private Boolean isCache;
