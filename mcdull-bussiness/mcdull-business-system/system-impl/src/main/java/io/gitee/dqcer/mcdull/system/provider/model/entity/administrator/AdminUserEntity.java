@@ -15,10 +15,14 @@ public class AdminUserEntity extends BaseEntity<Integer> {
     private String loginName;
     private String loginPwd;
     private String actualName;
+    private String phone;
+    private Integer gender;
     private String email;
     private Boolean administratorFlag;
     private Date lastLoginTime;
     private Date pwdResetTime;
     private Integer deptId;
+    private String roleJoin;
+    private String description;
 
 }

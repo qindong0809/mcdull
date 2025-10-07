@@ -19,15 +19,14 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.security.PasswordUtil;
 import io.gitee.dqcer.mcdull.framework.security.StpKit;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.administrator.LogonDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.administrator.UserSaveDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminDeptEntity;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminRoleEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminUserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.*;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.administrator.AdminUserMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ICaptchaService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.administrator.IAdminDeptService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.administrator.IAdminMenuService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.administrator.IAdminUserMenuService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.administrator.IAdminUserService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.administrator.*;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +45,8 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     private IAdminUserMenuService adminUserMenuService;
     @Resource
     private IAdminDeptService adminDeptService;
+    @Resource
+    private IAdminRoleService adminRoleService;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -86,10 +87,22 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
             vo.setId(entity.getId());
             vo.setUsername(entity.getLoginName());
             vo.setNickname(entity.getActualName());
+            vo.setGender(entity.getGender());
+            vo.setPhone(entity.getPhone());
             vo.setEmail(entity.getEmail());
             vo.setCreateTime(entity.getCreatedTime());
             vo.setRegistrationDate(entity.getCreatedTime());
-            vo.setRoles(Set.of("super_admin"));
+            String roleJoin = entity.getRoleJoin();
+            if (StrUtil.isNotBlank(roleJoin)) {
+                String[] roleArray = roleJoin.split(",");
+                List<Integer> roleIdList = new ArrayList<>();
+                for (String roleId : roleArray) {
+                    roleIdList.add(Integer.valueOf(roleId));
+                }
+                List<AdminRoleEntity> roleList = adminRoleService.listByIds(roleIdList);
+                vo.setRoles(roleList.stream().map(AdminRoleEntity::getCode).collect(Collectors.toSet()));
+                vo.setRoleNames(roleList.stream().map(AdminRoleEntity::getName).collect(Collectors.toList()));
+            }
             vo.setDeptId(entity.getDeptId());
             AdminDeptEntity deptEntity = adminDeptService.getById(entity.getDeptId());
             if (ObjectUtil.isNotNull(deptEntity)) {
@@ -128,12 +141,14 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     }
 
     @Override
-    public PagedVO<AdminUserVO> getUserList(Integer pageNum, Integer pageSize, Integer deptId, Integer status, String createTime, String description) {
+    public PagedVO<AdminUserVO> getUserList(Integer pageNum, Integer pageSize, Integer deptId, Integer status, String createTime, String description, Integer roleId, Integer notInRoleId) {
         LambdaQueryWrapper<AdminUserEntity> queryWrapper = new LambdaQueryWrapper<>();
         List<AdminDeptEntity> deptList = adminDeptService.list();
-        List<Integer> deptIdList = getChildDeptId(deptId, deptList);
-        deptIdList.add(deptId);
-        queryWrapper.in(AdminUserEntity::getDeptId, deptIdList);
+        if (ObjectUtil.isNotNull(deptId)) {
+            List<Integer> deptIdList = getChildDeptId(deptId, deptList);
+            deptIdList.add(deptId);
+            queryWrapper.in(AdminUserEntity::getDeptId, deptIdList);
+        }
         if (ObjectUtil.isNotNull(status)) {
             queryWrapper.eq(AdminUserEntity::getInactive, ObjectUtil.equal(status, 2));
         }
@@ -147,20 +162,67 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
             String endTime = split[1];
             queryWrapper.between(AdminUserEntity::getCreatedTime, startTime, endTime);
         }
-        List<AdminUserEntity> list = baseMapper.selectList(queryWrapper);
+
         Map<Integer, String> deptNameMap = adminDeptService.getDeptNameMap();
         List<AdminUserVO> voList = new ArrayList<>();
+        List<AdminUserEntity> list = baseMapper.selectList(queryWrapper);
+        if (ObjectUtil.isNotNull(roleId)) {
+            list = list.stream().filter( i -> {
+                String roleJoin = i.getRoleJoin();
+                if (StrUtil.isBlank(roleJoin)) {
+                    return false;
+                }
+                List<String> split = StrUtil.split(roleJoin, ',');
+                return split.contains(roleId.toString());
+            }).collect(Collectors.toList());
+        }
+        if (ObjectUtil.isNotNull(notInRoleId)) {
+            list = list.stream().filter( i -> {
+                String roleJoin = i.getRoleJoin();
+                if (StrUtil.isBlank(roleJoin)) {
+                    return true;
+                }
+                List<String> split = StrUtil.split(roleJoin, ',');
+                return !split.contains(notInRoleId.toString());
+            }).collect(Collectors.toList());
+        }
+
+        Set<String> collect = list.stream().map(AdminUserEntity::getRoleJoin).collect(Collectors.toSet());
+        Map<Integer, String> roleNameMap = new HashMap<>();
+        List<Integer> roleIdList = new ArrayList<>();
+        for (String roleJoin : collect) {
+            String[] split = roleJoin.split(",");
+            roleIdList.addAll(Arrays.stream(split).map(Integer::parseInt).toList());
+            List<AdminRoleEntity> roleList = adminRoleService.listByIds(roleIdList);
+            roleNameMap = roleList.stream().collect(Collectors.toMap(AdminRoleEntity::getId, AdminRoleEntity::getName));
+        }
+        Map<Integer, String> userNameMap = this.getUserNameMap();
         for (AdminUserEntity entity : list) {
             AdminUserVO vo = new AdminUserVO();
             vo.setId(entity.getId());
             vo.setUsername(entity.getLoginName());
             vo.setNickname(entity.getActualName());
+            vo.setGender(entity.getGender());
+            vo.setPhone(entity.getPhone());
             vo.setEmail(entity.getEmail());
             vo.setCreateTime(entity.getCreatedTime());
             vo.setDeptId(entity.getDeptId());
             vo.setDeptName(ObjectUtil.isNotNull(entity.getDeptId()) ? deptNameMap.get(entity.getDeptId()) : StrUtil.EMPTY);
             vo.setIsSystem(entity.getAdministratorFlag());
             vo.setStatus(entity.getInactive() ? 2 : 1);
+            String[] split = entity.getRoleJoin().split(",");
+            List<String> roleNameList = new ArrayList<>();
+            List<Integer> rList = new ArrayList<>();
+            for (String s : split) {
+                roleNameList.add(roleNameMap.get(Integer.valueOf(s)));
+                rList.add(Integer.valueOf(s));
+            }
+            vo.setRoleNames(roleNameList);
+            vo.setRoleIds(rList);
+            vo.setCreateUserString(userNameMap.get(entity.getCreatedBy()));
+            vo.setUpdateUserString(userNameMap.get(entity.getUpdatedBy()));
+            vo.setDescription(entity.getDescription());
+            vo.setDisabled(entity.getAdministratorFlag());
             voList.add(vo);
         }
         return PageUtil.of(voList, pageSize, pageNum);
@@ -181,9 +243,76 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
             vo.setDeptId(deptEntity.getId());
             vo.setDeptName(deptEntity.getName());
         }
+        String[] split = entity.getRoleJoin().split(",");
+        List<Integer> roleIds = new ArrayList<>();
+        for (String s : split) {
+            roleIds.add(Integer.parseInt(s));
+        }
+        vo.setRoleIds(roleIds);
+        vo.setRoleNames(adminRoleService.listByIds(vo.getRoleIds()).stream().map(AdminRoleEntity::getName).toList());
         vo.setIsSystem(entity.getAdministratorFlag());
         vo.setStatus(entity.getInactive() ? 2 : 1);
+        Map<Integer, String> userNameMap = this.getUserNameMap();
+        vo.setCreateUserString(userNameMap.get(entity.getCreatedBy()));
+        vo.setUpdateUserString(userNameMap.get(entity.getUpdatedBy()));
+        vo.setDescription(entity.getDescription());
         return vo;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Integer saveUser(UserSaveDTO dto) {
+        AdminUserEntity entity = new AdminUserEntity();
+        entity.setLoginName(dto.getUsername());
+        entity.setActualName(dto.getNickname());
+        entity.setLoginPwd(PasswordUtil.encode(dto.getPassword()));
+        entity.setGender(dto.getGender());
+        entity.setPhone(dto.getPhone());
+        entity.setEmail(dto.getEmail());
+        entity.setDeptId(dto.getDeptId());
+        entity.setInactive(ObjectUtil.equal(dto.getStatus(), 2));
+        entity.setAdministratorFlag(false);
+        entity.setRoleJoin(StrUtil.join(",", dto.getRoleIds()));
+        entity.setDescription(dto.getDescription());
+        super.save(entity);
+        return entity.getId();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Boolean editUser(Integer id, UserSaveDTO dto) {
+        AdminUserEntity entity = super.getById(id);
+        if (ObjectUtil.isNotNull(entity)) {
+            entity.setLoginName(dto.getUsername());
+            entity.setActualName(dto.getNickname());
+            entity.setGender(dto.getGender());
+            entity.setPhone(dto.getPhone());
+            entity.setEmail(dto.getEmail());
+            entity.setDeptId(dto.getDeptId());
+            entity.setInactive(ObjectUtil.equal(dto.getStatus(), 2));
+            entity.setRoleJoin(StrUtil.join(",", dto.getRoleIds()));
+            entity.setDescription(dto.getDescription());
+            super.updateById(entity);
+        }
+        return true;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Boolean deleteUser(List<Integer> ids) {
+        super.removeByIds(ids);
+        return true;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Boolean editUserRole(Integer id, List<Integer> roleIds) {
+        AdminUserEntity entity = super.getById(id);
+        if (ObjectUtil.isNotNull(entity)) {
+            entity.setRoleJoin(StrUtil.join(",", roleIds));
+            super.updateById(entity);
+        }
+        return true;
     }
 
     private List<Integer> getChildDeptId(Integer deptId, List<AdminDeptEntity> deptList) {

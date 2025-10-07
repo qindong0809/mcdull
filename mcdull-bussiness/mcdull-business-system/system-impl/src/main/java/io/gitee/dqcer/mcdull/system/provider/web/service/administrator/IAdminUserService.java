@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.administrator;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.administrator.LogonDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.administrator.UserSaveDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminUserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.AdminMenuVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.AdminUserSimpleVO;
@@ -22,7 +23,15 @@ public interface IAdminUserService extends IService<AdminUserEntity> {
 
     Map<Integer, String> getUserNameMap();
 
-    PagedVO<AdminUserVO> getUserList( Integer pageNum, Integer pageSize, Integer deptId, Integer status, String createTime, String description);
+    PagedVO<AdminUserVO> getUserList( Integer pageNum, Integer pageSize, Integer deptId, Integer status, String createTime, String description, Integer roleId, Integer notInRoleId);
 
     AdminUserSimpleVO getUser(Integer id);
+
+    Integer saveUser(UserSaveDTO dto);
+
+    Boolean editUser(Integer id, UserSaveDTO dto);
+
+    Boolean deleteUser(List<Integer> ids);
+
+    Boolean editUserRole(Integer id, List<Integer> roleIds);
 }
