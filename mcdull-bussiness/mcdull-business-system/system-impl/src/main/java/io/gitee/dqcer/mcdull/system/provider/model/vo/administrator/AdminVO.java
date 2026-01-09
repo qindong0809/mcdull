@@ -1,19 +1,14 @@
 
 package io.gitee.dqcer.mcdull.system.provider.model.vo.administrator;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
-import io.gitee.dqcer.mcdull.system.provider.model.enums.GenderEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -53,7 +48,7 @@ public class AdminVO implements Serializable {
      * 性别
      */
     @Schema(description = "性别", example = "1")
-    private GenderEnum gender;
+    private Integer gender;
 
     /**
      * 邮箱

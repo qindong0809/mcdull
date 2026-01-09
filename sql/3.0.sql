@@ -4,11 +4,15 @@ create table if not exists `administrator_user` (
 `login_name` varchar(30)  not null comment '登录帐号',
 `login_pwd` varchar(64)  not null comment '登录密码',
 `actual_name` varchar(30)  not null comment '用户名称',
-`email` varchar(300)  not null comment 'email',
+`phone` varchar(20) default null comment '联系电话',
+`gender` int not null comment '性别（0：未知；1：男；2：女）',
+`email` varchar(300)  default null comment 'email',
 `administrator_flag` tinyint(0) not null default 0 comment '是否为超级管理员: 0 不是，1是',
 `last_login_time` datetime default null comment '最近一次登录时间',
 `pwd_reset_time` datetime default null comment '最后一次修改密码时间',
  `dept_id` int not null comment '部门ID',
+ `role_join` varchar(64) not null comment '角色ID',
+ `description` varchar(200) default null comment '描述',
 `created_by` int not null comment '创建人',
 `created_time` datetime not null comment '创建时间',
 `updated_by` int default null comment '更新人',
@@ -17,7 +21,7 @@ create table if not exists `administrator_user` (
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 primary key (`id`)
 )  comment='管理端 用户';
-insert into `administrator_user` values('administrator', '$2a$12$ZfcrKBFIrvg8U1WAzOK9NulftyscQQ/mxCb7gPw6epUh7CbQVaI1u', 'Terry',  '1@sina.com', 1, null, null, 1,  0, sysdate(), 0, sysdate(), 1, 0);
+insert into `administrator_user` values(null, 'administrator', '$2a$12$ZfcrKBFIrvg8U1WAzOK9NulftyscQQ/mxCb7gPw6epUh7CbQVaI1u', 'Terry', '', 0,  '1@sina.com', 1, null, null, 1, '1', '这是内置的人员', 0, sysdate(), 0, sysdate(), 0, 0);
 
 
 
@@ -41,7 +45,7 @@ create table if not exists `administrator_dept` (
     primary key (`id`)
 ) comment='部门表';
 
-insert into `administrator_dept` values(1, '系统内置部门', 0, '0', '系统内置部门', 999, 1, 0, 0, sysdate(), 0, sysdate(), 0, 0);
+insert into `administrator_dept` values(1, '系统内置部门', 0, '0', '系统内置部门', 999, 1, 1, 0, sysdate(), 0, sysdate(), 0, 0);
 insert into `administrator_dept` values(2, '系统内置部门2', 1, '0,1', '系统内置部门2', 999, 1, 0, 0, sysdate(), 0, sysdate(), 0, 0);
 
 drop table if exists `administrator_user_menu`;
@@ -51,8 +55,28 @@ create table if not exists `administrator_user_menu` (
 `menu_id` int not null comment '菜单id',
 `created_time` datetime not null comment '创建时间',
 `updated_time` datetime default null comment '更新时间',
-`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）'
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+primary key (`id`)
 )  comment='关联表';
+
+drop table if exists `administrator_role`;
+CREATE TABLE IF NOT EXISTS `administrator_role` (
+`id`                  int   NOT NULL AUTO_INCREMENT COMMENT 'ID',
+`name`                varchar(30)  NOT NULL                COMMENT '名称',
+`code`                varchar(30)  NOT NULL                COMMENT '编码',
+`data_scope`          tinyint(1)   NOT NULL DEFAULT 4      COMMENT '数据权限（1：全部数据权限；2：本部门及以下数据权限；3：本部门数据权限；4：仅本人数据权限；5：自定义数据权限）',
+`description`         varchar(200) DEFAULT NULL            COMMENT '描述',
+`sort`                int          NOT NULL DEFAULT 999    COMMENT '排序',
+`is_system`           bit(1)       NOT NULL DEFAULT b'0'   COMMENT '是否为系统内置数据',
+`menu_join` varchar(1024) default null comment '菜单ID集合',
+`created_time` datetime not null comment '创建时间',
+`updated_time` datetime default null comment '更新时间',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+PRIMARY KEY (`id`)
+)  COMMENT='角色表';
+
+insert into `administrator_role` values(1, '超级管理员', 'super_admin', 4, '系统内置角色', 0, 1, null, sysdate(), sysdate(), 0);
+
 
 drop table if exists `sys_user`;
 create table if not exists `sys_user` (

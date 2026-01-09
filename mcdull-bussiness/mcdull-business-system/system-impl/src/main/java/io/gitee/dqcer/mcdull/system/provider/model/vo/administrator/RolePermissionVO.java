@@ -6,11 +6,17 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class AdminDeptTreeVO implements VO {
+public class RolePermissionVO implements VO {
 
-    private Integer key;
-    private Integer parentId;
+    private Integer id;
+
     private String title;
-    private Integer sort;
-    private List<AdminDeptTreeVO> children;
+
+    private Integer type;
+
+    private String permission;
+
+    private Integer parentId;
+
+    private List<RolePermissionVO> children;
 }

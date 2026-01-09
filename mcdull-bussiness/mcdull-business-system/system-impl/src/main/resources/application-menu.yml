@@ -10,7 +10,7 @@ administration:
         path: /system
         redirect: /system/user
         type: 1
-        permission: administrator
+        permission:
         sort: 1
         isCache: false
         isExternal: false
@@ -24,7 +24,7 @@ administration:
             parentId: 10
             type: 2
             path: /system/user
-            permission: administrator:user
+            permission:
             sort: 1
             isCache: false
             isExternal: false
@@ -37,8 +37,21 @@ administration:
             path: /system/dept
             name: SystemDept
             icon: mind-mapping
-            permission: administrator:dept
+            permission:
             sort: 2
+            isCache: false
+            isExternal: false
+            isHidden: false
+          - title: 角色管理
+            id: 103
+            component: system/role/index
+            parentId: 10
+            type: 2
+            path: /system/role
+            name: SystemRole
+            icon: user-management
+            permission:
+            sort: 3
             isCache: false
             isExternal: false
             isHidden: false

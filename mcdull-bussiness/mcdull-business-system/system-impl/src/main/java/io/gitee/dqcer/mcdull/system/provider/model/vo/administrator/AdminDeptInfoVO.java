@@ -3,14 +3,16 @@ package io.gitee.dqcer.mcdull.system.provider.model.vo.administrator;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class AdminDeptTreeVO implements VO {
+public class AdminDeptInfoVO implements VO {
 
-    private Integer key;
+
+    private Integer id;
     private Integer parentId;
-    private String title;
+    private String name;
     private Integer sort;
-    private List<AdminDeptTreeVO> children;
+    private Boolean isSystem;
+    private String description;
+    private Integer status;
+
 }
