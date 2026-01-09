@@ -31,7 +31,7 @@ public class RedissonCache implements ICache {
 
 
     private String prefix() {
-        return mcdullProperties + ":";
+        return mcdullProperties.getApplicationName() + ":";
     }
 
     @Override

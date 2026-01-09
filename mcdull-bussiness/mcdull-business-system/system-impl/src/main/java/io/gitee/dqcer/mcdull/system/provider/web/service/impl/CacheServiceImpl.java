@@ -60,7 +60,8 @@ public class CacheServiceImpl extends GenericLogic implements ICacheService {
         Collection<String> redisCacheList = redisClient.getAllKey();
         if (CollUtil.isNotEmpty(redisCacheList)) {
             for (String key : redisCacheList) {
-                if (!key.startsWith(GlobalConstant.RATE_LIMITER) && !key.startsWith("{" + GlobalConstant.RATE_LIMITER)) {
+                if (!key.startsWith(GlobalConstant.RATE_LIMITER) && !key.startsWith("{" + GlobalConstant.RATE_LIMITER)
+                    && (!key.startsWith("{"))) {
                     cacheNameList.add(new KeyValueVO<>(key, "redis"));
                 }
             }

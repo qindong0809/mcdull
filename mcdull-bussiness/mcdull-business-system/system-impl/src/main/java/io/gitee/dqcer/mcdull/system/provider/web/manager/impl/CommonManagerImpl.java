@@ -15,6 +15,7 @@ import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.*;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.ExcelWriter;
@@ -332,20 +333,24 @@ public class CommonManagerImpl implements ICommonManager {
 
     @Override
     public String getConfig(String key) {
-        List<?> list = cacheChannel.get("sys_config", List.class);
         String value = null;
-        if (CollUtil.isNotEmpty(list)) {
-            for (Object o : list) {
-                ConfigEntity entity = (ConfigEntity) o;
-                if (entity.getConfigKey().equals(key)) {
-                    value = entity.getConfigValue();
-                    break;
+        String jsonStr = cacheChannel.get("sys_config", String.class);
+        if (StrUtil.isNotBlank(jsonStr)) {
+            if (JSONUtil.isTypeJSON(jsonStr)) {
+                List<ConfigEntity> list = JSONUtil.toList(jsonStr, ConfigEntity.class);
+                if (CollUtil.isNotEmpty(list)) {
+                    for (ConfigEntity entity : list) {
+                        if (entity.getConfigKey().equals(key)) {
+                            value = entity.getConfigValue();
+                            break;
+                        }
+                    }
                 }
             }
         }
         List<ConfigEntity> entityList = configRepository.list();
         if (CollUtil.isNotEmpty(entityList)) {
-            cacheChannel.put("sys_config", entityList, 60 * 60 * 24);
+            cacheChannel.put("sys_config", JSONUtil.parseArray(entityList).toString(), 60 * 60 * 24);
             ConfigEntity configEntity = entityList.stream()
                     .filter(entity -> entity.getConfigKey().equals(key)).findFirst().orElse(null);
             if (ObjUtil.isNotNull(configEntity)) {

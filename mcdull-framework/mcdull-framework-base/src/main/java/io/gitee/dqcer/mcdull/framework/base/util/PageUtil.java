@@ -61,6 +61,10 @@ public class PageUtil {
         if (ObjectUtil.isNull(pageNum) || ObjectUtil.isNull(pageSize)) {
             throw new IllegalArgumentException("pageNum or pageSize is null");
         }
+        if (ObjectUtil.equal(pageNum, GlobalConstant.Number.NUMBER_0)
+            || ObjectUtil.equal(pageSize, GlobalConstant.Number.NUMBER_0)) {
+            return empty(pageDTO);
+        }
         int remainder = total % pageSize;
         int totalPage = remainder > GlobalConstant.Number.NUMBER_0
                 ? total / pageSize + GlobalConstant.Number.NUMBER_1
