@@ -27,7 +27,6 @@ import io.gitee.dqcer.mcdull.system.provider.util.Ip2RegionUtil;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;
 import jakarta.annotation.Resource;
 import org.springframework.cache.Cache;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -126,24 +125,23 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
 
     @Override
     public List<String> getPermissionList(Integer userId) {
+        Set<String> permissionCodeSet = new HashSet<>();
         Map<Integer, UserEntity> entityMap = userService.getEntityMap(ListUtil.of(userId));
         if (MapUtil.isNotEmpty(entityMap)) {
             UserEntity userDO = entityMap.get(userId);
             if (ObjUtil.isNotNull(userDO)) {
                 Boolean administratorFlag = userDO.getAdministratorFlag();
-                if (BooleanUtil.isTrue(administratorFlag)) {
-                    return ListUtil.of(GlobalConstant.ALL_CODE);
+                if (BooleanUtil.isFalse(administratorFlag)) {
+                    List<UserPowerVO> userPowerVOList = userService.getResourceModuleList(userId);
+                    if (CollUtil.isNotEmpty(userPowerVOList)) {
+                        for (UserPowerVO vo : userPowerVOList) {
+                            permissionCodeSet.addAll(vo.getModules());
+                        }
+                    }
                 }
             }
         }
-        List<UserPowerVO> userPowerVOList = userService.getResourceModuleList(userId);
-        Set<String> set = new HashSet<>();
-        if (CollUtil.isNotEmpty(userPowerVOList)) {
-            for (UserPowerVO vo : userPowerVOList) {
-                set.addAll(vo.getModules());
-            }
-        }
-        return new ArrayList<>(set);
+        return new ArrayList<>(permissionCodeSet);
     }
 
 

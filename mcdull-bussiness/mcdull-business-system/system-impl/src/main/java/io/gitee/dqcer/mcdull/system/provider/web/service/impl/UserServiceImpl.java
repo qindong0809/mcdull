@@ -417,6 +417,15 @@ public class UserServiceImpl
     }
 
     @Override
+    public boolean isAdmin(Integer userId) {
+        UserEntity entity = baseRepository.getById(userId);
+        if (ObjUtil.isNull(entity)) {
+            this.throwDataNotExistException(userId);
+        }
+        return entity.getAdministratorFlag();
+    }
+
+    @Override
     public Map<Integer, String> getNameMap(List<Integer> userIdList) {
         List<UserEntity> list = this.list(userIdList);
         return list.stream().collect(Collectors.toMap(IdEntity::getId, UserEntity::getActualName));

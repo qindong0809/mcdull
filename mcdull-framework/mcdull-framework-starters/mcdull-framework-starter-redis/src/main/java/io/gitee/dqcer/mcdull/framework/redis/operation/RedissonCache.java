@@ -1,9 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.redis.operation;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
@@ -71,7 +69,7 @@ public class RedissonCache implements ICache {
 
     public <T> T getOrSet(String key, Class<T> type, Supplier<T> supplier, long expire) {
         String jsonStr = this.get(key, String.class);
-        if (StrUtil.isNotBlank(jsonStr)) {
+        if (CharSequenceUtil.isNotBlank(jsonStr)) {
             return JSONUtil.toBean(jsonStr, type);
         }
         T t = supplier.get();
@@ -83,21 +81,12 @@ public class RedissonCache implements ICache {
         String jsonStr = this.get(key, String.class);
         if (CharSequenceUtil.isNotBlank(jsonStr)) {
             LogHelp.info(log, "redis缓存 key={} 缓存已命中 value:{}", key, jsonStr);
-            System.out.println(JSONUtil.isTypeJSON(jsonStr));
-            JSONObject jsonArray1 = JSONUtil.parseObj("[*:*:*]");
-            JSONArray jsonArray = JSONUtil.parseArray(jsonStr);
-            return JSONUtil.toList(jsonArray, type);
-//            return JSONUtil.toList(jsonStr, type);
+            return JSONUtil.toList(jsonStr, type);
         }
         List<T> t = supplier.get();
-        this.put(key, t, expire);
+        JSONArray jsonArray = JSONUtil.parseArray(JSONUtil.toJsonStr(t));
+        this.put(key, jsonArray.toString(), expire);
         return t;
-    }
-
-    public static void main(String[] args) {
-//        JSONArray jsonArray = JSONUtil.parseArray("[\"*:*:*\"]");
-        JSONObject jsonArray = JSONUtil.parseObj("[*:*:*]");
-        System.out.println(jsonArray);
     }
 
 

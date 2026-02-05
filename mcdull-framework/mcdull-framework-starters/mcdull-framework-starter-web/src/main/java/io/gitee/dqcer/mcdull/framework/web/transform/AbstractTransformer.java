@@ -4,9 +4,9 @@ import io.gitee.dqcer.mcdull.framework.base.annotation.ITransformer;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
-import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
-
+import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import jakarta.annotation.Resource;
+
 import java.text.MessageFormat;
 
 /**
@@ -18,7 +18,7 @@ import java.text.MessageFormat;
 public abstract class AbstractTransformer implements ITransformer<Object> {
 
     @Resource
-    private CacheChannel cacheChannel;
+    private RedissonCache redissonCache;
 
     private String keyFormat() {
         return "framework:web:transform:{0}:{0}:{1}";
@@ -41,13 +41,13 @@ public abstract class AbstractTransformer implements ITransformer<Object> {
         }
         String key = MessageFormat.format(keyFormat, cacheName, original, param);
 
-        KeyValueBO<?, ?> bo = cacheChannel.get(key, KeyValueBO.class);
+        KeyValueBO<?, ?> bo = redissonCache.get(key, KeyValueBO.class);
         if (bo != null) {
             return String.valueOf(bo.getValue());
         }
 
         bo = getKeyValueVO(original, param);
-        cacheChannel.put(key, bo, cacheExpireTime());
+        redissonCache.put(key, bo, cacheExpireTime());
         return String.valueOf(bo.getValue());
     }
 

@@ -12,14 +12,12 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.redis.aspect.CacheExpireAspect;
 import io.gitee.dqcer.mcdull.framework.redis.aspect.RedisLockAspect;
-import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.StringCodec;
 import org.redisson.config.Config;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
@@ -43,13 +41,7 @@ import java.util.stream.Stream;
  * @since 2021/09/10
  */
 @Configuration
-public class RedissonAutoConfiguration extends CachingConfigurerSupport {
-
-    @Bean
-    @ConditionalOnMissingBean(CacheChannel.class)
-    public CacheChannel getRedissonObject() {
-        return new CacheChannel();
-    }
+public class RedissonAutoConfiguration implements CachingConfigurer {
 
     @Bean
     public RedisLockAspect getRedisLockAspect() {

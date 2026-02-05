@@ -47,6 +47,14 @@ public interface IUserService {
     Map<Integer, UserEntity> getEntityMap(List<Integer> userIdList);
 
     /**
+     * 是否管理员
+     *
+     * @param userId 用户ID
+     * @return boolean
+     */
+    boolean isAdmin(Integer userId);
+
+    /**
      * userid、username
      *
      * @param userIdList 用户id列表

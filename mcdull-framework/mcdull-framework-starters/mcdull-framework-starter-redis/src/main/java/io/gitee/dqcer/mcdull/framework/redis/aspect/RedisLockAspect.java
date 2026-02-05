@@ -2,12 +2,10 @@ package io.gitee.dqcer.mcdull.framework.redis.aspect;
 
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.constants.SymbolConstants;
-import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock;
-import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
+import jakarta.annotation.Resource;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -25,7 +23,6 @@ import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
-import jakarta.annotation.Resource;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
@@ -45,9 +42,6 @@ public class RedisLockAspect {
     private static final ParameterNameDiscoverer NAME_DISCOVERER = new DefaultParameterNameDiscoverer();
 
     private static final ExpressionParser PARSER = new SpelExpressionParser();
-
-    @Resource
-    private CacheChannel cacheChannel;
 
     @Resource
     private RedissonClient redissonClient;
