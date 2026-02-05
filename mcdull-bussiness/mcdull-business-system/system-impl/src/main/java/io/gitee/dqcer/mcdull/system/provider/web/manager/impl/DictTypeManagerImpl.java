@@ -4,19 +4,18 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
+import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
-import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
 import io.gitee.dqcer.mcdull.system.provider.config.constants.CacheConstants;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DictValueVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.RemoteDictTypeVO;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IDictTypeManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDictValueService;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +35,8 @@ public class DictTypeManagerImpl implements IDictTypeManager {
 
     @Resource
     private IDictValueService dictValueService;
-
     @Resource
-    private CacheChannel cacheChannel;
+    private RedissonCache redissonCache;
 
 
     /**
@@ -75,7 +73,7 @@ public class DictTypeManagerImpl implements IDictTypeManager {
 
     @Override
     public void clean() {
-        cacheChannel.evict(CacheConstants.DICT_LIST);
+        redissonCache.evict(CacheConstants.DICT_LIST);
     }
 
     private Map<String, String> getMap(String selectCode) {
@@ -83,19 +81,9 @@ public class DictTypeManagerImpl implements IDictTypeManager {
             throw new IllegalArgumentException("'selectCode' is null.");
         }
         String key = StrUtil.format(CacheConstants.DICT_LIST,  selectCode);
-        List<KeyValueBO<String, String>> list = cacheChannel.get(key, List.class);
-        if (CollUtil.isNotEmpty(list)) {
-            return list.stream().collect(Collectors.toMap(KeyValueBO::getKey, KeyValueBO::getValue));
-        }
-
-        List<DictValueVO> dbList = dictValueService.selectByKeyCode(selectCode);
+        List<DictValueVO> dbList = redissonCache.getListOrSet(key, DictValueVO.class, () -> dictValueService.selectByKeyCode(selectCode), CacheConstants.DICT_EXPIRE);
         if (CollUtil.isNotEmpty(dbList)) {
-            List<KeyValueBO<String, String>> cacheList = new ArrayList<>();
-            for (DictValueVO dictValueVO : dbList) {
-                cacheList.add(new KeyValueBO<>(dictValueVO.getValueCode(), dictValueVO.getValueName()));
-            }
-            cacheChannel.put(key, cacheList, CacheConstants.DICT_EXPIRE);
-            return dbList.stream().collect(Collectors.toMap(DictValueVO::getValueCode, DictValueVO::getValueName));
+            return dbList.stream().collect(Collectors.toMap(DictValueVO::getValueCode, DictValueVO::getValueName, (k1, k2) -> k1));
         }
         return Collections.emptyMap();
     }

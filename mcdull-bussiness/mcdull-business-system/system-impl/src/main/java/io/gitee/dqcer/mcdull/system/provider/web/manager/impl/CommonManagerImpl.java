@@ -37,6 +37,7 @@ import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CacheChannel;
+import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.TimeZoneUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.bo.DynamicFieldBO;
@@ -85,7 +86,7 @@ public class CommonManagerImpl implements ICommonManager {
     @Resource
     private IConfigRepository configRepository;
     @Resource
-    private CacheChannel cacheChannel;
+    private RedissonCache redisCache;
     @Resource
     private IFolderService folderService;
     @Resource
@@ -333,31 +334,12 @@ public class CommonManagerImpl implements ICommonManager {
 
     @Override
     public String getConfig(String key) {
-        String value = null;
-        String jsonStr = cacheChannel.get("sys_config", String.class);
-        if (StrUtil.isNotBlank(jsonStr)) {
-            if (JSONUtil.isTypeJSON(jsonStr)) {
-                List<ConfigEntity> list = JSONUtil.toList(jsonStr, ConfigEntity.class);
-                if (CollUtil.isNotEmpty(list)) {
-                    for (ConfigEntity entity : list) {
-                        if (entity.getConfigKey().equals(key)) {
-                            value = entity.getConfigValue();
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        List<ConfigEntity> entityList = configRepository.list();
+        List<ConfigEntity> entityList = redisCache.getListOrSet("sys_config", ConfigEntity.class, () -> configRepository.list(), 60 * 60 * 24);
         if (CollUtil.isNotEmpty(entityList)) {
-            cacheChannel.put("sys_config", JSONUtil.parseArray(entityList).toString(), 60 * 60 * 24);
-            ConfigEntity configEntity = entityList.stream()
-                    .filter(entity -> entity.getConfigKey().equals(key)).findFirst().orElse(null);
-            if (ObjUtil.isNotNull(configEntity)) {
-                return configEntity.getConfigValue();
-            }
+            Map<String, String> map = entityList.stream().collect(Collectors.toMap(ConfigEntity::getConfigKey, ConfigEntity::getConfigValue));
+            return map.get(key);
         }
-        return value;
+        return null;
     }
 
     @Override

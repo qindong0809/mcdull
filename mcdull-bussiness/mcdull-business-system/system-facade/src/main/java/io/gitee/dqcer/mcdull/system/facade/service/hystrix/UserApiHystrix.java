@@ -23,12 +23,12 @@ public class UserApiHystrix implements UserApiDef {
     @Override
     public ResultApi<List<RemoteUserVO>> getList() {
         LogHelp.error(log, "UserApiHystrix#getList");
-        return ResultApi.error("hystrix fall back!");
+        return ResultApi.hystrixFallBack();
     }
 
     @Override
     public ResultApi<Map<Integer, RemoteUserVO>> getMapByIdList(List<Integer> userIdList) {
         LogHelp.error(log, "UserApiHystrix#getMapByIdList: {}", userIdList);
-        return ResultApi.error("hystrix fall back!");
+        return ResultApi.hystrixFallBack();
     }
 }

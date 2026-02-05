@@ -63,7 +63,7 @@
         <knife4j.version>4.5.0</knife4j.version>
         <fastjson.version>1.2.83</fastjson.version>
         <redisson.spring.boot.version>3.43.0</redisson.spring.boot.version>
-        <hutool.version>5.8.28</hutool.version>
+        <hutool.version>5.8.43</hutool.version>
         <archunit.version>1.0.1</archunit.version>
         <druid.version>1.2.23</druid.version>
         <kaptcha.version>2.3.3</kaptcha.version>
@@ -213,6 +213,11 @@
                 <artifactId>sa-token-spring-boot3-starter</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
+          <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-reactor-spring-boot-starter</artifactId>
+            <version>${sa-token.version}</version>
+          </dependency>
           <dependency>
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-spring-el</artifactId>

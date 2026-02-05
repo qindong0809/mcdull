@@ -22,15 +22,15 @@ public class UserContextHolder {
 
     public static void setDefaultSession() {
         UnifySession session = new UnifySession();
-            session.setTraceId(RandomUtil.uuid());
-            session.setNow(new Date());
-            session.setDateFormat(DatePattern.NORM_DATETIME_PATTERN);
-            session.setLanguage(Locale.SIMPLIFIED_CHINESE.getLanguage());
-            session.setZoneIdStr("Asia/Shanghai");
-            session.setTenantId(0);
-            session.setLoginName("system");
-            session.setUserId("0");
-            UserContextHolder.setSession(session);
+        session.setTraceId(RandomUtil.uuid());
+        session.setNow(new Date());
+        session.setDateFormat(DatePattern.NORM_DATETIME_PATTERN);
+        session.setLanguage(Locale.SIMPLIFIED_CHINESE.getLanguage());
+        session.setZoneIdStr("Asia/Shanghai");
+        session.setTenantId(0);
+        session.setLoginName("system");
+        session.setUserId("0");
+        UserContextHolder.setSession(session);
     }
 
     /**

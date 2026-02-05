@@ -1,0 +1,36 @@
+package io.gitee.dqcer.mcdull.system.provider.web.feign;
+
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 用户 feign 实现层
+ *
+ * @author dqcer
+ * @since 2022/12/25
+ */
+@Slf4j
+@Tag(name = "Auth Api")
+@RestController
+public class AuthApiImpl implements AuthApiDef {
+
+    @Resource
+    private IUserService userService;
+
+    @Override
+    public ResultApi<RemoteLogonUserVO> getLogonUserInfo(){
+        UnifySession session = UserContextHolder.getSession();
+        // todo
+        return ResultApi.success(new RemoteLogonUserVO());
+    }
+}

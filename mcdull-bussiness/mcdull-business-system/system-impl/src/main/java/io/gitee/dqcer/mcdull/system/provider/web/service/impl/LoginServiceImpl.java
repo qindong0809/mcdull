@@ -12,6 +12,7 @@ import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
@@ -59,6 +60,9 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
     @Resource
     private IDepartmentService departmentService;
 
+    @Resource
+    private RedissonCache redisCache;
+
 
     @Override
     public void saveLoginLog(String loginName, LoginLogResultTypeEnum resultTypeEnum, String remark) {
@@ -93,7 +97,11 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
                 vo.setDepartmentName(department.getName());
             }
         }
-        vo.setMenuList(menuService.getList(userEntity.getId(), userEntity.getAdministratorFlag()));
+        List<MenuVO> list = menuService.getList(userEntity.getId(), userEntity.getAdministratorFlag());
+        // 排序
+        list.sort((o1, o2) -> NumberUtil.compare(Convert.toInt(o1.getSort(),0), Convert.toInt(o2.getSort(), 0)));
+        list.sort(Comparator.comparing(MenuVO::getMenuId));
+        vo.setMenuList(list);
         LoginLogEntity lastLoginLog = loginLogService.getLastLoginLog(userEntity.getLoginName());
         if (ObjUtil.isNotNull(lastLoginLog)) {
             vo.setLastLoginIp(lastLoginLog.getLoginIp());
@@ -139,7 +147,6 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
     }
 
 
-    @Cacheable(cacheNames = "getRoleList", key = "#userId")
     @Override
     public List<String> getRoleList(Integer userId) {
         List<UserPowerVO> userPowerVOList = userService.getResourceModuleList(userId);
@@ -158,8 +165,6 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
         if (ObjUtil.isNotNull(cache)) {
             LogonVO vo = cache.get(key, LogonVO.class);
             if (ObjUtil.isNotNull(vo)) {
-                List<MenuVO> menuList = vo.getMenuList();
-                menuList.sort((o1, o2) -> NumberUtil.compare(Convert.toInt(o1.getSort(),0), Convert.toInt(o2.getSort(), 0)));
                 return vo;
             }
         }
@@ -170,8 +175,6 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
             if (ObjUtil.isNotNull(cache)) {
                 cache.put(key, vo);
             }
-            List<MenuVO> menuList = vo.getMenuList();
-            menuList.sort((o1, o2) -> NumberUtil.compare(Convert.toInt(o1.getSort(),0), Convert.toInt(o2.getSort(), 0)));
             return vo;
         }
         LogHelp.error(log, "getCurrentUserInfo error, userId: {}", userId);

@@ -50,21 +50,21 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(HttpTraceLogFilter.class);
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
     private static final String [] EXCLUDE_PATTERNS = {
-        GlobalConstant.LOGIN_URL,
+        GlobalConstant.LOGIN_URL + GlobalConstant.ALL_PATTERNS,
         GlobalConstant.INNER_API + GlobalConstant.ALL_PATTERNS,
         GlobalConstant.FAVICON_ICO,
         GlobalConstant.ACTUATOR_ALL,
-        "/druid/**",
-        "/monitoring/**",
+        "/druid" + GlobalConstant.ALL_PATTERNS,
+        "/monitoring" + GlobalConstant.ALL_PATTERNS,
         "/upload" + GlobalConstant.ALL_PATTERNS,
-        "/doc.html/**",
-        "/doc-ui.html/**",
-        "/doc-resources/**",
-        "/webjars/**",
+        "/doc.html" + GlobalConstant.ALL_PATTERNS,
+        "/doc-ui.html" + GlobalConstant.ALL_PATTERNS,
+        "/doc-resources" + GlobalConstant.ALL_PATTERNS,
+        "/webjars" + GlobalConstant.ALL_PATTERNS,
         "/error",
         "/home/upload" + GlobalConstant.ALL_PATTERNS,
-        "/v3/def-docs/**",
-        "/v3/api-docs/**",
+        "/v3/def-docs" + GlobalConstant.ALL_PATTERNS,
+        "/v3/api-docs" + GlobalConstant.ALL_PATTERNS,
         "/error",
     };
 
@@ -102,12 +102,14 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
             UserContextHolder.setSession(unifySession);
             if (!this.isRequestValid(request)) {
                 LogHelp.warn(log, "Illegal request. url: {}", requestUrl);
+                UserContextHolder.setDefaultSession();
                 filterChain.doFilter(request, response);
                 return;
             }
             globalDataRoutingDataSource.switchDataSource();
             if (this.shouldSkipAuth(requestUrl)) {
                 LogHelp.debug(log, "Should skip auth. url：{}", requestUrl);
+                UserContextHolder.setDefaultSession();
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -159,10 +161,13 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
 
     public boolean shouldSkipAuth(String path) {
         GatewayProperties gateway = mcdullProperties.getGateway();
+        List<String> allNoAuthList = new ArrayList<>();
         List<String> noAuthList = gateway.getNoAuth();
-        noAuthList = CollUtil.defaultIfEmpty(noAuthList, new ArrayList<>());
-        noAuthList.addAll(Arrays.asList(EXCLUDE_PATTERNS));
-        return noAuthList.stream().anyMatch(url -> path.startsWith(url) || PATH_MATCHER.match(url, path));
+        if (CollUtil.isNotEmpty(noAuthList)) {
+            allNoAuthList.addAll(noAuthList);
+        }
+        allNoAuthList.addAll(Arrays.asList(EXCLUDE_PATTERNS));
+        return allNoAuthList.stream().anyMatch(url -> PATH_MATCHER.match(url, path));
     }
 
 

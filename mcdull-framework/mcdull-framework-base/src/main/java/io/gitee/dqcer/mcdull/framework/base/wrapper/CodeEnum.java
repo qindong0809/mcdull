@@ -18,6 +18,13 @@ public enum CodeEnum implements ICode {
 	 */
 	INTERNAL_SERVER_ERROR(500, "system.internal.server.error"),
 
+    /**
+     * 服务不可用
+     */
+    SERVICE_UNAVAILABLE(503, "服务不可用: {0}"),
+
+    NOT_FOUND(404, "system.not.found"),
+
 	/**
 	 * 权限不足，此接口需要具备相应的权限才能访问
 	 */

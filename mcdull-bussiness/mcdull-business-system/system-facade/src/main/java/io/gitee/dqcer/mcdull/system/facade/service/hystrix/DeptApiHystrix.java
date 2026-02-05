@@ -17,12 +17,12 @@ public class DeptApiHystrix implements DeptApiDef {
     @Override
     public ResultApi<List<RemoteDeptVO>> getList() {
         LogHelp.error(log, "DeptApiHystrix#getList");
-        return ResultApi.error("hystrix fall back!");
+        return ResultApi.hystrixFallBack();
     }
 
     @Override
     public ResultApi<Map<Integer, RemoteDeptVO>> getMapByIdList(List<Integer> idList) {
         LogHelp.error(log, "DeptApiHystrix#getMapByIdList: {}", idList);
-        return ResultApi.error("hystrix fall back!");
+        return ResultApi.hystrixFallBack();
     }
 }

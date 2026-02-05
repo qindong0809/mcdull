@@ -17,6 +17,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
+import com.alibaba.excel.metadata.Cell;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.business.common.excel.ExcelUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
@@ -369,6 +370,8 @@ public class MenuServiceImpl
         list.add(Pair.of("frame地址", MenuVO::getFrameUrl));
         list.add(Pair.of("是否缓存", MenuVO::getCacheFlag));
         list.add(Pair.of("是否可见", MenuVO::getVisibleFlag));
+        list.add(Pair.of("更新时间", MenuVO::getUpdatedTime));
+        list.add(Pair.of("创建时间", MenuVO::getCreatedTime));
         return list;
     }
 

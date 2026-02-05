@@ -4,6 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.MenuEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 角色视图对象
@@ -11,6 +12,7 @@ import lombok.Data;
  * @author dqcer
  * @since  2022/11/27
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class MenuVO extends MenuEntity implements VO {
 

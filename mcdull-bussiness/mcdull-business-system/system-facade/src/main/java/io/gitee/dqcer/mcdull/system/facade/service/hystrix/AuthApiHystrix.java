@@ -1,9 +1,12 @@
 package io.gitee.dqcer.mcdull.system.facade.service.hystrix;
 
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
+import io.gitee.dqcer.mcdull.system.facade.service.def.AuthApiDef;
 import io.gitee.dqcer.mcdull.system.facade.service.def.ConfigApiDef;
 import io.gitee.dqcer.mcdull.system.facade.vo.RemoteConfigVO;
+import io.gitee.dqcer.mcdull.system.facade.vo.RemoteLogonUserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -12,17 +15,11 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class ConfigApiHystrix implements ConfigApiDef {
+public class AuthApiHystrix implements AuthApiDef {
 
     @Override
-    public ResultApi<List<RemoteConfigVO>> getList() {
-        LogHelp.error(log, "ConfigApiHystrix#getList");
-        return ResultApi.hystrixFallBack();
-    }
-
-    @Override
-    public ResultApi<Map<String, RemoteConfigVO>> getMapByKeyList(List<String> keyList) {
-        LogHelp.error(log, "ConfigApiHystrix#getMapByKeyList: {}", keyList);
+    public ResultApi<RemoteLogonUserVO> getLogonUserInfo() {
+        LogHelp.error(log, "AuthApiHystrix#getLogonUserInfo");
         return ResultApi.hystrixFallBack();
     }
 }

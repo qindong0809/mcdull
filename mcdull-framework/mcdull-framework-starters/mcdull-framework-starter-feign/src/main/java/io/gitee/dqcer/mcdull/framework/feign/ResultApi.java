@@ -98,6 +98,14 @@ public class ResultApi<T> implements Serializable {
                 .build();
     }
 
+
+    public static <T> ResultApi<T> hystrixFallBack() {
+        return ResultApi.<T>builder()
+            .withCode(CodeEnum.INTERNAL_SERVER_ERROR.getCode())
+            .withMessage(MessageFormat.format(CodeEnum.INTERNAL_SERVER_ERROR.getMessage(), "hystrix fall back"))
+            .build();
+    }
+
     /**
      * 返回错误消息
      *

@@ -1,14 +1,18 @@
 package io.gitee.dqcer.mcdull.gateway.filter;
 
+import cn.hutool.core.thread.ThreadFactoryBuilder;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.CodeEnum;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
 import io.gitee.dqcer.mcdull.gateway.properties.FilterProperties;
 import io.gitee.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
 import io.gitee.dqcer.mcdull.gateway.utils.SpringUtils;
-import io.gitee.dqcer.mcdull.uac.client.service.AuthClientService;
+import io.gitee.dqcer.mcdull.system.facade.service.AuthApi;
+import io.gitee.dqcer.mcdull.system.facade.vo.RemoteLogonUserVO;
+import io.lettuce.core.RedisClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -39,12 +43,12 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
 
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
-    private static final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3000, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1000), new ThreadFactoryBuilder()
-            .setNameFormat("auth-pool-%d").build());
-
-
+    private static final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3000, TimeUnit.SECONDS, new ArrayBlockingQueue<>(10000), ThreadFactoryBuilder.create()
+        .setNamePrefix("auth-pool-").build());
     @Resource
     private McdullGatewayProperties mcdullGatewayProperties;
+    @Resource
+    private RedisClient
 
     private static final Logger log = LoggerFactory.getLogger(AuthFilter.class);
 
@@ -55,36 +59,26 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
         ServerHttpRequest.Builder mutate = request.mutate();
         HttpHeaders headers = request.getHeaders();
         String requestUrl = exchange.getRequest().getURI().getPath();
-
         FilterProperties filterProperties = mcdullGatewayProperties.getFilter();
-
-        // 无需效验的接口
         if (ignoreFilter(request.getPath().toString(), filterProperties.getNoAuth())) {
             if (log.isDebugEnabled()) {
                 log.debug("Gateway Filer ignore url：{}", request.getPath());
             }
             return chain.filter(exchange);
         }
-
-        // feign拦截
         if(requestUrl.toLowerCase().contains(GlobalConstant.INNER_API)) {
-            log.warn("内部feign接口，外部非法调用");
+            log.warn("Gateway Filer feign url：{}", request.getPath());
             return errorResponse(response, CodeEnum.NOT_FOUND.getCode(), CodeEnum.NOT_FOUND.getMessage());
         }
-
-        //  租户id效验
         Boolean enableMultiTenant = filterProperties.getEnableMultiTenant();
         if (enableMultiTenant) {
             String tenantIdStr = headers.getFirst(HttpHeaderConstants.T_ID);
-            if (log.isDebugEnabled()) {
-                log.debug("Gateway Filer TenantId: {}", tenantIdStr);
-            }
-            if (null == tenantIdStr || tenantIdStr.trim().length() == 0) {
-                log.error("头部tid参数缺失");
+            if (null == tenantIdStr || tenantIdStr.trim().isEmpty()) {
+                log.error("Gateway Filer 头部tid参数缺失. url: {}", request.getPath());
                 return errorResponse(response, CodeEnum.ERROR_PARAMETERS.getCode(), CodeEnum.ERROR_PARAMETERS.getMessage());
             }
             if (!isNumber(tenantIdStr)) {
-                log.error("头部tid参数异常");
+                log.error("Gateway Filer 头部tid参数异常. url: {}", request.getPath());
                 return errorResponse(response, CodeEnum.ERROR_PARAMETERS.getCode(), CodeEnum.ERROR_PARAMETERS.getMessage());
             }
             addHeader(mutate, HttpHeaderConstants.T_ID, tenantIdStr);
@@ -95,22 +89,17 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
         if (log.isDebugEnabled()) {
             log.debug("Gateway Filer Authorization: {}", authorization);
         }
-        if (null == authorization || authorization.trim().length() == 0) {
-            log.error("头部Authorization参数缺失");
+        if (null == authorization || authorization.trim().isEmpty()) {
+            log.error("Gateway Filer 头部Authorization参数缺失. url: {}", request.getPath());
             return errorResponse(response, CodeEnum.UN_AUTHORIZATION.getCode(), CodeEnum.UN_AUTHORIZATION.getMessage());
         }
-
         String token = authorization.substring(HttpHeaderConstants.BEARER.length());
-        if (token.trim().length() == 0) {
-            log.error("头部Authorization参数缺失Bearer ");
+        if (token.trim().isEmpty()) {
+            log.error("Gateway Filer 头部Authorization参数缺失Bearer . url: {}", request.getPath());
             return errorResponse(response, CodeEnum.UN_AUTHORIZATION.getCode(), CodeEnum.UN_AUTHORIZATION.getMessage());
         }
-
         String traceId = headers.getFirst(HttpHeaderConstants.TRACE_ID_HEADER);
-//        RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
-        Result<Integer> result = remoteValid(token, traceId);
-
-
+        ResultApi<RemoteLogonUserVO> result = this.getLogonUserInfo(token, traceId, );
         log.info("token valid result: {}", result);
         if (!result.isOk()) {
             return errorResponse(response, result.getCode(), result.getMessage());
@@ -126,21 +115,33 @@ public class AuthFilter extends AbstractFilter implements GlobalFilter, Ordered 
      * 远程调用验证
      *
      * @param token 令牌
-     * @return {@link Result}<{@link Long}>
+     * @return {@link Result}<{@link RemoteLogonUserVO}>
      */
-    private static Result<Integer> remoteValid(String token, String traceId) {
-        // 身份验证服务,因网关加载顺序需要进行懒加载
-        AuthClientService authClientService = SpringUtils.getBean(AuthClientService.class);
+    private ResultApi<RemoteLogonUserVO> getLogonUserInfo(String token, String traceId, boolean isAuthReq) {
+        if (isAuthReq) {
+            // clean previous user info
+            redisClient.del(RedisConstants.LOGIN_USER_KEY + userObjId);
+            redisClient.
 
+        }
+        RemoteLogonUserVO userVO = redisClient.get(RedisConstants.LOGIN_USER_KEY + userObjId);
+        if (null != userVO) {
+            return ResultApi.success(userVO);
+        }
+        // 身份验证服务,因网关加载顺序需要进行懒加载
+        AuthApi authApi = SpringUtils.getBean(AuthApi.class);
         RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true);
         // WebFlux异步调用，同步会报错
-        Future<Result<Integer>> future = executorService.submit(() -> authClientService.tokenValid(token, traceId));
-        Result<Integer> result;
+        Future<ResultApi<RemoteLogonUserVO>> future = executorService.submit(() -> authApi.getLogonUserInfo(token, traceId));
+        ResultApi<RemoteLogonUserVO> result;
         try {
             result = future.get();
         } catch (InterruptedException | ExecutionException e) {
             Thread.currentThread().interrupt();
             throw new RuntimeException(e);
+        }
+        if (result.isOk()) {
+            redisClient.set(RedisConstants.LOGIN_USER_KEY + userObjId, result.getData());
         }
         return result;
     }

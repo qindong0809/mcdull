@@ -23,12 +23,12 @@ public class RoleApiHystrix implements RoleApiDef {
     @Override
     public ResultApi<List<RemoteRoleVO>> getList() {
         LogHelp.error(log, "RoleApiHystrix#getList");
-        return ResultApi.error("hystrix fall back!");
+        return ResultApi.hystrixFallBack();
     }
 
     @Override
     public ResultApi<Map<Integer, RemoteRoleVO>> getMapByIdList(List<Integer> userIdList) {
         LogHelp.error(log, "RoleApiHystrix#getMapByIdList: {}", userIdList);
-        return ResultApi.error("hystrix fall back!");
+        return ResultApi.hystrixFallBack();
     }
 }

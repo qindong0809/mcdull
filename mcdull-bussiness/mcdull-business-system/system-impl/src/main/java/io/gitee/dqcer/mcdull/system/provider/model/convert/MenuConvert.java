@@ -32,6 +32,13 @@ public class MenuConvert {
             vo.setComponent(entity.getComponent());
             vo.setWebPerms(entity.getWebPerms());
             vo.setFrameFlag(entity.getFrameFlag());
+            vo.setInactive(entity.getInactive());
+            vo.setCreatedTime(entity.getCreatedTime());
+            vo.setUpdatedTime(entity.getUpdatedTime());
+            vo.setDelFlag(entity.getDelFlag());
+            vo.setCreatedBy(Convert.toInt(entity.getCreatedBy()));
+            vo.setUpdatedBy(Convert.toInt(entity.getUpdatedBy()));
+            vo.setId(entity.getId());
             return vo;
         }
         return null;
