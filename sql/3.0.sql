@@ -1087,3 +1087,21 @@ create table if not exists `blaze_order_detail` (
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 primary key (`id`)
 )  comment='订单流水';
+
+drop table if exists `sys_user_filter`;
+create table if not exists `sys_user_filter` (
+  `id` int not null auto_increment comment '主键',
+  `user_id` int not null comment 'user id',
+  `role_id` int NOT NULL,
+  `category_code` varchar(512) NOT NULL,
+  `sub_category_code` varchar(512) DEFAULT NULL,
+  `filter_title` varchar(512) NOT NULL,
+  `filter_content` text DEFAULT NULL comment 'json str',
+  `created_by` int not null comment '创建人',
+  `created_time` datetime not null comment '创建时间',
+  `updated_by` int default null comment '更新人',
+  `updated_time` datetime default null comment '更新时间',
+  `inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
+  `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+  primary key (`id`)
+)  comment='用户表格过滤记录';

@@ -9,9 +9,10 @@ import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.support.Paged;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * 分页工具
@@ -101,6 +102,11 @@ public class PageUtil {
 
     public static <D extends PagedDTO> void setMaxPageSize(D dto) {
         dto.setPageSize(Integer.MAX_VALUE);
+        dto.setPageNum(GlobalConstant.Number.NUMBER_1);
+    }
+
+    public static <D extends PagedDTO> void setMinPageSize(D dto) {
+        dto.setPageSize(GlobalConstant.Number.NUMBER_1);
         dto.setPageNum(GlobalConstant.Number.NUMBER_1);
     }
 
