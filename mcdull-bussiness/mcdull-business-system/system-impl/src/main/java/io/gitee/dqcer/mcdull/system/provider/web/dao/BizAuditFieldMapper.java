@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.system.provider.web.dao.mapper;
+package io.gitee.dqcer.mcdull.system.provider.web.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.BizAuditFieldEntity;

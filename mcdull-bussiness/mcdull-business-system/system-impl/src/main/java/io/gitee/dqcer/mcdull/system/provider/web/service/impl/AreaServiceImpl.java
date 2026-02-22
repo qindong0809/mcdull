@@ -6,21 +6,25 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.AreaQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.AreaEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.AreaVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IAreaRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.AreaMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IAreaService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Area Service
@@ -29,15 +33,25 @@ import java.util.*;
  * @since 2024-06-15 13:11:44
  */
 @Service
-public class AreaServiceImpl
-        extends BasicServiceImpl<IAreaRepository> implements IAreaService {
+public class AreaServiceImpl extends BasicCurdServiceImpl<AreaMapper, AreaEntity> implements IAreaService {
 
     @Resource
     private ICommonManager commonManager;
 
+    private Page<AreaEntity> selectPage(AreaQueryDTO param) {
+        LambdaQueryWrapper<AreaEntity> lambda = Wrappers.lambdaQuery();
+        String keyword = param.getKeyword();
+        if (ObjUtil.isNotNull(keyword)) {
+            lambda.and(i->i.like(AreaEntity::getName, keyword).or()
+                .like(AreaEntity::getFullname, keyword));
+        }
+        return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
+    }
+
+    @Override
     public PagedVO<AreaVO> queryPage(AreaQueryDTO dto) {
         List<AreaVO> voList = new ArrayList<>();
-        Page<AreaEntity> entityPage = baseRepository.selectPage(dto);
+        Page<AreaEntity> entityPage = this.selectPage(dto);
         List<AreaEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
             for (AreaEntity entity : recordList) {
@@ -50,16 +64,24 @@ public class AreaServiceImpl
 
     @Override
     public List<LabelValueVO<String, String>> provinceList() {
-        return this.buildList(baseRepository.getByAreaType(1));
+        LambdaQueryWrapper<AreaEntity> query = Wrappers.lambdaQuery();
+        query.eq(AreaEntity::getAreaType, 1);
+        List<AreaEntity> areaEntities = baseMapper.selectList(query);
+        return this.buildList(areaEntities);
     }
+
 
     @Override
     public List<LabelValueVO<String, String>> cityList(String provinceCode) {
-        AreaEntity areaEntity = baseRepository.getCode(provinceCode);
+        LambdaQueryWrapper<AreaEntity> query = Wrappers.lambdaQuery();
+        query.eq(AreaEntity::getCode, provinceCode);
+        AreaEntity areaEntity = baseMapper.selectOne(query);
         if (ObjUtil.isNull(areaEntity)) {
             return Collections.emptyList();
         }
-        return this.buildList(baseRepository.getByPid(areaEntity.getId()));
+        LambdaQueryWrapper<AreaEntity> pidQuery = Wrappers.lambdaQuery();
+        pidQuery.eq(AreaEntity::getPid, areaEntity.getId());
+        return this.buildList(baseMapper.selectList(pidQuery));
     }
 
     @Override

@@ -1,14 +1,13 @@
-package io.gitee.dqcer.mcdull.system.provider.web.dao.repository.impl;
-
+package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.repository.CrudRepository;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.BizAuditFieldEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.BizAuditFieldMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IBizAuditFieldRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.BizAuditFieldMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditFieldService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -16,16 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
-/**
- * biz audit field 数据库操作封装实现层
- *
- * @author dqcer
- * @since 2024-06-15 13:11:44
- */
 @Service
-public class BizAuditFieldRepositoryImpl extends
-        CrudRepository<BizAuditFieldMapper, BizAuditFieldEntity> implements IBizAuditFieldRepository {
+public class BizAuditFieldServiceImpl extends BasicCurdServiceImpl<BizAuditFieldMapper, BizAuditFieldEntity>  implements IBizAuditFieldService {
 
     @Override
     public Map<Integer, List<BizAuditFieldEntity>> map(List<Integer> bizAuditIdList) {
@@ -42,10 +33,10 @@ public class BizAuditFieldRepositoryImpl extends
 
     @Override
     public List<BizAuditFieldEntity> like(String value) {
-        if (StrUtil.isNotBlank(value)) {
+        if (CharSequenceUtil.isNotBlank(value)) {
             LambdaQueryWrapper<BizAuditFieldEntity> query = Wrappers.lambdaQuery();
             query.like(BizAuditFieldEntity::getOldValue, value)
-                    .or().like(BizAuditFieldEntity::getNewValue, value);
+                .or().like(BizAuditFieldEntity::getNewValue, value);
             return baseMapper.selectList(query);
         }
         return Collections.emptyList();

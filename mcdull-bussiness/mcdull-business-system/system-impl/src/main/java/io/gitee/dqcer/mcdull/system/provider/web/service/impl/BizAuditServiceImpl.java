@@ -5,24 +5,26 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.AuditUtil;
-import io.gitee.dqcer.mcdull.system.provider.model.enums.OperationTypeEnum;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.BizAuditQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.BizAuditEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.BizAuditFieldEntity;
+import io.gitee.dqcer.mcdull.system.provider.model.enums.OperationTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.BizAuditVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IBizAuditFieldRepository;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IBizAuditRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.BizAuditMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IMenuManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditFieldService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -38,8 +40,7 @@ import java.util.stream.Collectors;
  * @since 2024-06-15 13:11:44
  */
 @Service
-public class BizAuditServiceImpl
-        extends BasicServiceImpl<IBizAuditRepository> implements IBizAuditService {
+public class BizAuditServiceImpl extends BasicCurdServiceImpl<BizAuditMapper, BizAuditEntity> implements IBizAuditService {
 
     @Resource
     private IMenuManager menuManager;
@@ -48,7 +49,7 @@ public class BizAuditServiceImpl
     @Resource
     private ICommonManager commonManager;
     @Resource
-    private IBizAuditFieldRepository bizAuditFieldRepository;
+    private IBizAuditFieldService bizAuditFieldService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -64,15 +65,26 @@ public class BizAuditServiceImpl
         entity.setBizIndex(bizIndex);
         entity.setExt(ext);
         entity.setTraceId(UserContextHolder.getSession().getTraceId());
-        baseRepository.save(entity);
+        super.save(entity);
         return entity.getId();
+    }
+
+    private Page<BizAuditEntity> selectPage(BizAuditQueryDTO queryForm) {
+        LambdaQueryWrapper<BizAuditEntity> query = Wrappers.lambdaQuery();
+        query.like(StrUtil.isNotBlank(queryForm.getKeyword()), BizAuditEntity::getComment, queryForm.getKeyword());
+        query.eq(queryForm.getOperation() != null, BizAuditEntity::getOperation, queryForm.getOperation());
+        query.eq(StrUtil.isNotBlank(queryForm.getBizTypeCode()), BizAuditEntity::getBizTypeCode, queryForm.getBizTypeCode());
+        query.eq(StrUtil.isNotBlank(queryForm.getOperator()), BizAuditEntity::getOperator, queryForm.getOperator());
+        query.eq(StrUtil.isNotBlank(queryForm.getBizIndex()), BizAuditEntity::getBizId, queryForm.getBizIndex());
+        query.orderByDesc(BizAuditEntity::getOperationTime);
+        return baseMapper.selectPage(new Page<>(queryForm.getPageNum(), queryForm.getPageSize()), query);
     }
 
     @Transactional(readOnly = true)
     @Override
     public PagedVO<BizAuditVO> queryPage(BizAuditQueryDTO queryForm) {
         List<BizAuditVO> voList = new ArrayList<>();
-        Page<BizAuditEntity> entityPage = baseRepository.selectPage(queryForm);
+        Page<BizAuditEntity> entityPage = this.selectPage(queryForm);
         List<BizAuditEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
             List<String> loginList = recordList.stream().map(BizAuditEntity::getOperator).collect(Collectors.toList());
@@ -80,7 +92,7 @@ public class BizAuditServiceImpl
             List<LabelValueVO<String, String>> nameCodeList = menuManager.getNameCodeList();
             Map<String, String> codeMap = nameCodeList.stream().collect(Collectors.toMap(LabelValueVO::getValue, LabelValueVO::getLabel));
             List<Integer> list = recordList.stream().map(BizAuditEntity::getId).collect(Collectors.toList());
-            Map<Integer, List<BizAuditFieldEntity>> map = bizAuditFieldRepository.map(list);
+            Map<Integer, List<BizAuditFieldEntity>> map = bizAuditFieldService.map(list);
             for (BizAuditEntity entity : recordList) {
                 BizAuditVO vo = this.convertToVO(entity);
                 vo.setBizTypeName(codeMap.get(entity.getBizTypeCode()));
