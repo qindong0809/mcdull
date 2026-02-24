@@ -4,21 +4,24 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.EmailSendHistoryQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.EmailSendHistoryEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.EmailTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.EmailSendHistoryVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IEmailSendHistoryRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.EmailSendHistoryMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IEmailSendHistoryService;
 import jakarta.annotation.Resource;
@@ -36,7 +39,7 @@ import java.util.List;
  */
 @Service
 public class EmailSendHistoryServiceImpl
-        extends BasicServiceImpl<IEmailSendHistoryRepository> implements IEmailSendHistoryService {
+        extends BasicCurdServiceImpl<EmailSendHistoryMapper, EmailSendHistoryEntity> implements IEmailSendHistoryService {
 
     @Resource
     private ICommonManager commonManager;
@@ -45,7 +48,7 @@ public class EmailSendHistoryServiceImpl
     @Transactional(rollbackFor = Exception.class)
     public void insert(EmailTypeEnum typeEnum, List<String> sendToList, List<String> ccList, String title, String content) {
         if (CollUtil.isEmpty(sendToList) || StrUtil.isBlank(title) || StrUtil.isBlank(content)) {
-            LogHelp.error(log, "insert email send history fail, sendToList: {}, title: {}, content: {}", sendToList, title, content);
+            LogHelp.error(logger, "insert email send history fail, sendToList: {}, title: {}, content: {}", sendToList, title, content);
             throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
         }
         EmailSendHistoryEntity entity = new EmailSendHistoryEntity();
@@ -56,7 +59,7 @@ public class EmailSendHistoryServiceImpl
         }
         entity.setTitle(title);
         entity.setContent(content);
-        baseRepository.save(entity);
+        super.save(entity);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -68,7 +71,7 @@ public class EmailSendHistoryServiceImpl
     @Override
     public PagedVO<EmailSendHistoryVO> queryPage(EmailSendHistoryQueryDTO queryDTO) {
         List<EmailSendHistoryVO> list = new ArrayList<>();
-        Page<EmailSendHistoryEntity> entityPage = baseRepository.selectPage(queryDTO);
+        Page<EmailSendHistoryEntity> entityPage = this.selectPage(queryDTO);
         if (ObjUtil.isNotNull(entityPage)) {
             List<EmailSendHistoryEntity> records = entityPage.getRecords();
             if (CollUtil.isNotEmpty(records)) {
@@ -105,5 +108,20 @@ public class EmailSendHistoryServiceImpl
                 Pair.of("内容", EmailSendHistoryVO::getContent),
                 Pair.of("发送时间", EmailSendHistoryVO::getCreateTime)
         );
+    }
+
+    public Page<EmailSendHistoryEntity> selectPage(EmailSendHistoryQueryDTO queryDTO) {
+        LambdaQueryWrapper<EmailSendHistoryEntity> query = Wrappers.lambdaQuery();
+        String keyword = queryDTO.getKeyword();
+        if (CharSequenceUtil.isNotBlank(keyword)) {
+            query.and(i -> i.like(EmailSendHistoryEntity::getTitle, keyword)
+                .or().like(EmailSendHistoryEntity::getContent, keyword));
+        }
+        String sendTo = queryDTO.getSendTo();
+        if (CharSequenceUtil.isNotBlank(sendTo)) {
+            query.like(EmailSendHistoryEntity::getSentTo, sendTo);
+        }
+        query.orderByDesc(EmailSendHistoryEntity::getCreatedTime);
+        return baseMapper.selectPage(new Page<>(queryDTO.getPageNum(), queryDTO.getPageSize()), query);
     }
 }

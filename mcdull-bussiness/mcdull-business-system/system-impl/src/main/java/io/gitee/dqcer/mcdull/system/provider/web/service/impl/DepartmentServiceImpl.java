@@ -5,11 +5,14 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.ObjUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.DepartmentAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DeptUpdateDTO;
@@ -17,7 +20,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentTreeInfoVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IDepartmentRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.DepartmentMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDepartmentService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
@@ -37,7 +40,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class DepartmentServiceImpl
-        extends BasicServiceImpl<IDepartmentRepository>  implements IDepartmentService {
+        extends BasicCurdServiceImpl<DepartmentMapper, DepartmentEntity> implements IDepartmentService {
 
     @Resource
     private IUserService userService;
@@ -49,7 +52,7 @@ public class DepartmentServiceImpl
     @Override
     public List<DepartmentInfoVO> getAll() {
         List<DepartmentInfoVO> list = new ArrayList<>();
-        List<DepartmentEntity> deptList = baseRepository.list();
+        List<DepartmentEntity> deptList = super.list();
         if (CollUtil.isNotEmpty(deptList)) {
             for (DepartmentEntity dept : deptList) {
                 DepartmentInfoVO vo = this.convertToVO(dept);
@@ -75,7 +78,7 @@ public class DepartmentServiceImpl
     @Override
     public boolean insert(DeptInsertDTO dto) {
         Integer parentId = dto.getParentId();
-        List<DepartmentEntity> childList = baseRepository.listByParentId(parentId);
+        List<DepartmentEntity> childList = this.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
             boolean anyMatch = childList.stream().anyMatch(i -> i.getName().equals(dto.getName()));
             if (anyMatch) {
@@ -83,7 +86,7 @@ public class DepartmentServiceImpl
             }
         }
         DepartmentEntity menu = this.convertToEntity(dto);
-        baseRepository.save(menu);
+        super.save(menu);
         auditManager.saveByAddEnum(dto.getName(), menu.getId(), this.buildAuditLog(menu));
         return true;
     }
@@ -123,18 +126,18 @@ public class DepartmentServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean update(Integer id, DeptUpdateDTO dto) {
-        DepartmentEntity entity = baseRepository.getById(id);
+        DepartmentEntity entity = super.getById(id);
         if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(id);
+            LogicCheckUtil.throwDataNotExistException(id);
         }
         Integer parentId = dto.getParentId();
-        List<DepartmentEntity> childList = baseRepository.listByParentId(parentId);
+        List<DepartmentEntity> childList = this.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
-            this.validNameExist(id, dto.getName(), childList,
+            LogicCheckUtil.validNameExist(id, dto.getName(), childList,
                     i -> !i.getId().equals(id) && i.getName().equals(dto.getName()));
         }
         this.settingUpdateValue(dto, entity);
-        baseRepository.updateById(entity);
+        super.updateById(entity);
         auditManager.saveByUpdateEnum(dto.getName(), id,
                 this.buildAuditLog(entity), this.buildAuditLog(getById(id)));
         return true;
@@ -151,22 +154,22 @@ public class DepartmentServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean delete(Integer id) {
-        DepartmentEntity department = baseRepository.getById(id);
+        DepartmentEntity department = super.getById(id);
         if (ObjUtil.isNull(department)) {
-            this.throwDataNotExistException(id);
+            LogicCheckUtil.throwDataNotExistException(id);
         }
-        List<DepartmentEntity> all = baseRepository.list();
+        List<DepartmentEntity> all = super.list();
         List<DepartmentEntity> currentList = this.getChildNodeByParentId(all, id);
         if (CollUtil.isNotEmpty(currentList)) {
             List<Integer> deptIdList = currentList.stream().map(DepartmentEntity::getId).collect(Collectors.toList());
             List<UserEntity> userList =userService.listByDeptList(deptIdList);
             if (CollUtil.isNotEmpty(userList)) {
-                LogHelp.error(log, "exist data. {}", () ->
+                LogHelp.error(logger, "exist data. {}", () ->
                         userList.stream().map(UserEntity::getLoginName).collect(Collectors.toList()));
                 throw new BusinessException("dept.has.user");
             }
         }
-        baseRepository.removeById(id);
+        super.removeById(id);
         auditManager.saveByDeleteEnum(department.getName(), department.getId(), "");
         return true;
     }
@@ -187,7 +190,7 @@ public class DepartmentServiceImpl
 
     @Override
     public List<DepartmentTreeInfoVO> departmentTree() {
-        List<DepartmentEntity> list = baseRepository.all();
+        List<DepartmentEntity> list = this.all();
         if (CollUtil.isNotEmpty(list)) {
             List<Tree<Integer>> build = TreeUtil.build(list, 0, (deptDO, treeNode) -> {
                 treeNode.setId(Convert.toInt(deptDO.getId()));
@@ -201,7 +204,7 @@ public class DepartmentServiceImpl
 
     @Override
     public Map<Integer, String> getNameMap(List<Integer> idList) {
-        List<DepartmentEntity> list = baseRepository.listByIds(idList);
+        List<DepartmentEntity> list = super.listByIds(idList);
         if (CollUtil.isNotEmpty(list)) {
             return list.stream()
                     .collect(Collectors.toMap(DepartmentEntity::getId, DepartmentEntity::getName));
@@ -212,7 +215,7 @@ public class DepartmentServiceImpl
     @Override
     public List<Integer> getChildrenIdList(Integer departmentId) {
         List<Integer> voList = new ArrayList<>();
-        List<DepartmentEntity> list = baseRepository.listByParentId(departmentId);
+        List<DepartmentEntity> list = this.listByParentId(departmentId);
         if (CollUtil.isNotEmpty(list)) {
             List<Integer> idList = list.stream()
                     .map(DepartmentEntity::getId).collect(Collectors.toList());
@@ -229,7 +232,7 @@ public class DepartmentServiceImpl
 
     @Override
     public DepartmentEntity getById(Integer departmentId) {
-        return baseRepository.getById(departmentId);
+        return super.getById(departmentId);
     }
 
 
@@ -278,6 +281,36 @@ public class DepartmentServiceImpl
         vo.setCreateTime(dept.getCreatedTime());
         vo.setUpdateTime(dept.getUpdatedTime());
         return vo;
+    }
 
+    public List<DepartmentEntity> listByParentId(Integer parentId) {
+        LambdaQueryWrapper<DepartmentEntity> query = Wrappers.lambdaQuery();
+        query.eq(DepartmentEntity::getParentId, parentId);
+        return baseMapper.selectList(query);
+    }
+
+    public List<DepartmentEntity> all() {
+        return baseMapper.selectList(null);
+    }
+
+
+    @Override
+    public List<DepartmentEntity> getTreeList(Integer parentDeptId) {
+        return this.getChildNodeByParentId(parentDeptId);
+    }
+
+    private List<DepartmentEntity> getChildNodeByParentId(Integer parentId) {
+        List<DepartmentEntity> result = new ArrayList<>();
+        List<DepartmentEntity> list = this.listByParentId(parentId);
+        if (CollUtil.isNotEmpty(list)) {
+            result.addAll(list);
+            for (DepartmentEntity entity : list) {
+                List<DepartmentEntity> childNodeList = getChildNodeByParentId(entity.getId());
+                if (CollUtil.isNotEmpty(childNodeList)) {
+                    result.addAll(childNodeList);
+                }
+            }
+        }
+        return result;
     }
 }

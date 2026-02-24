@@ -1,29 +1,38 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.CodeGeneratorConfigEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.CodeGeneratorConstant;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableColumnVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableConfigVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.ICodeGeneratorConfigRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.CodeGeneratorConfigMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ICodeGeneratorService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.CodeGeneratorTemplateService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.io.ByteArrayOutputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,26 +45,26 @@ import java.util.Optional;
  */
 @Service
 public class CodeGeneratorServiceImpl
-        extends BasicServiceImpl<ICodeGeneratorConfigRepository> implements ICodeGeneratorService {
+        extends BasicCurdServiceImpl<CodeGeneratorConfigMapper, CodeGeneratorConfigEntity> implements ICodeGeneratorService {
 
     @Resource
     private CodeGeneratorTemplateService codeGeneratorTemplateService;
 
     @Override
     public List<TableColumnVO> getTableColumns(String table) {
-       return baseRepository.getByTable(table);
+       return this.getByTable(table);
     }
 
     @Override
     public PagedVO<TableVO> queryTableList(TableQueryForm dto) {
         Page<?> page = new Page<>(dto.getPageNum(), dto.getPageSize());
-        List<TableVO> tableVOList = baseRepository.queryTableList(page, dto);
+        List<TableVO> tableVOList = this.queryTableList(page, dto);
         return PageUtil.toPage(tableVOList, page);
     }
 
     @Override
     public TableConfigVO getTableConfig(String table) {
-        CodeGeneratorConfigEntity config = baseRepository.getTableConfig(table);
+        CodeGeneratorConfigEntity config = this.getTableConfigEntity(table);
         if (ObjUtil.isNotNull(config)) {
             TableConfigVO vo = new TableConfigVO();
             vo.setBasic(JSONUtil.parseObj(config.getBasic()).toBean(CodeBasic.class));
@@ -66,7 +75,7 @@ public class CodeGeneratorServiceImpl
             vo.setDeleteInfo(JSONUtil.parseObj(config.getDeleteInfo()).toBean(CodeDelete.class));
             return vo;
         }
-        LogHelp.warn(log, "table config is null, tableName: {}", table);
+        LogHelp.warn(logger, "table config is null, tableName: {}", table);
         return new TableConfigVO();
     }
 
@@ -74,16 +83,16 @@ public class CodeGeneratorServiceImpl
     @Override
     public void updateConfig(CodeGeneratorConfigForm dto) {
         checkParam(dto);
-        CodeGeneratorConfigEntity config = baseRepository.getTableConfig(dto.getTableName());
+        CodeGeneratorConfigEntity config = this.getTableConfigEntity(dto.getTableName());
         if (ObjUtil.isNotNull(config)) {
             this.setFieldValue(dto, config);
-            baseRepository.updateById(config);
+            super.updateById(config);
             return;
         }
         config = new CodeGeneratorConfigEntity();
         this.setFieldValue(dto, config);
         config.setTableName(dto.getTableName());
-        baseRepository.insert(config);
+        baseMapper.insert(config);
     }
 
     private void setFieldValue(CodeGeneratorConfigForm dto, CodeGeneratorConfigEntity config) {
@@ -126,19 +135,82 @@ public class CodeGeneratorServiceImpl
     }
 
     private CodeGeneratorConfigEntity getConfigInfo(String tableName) {
-        boolean existedByTable = baseRepository.existByTable(tableName);
+        boolean existedByTable = this.existByTable(tableName);
         if (BooleanUtil.isFalse(existedByTable)) {
-            this.throwDataNotExistException(tableName);
+            LogicCheckUtil.throwDataNotExistException(tableName);
         }
-        CodeGeneratorConfigEntity entity = baseRepository.getTableConfig(tableName);
+        CodeGeneratorConfigEntity entity = this.getTableConfigEntity(tableName);
         if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(tableName);
+            LogicCheckUtil.throwDataNotExistException(tableName);
         }
-        List<TableColumnVO> columns = baseRepository.getByTable(tableName);
+        List<TableColumnVO> columns = this.getByTable(tableName);
         if (CollUtil.isEmpty(columns)) {
-            LogHelp.error(log, "表: {} 没有列信息无法生成", tableName);
-            this.throwDataNotExistException(tableName);
+            LogHelp.error(logger, "表: {} 没有列信息无法生成", tableName);
+            LogicCheckUtil.throwDataNotExistException(tableName);
         }
         return entity;
     }
+
+    public List<CodeGeneratorConfigEntity> queryListByIds(List<Integer> idList) {
+        LambdaQueryWrapper<CodeGeneratorConfigEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(CodeGeneratorConfigEntity::getId, idList);
+        List<CodeGeneratorConfigEntity> list =  baseMapper.selectList(wrapper);
+        if (ObjectUtil.isNotNull(list)) {
+            return list;
+        }
+        return Collections.emptyList();
+    }
+
+    public Page<CodeGeneratorConfigEntity> selectPage(FeedbackQueryDTO param) {
+        LambdaQueryWrapper<CodeGeneratorConfigEntity> lambda = new QueryWrapper<CodeGeneratorConfigEntity>().lambda();
+        String keyword = param.getKeyword();
+        if (CharSequenceUtil.isNotBlank(keyword)) {
+            lambda.like(CodeGeneratorConfigEntity::getTableName, keyword);
+        }
+        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
+    }
+
+
+    public CodeGeneratorConfigEntity getById(Integer id) {
+        return baseMapper.selectById(id);
+    }
+
+
+    public void insert(CodeGeneratorConfigEntity entity) {
+        baseMapper.insert(entity);
+    }
+
+
+    public boolean exist(CodeGeneratorConfigEntity entity) {
+        return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
+    }
+
+    public List<TableColumnVO> getByTable(String table) {
+        return baseMapper.getByTable(table);
+    }
+
+    public List<TableVO> queryTableList(Page<?> page, TableQueryForm dto) {
+        return baseMapper.queryTableList(page, dto);
+    }
+
+    public boolean existByTable(String tableName) {
+        return baseMapper.existByTable(tableName) > 0;
+    }
+
+    public CodeGeneratorConfigEntity getTableConfigEntity(String tableName) {
+        LambdaQueryWrapper<CodeGeneratorConfigEntity> query = Wrappers.lambdaQuery();
+        query.eq(CodeGeneratorConfigEntity::getTableName, tableName);
+        return baseMapper.selectOne(query);
+    }
+
+    /**
+     * 根据id删除批处理
+     *
+     * @param ids id集
+     */
+    public void deleteBatchByIds(List<Integer> ids) {
+        baseMapper.deleteByIds(ids);
+    }
+
 }

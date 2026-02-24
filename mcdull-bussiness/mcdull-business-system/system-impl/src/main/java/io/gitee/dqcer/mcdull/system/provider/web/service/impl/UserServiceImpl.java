@@ -25,9 +25,6 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
-import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
-import io.gitee.dqcer.mcdull.framework.web.enums.SexEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -35,6 +32,9 @@ import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.SexEnum;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.UserAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.bo.DynamicFieldBO;
@@ -49,11 +49,10 @@ import io.gitee.dqcer.mcdull.system.provider.model.enums.FormItemControlTypeEnum
 import io.gitee.dqcer.mcdull.system.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IDepartmentRepository;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IUserRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IDictTypeManager;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IUserRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;
 import jakarta.annotation.Resource;
 import jakarta.validation.ConstraintViolation;
@@ -88,7 +87,7 @@ public class UserServiceImpl
     @Resource
     private IMenuService menuService;
     @Resource
-    private IDepartmentRepository departmentRepository;
+    private IDepartmentService departmentService;
     @Resource
     private IAuditManager auditManager;
     @Resource
@@ -144,7 +143,7 @@ public class UserServiceImpl
         Integer departmentId = dto.getDepartmentId();
         List<Integer> deptIdList = new ArrayList<>();
         if (ObjUtil.isNotNull(departmentId)) {
-           List<DepartmentEntity> entityList = departmentRepository.getTreeList(departmentId);
+           List<DepartmentEntity> entityList = departmentService.getTreeList(departmentId);
             if (CollUtil.isNotEmpty(entityList)) {
                 deptIdList = entityList.stream().map(BaseEntity::getId).collect(Collectors.toList());
             }
@@ -240,7 +239,7 @@ public class UserServiceImpl
         audit.setRemark(user.getRemark());
         Integer departmentId = user.getDepartmentId();
         if (ObjUtil.isNotNull(departmentId)) {
-            DepartmentEntity department = departmentRepository.getById(departmentId);
+            DepartmentEntity department = departmentService.getById(departmentId);
             if (ObjUtil.isNotNull(department)) {
                 audit.setDepartment(department.getName());
             }
@@ -470,7 +469,7 @@ public class UserServiceImpl
             Set<Integer> deptIdSet = list.stream()
                     .map(UserEntity::getDepartmentId)
                     .filter(ObjUtil::isNotNull).collect(Collectors.toSet());
-            List<DepartmentEntity> departmentEntities = departmentRepository
+            List<DepartmentEntity> departmentEntities = departmentService
                     .listByIds(new ArrayList<>(deptIdSet));
             if (CollUtil.isEmpty(departmentEntities)) {
                 return Collections.emptyList();
@@ -548,7 +547,7 @@ public class UserServiceImpl
         Map<Integer, List<RoleEntity>> roleListMap = roleService.getRoleMap(userIdList);
         Set<Integer> depIdSet = userList.stream().map(UserEntity::getDepartmentId)
                 .collect(Collectors.toSet());
-        List<DepartmentEntity> departmentEntities = departmentRepository.listByIds(depIdSet);
+        List<DepartmentEntity> departmentEntities = departmentService.listByIds(depIdSet);
         Map<Integer, DepartmentEntity> deptMap = departmentEntities.stream()
                 .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
         for (UserEntity entity : userList) {
@@ -715,7 +714,7 @@ public class UserServiceImpl
 
     private DynamicFieldBO getDepartmentFieldBO() {
         DynamicFieldBO departmentField = new DynamicFieldBO("departmentName", "部门名称", true, FormItemControlTypeEnum.SELECT);
-        List<DepartmentEntity> departmentEntityList = departmentRepository.list();
+        List<DepartmentEntity> departmentEntityList = departmentService.list();
         if (CollUtil.isNotEmpty(departmentEntityList)) {
             departmentField.setDropdownList(departmentEntityList.stream().map(DepartmentEntity::getName).collect(Collectors.toList()));
             departmentField.setExtraObj(departmentEntityList);

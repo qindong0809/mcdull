@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DeptUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.DepartmentEntity;
@@ -16,7 +17,7 @@ import java.util.Map;
  * @since 2024/7/25 9:20
  */
 
-public interface IDepartmentService {
+public interface IDepartmentService extends IRepository<DepartmentEntity> {
 
     List<DepartmentInfoVO> getAll();
 
@@ -33,4 +34,6 @@ public interface IDepartmentService {
     List<Integer> getChildrenIdList(Integer departmentId);
 
     DepartmentEntity getById(Integer departmentId);
+
+    List<DepartmentEntity> getTreeList(Integer parentDeptId);
 }

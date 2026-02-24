@@ -1,15 +1,24 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.ConfigAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.convert.ConfigConvert;
@@ -19,7 +28,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.ConfigUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FileEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ConfigInfoVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IConfigRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.ConfigMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IConfigService;
@@ -29,10 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -44,7 +50,7 @@ import java.util.stream.Collectors;
 */
 @Service
 public class ConfigServiceImpl
-        extends BasicServiceImpl<IConfigRepository> implements IConfigService {
+        extends BasicCurdServiceImpl<ConfigMapper, ConfigEntity> implements IConfigService {
 
     @Resource
     private ICommonManager commonManager;
@@ -57,7 +63,7 @@ public class ConfigServiceImpl
     @Override
     public PagedVO<ConfigInfoVO> queryPage(ConfigQueryDTO dto) {
         List<ConfigInfoVO> voList = new ArrayList<>();
-        List<ConfigEntity> records = baseRepository.selectList(dto);
+        List<ConfigEntity> records = this.selectList(dto);
         if (CollUtil.isNotEmpty(records)) {
             List<Integer> idList = records.stream().map(IdEntity::getId).collect(Collectors.toList());
             Map<Integer, List<FileEntity>> fileMap = commonManager.getFileList(idList, ConfigEntity.class);
@@ -82,13 +88,13 @@ public class ConfigServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void add(ConfigAddDTO dto) {
-        List<ConfigEntity> list = baseRepository.list();
+        List<ConfigEntity> list = super.list();
         if (CollUtil.isNotEmpty(list)) {
-            this.validNameExist(null, dto.getConfigName(),
+            LogicCheckUtil.validNameExist(null, dto.getConfigName(),
                     list, entity -> entity.getConfigName().equals(dto.getConfigName()));
         }
         ConfigEntity configEntity = ConfigConvert.convertToConfigEntity(dto);
-        Integer configId = baseRepository.insert(configEntity);
+        Integer configId = baseMapper.insert(configEntity);
         auditManager.saveByAddEnum(dto.getConfigName(), configId, this.buildAuditLog(configEntity));
     }
 
@@ -105,34 +111,34 @@ public class ConfigServiceImpl
     @Override
     public void update(ConfigUpdateDTO dto) {
         Integer configId = dto.getConfigId();
-        ConfigEntity configEntity = baseRepository.getById(configId);
+        ConfigEntity configEntity = super.getById(configId);
         if (ObjUtil.isNull(configEntity)) {
-            this.throwDataNotExistException(configId);
+            LogicCheckUtil.throwDataNotExistException(configId);
         }
-        List<ConfigEntity> list = baseRepository.list();
+        List<ConfigEntity> list = super.list();
         if (CollUtil.isNotEmpty(list)) {
-            this.validNameExist(configId, dto.getConfigName(),
+            LogicCheckUtil.validNameExist(configId, dto.getConfigName(),
                     list, entity -> (!entity.getId().equals(configId))
                             && entity.getConfigName().equals(dto.getConfigName()));
         }
         ConfigEntity updateEntity = ConfigConvert.convertToConfigEntity(dto);
         updateEntity.setId(configId);
-        baseRepository.updateById(updateEntity);
+        super.updateById(updateEntity);
         auditManager.saveByUpdateEnum(dto.getConfigName(), configId,
-                this.buildAuditLog(configEntity), this.buildAuditLog(baseRepository.getById(configId)));
+                this.buildAuditLog(configEntity), this.buildAuditLog(super.getById(configId)));
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(List<Integer> idList) {
-        List<ConfigEntity> entityList = baseRepository.listByIds(idList);
+        List<ConfigEntity> entityList = this.listByIds(idList);
         if (CollUtil.isEmpty(entityList)) {
             entityList = new LinkedList<>();
         }
         if (idList.size() != entityList.size()) {
-            this.throwDataNotExistException(idList);
+            LogicCheckUtil.throwDataNotExistException(idList);
         }
-        baseRepository.deleteBatchByIds(idList);
+        this.deleteBatchByIds(idList);
 
         for (ConfigEntity entity : entityList) {
             fileService.remove(entity.getId(), ConfigEntity.class);
@@ -159,9 +165,9 @@ public class ConfigServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void importAttachmentData(Integer id, MultipartFile file) {
-        ConfigEntity config = baseRepository.getById(id);
+        ConfigEntity config = super.getById(id);
         if (ObjUtil.isNull(config) || config.getDelFlag()) {
-            this.throwDataNotExistException(id);
+            LogicCheckUtil.throwDataNotExistException(id);
         }
         commonManager.uploadFile(file, id, ConfigEntity.class);
     }
@@ -177,6 +183,61 @@ public class ConfigServiceImpl
         titleList.add(Pair.of("更新时间", ConfigInfoVO::getUpdateTime));
         return titleList;
     }
+
+
+    public List<ConfigEntity> queryListByIds(List<Integer> idList) {
+        LambdaQueryWrapper<ConfigEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(ConfigEntity::getId, idList);
+        List<ConfigEntity> list =  baseMapper.selectList(wrapper);
+        if (ObjectUtil.isNotNull(list)) {
+            return list;
+        }
+        return Collections.emptyList();
+    }
+
+    public Page<ConfigEntity> selectPage(ConfigQueryDTO param) {
+        LambdaQueryWrapper<ConfigEntity> lambda = new QueryWrapper<ConfigEntity>().lambda();
+        String configKey = param.getConfigKey();
+        if (CharSequenceUtil.isNotBlank(configKey)) {
+            lambda.like(ConfigEntity::getConfigKey, configKey);
+        }
+        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
+    }
+
+    public List<ConfigEntity> selectList(ConfigQueryDTO param) {
+        LambdaQueryWrapper<ConfigEntity> lambda = new QueryWrapper<ConfigEntity>().lambda();
+        String configKey = param.getConfigKey();
+        if (CharSequenceUtil.isNotBlank(configKey)) {
+            lambda.like(ConfigEntity::getConfigKey, configKey);
+        }
+        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        return baseMapper.selectList(lambda);
+    }
+
+    public ConfigEntity getById(Integer id) {
+        return baseMapper.selectById(id);
+    }
+
+    public Integer insert(ConfigEntity entity) {
+        baseMapper.insert(entity);
+        return entity.getId();
+    }
+
+    public boolean exist(ConfigEntity entity) {
+        return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
+    }
+
+    public ConfigEntity selectOne(String key) {
+        LambdaQueryWrapper<ConfigEntity> query = Wrappers.lambdaQuery();
+        query.eq(ConfigEntity::getConfigKey, key);
+        return baseMapper.selectOne(query);
+    }
+
+    public void deleteBatchByIds(List<Integer> ids) {
+        baseMapper.deleteByIds(ids);
+    }
+
 
 
 }

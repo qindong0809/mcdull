@@ -1,15 +1,21 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.DictValueAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DictValueAddDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DictValueQueryDTO;
@@ -18,14 +24,14 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.DictKeyEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.DictValueEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DictKeyVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DictValueVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IDictValueRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.DictValueMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDictKeyService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDictValueService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +46,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class DictValueServiceImpl
-        extends BasicServiceImpl<IDictValueRepository> implements IDictValueService {
+        extends BasicCurdServiceImpl<DictValueMapper, DictValueEntity> implements IDictValueService {
 
     @Resource
     private IDictKeyService dictKeyService;
@@ -50,7 +56,7 @@ public class DictValueServiceImpl
 
     @Override
     public PagedVO<DictValueVO> getList(DictValueQueryDTO dto) {
-        Page<DictValueEntity> entityPage = baseRepository.selectPage(dto);
+        Page<DictValueEntity> entityPage = this.selectPage(dto);
         List<DictValueVO> voList = new ArrayList<>();
         entityPage.getRecords().forEach(entity -> {
             DictValueVO vo = new DictValueVO();
@@ -68,12 +74,12 @@ public class DictValueServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void insert(DictValueAddDTO dto) {
-        List<DictValueEntity> entityList = baseRepository.getListByDictKeyId(dto.getDictKeyId());
+        List<DictValueEntity> entityList = this.getListByDictKeyId(dto.getDictKeyId());
         String valueName = dto.getValueName();
         String valueCode = dto.getValueCode();
-        this.validNameExist(null, valueName, entityList, i -> i.getValueName().equals(valueName));
-        this.validNameExist(null, valueCode, entityList, i -> i.getValueCode().equals(valueCode));
-        DictValueEntity entity = baseRepository.insert(dto);
+        LogicCheckUtil.validNameExist(null, valueName, entityList, i -> i.getValueName().equals(valueName));
+        LogicCheckUtil.validNameExist(null, valueCode, entityList, i -> i.getValueCode().equals(valueCode));
+        DictValueEntity entity = this.insertEntity(dto);
 //        auditManager.saveByAddEnum(entity.getValueName(), entity.getId(), this.buildAuditLog(entity));
     }
 
@@ -97,34 +103,34 @@ public class DictValueServiceImpl
     @Override
     public void update(DictValueUpdateDTO dto) {
         Integer id = dto.getDictValueId();
-        DictValueEntity entity = baseRepository.getById(id);
+        DictValueEntity entity = super.getById(id);
         if (ObjUtil.isNull(entity)) {
-            super.throwDataNotExistException(id);
+            LogicCheckUtil.throwDataNotExistException(id);
         }
         String valueName = dto.getValueName();
         String valueCode = dto.getValueCode();
-        List<DictValueEntity> entityList = baseRepository.getListByDictKeyId(dto.getDictKeyId());
-        this.validNameExist(id, valueName, entityList, i -> (!i.getId().equals(id)) && i.getValueName().equals(valueName));
-        this.validNameExist(id, valueCode, entityList, i -> (!i.getId().equals(id)) && i.getValueCode().equals(valueCode));
-        baseRepository.update(dto);
+        List<DictValueEntity> entityList = this.getListByDictKeyId(dto.getDictKeyId());
+        LogicCheckUtil.validNameExist(id, valueName, entityList, i -> (!i.getId().equals(id)) && i.getValueName().equals(valueName));
+        LogicCheckUtil.validNameExist(id, valueCode, entityList, i -> (!i.getId().equals(id)) && i.getValueCode().equals(valueCode));
+        this.updateEntity(dto);
         auditManager.saveByUpdateEnum(valueName, id,
-                this.buildAuditLog(entity), this.buildAuditLog(baseRepository.getById(id)));
+                this.buildAuditLog(entity), this.buildAuditLog(super.getById(id)));
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(List<Integer> idList) {
-        DictValueEntity entity = baseRepository.getById(idList.get(0));
+        DictValueEntity entity = super.getById(idList.get(0));
         if (ObjUtil.isNull(entity)) {
-            super.throwDataNotExistException(idList.get(0));
+            LogicCheckUtil.throwDataNotExistException(idList.get(0));
         }
-        List<DictValueEntity> list = baseRepository.getListByDictKeyId(entity.getDictKeyId());
+        List<DictValueEntity> list = this.getListByDictKeyId(entity.getDictKeyId());
         if (CollUtil.isNotEmpty(list)) {
             List<Integer> collect = list.stream().map(IdEntity::getId).collect(Collectors.toList());
             if (!CollUtil.containsAll(collect, idList)) {
                 throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
             }
-            baseRepository.removeByIds(idList);
+            super.removeByIds(idList);
             for (Integer id : idList) {
                 auditManager.saveByDeleteEnum(entity.getValueName(), id, null);
             }
@@ -135,7 +141,7 @@ public class DictValueServiceImpl
     public List<DictValueVO> selectByKeyCode(String keyCode) {
         DictKeyVO vo = dictKeyService.getByCode(keyCode);
         if (ObjUtil.isNotNull(vo)) {
-            return baseRepository.getListByDictKeyId(vo.getDictKeyId()).stream().map(i -> {
+            return this.getListByDictKeyId(vo.getDictKeyId()).stream().map(i -> {
                 DictValueVO valueVO = new DictValueVO();
                 valueVO.setDictValueId(i.getId());
                 valueVO.setValueCode(i.getValueCode());
@@ -144,5 +150,57 @@ public class DictValueServiceImpl
             }).collect(Collectors.toList());
         }
         return Collections.emptyList();
+    }
+
+
+    public void insert(DictValueEntity entity) {
+        baseMapper.insert(entity);
+    }
+
+
+    public List<DictValueEntity> getListByDictKeyId(Integer dictKeyId) {
+        if (ObjectUtil.isNotNull(dictKeyId)) {
+            LambdaQueryWrapper<DictValueEntity> wrapper = Wrappers.lambdaQuery(DictValueEntity.class)
+                .eq(DictValueEntity::getDictKeyId, dictKeyId);
+            return baseMapper.selectList(wrapper);
+        }
+        return Collections.emptyList();
+    }
+
+    public Page<DictValueEntity> selectPage(DictValueQueryDTO dto) {
+        LambdaQueryWrapper<DictValueEntity> query = Wrappers.lambdaQuery();
+        String keyword = dto.getSearchWord();
+        if (CharSequenceUtil.isNotBlank(keyword)) {
+            query.and(i-> i.like(DictValueEntity::getValueName, keyword)
+                .or().like(DictValueEntity::getValueCode, keyword)
+            );
+        }
+        Integer dictKeyId = dto.getDictKeyId();
+        if (ObjectUtil.isNotNull(dictKeyId)) {
+            query.eq(DictValueEntity::getDictKeyId, dictKeyId);
+        }
+        query.orderByDesc(RelEntity::getCreatedTime);
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
+    }
+
+    public DictValueEntity insertEntity(DictValueAddDTO dto) {
+        DictValueEntity entity = new DictValueEntity();
+        entity.setDictKeyId(dto.getDictKeyId());
+        entity.setValueCode(dto.getValueCode());
+        entity.setValueName(dto.getValueName());
+        entity.setSort(dto.getSort());
+        entity.setRemark(dto.getRemark());
+        this.insert(entity);
+        return entity;
+    }
+
+    public void updateEntity(DictValueUpdateDTO dto) {
+        DictValueEntity entity = new DictValueEntity();
+        entity.setId(dto.getDictValueId());
+        entity.setValueCode(dto.getValueCode());
+        entity.setValueName(dto.getValueName());
+        entity.setSort(dto.getSort());
+        entity.setRemark(dto.getRemark());
+        this.updateById(entity);
     }
 }

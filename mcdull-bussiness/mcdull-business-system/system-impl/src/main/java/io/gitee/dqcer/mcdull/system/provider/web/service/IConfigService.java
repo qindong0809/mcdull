@@ -1,9 +1,11 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.ConfigAddDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.ConfigUpdateDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ConfigInfoVO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +17,7 @@ import java.util.List;
  * @author dqcer
  * @since 2024-04-29
  */
-public interface IConfigService {
+public interface IConfigService extends IRepository<ConfigEntity> {
 
 
     /**

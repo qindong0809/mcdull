@@ -1,8 +1,10 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.FeedbackAddDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.FeedbackQueryDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.FeedbackEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FeedbackVO;
 
 /**
@@ -12,7 +14,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.FeedbackVO;
  * @since 2024/7/25 9:21
  */
 
-public interface IFeedbackService {
+public interface IFeedbackService extends IRepository<FeedbackEntity> {
 
 
     PagedVO<FeedbackVO> query(FeedbackQueryDTO dto);

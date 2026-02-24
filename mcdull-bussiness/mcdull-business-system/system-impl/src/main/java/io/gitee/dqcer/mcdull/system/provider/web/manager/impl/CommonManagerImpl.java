@@ -49,13 +49,9 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.ApproveVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileSimpleVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.IFileVO;
 import io.gitee.dqcer.mcdull.system.provider.util.ExcelUtil;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IConfigRepository;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IDepartmentRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IFolderService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IMenuService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
@@ -82,7 +78,7 @@ public class CommonManagerImpl implements ICommonManager {
     @Resource
     private IFileService fileService;
     @Resource
-    private IConfigRepository configRepository;
+    private IConfigService configService;
     @Resource
     private RedissonCache redisCache;
     @Resource
@@ -90,7 +86,7 @@ public class CommonManagerImpl implements ICommonManager {
     @Resource
     private IMenuService menuService;
     @Resource
-    private IDepartmentRepository definitionRepository;
+    private IDepartmentService departmentService;
 
     private String getFileName(FileExtensionTypeEnum fileExtension, String... args) {
         if (ObjUtil.isNull(fileExtension) || ArrayUtil.isEmpty(args)) {
@@ -332,7 +328,7 @@ public class CommonManagerImpl implements ICommonManager {
 
     @Override
     public String getConfig(String key) {
-        List<ConfigEntity> entityList = redisCache.getListOrSet("sys_config", ConfigEntity.class, () -> configRepository.list(), 60 * 60 * 24);
+        List<ConfigEntity> entityList = redisCache.getListOrSet("sys_config", ConfigEntity.class, () -> configService.list(), 60 * 60 * 24);
         if (CollUtil.isNotEmpty(entityList)) {
             Map<String, String> map = entityList.stream().collect(Collectors.toMap(ConfigEntity::getConfigKey, ConfigEntity::getConfigValue));
             return map.get(key);
@@ -413,7 +409,7 @@ public class CommonManagerImpl implements ICommonManager {
     @Override
     public void setDepartment(List<? extends ApproveVO> voList, Integer userId) {
         if (CollUtil.isNotEmpty(voList)) {
-            List<DepartmentEntity> list = definitionRepository.list();
+            List<DepartmentEntity> list = departmentService.list();
             Set<Integer> userIdSet = voList.stream().map(ApproveVO::getResponsibleUserId).collect(Collectors.toSet());
             userIdSet.add(userId);
             Map<Integer, UserEntity> entityMap = userManager.getEntityMap(new ArrayList<>(userIdSet));

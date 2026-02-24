@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.repository.CrudRepository;
 import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
 import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
@@ -20,7 +22,7 @@ public abstract class BasicCurdServiceImpl<M extends BaseMapper<T>, T> extends C
     @Resource
     protected DynamicLocaleMessageSource dynamicLocaleMessageSource;
 
-//    protected final Logger log = LoggerFactory.getLogger(this.getClass());
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected T mustGet(Serializable id) {
         T obj = super.getById(id);

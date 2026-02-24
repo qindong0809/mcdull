@@ -1,9 +1,11 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigForm;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorPreviewForm;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.TableQueryForm;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.CodeGeneratorConfigEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableColumnVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableConfigVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableVO;
@@ -17,7 +19,7 @@ import java.util.List;
  * @since 2024/7/25 9:19
  */
 
-public interface ICodeGeneratorService {
+public interface ICodeGeneratorService extends IRepository<CodeGeneratorConfigEntity> {
 
 
     List<TableColumnVO> getTableColumns(String table);

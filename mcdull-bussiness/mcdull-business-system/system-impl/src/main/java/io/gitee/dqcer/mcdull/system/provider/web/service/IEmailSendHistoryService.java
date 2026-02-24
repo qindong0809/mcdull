@@ -1,7 +1,9 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.EmailSendHistoryQueryDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.EmailSendHistoryEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.EmailTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.EmailSendHistoryVO;
 
@@ -14,7 +16,7 @@ import java.util.List;
  * @since 2024/7/25 9:21
  */
 
-public interface IEmailSendHistoryService {
+public interface IEmailSendHistoryService extends IRepository<EmailSendHistoryEntity> {
 
     /**
      * 插入
