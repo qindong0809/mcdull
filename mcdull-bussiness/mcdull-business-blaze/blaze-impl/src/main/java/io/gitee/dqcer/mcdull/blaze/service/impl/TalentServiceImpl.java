@@ -7,7 +7,7 @@ import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.mcdull.blaze.dao.repository.ITalentRepository;
+import io.gitee.dqcer.mcdull.blaze.repository.ITalentRepository;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.TalentEntity;
 import io.gitee.dqcer.mcdull.blaze.domain.enums.CertificateSocialSecurityRequirementEnum;
 import io.gitee.dqcer.mcdull.blaze.domain.enums.CertificateTitleEnum;
@@ -18,15 +18,15 @@ import io.gitee.dqcer.mcdull.blaze.domain.form.TalentUpdateDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.vo.TalentVO;
 import io.gitee.dqcer.mcdull.blaze.service.ITalentCertificateService;
 import io.gitee.dqcer.mcdull.blaze.service.ITalentService;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.GenderEnum;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAreaManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IAreaService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +46,7 @@ public class TalentServiceImpl
         extends BasicServiceImpl<ITalentRepository> implements ITalentService {
 
     @Resource
-    private IAreaManager areaManager;
+    private IAreaService areaService;
     @Resource
     private ITalentCertificateService talentCertificateService;
     @Resource
@@ -88,7 +88,7 @@ public class TalentServiceImpl
                 vo.setIdNumber(s);
                 voList.add(vo);
             }
-            areaManager.set(voList);
+            areaService.set(voList);
         }
         return PageUtil.toPage(voList, entityPage);
     }

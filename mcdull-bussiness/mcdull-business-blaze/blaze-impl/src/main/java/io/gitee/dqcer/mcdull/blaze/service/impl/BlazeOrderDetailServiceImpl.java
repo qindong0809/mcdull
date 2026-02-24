@@ -8,7 +8,7 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.mcdull.blaze.dao.repository.IBlazeOrderDetailRepository;
+import io.gitee.dqcer.mcdull.blaze.repository.IBlazeOrderDetailRepository;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.BlazeOrderDetailEntity;
 import io.gitee.dqcer.mcdull.blaze.domain.enums.ApproveEnum;
 import io.gitee.dqcer.mcdull.blaze.domain.form.BlazeOrderDetailAddDTO;

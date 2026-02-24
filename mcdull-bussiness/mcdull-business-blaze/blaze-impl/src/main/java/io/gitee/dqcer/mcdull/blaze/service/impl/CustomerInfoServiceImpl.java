@@ -6,7 +6,7 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.mcdull.blaze.dao.repository.ICustomerInfoRepository;
+import io.gitee.dqcer.mcdull.blaze.repository.ICustomerInfoRepository;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.CustomerInfoEntity;
 import io.gitee.dqcer.mcdull.blaze.domain.form.CustomerInfoAddDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.form.CustomerInfoQueryDTO;
@@ -20,10 +20,10 @@ import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.DictSelectTypeEnum;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAreaManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IDictTypeManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IAreaService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +47,7 @@ public class CustomerInfoServiceImpl
     @Resource
     private IUserManager userManager;
     @Resource
-    private IAreaManager areaManager;
+    private IAreaService areaService;
     @Resource
     private ICertificateRequirementsService certificateRequirementsService;
     @Resource
@@ -78,7 +78,7 @@ public class CustomerInfoServiceImpl
                 vo.setPhoneNumber("");
                 voList.add(vo);
             }
-            areaManager.set(voList);
+            areaService.set(voList);
         }
         return PageUtil.toPage(voList, entityPage);
     }

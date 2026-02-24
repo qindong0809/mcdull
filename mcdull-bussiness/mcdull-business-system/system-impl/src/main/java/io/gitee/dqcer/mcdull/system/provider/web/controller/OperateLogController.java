@@ -45,7 +45,7 @@ public class OperateLogController extends BasicController {
 
 
     @Operation(summary = "分页查询")
-    @PostMapping("/support/operateLog/page/query")
+    @PostMapping("/operateLog/page/query")
     @SaCheckEL("stp.checkPermission('support:operateLog:query')")
     public Result<PagedVO<OperateLogVO>> queryByPage(@RequestBody OperateLogQueryDTO dto) {
         return Result.success(operateLogService.queryByPage(dto));
@@ -59,7 +59,7 @@ public class OperateLogController extends BasicController {
     }
 
     @Operation(summary = "详情")
-    @GetMapping("/support/operateLog/detail/{operateLogId}")
+    @GetMapping("/operateLog/detail/{operateLogId}")
     @SaCheckEL("stp.checkPermission('support:operateLog:detail')")
     public Result<OperateLogVO> detail(@PathVariable(value = "operateLogId") Integer operateLogId) {
         return Result.success(operateLogService.detail(operateLogId));

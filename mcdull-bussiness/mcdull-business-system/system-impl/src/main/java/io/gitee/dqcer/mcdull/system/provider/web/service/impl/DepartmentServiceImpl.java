@@ -17,7 +17,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentTreeInfoVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IDepartmentRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IDepartmentRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDepartmentService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;

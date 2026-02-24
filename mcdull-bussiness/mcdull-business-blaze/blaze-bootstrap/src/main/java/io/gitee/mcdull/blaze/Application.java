@@ -14,7 +14,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @EnableFileStorage
 @EnableWebCore
-@MapperScan(basePackages = {GlobalConstant.MAPPER_PACKAGE})
+@MapperScan(basePackages = {GlobalConstant.MAPPER_PACKAGE, GlobalConstant.MAPPER_PACKAGE_DAO})
 @EnableDynamicDataSource
 @EnableCache
 @SpringBootApplication(scanBasePackages = "io.gitee")

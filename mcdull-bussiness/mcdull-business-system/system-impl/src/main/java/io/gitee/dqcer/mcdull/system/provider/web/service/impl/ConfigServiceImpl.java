@@ -19,7 +19,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.ConfigUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FileEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ConfigInfoVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IConfigRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IConfigRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IConfigService;

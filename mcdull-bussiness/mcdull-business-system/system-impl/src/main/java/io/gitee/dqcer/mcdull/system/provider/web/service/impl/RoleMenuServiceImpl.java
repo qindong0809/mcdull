@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleMenuEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IRoleMenuRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IRoleMenuRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleMenuService;
 import org.springframework.stereotype.Service;
 

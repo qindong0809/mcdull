@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IUserRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IUserRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDepartmentService;
 import jakarta.annotation.Resource;

@@ -17,7 +17,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.UserConfigEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.LoginDeviceEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.LoginLogResultTypeEnum;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IUserConfigRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IUserConfigRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ILoginService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;

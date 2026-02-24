@@ -11,7 +11,7 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.LoginFailQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.LoginLockedEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.LoginLockedVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.ILoginLockedRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.ILoginLockedRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ILoginLockedService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;

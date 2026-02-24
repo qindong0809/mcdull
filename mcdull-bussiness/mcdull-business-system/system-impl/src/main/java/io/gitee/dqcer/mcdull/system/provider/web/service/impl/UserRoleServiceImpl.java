@@ -5,7 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleUserEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IUserRoleRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IUserRoleRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserRoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

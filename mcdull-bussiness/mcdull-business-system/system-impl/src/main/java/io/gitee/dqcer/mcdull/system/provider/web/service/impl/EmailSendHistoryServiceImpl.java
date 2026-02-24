@@ -18,7 +18,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.EmailSendHistoryQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.EmailSendHistoryEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.EmailTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.EmailSendHistoryVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IEmailSendHistoryRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IEmailSendHistoryRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IEmailSendHistoryService;
 import jakarta.annotation.Resource;

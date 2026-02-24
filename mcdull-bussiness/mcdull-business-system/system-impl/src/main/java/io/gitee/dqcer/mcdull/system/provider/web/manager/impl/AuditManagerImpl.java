@@ -5,17 +5,17 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.business.common.audit.AuditUtil;
-import io.gitee.dqcer.mcdull.system.provider.model.enums.OperationTypeEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.BizAuditFieldEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IBizAuditFieldRepository;
+import io.gitee.dqcer.mcdull.system.provider.model.enums.OperationTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditFieldService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +29,7 @@ public class AuditManagerImpl implements IAuditManager {
     private IBizAuditService bizAuditService;
 
     @Resource
-    private IBizAuditFieldRepository bizAuditFieldRepository;
+    private IBizAuditFieldService bizAuditFieldService;
 
 
     @Override
@@ -91,6 +91,6 @@ public class AuditManagerImpl implements IAuditManager {
             auditField.setSortOrder(fieldDiff.getSortOrder());
             list.add(auditField);
         }
-        bizAuditFieldRepository.saveBatch(list, list.size());
+        bizAuditFieldService.saveBatch(list, list.size());
     }
 }

@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IFileBizRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IFileBizRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileBizService;
 import org.springframework.stereotype.Service;
 

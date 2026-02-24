@@ -16,7 +16,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.FolderUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FolderEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FolderInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FolderTreeInfoVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IFolderRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IFolderRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFolderService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IMenuService;
 import jakarta.annotation.Resource;

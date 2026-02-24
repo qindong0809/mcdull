@@ -16,7 +16,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.enums.CodeGeneratorConstant;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableColumnVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableConfigVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.ICodeGeneratorConfigRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.ICodeGeneratorConfigRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ICodeGeneratorService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.CodeGeneratorTemplateService;
 import org.springframework.stereotype.Service;

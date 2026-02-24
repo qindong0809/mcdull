@@ -16,7 +16,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.convert.RoleConvert;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.RoleVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IRoleRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IRoleRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleMenuService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleService;

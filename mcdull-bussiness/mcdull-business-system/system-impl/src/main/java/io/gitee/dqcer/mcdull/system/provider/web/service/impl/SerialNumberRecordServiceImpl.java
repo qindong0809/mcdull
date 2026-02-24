@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.SerialNumberRecordQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.SerialNumberEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.SerialNumberRecordEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.ISerialNumberRecordRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.ISerialNumberRecordRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ISerialNumberRecordService;
 import org.springframework.stereotype.Service;
 

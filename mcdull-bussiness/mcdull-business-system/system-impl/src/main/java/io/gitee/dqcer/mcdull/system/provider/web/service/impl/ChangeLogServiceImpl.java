@@ -1,16 +1,22 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.framework.web.version.IVersionInfoComponent;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.ChangeLogAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.ChangeLogAddDTO;
@@ -20,7 +26,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.ChangeLogEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.ChangeLogTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ChangeLogAndVersionVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ChangeLogVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IChangeLogRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.ChangeLogMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IChangeLogService;
@@ -28,7 +34,9 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -40,7 +48,7 @@ import java.util.List;
  */
 @Service
 public class ChangeLogServiceImpl
-        extends BasicServiceImpl<IChangeLogRepository> implements IChangeLogService {
+        extends BasicCurdServiceImpl<ChangeLogMapper, ChangeLogEntity> implements IChangeLogService {
 
     @Resource
     private IVersionInfoComponent versionInfoComponent;
@@ -52,13 +60,13 @@ public class ChangeLogServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean add(ChangeLogAddDTO dto) {
-        List<ChangeLogEntity> list = baseRepository.list();
+        List<ChangeLogEntity> list = super.list();
         if (CollUtil.isNotEmpty(list)) {
-            this.validNameExist(null, dto.getVersion(), list,
+            LogicCheckUtil.validNameExist(null, dto.getVersion(), list,
                     entity -> entity.getVersion().equals(dto.getVersion()));
         }
         ChangeLogEntity entity = this.convertEntity(dto);
-        baseRepository.insert(entity);
+        baseMapper.insert(entity);
         auditManager.saveByAddEnum(dto.getVersion(), entity.getId(), this.buildAuditLog(entity));
         return true;
     }
@@ -77,18 +85,18 @@ public class ChangeLogServiceImpl
     @Override
     public void update(ChangeLogUpdateDTO dto) {
         Integer changeLogId = dto.getChangeLogId();
-        ChangeLogEntity logEntity = baseRepository.getById(changeLogId);
+        ChangeLogEntity logEntity = super.getById(changeLogId);
         if (ObjUtil.isNull(logEntity)) {
-            this.throwDataNotExistException(changeLogId);
+            LogicCheckUtil.throwDataNotExistException(changeLogId);
         }
         ChangeLogEntity oldEntity = ObjUtil.cloneByStream(logEntity);
-        List<ChangeLogEntity> list = baseRepository.list();
+        List<ChangeLogEntity> list = super.list();
         if (CollUtil.isNotEmpty(list)) {
-            this.validNameExist(changeLogId, dto.getVersion(), list,
+            LogicCheckUtil.validNameExist(changeLogId, dto.getVersion(), list,
                     entity -> (!changeLogId.equals(entity.getId())) && entity.getVersion().equals(dto.getVersion()));
         }
         this.settingUpdateField(dto, logEntity);
-        baseRepository.updateById(logEntity);
+        baseMapper.updateById(logEntity);
         auditManager.saveByUpdateEnum(dto.getVersion(), changeLogId,
                 this.buildAuditLog(oldEntity), this.buildAuditLog(logEntity));
     }
@@ -96,11 +104,11 @@ public class ChangeLogServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void batchDelete(List<Integer> idList) {
-        List<ChangeLogEntity> entityList = baseRepository.queryListByIds(idList);
+        List<ChangeLogEntity> entityList = this.queryListByIds(idList);
         if (entityList.size() != idList.size()) {
-            this.throwDataNotExistException(idList);
+            LogicCheckUtil.throwDataNotExistException(idList);
         }
-        baseRepository.removeByIds(idList);
+        super.removeByIds(idList);
         for (ChangeLogEntity entity : entityList) {
             auditManager.saveByDeleteEnum(entity.getVersion(), entity.getId(), null);
         }
@@ -108,7 +116,7 @@ public class ChangeLogServiceImpl
 
     @Override
     public PagedVO<ChangeLogVO> queryPage(ChangeLogQueryDTO dto) {
-        Page<ChangeLogEntity> entityPage = baseRepository.selectPage(dto);
+        Page<ChangeLogEntity> entityPage = this.selectPage(dto);
         List<ChangeLogVO> voList = new ArrayList<>();
         for (ChangeLogEntity entity : entityPage.getRecords()) {
             ChangeLogVO logVO = this.convertToConfigVO(entity);
@@ -120,9 +128,9 @@ public class ChangeLogServiceImpl
 
     @Override
     public ChangeLogVO getById(Integer id) {
-        ChangeLogEntity logEntity = baseRepository.getById(id);
+        ChangeLogEntity logEntity = super.getById(id);
         if (ObjUtil.isNull(logEntity)) {
-            this.throwDataNotExistException(id);
+            LogicCheckUtil.throwDataNotExistException(id);
         }
         return this.convertToConfigVO(logEntity);
     }
@@ -130,7 +138,7 @@ public class ChangeLogServiceImpl
     @Override
     public ChangeLogAndVersionVO getChangeLogAndVersion() {
         ChangeLogAndVersionVO changeLogAndVersion = new ChangeLogAndVersionVO();
-        List<ChangeLogEntity> list = baseRepository.list();
+        List<ChangeLogEntity> list = super.list();
         if (CollUtil.isNotEmpty(list)) {
             List<ChangeLogVO> voList = new ArrayList<>();
             for (ChangeLogEntity entity : list) {
@@ -195,5 +203,55 @@ public class ChangeLogServiceImpl
         changeLogEntity.setContent(dto.getContent());
         changeLogEntity.setLink(dto.getLink());
         return changeLogEntity;
+    }
+
+
+    public List<ChangeLogEntity> queryListByIds(List<Integer> idList) {
+        LambdaQueryWrapper<ChangeLogEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(ChangeLogEntity::getId, idList);
+        List<ChangeLogEntity> list =  baseMapper.selectList(wrapper);
+        if (ObjUtil.isNotNull(list)) {
+            return list;
+        }
+        return Collections.emptyList();
+    }
+
+
+    public Page<ChangeLogEntity> selectPage(ChangeLogQueryDTO param) {
+        LambdaQueryWrapper<ChangeLogEntity> lambda = Wrappers.lambdaQuery();
+        String keyword = param.getKeyword();
+        if (StrUtil.isNotBlank(keyword)) {
+            lambda.and(i->i.like(ChangeLogEntity::getVersion, keyword)
+                .or().like(ChangeLogEntity::getContent, keyword));
+        }
+        Integer type = param.getType();
+        if (ObjUtil.isNotNull(type)) {
+            lambda.eq(ChangeLogEntity::getType, type);
+        }
+        LocalDate startDate = param.getPublicDateBegin();
+        LocalDate endDate = param.getPublicDateEnd();
+        if (ObjUtil.isAllNotEmpty(startDate, endDate)) {
+            lambda.between(ChangeLogEntity::getPublicDate, startDate,
+                LocalDateTimeUtil.endOfDay(endDate.atStartOfDay()));
+        }
+        LocalDate createTime = param.getCreateTime();
+        if (ObjUtil.isNotNull(createTime)) {
+            lambda.between(RelEntity::getCreatedTime, createTime, LocalDateTimeUtil.endOfDay(createTime.atStartOfDay()));
+        }
+        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
+    }
+
+
+    public void insert(ChangeLogEntity entity) {
+        baseMapper.insert(entity);
+    }
+
+    public boolean exist(ChangeLogEntity entity) {
+        return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
+    }
+
+    public void deleteBatchByIds(List<Integer> ids) {
+        baseMapper.deleteByIds(ids);
     }
 }

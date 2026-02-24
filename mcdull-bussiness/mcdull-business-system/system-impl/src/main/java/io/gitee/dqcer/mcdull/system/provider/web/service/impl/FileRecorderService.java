@@ -5,7 +5,7 @@ import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.lang.Dict;
 import io.gitee.dqcer.mcdull.framework.oss.OssService;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FileEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IFileRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IFileRepository;
 import jakarta.annotation.Resource;
 import org.dromara.x.file.storage.core.FileInfo;
 import org.dromara.x.file.storage.core.recorder.FileRecorder;

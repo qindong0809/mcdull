@@ -14,7 +14,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.SerialNumberRecordEnti
 import io.gitee.dqcer.mcdull.system.provider.model.enums.SerialNumberBusinessTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.SerialNumberFormatTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.SerialNumberVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.ISerialNumberRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.ISerialNumberRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ISerialNumberRecordService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ISerialNumberService;
 import org.springframework.stereotype.Service;

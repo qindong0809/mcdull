@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.TableColumnUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.TableColumnEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.ITableColumnRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.ITableColumnRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ITableColumnService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

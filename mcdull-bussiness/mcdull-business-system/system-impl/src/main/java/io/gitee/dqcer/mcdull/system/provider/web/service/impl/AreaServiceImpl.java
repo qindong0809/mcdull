@@ -16,15 +16,15 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.AreaQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.AreaEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.AreaVO;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.IArea;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.AreaMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IAreaService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Area Service
@@ -88,6 +88,46 @@ public class AreaServiceImpl extends BasicCurdServiceImpl<AreaMapper, AreaEntity
     public boolean exportData(AreaQueryDTO dto) {
         commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
         return true;
+    }
+
+    private Map<String, String> map(Set<String> codeSet) {
+        if (CollUtil.isNotEmpty(codeSet)) {
+            LambdaQueryWrapper<AreaEntity> query = Wrappers.lambdaQuery();
+            query.in(AreaEntity::getCode, codeSet);
+            List<AreaEntity> entityList = baseMapper.selectList(query);
+            if (CollUtil.isNotEmpty(entityList)) {
+                Map<String, String> map = new HashMap<>(entityList.size());
+                for (AreaEntity entity : entityList) {
+                    map.put(entity.getCode(), entity.getName());
+                }
+                return map;
+            }
+        }
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public <T extends IArea> void set(List<T> list) {
+        if (CollUtil.isNotEmpty(list)) {
+            Set<String> provincesSet = list.stream().map(IArea::getProvincesCode).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+            Set<String> citySet = list.stream().map(IArea::getCityCode).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+            Set<String> codList = new HashSet<>(provincesSet.size() + citySet.size());
+            if (CollUtil.isNotEmpty(provincesSet)) {
+                codList.addAll(provincesSet);
+            }
+            if (CollUtil.isNotEmpty(citySet)) {
+                codList.addAll(citySet);
+            }
+            Map<String, String> map = this.map(codList);
+            for (T t : list) {
+                if (ObjUtil.isNotNull(t.getProvincesCode())) {
+                    t.setProvincesName(map.get(t.getProvincesCode()));
+                }
+                if (ObjUtil.isNotNull(t.getCityCode())) {
+                    t.setCityName(map.get(t.getCityCode()));
+                }
+            }
+        }
     }
 
     private List<Pair<String, Func1<AreaVO, ?>>> getTitleList() {

@@ -18,7 +18,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.DictKeyEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.DictValueEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DictKeyVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DictValueVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IDictValueRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IDictValueRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDictKeyService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDictValueService;

@@ -10,7 +10,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.mcdull.blaze.dao.repository.ITalentCertificateRepository;
+import io.gitee.dqcer.mcdull.blaze.repository.ITalentCertificateRepository;
 import io.gitee.dqcer.mcdull.blaze.domain.bo.CertificateBO;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.BlazeOrderEntity;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.CertificateRequirementsEntity;
@@ -24,15 +24,14 @@ import io.gitee.dqcer.mcdull.blaze.service.*;
 import io.gitee.dqcer.mcdull.blaze.util.CertificateUtil;
 import io.gitee.dqcer.mcdull.business.common.CustomMultipartFile;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.bo.DynamicFieldBO;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.FormItemControlTypeEnum;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAreaManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IAreaService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
@@ -57,8 +56,6 @@ import java.util.stream.Collectors;
 public class TalentCertificateServiceImpl
         extends BasicServiceImpl<ITalentCertificateRepository> implements ITalentCertificateService {
 
-    @Resource
-    private IAreaManager areaManager;
     @Resource
     private ITalentService talentService;
     @Resource
@@ -144,7 +141,7 @@ public class TalentCertificateServiceImpl
                     vo.setPositionSourceName(IEnum.getTextByCode(CertificatePositionSourceEnum.class, positionSource));
                 }
                 voList.add(vo);
-                areaManager.set(voList);
+                areaService.set(voList);
 
             }
             approveService.setApproveVO(voList, recordList);

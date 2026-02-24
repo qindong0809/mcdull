@@ -37,13 +37,13 @@ public class CodeGeneratorConfigController extends BasicController {
     // ------------------- 查询 -------------------
 
     @Operation(summary = "获取表的列")
-    @GetMapping("/support/codeGenerator/table/getTableColumns/{table}")
+    @GetMapping("/codeGenerator/table/getTableColumns/{table}")
     public Result<List<TableColumnVO>> getTableColumns(@PathVariable(value = "table") String table) {
         return Result.success(codeGeneratorService.getTableColumns(table));
     }
 
     @Operation(summary = "查询数据库表")
-    @PostMapping("/support/codeGenerator/table/queryTableList")
+    @PostMapping("/codeGenerator/table/queryTableList")
     @SaCheckEL("stp.checkPermission('support:code_generator:read')")
     public Result<PagedVO<TableVO>> queryTableList(@RequestBody @Valid TableQueryForm tableQueryForm) {
         return Result.success(codeGeneratorService.queryTableList(tableQueryForm));
@@ -52,13 +52,13 @@ public class CodeGeneratorConfigController extends BasicController {
     // ------------------- 配置 -------------------
 
     @Operation(summary = "获取配置")
-    @GetMapping("/support/codeGenerator/table/getConfig/{table}")
+    @GetMapping("/codeGenerator/table/getConfig/{table}")
     public Result<TableConfigVO> getTableConfig(@PathVariable(value = "table") String table) {
         return Result.success(codeGeneratorService.getTableConfig(table));
     }
 
     @Operation(summary = "更新配置")
-    @PostMapping("/support/codeGenerator/table/updateConfig")
+    @PostMapping("/codeGenerator/table/updateConfig")
     @SaCheckEL("stp.checkPermission('support:code_generator:write')")
     public Result<Boolean> updateConfig(@RequestBody @Valid CodeGeneratorConfigForm form) {
         codeGeneratorService.updateConfig(form);
@@ -68,7 +68,7 @@ public class CodeGeneratorConfigController extends BasicController {
     // ------------------- 生成 -------------------
 
     @Operation(summary = "预览")
-    @PostMapping("/support/codeGenerator/code/preview")
+    @PostMapping("/codeGenerator/code/preview")
     @SaCheckEL("stp.checkPermission('support:code_generator:write')")
     public Result<String> preview(@RequestBody @Valid CodeGeneratorPreviewForm form) {
         return Result.success(codeGeneratorService.preview(form));
@@ -76,7 +76,7 @@ public class CodeGeneratorConfigController extends BasicController {
 
     @Operation(summary = "下载")
     @SaCheckEL("stp.checkPermission('support:code_generator:write')")
-    @GetMapping(value = "/support/codeGenerator/code/download/{tableName}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "/codeGenerator/code/download/{tableName}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void download(@PathVariable(value = "tableName") String tableName, HttpServletResponse response) {
         super.locker(tableName, () -> {
             byte[] dataStream = codeGeneratorService.download(tableName);

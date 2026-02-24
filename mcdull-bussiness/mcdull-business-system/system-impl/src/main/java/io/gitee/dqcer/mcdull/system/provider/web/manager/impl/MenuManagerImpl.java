@@ -5,7 +5,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.MenuEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IMenuRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IMenuRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IMenuManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

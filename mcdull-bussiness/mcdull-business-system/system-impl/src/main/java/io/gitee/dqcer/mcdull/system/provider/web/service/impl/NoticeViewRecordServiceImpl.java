@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.NoticeViewRecordEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.INoticeViewRecordRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.INoticeViewRecordRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.service.INoticeViewRecordService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

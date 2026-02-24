@@ -18,6 +18,7 @@ public class GlobalConstant {
     public static final String CACHE_CURRENT_ADMINISTRATOR_USER = "cacheCurrentAdministratorUser";
 
     public static final String MAPPER_PACKAGE = BASE_PACKAGE + ".**.mapper";
+    public static final String MAPPER_PACKAGE_DAO = BASE_PACKAGE + ".**.dao";
 
     /**
      * 内部接口调用 前缀

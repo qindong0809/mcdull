@@ -13,7 +13,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import io.gitee.dqcer.mcdull.blaze.dao.repository.IBlazeOrderRepository;
+import io.gitee.dqcer.mcdull.blaze.repository.IBlazeOrderRepository;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.BlazeOrderDetailEntity;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.BlazeOrderEntity;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.CertificateRequirementsEntity;

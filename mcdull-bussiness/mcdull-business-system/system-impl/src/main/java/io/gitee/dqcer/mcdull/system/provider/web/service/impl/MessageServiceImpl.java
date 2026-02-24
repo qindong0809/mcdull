@@ -13,7 +13,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.MessageQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.MessageEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.MessageTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.MessageVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.repository.IMessageRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.repository.IMessageRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IMessageService;
 import org.springframework.stereotype.Service;
