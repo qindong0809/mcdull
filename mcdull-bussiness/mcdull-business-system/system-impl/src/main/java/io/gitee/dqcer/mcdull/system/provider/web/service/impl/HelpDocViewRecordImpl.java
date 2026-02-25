@@ -12,7 +12,9 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.HelpDocViewRecordQueryDTO
 import io.gitee.dqcer.mcdull.system.provider.model.entity.HelpDocViewRecordEntity;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.HelpDocViewRecordMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IHelpDocViewRecordService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class HelpDocViewRecordImpl extends BasicCurdServiceImpl<HelpDocViewRecordMapper, HelpDocViewRecordEntity> implements IHelpDocViewRecordService {
 
     @Override
