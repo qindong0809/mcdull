@@ -4,8 +4,6 @@ spring:
   main:
     # 允许循环引用
     allow-circular-references: true
-  application:
-    name: mcdull-uac-provider
   profiles:
     include:
       - menu
@@ -60,13 +58,26 @@ management:
     web:
       exposure:
         include: "*"
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  undertow:
+    buffer-size: 1024
+    io-threads: 4
+    worker-threads: 20
+    max-initial-line-length: 10MB
+    max-parameter-size: 10MB
+    max-header-size: 10MB
+    max-post-size: 10MB
 sa-token:
+  # token 最低活跃频率（单位：秒），如果 token 超过此时间没有访问系统就会被冻结，默认-1 代表不限制，永不冻结
+  active-timeout: 1800
+  # token 有效期（单位：秒） 1天（86400秒），-1 代表永久有效
+  timeout: 86400
   # token 名称（同时也是 cookie 名称）
   token-name: Authorization
-  # token 有效期（单位：秒） 默认30天（2592000秒），-1 代表永久有效
-  timeout: 2592000
-  # token 最低活跃频率（单位：秒），如果 token 超过此时间没有访问系统就会被冻结，默认-1 代表不限制，永不冻结
-  active-timeout: 600
   # 是否允许同一账号多地同时登录 （为 true 时允许一起登录, 为 false 时新登录挤掉旧登录）
   is-concurrent: false
   # 在多人登录同一账号时，是否共用一个 token （为 true 时所有登录共用一个 token, 为 false 时每次登录新建一个 token）(jwt模式下恒false)
@@ -88,3 +99,25 @@ mcdull:
     noAuth:
       - /administrator/auth/login
       - /administrator/captcha/image
+  oss:
+    access-key:
+    secret-key:
+    max-file-size: 10000
+    max-request-size: 10000
+knife4j:
+  # 开启增强配置
+  enable: true
+  # 开启生产环境屏蔽
+  production: false
+dromara:
+  x-file-storage: #文件存储配置
+    default-platform: local-plus-1 #默认使用的存储平台
+    thumbnail-suffix: ".min.jpg" #缩略图后缀，例如【.min.jpg】【.png】
+    #对应平台的配置写在这里，注意缩进要对齐
+    local-plus:
+      - platform: local-plus-1 # 存储平台标识
+        enable-storage: true  #启用存储
+        enable-access: true #启用访问（线上请使用 Nginx 配置，效率更高）
+        domain: http://127.0.0.1:8090/upload/ # 访问域名，例如：“http://127.0.0.1:8030/file/”，注意后面要和 path-patterns 保持一致，“/”结尾，本地存储建议使用相对路径，方便后期更换域名
+        path-patterns: /upload/** # 访问路径
+        storage-path: /home/upload/ # 存储路径
