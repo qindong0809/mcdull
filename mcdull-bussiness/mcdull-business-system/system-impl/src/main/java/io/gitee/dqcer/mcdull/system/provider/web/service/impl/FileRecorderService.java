@@ -5,7 +5,7 @@ import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.lang.Dict;
 import io.gitee.dqcer.mcdull.framework.oss.OssService;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FileEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IFileRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
 import jakarta.annotation.Resource;
 import org.dromara.x.file.storage.core.FileInfo;
 import org.dromara.x.file.storage.core.recorder.FileRecorder;
@@ -21,12 +21,12 @@ public class FileRecorderService implements FileRecorder {
     @Resource
     private SpringFileStorageProperties springFileStorageProperties;
     @Resource
-    private IFileRepository baseRepository;
+    private IFileService fileService;
 
     @Override
     public boolean save(FileInfo fileInfo) {
         FileEntity file = this.getFileEntity(fileInfo);
-        baseRepository.save(file);
+        fileService.save(file);
         fileInfo.setId(file.getId().toString());
         return true;
     }
@@ -47,7 +47,7 @@ public class FileRecorderService implements FileRecorder {
     @Override
     public void update(FileInfo fileInfo) {
         FileEntity file = this.getFileEntity(fileInfo);
-        baseRepository.updateById(file);
+        fileService.updateById(file);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class FileRecorderService implements FileRecorder {
 
     private FileEntity getEntityByUrl(String s) {
         String key = ossService.getKey(s);
-        return baseRepository.getByFileKey(key);
+        return fileService.getByFileKey(key);
     }
 
     public FileInfo toFileInfo(FileEntity detail, String url) {
@@ -76,7 +76,7 @@ public class FileRecorderService implements FileRecorder {
     @Override
     public boolean delete(String s) {
         FileEntity entity = getEntityByUrl(s);
-        return baseRepository.removeById(entity);
+        return fileService.removeById(entity);
     }
 
     @Override

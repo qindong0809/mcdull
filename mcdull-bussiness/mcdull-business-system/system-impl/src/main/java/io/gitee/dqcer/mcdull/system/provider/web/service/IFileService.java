@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.system.provider.web.service;
 
 
 import cn.hutool.core.lang.Pair;
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.FileQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FileEntity;
@@ -21,7 +22,7 @@ import java.util.Set;
  * @since 2024/7/25 9:22
  */
 
-public interface IFileService {
+public interface IFileService extends IRepository<FileEntity> {
 
     PagedVO<FileVO> queryPage(FileQueryDTO dto);
 
@@ -42,4 +43,6 @@ public interface IFileService {
     void remove(Integer bizId, Class<?> clazz);
 
     Map<Integer, List<FileEntity>> get(List<Integer> idList, Class<?> aClass);
+
+    FileEntity getByFileKey(String fileKey);
 }

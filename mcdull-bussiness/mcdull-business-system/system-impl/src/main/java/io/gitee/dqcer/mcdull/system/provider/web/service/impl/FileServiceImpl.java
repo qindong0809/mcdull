@@ -9,28 +9,35 @@ import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.CustomMultipartFile;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.oss.OssService;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.convert.FileConvert;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.FileQueryDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FileEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileUploadVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FolderInfoVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IFileBizRepository;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IFileRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.FileMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileBizService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
@@ -44,6 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
@@ -51,14 +59,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class FileServiceImpl
-        extends BasicServiceImpl<IFileRepository> implements IFileService {
+        extends BasicCurdServiceImpl<FileMapper, FileEntity> implements IFileService {
 
     @Resource
     private OssService ossService;
     @Resource
     private IUserManager userManager;
-    @Resource
-    private IFileBizRepository fileBizRepository;
     @Resource
     private IFolderService folderService;
     @Resource
@@ -84,7 +90,7 @@ public class FileServiceImpl
             this.searchChild(all, folderId, childerList);
         }
 
-        Page<FileEntity> entityPage = baseRepository.selectPage(dto, userIdList, childerList);
+        Page<FileEntity> entityPage = this.selectPage(dto, userIdList, childerList);
         List<FileVO> voList = new ArrayList<>();
         List<FileEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
@@ -141,7 +147,7 @@ public class FileServiceImpl
         FileInfo upload = ossService.upload(file, folderType, FileFolderTypeEnum.FOLDER_PUBLIC + "/" + rootToNodeName + "/" + month + "/");
         // 上传成功 保存记录数据库
         String id = upload.getId();
-        FileEntity entity = baseRepository.getById(Convert.toInt(id));
+        FileEntity entity = super.getById(Convert.toInt(id));
         return this.convertToVO(upload, entity);
     }
 
@@ -171,7 +177,7 @@ public class FileServiceImpl
             Integer bizFolderId = folderService.addIfAbsent(month, systemFolderId);
             for (MultipartFile multipartFile : fileList) {
                 FileUploadVO fileUploadVO = this.fileUpload(multipartFile, bizFolderId);
-                fileBizRepository.save(ListUtil.of(fileUploadVO.getFileId()), bizId, this.getTableName(clazz));
+                fileBizService.save(ListUtil.of(fileUploadVO.getFileId()), bizId, this.getTableName(clazz));
             }
         }
     }
@@ -195,9 +201,9 @@ public class FileServiceImpl
 
     @Override
     public Pair<String, byte[]> getDownloadFile(String fileKey) {
-        FileEntity fileEntity = baseRepository.getByFileKey(fileKey);
+        FileEntity fileEntity = this.getByFileKey(fileKey);
         if (ObjectUtil.isNull(fileEntity)) {
-           this.throwDataExistException(fileKey);
+           LogicCheckUtil.throwDataExistException(fileKey);
         }
 
         // 根据文件服务类 获取对应文件服务 查询 url
@@ -212,7 +218,7 @@ public class FileServiceImpl
         }
         List<FileVO> list = new ArrayList<>();
         for (String fileKey : fileKeyList) {
-            FileEntity entity = baseRepository.getByFileKey(fileKey);
+            FileEntity entity = this.getByFileKey(fileKey);
             if (ObjectUtil.isNull(entity)) {
                 continue;
             }
@@ -228,7 +234,7 @@ public class FileServiceImpl
     @Override
     public Map<Integer, FileEntity> map(Set<Integer> fileIdSet) {
         if (CollUtil.isNotEmpty(fileIdSet)) {
-            List<FileEntity> list = baseRepository.listByIds(fileIdSet);
+            List<FileEntity> list = this.listByIds(fileIdSet);
             if (CollUtil.isNotEmpty(list)) {
                 return list.stream().collect(Collectors.toMap(FileEntity::getId, Function.identity()));
             }
@@ -243,10 +249,10 @@ public class FileServiceImpl
             List<Integer> fileIdList = listMap.get(bizId);
             if (CollUtil.isNotEmpty(fileIdList)) {
                 if (fileIdList.contains(fileId)) {
-                    baseRepository.removeById(fileId);
+                    super.removeById(fileId);
                 }
             }
-            fileBizRepository.deleteByBizCode(fileId, bizId, tableName);
+            fileBizService.deleteByBizCode(fileId, bizId, tableName);
         }
     }
 
@@ -258,9 +264,9 @@ public class FileServiceImpl
         if (MapUtil.isNotEmpty(listMap)) {
             List<Integer> fileIdList = listMap.get(bizId);
             if (CollUtil.isNotEmpty(fileIdList)) {
-                baseRepository.removeByIds(fileIdList);
+                super.removeByIds(fileIdList);
             }
-            fileBizRepository.deleteByBizCode(bizId, tableName);
+            fileBizService.deleteByBizCode(bizId, tableName);
         }
     }
 
@@ -271,7 +277,7 @@ public class FileServiceImpl
         if (MapUtil.isNotEmpty(bizFileMap)) {
             List<Integer> fileIdList = bizFileMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
             if (CollUtil.isNotEmpty(fileIdList)) {
-                List<FileEntity> list = baseRepository.listByIds(fileIdList);
+                List<FileEntity> list = this.listByIds(fileIdList);
                 if (CollUtil.isNotEmpty(list)) {
                     Map<Integer, List<FileEntity>> map = new HashMap<>();
                     for (Map.Entry<Integer, List<Integer>> entry : bizFileMap.entrySet()) {
@@ -301,4 +307,85 @@ public class FileServiceImpl
         return annotation.value();
     }
 
+
+    /**
+     * 根据ID获取单条数据
+     *
+     * @param id 主键
+     * @return {@link ConfigEntity}
+     */
+    public FileEntity getById(Integer id) {
+        return baseMapper.selectById(id);
+    }
+
+    /**
+     * 插入数据
+     *
+     * @param entity 实体对象
+     * @return Integer id
+     */
+    public Integer insert(FileEntity entity) {
+        baseMapper.insert(entity);
+        return entity.getId();
+    }
+
+    /**
+     * 存在
+     *
+     * @param entity 实体对象
+     * @return boolean true/存在 false/不存在
+     */
+    public boolean exist(FileEntity entity) {
+        return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
+    }
+
+    public Page<FileEntity> selectPage(FileQueryDTO dto, List<Integer> userIdList, List<Integer> childerList) {
+        LambdaQueryWrapper<FileEntity> lambda = new QueryWrapper<FileEntity>().lambda();
+        if (CollUtil.isNotEmpty(userIdList)) {
+            lambda.in(BaseEntity::getCreatedBy, userIdList);
+        }
+        if (CollUtil.isNotEmpty(childerList)) {
+            lambda.in(FileEntity::getFolderType, childerList);
+        }
+        String fileName = dto.getFileName();
+        if (CharSequenceUtil.isNotBlank(fileName)) {
+            lambda.like(FileEntity::getFileName, fileName);
+        }
+        String fileKey = dto.getFileKey();
+        if (CharSequenceUtil.isNotBlank(fileKey)) {
+            lambda.like(FileEntity::getFileKey, fileKey);
+        }
+        LocalDate startDate = dto.getCreateTimeBegin();
+        LocalDate endDate = dto.getCreateTimeEnd();
+        if (ObjectUtil.isAllNotEmpty(startDate, endDate)) {
+            lambda.between(RelEntity::getCreatedTime, startDate,
+                LocalDateTimeUtil.endOfDay(endDate.atStartOfDay()));
+        }
+        String fileType = dto.getFileType();
+        if (CharSequenceUtil.isNotBlank(fileType)) {
+            lambda.like(FileEntity::getFileType, fileType);
+        }
+        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
+    }
+
+    @Override
+    public FileEntity getByFileKey(String fileKey) {
+        if (CharSequenceUtil.isNotBlank(fileKey)) {
+            LambdaQueryWrapper<FileEntity> lambda = new QueryWrapper<FileEntity>().lambda();
+            lambda.eq(FileEntity::getFileKey, fileKey);
+            return baseMapper.selectOne(lambda);
+        }
+
+        return null;
+    }
+
+    /**
+     * 根据id删除批处理
+     *
+     * @param ids id集
+     */
+    public void deleteBatchByIds(List<Integer> ids) {
+        baseMapper.deleteByIds(ids);
+    }
 }
