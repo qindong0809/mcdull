@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.system.provider.config.log;
 
 import io.gitee.dqcer.mcdull.framework.web.async.BaseAsyncEvent;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.OperateLogEntity;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IOperateLogService;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.Resource;
@@ -14,7 +15,7 @@ import jakarta.annotation.Resource;
 public class OperationLogAsyncEvent extends BaseAsyncEvent<OperateLogEntity> {
 
     @Resource
-    private IOperationLog operationLog;
+    private IOperateLogService operationLog;
 
     /**
      * 执行

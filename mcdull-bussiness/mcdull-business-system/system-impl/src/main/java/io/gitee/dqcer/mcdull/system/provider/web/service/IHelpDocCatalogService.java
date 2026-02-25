@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.HelpDocCatalogAddDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.HelpDocCatalogUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.HelpDocCatalogEntity;
@@ -14,7 +15,7 @@ import java.util.List;
  * @since 2024/7/25 9:23
  */
 
-public interface IHelpDocCatalogService {
+public interface IHelpDocCatalogService extends IRepository<HelpDocCatalogEntity> {
 
     List<HelpDocCatalogVO> getAll();
 

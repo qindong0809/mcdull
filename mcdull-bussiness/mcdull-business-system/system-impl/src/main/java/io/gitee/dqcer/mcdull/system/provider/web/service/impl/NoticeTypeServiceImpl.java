@@ -1,11 +1,11 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjUtil;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.NoticeTypeEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.NoticeTypeVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.INoticeTypeRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.NoticeTypeMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.INoticeTypeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +25,13 @@ import java.util.stream.Collectors;
  */
 @Service
 public class NoticeTypeServiceImpl
-        extends BasicServiceImpl<INoticeTypeRepository> implements INoticeTypeService {
+        extends BasicCurdServiceImpl<NoticeTypeMapper, NoticeTypeEntity> implements INoticeTypeService {
 
 
     @Override
     public List<NoticeTypeVO> getAll() {
         List<NoticeTypeVO> voList = new ArrayList<>();
-        List<NoticeTypeEntity> list = baseRepository.list();
+        List<NoticeTypeEntity> list = super.list();
         if (CollUtil.isNotEmpty(list)) {
             for (NoticeTypeEntity entity : list) {
                 voList.add(this.convertVO(entity));
@@ -50,46 +50,40 @@ public class NoticeTypeServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void add(String name) {
-        List<NoticeTypeEntity> list = baseRepository.list();
+        List<NoticeTypeEntity> list = super.list();
         if (CollUtil.isNotEmpty(list)) {
-            this.validNameExist(null, name, list,
+            LogicCheckUtil.validNameExist(null, name, list,
                     (entity) -> entity.getNoticeTypeName().equals(name));
         }
         NoticeTypeEntity entity = new NoticeTypeEntity();
         entity.setNoticeTypeName(name);
-        baseRepository.save(entity);
+        this.save(entity);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(Integer id, String name) {
-        NoticeTypeEntity typeEntity = baseRepository.getById(id);
-        if (ObjUtil.isNull(typeEntity)) {
-            this.throwDataNotExistException(id);
-        }
-        List<NoticeTypeEntity> list = baseRepository.list();
+        NoticeTypeEntity typeEntity = super.mustGet(id);
+        List<NoticeTypeEntity> list = super.list();
         if (CollUtil.isNotEmpty(list)) {
-            this.validNameExist(id, name, list,
+            LogicCheckUtil.validNameExist(id, name, list,
                     (entity) -> !id.equals(entity.getId())
                             && entity.getNoticeTypeName().equals(name));
         }
         typeEntity.setNoticeTypeName(name);
-        baseRepository.save(typeEntity);
+        super.save(typeEntity);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(Integer id) {
-        NoticeTypeEntity typeEntity = baseRepository.getById(id);
-        if (ObjUtil.isNull(typeEntity)) {
-            this.throwDataNotExistException(id);
-        }
-        baseRepository.removeById(id);
+        NoticeTypeEntity typeEntity = super.mustGet(id);
+        super.removeById(id);
     }
 
     @Override
     public Map<Integer, String> getMap(List<Integer> idList) {
-        List<NoticeTypeEntity> list = baseRepository.listByIds(idList);
+        List<NoticeTypeEntity> list = super.listByIds(idList);
         if (CollUtil.isNotEmpty(list)) {
             return list.stream().collect(
                     Collectors.toMap(NoticeTypeEntity::getId, NoticeTypeEntity::getNoticeTypeName));

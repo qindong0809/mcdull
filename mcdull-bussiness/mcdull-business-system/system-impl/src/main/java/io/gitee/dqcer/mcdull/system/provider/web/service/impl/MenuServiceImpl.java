@@ -9,25 +9,28 @@ import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.BooleanUtil;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.business.common.excel.ExcelUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.MenuAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.convert.MenuConvert;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.MenuAddDTO;
@@ -38,7 +41,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.MenuEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.MenuTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.*;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IMenuRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.MenuMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IMenuManager;
@@ -52,6 +55,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -63,20 +67,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class MenuServiceImpl
-        extends BasicServiceImpl<IMenuRepository>  implements IMenuService {
+        extends BasicCurdServiceImpl<MenuMapper, MenuEntity> implements IMenuService {
 
     @Resource
     private IRoleMenuService roleMenuService;
-
     @Resource
     private IRoleService roleService;
-
     @Resource
     private ICommonManager commonManager;
-
     @Resource
     private IAuditManager auditManager;
-
     @Resource
     private IMenuManager menuManager;
 
@@ -84,7 +84,7 @@ public class MenuServiceImpl
     public Map<Integer, List<String>> getMenuCodeListMap(List<Integer> roleIdList) {
         if (CollUtil.isNotEmpty(roleIdList)) {
             Map<Integer, List<Integer>> menuListMap = roleMenuService.getMenuIdListMap(roleIdList);
-            return baseRepository.menuCodeListMap(menuListMap);
+            return this.menuCodeListMap(menuListMap);
         }
         return MapUtil.empty();
     }
@@ -93,20 +93,20 @@ public class MenuServiceImpl
     public Map<Integer, List<MenuEntity>> getMenuListMap(List<Integer> roleIdList) {
         if (CollUtil.isNotEmpty(roleIdList)) {
             Map<Integer, List<Integer>> menuListMap = roleMenuService.getMenuIdListMap(roleIdList);
-            return baseRepository.getMenuListMap(menuListMap);
+            return this.getMenuListMap(menuListMap);
         }
         return MapUtil.empty();
     }
 
     @Override
     public List<String> getAllCodeList() {
-        return baseRepository.allCodeList();
+        return this.allCodeList();
     }
 
     @Override
     public List<MenuVO> list(MenuListDTO dto) {
         List<MenuVO> list = new ArrayList<>();
-        List<MenuEntity> menuList = baseRepository.allAndButton();
+        List<MenuEntity> menuList = this.allAndButton();
         if (CollUtil.isNotEmpty(menuList)) {
             for (MenuEntity menu : menuList) {
                 MenuVO vo = MenuConvert.toVO(menu);
@@ -120,7 +120,7 @@ public class MenuServiceImpl
     @Override
     public void insert(MenuAddDTO dto) {
         Integer parentId = dto.getParentId();
-        List<MenuEntity> childList = baseRepository.listByParentId(parentId);
+        List<MenuEntity> childList = this.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
             boolean anyMatch = childList.stream().anyMatch(i -> i.getMenuName().equals(dto.getMenuName()));
             if (anyMatch) {
@@ -128,7 +128,7 @@ public class MenuServiceImpl
             }
         }
         MenuEntity menu = this.convertToEntity(dto);
-        baseRepository.save(menu);
+        this.save(menu);
         auditManager.saveByAddEnum(dto.getMenuName(), menu.getId(), this.buildAuditLog(menu));
     }
 
@@ -139,7 +139,7 @@ public class MenuServiceImpl
         audit.setMenuTypeName(IEnum.getTextByCode(MenuTypeEnum.class, menu.getMenuType()));
         Integer parentId = menu.getParentId();
         if (ObjUtil.isNotNull(parentId)) {
-            MenuEntity menuEntity = baseRepository.getById(parentId);
+            MenuEntity menuEntity = this.getById(parentId);
             if (ObjUtil.isNotNull(menuEntity)) {
                 audit.setParentName(menuEntity.getMenuName());
             }
@@ -161,13 +161,10 @@ public class MenuServiceImpl
     @Override
     public void update(MenuUpdateDTO dto) {
         Integer id = dto.getMenuId();
-        MenuEntity entity = baseRepository.getById(id);
-        if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(id);
-        }
+        MenuEntity entity = super.mustGet(id);
         MenuEntity oldEntity = ObjUtil.cloneByStream(entity);
         Integer parentId = dto.getParentId();
-        List<MenuEntity> childList = baseRepository.listByParentId(parentId);
+        List<MenuEntity> childList = this.listByParentId(parentId);
         if (CollUtil.isNotEmpty(childList)) {
             boolean anyMatch = childList.stream()
                     .anyMatch(i -> (!i.getId().equals(id)) && i.getMenuName().equals(dto.getMenuName()));
@@ -176,7 +173,7 @@ public class MenuServiceImpl
             }
         }
         MenuEntity menu = this.setUpdateField(dto, entity);
-        baseRepository.updateById(menu);
+        super.updateById(menu);
         auditManager.saveByUpdateEnum(dto.getMenuName(), id,
                 this.buildAuditLog(oldEntity), this.buildAuditLog(menu));
     }
@@ -184,11 +181,11 @@ public class MenuServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(List<Integer> menuIdList) {
-        List<MenuEntity> entityList = baseRepository.listByIds(menuIdList);
+        List<MenuEntity> entityList = this.listByIds(menuIdList);
         if (entityList.size() != menuIdList.size()) {
-            this.throwDataNotExistException(menuIdList);
+            LogicCheckUtil.throwDataNotExistException(menuIdList);
         }
-        baseRepository.removeByIds(menuIdList);
+        super.removeByIds(menuIdList);
         for (MenuEntity entity : entityList) {
             auditManager.saveByDeleteEnum(entity.getMenuName(), entity.getId(), null);
         }
@@ -283,7 +280,7 @@ public class MenuServiceImpl
     public List<MenuVO> getList(Integer userId, boolean administratorFlag) {
         Set<MenuVO> list = new HashSet<>();
         if (administratorFlag) {
-            baseRepository.allList().forEach(menuEntity -> {
+            this.allList().forEach(menuEntity -> {
                 MenuVO menuVO = MenuConvert.toVO(menuEntity);
                 list.add(menuVO);
             });
@@ -316,7 +313,7 @@ public class MenuServiceImpl
         if (ObjUtil.isNotNull(vo)) {
             RoleMenuTreeVO treeVO = new RoleMenuTreeVO();
             treeVO.setRoleId(Convert.toInt(roleId));
-            List<MenuEntity> entityList = baseRepository.allList();
+            List<MenuEntity> entityList = this.allList();
             if (CollUtil.isNotEmpty(entityList)) {
                 List<Tree<Integer>> integerTree = this.getTrees(entityList);
                 List<MenuSimpleTreeVO> menuList = this.convertSimpleRouter(integerTree);
@@ -339,7 +336,7 @@ public class MenuServiceImpl
 //    @Cacheable(cacheNames = GlobalConstant.CAFFEINE_CACHE, key = "#onlyMenu")
     @Override
     public List<MenuTreeVO> queryMenuTree(Boolean onlyMenu) {
-        List<MenuEntity> list = baseRepository.listOnlyMenu(onlyMenu);
+        List<MenuEntity> list = this.listOnlyMenu(onlyMenu);
         List<Tree<Integer>> integerTree = this.getTrees(list);
         return this.convertMenuTreeVO(integerTree);
     }
@@ -382,7 +379,7 @@ public class MenuServiceImpl
     private List<String> getMenuNameByPermissionCode(String permissionCode) {
         if (StrUtil.isNotBlank(permissionCode)) {
             List<String> nameList = new ArrayList<>();
-            List<MenuEntity> all = baseRepository.all();
+            List<MenuEntity> all = this.all();
             MenuEntity permissionEntity = all.stream()
                     .filter(menuEntity -> StrUtil.equals(permissionCode, menuEntity.getApiPerms())).findFirst().orElse(null);
             if (ObjUtil.isNotNull(permissionEntity)) {
@@ -402,7 +399,7 @@ public class MenuServiceImpl
         }
         List<String> menuNameList = this.getMenuNameByPermissionCode(permissionCode);
         if (CollUtil.isEmpty(menuNameList)) {
-            LogHelp.error(log, "menuName is not exist. permissionCode: {}", permissionCode);
+            LogHelp.error(logger, "menuName is not exist. permissionCode: {}", permissionCode);
             throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
         }
         return menuNameList;
@@ -439,19 +436,19 @@ public class MenuServiceImpl
 
             }
         });
-        List<MenuEntity> menuList = baseRepository.allAndButton();
+        List<MenuEntity> menuList = this.allAndButton();
         List<Integer> importIdList = list.stream().map(IdEntity::getId).collect(Collectors.toList());
         List<Integer> dbIdList = menuList.stream().map(IdEntity::getId).collect(Collectors.toList());
 
         List<Integer> deleteIdList = dbIdList.stream().filter(i -> !importIdList.contains(i)).collect(Collectors.toList());
         if (CollUtil.isNotEmpty(deleteIdList)) {
-            baseRepository.removeByIds(deleteIdList);
+            super.removeByIds(deleteIdList);
         }
         List<Integer> insertIdList = importIdList.stream().filter(i -> !dbIdList.contains(i)).collect(Collectors.toList());
         if (CollUtil.isNotEmpty(insertIdList)) {
             for (MenuEntity entity : list) {
                 if (insertIdList.contains(entity.getId())) {
-                    baseRepository.save(entity);
+                    this.save(entity);
                 }
             }
         }
@@ -477,7 +474,7 @@ public class MenuServiceImpl
                         entity.setFrameUrl(newEntity.getFrameUrl());
                         entity.setCacheFlag(newEntity.getCacheFlag());
                         entity.setVisibleFlag(newEntity.getVisibleFlag());
-                        baseRepository.updateById(entity);
+                        super.updateById(entity);
                     }
                 }
             }
@@ -546,4 +543,137 @@ public class MenuServiceImpl
         }
         return menuId.toString();
     }
+
+
+
+    public List<String> allCodeList() {
+        List<MenuEntity> list = this.allList();
+        if (CollUtil.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        return list.stream().map(MenuEntity::getApiPerms).collect(Collectors.toList());
+    }
+
+    public List<MenuEntity> allList() {
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(BaseEntity::getInactive, InactiveEnum.FALSE.getCode());
+        return baseMapper.selectList(query);
+    }
+
+    public Map<Integer, List<String>> menuCodeListMap(Map<Integer, List<Integer>> menuListMap) {
+        Map<Integer, List<String>> resultMap = new HashMap<>(menuListMap.size());
+        if (MapUtil.isNotEmpty(menuListMap)) {
+            List<MenuEntity> list = this.getMenuList(menuListMap);
+            if (CollUtil.isNotEmpty(list)) {
+                Map<Integer, MenuEntity> map = list.stream()
+                    .filter(i-> CharSequenceUtil.isNotBlank(i.getApiPerms()))
+                    .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+                for (Map.Entry<Integer, List<Integer>> entry : menuListMap.entrySet()) {
+                    List<Integer> menuIdList = entry.getValue();
+                    List<String> codeList = new ArrayList<>();
+                    if (CollUtil.isNotEmpty(menuIdList)) {
+                        for (Integer menuId : menuIdList) {
+                            MenuEntity menu = map.get(menuId);
+                            if (ObjectUtil.isNotNull(menu)) {
+                                String auths = menu.getApiPerms();
+                                if (CharSequenceUtil.isNotBlank(auths)) {
+                                    codeList.add(auths);
+                                }
+                            }
+                        }
+                    }
+                    resultMap.put(entry.getKey(), codeList);
+                }
+            }
+        }
+        return resultMap;
+    }
+
+    public List<MenuEntity> list(Collection<Integer> collection) {
+        if (CollUtil.isEmpty(collection)) {
+            return Collections.emptyList();
+        }
+        return this.list(collection, false);
+    }
+
+    public List<MenuEntity> all() {
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(BaseEntity::getInactive, InactiveEnum.FALSE.getCode());
+        query.orderByAsc(ListUtil.of(MenuEntity::getParentId, MenuEntity::getSort));
+        return baseMapper.selectList(query);
+    }
+
+    private List<MenuEntity> list(Collection<Integer> idList, boolean isAll) {
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(BaseEntity::getInactive, InactiveEnum.FALSE.getCode());
+        query.in(MenuEntity::getMenuType, ListUtil.of(MenuTypeEnum.MENU.getCode(), MenuTypeEnum.POINTS.getCode()));
+        if (!isAll) {
+            query.in(IdEntity::getId, idList);
+        }
+        query.orderByAsc(ListUtil.of(MenuEntity::getParentId, MenuEntity::getSort));
+        return baseMapper.selectList(query);
+    }
+
+    public List<MenuEntity> allAndButton() {
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(BaseEntity::getInactive, InactiveEnum.FALSE.getCode());
+        query.orderByAsc(ListUtil.of(MenuEntity::getParentId, MenuEntity::getSort));
+        return baseMapper.selectList(query);
+    }
+
+    public List<MenuEntity> listByParentId(Integer parentId) {
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(MenuEntity::getParentId, parentId);
+        return baseMapper.selectList(query);
+    }
+
+    public boolean delete(Integer id, String reason) {
+        return this.removeById(id);
+    }
+
+    public Map<Integer, List<MenuEntity>> getMenuListMap(Map<Integer, List<Integer>> menuListMap) {
+        if (MapUtil.isNotEmpty(menuListMap)) {
+            List<MenuEntity> list = this.getMenuList(menuListMap);
+            if (CollUtil.isNotEmpty(list)) {
+                Map<Integer, List<MenuEntity>> map = list.stream()
+                    .collect(Collectors.groupingBy(MenuEntity::getParentId));
+                for (Map.Entry<Integer, List<Integer>> entry : menuListMap.entrySet()) {
+                    List<Integer> menuIdList = entry.getValue();
+                    List<MenuEntity> menuList = new ArrayList<>();
+                    if (CollUtil.isNotEmpty(menuIdList)) {
+                        for (Integer menuId : menuIdList) {
+                            List<MenuEntity> menu = map.get(menuId);
+                            if (CollUtil.isNotEmpty(menu)) {
+                                menuList.addAll(menu);
+                            }
+                        }
+                    }
+                    map.put(entry.getKey(), menuList);
+                }
+                return map;
+            }
+        }
+        return Collections.emptyMap();
+    }
+
+    public List<MenuEntity> listOnlyMenu(Boolean onlyMenu) {
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        if (BooleanUtil.isTrue(onlyMenu)) {
+            query.in(MenuEntity::getMenuType,
+                ListUtil.of(MenuTypeEnum.MENU.getCode(), MenuTypeEnum.CATALOG.getCode()));
+        }
+        query.eq(BaseEntity::getInactive, false);
+        return baseMapper.selectList(query);
+    }
+
+    private List<MenuEntity> getMenuList(Map<Integer, List<Integer>> menuListMap) {
+        Set<Integer> idList = menuListMap.values().stream()
+            .flatMap(Collection::stream)
+            .collect(Collectors.toSet());
+        LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
+        query.eq(BaseEntity::getInactive, InactiveEnum.FALSE.getCode());
+        query.in(MenuEntity::getId, idList);
+        return baseMapper.selectList(query);
+    }
+
 }

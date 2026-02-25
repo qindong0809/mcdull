@@ -1,7 +1,9 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.FormEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FormItemVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FormVO;
 
@@ -15,7 +17,7 @@ import java.util.Map;
  * @since 2024/7/25 9:23
  */
 
-public interface IFormService {
+public interface IFormService extends IRepository<FormEntity> {
 
     PagedVO<FormVO> queryPage(FormQueryDTO dto);
 

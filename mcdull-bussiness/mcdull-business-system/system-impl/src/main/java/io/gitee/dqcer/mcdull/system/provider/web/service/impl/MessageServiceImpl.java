@@ -1,26 +1,34 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
+import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.MessageAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.MessageQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.MessageEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.MessageTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.MessageVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IMessageRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.MessageMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IMessageService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,20 +39,22 @@ import java.util.List;
  */
 @Service
 public class MessageServiceImpl
-        extends BasicServiceImpl<IMessageRepository> implements IMessageService {
+        extends BasicCurdServiceImpl<MessageMapper, MessageEntity> implements IMessageService {
 
     @Resource
     private IAuditManager auditManager;
 
     @Override
     public Integer getUnreadCount(Integer userId) {
-        return super.baseRepository.getUnreadCount(userId);
+        LambdaQueryWrapper<MessageEntity> query = Wrappers.lambdaQuery();
+        query.eq(MessageEntity::getReceiverUserId, userId).eq(MessageEntity::getReadFlag, false);
+        return Convert.toInt(this.count(query));
     }
 
     @Override
     public PagedVO<MessageVO> query(MessageQueryDTO dto) {
         List<MessageVO> voList = new ArrayList<>();
-        Page<MessageEntity> entityPage = baseRepository.selectPage(dto);
+        Page<MessageEntity> entityPage = this.selectPage(dto);
         List<MessageEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
             for (MessageEntity entity : recordList) {
@@ -58,15 +68,15 @@ public class MessageServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean updateReadFlag(Integer id, Integer userId) {
-        MessageEntity message = baseRepository.getById(id);
-        if (ObjUtil.isNull(message)) {
-            this.throwDataNotExistException(id);
-        }
+        MessageEntity message = super.mustGet(id);
         if (message.getReadFlag()) {
-            this.throwDataNeedRefreshException("id: {}", id);
+            LogicCheckUtil.throwDataNeedRefreshException("id: {}", id);
         }
-        baseRepository.updateReadFlag(id, userId);
-        return true;
+
+        LambdaUpdateWrapper<MessageEntity> update = Wrappers.lambdaUpdate();
+        update.set(MessageEntity::getReadFlag, true);
+        update.eq(IdEntity::getId, id);
+        return this.update(update);
     }
 
     @Override
@@ -78,13 +88,16 @@ public class MessageServiceImpl
         entity.setDataId(dataId);
         entity.setTitle(title);
         entity.setContent(content);
-        baseRepository.save(entity);
+        this.save(entity);
     }
 
     @Override
     public boolean getByUserId(Integer receiverUserId, String dataId) {
-        MessageEntity entity = baseRepository.getByUserId(receiverUserId, dataId);
-        return ObjectUtil.isNotNull(entity);
+        LambdaQueryWrapper<MessageEntity> query = Wrappers.lambdaQuery();
+        query.eq(MessageEntity::getReceiverUserId, receiverUserId);
+        query.eq(MessageEntity::getDataId, dataId);
+        List<MessageEntity> list = this.list(query);
+        return CollUtil.isNotEmpty(list);
     }
 
     private Audit buildAuditLog(MessageEntity message) {
@@ -105,5 +118,26 @@ public class MessageServiceImpl
         messageVO.setReadTime(entity.getReadTime());
         messageVO.setCreatedTime(entity.getCreatedTime());
         return messageVO;
+    }
+
+    public Page<MessageEntity> selectPage(MessageQueryDTO param) {
+        LambdaQueryWrapper<MessageEntity> lambda = Wrappers.lambdaQuery();
+        String keyword = param.getSearchWord();
+        if (ObjectUtil.isNotNull(keyword)) {
+            lambda.and(i->i.like(MessageEntity::getTitle, keyword).or()
+                .like(MessageEntity::getContent, keyword));
+        }
+        Boolean readFlag = param.getReadFlag();
+        if (ObjectUtil.isNotNull(readFlag)) {
+            lambda.eq(MessageEntity::getReadFlag, readFlag);
+        }
+        Date startDate = param.getStartDate();
+        Date endDate = param.getEndDate();
+        if (ObjectUtil.isNotNull(startDate) && ObjectUtil.isNotNull(endDate)) {
+            lambda.between(MessageEntity::getCreatedTime, startDate, endDate);
+        }
+        lambda.eq(MessageEntity::getReceiverUserId, param.getReceiverUserId());
+        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 }

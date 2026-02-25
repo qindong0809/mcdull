@@ -7,13 +7,19 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.Tuple;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.symmetric.AES;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.business.common.excel.DataAnalysisListener;
@@ -25,17 +31,19 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.web.enums.SexEnum;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.UserAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.bo.DynamicFieldBO;
 import io.gitee.dqcer.mcdull.system.provider.model.convert.UserConvert;
@@ -49,10 +57,10 @@ import io.gitee.dqcer.mcdull.system.provider.model.enums.FormItemControlTypeEnum
 import io.gitee.dqcer.mcdull.system.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.UserMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IDictTypeManager;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IUserRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;
 import jakarta.annotation.Resource;
 import jakarta.validation.ConstraintViolation;
@@ -78,7 +86,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserServiceImpl
-        extends BasicServiceImpl<IUserRepository>  implements IUserService {
+        extends BasicCurdServiceImpl<UserMapper, UserEntity> implements IUserService {
 
     @Resource
     private IUserRoleService userRoleService;
@@ -128,7 +136,7 @@ public class UserServiceImpl
             byte[] decryptedBytes = aes.decrypt(base64Decode);
             return new String(decryptedBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            LogHelp.error(log, "密码解密失败", e);
+            LogHelp.error(logger, "密码解密失败", e);
             return StrUtil.EMPTY;
         }
     }
@@ -149,7 +157,7 @@ public class UserServiceImpl
             }
             deptIdList.add(departmentId);
         }
-        Page<UserEntity> entityPage = baseRepository.selectPage(dto, deptIdList, null);
+        Page<UserEntity> entityPage = this.selectPage(dto, deptIdList, null);
         List<UserEntity> userList = entityPage.getRecords();
         if (CollUtil.isEmpty(userList)) {
             return PageUtil.empty(dto);
@@ -177,7 +185,7 @@ public class UserServiceImpl
         UserEntity entity = UserConvert.insertDtoToEntity(dto);
         entity.setLoginPwd(this.getDefaultPassword());
         entity.setAdministratorFlag(false);
-        baseRepository.insert(entity);
+        this.insert(entity);
         Integer userId = entity.getId();
         threadPoolTaskExecutor.execute(() -> this.sendCreateAccountEmail(entity));
         userRoleService.batchUserListByRoleId(userId, dto.getRoleIdList());
@@ -267,15 +275,15 @@ public class UserServiceImpl
     @Override
     public UserEntity get(String username) {
         if (StrUtil.isNotBlank(username)) {
-            return baseRepository.get(username);
+            return this.getEntity(username);
         }
         return null;
     }
 
     private void checkParam(UserAddDTO dto) {
-        List<UserEntity> list = baseRepository.list();
+        List<UserEntity> list = super.list();
         if (CollUtil.isNotEmpty(list)) {
-            this.validNameExist(null, dto.getLoginName(), list,
+            LogicCheckUtil.validNameExist(null, dto.getLoginName(), list,
                     i -> i.getLoginName().equals(dto.getLoginName()));
         }
     }
@@ -283,20 +291,20 @@ public class UserServiceImpl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void toggleActive(Integer id) {
-        UserEntity dbData = baseRepository.getById(id);
+        UserEntity dbData = super.getById(id);
         if (ObjUtil.isNull(dbData)) {
-            LogHelp.warn(log, "数据不存在 id:{}", id);
+            LogHelp.warn(logger, "数据不存在 id:{}", id);
             throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
         }
         Boolean administratorFlag = dbData.getAdministratorFlag();
         if (administratorFlag != null && administratorFlag) {
-            LogHelp.warn(log, "管理员账号禁止禁用，id:{}", id);
+            LogHelp.warn(logger, "管理员账号禁止禁用，id:{}", id);
             throw new BusinessException(I18nConstants.PERMISSION_DENIED);
         }
 
-        boolean success = baseRepository.update(id, !dbData.getInactive());
+        boolean success = this.update(id, !dbData.getInactive());
         if (BooleanUtil.isFalse(success)) {
-            LogHelp.error(log, "数据更新失败，id:{}", id);
+            LogHelp.error(logger, "数据更新失败，id:{}", id);
             throw new BusinessException(I18nConstants.DB_OPERATION_FAILED);
         }
         auditManager.saveByStatusEnum(dbData.getActualName(), id, !dbData.getInactive(), null);
@@ -305,16 +313,16 @@ public class UserServiceImpl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean delete(List<Integer> idList) {
-        List<UserEntity> userEntities = baseRepository.listByIds(idList);
+        List<UserEntity> userEntities = this.listByIds(idList);
         if (userEntities.size() != idList.size()) {
-            this.throwDataNotExistException(idList);
+            LogicCheckUtil.throwDataNotExistException(idList);
         }
         boolean anyMatch = userEntities.stream().anyMatch(UserEntity::getAdministratorFlag);
         if (anyMatch) {
-            LogHelp.warn(log, "管理员账号禁止删除，id:{}", idList);
+            LogHelp.warn(logger, "管理员账号禁止删除，id:{}", idList);
             throw new BusinessException(I18nConstants.PERMISSION_DENIED);
         }
-        baseRepository.removeByIds(idList);
+        super.removeByIds(idList);
         for (UserEntity userEntity : userEntities) {
             auditManager.saveByDeleteEnum(userEntity.getActualName(), userEntity.getId(), null);
         }
@@ -325,26 +333,20 @@ public class UserServiceImpl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updatePassword(Integer id, UserUpdatePasswordDTO dto) {
-        UserEntity entity = baseRepository.getById(id);
-        if (entity == null) {
-            this.throwDataNotExistException(id);
-        }
+        UserEntity entity = super.mustGet(id);
         boolean isOk = this.passwordCheck(entity, dto.getOldPassword());
         if (!isOk) {
             throw new BusinessException("user.password.incorrect");
         }
         String password = this.buildPassword(dto.getNewPassword());
-        baseRepository.update(id, password);
+        this.update(id, password);
         return id;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer update(Integer id, UserUpdateDTO dto) {
-        UserEntity entity = baseRepository.getById(id);
-        if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(id);
-        }
+        UserEntity entity = super.mustGet(id);
         this.checkParamThrowException(id, dto);
         Map<Integer, List<Integer>> roleIdListMap = userRoleService.getRoleIdListMap(ListUtil.of(id));
         List<Integer> roleIdList = new ArrayList<>();
@@ -353,23 +355,23 @@ public class UserServiceImpl
         }
         UserEntity updateDO = UserConvert.updateDtoToEntity(dto);
         updateDO.setId(id);
-        baseRepository.updateById(updateDO);
+        super.updateById(updateDO);
         userRoleService.batchUserListByRoleId(id, dto.getRoleIdList());
         auditManager.saveByUpdateEnum(entity.getActualName(), entity.getId(),
-                this.buildAuditLog(entity, roleIdList), this.buildAuditLog(baseRepository.getById(id), dto.getRoleIdList()));
+                this.buildAuditLog(entity, roleIdList), this.buildAuditLog(super.getById(id), dto.getRoleIdList()));
         return updateDO.getId();
     }
 
     private void checkParamThrowException(Integer id, UserUpdateDTO dto) {
-        UserEntity userDO = baseRepository.get(dto.getLoginName());
+        UserEntity userDO = this.getEntity(dto.getLoginName());
         if (userDO != null) {
             boolean administratorFlag = userDO.getAdministratorFlag();
             if (administratorFlag) {
-                LogHelp.warn(log, "管理员账号禁止操作，id:{}", id);
+                LogHelp.warn(logger, "管理员账号禁止操作，id:{}", id);
                 throw new BusinessException(I18nConstants.PERMISSION_DENIED);
             }
             if (!userDO.getId().equals(id)) {
-                LogHelp.warn(log, "账号名称已存在 account: {}", dto.getLoginName());
+                LogHelp.warn(logger, "账号名称已存在 account: {}", dto.getLoginName());
                 throw new BusinessException(I18nConstants.DATA_EXISTS);
             }
         }
@@ -380,7 +382,7 @@ public class UserServiceImpl
         Map<Integer, List<RoleEntity>> roleListMap = roleService.getRoleMap(ListUtil.of(userId));
         List<RoleEntity> roleDOList = roleListMap.get(userId);
         if (CollUtil.isEmpty(roleDOList)) {
-            LogHelp.warn(log, "userId: {} 查无角色权限", userId);
+            LogHelp.warn(logger, "userId: {} 查无角色权限", userId);
             return Collections.emptyList();
         }
         List<UserPowerVO> vos = roleDOList.stream().map(i-> {
@@ -401,7 +403,7 @@ public class UserServiceImpl
             }
             List<String> menuCodeList = keyRoleIdValueMenuCode.get(vo.getRoleId());
             if (CollUtil.isEmpty(menuCodeList)) {
-                LogHelp.warn(log, "userId: {} roleId: {} 查无模块权限", userId, vo.getRoleId());
+                LogHelp.warn(logger, "userId: {} roleId: {} 查无模块权限", userId, vo.getRoleId());
                 menuCodeList = Collections.emptyList();
             }
             vo.setModules(menuCodeList);
@@ -417,10 +419,7 @@ public class UserServiceImpl
 
     @Override
     public boolean isAdmin(Integer userId) {
-        UserEntity entity = baseRepository.getById(userId);
-        if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(userId);
-        }
+        UserEntity entity = super.mustGet(userId);
         return entity.getAdministratorFlag();
     }
 
@@ -444,27 +443,27 @@ public class UserServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public String resetPassword(Integer userId) {
-        UserEntity byId = baseRepository.getById(userId);
+        UserEntity byId = super.getById(userId);
         if (ObjectUtil.isNotEmpty(byId)) {
             if (byId.getAdministratorFlag()) {
                 throw new BusinessException(I18nConstants.PERMISSION_DENIED);
             }
         }
-        baseRepository.update(userId, this.getDefaultPassword());
+        this.update(userId, this.getDefaultPassword());
         return StrUtil.EMPTY;
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public String resetPassword(Integer userId, String newPassword) {
-        baseRepository.update(userId, this.buildPassword(newPassword));
+        this.update(userId, this.buildPassword(newPassword));
         return newPassword;
     }
 
     @Override
     public List<UserAllVO> queryAll(Boolean disabledFlag) {
         List<UserAllVO> voList = new ArrayList<>();
-        List<UserEntity> list = baseRepository.list();
+        List<UserEntity> list = super.list();
         if (CollUtil.isNotEmpty(list)) {
             Set<Integer> deptIdSet = list.stream()
                     .map(UserEntity::getDepartmentId)
@@ -507,13 +506,13 @@ public class UserServiceImpl
     @Override
     public void batchUpdateDepartment(UserBatchUpdateDepartmentDTO dto) {
         List<Integer> list = dto.getEmployeeIdList();
-        List<UserEntity> userEntities = baseRepository.listByIds(list);
+        List<UserEntity> userEntities = super.listByIds(list);
         if (list.size() != userEntities.size()) {
-            this.throwDataNotExistException(list);
+            LogicCheckUtil.throwDataNotExistException(list);
         }
         Integer departmentId = dto.getDepartmentId();
         userEntities.forEach(i -> i.setDepartmentId(departmentId));
-        baseRepository.updateBatchById(userEntities, 500);
+        super.updateBatchById(userEntities, 500);
     }
 
     @Override
@@ -522,7 +521,7 @@ public class UserServiceImpl
         if (CollUtil.isEmpty(idList)) {
             return PageUtil.empty(dto);
         }
-        Page<UserEntity> entityPage = baseRepository.selectPageByRoleId(idList, dto);
+        Page<UserEntity> entityPage = this.selectPageByRoleId(idList, dto);
         List<UserEntity> userList = entityPage.getRecords();
         if (CollUtil.isEmpty(userList)) {
             return PageUtil.empty(dto);
@@ -537,7 +536,7 @@ public class UserServiceImpl
         Set<Integer> updatedBySet = userList.stream().map(BaseEntity::getUpdatedBy)
                 .filter(ObjUtil::isNotNull).collect(Collectors.toSet());
         createdBySet.addAll(updatedBySet);
-        List<UserEntity> list = baseRepository.listByIds(createdBySet);
+        List<UserEntity> list = this.listByIds(createdBySet);
         Map<Integer, UserEntity> userMap = new HashMap<>(list.size());
         if (CollUtil.isNotEmpty(list)) {
             userMap = list.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
@@ -601,7 +600,7 @@ public class UserServiceImpl
         if (CollUtil.isEmpty(idList)) {
             return Collections.emptyList();
         }
-        List<UserEntity> records = baseRepository.listByIds(idList);
+        List<UserEntity> records = super.listByIds(idList);
         return this.getVoList(records);
     }
 
@@ -613,26 +612,31 @@ public class UserServiceImpl
 
     @Override
     public List<UserEntity> listByDeptList(List<Integer> deptIdList) {
-        return baseRepository.listByDeptList(deptIdList);
+        if (CollUtil.isNotEmpty(deptIdList)) {
+            LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+            query.in(UserEntity::getDepartmentId, deptIdList);
+            return baseMapper.selectList(query);
+        }
+        return Collections.emptyList();
     }
 
     @Override
     public List<UserEntity> getLike(String userName) {
-        return baseRepository.like(userName);
+        return this.like(userName);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateLoginTime(Integer id) {
-        UserEntity entity = this.mustGet(id, UserEntity.class);
+        UserEntity entity = this.mustGet(id);
         entity.setLastLoginTime(UserContextHolder.getSession().getNow());
-        baseRepository.updateById(entity);
+        super.updateById(entity);
     }
 
     @Override
     public PagedVO<UserVO> pageByRoleId(Integer roleId, UserListDTO dto) {
         List<Integer> userId = userRoleService.getUserId(roleId);
-        Page<UserEntity> entityPage = baseRepository.selectPage(dto, null, userId);
+        Page<UserEntity> entityPage = this.selectPage(dto, null, userId);
         List<UserVO> voList = new ArrayList<>();
         List<UserEntity> userList = entityPage.getRecords();
         if (entityPage.getTotal() == GlobalConstant.Number.NUMBER_0) {
@@ -644,7 +648,7 @@ public class UserServiceImpl
 
     private List<UserEntity> list(List<Integer> userIdList) {
         if (CollUtil.isNotEmpty(userIdList)) {
-            List<UserEntity> userList = baseRepository.listByIds(userIdList);
+            List<UserEntity> userList = super.listByIds(userIdList);
             return CollUtil.emptyIfNull(userList);
         }
         return Collections.emptyList();
@@ -653,7 +657,7 @@ public class UserServiceImpl
     @Override
     public String getActualName(Integer userId) {
         if (ObjUtil.isNotNull(userId)) {
-            UserEntity user = baseRepository.getById(userId);
+            UserEntity user = super.getById(userId);
             if (ObjUtil.isNotNull(user)) {
                 return user.getActualName();
             }
@@ -758,7 +762,7 @@ public class UserServiceImpl
                     Set<ConstraintViolation<UserAddDTO>> violations = validator.validate(userAddDTO);
                     if (!violations.isEmpty()) {
                         // 处理验证错误
-                        log.error("验证错误：{}", violations);
+                        logger.error("验证错误：{}", violations);
                         continue;
                     }
                     this.insert(userAddDTO);
@@ -787,6 +791,111 @@ public class UserServiceImpl
         return fieldBOList;
     }
 
+    public Page<UserEntity> selectPage(UserListDTO dto, List<Integer> deptIdList,
+                                       List<Integer> notContainsUserIdList) {
+        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+        String keyword = dto.getKeyword();
+        if (CharSequenceUtil.isNotBlank(keyword)) {
+            query.and(i-> i.like(UserEntity::getLoginName, keyword)
+                .or().like(UserEntity::getPhone, keyword)
+                .or().like(UserEntity::getActualName, keyword)
+            );
+        }
+        if (CollUtil.isNotEmpty(deptIdList)) {
+            query.in(UserEntity::getDepartmentId, deptIdList);
+        }
+        if (CollUtil.isNotEmpty(notContainsUserIdList)) {
+            query.notIn(IdEntity::getId, notContainsUserIdList);
+        }
+        Boolean disabledFlag = dto.getDisabledFlag();
+        if (ObjectUtil.isNotNull(disabledFlag)) {
+            query.eq(BaseEntity::getInactive, disabledFlag);
+        }
+        String sortField = dto.getSortField();
+        if (CharSequenceUtil.isNotBlank(sortField)) {
+            query.orderBy(sortField.equals(LambdaUtil.getFieldName(UserEntity::getActualName)), dto.isAsc(), UserEntity::getActualName);
+            query.orderBy(sortField.equals(LambdaUtil.getFieldName(UserEntity::getLoginName)), dto.isAsc(), UserEntity::getLoginName);
+            query.orderBy(sortField.equals(LambdaUtil.getFieldName(UserEntity::getInactive)), dto.isAsc(), UserEntity::getInactive);
+            query.orderBy(sortField.equals(LambdaUtil.getFieldName(UserEntity::getCreatedTime)), dto.isAsc(), UserEntity::getCreatedTime);
+            query.orderBy(sortField.equals(LambdaUtil.getFieldName(UserEntity::getUpdatedTime)), dto.isAsc(), UserEntity::getUpdatedTime);
+        } else {
+            query.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        }
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
+    }
+
+    public Integer insert(UserEntity entity) {
+        baseMapper.insert(entity);
+        return entity.getId();
+    }
+
+    public UserEntity getEntity(String loginName) {
+        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+        query.eq(UserEntity::getLoginName, loginName);
+        query.last(GlobalConstant.Database.SQL_LIMIT_1);
+        List<UserEntity> list = list(query);
+        if (list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+    public boolean update(Integer id, boolean inactive) {
+        UserEntity entity = new UserEntity();
+        entity.setId(id);
+        entity.setInactive(inactive);
+        return this.update(entity);
+    }
+
+    public boolean update(Integer id, String password) {
+        UserEntity entity = new UserEntity();
+        entity.setId(id);
+        entity.setLoginPwd(password);
+
+        UserEntity userEntity = this.getById(id);
+        String usedPassword = userEntity.getUsedPassword();
+        List<String> passwordList = new ArrayList<>();
+        if (CharSequenceUtil.isNotBlank(usedPassword)) {
+            boolean isArray = JSONUtil.isTypeJSONArray(usedPassword);
+            if (isArray) {
+                JSONArray objects = JSONUtil.parseArray(usedPassword);
+                List<String> list = objects.toList(String.class);
+                list.add(password);
+                passwordList.addAll(list);
+            }
+        } else {
+            passwordList.add(password);
+        }
+        entity.setUsedPassword(JSONUtil.toJsonStr(passwordList));
+        entity.setLastPasswordModifiedDate(UserContextHolder.getSession().getNow());
+        return this.update(entity);
+    }
+
+    public Page<UserEntity> selectPageByRoleId(List<Integer> userIdList, RoleUserQueryDTO dto) {
+        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+        String keyword = dto.getKeyword();
+        if (CharSequenceUtil.isNotBlank(keyword)) {
+            query.and(i-> i.like(UserEntity::getLoginName, keyword)
+                .or().like(UserEntity::getPhone, keyword)
+            );
+        }
+        if (CollUtil.isNotEmpty(userIdList)) {
+            query.in(IdEntity::getId, userIdList);
+        }
+        query.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), query);
+    }
+
+    @Override
+    public List<UserEntity> like(String userName) {
+        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+        query.like(UserEntity::getActualName, userName);
+        return baseMapper.selectList(query);
+    }
+
+    public boolean update(UserEntity entity) {
+        return this.updateById(entity);
+    }
 
 
 }

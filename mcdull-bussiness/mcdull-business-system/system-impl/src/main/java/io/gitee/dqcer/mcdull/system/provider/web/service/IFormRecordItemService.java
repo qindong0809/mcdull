@@ -1,19 +1,11 @@
-package io.gitee.dqcer.mcdull.system.provider.web.repository;
+package io.gitee.dqcer.mcdull.system.provider.web.service;
 
 import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormRecordItemEntity;
 
 import java.util.List;
 
-
-/**
- * Form record item repository
- *
- * @author dqcer
- * @since 2024-06-15 13:11:44
- */
-public interface IFormRecordItemRepository extends IRepository<FormRecordItemEntity> {
-
+public interface IFormRecordItemService extends IRepository<FormRecordItemEntity> {
     /**
      * select by form id
      *

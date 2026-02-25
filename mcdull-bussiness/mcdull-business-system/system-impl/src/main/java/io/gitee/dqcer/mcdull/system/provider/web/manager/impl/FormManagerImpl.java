@@ -11,27 +11,27 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormItemEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormRecordEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormRecordItemEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FormRecordDataVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IFormItemRepository;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IFormRecordItemRepository;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IFormRecordRepository;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IFormRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IFormManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IFormItemService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IFormRecordItemService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IFormRecordService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IFormService;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,16 +51,16 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
     private static final Logger log = LoggerFactory.getLogger(FormManagerImpl.class);
 
     @Resource
-    private IFormRepository formRepository;
+    private IFormService formService;
 
     @Resource
-    private IFormItemRepository formItemRepository;
+    private IFormItemService formItemService;
 
     @Resource
-    private IFormRecordRepository formRecordRepository;
+    private IFormRecordService formRecordService;
 
     @Resource
-    private IFormRecordItemRepository formRecordItemRepository;
+    private IFormRecordItemService formRecordItemService;
 
 
     @Override
@@ -106,7 +106,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void initFormAndFormItem(Integer formId, String jsonText) {
-        FormEntity entity = formRepository.getById(formId);
+        FormEntity entity = formService.getById(formId);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(formId);
         }
@@ -114,9 +114,9 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             throw new RuntimeException("动态表单已发布，不能修改");
         }
         entity.setJsonText(jsonText);
-        formRepository.updateById(entity);
+        formService.updateById(entity);
 
-        formItemRepository.deleteByFormId(formId);
+        formItemService.deleteByFormId(formId);
 
         List<JSONObject> formItemList = this.getFormItemList(jsonText);
         if (CollUtil.isEmpty(formItemList)) {
@@ -161,12 +161,12 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                 }
             }
         }
-        formItemRepository.saveBatch(itemEntityList, itemEntityList.size());
+        formItemService.saveBatch(itemEntityList, itemEntityList.size());
     }
 
     @Override
     public void addFormRecordData(Integer formId, Map<String, Object> formDataMap) {
-        FormEntity formEntity = formRepository.getById(formId);
+        FormEntity formEntity = formService.getById(formId);
         if (ObjUtil.isNull(formEntity)) {
             this.throwDataNotExistException(formId);
         }
@@ -176,13 +176,13 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
         if (MapUtil.isEmpty(formDataMap)) {
             return;
         }
-        List<FormItemEntity> formItemEntityList = formItemRepository.selectByFormId(formId);
+        List<FormItemEntity> formItemEntityList = formItemService.selectByFormId(formId);
         if (CollUtil.isEmpty(formItemEntityList)) {
             return;
         }
         FormRecordEntity recordEntity = new FormRecordEntity();
         recordEntity.setFormId(formId);
-        formRecordRepository.save(recordEntity);
+        formRecordService.save(recordEntity);
 
         Integer recordId = recordEntity.getId();
         List<FormRecordItemEntity> recordItemList = new ArrayList<>();
@@ -204,7 +204,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             }
             recordItemList.add(recordItem);
         });
-        formRecordItemRepository.saveBatch(recordItemList, recordItemList.size());
+        formRecordItemService.saveBatch(recordItemList, recordItemList.size());
     }
 
     @Override
@@ -212,22 +212,22 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
         if (ObjUtil.isNull(formId)) {
             return Collections.emptyList();
         }
-        if (BooleanUtil.isFalse(formRepository.getById(formId).getPublish())) {
+        if (BooleanUtil.isFalse(formService.getById(formId).getPublish())) {
             return Collections.emptyList();
         }
-        List<FormItemEntity> itemList = formItemRepository.selectByFormId(formId);
+        List<FormItemEntity> itemList = formItemService.selectByFormId(formId);
         if (CollUtil.isEmpty(itemList)) {
             return Collections.emptyList();
         }
         Map<Integer, FormItemEntity> itemMap = itemList.stream()
                 .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
-        List<FormRecordEntity> recordList = formRecordRepository.selectByFormId(formId);
+        List<FormRecordEntity> recordList = formRecordService.selectByFormId(formId);
         if (CollUtil.isEmpty(recordList)) {
             return Collections.emptyList();
         }
         Map<Integer, FormRecordEntity> recordMap = recordList.stream()
                 .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
-        List<FormRecordItemEntity> recordItemList1 = formRecordItemRepository.selectByFormId(formId);
+        List<FormRecordItemEntity> recordItemList1 = formRecordItemService.selectByFormId(formId);
         if (CollUtil.isEmpty(recordItemList1)) {
             return Collections.emptyList();
         }
@@ -325,7 +325,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
 
     @Override
     public void formConfigReady(Integer formId) {
-        FormEntity form = formRepository.getById(formId);
+        FormEntity form = formService.getById(formId);
         if (ObjUtil.isNull(form)) {
             this.throwDataNotExistException(formId);
         }
@@ -333,16 +333,16 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             return;
         }
         form.setPublish(true);
-        formRepository.updateById(form);
+        formService.updateById(form);
     }
 
     @Override
     public void deleteOneRecord(Integer recordId) {
-        FormRecordEntity formRecord = formRecordRepository.getById(recordId);
+        FormRecordEntity formRecord = formRecordService.getById(recordId);
         if (ObjUtil.isNull(formRecord)) {
             this.throwDataNotExistException(recordId);
         }
-       formRecordRepository.removeById(recordId);
+        formRecordService.removeById(recordId);
     }
 
     @Override
@@ -351,11 +351,11 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             LogHelp.warn(log, "formDataMap is empty");
             return;
         }
-        FormRecordEntity formRecord = formRecordRepository.getById(recordId);
+        FormRecordEntity formRecord = formRecordService.getById(recordId);
         if (ObjUtil.isNull(formRecord)) {
             this.throwDataNotExistException(recordId);
         }
-        List<FormItemEntity> formItemEntityList = formItemRepository.selectByFormId(formRecord.getFormId());
+        List<FormItemEntity> formItemEntityList = formItemService.selectByFormId(formRecord.getFormId());
         if (CollUtil.isEmpty(formItemEntityList)) {
             LogHelp.warn(log, "formId:{}. formItemEntityList is empty", formRecord.getFormId());
             return;
@@ -363,7 +363,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
         Map<Integer, FormItemEntity> itemMap = formItemEntityList.stream()
                 .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
 
-        List<FormRecordItemEntity> list = formRecordItemRepository.selectByRecordId(recordId);
+        List<FormRecordItemEntity> list = formRecordItemService.selectByRecordId(recordId);
         if (CollUtil.isEmpty(list)) {
             LogHelp.error(log, "recordId:{} is not exist", recordId);
             return;
@@ -387,24 +387,24 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                 recordItem.setCurrentValue(Convert.toStr(obj));
             }
         });
-        formRecordItemRepository.updateBatchById(list, list.size());
+        formRecordItemService.updateBatchById(list, list.size());
     }
 
     @Override
     public Map<String, Object> getOneRecordNoConvert(Integer recordId) {
-        FormRecordEntity formRecord = formRecordRepository.getById(recordId);
+        FormRecordEntity formRecord = formRecordService.getById(recordId);
         if (ObjUtil.isNull(formRecord)) {
             return Collections.emptyMap();
         }
         Integer formId = formRecord.getFormId();
-        List<FormItemEntity> itemList = formItemRepository.selectByFormId(formId);
+        List<FormItemEntity> itemList = formItemService.selectByFormId(formId);
         if (CollUtil.isEmpty(itemList)) {
             return Collections.emptyMap();
         }
         Map<Integer, FormItemEntity> itemMap = itemList.stream()
                 .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
 
-        List<FormRecordItemEntity> recordItemList = formRecordItemRepository.selectByRecordId(recordId);
+        List<FormRecordItemEntity> recordItemList = formRecordItemService.selectByRecordId(recordId);
         if (CollUtil.isNotEmpty(recordItemList)) {
             Map<String, Object> result = MapUtil.newHashMap();
             recordItemList.forEach(recordItem -> {

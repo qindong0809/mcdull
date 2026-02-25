@@ -1,17 +1,23 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.FormAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormEntity;
@@ -19,17 +25,20 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.FormRecordEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FormItemVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FormRecordDataVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FormVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IFormRecordRepository;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IFormRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.FormMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IFormManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IFormRecordService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFormService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Form ServiceImpl
@@ -39,7 +48,7 @@ import java.util.*;
  */
 @Service
 public class FormServiceImpl
-        extends BasicServiceImpl<IFormRepository> implements IFormService {
+        extends BasicCurdServiceImpl<FormMapper, FormEntity> implements IFormService {
 
     @Resource
     private IFormManager formManager;
@@ -51,15 +60,15 @@ public class FormServiceImpl
     private IAuditManager auditManager;
 
     @Resource
-    private IFormRecordRepository formRecordRepository;
+    private IFormRecordService formRecordService;
 
     @Override
     public PagedVO<FormVO> queryPage(FormQueryDTO dto) {
         List<FormVO> voList = new ArrayList<>();
-        Page<FormEntity> entityPage = baseRepository.selectPage(dto);
+        Page<FormEntity> entityPage = this.selectPage(dto);
         List<FormEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
-            List<FormRecordEntity> list = formRecordRepository.list();
+            List<FormRecordEntity> list = formRecordService.list();
             for (FormEntity entity : recordList) {
                 FormVO vo = this.convertToVO(entity);
                 Integer count = Convert.toInt(list.stream().filter(i -> i.getFormId().equals(entity.getId())).count());
@@ -76,12 +85,12 @@ public class FormServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void add(FormAddDTO dto) {
-        FormEntity entity = baseRepository.getByName(dto.getName());
+        FormEntity entity = this.getByName(dto.getName());
         if (ObjUtil.isNotNull(entity)) {
-            this.throwDataExistException(dto.getName());
+            LogicCheckUtil.throwDataExistException(dto.getName());
         }
         FormEntity formEntity = this.convertToEntity(dto);
-        baseRepository.save(formEntity);
+        super.save(formEntity);
         auditManager.saveByAddEnum(formEntity.getName(), formEntity.getId(), this.buildAuditLog(formEntity));
     }
 
@@ -97,17 +106,17 @@ public class FormServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(FormUpdateDTO dto) {
-        FormEntity tempForm = baseRepository.getByName(dto.getName());
+        FormEntity tempForm = this.getByName(dto.getName());
         if (ObjUtil.isNotNull(tempForm)) {
             if (!tempForm.getId().equals(dto.getId())) {
-                this.throwDataExistException(dto.getName());
+                LogicCheckUtil.throwDataExistException(dto.getName());
             }
         }
-        FormEntity oldEntity = baseRepository.getById(dto.getId());
+        FormEntity oldEntity = super.getById(dto.getId());
         FormEntity newEntity = this.convertToEntity(dto);
         newEntity.setPublish(oldEntity.getPublish());
         newEntity.setId(dto.getId());
-        baseRepository.updateById(newEntity);
+        super.updateById(newEntity);
         auditManager.saveByUpdateEnum(oldEntity.getName(), oldEntity.getId(),
                 this.buildAuditLog(oldEntity), this.buildAuditLog(newEntity));
     }
@@ -115,21 +124,21 @@ public class FormServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(Integer id) {
-        FormEntity entity = baseRepository.getById(id);
+        FormEntity entity = super.getById(id);
         if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(id);
+            LogicCheckUtil.throwDataNotExistException(id);
         }
-        baseRepository.removeById(id);
+        super.removeById(id);
         auditManager.saveByDeleteEnum(entity.getName(), entity.getId(), "");
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateJsonText(FormUpdateJsonTextDTO dto) {
-        FormEntity entity = baseRepository.getById(dto.getId());
+        FormEntity entity = super.getById(dto.getId());
         formManager.initFormAndFormItem(dto.getId(), dto.getJsonText());
         auditManager.saveByUpdateEnum(entity.getName(), entity.getId(),
-                this.buildAuditLog(entity), this.buildAuditLog(baseRepository.getById(dto.getId())));
+                this.buildAuditLog(entity), this.buildAuditLog(super.getById(dto.getId())));
     }
 
 
@@ -141,18 +150,18 @@ public class FormServiceImpl
 
     @Override
     public FormVO detail(Integer formId) {
-        FormEntity entity = baseRepository.getById(formId);
+        FormEntity entity = super.getById(formId);
         if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(formId);
+            LogicCheckUtil.throwDataNotExistException(formId);
         }
         return this.convertToVO(entity);
     }
 
     @Override
     public List<FormItemVO> itemConfigList(Integer formId) {
-        FormEntity entity = baseRepository.getById(formId);
+        FormEntity entity = super.getById(formId);
         if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(formId);
+            LogicCheckUtil.throwDataNotExistException(formId);
         }
         if (BooleanUtil.isFalse(entity.getPublish())) {
             return Collections.emptyList();
@@ -226,7 +235,7 @@ public class FormServiceImpl
         for (FormItemVO itemVO : formItemVOS) {
             pairList.add(Pair.of(itemVO.getName(), itemVO.getKey()));
         }
-        FormEntity form = baseRepository.getById(dto.getFormId());
+        FormEntity form = super.getById(dto.getFormId());
         String conditions = this.filterConditionsStr(dto);
         String sheetName = form.getName();
         commonManager.exportExcel(sheetName, conditions, pairList, allRecord);
@@ -277,5 +286,20 @@ public class FormServiceImpl
         return formVO;
     }
 
+    public Page<FormEntity> selectPage(FormQueryDTO param) {
+        LambdaQueryWrapper<FormEntity> lambda = Wrappers.lambdaQuery();
+        String keyword = param.getKeyword();
+        if (ObjectUtil.isNotNull(keyword)) {
+            lambda.like(FormEntity::getName, keyword);
+        }
+        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
+    }
+
+    public FormEntity getByName(String name) {
+        LambdaQueryWrapper<FormEntity> lambda = Wrappers.lambdaQuery();
+        lambda.eq(FormEntity::getName, name);
+        return baseMapper.selectOne(lambda);
+    }
 
 }

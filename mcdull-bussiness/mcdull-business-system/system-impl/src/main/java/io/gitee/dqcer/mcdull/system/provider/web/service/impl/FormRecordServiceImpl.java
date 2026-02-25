@@ -1,26 +1,17 @@
-package io.gitee.dqcer.mcdull.system.provider.web.repository.impl;
-
+package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.repository.CrudRepository;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormRecordEntity;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.FormRecordMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IFormRecordRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IFormRecordService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
-/**
- * Form Record Repository
- *
- * @author dqcer
- * @since 2024-06-15 13:11:44
- */
 @Service
-public class FormRecordRepositoryImpl extends
-        CrudRepository<FormRecordMapper, FormRecordEntity> implements IFormRecordRepository {
+public class FormRecordServiceImpl extends BasicCurdServiceImpl<FormRecordMapper, FormRecordEntity> implements IFormRecordService {
 
     @Override
     public List<FormRecordEntity> selectByFormId(Integer formId) {

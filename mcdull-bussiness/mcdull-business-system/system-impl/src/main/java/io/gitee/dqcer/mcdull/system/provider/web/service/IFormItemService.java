@@ -1,19 +1,11 @@
-package io.gitee.dqcer.mcdull.system.provider.web.repository;
+package io.gitee.dqcer.mcdull.system.provider.web.service;
 
 import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormItemEntity;
 
 import java.util.List;
 
-
-/**
- * Form item repository
- *
- * @author dqcer
- * @since 2024-06-15 13:11:44
- */
-public interface IFormItemRepository extends IRepository<FormItemEntity> {
-
+public interface IFormItemService extends IRepository<FormItemEntity> {
     /**
      * delete by form id
      *
@@ -28,4 +20,5 @@ public interface IFormItemRepository extends IRepository<FormItemEntity> {
      * @return {@link List}<{@link FormItemEntity}>
      */
     List<FormItemEntity> selectByFormId(Integer formId);
+
 }

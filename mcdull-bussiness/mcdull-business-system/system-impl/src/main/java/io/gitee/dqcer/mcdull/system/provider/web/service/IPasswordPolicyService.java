@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.PasswordPolicyDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.PasswordPolicyEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.PasswordPolicyVO;
 
 /**
@@ -10,17 +12,17 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.PasswordPolicyVO;
  * @since 2024/7/25 9:27
  */
 
-public interface IPasswordPolicyService {
+public interface IPasswordPolicyService extends IRepository<PasswordPolicyEntity> {
 
     /**
-     * 详情
+     * detail
      *
      * @return {@link PasswordPolicyVO }
      */
     PasswordPolicyVO detail();
 
     /**
-     * 更新
+     * update
      *
      * @param dto DTO
      */

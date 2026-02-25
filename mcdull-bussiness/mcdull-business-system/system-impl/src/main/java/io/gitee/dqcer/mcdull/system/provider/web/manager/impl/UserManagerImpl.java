@@ -6,9 +6,9 @@ import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IUserRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDepartmentService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,14 +22,14 @@ import java.util.stream.Collectors;
 public class UserManagerImpl implements IUserManager {
 
     @Resource
-    private IUserRepository userRepository;
+    private IUserService userService;
     @Resource
     private IDepartmentService departmentService;
 
     @Override
     public Map<Integer, String> getNameMap(List<Integer> userIdList) {
         if (CollUtil.isNotEmpty(userIdList)) {
-            List<UserEntity> entityList = userRepository.listByIds(userIdList);
+            List<UserEntity> entityList = userService.listByIds(userIdList);
             if (CollUtil.isNotEmpty(entityList)) {
                 return entityList.stream()
                         .collect(Collectors.toMap(UserEntity::getId, UserEntity::getActualName));
@@ -41,7 +41,7 @@ public class UserManagerImpl implements IUserManager {
     @Override
     public Map<String, String> getNameMapByLoginName(List<String> loginList) {
         if (CollUtil.isNotEmpty(loginList)) {
-            List<UserEntity> list = userRepository.list();
+            List<UserEntity> list = userService.list();
             if (CollUtil.isNotEmpty(list)) {
                 return list.stream().filter(i -> loginList.contains(i.getLoginName()))
                         .collect(Collectors.toMap(UserEntity::getLoginName, UserEntity::getActualName));
@@ -51,19 +51,14 @@ public class UserManagerImpl implements IUserManager {
     }
 
     @Override
-    public List<UserEntity> getLike(String userName) {
-        return userRepository.like(userName);
-    }
-
-    @Override
     public Map<Integer, UserEntity> getEntityMap(List<Integer> userIdList) {
-        List<UserEntity> list = userRepository.listByIds(userIdList);
+        List<UserEntity> list = userService.listByIds(userIdList);
         return list.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
     }
 
     @Override
     public Map<Integer, Integer> getUserDepartmentMap(List<Integer> userIdList) {
-        List<UserEntity> list = userRepository.listByIds(userIdList);
+        List<UserEntity> list = userService.listByIds(userIdList);
         if (CollUtil.isNotEmpty(list)) {
             Set<Integer> departmentIdSet = list.stream().map(UserEntity::getDepartmentId)
                     .filter(ObjUtil::isNotNull).collect(Collectors.toSet());
@@ -80,7 +75,7 @@ public class UserManagerImpl implements IUserManager {
 
     @Override
     public List<LabelValueVO<Integer, String>> getResponsibleList() {
-        List<UserEntity> list = userRepository.list();
+        List<UserEntity> list = userService.list();
         if (CollUtil.isNotEmpty(list)) {
             return list.stream()
                     .map(i -> new LabelValueVO<>(i.getId(), i.getActualName()))
@@ -94,7 +89,7 @@ public class UserManagerImpl implements IUserManager {
     public List<Integer> getUserIdList(Integer departmentId) {
         List<Integer> childrenIdList = CollUtil.defaultIfEmpty(departmentService.getChildrenIdList(departmentId), new ArrayList<>());
         childrenIdList.add(departmentId);
-        List<UserEntity> list = userRepository.listByDeptList(childrenIdList);
+        List<UserEntity> list = userService.listByDeptList(childrenIdList);
         if (CollUtil.isNotEmpty(list)) {
             return list.stream().map(UserEntity::getId).collect(Collectors.toList());
         }

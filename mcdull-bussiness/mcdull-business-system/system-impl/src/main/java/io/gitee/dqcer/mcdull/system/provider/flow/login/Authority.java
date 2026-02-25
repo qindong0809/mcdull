@@ -6,19 +6,19 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.CacheUserSession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.flow.node.ProcessHandler;
 import io.gitee.dqcer.mcdull.framework.flow.node.TreeNode;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.LoginDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserConfigEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.LoginDeviceEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.LoginLogResultTypeEnum;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IUserConfigRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ILoginService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IUserConfigService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
@@ -30,9 +30,8 @@ public class Authority implements ProcessHandler<LoginContext> {
 
     @Resource
     private ILoginService loginService;
-
     @Resource
-    private IUserConfigRepository userConfigRepository;
+    private IUserConfigService userConfigService;
 
     @Override
     public void execute(LoginContext context) {
@@ -66,7 +65,7 @@ public class Authority implements ProcessHandler<LoginContext> {
         cache.setAdministratorFlag(entity.getAdministratorFlag());
         cache.setLanguage(Locale.SIMPLIFIED_CHINESE.getLanguage());
         cache.setLoginName(entity.getLoginName());
-        UserConfigEntity userConfig = userConfigRepository.getByUserId(entity.getId());
+        UserConfigEntity userConfig = userConfigService.get(entity.getId());
         if (ObjUtil.isNotNull(userConfig)) {
             cache.setDateFormat(userConfig.getDateFormat());
             cache.setZoneIdStr(userConfig.getTimezone());

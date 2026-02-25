@@ -3,18 +3,19 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.PasswordPolicyAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.PasswordPolicyDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.PasswordPolicyEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.PasswordPolicyVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IPasswordPolicyRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.PasswordPolicyMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IPasswordPolicyService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 
 
@@ -26,7 +27,7 @@ import java.util.List;
  */
 @Service
 public class PasswordPolicyServiceImpl
-        extends BasicServiceImpl<IPasswordPolicyRepository> implements IPasswordPolicyService {
+        extends BasicCurdServiceImpl<PasswordPolicyMapper, PasswordPolicyEntity> implements IPasswordPolicyService {
 
     @Resource
     private IAuditManager auditManager;
@@ -40,9 +41,9 @@ public class PasswordPolicyServiceImpl
     }
 
     private PasswordPolicyEntity get() {
-        List<PasswordPolicyEntity> list = baseRepository.list();
+        List<PasswordPolicyEntity> list = super.list();
         if (CollUtil.isEmpty(list)) {
-            this.throwDataNotExistException("is empty");
+            LogicCheckUtil.throwDataNotExistException("is empty");
         }
         return list.get(0);
     }
@@ -56,7 +57,7 @@ public class PasswordPolicyServiceImpl
         entity.setFailedLoginMaximumNumber(dto.getFailedLoginMaximumNumber());
         entity.setFailedLoginMaximumTime(dto.getFailedLoginMaximumTime());
         entity.setPasswordExpiredPeriod(dto.getPasswordExpiredPeriod());
-        baseRepository.updateById(entity);
+        super.updateById(entity);
         auditManager.saveByUpdateEnum(MODULE_NAME, entity.getId(),
                 this.buildAuditLog(oldEntity), this.buildAuditLog(entity));
     }

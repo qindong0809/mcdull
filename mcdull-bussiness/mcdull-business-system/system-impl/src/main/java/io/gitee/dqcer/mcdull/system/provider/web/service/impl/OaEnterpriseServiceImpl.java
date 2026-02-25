@@ -6,21 +6,27 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.EnterpriseAddDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.EnterpriseQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.EnterpriseUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.OaEnterpriseEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.EnterpriseTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.EnterpriseVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IOaEnterpriseRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.OaEnterpriseMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IOaEnterpriseService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
@@ -28,6 +34,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +50,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class OaEnterpriseServiceImpl
-        extends BasicServiceImpl<IOaEnterpriseRepository> implements IOaEnterpriseService {
+        extends BasicCurdServiceImpl<OaEnterpriseMapper, OaEnterpriseEntity> implements IOaEnterpriseService {
 
     @Resource
     private IUserService userService;
@@ -53,7 +60,7 @@ public class OaEnterpriseServiceImpl
     @Override
     public PagedVO<EnterpriseVO> queryByPage(EnterpriseQueryDTO dto) {
         List<EnterpriseVO> voList = new ArrayList<>();
-        Page<OaEnterpriseEntity> entityPage = baseRepository.selectPage(dto);
+        Page<OaEnterpriseEntity> entityPage = this.selectPage(dto);
         List<OaEnterpriseEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
             Set<Integer> userIdSet = recordList.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
@@ -74,28 +81,25 @@ public class OaEnterpriseServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void add(EnterpriseAddDTO dto) {
-        List<OaEnterpriseEntity> list = baseRepository.list();
+        List<OaEnterpriseEntity> list = super.list();
         if (CollUtil.isNotEmpty(list)) {
-            this.validNameExist(null, dto.getEnterpriseName(),
+            LogicCheckUtil.validNameExist(null, dto.getEnterpriseName(),
                     list,entity -> dto.getEnterpriseName().equals(entity.getEnterpriseName()));
         }
         OaEnterpriseEntity entity = this.convertToEntity(dto);
-        baseRepository.save(entity);
+        super.save(entity);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(EnterpriseUpdateDTO dto) {
         Integer enterpriseId = dto.getEnterpriseId();
-        OaEnterpriseEntity entity = baseRepository.getById(enterpriseId);
-        if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(enterpriseId);
-        }
-        this.validNameExist(enterpriseId, dto.getEnterpriseName(), baseRepository.list(),
+        OaEnterpriseEntity entity = super.mustGet(enterpriseId);
+        LogicCheckUtil.validNameExist(enterpriseId, dto.getEnterpriseName(), super.list(),
                 i -> !i.getId().equals(enterpriseId)
                         && dto.getEnterpriseName().equals(i.getEnterpriseName()));
         this.setUpdateFieldValue(dto, entity);
-        baseRepository.updateById(entity);
+        super.updateById(entity);
     }
 
     private void setUpdateFieldValue(EnterpriseUpdateDTO dto, OaEnterpriseEntity entity) {
@@ -119,16 +123,13 @@ public class OaEnterpriseServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(Integer enterpriseId) {
-        OaEnterpriseEntity entity = baseRepository.getById(enterpriseId);
-        if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(enterpriseId);
-        }
-        baseRepository.removeById(entity);
+        OaEnterpriseEntity entity = super.mustGet(enterpriseId);
+        super.removeById(entity);
     }
 
     @Override
     public EnterpriseVO getDetail(Integer enterpriseId) {
-        OaEnterpriseEntity entity = baseRepository.getById(enterpriseId);
+        OaEnterpriseEntity entity = super.mustGet(enterpriseId);
         EnterpriseVO enterpriseVO = this.convertToVO(entity);
         Integer createdBy = entity.getCreatedBy();
         Map<Integer, String> nameMap = userService.getNameMap(ListUtil.of(createdBy));
@@ -201,5 +202,23 @@ public class OaEnterpriseServiceImpl
         enterpriseVO.setCreateTime(LocalDateTimeUtil.of(entity.getCreatedTime()));
         enterpriseVO.setUpdateTime(LocalDateTimeUtil.of(entity.getUpdatedTime()));
         return enterpriseVO;
+    }
+
+    public Page<OaEnterpriseEntity> selectPage(EnterpriseQueryDTO dto) {
+        LambdaQueryWrapper<OaEnterpriseEntity> lambda = Wrappers.lambdaQuery();
+        String keywords = dto.getKeywords();
+        if (CharSequenceUtil.isNotBlank(keywords)) {
+            lambda.and(i->i.like(OaEnterpriseEntity::getEnterpriseName, keywords)
+                .or().like(OaEnterpriseEntity::getContact, keywords)
+                .or().like(OaEnterpriseEntity::getContactPhone, keywords));
+        }
+        LocalDate startTime = dto.getStartTime();
+        LocalDate endTime = dto.getEndTime();
+        if (ObjectUtil.isAllNotEmpty(startTime, endTime)) {
+            lambda.between(RelEntity::getCreatedTime, startTime,
+                LocalDateTimeUtil.endOfDay(endTime.atStartOfDay()));
+        }
+        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        return baseMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), lambda);
     }
 }

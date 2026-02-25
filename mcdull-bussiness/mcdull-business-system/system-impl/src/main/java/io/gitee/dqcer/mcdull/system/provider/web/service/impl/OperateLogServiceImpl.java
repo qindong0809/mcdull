@@ -1,23 +1,31 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.TimestampEntity;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.NameValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.OperateLogQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.OperateLogEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.OperateLogVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IOperateLogRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.OperateLogMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IOperateLogService;
@@ -39,7 +47,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class OperateLogServiceImpl
-        extends BasicServiceImpl<IOperateLogRepository> implements IOperateLogService {
+        extends BasicCurdServiceImpl<OperateLogMapper, OperateLogEntity> implements IOperateLogService {
 
     @Resource
     private IUserService userService;
@@ -50,8 +58,8 @@ public class OperateLogServiceImpl
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     @Override
-    public void save(OperateLogEntity dto) {
-        baseRepository.save(dto);
+    public boolean save(OperateLogEntity dto) {
+        return super.save(dto);
     }
 
     @Override
@@ -59,13 +67,13 @@ public class OperateLogServiceImpl
         String userName = dto.getUserName();
         List<Integer> userIdList = new ArrayList<>();
         if (StrUtil.isNotBlank(userName)) {
-            List<UserEntity> userList = userManager.getLike(userName);
+            List<UserEntity> userList = userService.getLike(userName);
             if (CollUtil.isEmpty(userList)) {
                 return PageUtil.empty(dto);
             }
             userIdList = userList.stream().map(IdEntity::getId).collect(Collectors.toList());
         }
-        Page<OperateLogEntity> entityPage = baseRepository.selectPage(dto, userIdList);
+        Page<OperateLogEntity> entityPage = this.selectPage(dto, userIdList);
         List<OperateLogVO> voList = new ArrayList<>();
         List<OperateLogEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
@@ -107,10 +115,7 @@ public class OperateLogServiceImpl
 
     @Override
     public OperateLogVO detail(Integer operateLogId) {
-        OperateLogEntity entity = baseRepository.getById(operateLogId);
-        if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(operateLogId);
-        }
+        OperateLogEntity entity = super.mustGet(operateLogId);
         OperateLogVO vo = this.convertToLogVO(entity);
         UserEntity user = userService.get(vo.getOperateUserId());
         if (ObjUtil.isNotNull(user)) {
@@ -123,7 +128,7 @@ public class OperateLogServiceImpl
     public KeyValueVO<List<String>, List<Integer>> homePie() {
         List<String> key = new ArrayList<>();
         List<Integer> value = new ArrayList<>();
-        List<Map<String, Object>> list = baseRepository.home();
+        List<Map<String, Object>> list = this.home();
         for (Map<String, Object> map : list) {
             Object o = map.get("createdTime");
             key.add(Convert.toStr(o));
@@ -136,7 +141,7 @@ public class OperateLogServiceImpl
 
     @Override
     public List<NameValueVO<String, Integer>> pieHome() {
-        List<OperateLogEntity> list = baseRepository.getOnlyModule();
+        List<OperateLogEntity> list = this.getOnlyModule();
         if (CollUtil.isNotEmpty(list)) {
             List<NameValueVO<String, Integer>> voList = new ArrayList<>();
             Map<String, Long> map = list.stream()
@@ -171,5 +176,60 @@ public class OperateLogServiceImpl
                 Pair.of("时间", OperateLogVO::getCreateTime)
         );
     }
+
+
+    public Page<OperateLogEntity> selectPage(OperateLogQueryDTO param, List<Integer> userIdList) {
+        LambdaQueryWrapper<OperateLogEntity> lambda = Wrappers.lambdaQuery();
+        String startDate = param.getStartDate();
+        String endDate = param.getEndDate();
+        if (CharSequenceUtil.isAllNotBlank(startDate, endDate)) {
+            lambda.between(TimestampEntity::getCreatedTime,
+                DateUtil.parseDate(startDate), DateUtil.endOfDay(DateUtil.parseDate(endDate)));
+        }
+        lambda.eq(ObjectUtil.isNotNull(param.getUserId()), OperateLogEntity::getUserId, param.getUserId());
+        if (CollUtil.isNotEmpty(userIdList)) {
+            lambda.in(OperateLogEntity::getUserId, userIdList);
+        }
+        Boolean successFlag = param.getSuccessFlag();
+        if (ObjectUtil.isNotNull(successFlag)) {
+            lambda.eq(OperateLogEntity::getSuccessFlag, successFlag);
+        }
+        String url = param.getUrl();
+        if (CharSequenceUtil.isNotBlank(url)) {
+            lambda.like(OperateLogEntity::getUrl, url);
+        }
+        String traceId = param.getTraceId();
+        if (CharSequenceUtil.isNotBlank(traceId)) {
+            lambda.like(OperateLogEntity::getTraceId, traceId);
+        }
+        String keyword = param.getKeyword();
+        if (CharSequenceUtil.isNotBlank(keyword)) {
+            lambda.like(OperateLogEntity::getParam, keyword);
+        }
+        String module = param.getModule();
+        if (CharSequenceUtil.isNotBlank(module)) {
+            lambda.like(OperateLogEntity::getModule, module);
+        }
+        String content = param.getContent();
+        if (CharSequenceUtil.isNotBlank(content)) {
+            lambda.like(OperateLogEntity::getContent, content);
+        }
+        lambda.orderByDesc(ListUtil.of(TimestampEntity::getCreatedTime));
+        return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
+    }
+
+    public List<Map<String, Object>> home() {
+        QueryWrapper<OperateLogEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("date_format(created_time, '%Y-%m-%d %H:%i:%s') as 'createdTime',count(1) as 'count'")
+            .groupBy("date_format(created_time, '%Y-%m-%d %H:%i:%s')");
+        return this.listMaps(queryWrapper);
+    }
+
+    public List<OperateLogEntity> getOnlyModule() {
+        LambdaQueryWrapper<OperateLogEntity> query = Wrappers.lambdaQuery();
+        query.select(OperateLogEntity::getModule);
+        return baseMapper.selectList(query);
+    }
+
 
 }

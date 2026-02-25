@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.MenuAddDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.MenuListDTO;
@@ -21,10 +22,10 @@ import java.util.Map;
  * @since 2024/7/25 9:24
  */
 
-public interface IMenuService {
+public interface IMenuService extends IRepository<MenuEntity> {
 
     /**
-     * 获取菜单代码列表映射
+     * get menu code list map
      *
      * @param roleIdList 角色 ID 列表
      * @return {@link Map }<{@link Integer }, {@link List }<{@link String }>>
@@ -32,7 +33,7 @@ public interface IMenuService {
     Map<Integer, List<String>> getMenuCodeListMap(List<Integer> roleIdList);
 
     /**
-     * 获取菜单列表地图
+     * get menu list map
      *
      * @param roleIdList 角色 ID 列表
      * @return {@link Map }<{@link Integer }, {@link List }<{@link MenuEntity }>>
@@ -40,14 +41,14 @@ public interface IMenuService {
     Map<Integer, List<MenuEntity>> getMenuListMap(List<Integer> roleIdList);
 
     /**
-     * 获取所有代码列表
+     * get all code list
      *
      * @return {@link List }<{@link String }>
      */
     List<String> getAllCodeList();
 
     /**
-     * 列表
+     * list
      *
      * @param dto DTO
      * @return {@link List }<{@link MenuVO }>
@@ -55,14 +56,14 @@ public interface IMenuService {
     List<MenuVO> list(MenuListDTO dto);
 
     /**
-     * 插入
+     * insert
      *
      * @param dto DTO
      */
     void insert(MenuAddDTO dto);
 
     /**
-     * 更新
+     * update
      *
      * @param dto DTO
      */
@@ -71,58 +72,58 @@ public interface IMenuService {
     /**
      * 删除
      *
-     * @param menuIdList 菜单 ID 列表
+     * @param menuIdList menuIdList
      */
     void delete(List<Integer> menuIdList);
 
     /**
-     * 获取列表
+     * get list
      *
-     * @param userId            用户 ID
-     * @param administratorFlag 管理员标志
+     * @param userId            userId
+     * @param administratorFlag administratorFlag
      * @return {@link List }<{@link MenuVO }>
      */
     List<MenuVO> getList(Integer userId, boolean administratorFlag);
 
     /**
-     * 获取树角色 ID
+     * get tree role id
      *
-     * @param roleId 角色 ID
+     * @param roleId roleId
      * @return {@link RoleMenuTreeVO }
      */
     RoleMenuTreeVO getTreeRoleId(Integer roleId);
 
     /**
-     * Query 菜单树
+     * Query menu tree
      *
-     * @param onlyMenu Only 菜单
+     * @param onlyMenu onlyMenu
      * @return {@link List }<{@link MenuTreeVO }>
      */
     List<MenuTreeVO> queryMenuTree(Boolean onlyMenu);
 
     /**
-     * 导出数据
+     * export data
      *
      * @param dto DTO
      */
     boolean exportData(MenuListDTO dto);
 
     /**
-     * 获取下拉选项
+     * get dropdown options
      *
      * @return {@link List }<{@link LabelValueVO }<{@link String }, {@link String }>>
      */
     List<LabelValueVO<String, String>> getDropdownOptions();
 
     /**
-     * 获取当前菜单名称
+     * get current menu name
      *
      * @return {@link String }
      */
     List<String> getCurrentMenuName();
 
     /**
-     * 导入数据
+     * import menu
      *
      * @param file file
      * @return <{@link Boolean }>

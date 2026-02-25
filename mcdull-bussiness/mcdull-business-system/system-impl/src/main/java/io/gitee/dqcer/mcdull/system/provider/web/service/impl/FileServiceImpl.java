@@ -42,6 +42,7 @@ import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileBizService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFolderService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.dromara.x.file.storage.core.Downloader;
@@ -66,6 +67,8 @@ public class FileServiceImpl
     @Resource
     private IUserManager userManager;
     @Resource
+    private IUserService userService;
+    @Resource
     private IFolderService folderService;
     @Resource
     private IFileBizService fileBizService;
@@ -76,7 +79,7 @@ public class FileServiceImpl
         String creatorName = dto.getCreatorName();
         List<Integer> userIdList = new ArrayList<>();
         if (StrUtil.isNotBlank(creatorName)) {
-            List<UserEntity> entityList = userManager.getLike(creatorName);
+            List<UserEntity> entityList = userService.getLike(creatorName);
             userIdList = entityList.stream().map(IdEntity::getId).collect(Collectors.toList());
             if (CollUtil.isEmpty(userIdList)) {
                 return PageUtil.empty(dto);

@@ -1,10 +1,12 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.NameValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.config.log.IOperationLog;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.OperateLogQueryDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.OperateLogEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.OperateLogVO;
 
 import java.util.List;
@@ -16,10 +18,10 @@ import java.util.List;
  * @since 2024/7/25 9:26
  */
 
-public interface IOperateLogService extends IOperationLog {
+public interface IOperateLogService extends IRepository<OperateLogEntity> {
 
     /**
-     * 按页查询
+     * query page
      *
      * @param dto DTO
      * @return {@link PagedVO }<{@link OperateLogVO }>
@@ -27,9 +29,9 @@ public interface IOperateLogService extends IOperationLog {
     PagedVO<OperateLogVO> queryByPage(OperateLogQueryDTO dto);
 
     /**
-     * 详情
+     * detail
      *
-     * @param operateLogId 作日志 ID
+     * @param operateLogId operateLogId
      * @return {@link OperateLogVO }
      */
     OperateLogVO detail(Integer operateLogId);
@@ -42,14 +44,14 @@ public interface IOperateLogService extends IOperationLog {
     KeyValueVO<List<String>, List<Integer>> homePie();
 
     /**
-     * 首页
+     * pie home
      *
      * @return {@link List }<{@link NameValueVO }<{@link String }, {@link Integer }>>
      */
     List<NameValueVO<String, Integer>> pieHome();
 
     /**
-     * 导出数据
+     * export data
      *
      * @param dto DTO
      * @return boolean

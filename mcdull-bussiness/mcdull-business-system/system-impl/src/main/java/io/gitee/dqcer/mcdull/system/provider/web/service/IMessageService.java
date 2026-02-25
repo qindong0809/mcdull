@@ -1,7 +1,9 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.MessageQueryDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.MessageEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.MessageTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.MessageVO;
 
@@ -12,7 +14,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.MessageVO;
  * @since 2024/7/25 9:16
  */
 
-public interface IMessageService {
+public interface IMessageService extends IRepository<MessageEntity> {
 
     Integer getUnreadCount(Integer userId);
 

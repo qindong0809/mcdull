@@ -5,12 +5,12 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.MenuEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IMenuRepository;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IMenuManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IMenuService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
 public class MenuManagerImpl implements IMenuManager {
 
     @Resource
-    private IMenuRepository menuRepository;
+    private IMenuService  menuService;
 
     @Override
     public List<MenuEntity> listAll() {
-        return menuRepository.list();
+        return menuService.list();
     }
 
     @Override

@@ -33,14 +33,6 @@ public interface IUserManager {
    Map<String, String> getNameMapByLoginName(List<String> loginList);
 
    /**
-    * get like
-    *
-    * @param userName 用户名
-    * @return {@link List }<{@link UserEntity }>
-    */
-   List<UserEntity> getLike(String userName);
-
-   /**
     * 获取实体映射
     *
     * @param userIdList 用户 ID 列表

@@ -2,9 +2,11 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.gitee.dqcer.mcdull.framework.base.engine.CompareBean;
 import io.gitee.dqcer.mcdull.framework.base.engine.DomainEngine;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.bo.DataScopeBO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.RoleDataScopeUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleDataScopeEntity;
@@ -13,7 +15,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.enums.DataScopeViewTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DataScopeAndViewTypeVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DataScopeViewTypeVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.RoleDataScopeVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IRoleDataScopeRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.RoleDataScopeMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleDataScopeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,11 +31,12 @@ import java.util.List;
  */
 @Service
 public class RoleDataScopeServiceImpl
-        extends BasicServiceImpl<IRoleDataScopeRepository> implements IRoleDataScopeService {
+        extends BasicCurdServiceImpl<RoleDataScopeMapper, RoleDataScopeEntity> implements IRoleDataScopeService {
+
     @Override
     public List<RoleDataScopeVO> getListByRole(Integer roleId) {
         List<RoleDataScopeVO> voList = new ArrayList<>();
-        List<RoleDataScopeEntity> list = baseRepository.getListByRole(roleId);
+        List<RoleDataScopeEntity> list = this.getList(roleId);
         if (CollUtil.isNotEmpty(list)) {
             list.forEach(entity -> {
                 RoleDataScopeVO vo = new RoleDataScopeVO();
@@ -51,7 +54,7 @@ public class RoleDataScopeServiceImpl
         List<RoleDataScopeUpdateDTO.RoleUpdateDataScopeListFormItem> scopeItemList =
                 dto.getDataScopeItemList();
         Integer roleId = dto.getRoleId();
-        List<RoleDataScopeEntity> dbList = baseRepository.getListByRole(roleId);
+        List<RoleDataScopeEntity> dbList = this.getList(roleId);
         List<RoleDataScopeEntity> tempList = new ArrayList<>();
         if (CollUtil.isNotEmpty(scopeItemList)) {
             for (RoleDataScopeUpdateDTO.RoleUpdateDataScopeListFormItem item : scopeItemList) {
@@ -72,7 +75,7 @@ public class RoleDataScopeServiceImpl
             }
         }
         CompareBean<RoleDataScopeEntity, Integer> compare = DomainEngine.compare(dbList, tempList);
-        baseRepository.update(compare.getInsertList(), compare.getUpdateList(), compare.getRemoveList());
+        this.update(compare.getInsertList(), compare.getUpdateList(), compare.getRemoveList());
     }
 
     @Override
@@ -133,6 +136,32 @@ public class RoleDataScopeServiceImpl
                 .comparing(DataScopeBO::getDataScopeTypeSort);
         dataScopeTypeList.sort(comparator);
         return dataScopeTypeList;
+    }
+
+    public List<RoleDataScopeEntity> getList(Integer roleId) {
+        LambdaQueryWrapper<RoleDataScopeEntity> query = Wrappers.lambdaQuery();
+        query.eq(RoleDataScopeEntity::getRoleId, roleId);
+        return baseMapper.selectList(query);
+    }
+
+    public void update(List<RoleDataScopeEntity> insertList,
+                       List<RoleDataScopeEntity> updateList,
+                       List<RoleDataScopeEntity> removeList) {
+        if (CollUtil.isNotEmpty(insertList)) {
+            this.executeBatch(insertList, insertList.size(), (sqlSession, entity) -> {
+                sqlSession.getMapper(RoleDataScopeMapper.class).insert(entity);
+            });
+        }
+        if (CollUtil.isNotEmpty(updateList)) {
+            this.executeBatch(updateList, updateList.size(), (sqlSession, entity) -> {
+                sqlSession.getMapper(RoleDataScopeMapper.class).updateById(entity);
+            });
+        }
+        if (CollUtil.isNotEmpty(removeList)) {
+            this.executeBatch(removeList, removeList.size(), (sqlSession, entity) -> {
+                sqlSession.getMapper(RoleDataScopeMapper.class).deleteById(entity.getId());
+            });
+        }
     }
 
 }

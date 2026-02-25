@@ -1,26 +1,32 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.ChangeLogQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.SerialNumberGenerateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.SerialNumberEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.SerialNumberRecordEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.SerialNumberBusinessTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.SerialNumberFormatTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.SerialNumberVO;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.ISerialNumberRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.SerialNumberMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ISerialNumberRecordService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ISerialNumberService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,7 +40,7 @@ import java.util.List;
  */
 @Service
 public class SerialNumberServiceImpl
-        extends BasicServiceImpl<ISerialNumberRepository> implements ISerialNumberService {
+        extends BasicCurdServiceImpl<SerialNumberMapper, SerialNumberEntity> implements ISerialNumberService {
 
     @Resource
     private ISerialNumberRecordService serialNumberRecordService;
@@ -42,7 +48,7 @@ public class SerialNumberServiceImpl
     @Override
     public List<SerialNumberVO> getAll() {
         List<SerialNumberVO> voList = new ArrayList<>();
-        List<SerialNumberEntity> list = baseRepository.list();
+        List<SerialNumberEntity> list = super.list();
         if (CollUtil.isNotEmpty(list)) {
             for (SerialNumberEntity entity : list) {
                 SerialNumberVO vo = this.convertToVO(entity);
@@ -60,7 +66,7 @@ public class SerialNumberServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public List<String> generate(SerialNumberGenerateDTO dto) {
-        SerialNumberEntity entity = super.mustGet(dto.getSerialNumberId(), SerialNumberEntity.class);
+        SerialNumberEntity entity = super.mustGet(dto.getSerialNumberId());
         Integer count = dto.getCount();
         String format = entity.getFormat();
         Date now = UserContextHolder.getSession().getNow();
@@ -117,5 +123,37 @@ public class SerialNumberServiceImpl
         serialNumberVO.setStepRandomRange(entity.getStepRandomRange());
         serialNumberVO.setRemark(entity.getRemark());
         return serialNumberVO;
+    }
+
+
+    public List<SerialNumberEntity> queryListByIds(List<Integer> idList) {
+        LambdaQueryWrapper<SerialNumberEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(SerialNumberEntity::getId, idList);
+        return baseMapper.selectList(wrapper);
+    }
+
+
+    public Page<SerialNumberEntity> selectPage(ChangeLogQueryDTO param) {
+        LambdaQueryWrapper<SerialNumberEntity> lambda = Wrappers.lambdaQuery();
+        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
+    }
+
+
+    public SerialNumberEntity getById(Integer id) {
+        return baseMapper.selectById(id);
+    }
+
+
+    public void insert(SerialNumberEntity entity) {
+        baseMapper.insert(entity);
+    }
+
+    public boolean exist(SerialNumberEntity entity) {
+        return !baseMapper.selectList(Wrappers.lambdaQuery(entity)).isEmpty();
+    }
+
+    public void deleteBatchByIds(List<Integer> ids) {
+        baseMapper.deleteByIds(ids);
     }
 }

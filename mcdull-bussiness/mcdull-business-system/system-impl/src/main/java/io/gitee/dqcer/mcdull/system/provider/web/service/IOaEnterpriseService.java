@@ -1,9 +1,11 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.EnterpriseAddDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.EnterpriseQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.EnterpriseUpdateDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.OaEnterpriseEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.EnterpriseVO;
 
 /**
@@ -13,10 +15,10 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.EnterpriseVO;
  * @since 2024/7/25 9:26
  */
 
-public interface IOaEnterpriseService {
+public interface IOaEnterpriseService extends IRepository<OaEnterpriseEntity> {
 
     /**
-     * 按页查询
+     * query page
      *
      * @param dto DTO
      * @return {@link PagedVO }<{@link EnterpriseVO }>
@@ -24,36 +26,36 @@ public interface IOaEnterpriseService {
     PagedVO<EnterpriseVO> queryByPage(EnterpriseQueryDTO dto);
 
     /**
-     * 加
+     * add
      *
      * @param dto DTO
      */
     void add(EnterpriseAddDTO dto);
 
     /**
-     * 更新
+     * update
      *
      * @param dto DTO
      */
     void update(EnterpriseUpdateDTO dto);
 
     /**
-     * 删除
+     * delete
      *
-     * @param enterpriseId 企业 ID
+     * @param enterpriseId enterpriseId
      */
     void delete(Integer enterpriseId);
 
     /**
-     * 获取详细信息
+     * get
      *
-     * @param enterpriseId 企业 ID
+     * @param enterpriseId enterpriseId
      * @return {@link EnterpriseVO }
      */
     EnterpriseVO getDetail(Integer enterpriseId);
 
     /**
-     * 导出数据
+     * export data
      *
      * @param dto DTO
      * @return boolean

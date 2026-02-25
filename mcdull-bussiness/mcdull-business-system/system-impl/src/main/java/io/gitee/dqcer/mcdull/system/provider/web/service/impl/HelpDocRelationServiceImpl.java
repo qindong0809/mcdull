@@ -1,24 +1,17 @@
-package io.gitee.dqcer.mcdull.system.provider.web.repository.impl;
+package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.repository.CrudRepository;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.HelpDocRelationEntity;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.HelpDocRelationMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.IHelpDocRelationRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IHelpDocRelationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * Help doc relation repository impl
- *
- * @author dqcer
- * @since 2024-04-29
- */
 @Service
-public class HelpDocRelationRepositoryImpl
-        extends CrudRepository<HelpDocRelationMapper, HelpDocRelationEntity> implements IHelpDocRelationRepository {
+public class HelpDocRelationServiceImpl extends BasicCurdServiceImpl<HelpDocRelationMapper, HelpDocRelationEntity> implements IHelpDocRelationService {
 
     @Override
     public List<HelpDocRelationEntity> listByRelationId(Integer relationId) {

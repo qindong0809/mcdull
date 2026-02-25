@@ -7,20 +7,26 @@ import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.engine.CompareBean;
 import io.gitee.dqcer.mcdull.framework.base.engine.DomainEngine;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
+import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.NoticeAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
@@ -30,14 +36,14 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.NoticeVisibleRangeEnti
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.NoticeVisitbleRangeDataTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.*;
-import io.gitee.dqcer.mcdull.system.provider.web.repository.INoticeRepository;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.NoticeMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -52,7 +58,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class NoticeServiceImpl
-        extends BasicServiceImpl<INoticeRepository> implements INoticeService {
+        extends BasicCurdServiceImpl<NoticeMapper, NoticeEntity> implements INoticeService {
 
     @Resource
     private IUserService userService;
@@ -72,7 +78,7 @@ public class NoticeServiceImpl
     @Override
     public PagedVO<NoticeVO> queryPage(NoticeQueryDTO dto) {
         List<NoticeVO> voList = new ArrayList<>();
-        Page<NoticeEntity> entityPage = baseRepository.selectPage(dto);
+        Page<NoticeEntity> entityPage = this.selectPage(dto);
         List<NoticeEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
             Set<Integer> typeIdSet = recordList.stream()
@@ -97,10 +103,7 @@ public class NoticeServiceImpl
 
     @Override
     public NoticeUpdateFormVO getUpdateFormVO(Integer noticeId) {
-        NoticeEntity detail = baseRepository.getById(noticeId);
-        if (ObjUtil.isNull(detail)) {
-            this.throwDataNotExistException(noticeId);
-        }
+        NoticeEntity detail = super.mustGet(noticeId);
         NoticeUpdateFormVO vo = new NoticeUpdateFormVO();
         vo.setNoticeId(detail.getId());
         vo.setNoticeTypeId(detail.getNoticeTypeId());
@@ -178,7 +181,7 @@ public class NoticeServiceImpl
             deptIdList.add(departmentId);
         }
         if (BooleanUtil.isTrue(dto.getNotViewFlag())) {
-            Page<NoticeUserVO> voPage = baseRepository.queryEmployeeNotViewNotice(dto, userId, deptIdList,
+            Page<NoticeUserVO> voPage = this.queryEmployeeNotViewNotice(dto, userId, deptIdList,
                     userEntity.getAdministratorFlag(),
                     NoticeVisitbleRangeDataTypeEnum.DEPARTMENT.getCode(),
                     NoticeVisitbleRangeDataTypeEnum.EMPLOYEE.getCode());
@@ -247,17 +250,14 @@ public class NoticeServiceImpl
             if (CollUtil.isEmpty(noticeIdList)) {
                 return Collections.emptyList();
             }
-            return baseRepository.queryListByIds(Convert.toList(Integer.class, noticeIdList));
+            return this.queryListByIds(Convert.toList(Integer.class, noticeIdList));
         }
-        return baseRepository.list();
+        return super.list();
     }
 
     @Override
     public NoticeDetailVO view(Integer noticeId) {
-        NoticeEntity entity = baseRepository.getById(noticeId);
-        if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(noticeId);
-        }
+        NoticeEntity entity = super.mustGet(noticeId);
         // TODO: 2024/5/23 对不起，您没有权限查看内容
 
         Integer userId = UserContextHolder.userId();
@@ -381,14 +381,14 @@ public class NoticeServiceImpl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void insert(NoticeAddDTO dto) {
-        List<NoticeEntity> entityList = baseRepository.listByTitleName(dto.getTitle());
+        List<NoticeEntity> entityList = this.listByTitleName(dto.getTitle());
         if (CollUtil.isNotEmpty(entityList)) {
-            this.throwDataExistException(dto.getTitle());
+            LogicCheckUtil.throwDataExistException(dto.getTitle());
         }
         NoticeEntity entity = this.convertToEntity(dto);
         entity.setPublishTime(BooleanUtil.isFalse(dto.getScheduledPublishFlag())
                 ? LocalDateTime.now() : dto.getPublishTime());
-        baseRepository.save(entity);
+        this.save(entity);
         Integer id = entity.getId();
         if (BooleanUtil.isFalse(dto.getAllVisibleFlag())) {
             List<NoticeVisibleRangeDTO> visibleRangeList = dto.getVisibleRangeList();
@@ -423,21 +423,17 @@ public class NoticeServiceImpl
         return audit;
     }
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(NoticeUpdateDTO dto) {
         Integer id = dto.getNoticeId();
-        NoticeEntity entity = baseRepository.getById(id);
-        if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(id);
-        }
+        NoticeEntity entity = super.mustGet(id);
         NoticeEntity oldEntity = ObjUtil.cloneByStream(entity);
         this.setUpdateFieldValue(dto, entity);
         if (BooleanUtil.isFalse(dto.getScheduledPublishFlag())) {
             entity.setPublishTime(LocalDateTime.now());
         }
-        baseRepository.updateById(entity);
+        super.updateById(entity);
         List<NoticeVisibleRangeDTO> visibleRangeList = dto.getVisibleRangeList();
         List<NoticeVisibleRangeEntity> dbList = noticeVisibleRangeService.getListByNoticeId(id);
         List<NoticeVisibleRangeEntity> tempList = new ArrayList<>();
@@ -468,25 +464,82 @@ public class NoticeServiceImpl
 
     @Override
     public NoticeVO detail(Integer id) {
-        NoticeEntity entity = baseRepository.getById(id);
-        if (ObjUtil.isNull(entity)) {
-            this.throwDataNotExistException(id);
-        }
+        NoticeEntity entity = super.mustGet(id);
         return this.convertToVO(entity);
     }
-
-
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void batchDelete(List<Integer> idList) {
-        List<NoticeEntity> entityList = baseRepository.queryListByIds(idList);
+        List<NoticeEntity> entityList = this.queryListByIds(idList);
         if (entityList.size() != idList.size()) {
-            this.throwDataNotExistException(idList);
+            LogicCheckUtil.throwDataNotExistException(idList);
         }
-        baseRepository.removeByIds(idList);
+        super.removeByIds(idList);
         for (NoticeEntity entity : entityList) {
             auditManager.saveByDeleteEnum(entity.getTitle(), entity.getId(), null);
         }
+    }
+
+    public List<NoticeEntity> queryListByIds(List<Integer> idList) {
+        LambdaQueryWrapper<NoticeEntity> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(NoticeEntity::getId, idList);
+        List<NoticeEntity> list =  baseMapper.selectList(wrapper);
+        if (ObjectUtil.isNotNull(list)) {
+            return list;
+        }
+        wrapper.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        return Collections.emptyList();
+    }
+
+    public Page<NoticeEntity> selectPage(NoticeQueryDTO param) {
+        LambdaQueryWrapper<NoticeEntity> lambda = Wrappers.lambdaQuery();
+        Integer noticeTypeId = param.getNoticeTypeId();
+        if (ObjectUtil.isNotNull(noticeTypeId)) {
+            lambda.eq(NoticeEntity::getNoticeTypeId, noticeTypeId);
+        }
+        String documentNumber = param.getDocumentNumber();
+        if (ObjectUtil.isNotEmpty(documentNumber)) {
+            lambda.like(NoticeEntity::getDocumentNumber, documentNumber);
+        }
+        String keywords = param.getKeywords();
+        if (CharSequenceUtil.isNotBlank(keywords)) {
+            lambda.and(i -> i.like(NoticeEntity::getAuthor, keywords)
+                .or().like(NoticeEntity::getSource, keywords)
+                .or().like(NoticeEntity::getTitle, keywords));
+        }
+        lambda.orderByDesc(ListUtil.of(RelEntity::getCreatedTime, RelEntity::getUpdatedTime));
+        return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
+    }
+
+    public Page<NoticeUserVO> queryEmployeeNotViewNotice(NoticeEmployeeQueryDTO dto,
+                                                         Integer userId,
+                                                         List<Integer> deptIdList,
+                                                         Boolean administratorFlag,
+                                                         Integer deptCode,
+                                                         Integer userCode) {
+        Page<?> page = new Page<>(dto.getPageNum(), dto.getPageSize());
+        return baseMapper
+            .queryEmployeeNotViewNotice(page, dto, userId, deptIdList, administratorFlag, deptCode, userCode);
+    }
+
+    public Page<NoticeUserVO> queryEmployeeNotice(NoticeEmployeeQueryDTO dto,
+                                                  Integer userId,
+                                                  List<Integer> deptIdList,
+                                                  Boolean administratorFlag,
+                                                  Integer deptCode,
+                                                  Integer userCode) {
+        Page<?> page = new Page<>(dto.getPageNum(), dto.getPageSize());
+        return baseMapper
+            .queryEmployeeNotice(page, dto, userId, deptIdList, administratorFlag, deptCode, userCode);
+    }
+
+    public List<NoticeEntity> listByTitleName(String title) {
+        if (CharSequenceUtil.isNotBlank(title)) {
+            LambdaQueryWrapper<NoticeEntity> query = Wrappers.lambdaQuery();
+            query.eq(NoticeEntity::getTitle, title);
+            return baseMapper.selectList(query);
+        }
+        return Collections.emptyList();
     }
 }

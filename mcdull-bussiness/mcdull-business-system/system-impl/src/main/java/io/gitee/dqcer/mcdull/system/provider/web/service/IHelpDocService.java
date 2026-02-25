@@ -1,10 +1,12 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
+import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.HelpDocAddDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.HelpDocQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.HelpDocUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.HelpDocViewRecordQueryDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.HelpDocEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.HelpDocDetailVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.HelpDocVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.HelpDocViewRecordVO;
@@ -18,7 +20,7 @@ import java.util.List;
  * @since 2024/7/25 9:23
  */
 
-public interface IHelpDocService {
+public interface IHelpDocService extends IRepository<HelpDocEntity> {
 
 
     HelpDocDetailVO view(Integer helpDocId);
