@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.bo.EmailConfigBO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.EmailConfigDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.SysInfoEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.EmailConfigVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.SysInfoMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.SysInfoMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ISysInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

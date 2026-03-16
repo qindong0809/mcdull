@@ -20,7 +20,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.SerialNumberRecordEnti
 import io.gitee.dqcer.mcdull.system.provider.model.enums.SerialNumberBusinessTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.SerialNumberFormatTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.SerialNumberVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.SerialNumberMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.SerialNumberMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ISerialNumberRecordService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ISerialNumberService;
 import jakarta.annotation.Resource;

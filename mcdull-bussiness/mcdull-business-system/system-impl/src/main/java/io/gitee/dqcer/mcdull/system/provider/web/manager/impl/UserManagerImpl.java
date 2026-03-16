@@ -57,23 +57,6 @@ public class UserManagerImpl implements IUserManager {
     }
 
     @Override
-    public Map<Integer, Integer> getUserDepartmentMap(List<Integer> userIdList) {
-        List<UserEntity> list = userService.listByIds(userIdList);
-        if (CollUtil.isNotEmpty(list)) {
-            Set<Integer> departmentIdSet = list.stream().map(UserEntity::getDepartmentId)
-                    .filter(ObjUtil::isNotNull).collect(Collectors.toSet());
-
-
-            for (UserEntity user : list) {
-                if (ObjUtil.isNotNull(user.getDepartmentId())) {
-                    return Map.of(user.getId(), user.getDepartmentId());
-                }
-            }
-        }
-        return Map.of();
-    }
-
-    @Override
     public List<LabelValueVO<Integer, String>> getResponsibleList() {
         List<UserEntity> list = userService.list();
         if (CollUtil.isNotEmpty(list)) {

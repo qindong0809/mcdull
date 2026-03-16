@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.audit.PasswordPolicyAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.PasswordPolicyDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.PasswordPolicyEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.PasswordPolicyVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.PasswordPolicyMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.PasswordPolicyMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IPasswordPolicyService;
 import jakarta.annotation.Resource;

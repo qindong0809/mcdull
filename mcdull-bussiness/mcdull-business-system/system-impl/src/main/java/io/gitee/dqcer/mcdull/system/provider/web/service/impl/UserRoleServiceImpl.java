@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleUserEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.RoleUserMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.RoleUserMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserRoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

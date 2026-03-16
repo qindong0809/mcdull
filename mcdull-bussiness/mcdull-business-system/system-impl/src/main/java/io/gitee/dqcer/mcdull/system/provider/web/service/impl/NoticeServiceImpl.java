@@ -36,7 +36,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.NoticeVisibleRangeEnti
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.NoticeVisitbleRangeDataTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.*;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.NoticeMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.NoticeMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;

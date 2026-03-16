@@ -21,7 +21,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.SerialNumberGenerateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FeedbackEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FeedbackVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.FeedbackMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.FeedbackMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFeedbackService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ISerialNumberService;

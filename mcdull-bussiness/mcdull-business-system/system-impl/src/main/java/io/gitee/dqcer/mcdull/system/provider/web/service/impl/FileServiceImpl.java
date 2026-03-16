@@ -37,7 +37,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.enums.FileFolderTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileUploadVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FolderInfoVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.FileMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.FileMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileBizService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;

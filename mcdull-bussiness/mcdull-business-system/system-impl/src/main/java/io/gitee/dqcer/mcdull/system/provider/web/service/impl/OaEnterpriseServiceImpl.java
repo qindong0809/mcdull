@@ -26,7 +26,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.EnterpriseUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.OaEnterpriseEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.EnterpriseTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.EnterpriseVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.OaEnterpriseMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.OaEnterpriseMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IOaEnterpriseService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;

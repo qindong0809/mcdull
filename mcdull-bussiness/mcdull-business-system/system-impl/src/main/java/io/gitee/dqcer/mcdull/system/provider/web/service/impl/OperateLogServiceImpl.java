@@ -25,7 +25,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.OperateLogQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.OperateLogEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.OperateLogVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.OperateLogMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.OperateLogMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IOperateLogService;

@@ -29,7 +29,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.*;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.HelpDocDetailVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.HelpDocVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.HelpDocViewRecordVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.HelpDocMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.HelpDocMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IHelpDocCatalogService;

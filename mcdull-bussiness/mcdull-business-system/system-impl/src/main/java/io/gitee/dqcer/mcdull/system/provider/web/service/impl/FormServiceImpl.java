@@ -25,7 +25,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.FormRecordEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FormItemVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FormRecordDataVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FormVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.FormMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.FormMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IFormManager;

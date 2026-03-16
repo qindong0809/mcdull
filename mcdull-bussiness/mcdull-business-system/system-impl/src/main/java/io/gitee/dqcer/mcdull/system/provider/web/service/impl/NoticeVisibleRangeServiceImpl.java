@@ -5,7 +5,7 @@ import cn.hutool.core.convert.Convert;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.NoticeVisibleRangeEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.NoticeVisibleRangeMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.NoticeVisibleRangeMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.INoticeVisibleRangeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

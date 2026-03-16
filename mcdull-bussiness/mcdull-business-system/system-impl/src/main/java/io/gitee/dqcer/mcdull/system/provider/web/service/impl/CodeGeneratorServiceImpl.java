@@ -24,7 +24,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.enums.CodeGeneratorConstant;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableColumnVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableConfigVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.CodeGeneratorConfigMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.CodeGeneratorConfigMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ICodeGeneratorService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.CodeGeneratorTemplateService;
 import jakarta.annotation.Resource;

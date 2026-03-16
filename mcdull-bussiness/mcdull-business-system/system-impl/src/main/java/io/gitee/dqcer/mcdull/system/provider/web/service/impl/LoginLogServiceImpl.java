@@ -22,7 +22,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.LoginLogVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.LoginLogMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.LoginLogMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ILoginLogService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;

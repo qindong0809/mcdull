@@ -57,7 +57,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.enums.FormItemControlTypeEnum
 import io.gitee.dqcer.mcdull.system.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.UserMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.UserMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IDictTypeManager;

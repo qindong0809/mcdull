@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.NoticeViewRecordEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.NoticeViewRecordMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.NoticeViewRecordMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.INoticeViewRecordService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

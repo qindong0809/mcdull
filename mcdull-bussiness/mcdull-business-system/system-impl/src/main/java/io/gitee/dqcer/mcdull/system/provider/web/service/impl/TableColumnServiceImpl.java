@@ -17,7 +17,7 @@ import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.ConfigQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.TableColumnUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.TableColumnEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.TableColumnMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.TableColumnMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ITableColumnService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

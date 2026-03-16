@@ -11,10 +11,6 @@ import java.util.Deque;
  */
 public final class DynamicContextHolder {
 
-
-    /**
-     * ds上下文持有人
-     */
     private static final ThreadLocal<Deque<String>> DS_CONTEXT_HOLDER = ThreadLocal.withInitial(ArrayDeque::new);
 
     private DynamicContextHolder() { }

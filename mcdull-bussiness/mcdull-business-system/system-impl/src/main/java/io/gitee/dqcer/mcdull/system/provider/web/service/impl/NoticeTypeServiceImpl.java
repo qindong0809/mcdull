@@ -5,7 +5,7 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.NoticeTypeEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.NoticeTypeVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.NoticeTypeMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.NoticeTypeMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.INoticeTypeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

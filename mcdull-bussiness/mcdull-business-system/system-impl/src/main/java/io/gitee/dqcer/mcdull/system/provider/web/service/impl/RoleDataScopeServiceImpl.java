@@ -15,7 +15,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.enums.DataScopeViewTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DataScopeAndViewTypeVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DataScopeViewTypeVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.RoleDataScopeVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.RoleDataScopeMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.RoleDataScopeMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleDataScopeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
