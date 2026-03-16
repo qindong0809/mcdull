@@ -14,13 +14,11 @@ public abstract class AbstractUserDetailsService implements StpInterface {
 
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        // TODO: 2023/12/1 缓存
         return permissionList(loginId);
     }
 
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        // TODO: 2023/12/1 缓存
         return this.roleList(loginId);
     }
 

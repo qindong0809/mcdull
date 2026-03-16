@@ -24,6 +24,7 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
     protected static final String [] EXCLUDE_PATTERNS = {
             GlobalConstant.LOGIN_URL,
             GlobalConstant.INNER_API + GlobalConstant.ALL_PATTERNS,
+            GlobalConstant.IGNORE_URL + GlobalConstant.ALL_PATTERNS,
             GlobalConstant.FAVICON_ICO,
             GlobalConstant.ACTUATOR_ALL,
             "/druid/**",

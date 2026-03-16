@@ -12,12 +12,17 @@ import cn.dev33.satoken.stp.StpUtil;
 public class StpKit {
 
     /**
-     * 默认原生会话对象
+     * PCUser 业务端。默认原生会话对象
      */
     public static final StpLogic DEFAULT = StpUtil.stpLogic;
 
     /**
-     * Admin 会话对象，管理 Admin 表所有账号的登录、权限认证
+     * PCAdmin 业务管理端
      */
     public static final StpLogic ADMIN = new StpLogic("admin");
+
+    /**
+     * AppUser 移动业务端
+     */
+    public static final StpLogic APP_USER = new StpLogic("app_user");
 }

@@ -167,6 +167,7 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
             allNoAuthList.addAll(noAuthList);
         }
         allNoAuthList.addAll(Arrays.asList(EXCLUDE_PATTERNS));
+        allNoAuthList.add(GlobalConstant.IGNORE_URL + GlobalConstant.ALL_PATTERNS);
         return allNoAuthList.stream().anyMatch(url -> PATH_MATCHER.match(url, path));
     }
 

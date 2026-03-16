@@ -41,7 +41,7 @@ public class StpInterfaceImpl extends AbstractUserDetailsService {
     @Override
     protected List<String> roleList(Object userId) {
         Integer id = Convert.toInt(userId);
-        String cacheKeyFormat = StrUtil.format( "current:user:{}:role:list", id);
+        String cacheKeyFormat = CharSequenceUtil.format( "current:user:{}:role:list", id);
         return redissonCache.getListOrSet(cacheKeyFormat, String.class, () -> loginService.getRoleList(id), 60);
     }
 

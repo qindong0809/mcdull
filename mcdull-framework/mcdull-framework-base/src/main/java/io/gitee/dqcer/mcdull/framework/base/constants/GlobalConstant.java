@@ -24,6 +24,7 @@ public class GlobalConstant {
      * 内部接口调用 前缀
      */
     public static final String INNER_API = "/interior-def";
+    public static final String IGNORE_URL = "/ignore";
     public static final String ADMINISTRATOR_PATH = "/administrator";
     public static final String ALL_CODE = "*:*:*";
     public static final String SYSTEM = "/system";
