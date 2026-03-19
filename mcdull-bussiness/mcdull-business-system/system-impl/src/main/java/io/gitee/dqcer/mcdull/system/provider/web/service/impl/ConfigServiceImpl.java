@@ -29,8 +29,8 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.ConfigEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FileEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ConfigInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.ConfigMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IConfigService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
 import jakarta.annotation.Resource;
@@ -55,7 +55,7 @@ public class ConfigServiceImpl
     @Resource
     private ICommonManager commonManager;
     @Resource
-    private IAuditManager auditManager;
+    private IBizAuditService bizAuditService;
     @Resource
     private IFileService fileService;
 
@@ -95,7 +95,7 @@ public class ConfigServiceImpl
         }
         ConfigEntity configEntity = ConfigConvert.convertToConfigEntity(dto);
         Integer configId = baseMapper.insert(configEntity);
-        auditManager.saveByAddEnum(dto.getConfigName(), configId, this.buildAuditLog(configEntity));
+        bizAuditService.saveByAddEnum(dto.getConfigName(), configId, this.buildAuditLog(configEntity));
     }
 
     private Audit buildAuditLog(ConfigEntity configEntity) {
@@ -124,7 +124,7 @@ public class ConfigServiceImpl
         ConfigEntity updateEntity = ConfigConvert.convertToConfigEntity(dto);
         updateEntity.setId(configId);
         super.updateById(updateEntity);
-        auditManager.saveByUpdateEnum(dto.getConfigName(), configId,
+        bizAuditService.saveByUpdateEnum(dto.getConfigName(), configId,
                 this.buildAuditLog(configEntity), this.buildAuditLog(super.getById(configId)));
     }
 
@@ -142,7 +142,7 @@ public class ConfigServiceImpl
 
         for (ConfigEntity entity : entityList) {
             fileService.remove(entity.getId(), ConfigEntity.class);
-            auditManager.saveByDeleteEnum(entity.getConfigName(), entity.getId(), null);
+            bizAuditService.saveByDeleteEnum(entity.getConfigName(), entity.getId(), null);
         }
     }
 

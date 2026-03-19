@@ -52,13 +52,10 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
 
     @Resource
     private IFormService formService;
-
     @Resource
     private IFormItemService formItemService;
-
     @Resource
     private IFormRecordService formRecordService;
-
     @Resource
     private IFormRecordItemService formRecordItemService;
 
@@ -74,7 +71,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
         for (Object object : objects) {
             if (ObjUtil.isNotNull(object)) {
                 JSONObject subJsonObject = JSONUtil.parseObj(object);
-                List<JSONObject> sub = extracted(subJsonObject);
+                List<JSONObject> sub = extractLeafNodes(subJsonObject);
                 if (CollUtil.isNotEmpty(sub)) {
                     list.addAll(sub);
                 }
@@ -84,14 +81,14 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
     }
 
 
-    private static List<JSONObject> extracted(JSONObject jsonObject) {
+    private static List<JSONObject> extractLeafNodes(JSONObject jsonObject) {
         List<JSONObject> list = new ArrayList<>();
         Object value = jsonObject.get("children");
         if (ObjUtil.isNotNull(value)) {
             JSONArray objects = JSONUtil.parseArray(value);
             for (Object object : objects) {
                 JSONObject subJsonObject = JSONUtil.parseObj(object);
-                List<JSONObject> sub = extracted(subJsonObject);
+                List<JSONObject> sub = extractLeafNodes(subJsonObject);
                 if (CollUtil.isNotEmpty(sub)) {
                     list.addAll(sub);
                 }

@@ -13,7 +13,6 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import io.gitee.dqcer.mcdull.blaze.repository.IBlazeOrderRepository;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.BlazeOrderDetailEntity;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.BlazeOrderEntity;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.CertificateRequirementsEntity;
@@ -24,24 +23,25 @@ import io.gitee.dqcer.mcdull.blaze.domain.form.BlazeOrderQueryDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.form.BlazeOrderSearchDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.form.BlazeOrderUpdateDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.vo.BlazeOrderVO;
+import io.gitee.dqcer.mcdull.blaze.repository.IBlazeOrderRepository;
 import io.gitee.dqcer.mcdull.blaze.service.*;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
-import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.SerialNumberGenerateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDepartmentService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ISerialNumberService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,7 +69,7 @@ public class BlazeOrderServiceImpl
     @Resource
     private ICommonManager commonManager;
     @Resource
-    private IUserManager userManager;
+    private IUserService userService;
     @Resource
     private ISerialNumberService serialNumberService;
     @Resource
@@ -85,7 +85,7 @@ public class BlazeOrderServiceImpl
         List<BlazeOrderVO> voList = new ArrayList<>();
         List<BlazeOrderEntity> recordList = baseRepository.selectList(dto);
         if (CollUtil.isNotEmpty(recordList)) {
-            Map<Integer, String> nameMap = userManager.getMap(recordList);
+            Map<Integer, String> nameMap = userService.getMap(recordList);
             List<Integer> orderIdList = recordList.stream().map(IdEntity::getId).toList();
             List<BlazeOrderDetailEntity> orderDetailList = blazeOrderDetailService.getByOrderId(orderIdList);
             List<LabelValueVO<Integer, String>> list = CollUtil.emptyIfNull(certificateRequirementsService.all(false));
@@ -147,7 +147,7 @@ public class BlazeOrderServiceImpl
             }
             Set<Integer> collect = voList.stream().map(BlazeOrderVO::getTalentResponsibleUserId).collect(Collectors.toSet());
             collect.addAll(voList.stream().map(BlazeOrderVO::getCustomerResponsibleUserId).collect(Collectors.toSet()));
-            Map<Integer, UserEntity> userMap = userManager.getEntityMap(new ArrayList<>(collect));
+            Map<Integer, UserEntity> userMap = userService.getEntityMap(new ArrayList<>(collect));
             for (BlazeOrderVO orderVO : voList) {
                 if (MapUtil.isNotEmpty(userMap)) {
                     UserEntity user = userMap.get(orderVO.getTalentResponsibleUserId());

@@ -14,8 +14,9 @@ public class GlobalConstant {
     public static final String UTF_8 = "UTF-8";
     public static final String CUSTOMIZE_LANGUAGE_HEAD_NAME = "Language-Content";
 
-    public static final String CACHE_CURRENT_USER = "cacheCurrentUser";
-    public static final String CACHE_CURRENT_ADMINISTRATOR_USER = "cacheCurrentAdministratorUser";
+    public static final String CACHE_CURRENT_USER = "cache_current_user";
+    public static final String CACHE_CURRENT_ADMINISTRATOR_USER = "cache_current_administrator_user";
+    public static final String CACHE_CURRENT_APP_USER = "cache_current_app_user";
 
     public static final String MAPPER_PACKAGE = BASE_PACKAGE + ".**.mapper";
     public static final String MAPPER_PACKAGE_DAO = BASE_PACKAGE + ".**.dao";
@@ -28,6 +29,7 @@ public class GlobalConstant {
     public static final String ADMINISTRATOR_PATH = "/administrator";
     public static final String ALL_CODE = "*:*:*";
     public static final String SYSTEM = "/system";
+    public static final String APP_PATH = "/app";
 
     public static final String FAVICON_ICO = "/favicon.ico";
     public static final String ACTUATOR_ALL = "/actuator/**";

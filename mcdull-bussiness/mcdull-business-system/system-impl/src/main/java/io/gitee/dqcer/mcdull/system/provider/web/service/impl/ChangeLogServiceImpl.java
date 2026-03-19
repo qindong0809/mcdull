@@ -27,8 +27,8 @@ import io.gitee.dqcer.mcdull.system.provider.model.enums.ChangeLogTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ChangeLogAndVersionVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ChangeLogVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.ChangeLogMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IChangeLogService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -53,7 +53,7 @@ public class ChangeLogServiceImpl
     @Resource
     private IVersionInfoComponent versionInfoComponent;
     @Resource
-    private IAuditManager auditManager;
+    private IBizAuditService bizAuditService;
     @Resource
     private ICommonManager commonManager;
 
@@ -67,7 +67,7 @@ public class ChangeLogServiceImpl
         }
         ChangeLogEntity entity = this.convertEntity(dto);
         baseMapper.insert(entity);
-        auditManager.saveByAddEnum(dto.getVersion(), entity.getId(), this.buildAuditLog(entity));
+        bizAuditService.saveByAddEnum(dto.getVersion(), entity.getId(), this.buildAuditLog(entity));
         return true;
     }
 
@@ -97,7 +97,7 @@ public class ChangeLogServiceImpl
         }
         this.settingUpdateField(dto, logEntity);
         baseMapper.updateById(logEntity);
-        auditManager.saveByUpdateEnum(dto.getVersion(), changeLogId,
+        bizAuditService.saveByUpdateEnum(dto.getVersion(), changeLogId,
                 this.buildAuditLog(oldEntity), this.buildAuditLog(logEntity));
     }
 
@@ -110,7 +110,7 @@ public class ChangeLogServiceImpl
         }
         super.removeByIds(idList);
         for (ChangeLogEntity entity : entityList) {
-            auditManager.saveByDeleteEnum(entity.getVersion(), entity.getId(), null);
+            bizAuditService.saveByDeleteEnum(entity.getVersion(), entity.getId(), null);
         }
     }
 

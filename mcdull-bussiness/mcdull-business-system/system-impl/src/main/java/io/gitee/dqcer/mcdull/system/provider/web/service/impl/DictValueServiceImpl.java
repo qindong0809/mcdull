@@ -8,14 +8,19 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.business.common.audit.Audit;
+import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
+import io.gitee.dqcer.mcdull.system.provider.config.constants.CacheConstants;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.DictValueAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DictValueAddDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DictValueQueryDTO;
@@ -24,8 +29,9 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.DictKeyEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.DictValueEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DictKeyVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DictValueVO;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.RemoteDictTypeVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.DictValueMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDictKeyService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDictValueService;
 import jakarta.annotation.Resource;
@@ -35,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -50,9 +57,10 @@ public class DictValueServiceImpl
 
     @Resource
     private IDictKeyService dictKeyService;
-
     @Resource
-    private IAuditManager auditManager;
+    private RedissonCache redissonCache;
+    @Resource
+    private IBizAuditService bizAuditService;
 
     @Override
     public PagedVO<DictValueVO> getList(DictValueQueryDTO dto) {
@@ -113,7 +121,7 @@ public class DictValueServiceImpl
         LogicCheckUtil.validNameExist(id, valueName, entityList, i -> (!i.getId().equals(id)) && i.getValueName().equals(valueName));
         LogicCheckUtil.validNameExist(id, valueCode, entityList, i -> (!i.getId().equals(id)) && i.getValueCode().equals(valueCode));
         this.updateEntity(dto);
-        auditManager.saveByUpdateEnum(valueName, id,
+        bizAuditService.saveByUpdateEnum(valueName, id,
                 this.buildAuditLog(entity), this.buildAuditLog(super.getById(id)));
     }
 
@@ -132,7 +140,7 @@ public class DictValueServiceImpl
             }
             super.removeByIds(idList);
             for (Integer id : idList) {
-                auditManager.saveByDeleteEnum(entity.getValueName(), id, null);
+                bizAuditService.saveByDeleteEnum(entity.getValueName(), id, null);
             }
         }
     }
@@ -202,5 +210,43 @@ public class DictValueServiceImpl
         entity.setSort(dto.getSort());
         entity.setRemark(dto.getRemark());
         this.updateById(entity);
+    }
+
+
+    /**
+     * 字典视图对象
+     *
+     * @param selectTypeEnum 选择类型
+     * @param code       代码
+     * @return {@link RemoteDictTypeVO}
+     */
+    @Override
+    public KeyValueBO<String, String> dictVO(IEnum<String> selectTypeEnum, String code){
+        if (ObjectUtil.isNull(selectTypeEnum) || CharSequenceUtil.isBlank(code)) {
+            LogHelp.error(logger, "select: {} code: {}", selectTypeEnum, code);
+            throw new IllegalArgumentException("参数异常");
+        }
+        Map<String, String> map = this.getMap(selectTypeEnum.getCode());
+        if (CollUtil.isNotEmpty(map)) {
+            return new KeyValueBO<>(code, map.get(code));
+        }
+        return null;
+    }
+
+    @Override
+    public void clean() {
+        redissonCache.evict(CacheConstants.DICT_LIST);
+    }
+
+    private Map<String, String> getMap(String selectCode) {
+        if (ObjectUtil.isNull(selectCode)) {
+            throw new IllegalArgumentException("'selectCode' is null.");
+        }
+        String key = CharSequenceUtil.format(CacheConstants.DICT_LIST,  selectCode);
+        List<DictValueVO> dbList = redissonCache.getListOrSet(key, DictValueVO.class, () -> this.selectByKeyCode(selectCode), CacheConstants.DICT_EXPIRE);
+        if (CollUtil.isNotEmpty(dbList)) {
+            return dbList.stream().collect(Collectors.toMap(DictValueVO::getValueCode, DictValueVO::getValueName, (k1, k2) -> k1));
+        }
+        return Collections.emptyMap();
     }
 }

@@ -69,7 +69,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
             .set(GlobalConstant.CACHE_CURRENT_ADMINISTRATOR_USER, cache);
         this.initPwdResetTimeIfFirstLogin(adminUser);
         this.updateLastLoginTime(adminUser.getId());
-        return StpUtil.getTokenValue();
+        return StpKit.ADMIN.getTokenValue();
     }
 
     private void initPwdResetTimeIfFirstLogin(AdminUserEntity adminUser) {

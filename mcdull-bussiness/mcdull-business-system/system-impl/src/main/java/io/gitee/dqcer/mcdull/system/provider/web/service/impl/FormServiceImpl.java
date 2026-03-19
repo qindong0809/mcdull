@@ -26,9 +26,9 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.FormItemVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FormRecordDataVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FormVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.FormMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IFormManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFormRecordService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFormService;
 import jakarta.annotation.Resource;
@@ -52,12 +52,10 @@ public class FormServiceImpl
 
     @Resource
     private IFormManager formManager;
-
     @Resource
     private ICommonManager commonManager;
-
     @Resource
-    private IAuditManager auditManager;
+    private IBizAuditService bizAuditService;
 
     @Resource
     private IFormRecordService formRecordService;
@@ -91,7 +89,7 @@ public class FormServiceImpl
         }
         FormEntity formEntity = this.convertToEntity(dto);
         super.save(formEntity);
-        auditManager.saveByAddEnum(formEntity.getName(), formEntity.getId(), this.buildAuditLog(formEntity));
+        bizAuditService.saveByAddEnum(formEntity.getName(), formEntity.getId(), this.buildAuditLog(formEntity));
     }
 
     private Audit buildAuditLog(FormEntity entity) {
@@ -117,7 +115,7 @@ public class FormServiceImpl
         newEntity.setPublish(oldEntity.getPublish());
         newEntity.setId(dto.getId());
         super.updateById(newEntity);
-        auditManager.saveByUpdateEnum(oldEntity.getName(), oldEntity.getId(),
+        bizAuditService.saveByUpdateEnum(oldEntity.getName(), oldEntity.getId(),
                 this.buildAuditLog(oldEntity), this.buildAuditLog(newEntity));
     }
 
@@ -129,7 +127,7 @@ public class FormServiceImpl
             LogicCheckUtil.throwDataNotExistException(id);
         }
         super.removeById(id);
-        auditManager.saveByDeleteEnum(entity.getName(), entity.getId(), "");
+        bizAuditService.saveByDeleteEnum(entity.getName(), entity.getId(), "");
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -137,7 +135,7 @@ public class FormServiceImpl
     public void updateJsonText(FormUpdateJsonTextDTO dto) {
         FormEntity entity = super.getById(dto.getId());
         formManager.initFormAndFormItem(dto.getId(), dto.getJsonText());
-        auditManager.saveByUpdateEnum(entity.getName(), entity.getId(),
+        bizAuditService.saveByUpdateEnum(entity.getName(), entity.getId(),
                 this.buildAuditLog(entity), this.buildAuditLog(super.getById(dto.getId())));
     }
 

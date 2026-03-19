@@ -60,7 +60,19 @@ public interface IFormManager {
      */
     void deleteOneRecord(Integer recordId);
 
+    /**
+     * 更新一条记录
+     *
+     * @param recordId 记录ID
+     * @param formData 表单数据
+     */
     void updateOneRecord(Integer recordId, Map<String, Object> formData);
 
+    /**
+     * get one record no convert
+     *
+     * @param recordId 记录ID
+     * @return {@link Map }<{@link String }, {@link Object }>
+     */
     Map<String, Object> getOneRecordNoConvert(Integer recordId);
 }

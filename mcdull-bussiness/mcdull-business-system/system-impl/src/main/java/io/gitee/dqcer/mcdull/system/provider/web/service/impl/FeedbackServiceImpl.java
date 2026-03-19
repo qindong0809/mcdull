@@ -22,9 +22,9 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.FeedbackEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FeedbackVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.FeedbackMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFeedbackService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ISerialNumberService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +48,7 @@ public class FeedbackServiceImpl
         extends BasicCurdServiceImpl<FeedbackMapper, FeedbackEntity> implements IFeedbackService {
 
     @Resource
-    private IUserManager userManager;
+    private IUserService userService;
 
     @Resource
     private ISerialNumberService serialNumberService;
@@ -60,7 +60,7 @@ public class FeedbackServiceImpl
         List<FeedbackEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
             Set<Integer> userIdSet = records.stream().map(FeedbackEntity::getUserId).collect(Collectors.toSet());
-            Map<Integer, UserEntity> userEntityMap = userManager.getEntityMap(new ArrayList<>(userIdSet));
+            Map<Integer, UserEntity> userEntityMap = userService.getEntityMap(new ArrayList<>(userIdSet));
             for (FeedbackEntity entity : records) {
                 FeedbackVO feedbackVO = this.convertToConfigVO(entity);
                 UserEntity userEntity = userEntityMap.get(entity.getUserId());

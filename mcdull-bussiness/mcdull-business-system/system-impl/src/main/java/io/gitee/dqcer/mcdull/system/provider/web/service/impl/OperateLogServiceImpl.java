@@ -27,7 +27,6 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.OperateLogVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.OperateLogMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IOperateLogService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import jakarta.annotation.Resource;
@@ -51,8 +50,6 @@ public class OperateLogServiceImpl
 
     @Resource
     private IUserService userService;
-    @Resource
-    private IUserManager userManager;
     @Resource
     private ICommonManager commonManager;
 
@@ -78,7 +75,7 @@ public class OperateLogServiceImpl
         List<OperateLogEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
             Set<Integer> userIdSet = records.stream().map(OperateLogEntity::getUserId).collect(Collectors.toSet());
-            Map<Integer, UserEntity> userMap = userManager.getEntityMap(new ArrayList<>(userIdSet));
+            Map<Integer, UserEntity> userMap = userService.getEntityMap(new ArrayList<>(userIdSet));
             for (OperateLogEntity entity : records) {
                 OperateLogVO vo = this.convertToLogVO(entity);
                 Integer operateUserId = vo.getOperateUserId();

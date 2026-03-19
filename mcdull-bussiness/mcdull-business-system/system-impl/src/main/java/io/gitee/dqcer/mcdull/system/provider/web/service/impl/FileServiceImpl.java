@@ -38,7 +38,6 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.FileUploadVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FileVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FolderInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.FileMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileBizService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFolderService;
@@ -64,8 +63,6 @@ public class FileServiceImpl
 
     @Resource
     private OssService ossService;
-    @Resource
-    private IUserManager userManager;
     @Resource
     private IUserService userService;
     @Resource
@@ -98,7 +95,7 @@ public class FileServiceImpl
         List<FileEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
             Map<Integer, String> folderMap = folderService.getMap(records.stream().map(FileEntity::getFolderType).collect(Collectors.toSet()));
-            Map<Integer, String> userMap = userManager.getMap(records);
+            Map<Integer, String> userMap = userService.getMap(records);
             for (FileEntity entity : records) {
                 FileVO fileVO = FileConvert.convertToEntity(entity);
                 fileVO.setFileUrl(ossService.getUrl(entity.getFileKey()));

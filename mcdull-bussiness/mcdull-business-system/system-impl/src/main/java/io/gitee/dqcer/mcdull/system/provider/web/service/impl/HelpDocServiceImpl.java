@@ -30,12 +30,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.HelpDocDetailVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.HelpDocVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.HelpDocViewRecordVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.HelpDocMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IHelpDocCatalogService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IHelpDocRelationService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IHelpDocService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IHelpDocViewRecordService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.*;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,18 +53,14 @@ public class HelpDocServiceImpl
 
     @Resource
     private IHelpDocViewRecordService helpDocViewRecordService;
-
     @Resource
-    private IUserManager userManager;
-
+    private IUserService userService;
     @Resource
     private IHelpDocCatalogService helpDocCatalogService;
-
     @Resource
     private IHelpDocRelationService helpDocRelationService;
-
     @Resource
-    private IAuditManager auditManager;
+    private IBizAuditService bizAuditService;
 
     @Override
     public HelpDocDetailVO view(Integer helpDocId) {
@@ -119,7 +110,7 @@ public class HelpDocServiceImpl
         List<HelpDocViewRecordEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
             Set<Integer> userIdSet = records.stream().map(HelpDocViewRecordEntity::getUserId).collect(Collectors.toSet());
-            Map<Integer, UserEntity> userMap = userManager.getEntityMap(new ArrayList<>(userIdSet));
+            Map<Integer, UserEntity> userMap = userService.getEntityMap(new ArrayList<>(userIdSet));
             for (HelpDocViewRecordEntity entity : records) {
                 HelpDocViewRecordVO vo = this.convertRecord(entity);
                 if (MapUtil.isNotEmpty(userMap)) {
@@ -192,7 +183,7 @@ public class HelpDocServiceImpl
         entity.setUserViewCount(0);
         entity.setAttachment(dto.getAttachment());
         this.insert(entity);
-        auditManager.saveByAddEnum(dto.getTitle(), entity.getId(), this.buildAuditLog(entity));
+        bizAuditService.saveByAddEnum(dto.getTitle(), entity.getId(), this.buildAuditLog(entity));
     }
 
     private Audit buildAuditLog(HelpDocEntity entity) {
@@ -231,7 +222,7 @@ public class HelpDocServiceImpl
         docEntity.setSort(dto.getSort());
         docEntity.setAttachment(dto.getAttachment());
         super.updateById(docEntity);
-        auditManager.saveByUpdateEnum(dto.getTitle(), helpDocId,
+        bizAuditService.saveByUpdateEnum(dto.getTitle(), helpDocId,
                 this.buildAuditLog(oldEntity), this.buildAuditLog(docEntity));
     }
 
@@ -240,7 +231,7 @@ public class HelpDocServiceImpl
     public void delete(Integer helpDocId) {
         HelpDocEntity entity = super.mustGet(helpDocId);
         super.removeById(helpDocId);
-        auditManager.saveByDeleteEnum(entity.getTitle(), helpDocId, "");
+        bizAuditService.saveByDeleteEnum(entity.getTitle(), helpDocId, "");
     }
 
     @Override

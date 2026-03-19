@@ -8,7 +8,6 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.mcdull.blaze.repository.IBlazeOrderDetailRepository;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.BlazeOrderDetailEntity;
 import io.gitee.dqcer.mcdull.blaze.domain.enums.ApproveEnum;
 import io.gitee.dqcer.mcdull.blaze.domain.form.BlazeOrderDetailAddDTO;
@@ -18,21 +17,22 @@ import io.gitee.dqcer.mcdull.blaze.domain.form.BlazeOrderQueryDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.vo.BlazeOrderDetailListVO;
 import io.gitee.dqcer.mcdull.blaze.domain.vo.BlazeOrderDetailVO;
 import io.gitee.dqcer.mcdull.blaze.domain.vo.BlazeOrderVO;
+import io.gitee.dqcer.mcdull.blaze.repository.IBlazeOrderDetailRepository;
 import io.gitee.dqcer.mcdull.blaze.service.IApproveService;
 import io.gitee.dqcer.mcdull.blaze.service.IBlazeOrderDetailService;
 import io.gitee.dqcer.mcdull.blaze.service.IBlazeOrderService;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
-import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
+import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +56,7 @@ public class BlazeOrderDetailServiceImpl
     @Resource
     private IBlazeOrderService blazeOrderService;
     @Resource
-    private IUserManager userManager;
+    private IUserService userService;
     @Resource
     private ICommonManager commonManager;
     @Resource
@@ -77,10 +77,10 @@ public class BlazeOrderDetailServiceImpl
         PagedVO<BlazeOrderVO> page = blazeOrderService.queryPage(orderQueryDTO);
         List<BlazeOrderVO> orderVOList = CollUtil.defaultIfEmpty(page.getList(), new ArrayList<>());
         Map<Integer, BlazeOrderVO> orderMap = orderVOList.stream().collect(Collectors.toMap(BlazeOrderVO::getId, Function.identity()));
-        Map<Integer, UserEntity> responsibleMap = userManager.getEntityMap(records.stream()
+        Map<Integer, UserEntity> responsibleMap = userService.getEntityMap(records.stream()
                 .map(BlazeOrderDetailEntity::getResponsibleUserId)
                 .filter(ObjUtil::isNotNull).collect(Collectors.toList()));
-        Map<Integer, String> nameMap = userManager.getMap(records);
+        Map<Integer, String> nameMap = userService.getMap(records);
         for (BlazeOrderDetailEntity entity : records) {
             BlazeOrderDetailVO vo = this.convertToVO(entity);
             Integer blazeOrderId = vo.getBlazeOrderId();
@@ -263,7 +263,7 @@ public class BlazeOrderDetailServiceImpl
 
     @Override
     public List<LabelValueVO<Integer, String>> getResponsibleList() {
-        return userManager.getResponsibleList();
+        return userService.getResponsibleList();
     }
 
     @Override

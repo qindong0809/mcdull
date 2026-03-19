@@ -24,8 +24,8 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.DictKeyUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.DictKeyEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DictKeyVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.DictKeyMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDictKeyService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class DictKeyServiceImpl
         extends BasicCurdServiceImpl<DictKeyMapper, DictKeyEntity> implements IDictKeyService {
 
     @Resource
-    private IAuditManager auditManager;
+    private IBizAuditService bizAuditService;
     @Resource
     private ICommonManager commonManager;
 
@@ -81,7 +81,7 @@ public class DictKeyServiceImpl
             LogicCheckUtil.validNameExist(null, keyCode, listAll, entity -> entity.getKeyCode().equals(keyCode));
         }
         DictKeyEntity entity = this.insert(keyCode, keyName, dto.getRemark());
-        auditManager.saveByAddEnum(entity.getKeyName(), entity.getId(), this.buildAuditLog(entity));
+        bizAuditService.saveByAddEnum(entity.getKeyName(), entity.getId(), this.buildAuditLog(entity));
     }
 
     private Audit buildAuditLog(DictKeyEntity entity) {
@@ -101,7 +101,7 @@ public class DictKeyServiceImpl
         }
         super.removeByIds(idList);
         for (DictKeyEntity entity : list) {
-            auditManager.saveByDeleteEnum(entity.getKeyName(), entity.getId(), null);
+            bizAuditService.saveByDeleteEnum(entity.getKeyName(), entity.getId(), null);
         }
     }
 
@@ -122,7 +122,7 @@ public class DictKeyServiceImpl
             LogicCheckUtil.validNameExist(dictKeyId, keyName, listAll,
                     entity -> (!entity.getId().equals(dictKeyId)) && (entity.getKeyName().equals(keyName)));
             this.update(dictKeyId, keyCode, keyName, dto.getRemark());
-            auditManager.saveByUpdateEnum(keyName, dictKeyId,
+            bizAuditService.saveByUpdateEnum(keyName, dictKeyId,
                     this.buildAuditLog(dictKey), this.buildAuditLog(super.getById(dictKeyId)));
         }
     }

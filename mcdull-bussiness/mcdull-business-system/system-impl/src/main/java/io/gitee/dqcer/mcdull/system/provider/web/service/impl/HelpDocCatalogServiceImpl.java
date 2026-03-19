@@ -19,7 +19,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.HelpDocCatalogUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.HelpDocCatalogEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.HelpDocCatalogVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.HelpDocCatalogMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IHelpDocCatalogService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -41,7 +41,7 @@ public class HelpDocCatalogServiceImpl
         extends BasicCurdServiceImpl<HelpDocCatalogMapper, HelpDocCatalogEntity> implements IHelpDocCatalogService {
 
     @Resource
-    private IAuditManager auditManager;
+    private IBizAuditService bizAuditService;
 
     @Override
     public List<HelpDocCatalogVO> getAll() {
@@ -70,7 +70,7 @@ public class HelpDocCatalogServiceImpl
         entity.setParentId(dto.getParentId());
         baseMapper.insert(entity);
 
-        auditManager.saveByAddEnum(dto.getName(), entity.getId(), this.buildAuditLog(entity));
+        bizAuditService.saveByAddEnum(dto.getName(), entity.getId(), this.buildAuditLog(entity));
     }
 
     private Audit buildAuditLog(HelpDocCatalogEntity entity) {
@@ -101,7 +101,7 @@ public class HelpDocCatalogServiceImpl
         helpDocCatalog.setName(dto.getName());
         helpDocCatalog.setSort(dto.getSort());
         super.updateById(helpDocCatalog);
-        auditManager.saveByUpdateEnum(dto.getName(), helpDocCatalogId,
+        bizAuditService.saveByUpdateEnum(dto.getName(), helpDocCatalogId,
                 this.buildAuditLog(oldEntity), this.buildAuditLog(helpDocCatalog));
     }
 
@@ -110,7 +110,7 @@ public class HelpDocCatalogServiceImpl
     public void delete(Integer id) {
         HelpDocCatalogEntity helpDocCatalog = super.mustGet(id);
         super.removeById(helpDocCatalog);
-        auditManager.saveByDeleteEnum(helpDocCatalog.getName(), id, null);
+        bizAuditService.saveByDeleteEnum(helpDocCatalog.getName(), id, null);
     }
 
     @Override

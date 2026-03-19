@@ -37,6 +37,7 @@ import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
@@ -58,9 +59,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.UserMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IDictTypeManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;
 import jakarta.annotation.Resource;
 import jakarta.validation.ConstraintViolation;
@@ -97,9 +96,9 @@ public class UserServiceImpl
     @Resource
     private IDepartmentService departmentService;
     @Resource
-    private IAuditManager auditManager;
+    private IBizAuditService bizAuditService;
     @Resource
-    private IDictTypeManager dictTypeManager;
+    private IDictValueService dictValueService;
     @Resource
     private IEmailService emailService;
     @Resource
@@ -189,7 +188,7 @@ public class UserServiceImpl
         Integer userId = entity.getId();
         threadPoolTaskExecutor.execute(() -> this.sendCreateAccountEmail(entity));
         userRoleService.batchUserListByRoleId(userId, dto.getRoleIdList());
-        auditManager.saveByAddEnum(dto.getActualName(), userId, this.buildAuditLog(entity, dto.getRoleIdList()));
+        bizAuditService.saveByAddEnum(dto.getActualName(), userId, this.buildAuditLog(entity, dto.getRoleIdList()));
         return userId;
     }
 
@@ -254,7 +253,7 @@ public class UserServiceImpl
         }
         Integer gender = user.getGender();
         if (ObjUtil.isNotNull(gender)) {
-            KeyValueBO<String, String> vo = dictTypeManager.dictVO(DictSelectTypeEnum.USER_SEX, gender.toString());
+            KeyValueBO<String, String> vo = dictValueService.dictVO(DictSelectTypeEnum.USER_SEX, gender.toString());
             if (ObjUtil.isNotNull(vo)) {
                 audit.setGender(vo.getValue());
             }
@@ -307,7 +306,7 @@ public class UserServiceImpl
             LogHelp.error(logger, "数据更新失败，id:{}", id);
             throw new BusinessException(I18nConstants.DB_OPERATION_FAILED);
         }
-        auditManager.saveByStatusEnum(dbData.getActualName(), id, !dbData.getInactive(), null);
+        bizAuditService.saveByStatusEnum(dbData.getActualName(), id, !dbData.getInactive(), null);
     }
 
     @Override
@@ -324,7 +323,7 @@ public class UserServiceImpl
         }
         super.removeByIds(idList);
         for (UserEntity userEntity : userEntities) {
-            auditManager.saveByDeleteEnum(userEntity.getActualName(), userEntity.getId(), null);
+            bizAuditService.saveByDeleteEnum(userEntity.getActualName(), userEntity.getId(), null);
         }
         return true;
     }
@@ -357,7 +356,7 @@ public class UserServiceImpl
         updateDO.setId(id);
         super.updateById(updateDO);
         userRoleService.batchUserListByRoleId(id, dto.getRoleIdList());
-        auditManager.saveByUpdateEnum(entity.getActualName(), entity.getId(),
+        bizAuditService.saveByUpdateEnum(entity.getActualName(), entity.getId(),
                 this.buildAuditLog(entity, roleIdList), this.buildAuditLog(super.getById(id), dto.getRoleIdList()));
         return updateDO.getId();
     }
@@ -895,6 +894,55 @@ public class UserServiceImpl
 
     public boolean update(UserEntity entity) {
         return this.updateById(entity);
+    }
+
+
+
+    @Override
+    public Map<String, String> getNameMapByLoginName(List<String> loginList) {
+        if (CollUtil.isNotEmpty(loginList)) {
+            List<UserEntity> list = this.list();
+            if (CollUtil.isNotEmpty(list)) {
+                return list.stream().filter(i -> loginList.contains(i.getLoginName()))
+                    .collect(Collectors.toMap(UserEntity::getLoginName, UserEntity::getActualName));
+            }
+        }
+        return Collections.emptyMap();
+    }
+
+
+    @Override
+    public List<LabelValueVO<Integer, String>> getResponsibleList() {
+        List<UserEntity> list = this.list();
+        if (CollUtil.isNotEmpty(list)) {
+            return list.stream()
+                .map(i -> new LabelValueVO<>(i.getId(), i.getActualName()))
+                .sorted(Comparator.comparing(LabelValueVO::getLabel))
+                .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<Integer> getUserIdList(Integer departmentId) {
+        List<Integer> childrenIdList = CollUtil.defaultIfEmpty(departmentService.getChildrenIdList(departmentId), new ArrayList<>());
+        childrenIdList.add(departmentId);
+        List<UserEntity> list = this.listByDeptList(childrenIdList);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.stream().map(UserEntity::getId).collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Map<Integer, String> getMap(List<? extends BaseEntity<Integer>> list) {
+        if (CollUtil.isNotEmpty(list)) {
+            Set<Integer> createSet = list.stream().map(BaseEntity::getCreatedBy).collect(Collectors.toSet());
+            Set<Integer> updateSet = list.stream().map(BaseEntity::getUpdatedBy).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+            createSet.addAll(updateSet);
+            return this.getNameMap(new ArrayList<>(createSet));
+        }
+        return Map.of();
     }
 
 

@@ -10,7 +10,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.PasswordPolicyDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.PasswordPolicyEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.PasswordPolicyVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.PasswordPolicyMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IPasswordPolicyService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class PasswordPolicyServiceImpl
         extends BasicCurdServiceImpl<PasswordPolicyMapper, PasswordPolicyEntity> implements IPasswordPolicyService {
 
     @Resource
-    private IAuditManager auditManager;
+    private IBizAuditService bizAuditService;
 
     private static final String MODULE_NAME = "密码策略";
 
@@ -58,7 +58,7 @@ public class PasswordPolicyServiceImpl
         entity.setFailedLoginMaximumTime(dto.getFailedLoginMaximumTime());
         entity.setPasswordExpiredPeriod(dto.getPasswordExpiredPeriod());
         super.updateById(entity);
-        auditManager.saveByUpdateEnum(MODULE_NAME, entity.getId(),
+        bizAuditService.saveByUpdateEnum(MODULE_NAME, entity.getId(),
                 this.buildAuditLog(oldEntity), this.buildAuditLog(entity));
     }
 

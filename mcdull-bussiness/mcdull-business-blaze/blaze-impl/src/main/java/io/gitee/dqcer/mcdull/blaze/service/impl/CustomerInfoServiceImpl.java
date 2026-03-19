@@ -6,12 +6,12 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.mcdull.blaze.repository.ICustomerInfoRepository;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.CustomerInfoEntity;
 import io.gitee.dqcer.mcdull.blaze.domain.form.CustomerInfoAddDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.form.CustomerInfoQueryDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.form.CustomerInfoUpdateDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.vo.CustomerInfoVO;
+import io.gitee.dqcer.mcdull.blaze.repository.ICustomerInfoRepository;
 import io.gitee.dqcer.mcdull.blaze.service.ICertificateRequirementsService;
 import io.gitee.dqcer.mcdull.blaze.service.ICustomerInfoService;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
@@ -21,9 +21,9 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.DictSelectTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IDictTypeManager;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IAreaService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IDictValueService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,9 +43,9 @@ public class CustomerInfoServiceImpl
         extends BasicServiceImpl<ICustomerInfoRepository> implements ICustomerInfoService {
 
     @Resource
-    private IDictTypeManager dictTypeManager;
+    private IDictValueService dictValueService;
     @Resource
-    private IUserManager userManager;
+    private IUserService userService;
     @Resource
     private IAreaService areaService;
     @Resource
@@ -59,15 +59,15 @@ public class CustomerInfoServiceImpl
         List<CustomerInfoEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
             Set<Integer> collect = recordList.stream().map(CustomerInfoEntity::getResponsibleUserId).collect(Collectors.toSet());
-            Map<Integer, String> nameMap1 = userManager.getNameMap(new ArrayList<>(collect));
-            Map<Integer, String> nameMap = userManager.getMap(recordList);
+            Map<Integer, String> nameMap1 = userService.getNameMap(new ArrayList<>(collect));
+            Map<Integer, String> nameMap = userService.getMap(recordList);
             for (CustomerInfoEntity entity : recordList) {
                 CustomerInfoVO vo = this.convertToVO(entity);
-                KeyValueBO<String, String> keyValue = dictTypeManager.dictVO(DictSelectTypeEnum.CUSTOMER_TYPE, vo.getCustomerType());
+                KeyValueBO<String, String> keyValue = dictValueService.dictVO(DictSelectTypeEnum.CUSTOMER_TYPE, vo.getCustomerType());
                 if (ObjUtil.isNotNull(keyValue)) {
                     vo.setCustomerTypeName(keyValue.getValue());
                 }
-                KeyValueBO<String, String> inactiveKeyValue = dictTypeManager.dictVO(DictSelectTypeEnum.IN_ACTIVE, vo.getInactive().toString());
+                KeyValueBO<String, String> inactiveKeyValue = dictValueService.dictVO(DictSelectTypeEnum.IN_ACTIVE, vo.getInactive().toString());
                 if (ObjUtil.isNotNull(inactiveKeyValue)) {
                     vo.setInactiveName(inactiveKeyValue.getValue());
                 }

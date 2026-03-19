@@ -8,7 +8,6 @@ import io.gitee.dqcer.mcdull.blaze.domain.form.PermissionDTO;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import jakarta.annotation.Resource;
 
@@ -18,8 +17,6 @@ import java.util.function.Function;
 public class BlazeBasicController extends BasicController {
 
     @Resource
-    private IUserManager userManager;
-    @Resource
     private IUserService userService;
 
     protected <VO, DTO extends PermissionDTO> VO executeByPermission(String code, VO emptyDefaultValue, DTO dto, Function<DTO, VO> function) {
@@ -28,7 +25,7 @@ public class BlazeBasicController extends BasicController {
             if (permissionApprove) {
                 UserEntity userEntity = userService.get(UserContextHolder.userId());
                 Integer departmentId = userEntity.getDepartmentId();
-                List<Integer> userIdList = userManager.getUserIdList(departmentId);
+                List<Integer> userIdList = userService.getUserIdList(departmentId);
                 if (CollUtil.isEmpty(userIdList)) {
                     return emptyDefaultValue;
                 }

@@ -21,7 +21,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentTreeInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.DepartmentMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDepartmentService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import jakarta.annotation.Resource;
@@ -46,7 +46,7 @@ public class DepartmentServiceImpl
     private IUserService userService;
 
     @Resource
-    private IAuditManager auditManager;
+    private IBizAuditService bizAuditService;
 
 //    @Cacheable(cacheNames = "caffeineCache", key = "'department-all'")
     @Override
@@ -87,7 +87,7 @@ public class DepartmentServiceImpl
         }
         DepartmentEntity menu = this.convertToEntity(dto);
         super.save(menu);
-        auditManager.saveByAddEnum(dto.getName(), menu.getId(), this.buildAuditLog(menu));
+        bizAuditService.saveByAddEnum(dto.getName(), menu.getId(), this.buildAuditLog(menu));
         return true;
     }
 
@@ -138,7 +138,7 @@ public class DepartmentServiceImpl
         }
         this.settingUpdateValue(dto, entity);
         super.updateById(entity);
-        auditManager.saveByUpdateEnum(dto.getName(), id,
+        bizAuditService.saveByUpdateEnum(dto.getName(), id,
                 this.buildAuditLog(entity), this.buildAuditLog(getById(id)));
         return true;
     }
@@ -170,7 +170,7 @@ public class DepartmentServiceImpl
             }
         }
         super.removeById(id);
-        auditManager.saveByDeleteEnum(department.getName(), department.getId(), "");
+        bizAuditService.saveByDeleteEnum(department.getName(), department.getId(), "");
         return true;
     }
 

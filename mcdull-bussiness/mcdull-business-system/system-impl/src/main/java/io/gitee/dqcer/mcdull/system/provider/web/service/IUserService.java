@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
 import com.baomidou.mybatisplus.extension.repository.IRepository;
+import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
@@ -249,4 +251,36 @@ public interface IUserService extends IRepository<UserEntity> {
      * @return List
      */
     List<UserEntity> like(String userName);
+
+    /**
+     * 按登录名获取名称映射
+     *
+     * @param loginList 登录列表
+     * @return {@link Map }<{@link String }, {@link String }>
+     */
+    Map<String, String> getNameMapByLoginName(List<String> loginList);
+
+
+    /**
+     * 获取负责人列表
+     *
+     * @return {@link List }<{@link LabelValueVO }<{@link Integer }, {@link String }>>
+     */
+    List<LabelValueVO<Integer, String>> getResponsibleList();
+
+    /**
+     * 获取用户 ID 列表
+     *
+     * @param departmentId 部门 ID
+     * @return {@link List }<{@link Integer }>
+     */
+    List<Integer> getUserIdList(Integer departmentId);
+
+    /**
+     * 获取地图
+     *
+     * @param list 列表
+     * @return {@link Map }<{@link Integer }, {@link String }>
+     */
+    Map<Integer, String> getMap(List<? extends BaseEntity<Integer>> list);
 }

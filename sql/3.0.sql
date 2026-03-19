@@ -1121,3 +1121,21 @@ create table if not exists `app_user` (
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
 primary key (`id`)
   )  comment='app 用户';
+
+drop table if exists `app_user_focus_time`;
+create table if not exists `app_user_focus_time` (
+`id` int not null auto_increment comment '主键',
+`app_user_id` int not null comment 'app user id',
+`duration` int not null comment '专注时长',
+`focused_time` int not null comment '专注时间',
+`is_completed` tinyint(0) not null comment '是否完成',
+`white_noise` varchar(512) not null comment '白噪声',
+`timestamp` datetime not null comment '时间戳',
+`created_by` int not null comment '创建人',
+`created_time` datetime not null comment '创建时间',
+`updated_by` int default null comment '更新人',
+`updated_time` datetime default null comment '更新时间',
+`inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
+`del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
+  primary key (`id`)
+)

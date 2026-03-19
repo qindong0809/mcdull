@@ -7,7 +7,6 @@ import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.mcdull.blaze.repository.ITalentRepository;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.TalentEntity;
 import io.gitee.dqcer.mcdull.blaze.domain.enums.CertificateSocialSecurityRequirementEnum;
 import io.gitee.dqcer.mcdull.blaze.domain.enums.CertificateTitleEnum;
@@ -16,6 +15,7 @@ import io.gitee.dqcer.mcdull.blaze.domain.form.TalentAddDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.form.TalentQueryDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.form.TalentUpdateDTO;
 import io.gitee.dqcer.mcdull.blaze.domain.vo.TalentVO;
+import io.gitee.dqcer.mcdull.blaze.repository.ITalentRepository;
 import io.gitee.dqcer.mcdull.blaze.service.ITalentCertificateService;
 import io.gitee.dqcer.mcdull.blaze.service.ITalentService;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -25,8 +25,8 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.GenderEnum;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IAreaService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +52,7 @@ public class TalentServiceImpl
     @Resource
     private ICommonManager commonManager;
     @Resource
-    private IUserManager userManager;
+    private IUserService userService;
 
     public PagedVO<TalentVO> queryPage(TalentQueryDTO dto) {
         List<TalentVO> voList = new ArrayList<>();
@@ -60,7 +60,7 @@ public class TalentServiceImpl
         List<TalentEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
             Set<Integer> collect = recordList.stream().map(TalentEntity::getResponsibleUserId).collect(Collectors.toSet());
-            Map<Integer, String> map = userManager.getNameMap(new ArrayList<>(collect));
+            Map<Integer, String> map = userService.getNameMap(new ArrayList<>(collect));
             for (TalentEntity entity : recordList) {
                 TalentVO vo = this.convertToVO(entity);
                 Integer gender = vo.getGender();

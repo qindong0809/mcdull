@@ -129,4 +129,18 @@ public interface IMenuService extends IRepository<MenuEntity> {
      * @return <{@link Boolean }>
      */
     Boolean importMenu(MultipartFile file) throws IOException;
+
+    /**
+     * 列出全部
+     *
+     * @return {@link List }<{@link MenuEntity }>
+     */
+    List<MenuEntity> listAll();
+
+    /**
+     * 获取名称代码列表
+     *
+     * @return {@link List }<{@link LabelValueVO }<{@link String }, {@link String }>>
+     */
+    List<LabelValueVO<String, String>> getNameCodeList();
 }

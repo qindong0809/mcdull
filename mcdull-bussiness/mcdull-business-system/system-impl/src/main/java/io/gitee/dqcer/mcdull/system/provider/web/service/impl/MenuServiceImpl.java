@@ -42,9 +42,8 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.MenuTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.MenuMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IMenuManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IMenuService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleMenuService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleService;
@@ -76,9 +75,7 @@ public class MenuServiceImpl
     @Resource
     private ICommonManager commonManager;
     @Resource
-    private IAuditManager auditManager;
-    @Resource
-    private IMenuManager menuManager;
+    private IBizAuditService bizAuditService;
 
     @Override
     public Map<Integer, List<String>> getMenuCodeListMap(List<Integer> roleIdList) {
@@ -129,7 +126,7 @@ public class MenuServiceImpl
         }
         MenuEntity menu = this.convertToEntity(dto);
         this.save(menu);
-        auditManager.saveByAddEnum(dto.getMenuName(), menu.getId(), this.buildAuditLog(menu));
+        bizAuditService.saveByAddEnum(dto.getMenuName(), menu.getId(), this.buildAuditLog(menu));
     }
 
     private Audit buildAuditLog(MenuEntity menu) {
@@ -174,7 +171,7 @@ public class MenuServiceImpl
         }
         MenuEntity menu = this.setUpdateField(dto, entity);
         super.updateById(menu);
-        auditManager.saveByUpdateEnum(dto.getMenuName(), id,
+        bizAuditService.saveByUpdateEnum(dto.getMenuName(), id,
                 this.buildAuditLog(oldEntity), this.buildAuditLog(menu));
     }
 
@@ -187,7 +184,7 @@ public class MenuServiceImpl
         }
         super.removeByIds(menuIdList);
         for (MenuEntity entity : entityList) {
-            auditManager.saveByDeleteEnum(entity.getMenuName(), entity.getId(), null);
+            bizAuditService.saveByDeleteEnum(entity.getMenuName(), entity.getId(), null);
         }
     }
 
@@ -373,7 +370,7 @@ public class MenuServiceImpl
 
     @Override
     public List<LabelValueVO<String, String>> getDropdownOptions() {
-        return menuManager.getNameCodeList();
+        return this.getNameCodeList();
     }
 
     private List<String> getMenuNameByPermissionCode(String permissionCode) {
@@ -674,6 +671,53 @@ public class MenuServiceImpl
         query.eq(BaseEntity::getInactive, InactiveEnum.FALSE.getCode());
         query.in(MenuEntity::getId, idList);
         return baseMapper.selectList(query);
+    }
+
+
+    @Override
+    public List<MenuEntity> listAll() {
+        return this.list();
+    }
+
+    @Override
+    public List<LabelValueVO<String, String>> getNameCodeList() {
+        List<LabelValueVO<String, String>> list = new ArrayList<>();
+        List<MenuEntity> listAll = this.listAll();
+        Map<String, MenuEntity> collect = this.listAll().stream()
+            .filter(menuEntity -> CharSequenceUtil.isNotBlank(menuEntity.getApiPerms()))
+            .collect(Collectors.toMap(MenuEntity::getApiPerms, Function.identity(), (o1, o2) -> o1));
+        for (Map.Entry<String, MenuEntity> entry : collect.entrySet()) {
+            MenuEntity menuEntity = entry.getValue();
+            if (CharSequenceUtil.isNotBlank(menuEntity.getApiPerms())) {
+                List<String> rootName = this.getRootName(listAll, menuEntity.getParentId());
+                if (CollUtil.isNotEmpty(rootName)) {
+                    StringBuilder builder = new StringBuilder();
+                    for (String s : rootName) {
+                        builder.append(s).append("/");
+                    }
+                    builder.append(menuEntity.getMenuName());
+                    LabelValueVO<String, String> labelValueVO = new LabelValueVO<>(entry.getKey(), builder.toString());
+                    list.add(labelValueVO);
+                }
+            }
+        }
+        return list;
+    }
+
+    public List<String> getRootName(List<MenuEntity> list, Integer id) {
+        if (ObjectUtil.isNotNull(id)) {
+            MenuEntity menuEntity = list.stream().filter(item -> ObjectUtil.equal(item.getId(), id)).findFirst().orElse(null);
+            if (ObjectUtil.isNotNull(menuEntity)) {
+                List<String> arrayList = new ArrayList<>();
+                arrayList.add(menuEntity.getMenuName());
+                List<String> l = this.getRootName(list, menuEntity.getParentId());
+                if (CollUtil.isNotEmpty(l)) {
+                    arrayList.addAll(l);
+                }
+                return arrayList;
+            }
+        }
+        return Collections.emptyList();
     }
 
 }

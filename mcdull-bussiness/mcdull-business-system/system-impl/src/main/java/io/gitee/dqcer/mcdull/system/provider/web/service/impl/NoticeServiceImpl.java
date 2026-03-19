@@ -37,7 +37,6 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.NoticeVisitbleRangeDataTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.NoticeMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;
 import jakarta.annotation.Resource;
@@ -71,7 +70,7 @@ public class NoticeServiceImpl
     @Resource
     private INoticeViewRecordService noticeViewRecordService;
     @Resource
-    private IAuditManager auditManager;
+    private IBizAuditService bizAuditService;
     @Resource
     private ICommonManager commonManager;
 
@@ -404,7 +403,7 @@ public class NoticeServiceImpl
                 noticeVisibleRangeService.batchInsert(rangeEntityList);
             }
         }
-        auditManager.saveByAddEnum(entity.getTitle(), id, this.buildAuditLog(entity));
+        bizAuditService.saveByAddEnum(entity.getTitle(), id, this.buildAuditLog(entity));
     }
 
     private Audit buildAuditLog(NoticeEntity entity) {
@@ -458,7 +457,7 @@ public class NoticeServiceImpl
         }
         CompareBean<NoticeVisibleRangeEntity, Integer> compare = DomainEngine.compare(dbList, tempList);
         noticeVisibleRangeService.update(compare.getInsertList(), compare.getUpdateList(), compare.getRemoveList());
-        auditManager.saveByUpdateEnum(entity.getTitle(), id,
+        bizAuditService.saveByUpdateEnum(entity.getTitle(), id,
                 this.buildAuditLog(oldEntity), this.buildAuditLog(entity));
     }
 
@@ -477,7 +476,7 @@ public class NoticeServiceImpl
         }
         super.removeByIds(idList);
         for (NoticeEntity entity : entityList) {
-            auditManager.saveByDeleteEnum(entity.getTitle(), entity.getId(), null);
+            bizAuditService.saveByDeleteEnum(entity.getTitle(), entity.getId(), null);
         }
     }
 

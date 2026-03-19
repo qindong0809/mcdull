@@ -20,7 +20,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.RoleMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleMenuService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserRoleService;
@@ -47,7 +47,7 @@ public class RoleServiceImpl
     @Resource
     private IRoleMenuService roleMenuService;
     @Resource
-    private IAuditManager auditManager;
+    private IBizAuditService bizAuditService;
 
     @Override
     public RoleVO detail(Integer id) {
@@ -67,7 +67,7 @@ public class RoleServiceImpl
         }
         RoleEntity entity = RoleConvert.insertToEntity(dto);
         baseMapper.insert(entity);
-        auditManager.saveByAddEnum(dto.getRoleName(), entity.getId(), this.buildAuditLog(entity));
+        bizAuditService.saveByAddEnum(dto.getRoleName(), entity.getId(), this.buildAuditLog(entity));
     }
 
     private Audit buildAuditLog(RoleEntity entity) {
@@ -83,7 +83,7 @@ public class RoleServiceImpl
     public void delete(Integer id) {
         RoleEntity dbData = super.mustGet(id);
         super.removeById(id);
-        auditManager.saveByDeleteEnum(dbData.getRoleName(), id, null);
+        bizAuditService.saveByDeleteEnum(dbData.getRoleName(), id, null);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class RoleServiceImpl
         role.setRoleCode(dto.getRoleCode());
         role.setRemark(dto.getRemark());
         this.updateById(role);
-        auditManager.saveByUpdateEnum(dto.getRoleName(), id, this.buildAuditLog(role),
+        bizAuditService.saveByUpdateEnum(dto.getRoleName(), id, this.buildAuditLog(role),
                 this.buildAuditLog(this.getById(id)));
         return true;
     }

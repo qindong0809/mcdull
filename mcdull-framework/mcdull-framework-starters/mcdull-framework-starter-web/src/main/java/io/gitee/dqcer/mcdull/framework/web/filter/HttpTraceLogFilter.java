@@ -155,6 +155,9 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
         if (PATH_MATCHER.match(GlobalConstant.ADMINISTRATOR_PATH + GlobalConstant.ALL_PATTERNS, requestUrl)) {
             return StpKit.ADMIN.getSession().get(GlobalConstant.CACHE_CURRENT_ADMINISTRATOR_USER, new CacheUserSession());
         }
+        if (PATH_MATCHER.match(GlobalConstant.APP_PATH + GlobalConstant.ALL_PATTERNS, requestUrl)) {
+            return StpKit.APP_USER.getSession().get(GlobalConstant.CACHE_CURRENT_APP_USER, new CacheUserSession());
+        }
         return StpKit.DEFAULT.getSession().get(GlobalConstant.CACHE_CURRENT_USER, new CacheUserSession());
     }
 

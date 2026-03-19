@@ -7,16 +7,15 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DictKeyVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DictValueVO;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IDictTypeManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDictKeyService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDictValueService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.annotation.Resource;
-import jakarta.validation.Valid;
 import java.util.List;
 
 
@@ -34,8 +33,6 @@ public class DictController extends BasicController {
     private IDictKeyService dictKeyService;
     @Resource
     private IDictValueService dictValueService;
-    @Resource
-    private IDictTypeManager dictTypeManager;
 
 
     @Operation(summary = "查询全部")
@@ -85,7 +82,7 @@ public class DictController extends BasicController {
     @GetMapping("/dict/cache/refresh")
     @SaCheckEL("stp.checkPermission('support:dict:refresh')")
     public Result<String> cacheRefresh() {
-        dictTypeManager.clean();
+        dictValueService.clean();
         return Result.success();
     }
 

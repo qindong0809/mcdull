@@ -4,11 +4,16 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.business.common.audit.Audit;
 import io.gitee.dqcer.mcdull.business.common.audit.AuditUtil;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
@@ -22,10 +27,10 @@ import io.gitee.dqcer.mcdull.system.provider.model.enums.OperationTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.BizAuditVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.BizAuditMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IMenuManager;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditFieldService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IMenuService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,9 +48,9 @@ import java.util.stream.Collectors;
 public class BizAuditServiceImpl extends BasicCurdServiceImpl<BizAuditMapper, BizAuditEntity> implements IBizAuditService {
 
     @Resource
-    private IMenuManager menuManager;
+    private IMenuService menuService;
     @Resource
-    private IUserManager userManager;
+    private IUserService userService;
     @Resource
     private ICommonManager commonManager;
     @Resource
@@ -88,8 +93,8 @@ public class BizAuditServiceImpl extends BasicCurdServiceImpl<BizAuditMapper, Bi
         List<BizAuditEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
             List<String> loginList = recordList.stream().map(BizAuditEntity::getOperator).collect(Collectors.toList());
-            Map<String, String> nameMapByLoginName = userManager.getNameMapByLoginName(loginList);
-            List<LabelValueVO<String, String>> nameCodeList = menuManager.getNameCodeList();
+            Map<String, String> nameMapByLoginName = userService.getNameMapByLoginName(loginList);
+            List<LabelValueVO<String, String>> nameCodeList = menuService.getNameCodeList();
             Map<String, String> codeMap = nameCodeList.stream().collect(Collectors.toMap(LabelValueVO::getValue, LabelValueVO::getLabel));
             List<Integer> list = recordList.stream().map(BizAuditEntity::getId).collect(Collectors.toList());
             Map<Integer, List<BizAuditFieldEntity>> map = bizAuditFieldService.map(list);
@@ -156,5 +161,69 @@ public class BizAuditServiceImpl extends BasicCurdServiceImpl<BizAuditMapper, Bi
         vo.setOperator(entity.getOperator());
         vo.setOperationTime(entity.getOperationTime());
         return vo;
+    }
+
+
+
+    @Override
+    public <T extends Audit> void saveByAddEnum(String bizIndex, Integer bizId, T auditBean) {
+        this.common(OperationTypeEnum.ADD,  bizIndex, bizId, null, auditBean, null);
+    }
+    @Override
+    public <T extends Audit> void saveByUpdateEnum(String bizIndex, Integer bizId, T oldAuditBean, T newAuditBean) {
+        this.common(OperationTypeEnum.UPDATE,  bizIndex, bizId, oldAuditBean, newAuditBean, null);
+    }
+
+    @Override
+    public void saveByDeleteEnum(String bizIndex, Integer bizId, String reason) {
+        this.common(OperationTypeEnum.DELETE,  bizIndex, bizId, null, null, reason);
+    }
+
+    @Override
+    public void saveByStatusEnum(String bizIndex, Integer bizId, boolean active, String reason) {
+        this.common(active ? OperationTypeEnum.ENABLE : OperationTypeEnum.DISABLE,  bizIndex, bizId, null, null, reason);
+    }
+
+
+    private <T extends Audit> void common(OperationTypeEnum typeEnum, String bizIndex, Integer bizId,
+                                          T oldAuditBean, T newAuditBean, String reason) {
+        if (ObjectUtil.isNull(bizId) || CharSequenceUtil.isBlank(bizIndex)) {
+            throw new IllegalArgumentException();
+        }
+        UnifySession session = UserContextHolder.getSession();
+        if (ObjUtil.isNull(session)) {
+            return;
+        }
+        String bizTypeCode = session.getPermissionCode();
+        String comment = StrUtil.EMPTY;
+        List<AuditUtil.FieldDiff> diffList = new ArrayList<>();
+        if (typeEnum == OperationTypeEnum.UPDATE) {
+            diffList = AuditUtil.compare(oldAuditBean, newAuditBean);
+        } else if (typeEnum == OperationTypeEnum.ADD) {
+            diffList = AuditUtil.compare(oldAuditBean);
+        } else if (typeEnum == OperationTypeEnum.DELETE
+            || typeEnum == OperationTypeEnum.DISABLE
+            || typeEnum == OperationTypeEnum.ENABLE) {
+            comment = reason;
+        }
+        String loginName = session.getLoginName();
+        Integer bizAuditId = this.insert(bizTypeCode, typeEnum, bizIndex, bizId, comment, loginName, new Date(), null);
+        if (CollUtil.isNotEmpty(diffList)) {
+            this.insertAuditFieldList(diffList, bizAuditId);
+        }
+    }
+
+    private void insertAuditFieldList(List<AuditUtil.FieldDiff> diffList, Integer bizAuditId) {
+        List<BizAuditFieldEntity> list = new ArrayList<>();
+        for (AuditUtil.FieldDiff fieldDiff : diffList) {
+            BizAuditFieldEntity auditField = new BizAuditFieldEntity();
+            auditField.setBizAuditId(bizAuditId);
+            auditField.setFieldName(fieldDiff.getFieldName());
+            auditField.setOldValue(fieldDiff.getBeforeValue());
+            auditField.setNewValue(fieldDiff.getAfterValue());
+            auditField.setSortOrder(fieldDiff.getSortOrder());
+            list.add(auditField);
+        }
+        bizAuditFieldService.saveBatch(list, list.size());
     }
 }

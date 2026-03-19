@@ -50,7 +50,6 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.FileSimpleVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.IFileVO;
 import io.gitee.dqcer.mcdull.system.provider.util.ExcelUtil;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
@@ -74,7 +73,7 @@ import java.util.stream.Collectors;
 public class CommonManagerImpl implements ICommonManager {
 
     @Resource
-    private IUserManager userManager;
+    private IUserService userService;
     @Resource
     private IFileService fileService;
     @Resource
@@ -229,7 +228,7 @@ public class CommonManagerImpl implements ICommonManager {
     }
 
     private String getUserName(Integer userId) {
-        Map<Integer, String> nameMap = userManager.getNameMap(ListUtil.of(userId));
+        Map<Integer, String> nameMap = userService.getNameMap(ListUtil.of(userId));
         return nameMap.get(userId);
     }
 
@@ -412,7 +411,7 @@ public class CommonManagerImpl implements ICommonManager {
             List<DepartmentEntity> list = departmentService.list();
             Set<Integer> userIdSet = voList.stream().map(ApproveVO::getResponsibleUserId).collect(Collectors.toSet());
             userIdSet.add(userId);
-            Map<Integer, UserEntity> entityMap = userManager.getEntityMap(new ArrayList<>(userIdSet));
+            Map<Integer, UserEntity> entityMap = userService.getEntityMap(new ArrayList<>(userIdSet));
             UserEntity user = entityMap.get(userId);
             Integer userRootDepartmentId = this.getRootDepartmentId(list, user.getDepartmentId());
 

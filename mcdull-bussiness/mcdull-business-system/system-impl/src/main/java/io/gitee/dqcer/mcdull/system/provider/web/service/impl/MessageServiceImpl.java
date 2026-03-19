@@ -21,7 +21,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.MessageEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.MessageTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.MessageVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.MessageMapper;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.IAuditManager;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IMessageService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -42,7 +42,7 @@ public class MessageServiceImpl
         extends BasicCurdServiceImpl<MessageMapper, MessageEntity> implements IMessageService {
 
     @Resource
-    private IAuditManager auditManager;
+    private IBizAuditService bizAuditService;
 
     @Override
     public Integer getUnreadCount(Integer userId) {
