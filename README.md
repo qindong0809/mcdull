@@ -1,435 +1,210 @@
-# mcdull
+# Mcdull 项目
 
+## 项目简介
 
-### 框架介绍
-<div align="center"><h3 align="center">mcdull 为企业级环境中提炼出来的cloud微服务版本</h3></div>
-<div align="center"><h3 align="center">没有最好的框架，只有最合适的</h3></div>
-<p align="center">     
-    <p align="center">
-        <a href="https://spring.io/projects/spring-cloud">
-            <img src="https://img.shields.io/badge/spring--cloud-2021.0.3-orange.svg" alt="spring-cloud">
-        </a>
-        <a href="http://spring.io/projects/spring-boot">
-            <img src="https://img.shields.io/badge/spring--boot-2.7.1-green.svg" alt="spring-boot">
-        </a>
-        <a href="http://mp.baomidou.com">
-            <img src="https://img.shields.io/badge/mybatis--plus-3.5.2-blue.svg" alt="mybatis-plus">
-        </a>
-        <a href="http://mp.baom1idou.com">
-            <img src="https://img.shields.io/badge/spring--cloud--alibaba-2021.0.1.0-lightgrey.svg" alt="mybatis-plus">
-        </a>
-    </p>
-</p>
+Mcdull 是一个基于 Spring Cloud 的企业级应用开发框架，提供了完整的微服务架构解决方案。该项目旨在简化企业应用的开发、部署和维护，为开发者提供一套标准化、可扩展的开发框架。
 
-> 徽章生产网站 https://shields.io/
+## 技术栈
 
-### 快速链接
+- **基础框架**: Spring Boot 2.x, Spring Cloud
+- **服务注册与发现**: Nacos
+- **配置中心**: Nacos
+- **API 网关**: Spring Cloud Gateway
+- **服务调用**: Feign
+- **熔断器**: Sentinel
+- **数据库**: MySQL, MongoDB, Redis
+- **消息队列**: RocketMQ
+- **认证授权**: Spring Security
+- **流程引擎**: Warm Flow
+- **构建工具**: Maven
+- **CI/CD**: GitHub Actions
 
-* 在线文档： [点击前往](https://dqcer.gitee.io/mcdull)
+## 亮点功能
 
+### 1. 字段级别的日志审计稽查
 
-#### 介绍
-麦兜框架：依赖管理 基类/超类 效验参数 架构规则库 操作稽查组件 缓存组件 多级缓存 多数据源 动态数据源 加解密 MQ组件
+提供了细粒度的字段级别审计功能，能够追踪实体字段的变更历史，记录变更前后的值，支持对业务操作的完整审计。
 
-### 架构图
-![](https://gitee.com/dqcer/mcdull/raw/master/doc/assets/%E6%9E%B6%E6%9E%84%E5%9B%BE.png)
+- 通过 `@AuditDescription` 注解标记需要审计的字段
+- 自动记录字段变更前后的值
+- 支持自定义审计描述和排序
+- 提供完整的审计记录查询接口
 
-> 画图工具 [excalidraw](https://excalidraw.com/)
+### 2. 动态数据源
 
+实现了灵活的动态数据源切换功能，支持在运行时根据业务需求切换不同的数据源。
 
-### 项目结构 
+- 通过 `@DynamicDataSource` 注解指定数据源
+- 支持多数据源配置和管理
+- 提供数据源切换的切面处理
+- 支持全局和局部数据源切换
 
-```
-mcdull
-├──doc                           文档
-│    ├─db                        sql
-│    └─yaml                      配置文件
-│ 
-├─mcdull-bussiness               业务模块
-│   
-├─mcdull-framework                              基础框架
-│    ├─mcdull-framework-agent                     探针模块
-│    ├─mcdull-framework-base                      底层定义
-│    ├─mcdull-framework-config                    配置定义
-│    ├─mcdull-framework-dependencies              依赖管理
-│    ├─mcdull-framework-enforcer                  框架规则
-│    └─mcdull-framework-starters               组件starters  
-│       ├─mcdull-framework-starter-feign          feign组件
-│       ├─mcdull-framework-starter-feign          流程编排
-│       ├─mcdull-framework-starter-mongodb        mongodb组件
-│       ├─mcdull-framework-starter-mysql          mysql组件
-│       ├─mcdull-framework-starter-nacos          nacos组件
-│       ├─mcdull-framework-starter-oss            对象存储
-│       ├─mcdull-framework-starter-redis          redis组件
-│       └─mcdull-framework-starter-web            web组件
-│ 
-├─mcdull-support                              支撑模块（包含技术中台和业务中台）
-│    └─mcdull-geteway                             统一网关
-│    ├─mcdull-generator                           代码生成器  
-│    ├─mcdull-mdc                                 元数据中心  
-│    └─mcdull-uac                                 用户中心     
+### 3. 国际化和多语言
 
-```
+内置了完善的国际化支持，支持多语言环境和动态语言切换。
 
-### 功能特性
+- 支持多语言资源文件
+- 提供动态语言切换功能
+- 支持基于用户偏好的语言设置
+- 内置中英文语言包
 
-- [x] <img src="https://img.shields.io/badge/-全链路日志追踪-brightgreen.svg" alt="全链路日志追踪">
-- [x] 网关动态路由
-- [x] 日志打印
-  - [x] 基于网关
-  - [x] 基于controller
-  - [x] 基于数据库表
-- [x] RBAC权限控制
-- [x] 参数效验
-- [x] 枚举封装
-- [x] 动态数据源
-- [x] 多级缓存
-- [x] VO/DO/DTO定义
-- [x] 异常拦截
-- [x] 码表自动翻译
-- [x] 代码生成器
-- [x] 分布式锁
-- [x] 基于IP的雪花算法
-- [x] 基于用户/物品协同的推荐算法
-- [x] 支持csv文件解析并支持模糊搜索和指定显示的字段
+### 4. 多时区和自定义用户日期格式
 
-### 框架优势
+支持多时区处理和用户自定义日期格式，满足不同地区和用户的时间显示需求。
 
-1. 模块化架构设计，层次清晰，方便升级。
-2. 最小依赖原则，杜绝循环重复依赖。
-3. 从真实线上环境中提炼而来。
-4. 前沿技术与技术成熟度的平衡选型。
-5. 代码洁癖者。
-6. 有节制的使用第三方开源组件，最大程度上实现自主可控。
-7. 提供了静态检查机制(配合单元测试使用)，避免线上出现不合规范的使用。
-8. 四层架构（controller, service, manager, dao） 
+- 支持多时区设置
+- 基于用户偏好的日期格式
+- 动态日期序列化和反序列化
+- 时区自动转换
 
-### 快速开始
+### 5. JMX 口子
 
-#### 文档部署
+提供了丰富的 JMX 接口，用于系统监控和管理。
 
-- 全局安装``docsify`` ，安装之前必须要安装``nodeJS``
-```shell
-npm i docsify-cli -g
-```
-- 进入到文档目录下
-```shell
-cd doc
-```
-- 启动文档系统
-```shell
-docsify serve .
+- 线程池监控
+- 数据库连接池监控
+- Redis 连接监控
+- 系统运行状态监控
+
+### 6. 日志全链路
+
+实现了完整的日志全链路追踪功能，支持请求的全链路跟踪和分析。
+
+- 请求链路追踪
+- 日志上下文传递
+- 分布式追踪支持
+- 性能分析和监控
+
+## 项目架构
+
+Mcdull 采用分层架构设计，主要包含以下模块：
+
+1. **框架层 (mcdull-framework)**：提供基础组件和通用功能
+2. **业务层 (mcdull-bussiness)**：包含具体业务逻辑实现
+3. **支持层 (mcdull-support)**：提供网关、监控等支持服务
+4. **文档层 (doc)**：项目文档和API说明
+5. **SQL层 (sql)**：数据库脚本和初始化数据
+
+## 快速开始
+
+### 环境要求
+
+- JDK 1.8+ 
+- Maven 3.6+
+- MySQL 5.7+
+- Redis 5.0+
+- Nacos 2.0+
+
+### 安装与运行
+
+1. **克隆项目**
+
+```bash
+git clone https://gitee.com/dqcer/mcdull.git
+cd mcdull
 ```
 
+2. **编译项目**
 
-### 编码常识
-
-#### 基本类型与包装类型使用标准
-
-关于基本数据类型与包装数据类型的使用标准如下：
-- 所有的POJO类属性必须使用包装数据类型。 
-- RPC方法的返回值和参数必须使用包装数据类型。 
-- 所有的局部变量推荐使用基本数据类型。 
-> 说明：POJO类属性没有初值是提醒使用者在需要使用时，必须自己显式地进行赋值，任何NPE问题，或者入库检查，都由使用者来保证。
-
-#### @SuppressWarnings注解
-- all	抑制所有警告
-- boxing	抑制装箱、拆箱操作时候的警告
-- cast	抑制映射相关的警告
-- dep-ann	抑制启用注释的警告
-- deprecation	抑制过期方法警告
-- fallthrough	抑制在 switch 中缺失 breaks 的警告
-- finally	抑制 finally 模块没有返回的警告
-- hiding	抑制相对于隐藏变量的局部变量的警告
-- incomplete-switch	忽略不完整的 switch 语句
-- nls	忽略非 nls 格式的字符
-- null	忽略对 null 的操作
-- rawtypes	使用 generics 时忽略没有指定相应的类型
-- restriction	抑制禁止使用劝阻或禁止引用的警告
-- serial	忽略在 serializable 类中没有声明 serialVersionUID 变量
-- static-access	抑制不正确的静态访问方式警告
-- synthetic-access	抑制子类没有按最优方法访问内部类的警告
-- unchecked	抑制没有进行类型检查操作的警告
-- unqualified-field-access	抑制没有权限访问的域的警告
-- unused	抑制没被使用过的代码的警告
-
-
-### 闭坑指南
-
-##### feign 传参服务端无法接收
-- 解决方案
-```xml
-        <!--feign配置 针对解决：feign调用get请求时，body有参导致服务端自动转换为post请求-->
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-httpclient</artifactId>
-        </dependency>
+```bash
+mvn clean install -DskipTests
 ```
 
-##### 上传文件 子线程无法获取文件
-```java
-    private void biz(MultipartFile[] attachmentFiles) {
-        this.前置逻辑();
-        EmailUtil.sendEmailAsyn(
-                () -> {
-                    // 模拟复现条件 Thread.sleep(25000);
-                    // 可能存在的场景：主线程结束，临时文件被清空，导致子线程业务类无法获取到临时文件而报错(系统找不到指定的文件)。
-                    mailApi.sendEmailToMultipleReceiverWithAttachment(attachmentFiles, sendTo, ccs, subject, html(text));
-                });
+3. **初始化数据库**
 
-        this.后续逻辑();
-    }
-```
-- 解决方案
-> 改成主线程、或者使用file.getInputStream()，以文件流信息存储在内存中
+执行 `sql` 目录下的初始化脚本：
+- `common.sql` - 通用表结构
+- `3.0.sql` - 系统核心表结构
+- `3.0_workflow_1.7.4.sql` - 工作流表结构
 
+4. **配置 Nacos**
 
-##### feign get传对象
+启动 Nacos 服务，并导入配置文件：
+- 配置文件位置：`doc/nacos_config_export_20240421173102.zip`
 
-- 解决方案
-```java
-    /**
-     * 单个详情（使用 @SpringQueryMap）
-     *
-     * @param dto dto
-     * @return {@link Result < DictVO >}
-     */
-    @GetMapping("/dict/detail")
-    Result<DictVO> detail(@SpringQueryMap @Validated(value = ValidGroup.One.class) DictLiteDTO dto);
-```
+5. **启动服务**
 
-##### 使用工具类Arrays.asList()把数组转换成集合时，不能使用其修改集合相关的方法，因为它的add/remove/clear方法会抛出UnsupportedOperationException异常
-> asList的返回对象是一个Arrays内部类，并没有实现集合的修改方法。Arrays.asList体现的是适配器模式，只是转换接口，后台的数据仍是数据
-```java
-        // 反例
-        String[] str = new String[]{"1", "2"};
-        List<String> list = Arrays.asList(str);
-        // 第一种情况运行时异常
-        list.add(3);
-        // 第二种情况也会随之修改，反之亦然
-        str[0] = "1-1";
-        System.out.println(list);
-        
-```
+按以下顺序启动服务：
+1. 配置中心 (Nacos)
+2. 网关服务 (mcdull-gateway)
+3. 业务服务 (mcdull-business-*)
+4. 支持服务 (mcdull-support-*)
 
-#### 禁止使用bean进行copy
-```java
-// 反例
-BeanUtil.copyProperties(source, target)
-// 正例
-get/set
-```
-> 说明：使用反射效率低，其次增加可维护性成本增高，后面接手的小伙伴不知道程序哪些是需要的字段. 
-> 使用get/set是最直接，也是最简单的。后续二开/维护排错倍倍香!!!
+## 模块说明
 
-#### 避免过多冗余、过少的日志
+### 框架层 (mcdull-framework)
 
-- 打印必要的日志
-- 合并打印
-- 简化：只打印其id
-- 缩写：如write 简化为 w, read 简化为 r
-- 压缩：文件压缩处理
+- **mcdull-framework-dependencies**: 依赖管理
+- **mcdull-framework-base**: 基础组件
+- **mcdull-framework-config**: 配置管理
+- **mcdull-framework-agent**: 服务代理和监控
+- **mcdull-framework-enforcer**: 架构约束
+- **mcdull-framework-starters**: 各种功能的启动器
+  - mcdull-framework-starter-doc: 文档生成
+  - mcdull-framework-starter-feign: 服务调用
+  - mcdull-framework-starter-flow: 工作流
+  - mcdull-framework-starter-mongodb: MongoDB 集成
+  - mcdull-framework-starter-monitor: 监控
+  - mcdull-framework-starter-mysql: MySQL 集成
+  - mcdull-framework-starter-nacos: Nacos 集成
+  - mcdull-framework-starter-oss: 对象存储
+  - mcdull-framework-starter-redis: Redis 集成
+  - mcdull-framework-starter-security: 安全认证
+  - mcdull-framework-starter-web: Web 基础
 
-> 多说一句： 日志用时方恨少，但切记避免过于冗余
+### 业务层 (mcdull-bussiness)
 
+- **mcdull-business-common**: 业务通用组件
+- **mcdull-business-system**: 系统管理业务
+- **mcdull-business-blaze**: 业务处理模块
+- **mcdull-business-workflow**: 工作流业务
+- **mcdull-business-demo**: 示例业务
 
-### 常见问题
+### 支持层 (mcdull-support)
 
-#### 是否使用swagger
-- 结论：尽量避免使用``swagger``
-- 原因：代码侵入性强，部分存在兼容问题
+- **mcdull-gateway**: API 网关
+- **mcdull-mdc**: 元数据中心
+- **mcdull-monitor**: 监控服务
+- **mcdull-tools**: 开发工具
+- **mcdull-ai**: AI 相关功能
 
-#### 是否lombok
-- 结论：科学使用``lombok``，不要一上来就使用``@Data``注解
-- 原因：有时候bean只需要``get``、``set`` 和 ``toString``,但这哥们给我们生成太多东西了。另外因为是在编译的时候生成的，导致编译速度下降
+## 开发指南
 
-### 自动化测试组件
+### 代码规范
 
-> 用于检查 Java 代码的体系结构，命名，层级调用是否满足规约
+- 遵循 Java 编码规范
+- 使用 Lombok 简化代码
+- 统一异常处理
+- 统一日志管理
 
-##### 快速开始
+### 开发流程
 
-- 导入maven
+1. 从 `develop` 分支创建功能分支
+2. 完成功能开发和测试
+3. 提交代码并发起 Pull Request
+4. 代码审查通过后合并到 `develop` 分支
+5. 定期从 `develop` 分支发布到 `master` 分支
 
-```xml
-        <dependency>
-            <groupId>io.gitee.dqcer</groupId>
-            <artifactId>mcdull-framework-enforcer</artifactId>
-            <scope>test</scope>
-        </dependency>
-```
+## 部署说明
 
-- 编码
+### 本地开发环境
 
-```java
+- 开发工具：IntelliJ IDEA 或 Eclipse
+- 运行模式：使用 `application-dev.yml` 配置
+- 数据库：本地 MySQL 实例
+- 缓存：本地 Redis 实例
 
-    private JavaClasses classes;
+### 生产环境
 
-    @BeforeEach
-    public void setUp() {
+- 部署方式：Docker 容器
+- 运行模式：使用 `application-prod.yml` 配置
+- 数据库：生产 MySQL 集群
+- 缓存：生产 Redis 集群
+- 服务注册：Nacos 集群
 
-        classes = new ClassFileImporter()
-                .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_JARS)
-                .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
-                .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_PACKAGE_INFOS)
-                .importPackages("io.gitee");
-    }
+## 更新日志
 
-    @Test
-    public void requiredRules() {
-        for (ArchRule rule : ArchitectureEnforcer.requiredRules) {
-            rule.check(classes);
-        }
-    }
-```
-
-##### 内置规约如下
-
-##### 命名规则
-    
-1. mapper 层下的类应该以'Mapper'结尾
-2. 实现DO的类名应该以'DO'结尾
-3. 实现DTO的类名应该以'DTO'结尾
-4. 实现VO的类名应该以'VO'结尾
-5. 枚举类应该以'Enum'结尾
-    
-
-##### 层级调用
-
-1. Mapper数据库访问层仅被Repository数据库包装层调用
-2. Repository数据库包装层仅被Service业务层、Manager通用逻辑层调用
-3. Manager数据库访问层仅被Service业务层调用
-4. Service业务层仅被Controller层和ServerFeign层调用
-
-
-- 异常处理反例
-
-```java
-// 反例
-     throw new Exception(); 
-     throw new RuntimeException("error"); 
-     throw new Throwable("error"); 
-class CustomException extends Throwable {
-    
-}
-
-```
-
-- 控制台打印反例
-
-```java
-System.out.println("foo");
-System.err.println("bar");
-
-OutputStream out = System.out; 
-out.write(bytes)
-
-try {
-     // ...
-} catch (Exception e) {
-     e.printStackTrace(); 
- }
-```
-
-### 插件推荐
-#### GenerateAllSetter
-> 通过alt+enter对变量类生成对类的所有setter方法的调用
-
-#### Free Mybatis plugin
->快速从代码跳转到mapper及从mapper返回代码
-
-#### RestfulTool
->一套 Restful 服务开发辅助工具集
-
-#### Easy Javadoc
->自动生成javadoc文档注释
-
-
-### 后期规划
-- 翻译转换支持批量提高效率
-- 文件上传下载
-- pdf生成器
-- transmittable-thread-local
->动态表单： https://segmentfault.com/q/1010000009146625 
-> https://www.jianshu.com/p/b2f4ad0ec396
->log.error("xxxxx", ThrowableUtil.getStackTraceAsString(e));
->如有需求请联系作者(dqcer@sina.com)
-
-### 编码建议
-
-#### 控制流语句“if”、“for”、“while”、“switch”和“try”不应该嵌套得太深
-```java
-// 反例
-if (condition1) {                  // Compliant - depth = 1
-  /* ... */
-  if (condition2) {                // Compliant - depth = 2
-    /* ... */
-    for(int i = 0; i < 10; i++) {  // Compliant - depth = 3, not exceeding the limit
-      /* ... */
-      if (condition4) {            // Noncompliant - depth = 4
-        if (condition5) {          // Depth = 5, exceeding the limit, but issues are only reported on depth = 4
-          /* ... */
-        }
-        return;
-      }
-    }
-  }
-}
-// 正例
-if (!condition1) {                 
-  /* ... */
-    return;
-}
-if (!condition2) {                
-   /* ... */
-    return;
-}
-for(int i = 0; i < 10; i++) {  
- /* ... */
- if (condition4) {            
-   if (condition5) {          
-     /* ... */
-   }
-   return;
- }
-}
-```
-
-#### 禁止导入包import * 和允许import内部类（idea默认是允许导入*的）
-- 打开设置，找到 File | Settings | Editor | Code Style | Java 界面的 imports 页签，导入数量设置为999
-
-#### 进行权限的拦截时，优先使用``OncePerRequestFilter``而不是``Filter``
-> OncePerRequestFilter 确保其 doFilter() 方法在每个请求中只被调用一次，即使在多个线程并发处理请求的情况下
-
-#### 替换``LoadBalancer``用默认的缓存
-> 生产环境中使用Caffeine 缓存以获得更好的性能和内存管理
-- 1、``pom``添加依赖
-```xml
-        <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
-        </dependency>
-```
-
-- 2、``application.yml``添加配置
-```yml
-spring:
-  cache:
-    type: caffeine
-```
-
-#### 服务间内部调用避免存在当前登录会话凭证， 能避免head传参的尽量避免，除非是公用属性
-> 需要兼容，定时任务、无需登录的接口和场景
-
-#### 对于相对复杂且持续迭代的业务，避免使用所谓的`validation`的组进行分组效验
-> 后期谁维护了才只知道，可维护性差
-
-
-#### commit 信息
-> 背景：测试提交了一个bug，开发人员无法确认是哪个版本有这个问题？当前测试环境部署的是某个版本吗？生产环境会不会也有这个问题？
->公司内部的项目，总共几十、几百个服务，每天都有服务的生产环境部署，一个服务甚至一天上线好几次，对于项目管理来说无法清晰了解某一时刻某个服务的版本
-如何验证我的代码是否已经上线？
-
-
-
-持续更新中... 欢迎点``star``, 避免下次迷路
+### 版本 1.0
+- 初始版本
+- 实现基础业务功能
+- 搭建项目框架

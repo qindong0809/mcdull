@@ -14,12 +14,14 @@ import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
+import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
+import io.gitee.dqcer.mcdull.system.provider.model.enums.GenderEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.LogonVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.MenuVO;
@@ -46,19 +48,14 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
 
     @Resource
     private IUserService userService;
-
     @Resource
     private IMenuService menuService;
-
     @Resource
     private ILoginLogService loginLogService;
-
     @Resource
     private CaffeineCacheManager cacheManager;
-
     @Resource
     private IDepartmentService departmentService;
-
     @Resource
     private RedissonCache redisCache;
 
@@ -86,6 +83,7 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
         vo.setDepartmentId(userEntity.getDepartmentId());
         vo.setAdministratorFlag(userEntity.getAdministratorFlag());
         vo.setGender(userEntity.getGender());
+        vo.setGenderName(IEnum.getTextByCode(GenderEnum.class, userEntity.getGender()));
         vo.setPhone(userEntity.getPhone());
         vo.setIp(IpUtil.getIpAddr(ServletUtil.getRequest()));
         vo.setUserAgent(ServletUtil.getUserAgent());

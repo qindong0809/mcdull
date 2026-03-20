@@ -12,6 +12,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,6 +84,20 @@ public class ExceptionAdvice extends AbstractExceptionAdvice{
         CodeEnum codeEnum = CodeEnum.ERROR_PARAMETERS;
         return Result.error(codeEnum.getCode(),
                 dynamicLocaleMessageSource.getMessage(codeEnum.getMessage(), new Object[]{args}), this.buildExceptionStr(e));
+    }
+
+    /**
+     * 处理资源未找到异常
+     *
+     * @param exception 异常
+     * @return {@link Result}
+     */
+    @ExceptionHandler(value = NoResourceFoundException.class)
+    public Result<?> noResourceFoundException(NoResourceFoundException exception) {
+        LogHelp.error(log, "{}. NoResourceFoundException: {}", UserContextHolder.print(), exception.getMessage(), exception);
+        CodeEnum codeEnum = CodeEnum.NOT_FOUND;
+        String message = dynamicLocaleMessageSource.getMessage(codeEnum.getMessage());
+        return Result.error(codeEnum.getCode(), message, this.buildExceptionStr(exception));
     }
 
 }

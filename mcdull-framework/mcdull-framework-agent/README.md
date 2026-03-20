@@ -1,9 +1,7 @@
-# mcdull
+# 概述
 
 #### javaagent 探针
-
 入库、统计每个方法的花费时间、对应的堆栈信息、非堆栈以外的信息已经GC回收次数
-
 方法执行耗时、出入参获取、异常捕获、添加链路ID
 
 在VM启动参数中添加以下参数：
@@ -15,7 +13,8 @@ mvn clean package
 -javaagent:D:\gitee\mcdull\mcdull-framework\mcdull-framework-agent\target\mcdull-framework-agent-1.0-SNAPSHOT.jar
 ```
 
-```sqlDROP TABLE IF EXISTS `service_log`;
+```sql
+DROP TABLE IF EXISTS `service_log`;
 CREATE TABLE `service_log` (
 `id` bigint NOT NULL  COMMENT 'id',
 `trace_id` varchar(255) NOT NULL  COMMENT '跟踪id',
@@ -64,6 +63,4 @@ PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='agent 探针GC明细表';
 
 ```
-#### 待办事项
-
 

@@ -35,6 +35,9 @@ public class UserBO implements BO {
     @SchemaEnum(GenderEnum.class)
     private Integer gender;
 
+    @Schema(description = "性别名称")
+    private String genderName;
+
     @Schema(description = "手机号码")
     private String phone;
 

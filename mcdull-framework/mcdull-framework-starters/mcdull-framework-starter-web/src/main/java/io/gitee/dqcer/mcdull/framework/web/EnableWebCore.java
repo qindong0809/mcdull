@@ -32,6 +32,7 @@ import java.lang.annotation.Target;
         DateTimeConfig.class,
         MultipartFileConfig.class,
         ThreadPoolConfig.class,
+        TrimStringConfig.class,
 //        UndertowConfig.class,
         SpringContextHolder.class,
         I18nConfig.class,
