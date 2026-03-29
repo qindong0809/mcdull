@@ -52,7 +52,10 @@ public class ExceptionAdvice extends AbstractExceptionAdvice{
     @ExceptionHandler(value = BusinessException.class)
     public Result<?> businessException(BusinessException exception) {
         String i18nMessage = dynamicLocaleMessageSource
-                .getMessage(exception.getMessageCode(), exception.getArgs());
+            .getMessage(exception.getMessageCode(), exception.getArgs());
+        if (exception.getCode() != null) {
+            return Result.error(exception.getCode().getCode(), i18nMessage, this.buildExceptionStr(exception));
+        }
         LogHelp.error(log, "{}. Business Exception. {}",
                 UserContextHolder.print(), i18nMessage, exception);
         return Result.error(i18nMessage);

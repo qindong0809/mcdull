@@ -15,11 +15,13 @@
         <dependency>
           <groupId>cn.dev33</groupId>
           <artifactId>sa-token-reactor-spring-boot-starter</artifactId>
+          <version>1.42.0</version>
         </dependency>
         <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
         <dependency>
           <groupId>cn.dev33</groupId>
           <artifactId>sa-token-redis-jackson</artifactId>
+          <version>1.42.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -95,6 +97,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
                 <configuration>
                     <skipTests>true</skipTests>
                 </configuration>

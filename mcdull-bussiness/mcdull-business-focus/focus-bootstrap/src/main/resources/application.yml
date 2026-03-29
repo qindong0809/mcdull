@@ -1,0 +1,44 @@
+server:
+  port: 6060
+spring:
+  application:
+    name: focus-bootstrap
+  data:
+    redis:
+      host: mcdull.io
+      port: 6379
+  datasource:
+    url: jdbc:mysql://mcdull.io:3306/focus?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    poolType: Druid
+    maxActive: 10
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+    logSlowSql: true
+    allow:
+    adminUser: root
+    adminPassword: 8YTJWOuA7XRK17wRQnw4
+mcdull:
+  gateway:
+    no-auth:
+      - /register
+      - /login
+      - /guest-mode
+sa-token:
+  # token 最低活跃频率（单位：秒），如果 token 超过此时间没有访问系统就会被冻结，默认-1 代表不限制，永不冻结
+  active-timeout: 1800
+  # token 有效期（单位：秒） 1天（86400秒），-1 代表永久有效
+  timeout: -1
+  # token 名称（同时也是 cookie 名称）
+  token-name: Authorization

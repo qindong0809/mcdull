@@ -51,6 +51,7 @@ public class BusinessException extends RuntimeException {
 	public BusinessException(ICode codeEnum) {
 		super(codeEnum == null ? "" : codeEnum.getMessage());
 		this.code = codeEnum;
+        this.messageCode = codeEnum == null ? "" : codeEnum.getMessage();
 	}
 
 

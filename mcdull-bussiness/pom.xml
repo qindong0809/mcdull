@@ -27,6 +27,7 @@
         <module>mcdull-business-blaze</module>
         <module>mcdull-business-demo</module>
         <module>mcdull-business-workflow</module>
+        <module>mcdull-business-focus</module>
     </modules>
 
     <dependencyManagement>

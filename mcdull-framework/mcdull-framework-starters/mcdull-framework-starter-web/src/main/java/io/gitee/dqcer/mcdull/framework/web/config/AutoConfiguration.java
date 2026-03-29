@@ -35,10 +35,6 @@ public class AutoConfiguration {
     private SwitchableDataSource globalDataRoutingDataSource;
     @Resource
     private McdullProperties mcdullProperties;
-    @Resource
-    private DynamicLocaleMessageSource dynamicLocaleMessageSource;
-    @Resource
-    private BaseExceptionAdvice baseExceptionAdvice;
 
     /**
      * 跟踪日志过滤器bean注册
@@ -46,7 +42,7 @@ public class AutoConfiguration {
      * @return {@link FilterRegistrationBean}
      */
     @Bean
-    public FilterRegistrationBean<HttpTraceLogFilter> traceLogFilterRegistrationBean() {
+    public FilterRegistrationBean<HttpTraceLogFilter> traceLogFilterRegistrationBean(DynamicLocaleMessageSource dynamicLocaleMessageSource, BaseExceptionAdvice baseExceptionAdvice) {
         FilterRegistrationBean<HttpTraceLogFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new HttpTraceLogFilter(globalDataRoutingDataSource, mcdullProperties, dynamicLocaleMessageSource, baseExceptionAdvice));
         filterRegistrationBean.setOrder(2);

@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.web.config;
 
+import cn.hutool.core.io.resource.ResourceUtil;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.web.i18n.CustomizeLocaleResolver;
 import org.slf4j.Logger;
@@ -47,7 +48,13 @@ public class I18nConfig implements SmartInitializingSingleton {
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name());
-        messageSource.setBasenames("classpath:i18n/framework", "classpath:i18n/message");
+        boolean exists = ResourceUtil.getResource("i18n/message") != null;
+        if (exists) {
+            messageSource.setBasenames("classpath:i18n/framework", "classpath:i18n/message");
+        } else {
+            messageSource.setBasenames("classpath:i18n/framework");
+        }
+
         messageSource.setCacheSeconds(-1);
         // TODO: 2023/12/27 修改路径可读取外部文件
         return messageSource;

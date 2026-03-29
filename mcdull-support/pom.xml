@@ -30,7 +30,7 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>mcdull-framework-dependencies</artifactId>
-                <version>${project.version}</version>
+                <version>1.0.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

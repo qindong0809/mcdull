@@ -216,8 +216,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
         if (CollUtil.isEmpty(itemList)) {
             return Collections.emptyList();
         }
-        Map<Integer, FormItemEntity> itemMap = itemList.stream()
-                .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+        Map<Integer, FormItemEntity> itemMap = itemList.stream().collect(Collectors.toMap(IdEntity::getId, Function.identity()));
         List<FormRecordEntity> recordList = formRecordService.selectByFormId(formId);
         if (CollUtil.isEmpty(recordList)) {
             return Collections.emptyList();

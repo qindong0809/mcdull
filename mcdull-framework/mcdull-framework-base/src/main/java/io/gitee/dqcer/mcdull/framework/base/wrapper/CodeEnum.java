@@ -45,8 +45,13 @@ public enum CodeEnum implements ICode {
 	 */
 	ERROR_PARAMETERS(999450, "system.validation.failed"),
 
+    /**
+     * 只读操作
+     */
+    READ_ONLY(999451, "system.read.only"),
 
-	;
+
+    ;
 	/**
 	 * 状态码
 	 */

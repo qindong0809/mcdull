@@ -64,4 +64,35 @@
             <timezone>+8</timezone>
         </developer>
     </developers>
+
+<build>
+    <plugins>
+        <!-- 现有插件 -->
+        <!-- 添加 Maven Flatten Plugin -->
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>flatten-maven-plugin</artifactId>
+            <version>1.5.0</version>
+            <executions>
+                <execution>
+                    <id>flatten</id>
+                    <phase>process-resources</phase>
+                    <goals>
+                        <goal>flatten</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>flatten.clean</id>
+                    <phase>clean</phase>
+                    <goals>
+                        <goal>clean</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <flattenMode>resolveCiFriendliesOnly</flattenMode>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
 </project>

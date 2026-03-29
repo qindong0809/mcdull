@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.gitee.dqcer</groupId>
+    <artifactId>mcdull-business-focus</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
+  <artifactId>focus-impl</artifactId>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <docx4j.version>11.4.9</docx4j.version>
+    <pdfbox.version>2.0.29</pdfbox.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>mcdull-framework-starter-web</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.dromara</groupId>
+      <artifactId>x-easypdf-pdfbox</artifactId>
+      <version>3.5.5</version>
+    </dependency>
+  <dependency>
+    <groupId>com.documents4j</groupId>
+    <artifactId>documents4j-local</artifactId>
+    <version>1.1.12</version>
+  </dependency>
+  <dependency>
+    <groupId>com.documents4j</groupId>
+    <artifactId>documents4j-transformer-msoffice-word</artifactId>
+    <version>1.1.12</version>
+  </dependency>
+</dependencies>
+</project>
