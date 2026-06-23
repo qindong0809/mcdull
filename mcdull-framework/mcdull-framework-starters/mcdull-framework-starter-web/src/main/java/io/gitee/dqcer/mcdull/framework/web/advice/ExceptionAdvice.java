@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +28,18 @@ import java.util.List;
 @RestControllerAdvice
 @Order(1)
 public class ExceptionAdvice extends AbstractExceptionAdvice{
+
+    /**
+     * 客户端中断连接异常（如浏览器关闭、请求取消等），无需返回响应体
+     *
+     * @param exception 异常
+     * @param response  响应
+     */
+    @ExceptionHandler(value = org.apache.catalina.connector.ClientAbortException.class)
+    public void clientAbortException(Exception exception, HttpServletResponse response) {
+        LogHelp.debug(log, "{}. ClientAbortException (client disconnected): {}",
+                UserContextHolder.print(), exception.getMessage());
+    }
 
     /**
      * 异常

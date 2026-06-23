@@ -65,6 +65,7 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
         "/home/upload" + GlobalConstant.ALL_PATTERNS,
         "/v3/def-docs" + GlobalConstant.ALL_PATTERNS,
         "/v3/api-docs" + GlobalConstant.ALL_PATTERNS,
+        "/mp3" + GlobalConstant.ALL_PATTERNS,
         "/error",
     };
 

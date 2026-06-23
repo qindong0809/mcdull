@@ -3,7 +3,11 @@ package io.gitee.dqcer.mcdull.focus.web.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.gitee.dqcer.mcdull.focus.model.entity.AppUserEntity;
@@ -18,15 +22,15 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.security.StpKit;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @RestController
 public class LoginController extends BasicController {
@@ -124,5 +128,104 @@ public class LoginController extends BasicController {
             "email", user.getEmail()
         );
         return Result.success(result);
+    }
+
+
+    @Operation(summary = "profile")
+    @PostMapping("/app/user/profile")
+    public Result<Map<String, Object>> profile() {
+        AppUserEntity user = appUserMapper.selectById(UserContextHolder.userId());
+        Map<String, Object> map = new HashMap<>();
+        map.put("username", user.getLoginName());
+        map.put("email", user.getEmail());
+        map.put("gender", user.getGender());
+        map.put("stage", user.getStage());
+        map.put("theme", user.getTheme());
+        map.put("vip", user.getVip());
+        map.put("streakDays", 125);
+        return Result.success(map);
+    }
+
+
+    @Operation(summary = "saveSettings")
+    @PostMapping("/app/user/saveSettings")
+    public Result<Boolean> saveSettings(@RequestBody Map<String, Object> map) {
+        AppUserEntity user = appUserMapper.selectById(UserContextHolder.userId());
+        user.setTheme(Convert.toInt(map.get("theme")));
+        appUserMapper.updateById(user);
+        return Result.success(true);
+    }
+
+    @Operation(summary = "delete")
+    @PostMapping("/app/user/delete")
+    public Result<Boolean> delete() {
+        appUserMapper.deleteById(UserContextHolder.userId());
+        return Result.success(true);
+    }
+
+    @Operation(summary = "updateProfile")
+    @PostMapping("/app/user/updateProfile")
+    public Result<Boolean> updateProfile(@RequestBody Map<String, Object> map) {
+        AppUserEntity user = appUserMapper.selectById(UserContextHolder.userId());
+        user.setGender(Convert.toStr(map.get("gender")));
+        user.setStage(Convert.toStr(map.get("stage")));
+        appUserMapper.updateById(user);
+        return Result.success(true);
+    }
+
+
+    @Operation(summary = "purchaseVip")
+    @PostMapping("/app/user/purchaseVip")
+    public Result<Map<String, Object>> purchaseVip(@RequestBody Map<String, Object> map) {
+        String plan = Convert.toStr(map.get("plan"));
+        if (!CharSequenceUtil.equalsAny(plan, "monthly", "yearly")) {
+            LogicCheckUtil.throwDataExistException("plan is error");
+        }
+        Date expireDate = DateUtil.offsetMonth(new Date(), 1);
+        if ("yearly".equals(plan)) {
+            expireDate = DateUtil.offsetYear(new Date(), 1);
+        }
+
+        AppUserEntity user = appUserMapper.selectById(UserContextHolder.userId());
+        user.setVip(true);
+        appUserMapper.updateById(user);
+        return Result.success(Map.of(
+            "vip", true,
+            "expireDate", DateUtil.format(expireDate, DatePattern.NORM_DATETIME_PATTERN)
+        ));
+    }
+
+    @Operation(summary = "exportData")
+    @PostMapping("/app/user/exportData")
+    public void exportData(@RequestBody Map<String, Object> map) {
+        String format = Convert.toStr(map.get("format"));
+        if (!CharSequenceUtil.equalsAny(format, "json", "csv")) {
+            LogicCheckUtil.throwDataExistException("format is error");
+        }
+
+        ServletUtil.download("test.json", "good job".getBytes(StandardCharsets.UTF_8));
+    }
+
+
+    @Operation(summary = "我的成就")
+    @PostMapping("/app/user/achievements")
+    public Result<Map<String, Object>> achievements() {
+        return Result.success(Map.of(
+            "badges", List.of(
+                    Map.of("type", "streak_7", "unlocked", true, "unlockedAt", DateUtil.format(new Date(), DatePattern.NORM_DATETIME_PATTERN)),
+                    Map.of("type", "streak_30", "unlocked", true, "unlockedAt", DateUtil.format(new Date(), DatePattern.NORM_DATETIME_PATTERN))),
+            "totalPoints", 100
+        ));
+    }
+
+
+    @Operation(summary = "我的成就")
+    @PostMapping("/app/daily/quote")
+    public Result<String> dailyQuote() {
+        String s = ResourceUtil.readUtf8Str("quote.json");
+        List<String> quoteList = JSONUtil.toList(s, String.class);
+        // 随机获取一条
+        String quote = RandomUtil.randomEle(quoteList);
+        return Result.success(quote);
     }
 }

@@ -11,6 +11,8 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+
 /**
  * 数据库字段自动填充配置
  *
@@ -33,27 +35,50 @@ public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
         if (originalObject instanceof RelEntity<?>) {
             RelEntity<?> relEntity = (RelEntity<?>) originalObject;
             if (ObjUtil.isNotNull(relEntity)) {
-                relEntity.setCreatedTime(UserContextHolder.getSession().getNow());
-                relEntity.setUpdatedTime(UserContextHolder.getSession().getNow());
-                relEntity.setDelFlag(Boolean.FALSE);
+                if (relEntity.getCreatedTime() == null) {
+                    relEntity.setCreatedTime(UserContextHolder.getSession().getNow());
+                }
+                if (relEntity.getUpdatedTime() == null) {
+                    relEntity.setUpdatedTime(UserContextHolder.getSession().getNow());
+                }
+                if (relEntity.getDelFlag() == null) {
+                    relEntity.setDelFlag(Boolean.FALSE);
+                }
             }
         }
         if (originalObject instanceof BaseEntity<?>) {
             BaseEntity<?> baseEntity = (BaseEntity<?>) originalObject;
             if (ObjUtil.isNotNull(baseEntity)) {
-                baseEntity.setCreatedTime(UserContextHolder.getSession().getNow());
+                if (baseEntity.getCreatedTime() == null) {
+                    baseEntity.setCreatedTime(UserContextHolder.getSession().getNow());
+                }
+                if (baseEntity.getCreatedBy() == null) {
+                    baseEntity.setCreatedBy(UserContextHolder.userId());
+                }
                 baseEntity.setCreatedBy(UserContextHolder.userId());
-                baseEntity.setUpdatedTime(UserContextHolder.getSession().getNow());
-                baseEntity.setUpdatedBy(UserContextHolder.userId());
-                baseEntity.setDelFlag(Boolean.FALSE);
-                baseEntity.setInactive(Boolean.FALSE);
+                if (baseEntity.getUpdatedTime() == null) {
+                    baseEntity.setUpdatedTime(UserContextHolder.getSession().getNow());
+                }
+                if (baseEntity.getUpdatedBy() == null) {
+                    baseEntity.setUpdatedBy(UserContextHolder.userId());
+                }
+                if (baseEntity.getDelFlag() == null) {
+                    baseEntity.setDelFlag(Boolean.FALSE);
+                }
+                if (baseEntity.getInactive() == null) {
+                    baseEntity.setInactive(Boolean.FALSE);
+                }
             }
         }
         if (originalObject instanceof TimestampEntity<?>) {
             TimestampEntity<?> timestampEntity = (TimestampEntity<?>) originalObject;
             if (ObjUtil.isNotNull(timestampEntity)) {
-                timestampEntity.setCreatedTime(UserContextHolder.getSession().getNow());
-                timestampEntity.setDelFlag(Boolean.FALSE);
+                if (timestampEntity.getCreatedTime() == null) {
+                    timestampEntity.setCreatedTime(UserContextHolder.getSession().getNow());
+                }
+                if (timestampEntity.getDelFlag() == null) {
+                    timestampEntity.setDelFlag(Boolean.FALSE);
+                }
             }
         }
     }
@@ -65,14 +90,20 @@ public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
         if (originalObject instanceof RelEntity<?>) {
             RelEntity<?> relEntity = (RelEntity<?>) originalObject;
             if (ObjUtil.isNotNull(relEntity)) {
-                relEntity.setUpdatedTime(UserContextHolder.getSession().getNow());
+                if (relEntity.getUpdatedTime() == null) {
+                    relEntity.setUpdatedTime(UserContextHolder.getSession().getNow());
+                }
             }
         }
         if (originalObject instanceof BaseEntity<?>) {
             BaseEntity<?> baseEntity = (BaseEntity<?>) originalObject;
             if (ObjUtil.isNotNull(baseEntity)) {
-                baseEntity.setUpdatedTime(UserContextHolder.getSession().getNow());
-                baseEntity.setUpdatedBy(UserContextHolder.userId());
+                if (baseEntity.getUpdatedTime() == null) {
+                    baseEntity.setUpdatedTime(UserContextHolder.getSession().getNow());
+                }
+                if (baseEntity.getUpdatedBy() == null) {
+                    baseEntity.setUpdatedBy(UserContextHolder.userId());
+                }
             }
         }
     }

@@ -19,5 +19,9 @@ public class AppUserEntity extends BaseEntity<Integer> {
     private String loginName;
     private String loginPwd;
     private String email;
+    private String gender;
+    private String stage;
+    private Integer theme;
+    private Boolean vip;
 
 }

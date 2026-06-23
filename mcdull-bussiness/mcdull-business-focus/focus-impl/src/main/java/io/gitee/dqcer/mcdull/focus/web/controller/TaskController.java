@@ -36,9 +36,12 @@ public class TaskController extends BasicController {
 
     @Operation(summary = "task list")
     @PostMapping(GlobalConstant.APP_PATH + "/task/list")
-    public Result<List<AppTaskEntity>> list() {
+    public Result<List<AppTaskEntity>> list(@RequestBody Map<String, Object> param) {
+        Object completed = param.get("completed");
         LambdaQueryWrapper<AppTaskEntity> query = Wrappers.lambdaQuery();
+        query.eq(ObjectUtil.isNotNull(completed), AppTaskEntity::getCompleted, completed);
         query.eq(AppTaskEntity::getCreatedBy, UserContextHolder.userId());
+        query.orderByAsc(AppTaskEntity::getDueDate);
         return Result.success(appTaskMapper.selectList(query));
     }
     public void validReadOnlyUser() {
@@ -107,7 +110,7 @@ public class TaskController extends BasicController {
         update.setCategory(dto.getCategory());
         update.setReminderEnabled(dto.getReminderEnabled());
         appTaskMapper.updateById(update);
-        return Result.success(Map.of("id", update.getId(), "date", update.getDueDate()));
+        return Result.success(Map.of("id", update.getId(), "dueDate", update.getDueDate()));
     }
 
     @Operation(summary = "task delete")

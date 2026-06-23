@@ -37,7 +37,7 @@ mcdull:
       - /guest-mode
 sa-token:
   # token 最低活跃频率（单位：秒），如果 token 超过此时间没有访问系统就会被冻结，默认-1 代表不限制，永不冻结
-  active-timeout: 1800
+  active-timeout: 864000
   # token 有效期（单位：秒） 1天（86400秒），-1 代表永久有效
   timeout: -1
   # token 名称（同时也是 cookie 名称）
