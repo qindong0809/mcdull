@@ -104,6 +104,9 @@ public class HabitController extends BasicController {
         LambdaQueryWrapper<AppHabitRecordEntity> query = Wrappers.lambdaQuery();
         query.eq(AppHabitRecordEntity::getHabitId, Convert.toInt(request.get("id")));
         query.eq(BaseEntity::getCreatedBy, UserContextHolder.userId());
+        // 只删除今天的打卡记录，不影响历史
+        query.ge(AppHabitRecordEntity::getCreatedTime, DateUtil.beginOfDay(new Date()));
+        query.le(AppHabitRecordEntity::getCreatedTime, DateUtil.endOfDay(new Date()));
         appHabitRecordMapper.delete(query);
         return Result.success(true);
     }

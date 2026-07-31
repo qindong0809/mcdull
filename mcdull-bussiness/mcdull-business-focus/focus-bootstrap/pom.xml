@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.gitee.dqcer</groupId>
     <artifactId>mcdull-business-focus</artifactId>
-    <version>1.0.0</version>
+    <version>${revision}</version>
   </parent>
 
   <artifactId>focus-bootstrap</artifactId>
@@ -16,6 +16,64 @@
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <excludes>
+          <exclude>**/*.mp3</exclude>
+          <exclude>**/*.wav</exclude>
+          <exclude>**/*.png</exclude>
+          <exclude>**/*.jpg</exclude>
+          <exclude>**/*.gif</exclude>
+          <exclude>**/*.pdf</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*.mp3</include>
+          <include>**/*.wav</include>
+          <include>**/*.png</include>
+          <include>**/*.jpg</include>
+          <include>**/*.gif</include>
+          <include>**/*.pdf</include>
+        </includes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+              <goal>build-info</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+        <configuration>
+          <skipTests>true</skipTests>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <dependencies>
     <dependency>

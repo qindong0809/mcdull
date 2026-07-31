@@ -31,7 +31,7 @@ public class FocusController extends BasicController {
         AppFocusEntity entity = new AppFocusEntity();
         entity.setDurationMinutes(Convert.toInt(request.get("durationMinutes")));
         entity.setMode(Convert.toInt(request.get("mode")));
-        entity.setTaskId(Convert.toInt(request.get("preset")));
+        entity.setTaskId(Convert.toInt(request.get("taskId")));
         appFocusMapper.insert(entity);
         return Result.success(true);
     }

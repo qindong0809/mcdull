@@ -46,8 +46,7 @@ public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
                 }
             }
         }
-        if (originalObject instanceof BaseEntity<?>) {
-            BaseEntity<?> baseEntity = (BaseEntity<?>) originalObject;
+        if (originalObject instanceof BaseEntity<?> baseEntity) {
             if (ObjUtil.isNotNull(baseEntity)) {
                 if (baseEntity.getCreatedTime() == null) {
                     baseEntity.setCreatedTime(UserContextHolder.getSession().getNow());
@@ -70,8 +69,7 @@ public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
                 }
             }
         }
-        if (originalObject instanceof TimestampEntity<?>) {
-            TimestampEntity<?> timestampEntity = (TimestampEntity<?>) originalObject;
+        if (originalObject instanceof TimestampEntity<?> timestampEntity) {
             if (ObjUtil.isNotNull(timestampEntity)) {
                 if (timestampEntity.getCreatedTime() == null) {
                     timestampEntity.setCreatedTime(UserContextHolder.getSession().getNow());

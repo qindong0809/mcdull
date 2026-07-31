@@ -69,7 +69,11 @@ public class ScheduleController extends BasicController {
     @PostMapping(GlobalConstant.APP_PATH + "/schedule/delete")
     public Result<Void> delete(@RequestBody Map<String, Object> param) {
         Integer id = (Integer) param.get("id");
-        appScheduleMapper.deleteById(id);
+        // 校验归属权限：只能删除自己的日程
+        LambdaQueryWrapper<AppScheduleEntity> query = Wrappers.lambdaQuery();
+        query.eq(AppScheduleEntity::getId, id);
+        query.eq(AppScheduleEntity::getCreatedBy, UserContextHolder.userId());
+        appScheduleMapper.delete(query);
         return Result.success();
     }
 }
