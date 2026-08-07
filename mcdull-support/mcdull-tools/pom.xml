@@ -23,6 +23,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-web</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>mcdull-framework-starter-mysql</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

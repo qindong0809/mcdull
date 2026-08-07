@@ -1,12 +1,16 @@
 package io.gitee.mcdull.tools;
 
-import io.gitee.dqcer.mcdull.framework.redis.EnableCache;
 import org.dromara.x.file.storage.spring.EnableFileStorage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @EnableFileStorage
-@EnableCache
-@SpringBootApplication(scanBasePackages = "io.gitee")
+@SpringBootApplication(
+    scanBasePackages = "io.gitee.mcdull.tools",
+    exclude = {
+        DataSourceAutoConfiguration.class
+    }
+)
 public class ToolsApplication {
 
     public static void main(String[] args) {
