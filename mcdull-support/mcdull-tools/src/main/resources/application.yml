@@ -37,3 +37,67 @@ spring:
     prefix: classpath:/static/
 log:
   enable: false
+mcdull:
+  gateway:
+    no-auth:
+      - /**
+  tools:
+    log:
+      # Legacy fallback (used when targets list is empty)
+      dir: D:/var/log/mcdull-uac-provider
+      active-file: out.log
+      charset: UTF-8
+      page-lines: 300
+      max-scan-bytes: 33554432
+      tail-interval-millis: 500
+      heartbeat-millis: 15000
+      # Named credentials (passwords read from env vars in production)
+      credentials:
+        test:
+          username: xxx
+          password: xxx
+        # 公钥认证
+        staging-key-encrypted:
+          username: xxx
+          private-key-path: D:/workspace/code/xxx-20250506.pem
+      # Targets shown in the UI selector
+      targets:
+        - id: local
+          env: 本机
+          service: mcdull-tools
+          dir: D:/var/log/mcdull-uac-provider
+          pattern: "out*.log*"
+          active-file: out.log
+          charset: UTF-8
+          # 用户名密码
+        - id: test
+          env: 测试
+          service: uac-provider
+          host: mcdull.io
+          port: 22
+          credential: test
+          dir: /home/nacos/logs
+          pattern: "*.log*"
+          active-file: nacos.log
+          charset: UTF-8
+          # 密钥证书
+        - id: staging-key-encrypted
+          env: 测试
+          service: 测试服务器-01
+          host: dev-xxxx.cn
+          port: 22
+          credential: staging-key-encrypted
+          dir: /home/deployment/xxxx/log
+          pattern: "*.log*"
+          active-file: xxx_log.log
+          charset: UTF-8
+        - id: staging-key-encrypted
+          env: 测试
+          service: 测试服务器-02
+          host: dev-xxxx.cn
+          port: 22
+          credential: staging-key-encrypted
+          dir: /home/deployment/xxxx/log
+          pattern: "*.log*"
+          active-file: xxx_log.log
+          charset: UTF-8

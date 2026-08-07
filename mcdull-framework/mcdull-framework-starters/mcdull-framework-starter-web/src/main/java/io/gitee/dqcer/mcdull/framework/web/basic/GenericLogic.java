@@ -22,7 +22,6 @@ import java.util.function.Predicate;
  * @author dqcer
  * @since 2023/04/14
  */
-@SuppressWarnings("all")
 public abstract class GenericLogic {
 
     @Resource

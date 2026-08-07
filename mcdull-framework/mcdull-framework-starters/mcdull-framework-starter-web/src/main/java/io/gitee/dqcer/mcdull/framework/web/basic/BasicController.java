@@ -73,6 +73,7 @@ public abstract class BasicController {
         key = this.buildKeyName(key);
         if (concurrentRateLimiter.limiter(key, quantity, seconds)) {
             function.accept(null);
+            return;
         }
         throw new BusinessException(I18nConstants.SYSTEM_REQUEST_TOO_FREQUENT);
     }

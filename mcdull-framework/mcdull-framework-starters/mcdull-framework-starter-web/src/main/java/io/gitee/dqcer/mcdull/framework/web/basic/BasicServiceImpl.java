@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author dqcer
  * @since 2023/04/14
  */
-@SuppressWarnings("all")
+@SuppressWarnings("rawtypes")
 public abstract class BasicServiceImpl<R extends IRepository> extends GenericLogic {
 
     @Autowired

@@ -1,71 +1,104 @@
 package io.gitee.mcdull.tools.web.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.file.Tailer;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
+import io.gitee.mcdull.tools.component.LogTailPublisher;
+import io.gitee.mcdull.tools.web.domain.LogFileVO;
+import io.gitee.mcdull.tools.web.domain.LogPageVO;
+import io.gitee.mcdull.tools.web.domain.LogTargetVO;
+import io.gitee.mcdull.tools.web.service.LogFileService;
+import io.gitee.mcdull.tools.web.service.source.LogSourceRegistry;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
+/**
+ * Log viewing: live tail over SSE and history paging over byte cursors, both filterable by keyword.
+ * <p>
+ * Supports multiple targets (local and remote). The UI calls /log/targets first to populate the
+ * selector, then all other endpoints carry the selected target id.
+ *
+ * @author dqcer
+ */
+@Slf4j
 @RestController
-public class LogController {
+@RequestMapping("/log")
+public class LogController extends BasicController {
 
-    private final Set<SseEmitter> emitters = Collections.synchronizedSet(new HashSet<>());
+    @Resource
+    private LogFileService logFileService;
 
+    @Resource
+    private LogTailPublisher logTailPublisher;
+
+    @Resource
+    private LogSourceRegistry logSourceRegistry;
+
+    /**
+     * Available targets for the UI selector.
+     *
+     * @return all configured targets
+     */
     @SaIgnore
-    @GetMapping(value = "/logs-stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter streamLogs() {
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
-        Tailer tailer = new Tailer(FileUtil.file("D:\\var\\log\\mcdull-uac-provider\\out.log"), line -> {
-            try {
-                emitter.send(line);
-//                emitter.complete();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }, 2);
-        tailer.start();
-        emitter.complete();
-
-
-
-//        emitters.add(emitter);
-//        emitter.onCompletion(() -> emitters.remove(emitter));
-//        emitter.onTimeout(() -> emitters.remove(emitter));
-//        new Thread(() -> {
-//            for (int i = 0; i < 100; i++) {
-//                try {
-//                    emitter.send("data: " + i + "\n\n");
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//                try {
-//                    Thread.sleep(100);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//            emitter.complete();
-//        }).start();
-        return emitter;
+    @GetMapping("/targets")
+    public Result<List<LogTargetVO>> targets() {
+        return Result.success(logSourceRegistry.listTargets());
     }
 
+    /**
+     * Log files for a target.
+     *
+     * @param target target id, blank uses the default
+     * @return files inside the target's directory, newest first
+     */
     @SaIgnore
-    public void broadcast(String message) {
-        synchronized (emitters) {
-            emitters.forEach(emitter -> {
-                try {
-                    emitter.send(message);
-                } catch (IOException e) {
-                    emitter.completeWithError(e);
-                }
-            });
-        }
+    @GetMapping("/files")
+    public Result<List<LogFileVO>> listFiles(
+            @RequestParam(name = "target", required = false) String target) {
+        return Result.success(logFileService.listFiles(target));
+    }
+
+    /**
+     * Reads a page of history backwards from {@code cursor}.
+     *
+     * @param target  target id
+     * @param file    file name, blank means the active file
+     * @param cursor  exclusive end byte offset, null starts at the tail
+     * @param limit   maximum lines to return
+     * @param keyword case insensitive substring filter
+     * @return one page of lines plus the cursor for the page in front of it
+     */
+    @SaIgnore
+    @GetMapping("/history")
+    public Result<LogPageVO> history(
+            @RequestParam(name = "target", required = false) String target,
+            @RequestParam(name = "file", required = false) String file,
+            @RequestParam(name = "cursor", required = false) Long cursor,
+            @RequestParam(name = "limit", required = false) Integer limit,
+            @RequestParam(name = "keyword", required = false) String keyword) {
+        return Result.success(logFileService.readBackward(target, file, cursor, limit, keyword));
+    }
+
+    /**
+     * Live tail of a target's active file.
+     *
+     * @param target  target id
+     * @param keyword case insensitive substring filter, blank streams everything
+     * @return server sent event stream of log lines
+     */
+    @SaIgnore
+    @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter stream(
+            @RequestParam(name = "target", required = false) String target,
+            @RequestParam(name = "keyword", required = false) String keyword) {
+        return logTailPublisher.subscribe(target, keyword);
     }
 }

@@ -65,7 +65,7 @@ public class UserContextHolder {
      */
     public static boolean isAdmin() {
         UnifySession session = UNIFY_SESSION.get();
-        return session.getAdministratorFlag();
+        return session != null && Boolean.TRUE.equals(session.getAdministratorFlag());
     }
 
     /**
@@ -74,10 +74,11 @@ public class UserContextHolder {
      * @return {@link Long}
      */
     public static Object currentUserId() {
-        return UNIFY_SESSION.get().getUserId();
+        UnifySession session = UNIFY_SESSION.get();
+        return session != null ? session.getUserId() : null;
     }
 
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     public static <T> T currentUserId(Class<T> tClass) {
         if (tClass == Long.class) {
             return (T) userIdLong();
@@ -89,15 +90,18 @@ public class UserContextHolder {
     }
 
     public static Long userIdLong() {
-        return Convert.toLong(UNIFY_SESSION.get().getUserId());
+        UnifySession session = UNIFY_SESSION.get();
+        return session != null ? Convert.toLong(session.getUserId()) : null;
     }
 
     public static Integer userId() {
-        return Convert.toInt(UNIFY_SESSION.get().getUserId());
+        UnifySession session = UNIFY_SESSION.get();
+        return session != null ? Convert.toInt(session.getUserId()) : null;
     }
 
     public static String userIdStr() {
-        return Convert.toStr(UNIFY_SESSION.get().getUserId());
+        UnifySession session = UNIFY_SESSION.get();
+        return session != null ? Convert.toStr(session.getUserId()) : null;
     }
 
     public static String print() {

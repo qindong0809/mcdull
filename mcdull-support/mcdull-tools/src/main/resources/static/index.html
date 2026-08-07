@@ -2,259 +2,1298 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>研发日常工具系统</title>
+    <title>研发日常工具</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="dist/css/layui.css" rel="stylesheet">
+    <style>
+        /* ===== 设计变量 =====
+           主色取中饱和绿，白底上不刺眼。实心按钮用 --green-solid，
+           白字对比度 5.02:1（WCAG AA）；--green 仅作强调，不承载白字。 */
+        :root {
+            /* 底色与文字 */
+            --bg:           #f7faf8;
+            --surface:      #ffffff;
+            --ink:          #18242b;
+            --ink-dim:      #5d6c74;
+            --ink-faint:    #93a0a7;
+            --line:         rgba(20, 45, 38, 0.10);
+            --line-strong:  rgba(20, 45, 38, 0.18);
+
+            /* 品牌绿 */
+            --green:        #16a34a; /* 强调：图标、active、focus、进度 */
+            --green-solid:  #15803d; /* 实心按钮底，白字 5.02:1 */
+            --green-hover:  #126c34; /* hover 加深，不提亮 */
+            --green-soft:   #eefaf2; /* 浅色底：chip、图标底、横幅 */
+            --green-line:   #c8ecd6;
+            --green-ink:    #14532d; /* 浅绿底上的深绿文字 */
+            --on-green:     #ffffff;
+
+            /* 语义色 */
+            --danger:       #dc2626;
+
+            /* 深色面板：日志控制台保留深底，长文本可读性优先 */
+            --dark:         #171c20;
+            --dark-line:    #2c343a;
+            --dark-ink:     #c9d1d9;
+
+            --r:            10px;
+            --r-sm:         8px;
+        }
+
+        * { box-sizing: border-box; }
+        body { background: var(--bg); margin: 0; color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+        /* ===== 顶栏 ===== */
+        .app-header {
+            height: 56px;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            border-bottom: 1px solid var(--line);
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 999;
+        }
+        .app-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--ink);
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            user-select: none;
+        }
+        .app-header .logo-icon {
+            width: 30px; height: 30px;
+            background: var(--green-solid);
+            color: var(--on-green);
+            border-radius: var(--r-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+        }
+        .app-header .header-right {
+            margin-left: auto;
+            color: var(--ink-faint);
+            font-size: 12px;
+        }
+
+        /* ===== 侧边栏 ===== */
+        .app-sidebar {
+            position: fixed;
+            top: 56px; left: 0; bottom: 0;
+            width: 220px;
+            background: var(--surface);
+            border-right: 1px solid var(--line);
+            overflow-y: auto;
+            z-index: 998;
+        }
+        .sidebar-section {
+            padding: 16px 0 8px;
+        }
+        .sidebar-section-title {
+            padding: 0 16px 8px;
+            font-size: 11px;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 600;
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            color: var(--ink-dim);
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            user-select: none;
+        }
+        .sidebar-item:hover { background: var(--green-soft); color: var(--green-ink); }
+        .sidebar-item.active {
+            background: var(--green-soft);
+            color: var(--green-ink);
+            border-left-color: var(--green);
+            font-weight: 500;
+        }
+        .sidebar-item .item-icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+        .sidebar-badge {
+            margin-left: auto;
+            background: var(--green-solid);
+            color: var(--on-green);
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 8px;
+        }
+
+        /* ===== 主内容区 ===== */
+        .app-main {
+            margin-left: 220px;
+            margin-top: 56px;
+            min-height: calc(100vh - 56px);
+            padding: 24px;
+        }
+
+        /* ===== 卡片 ===== */
+        /* 发丝边框替代重阴影，视觉更轻 */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--line);
+        }
+        .card-header .card-icon {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+        /* 图标底统一走浅绿，保留 blue/green/purple 类名以免改动 HTML */
+        .card-icon.blue, .card-icon.green, .card-icon.purple {
+            background: var(--green-soft);
+            color: var(--green-solid);
+        }
+        .card-header .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+        .card-header .card-desc {
+            font-size: 13px;
+            color: var(--ink-dim);
+            margin-top: 2px;
+        }
+        /* ===== 表单样式覆盖 ===== */
+        .form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 16px; }
+        .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+        .form-label {
+            font-size: 13px;
+            color: var(--ink);
+            font-weight: 500;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .form-label .required { color: var(--danger); margin-left: 2px; }
+        .layui-input, .layui-textarea {
+            border-radius: var(--r-sm) !important;
+            border-color: var(--line-strong) !important;
+            color: var(--ink) !important;
+            font-size: 13px !important;
+            transition: border-color 0.2s, box-shadow 0.2s !important;
+        }
+        .layui-input:focus, .layui-textarea:focus {
+            border-color: var(--green) !important;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12) !important;
+            outline: none !important;
+        }
+
+        /* ===== 上传区域 ===== */
+        .upload-zone {
+            border: 2px dashed var(--green-line);
+            border-radius: 12px;
+            background: var(--bg);
+            padding: 32px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .upload-zone:hover { border-color: var(--green); background: var(--green-soft); }
+        .upload-zone.has-file { border-style: solid; border-color: var(--green); background: var(--green-soft); }
+        .upload-zone .upload-icon { font-size: 32px; color: var(--green-solid); margin-bottom: 8px; }
+        .upload-zone .upload-text { font-size: 13px; color: var(--ink-dim); }
+        .upload-zone .upload-hint { font-size: 11px; color: var(--ink-faint); margin-top: 4px; }
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--green-line);
+            border-radius: var(--r-sm);
+            padding: 8px 12px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--green-ink);
+        }
+        .file-info .file-icon { font-size: 16px; }
+
+        /* ===== 按钮 ===== */
+        .btn-primary {
+            background: var(--green-solid);
+            color: var(--on-green);
+            border: none;
+            border-radius: var(--r-sm);
+            padding: 10px 28px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        /* hover 往深走：提亮会让白字对比度掉到 AA 以下 */
+        .btn-primary:hover { background: var(--green-hover); transform: translateY(-1px); }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-primary:disabled { background: var(--green-line); color: var(--green-ink); cursor: not-allowed; transform: none; }
+
+        /* 小号实心按钮 */
+        .btn-primary-sm {
+            background: var(--green-solid);
+            color: var(--on-green);
+            border: none;
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-primary-sm:hover { background: var(--green-hover); }
+
+        /* 次级按钮：透明底 + 发丝边框 */
+        .btn-ghost {
+            background: none;
+            border: 1px solid var(--line-strong);
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--ink-dim);
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .btn-ghost:hover { border-color: var(--green); color: var(--green-ink); }
+        .btn-ghost.sm { padding: 4px 12px; }
+        /* ===== 日志面板 ===== */
+        .log-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .log-toolbar .layui-input { height: 32px; line-height: 32px; }
+        .log-toolbar select.layui-input { appearance: auto; }
+        .log-hint { font-size: 12px; color: var(--ink-dim); }
+
+        /* 实时 / 历史 切换 */
+        .segmented {
+            display: inline-flex;
+            background: var(--green-soft);
+            border-radius: var(--r-sm);
+            padding: 2px;
+        }
+        .segmented .seg-item {
+            background: none;
+            border: none;
+            border-radius: 6px;
+            padding: 5px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--ink-dim);
+        }
+        .segmented .seg-item.active {
+            background: var(--surface);
+            color: var(--green-ink);
+            font-weight: 500;
+        }
+
+        .load-older { display: block; margin: 0 auto 8px; }
+        /* 关键字高亮 */
+        .log-hit { background: rgba(22, 163, 74, 0.28); color: #fff; border-radius: 2px; }
+        .log-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--ink-dim);
+        }
+        .log-status-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--line-strong);
+        }
+        .log-status-dot.connected { background: var(--green); animation: pulse 2s infinite; }
+        .log-status-dot.error { background: var(--danger); }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        #log-container {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-all;
+            height: calc(100vh - 280px);
+            min-height: 400px;
+            overflow-y: auto;
+            background: var(--dark);
+            color: var(--dark-ink);
+            padding: 16px;
+            border-radius: var(--r);
+            border: 1px solid var(--dark-line);
+        }
+        #log-container::-webkit-scrollbar { width: 6px; }
+        #log-container::-webkit-scrollbar-track { background: var(--dark); }
+        #log-container::-webkit-scrollbar-thumb { background: var(--dark-line); border-radius: 3px; }
+
+        /* ===== 日志级别着色 =====
+           只给级别 token 上色 + 整行左侧色条，正文保持中性色。
+           整行着色会让一屏几十行全红，反而看不出重点，正文也更难读。
+           深底 #171c20 上的对比度：ERROR 6.8:1，WARN 8.8:1，DEBUG 5.6:1，正文 11.1:1 */
+        #log-container > div {
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+            margin-left: -8px;
+        }
+        .lv-token { font-weight: 600; }
+
+        .lv-fatal { border-left-color: #ff5449; background: rgba(255, 84, 73, 0.12); }
+        .lv-fatal .lv-token { color: #ff5449; font-weight: 700; }
+        .lv-error { border-left-color: #ff7b72; background: rgba(255, 123, 114, 0.07); }
+        .lv-error .lv-token { color: #ff7b72; }
+        .lv-warn  { border-left-color: #e3b341; }
+        .lv-warn  .lv-token { color: #e3b341; }
+        /* INFO 是基线，只标 token，正文不动 */
+        .lv-info  .lv-token { color: #79c0ff; }
+        /* DEBUG/TRACE 是噪音，整行调暗主动后退 */
+        .lv-debug, .lv-trace { color: #8b949e; }
+        /* 堆栈续行：调暗但保留所属级别的色条，视觉上和上面那条错误连成一块 */
+        .lv-cont { color: #8b949e; }
+
+        /* 级别过滤纯前端，用 class 隐藏，切换瞬时且不用重新请求。
+           识别不出级别的裸文本行不带 lv- class，任何过滤下都保持显示 */
+        .flt-info  .lv-debug, .flt-info  .lv-trace { display: none; }
+        .flt-warn  .lv-debug, .flt-warn  .lv-trace, .flt-warn  .lv-info { display: none; }
+        .flt-error .lv-debug, .flt-error .lv-trace, .flt-error .lv-info, .flt-error .lv-warn { display: none; }
+
+        /* ===== 导入日志 ===== */
+        #import-log {
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            background: var(--dark);
+            color: var(--dark-ink) !important;
+            border-radius: var(--r);
+            border: 1px solid var(--dark-line) !important;
+            height: 180px;
+            resize: vertical;
+        }
+
+        /* ===== 进度条 ===== */
+        .progress-wrap { display: none; }
+        .progress-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .progress-phase {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--ink);
+        }
+        .progress-percent {
+            margin-left: auto;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--green-solid);
+            font-variant-numeric: tabular-nums;
+        }
+        .progress-bar-bg {
+            height: 6px;
+            background: var(--green-soft);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--green);
+            border-radius: 3px;
+            width: 0%;
+        }
+        /* 上传阶段：宽度由真实进度驱动 */
+        .progress-bar-fill.determinate { transition: width 0.2s linear; }
+        /* 服务端处理阶段：时长不可知，用滑块表达"正在进行"而非具体进度 */
+        .progress-bar-fill.indeterminate {
+            width: 35%;
+            animation: indeterminate 1.4s ease-in-out infinite;
+        }
+        @keyframes indeterminate {
+            0%   { margin-left: -35%; }
+            100% { margin-left: 100%; }
+        }
+        .progress-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--ink-dim);
+            font-variant-numeric: tabular-nums;
+        }
+        .progress-meta .sep { color: var(--line-strong); }
+        .btn-cancel {
+            margin-left: auto;
+            background: none;
+            border: 1px solid var(--line-strong);
+            border-radius: 6px;
+            padding: 3px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--ink-dim);
+        }
+        .btn-cancel:hover { border-color: var(--danger); color: var(--danger); }
+
+        /* ===== 分割线标题 ===== */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 16px 0;
+            color: var(--ink-dim);
+            font-size: 12px;
+        }
+        .section-divider::before, .section-divider::after {
+            content: ''; flex: 1;
+            height: 1px;
+            background: var(--line);
+        }
+
+        /* ===== 导入结果横幅 ===== */
+        .result-banner {
+            display: none;
+            align-items: center;
+            gap: 14px;
+            background: var(--green-soft);
+            border: 1px solid var(--green-line);
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+        }
+        .result-banner code { margin-left: auto; }
+
+        /* ===== 隐藏 ===== */
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
-<div class="layui-layout layui-layout-admin">
-    <div class="layui-header">
-        <ul class="layui-nav">
-            <li class="layui-nav-item layui-this" data-content="backup">数据库脱敏导入</li>
-            <li class="layui-nav-item" data-content="log">日志查看</li>
-        </ul>
+
+<!-- ===== 顶栏 ===== -->
+<div class="app-header">
+    <div class="logo">
+        <div class="logo-icon">🛠</div>
+        <span>研发日常工具</span>
     </div>
-<!--    <div class="layui-side layui-bg-black">-->
-<!--        <div class="layui-side-scroll">-->
-<!--        </div>-->
-<!--    </div>-->
-    <div class="layui-body">
-        <!-- 内容主体区域 -->
-        <div id="main-content" style="padding: 15px;">
-            <!-- 数据库脱敏导入静态内容 -->
-            <div id="backup-content" style="display: none;">
-                <form class="layui-form" action="">
-                    <div class="layui-row">
-                        <div class="layui-col-xs3">
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">IP地址:</label>
-                                <div class="layui-input-block">
-                                    <input autocomplete="off" class="layui-input" lay-verify="required" name="ip" value="127.0.0.1" placeholder="请输入IP地址"
-                                           required type="text">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-col-xs3">
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">端口:</label>
-                                <div class="layui-input-block">
-                                    <input autocomplete="off"  class="layui-input" lay-verify="required" name="port" value="3306" placeholder="请输入端口"
-                                           required type="number">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-col-xs3">
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">用户名:</label>
-                                <div class="layui-input-block">
-                                    <input autocomplete="off" class="layui-input" lay-verify="required" name="username" value="root"
-                                           placeholder="请输入用户名" required type="text">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-col-xs3">
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">密码:</label>
-                                <div class="layui-input-block">
-                                    <input autocomplete="off" class="layui-input" lay-verify="required" name="password" value="123456"
-                                           placeholder="请输入密码" required type="password">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-row">
-                        <div class="layui-col-xs4">
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">导入文件:</label>
-                                <div class="layui-upload-drag" id="ID-upload-demo-drag">
-                                    <i class="layui-icon layui-icon-upload"></i>
-                                    <div>点击上传，或将文件拖拽到此处</div>
-                                    <div class="layui-hide" id="ID-upload-demo-preview">
-                                        <hr>
-                                        <!-- 文件名将显示在这里 -->
-                                        <div id="file-name-container" style="padding: 10px;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-col-xs4">
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">脱敏SQL:</label>
-                                <div class="layui-input-block">
-                                    <textarea class="layui-textarea" style="font-size: 11px;"  name="sql" ></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-col-xs4">
-                            <div class="layui-form-item">
-                                <div class="layui-input-block">
-                                    <button type="submit" class="layui-btn" lay-submit lay-filter="import-btn" >导入</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <textarea class="layui-textarea"  id="import-log" placeholder="日志内容" readonly></textarea>
-                    </div>
+    <div class="header-right">McDull Tools</div>
+</div>
+
+<!-- ===== 侧边栏 ===== -->
+<div class="app-sidebar">
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">数据管理</div>
+        <div class="sidebar-item active" data-page="import" onclick="switchPage('import', this)">
+            <span class="item-icon">💾</span>
+            <span>数据库脱敏导入</span>
+        </div>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">监控诊断</div>
+        <div class="sidebar-item" data-page="log" onclick="switchPage('log', this)">
+            <span class="item-icon">📋</span>
+            <span>日志实时查看</span>
+            <span class="sidebar-badge" id="log-badge" style="display:none">Live</span>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 主内容区 ===== -->
+<div class="app-main">
+
+    <!-- 数据库脱敏导入页 -->
+    <div id="page-import">
+
+        <!-- 连接配置卡片 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon blue">🔌</div>
+                <div>
+                    <div class="card-title">数据库连接</div>
+                    <div class="card-desc">配置目标 MySQL 数据库连接信息</div>
                 </div>
             </div>
-            <!-- 日志查看静态内容 -->
-            <div id="log-content" style="display: none;">
-<!--                <div class="layui-form-item">-->
-<!--                    <div class="layui-input-block">-->
-<!--                        <textarea class="layui-textarea"  placeholder="日志内容" readonly></textarea>-->
-<!--                    </div>-->
-<!--                </div>-->
-                <div id="log-container"></div>
+            <div class="form-grid">
+                <div>
+                    <label class="form-label">IP 地址 <span class="required">*</span></label>
+                    <input id="f-ip" class="layui-input" type="text" value="127.0.0.1" placeholder="例：192.168.1.100">
+                </div>
+                <div>
+                    <label class="form-label">端口 <span class="required">*</span></label>
+                    <input id="f-port" class="layui-input" type="number" value="3306" placeholder="3306">
+                </div>
+                <div>
+                    <label class="form-label">用户名 <span class="required">*</span></label>
+                    <input id="f-username" class="layui-input" type="text" value="root" placeholder="数据库用户名">
+                </div>
+                <div>
+                    <label class="form-label">密码 <span class="required">*</span></label>
+                    <input id="f-password" class="layui-input" type="password" placeholder="数据库密码">
+                </div>
             </div>
         </div>
-        <div class="layui-footer">
-            <!-- 底部固定区域 -->
-            底部固定区域
+
+        <!-- 导入配置卡片 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon purple">📂</div>
+                <div>
+                    <div class="card-title">导入配置</div>
+                    <div class="card-desc">上传 SQL 文件并配置脱敏规则</div>
+                </div>
+            </div>
+            <div class="form-grid-2">
+                <div>
+                    <label class="form-label">SQL 文件 <span class="required">*</span></label>
+                    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+                        <div class="upload-icon">⬆</div>
+                        <div class="upload-text">点击选择文件</div>
+                        <div class="upload-hint">支持 .sql 格式</div>
+                    </div>
+                    <div class="file-info hidden" id="file-info">
+                        <span class="file-icon">📄</span>
+                        <span id="file-name-text"></span>
+                        <span id="file-size-text" style="color:var(--ink-dim); margin-left:auto;"></span>
+                        <span style="cursor:pointer; color:var(--ink-dim);" onclick="clearFile()">✕</span>
+                    </div>
+                    <input type="file" id="file-input" accept=".sql" style="display:none" onchange="onFileSelected(this)">
+                </div>
+                <div>
+                    <label class="form-label">脱敏 SQL <span style="color:var(--ink-faint); font-weight:400;">（可选）</span></label>
+                    <textarea id="f-sql" class="layui-textarea" style="height:150px; font-size:12px; font-family:Consolas,monospace; resize:vertical;"
+                        placeholder="-- 导入完成后执行的脱敏语句，例如：&#10;UPDATE user SET email = CONCAT('user_', id, '@example.com');&#10;UPDATE user SET phone = '13800000000';"></textarea>
+                </div>
+                <div style="display:flex; flex-direction:column; justify-content:flex-end;">
+                    <label class="form-label" style="visibility:hidden;">操作</label>
+                    <button class="btn-primary" id="import-btn" onclick="doImport()">
+                        <span>▶</span> 开始导入
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 导入结果：每次导入生成新库，需要明确告知连哪个库 -->
+        <div class="result-banner" id="result-banner">
+            <span style="font-size:18px;">✅</span>
+            <div>
+                <div style="font-size:13px; font-weight:600; color:var(--green-ink);">导入完成，请连接到新库</div>
+                <div style="font-size:12px; color:var(--green-solid); margin-top:2px;">
+                    原库结构保持不变，历史版本按保留策略自动清理
+                </div>
+            </div>
+            <code id="result-db-name" style="background:var(--surface); border:1px solid var(--green-line); border-radius:6px;
+                padding:6px 12px; font-size:13px; color:var(--green-ink); user-select:all;"></code>
+            <button onclick="hideResultBanner()" style="background:none; border:none; cursor:pointer;
+                color:var(--green-solid); font-size:16px;">✕</button>
+        </div>
+
+        <!-- 执行进度 -->
+        <div class="card progress-wrap" id="progress-wrap" style="padding:18px 24px;">
+            <div class="progress-head">
+                <span class="progress-phase" id="progress-phase">准备中</span>
+                <span class="progress-percent" id="progress-percent"></span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-meta">
+                <span id="progress-detail"></span>
+                <span class="sep" id="progress-sep">·</span>
+                <span id="progress-elapsed">已用 0s</span>
+                <button class="btn-cancel" id="progress-cancel" onclick="cancelImport()">取消上传</button>
+            </div>
+        </div>
+
+        <!-- 导入日志卡片 -->
+        <div class="card">
+            <div class="card-header" style="margin-bottom:12px; padding-bottom:12px;">
+                <div class="card-icon green">📜</div>
+                <div>
+                    <div class="card-title">执行日志</div>
+                    <div class="card-desc">导入过程输出</div>
+                </div>
+                <button class="btn-ghost sm" onclick="clearImportLog()" style="margin-left:auto;">清空</button>
+            </div>
+            <textarea id="import-log" class="layui-textarea" readonly
+                placeholder="导入日志将在此显示..."></textarea>
         </div>
     </div>
 
-    <script src="dist/layui.js"></script>
-    <script>
-        layui.use(['jquery'], function(){
-            var $ = layui.$; // 引入jquery模块
-            var selectedFile = null;
+    <!-- 日志查看页 -->
+    <div id="page-log" class="hidden">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon blue">📡</div>
+                <div>
+                    <div class="card-title">日志查看</div>
+                    <div class="card-desc">实时追踪或回溯历史，关键字在服务端过滤</div>
+                </div>
+                <div style="margin-left:auto; display:flex; align-items:center; gap:12px;">
+                    <div class="log-status">
+                        <div class="log-status-dot" id="sse-status-dot"></div>
+                        <span id="sse-status-text">未连接</span>
+                    </div>
+                    <button class="btn-ghost" onclick="clearLog()">清空</button>
+                </div>
+            </div>
 
-             // 页面加载时默认显示数据库脱敏导入内容
-            $(document).ready(function() {
-                $('#backup-content').show(); // 显示数据库脱敏导入内容
-                $('.layui-nav-item[data-content="backup"]').addClass('layui-this'); // 设置“数据库脱敏导入”菜单为选中状态
-            });
+            <!-- 工具条：target + 模式 + 关键字 + 历史文件 -->
+            <div class="log-toolbar">
+                <select id="log-target" class="layui-input" style="width:220px;" onchange="onTargetChange()"></select>
 
-            // 根据导航菜单显示对应内容
-            $('.layui-nav-item').click(function(){
-                var content = $(this).data('content');
-                if(content === 'backup'){
-                    $('#backup-content').show();
-                    $('#log-content').hide();
-                }else if(content === 'log'){
-                    $('#backup-content').hide();
-                    $('#log-content').show();
-                    const  logContainer = document.getElementById('log-container');
-                    const  eventSource = new EventSource('/logs-stream');
-                    eventSource.onmessage = function(e) {
-                        logContainer.textContent += e.data;
-                        // 自动滚动
-                        logContainer.scrollTop = logContainer.scrollHeight;
-                    };
-                    eventSource.onerror = function(e) {
-                        console.error('EventSource failed:', e);
-                        eventSource.close();
-                    };
-                }
-            });
+                <div class="segmented">
+                    <button class="seg-item active" id="seg-live" onclick="setLogMode('live')">实时</button>
+                    <button class="seg-item" id="seg-history" onclick="setLogMode('history')">历史</button>
+                </div>
 
-        var form = layui.form;
-          // 提交事件
-          form.on('submit(import-btn)', function(data){
-            var field = data.field; // 获取表单字段值
-            $('#import-log').val('导入开始...\n');
-            $('#import-log').val($('#import-log').val() + '连接数据库中...\n');
-            // 显示填写结果，仅作演示用
-            layer.alert(JSON.stringify(field), {
-              title: '当前填写的字段值'
-            });
+                <input id="log-keyword" class="layui-input" type="text" placeholder="关键字（不区分大小写，回车应用）"
+                       style="width:280px;" onkeydown="if(event.key==='Enter') applyKeyword()">
+                <button class="btn-primary-sm" onclick="applyKeyword()">搜索</button>
+                <button class="btn-ghost" onclick="resetKeyword()">重置</button>
 
-            // 创建 FormData 对象
-            var formData = new FormData();
+                <select id="log-level" class="layui-input" style="width:140px;" onchange="applyLevelFilter()">
+                    <option value="">全部级别</option>
+                    <option value="info">INFO 及以上</option>
+                    <option value="warn">WARN 及以上</option>
+                    <option value="error">ERROR 及以上</option>
+                </select>
 
-            // 遍历 data 对象，将每个字段添加到 FormData 中
-            for (var key in field) {
-                if (field.hasOwnProperty(key) && key !== 'file') { // 确保是对象自身的属性
-                    formData.append(key, field[key]);
-                }
-            }
-             // 添加其他参数
-            formData.append('file', selectedFile);
+                <select id="log-file" class="layui-input" style="width:240px; display:none;" onchange="reloadHistory()"></select>
 
-            // 此处可执行 Ajax 等操作
-            $.ajax({
-                url: '/import',
-                type: 'POST',
-                data: formData,
-                processData: false, // 告诉 jQuery 不要去处理发送的数据
-                contentType: false, // 告诉 jQuery 不要去设置 Content-Type 请求头
-                success: function(response) {
-                    // 处理服务器返回的数据
-                    console.log(response);
-                    $('#import-log').val($('#import-log').val() + response + '\n');
-                },
-                error: function(xhr, status, error) {
-                    // 处理请求失败的情况
-                    console.log(error);
-                    $('#import-log').val($('#import-log').val() + '导入失败。\n');
-                }
-            })
+                <label id="auto-scroll-wrap" style="font-size:12px; color:var(--ink-dim); display:flex; align-items:center; gap:4px; cursor:pointer;">
+                    <input type="checkbox" id="auto-scroll-cb" checked> 自动滚动
+                </label>
 
+                <span class="log-hint" id="log-hint" style="margin-left:auto;"></span>
+            </div>
 
-            // …
-            return false; // 阻止默认 form 跳转
-          });
+            <button class="btn-ghost load-older hidden" id="load-older" onclick="loadOlder()">加载更早</button>
+            <div id="log-container"></div>
+        </div>
+    </div>
 
-<!--            // 模拟导入按钮点击事件-->
-<!--            $('#import-btn').click(function(){-->
-<!--            console.log('模拟导入按钮点击事件');-->
-<!--                // 模拟导入过程-->
-<!--                $('#import-log').val('导入开始...\n');-->
-<!--                setTimeout(function(){-->
-<!--                    $('#import-log').val($('#import-log').val() + '连接数据库中...\n');-->
-<!--                    setTimeout(function(){-->
-<!--                        $('#import-log').val($('#import-log').val() + '导入文件...\n');-->
-<!--                        setTimeout(function(){-->
-<!--                            $('#import-log').val($('#import-log').val() + '导入完成。\n');-->
-<!--                        }, 1000);-->
-<!--                    }, 1000);-->
-<!--                }, 1000);-->
-<!--            });-->
-         var upload = layui.upload;
-         var $ = layui.$;
-         upload.render({
-            elem: '#ID-upload-demo-drag',
-            accept: 'file', //普通文件
-            auto: false, //选择文件后不自动上传
-            url: '',
-            choose: function(obj){
-               // 正确获取文件的方式
-                obj.preview(function(index, file, result){
-                    selectedFile = file;
-                    // 显示预览区域
-                    $('#ID-upload-demo-preview').removeClass('layui-hide');
-                    var fileSize = (file.size/1024).toFixed(2) + ' KB';
-                    $('#file-name-container')
-                    .html(`<span style="color: #666; font-size: 12px;">${file.name}${fileSize}</span>`);
-                });
-            }
-          });
+</div><!-- /.app-main -->
+
+<script src="dist/layui.js"></script>
+<script>
+var selectedFile = null;
+var eventSource  = null;
+
+// ===== 页面切换 =====
+function switchPage(page, el) {
+    document.querySelectorAll('.sidebar-item').forEach(function(i){ i.classList.remove('active'); });
+    el.classList.add('active');
+    document.getElementById('page-import').classList.toggle('hidden', page !== 'import');
+    document.getElementById('page-log').classList.toggle('hidden', page !== 'log');
+    // 离开日志页就断开 SSE，别让连接和推送一直挂着
+    if (page === 'log') {
+        loadTargetList(function() {
+            if (logMode === 'live') { connectLive(); } else { loadFileList(); reloadHistory(); }
         });
-    </script>
-    <style>
-        .layui-nav-item {
-           cursor: pointer; /* 鼠标悬停时显示手形图标 */
-       }
-       .layui-nav .layui-nav-item {
-           margin-left: 184px;
-       }
-       .layui-row {
-           margin-left: 30px;
-       }
-         #log-container {
-            font-family: monospace;
-            white-space: pre;
-            height: 80vh;
-            overflow-y: auto;
-            background: #1e1e1e;
-            color: #d4d4d4;
-            padding: 10px;
+    } else {
+        disconnectLive();
+    }
+}
+
+// ===== 文件选择 =====
+function onFileSelected(input) {
+    var file = input.files[0];
+    if (!file) return;
+    selectedFile = file;
+    var zone = document.getElementById('upload-zone');
+    zone.classList.add('has-file');
+    zone.innerHTML = '<div style="font-size:28px;">✅</div><div style="font-size:13px; color:var(--green-ink); font-weight:500;">' + file.name + '</div>';
+    document.getElementById('file-info').classList.remove('hidden');
+    document.getElementById('file-name-text').textContent = file.name;
+    document.getElementById('file-size-text').textContent = formatBytes(file.size);
+    // 重置 input 以允许重复选同一文件
+    input.value = '';
+}
+function clearFile() {
+    selectedFile = null;
+    var zone = document.getElementById('upload-zone');
+    zone.classList.remove('has-file');
+    zone.innerHTML = '<div class="upload-icon">⬆</div><div class="upload-text">点击选择文件</div><div class="upload-hint">支持 .sql 格式</div>';
+    document.getElementById('file-info').classList.add('hidden');
+}
+
+</script>
+<script>
+// ===== 格式化 =====
+function formatBytes(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+    if (n < 1073741824) return (n / 1048576).toFixed(1) + ' MB';
+    return (n / 1073741824).toFixed(2) + ' GB';
+}
+function formatDuration(sec) {
+    sec = Math.max(0, Math.round(sec));
+    if (sec < 60) return sec + 's';
+    var m = Math.floor(sec / 60), s = sec % 60;
+    if (m < 60) return m + 'm' + (s ? ' ' + s + 's' : '');
+    var h = Math.floor(m / 60);
+    m = m % 60;
+    return h + 'h' + (m ? ' ' + m + 'm' : '');
+}
+
+// ===== 进度 =====
+var POLL_INTERVAL_MS   = 600;
+var POLL_MAX_FAILURES  = 10;
+
+var importXhr    = null;
+var importStart  = 0;
+var elapsedTimer = null;
+var pollTimer    = null;
+var pollFailures = 0;
+
+function restoreImportBtn() {
+    var btn = document.getElementById('import-btn');
+    btn.disabled = false;
+    btn.innerHTML = '<span>▶</span> 开始导入';
+}
+
+function progressStart() {
+    importStart = Date.now();
+    hideResultBanner();
+    document.getElementById('progress-wrap').style.display = 'block';
+    document.getElementById('progress-cancel').style.display = '';
+    setPhase('上传中', 'determinate');
+    document.getElementById('progress-fill').style.width = '0%';
+    document.getElementById('progress-percent').textContent = '0%';
+    document.getElementById('progress-detail').textContent = '正在建立连接';
+    elapsedTimer = setInterval(function() {
+        document.getElementById('progress-elapsed').textContent =
+            '已用 ' + formatDuration((Date.now() - importStart) / 1000);
+    }, 500);
+}
+function progressEnd() {
+    if (elapsedTimer) { clearInterval(elapsedTimer); elapsedTimer = null; }
+    stopPolling();
+    document.getElementById('progress-wrap').style.display = 'none';
+    importXhr = null;
+}
+function setPhase(text, mode) {
+    document.getElementById('progress-phase').textContent = text;
+    var fill = document.getElementById('progress-fill');
+    fill.className = 'progress-bar-fill ' + mode;
+    if (mode === 'indeterminate') {
+        // 清掉上传阶段留下的行内宽度，否则会盖掉滑块的 CSS 宽度
+        fill.style.width = '';
+    }
+    // 服务端阶段没有百分比可言，隐藏数字避免误导
+    document.getElementById('progress-percent').style.display =
+        mode === 'determinate' ? '' : 'none';
+}
+function setUploadProgress(loaded, total) {
+    var pct = total > 0 ? (loaded / total * 100) : 0;
+    document.getElementById('progress-fill').style.width = pct.toFixed(1) + '%';
+    document.getElementById('progress-percent').textContent = pct.toFixed(1) + '%';
+    var seconds = (Date.now() - importStart) / 1000;
+    var parts = [formatBytes(loaded) + ' / ' + formatBytes(total)];
+    if (seconds > 0.5 && loaded > 0) {
+        var speed = loaded / seconds;
+        parts.push(formatBytes(speed) + '/s');
+        if (loaded < total) {
+            parts.push('剩余约 ' + formatDuration((total - loaded) / speed));
         }
-    </style>
+    }
+    document.getElementById('progress-detail').textContent = parts.join(' · ');
+}
+
+function cancelImport() {
+    if (importXhr) { importXhr.abort(); }
+}
+
+// ===== 导入 =====
+function doImport() {
+    var ip       = document.getElementById('f-ip').value.trim();
+    var port     = document.getElementById('f-port').value.trim();
+    var username = document.getElementById('f-username').value.trim();
+    var password = document.getElementById('f-password').value.trim();
+    var sql      = document.getElementById('f-sql').value.trim();
+
+    if (!ip)       { layui.layer.msg('请填写 IP 地址', {icon:5}); return; }
+    if (!port)     { layui.layer.msg('请填写端口', {icon:5}); return; }
+    if (!username) { layui.layer.msg('请填写用户名', {icon:5}); return; }
+    if (!password) { layui.layer.msg('请填写密码', {icon:5}); return; }
+    if (!selectedFile) { layui.layer.msg('请选择 SQL 文件', {icon:5}); return; }
+
+    var btn = document.getElementById('import-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳</span> 导入中...';
+    progressStart();
+    appendImportLog('开始导入: ' + selectedFile.name
+        + ' (' + formatBytes(selectedFile.size) + ')\n');
+
+    var formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('ip', ip);
+    formData.append('port', port);
+    formData.append('username', username);
+    formData.append('password', password);
+    if (sql) formData.append('sql', sql);
+
+    var xhr = new XMLHttpRequest();
+    importXhr = xhr;
+    xhr.open('POST', '/import', true);
+
+    // 上传阶段的进度由浏览器提供
+    xhr.upload.onprogress = function(e) {
+        if (e.lengthComputable) { setUploadProgress(e.loaded, e.total); }
+    };
+    // 请求体发送完毕，服务端正在落盘并解析库名，这一小段没有可度量的单位
+    xhr.upload.onload = function() {
+        setPhase('服务端接收中', 'indeterminate');
+        document.getElementById('progress-detail').textContent = '文件已上传，正在落盘并创建任务';
+        // 中止请求不会停止服务端已开始的导入，此阶段不再提供取消
+        document.getElementById('progress-cancel').style.display = 'none';
+        appendImportLog('文件上传完成\n');
+    };
+
+    xhr.onload = function() {
+        if (xhr.status !== 200) {
+            progressEnd();
+            restoreImportBtn();
+            appendImportLog('❌ 任务创建失败 (HTTP ' + xhr.status + ')\n' + xhr.responseText + '\n');
+            layui.layer.msg('任务创建失败', {icon:2});
+            return;
+        }
+        var taskId = null;
+        try {
+            taskId = JSON.parse(xhr.responseText).data;
+        } catch (e) {
+            // 忽略，下面按无 taskId 处理
+        }
+        if (!taskId) {
+            progressEnd();
+            restoreImportBtn();
+            appendImportLog('❌ 未获取到任务 ID\n' + xhr.responseText + '\n');
+            layui.layer.msg('任务创建失败', {icon:2});
+            return;
+        }
+        // 导入已转入后台，改为轮询任务进度
+        startPolling(taskId);
+    };
+    xhr.onerror = function() {
+        progressEnd();
+        restoreImportBtn();
+        appendImportLog('❌ 请求失败，请检查网络或服务状态\n');
+        layui.layer.msg('请求失败', {icon:2});
+    };
+    xhr.onabort = function() {
+        progressEnd();
+        restoreImportBtn();
+        appendImportLog('⚠ 上传已取消\n');
+        layui.layer.msg('已取消', {icon:0});
+    };
+    xhr.send(formData);
+}
+
+// ===== 服务端任务轮询 =====
+function startPolling(taskId) {
+    appendImportLog('任务已创建: ' + taskId + '\n');
+    pollFailures = 0;
+    pollTimer = setInterval(function() { pollOnce(taskId); }, POLL_INTERVAL_MS);
+    pollOnce(taskId);
+}
+function stopPolling() {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+}
+function pollOnce(taskId) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/import/task/' + encodeURIComponent(taskId), true);
+    xhr.onload = function() {
+        var task = null;
+        if (xhr.status === 200) {
+            try {
+                task = JSON.parse(xhr.responseText).data;
+            } catch (e) {
+                // 保持 task 为 null，走下面的失败计数
+            }
+        }
+        if (!task) { onPollFailure(); return; }
+        pollFailures = 0;
+        renderTask(task);
+    };
+    xhr.onerror = onPollFailure;
+    xhr.send();
+}
+function onPollFailure() {
+    // 单次抖动不终止，连续失败才判定失联，避免误报
+    if (++pollFailures < POLL_MAX_FAILURES) { return; }
+    progressEnd();
+    restoreImportBtn();
+    appendImportLog('❌ 无法获取任务进度，连接可能已中断。导入可能仍在服务端继续。\n');
+    layui.layer.msg('进度获取失败', {icon:2});
+}
+function renderTask(task) {
+    var dbSuffix = task.databaseName ? ' · ' + task.databaseName : '';
+    if (task.phase === 'IMPORTING') {
+        setPhase('导入中', 'determinate');
+        document.getElementById('progress-fill').style.width = task.percent + '%';
+        document.getElementById('progress-percent').textContent = task.percent + '%';
+        document.getElementById('progress-detail').textContent =
+            formatBytes(task.processedBytes) + ' / ' + formatBytes(task.totalBytes) + dbSuffix;
+    } else if (task.phase === 'MASKING') {
+        setPhase('脱敏中', 'indeterminate');
+        document.getElementById('progress-detail').textContent = '导入完成，正在执行脱敏 SQL' + dbSuffix;
+    } else {
+        finishTask(task);
+    }
+}
+function finishTask(task) {
+    var cost = formatDuration((Date.now() - importStart) / 1000);
+    progressEnd();
+    restoreImportBtn();
+    if (task.phase === 'SUCCESS') {
+        appendImportLog('✅ 导入成功，总耗时 ' + cost + '\n'
+            + '请连接到新库: ' + task.databaseName + '\n'
+            + (task.message ? task.message + '\n' : ''));
+        showResultBanner(task.databaseName);
+        layui.layer.msg('导入成功', {icon:1});
+    } else {
+        // 失败时版本库已被 drop，目标环境不会残留未脱敏数据
+        appendImportLog('❌ 导入失败 (总耗时 ' + cost + ')\n' + (task.message || '') + '\n');
+        layui.layer.msg('导入失败', {icon:2});
+    }
+}
+function showResultBanner(databaseName) {
+    var banner = document.getElementById('result-banner');
+    document.getElementById('result-db-name').textContent = databaseName;
+    banner.style.display = 'flex';
+}
+function hideResultBanner() {
+    document.getElementById('result-banner').style.display = 'none';
+}
+function appendImportLog(text) {
+    var ta = document.getElementById('import-log');
+    ta.value += '[' + new Date().toLocaleTimeString() + '] ' + text;
+    ta.scrollTop = ta.scrollHeight;
+}
+function clearImportLog() {
+    document.getElementById('import-log').value = '';
+}
+
+// ===== 日志查看：实时 + 历史 =====
+// 实时走 SSE，历史走字节游标分页，两种模式共用一个关键字，过滤都在服务端完成。
+var LIVE_MAX_LINES = 5000;   // 实时模式 DOM 上限，超出从顶部丢弃，避免长时间挂着把内存吃满
+
+var logMode      = 'live';
+var logKeyword   = '';
+var logTarget    = '';       // selected target id
+var historyCursor = null;    // null 表示从文件尾开始
+var historyDone   = false;
+var fileListLoaded = false;
+var targetListLoaded = false;
+
+function getJson(url, onOk) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onload = function() {
+        if (xhr.status !== 200) { setLogHint('请求失败 (HTTP ' + xhr.status + ')'); return; }
+        var body = null;
+        try { body = JSON.parse(xhr.responseText); } catch (e) { /* 下面按空响应处理 */ }
+        if (!body || body.data === undefined || body.data === null) {
+            setLogHint((body && body.message) ? body.message : '响应解析失败');
+            return;
+        }
+        onOk(body.data);
+    };
+    xhr.onerror = function() { setLogHint('请求失败，请检查服务状态'); };
+    xhr.send();
+}
+
+// ===== 模式切换 =====
+function loadTargetList(callback) {
+    if (targetListLoaded) { if (callback) callback(); return; }
+    getJson('/log/targets', function(targets) {
+        var select = document.getElementById('log-target');
+        select.innerHTML = '';
+        var saved = localStorage.getItem('log-target');
+        targets.forEach(function(t) {
+            var option = document.createElement('option');
+            option.value = t.id;
+            option.textContent = t.env + ' · ' + t.service + (t.remote ? '  ⇆' : '');
+            if (saved && t.id === saved) { option.selected = true; }
+            select.appendChild(option);
+        });
+        logTarget = select.value;
+        targetListLoaded = true;
+        if (callback) callback();
+    });
+}
+
+function onTargetChange() {
+    logTarget = document.getElementById('log-target').value;
+    localStorage.setItem('log-target', logTarget);
+    fileListLoaded = false;
+    clearLog();
+    if (logMode === 'live') { connectLive(); } else { loadFileList(); reloadHistory(); }
+}
+
+function setLogMode(mode) {
+    if (logMode === mode) { return; }
+    logMode = mode;
+    document.getElementById('seg-live').classList.toggle('active', mode === 'live');
+    document.getElementById('seg-history').classList.toggle('active', mode === 'history');
+    document.getElementById('log-file').style.display = mode === 'history' ? '' : 'none';
+    document.getElementById('auto-scroll-wrap').style.display = mode === 'live' ? '' : 'none';
+    clearLog();
+    if (mode === 'live') {
+        document.getElementById('load-older').classList.add('hidden');
+        connectLive();
+    } else {
+        disconnectLive();
+        loadFileList();
+        reloadHistory();
+    }
+}
+
+function applyKeyword() {
+    logKeyword = document.getElementById('log-keyword').value.trim();
+    clearLog();
+    if (logMode === 'live') { connectLive(); } else { reloadHistory(); }
+}
+function resetKeyword() {
+    document.getElementById('log-keyword').value = '';
+    applyKeyword();
+}
+
+// ===== 实时 =====
+function connectLive() {
+    disconnectLive();
+    setLogStatus('connecting');
+    document.getElementById('log-badge').style.display = 'inline';
+    var url = '/log/stream?target=' + encodeURIComponent(logTarget)
+            + (logKeyword ? '&keyword=' + encodeURIComponent(logKeyword) : '');
+    eventSource = new EventSource(url);
+    eventSource.onopen = function() {
+        setLogStatus('connected');
+        setLogHint(logKeyword ? '仅推送包含关键字的行' : '');
+    };
+    eventSource.onmessage = function(e) {
+        appendLine(e.data);
+    };
+    eventSource.onerror = function() {
+        // EventSource 会自行重连，这里只反映状态，不主动关闭
+        setLogStatus('error');
+    };
+}
+function disconnectLive() {
+    if (eventSource) { eventSource.close(); eventSource = null; }
+    setLogStatus('disconnected');
+    document.getElementById('log-badge').style.display = 'none';
+}
+
+// ===== 历史 =====
+function loadFileList() {
+    if (fileListLoaded) { return; }
+    getJson('/log/files?target=' + encodeURIComponent(logTarget), function(files) {
+        var select = document.getElementById('log-file');
+        select.innerHTML = '';
+        files.forEach(function(f) {
+            var option = document.createElement('option');
+            option.value = f.name;
+            option.textContent = f.name + '  (' + formatBytes(f.size) + ')' + (f.active ? '  · 当前' : '');
+            select.appendChild(option);
+        });
+        fileListLoaded = true;
+    });
+}
+
+function reloadHistory() {
+    historyCursor = null;
+    historyDone = false;
+    clearLog();
+    fetchHistory(false);
+}
+
+function loadOlder() {
+    fetchHistory(true);
+}
+
+/**
+ * 拉一页历史。prepend 为 true 时插到已有内容前面（往更早翻），否则是首屏。
+ */
+function fetchHistory(prepend) {
+    if (historyDone) { return; }
+    var file = document.getElementById('log-file').value;
+    var url = '/log/history?target=' + encodeURIComponent(logTarget) + '&limit=300';
+    if (file)       { url += '&file=' + encodeURIComponent(file); }
+    if (logKeyword) { url += '&keyword=' + encodeURIComponent(logKeyword); }
+    if (historyCursor !== null) { url += '&cursor=' + historyCursor; }
+
+    setLogHint('加载中...');
+    getJson(url, function(page) {
+        var container = document.getElementById('log-container');
+        var anchor = prepend ? container.firstChild : null;
+        var previousHeight = container.scrollHeight;
+
+        // 每页重置继承链：往前翻时上一页的级别不该渗到这一页的首行
+        lastLevel = null;
+        var fragment = document.createDocumentFragment();
+        page.lines.forEach(function(text) { fragment.appendChild(renderLine(text)); });
+        if (anchor) { container.insertBefore(fragment, anchor); } else { container.appendChild(fragment); }
+
+        historyCursor = page.nextCursor;
+        historyDone = (page.nextCursor === null || page.nextCursor === undefined);
+        document.getElementById('load-older').classList.toggle('hidden', historyDone);
+
+        if (prepend) {
+            // 保持视口停在原来那一行上，否则往前翻会跳走
+            container.scrollTop += container.scrollHeight - previousHeight;
+        } else {
+            container.scrollTop = container.scrollHeight;
+        }
+        setLogHint(buildHistoryHint(page));
+    });
+}
+
+function buildHistoryHint(page) {
+    var parts = [];
+    if (logKeyword) { parts.push('命中 ' + page.lines.length + ' 行'); }
+    else { parts.push(page.lines.length + ' 行'); }
+    parts.push('文件 ' + formatBytes(page.fileSize));
+    if (page.scannedBytes) { parts.push('已扫描 ' + formatBytes(page.scannedBytes)); }
+    if (page.truncated)    { parts.push('已达扫描上限，更早的匹配请继续点“加载更早”'); }
+    else if (historyDone)  { parts.push('已到文件开头'); }
+    return parts.join(' · ');
+}
+
+// ===== 渲染 =====
+// 只匹配大写，不加 i 标志：Java 各种布局里级别一律大写，
+// 这样 com.foo.ErrorHandler 这类类名不会被误判成级别。
+var LEVEL_RE   = /\b(FATAL|ERROR|WARN|WARNING|INFO|DEBUG|TRACE)\b/;
+// 级别只在行首这么多字符内找。Spring Boot 默认格式时间戳占 30 字符、级别紧随其后，
+// 64 足够覆盖，同时把正文排除在外 —— 否则 "failed to map Exception handler" 这种
+// INFO 行会被判成 ERROR，误判率很高。
+var LEVEL_HEAD = 64;
+var CONT_RE    = /^(\s|at |Caused by:|Suppressed:|\.\.\.)/;
+
+var lastLevel = null;   // 上一行的级别，供堆栈续行继承
+
+function detectLevel(text) {
+    var m = LEVEL_RE.exec(text.slice(0, LEVEL_HEAD));
+    if (!m) { return null; }
+    var name = (m[1] === 'WARNING') ? 'WARN' : m[1];
+    return { name: name.toLowerCase(), start: m.index, end: m.index + m[1].length };
+}
+
+/**
+ * 把 text 追加到 parent，命中的关键字包 span 高亮。
+ * 全程走 textContent / createTextNode，日志里的尖括号不会被当成标签解析。
+ */
+function appendHighlighted(parent, text) {
+    if (!text) { return; }
+    if (!logKeyword) { parent.appendChild(document.createTextNode(text)); return; }
+
+    var lower = text.toLowerCase();
+    var needle = logKeyword.toLowerCase();
+    var from = 0;
+    var at = lower.indexOf(needle);
+    while (at >= 0) {
+        if (at > from) { parent.appendChild(document.createTextNode(text.slice(from, at))); }
+        var mark = document.createElement('span');
+        mark.className = 'log-hit';
+        mark.textContent = text.slice(at, at + needle.length);
+        parent.appendChild(mark);
+        from = at + needle.length;
+        at = lower.indexOf(needle, from);
+    }
+    if (from < text.length) { parent.appendChild(document.createTextNode(text.slice(from))); }
+}
+
+/**
+ * 拼装一行：前缀 / 级别 token / 正文三段，关键字高亮在每段内独立进行。
+ */
+function renderLine(text) {
+    var div = document.createElement('div');
+    var level = detectLevel(text);
+    if (level) {
+        lastLevel = level.name;
+        div.className = 'lv-' + level.name;
+        appendHighlighted(div, text.slice(0, level.start));
+        var token = document.createElement('span');
+        token.className = 'lv-token';
+        token.textContent = text.slice(level.start, level.end);
+        div.appendChild(token);
+        appendHighlighted(div, text.slice(level.end));
+        return div;
+    }
+    // 无级别的行：堆栈续行继承上一行，这样一坨堆栈跟着它的 ERROR 一起显示或隐藏。
+    // 其余（比如裸 System.out）不带 lv- class，任何过滤下都保持显示。
+    if (lastLevel && CONT_RE.test(text)) {
+        div.className = 'lv-' + lastLevel + ' lv-cont';
+    }
+    appendHighlighted(div, text);
+    return div;
+}
+
+function applyLevelFilter() {
+    var level = document.getElementById('log-level').value;
+    document.getElementById('log-container').className = level ? 'flt-' + level : '';
+}
+
+function appendLine(text) {
+    var container = document.getElementById('log-container');
+    container.appendChild(renderLine(text));
+    while (container.childElementCount > LIVE_MAX_LINES) {
+        container.removeChild(container.firstChild);
+    }
+    if (document.getElementById('auto-scroll-cb').checked) {
+        container.scrollTop = container.scrollHeight;
+    }
+}
+
+function clearLog() {
+    document.getElementById('log-container').innerHTML = '';
+    lastLevel = null;
+    setLogHint('');
+}
+function setLogHint(text) {
+    document.getElementById('log-hint').textContent = text || '';
+}
+function setLogStatus(state) {
+    var dot  = document.getElementById('sse-status-dot');
+    var text = document.getElementById('sse-status-text');
+    dot.className = 'log-status-dot';
+    if (state === 'connected')       { dot.classList.add('connected'); text.textContent = '实时已连接'; }
+    else if (state === 'connecting') { text.textContent = '连接中...'; }
+    else if (state === 'error')      { dot.classList.add('error'); text.textContent = '连接异常，重试中'; }
+    else                             { text.textContent = '未连接'; }
+}
+</script>
 </body>
 </html>
