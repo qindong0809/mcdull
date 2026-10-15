@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mcdull-ai 对话助手</title>
+    <link rel="stylesheet" href="css/chat.css">
+</head>
+<body>
+<div class="app">
+
+    <!-- 侧边栏：会话管理 -->
+    <aside class="sidebar">
+        <div class="brand">
+            <span class="brand-logo">🐷</span>
+            <span class="brand-name">mcdull-ai</span>
+        </div>
+        <button id="newChatBtn" class="btn-new">＋ 新对话</button>
+        <nav id="sessionList" class="session-list"></nav>
+        <details class="api-info">
+            <summary>接口一览（学习用）</summary>
+            <ul>
+                <li><code>GET /ai/generate</code> 阻塞对话（无记忆）</li>
+                <li><code>GET /ai/generateStream</code> SSE 流（无记忆）</li>
+                <li><code>GET /ai/chat</code> 阻塞对话（带记忆）</li>
+                <li><code>GET /ai/chat/stream</code> SSE 流（带记忆）</li>
+                <li><code>GET /ai/roles</code> 角色预设</li>
+                <li><code>GET /ai/history/{sessionId}</code> 会话历史</li>
+                <li><code>DELETE /ai/history/{sessionId}</code> 清空会话</li>
+            </ul>
+        </details>
+    </aside>
+
+    <!-- 主区域：对话 -->
+    <main class="chat">
+        <header class="chat-header">
+            <div class="role-picker">
+                <label for="roleSelect">角色</label>
+                <select id="roleSelect" title="切换角色（影响后续回答的系统提示词）"></select>
+                <label class="switch" title="开启后模型会输出思考过程">
+                    <input type="checkbox" id="thinkingToggle">
+                    <span>深度思考</span>
+                </label>
+            </div>
+            <button id="clearBtn" class="btn-ghost" title="清空当前会话的记忆">清空会话</button>
+        </header>
+
+        <div id="messages" class="messages">
+            <div class="welcome">
+                <h2>mcdull-ai 学习助手</h2>
+                <p>基于 Spring AI 1.1.x + 智谱 GLM-4-Flash，支持会话记忆、SSE 流式输出与角色预设。</p>
+                <p>试试问我：「用一句话介绍 Spring AI 的 ChatClient」</p>
+            </div>
+        </div>
+
+        <footer class="composer">
+            <textarea id="input" rows="1" placeholder="输入消息，Enter 发送，Shift+Enter 换行"></textarea>
+            <button id="sendBtn" class="btn-send">发送</button>
+            <button id="stopBtn" class="btn-stop" hidden>停止</button>
+        </footer>
+    </main>
+</div>
+
+<script src="js/chat.js"></script>
+</body>
+</html>

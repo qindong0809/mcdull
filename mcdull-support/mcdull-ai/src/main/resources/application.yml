@@ -1,0 +1,12 @@
+spring:
+  ai:
+    zhipuai:
+      # api-key 使用你自己申请的进行替换；如果为了安全考虑，可以通过启动参数进行设置
+      api-key: ${zhipuai-api-key}
+      chat:
+        options:
+          # 模型选择：glm-4-plus（当前 key 可用，效果优于 flash）。
+          # 若 key 开通了推理模型权限，可换成 glm-z1，原生返回 reasoning_content，
+          # 前端会以"思考过程"折叠块展示；否则可开启页面上的"深度思考"开关，
+          # 通过提示词让模型以 <thinking> 标签输出思考过程。
+          model: glm-4-plus

@@ -15,6 +15,24 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- 保留方法参数名，Spring MVC 才能解析 @RequestParam 等注解中省略的 name -->
+        <maven.compiler.parameters>true</maven.compiler.parameters>
     </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.ai</groupId>
+      <artifactId>spring-ai-starter-model-zhipuai</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ai.z.openapi</groupId>
+      <artifactId>zai-sdk</artifactId>
+      <version>0.3.5</version>
+    </dependency>
+  </dependencies>
 
 </project>

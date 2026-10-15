@@ -142,7 +142,7 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
         try {
             out = response.getOutputStream();
             ObjectMapper mapper = new ObjectMapper();
-            response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, MediaType.ALL_VALUE);
+            // CORS响应头由高优先级的CorsFilter统一处理，此处不再手工设置（手工设置*且缺少凭证头会被浏览器拦截）
             response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
             mapper.writeValue(out, result);
             out.flush();
