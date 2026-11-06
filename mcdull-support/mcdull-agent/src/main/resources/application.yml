@@ -1,0 +1,10 @@
+server:
+  port: 6080
+langchain4j:
+  open-ai:
+    chat-model:
+      base-url: http://127.0.0.1:11434/v1
+      api-key:
+      model-name: qwen2.5:7b-instruct-q4_K_M
+      log-requests: true
+      log-responses: true

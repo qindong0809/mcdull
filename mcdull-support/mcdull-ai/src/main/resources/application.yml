@@ -10,3 +10,6 @@ spring:
           # 前端会以"思考过程"折叠块展示；否则可开启页面上的"深度思考"开关，
           # 通过提示词让模型以 <thinking> 标签输出思考过程。
           model: glm-4-plus
+  temporal:
+    connection:
+      target: local

@@ -15,6 +15,7 @@
         <module>mcdull-monitor</module>
         <module>mcdull-tools</module>
         <module>mcdull-ai</module>
+        <module>mcdull-agent</module>
     </modules>
 
     <artifactId>mcdull-support</artifactId>

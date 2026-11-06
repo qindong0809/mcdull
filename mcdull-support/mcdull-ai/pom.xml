@@ -33,6 +33,10 @@
       <artifactId>zai-sdk</artifactId>
       <version>0.3.5</version>
     </dependency>
+    <dependency>
+      <groupId>io.temporal</groupId>
+      <artifactId>temporal-spring-boot-starter</artifactId>
+    </dependency>
   </dependencies>
 
 </project>
