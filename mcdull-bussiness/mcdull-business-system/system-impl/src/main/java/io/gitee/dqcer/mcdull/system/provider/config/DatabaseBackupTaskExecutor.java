@@ -4,21 +4,22 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
-import cn.hutool.cron.CronUtil;
+import com.github.kagkarlsson.scheduler.task.ExecutionContext;
+import com.github.kagkarlsson.scheduler.task.TaskInstance;
 import io.gitee.dqcer.mcdull.business.common.dump.SqlDumper;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.mysql.datasource.SwitchableDataSource;
-import io.gitee.dqcer.mcdull.framework.web.component.ConcurrentRateLimiter;
+import io.gitee.dqcer.mcdull.framework.scheduler.node.BackoffStrategy;
+import io.gitee.dqcer.mcdull.framework.scheduler.node.McdullScheduleDefinition;
+import io.gitee.dqcer.mcdull.framework.scheduler.node.McdullScheduledTask;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFolderService;
-import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -26,19 +27,28 @@ import java.util.Date;
 import java.util.HashSet;
 
 /**
- * 数据库备份任务执行程序
+ * 数据库备份任务执行程序。
+ *
+ * <p>cron 表达式来自系统配置项 {@code task-database-backup}，应用启动时读取并注册到 db-scheduler。
+ * 集群下的单实例执行由 db-scheduler 的数据库行锁保证，不再需要额外的分布式锁。
  *
  * @author dqcer
  * @since 2024/11/18
  */
 @Slf4j
 @Component
-public class DatabaseBackupTaskExecutor {
+public class DatabaseBackupTaskExecutor implements McdullScheduledTask<Void> {
 
-    @Resource
-    private DataSource dataSource;
-    @Resource
-    private ConcurrentRateLimiter concurrentRateLimiter;
+    /**
+     * 任务名称（同时作为系统配置项的 key）
+     */
+    public static final String TASK_NAME = "task-database-backup";
+
+    /**
+     * 配置缺失时的兜底 cron（每天凌晨 2 点）
+     */
+    private static final String DEFAULT_CRON = "0 0 2 * * ?";
+
     @Resource
     private IFileService fileService;
     @Resource
@@ -48,28 +58,33 @@ public class DatabaseBackupTaskExecutor {
     @Resource
     private SwitchableDataSource globalDataRoutingDataSource;
 
-    @PostConstruct
-    public void init() {
+    @Override
+    public McdullScheduleDefinition definition() {
+        String cron;
         try {
             globalDataRoutingDataSource.switchDataSource();
-            final String key = "task-database-backup";
-            String value = commonManager.getConfig(key);
-            log.info("task-database-backup: {}", value);
-            if (StrUtil.isNotBlank(value)) {
-                // 创建并注册定时任务
-                CronUtil.schedule(value, (Runnable) () ->
-                        concurrentRateLimiter.locker(key, 0,  this::startBackup, false));
-                // 秒级别定时任务
-                CronUtil.setMatchSecond(true);
-                // 启动定时任务调度器
-                CronUtil.start();
-            }
-        }finally {
+            cron = commonManager.getConfig(TASK_NAME);
+            log.info("{}: {}", TASK_NAME, cron);
+        } finally {
             globalDataRoutingDataSource.removeDataSource();
         }
+
+        boolean enabled = StrUtil.isNotBlank(cron);
+        return McdullScheduleDefinition.builder()
+                .name(TASK_NAME)
+                .cron(enabled ? cron : DEFAULT_CRON)
+                .enabled(enabled)
+                .maxRetries(0)
+                .backoff(BackoffStrategy.NONE)
+                .build();
     }
 
-    private boolean startBackup() {
+    @Override
+    public void execute(TaskInstance<Void> instance, ExecutionContext context) {
+        startBackup();
+    }
+
+    private void startBackup() {
         try {
             globalDataRoutingDataSource.switchDataSource();
             File file = null;
@@ -93,9 +108,8 @@ public class DatabaseBackupTaskExecutor {
                 FileUtil.del(zipFile);
                 UserContextHolder.clearSession();
             }
-        }finally {
+        } finally {
             globalDataRoutingDataSource.removeDataSource();
         }
-        return true;
     }
 }

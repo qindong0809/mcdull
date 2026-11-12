@@ -22,6 +22,7 @@
         <module>mcdull-framework-starter-doc</module>
         <module>mcdull-framework-starter-monitor</module>
         <module>mcdull-framework-starter-external</module>
+        <module>mcdull-framework-starter-scheduler</module>
     </modules>
 
     <artifactId>mcdull-framework-starters</artifactId>

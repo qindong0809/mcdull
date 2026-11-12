@@ -234,6 +234,46 @@ public interface ProdigyClient {
 
 四种认证策略：`none` / `jwt-account`（自动缓存续期，token 过期前 60s 预刷新）/ `credentials` / `api-key`。
 
+### ⏰ 定时任务调度（Scheduler Starter）
+
+`mcdull-framework-starter-scheduler` 基于 [db-scheduler](https://github.com/kagkarlsson/db-scheduler) 实现，提供集群安全、单表持久化、失败重试的企业级定时任务能力，替代 Spring 原生 `@Scheduled` 和 Hutool CronUtil。
+
+采用"三层暴露"设计，业务方按需选型：
+
+```java
+// 第一层：声明式注解（覆盖 80% 简单场景）
+@McdullScheduled(name = "db-backup", cron = "0 0 2 * * ?", maxRetries = 2)
+public void backup() { /* ... */ }
+
+// 第二层：接口实现（StatefulTask / 链式调度 / 动态 cron）
+@Component
+public class DataSyncTask implements McdullScheduledTask<DataSyncState> {
+    @Override
+    public McdullScheduleDefinition definition() {
+        return McdullScheduleDefinition.builder()
+            .name("data-sync")
+            .cron(nacosConfig.getProperty("data-sync.cron"))
+            .stateful(true).build();
+    }
+    @Override
+    public void execute(TaskInstance<DataSyncState> instance, ExecutionContext ctx) {
+        // 可拿到上一次持久化的状态、可链式调度其他任务
+    }
+}
+
+// 第三层：SchedulerManager（运行时管理）
+schedulerManager.trigger("db-backup");       // 手动触发
+schedulerManager.pauseTask("db-backup");     // 暂停
+schedulerManager.resumeTask("db-backup");    // 恢复
+```
+
+核心特性：
+- **集群安全**：所有调度器实例读写同一张 `scheduled_tasks` 表，数据库行锁保证多实例下单次执行
+- **自动建表**：启动时 `CREATE TABLE IF NOT EXISTS`，业务方无需手动建表
+- **失败重试**：支持 FIXED / EXPONENTIAL 退避策略
+- **状态持久化**：StatefulTask 每次执行后更新持久化状态，下次执行可读取
+- **运行时管理**：`SchedulerManager` 提供手动触发/暂停/恢复，`TaskQueryService` 提供任务列表和执行历史查询
+
 ### 🔌 Feign 跨服务异常透传
 
 `mcdull-framework-starter-feign` 解决微服务间 Feign 调用时异常信息丢失的问题：
@@ -342,6 +382,8 @@ String diffText = AuditUtil.compareStr(before, after);
 
 启动时从系统配置表读取 cron 表达式，动态注册定时任务：dump SQL → zip 压缩 → 上传到文件系统"数据备份"目录，自动按日期命名。分布式锁防多实例重复执行，备份策略完全由配置驱动，无需重启服务。
 
+> 该功能已迁移至 [`mcdull-framework-starter-scheduler`](#-定时任务调度scheduler-starter)，由 db-scheduler 提供集群锁、失败重试与执行历史，cron 表达式仍由系统配置项 `task-database-backup` 驱动。
+
 ### 🔢 业务序列号生成引擎
 
 可配置的业务单号生成系统，不依赖 Redis 自增，支持持久化历史记录：
@@ -397,6 +439,7 @@ mcdull/
 │       ├── mcdull-framework-starter-nacos      # Nacos 集成
 │       ├── mcdull-framework-starter-oss        # 对象存储
 │       ├── mcdull-framework-starter-redis      # Redis 集成
+│       ├── mcdull-framework-starter-scheduler  # 定时任务（db-scheduler）
 │       ├── mcdull-framework-starter-security   # 安全认证（Sa-Token）
 │       └── mcdull-framework-starter-web        # Web 基础
 ├── mcdull-bussiness/          # 业务层 — 具体业务实现（注：目录名含历史拼写）

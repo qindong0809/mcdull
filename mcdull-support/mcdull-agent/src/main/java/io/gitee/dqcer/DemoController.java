@@ -15,7 +15,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,7 @@ public class DemoController {
 
     @GetMapping("/memory-chat")
     public Result<String> memoryChat(@RequestParam(value = "message", defaultValue = "Hello") String message) {
-        ChatMemory chatMemory = TokenWindowChatMemory.withMaxMessages(10);
+//        ChatMemory chatMemory = TokenWindowChatMemory.withMaxMessages(10);
 
         return Result.success(chatModel.chat(message));
     }
