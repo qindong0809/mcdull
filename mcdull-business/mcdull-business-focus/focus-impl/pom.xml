@@ -12,9 +12,6 @@
   <artifactId>focus-impl</artifactId>
 
   <properties>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <docx4j.version>11.4.9</docx4j.version>
     <pdfbox.version>2.0.29</pdfbox.version>
   </properties>

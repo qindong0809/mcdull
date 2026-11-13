@@ -1,6 +1,7 @@
-package io.gitee.dqcer.mcdull.common.recommend;
+package io.gitee.dqcer.mcdull.business.common.recommend;
 
 import cn.hutool.core.io.BOMInputStream;
+import io.gitee.dqcer.mcdull.common.recommend.Recommend;
 import io.gitee.dqcer.mcdull.common.recommend.dto.RelateDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,7 +1,9 @@
-package io.gitee.dqcer.mcdull.common.pdf;
+package io.gitee.dqcer.mcdull.business.common.pdf;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import io.gitee.dqcer.mcdull.common.pdf.ByteArrayInOutConvert;
+import io.gitee.dqcer.mcdull.common.pdf.HtmlConvertPdf;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

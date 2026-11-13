@@ -12,9 +12,7 @@
     <artifactId>mcdull-ai</artifactId>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <!-- 保留方法参数名，Spring MVC 才能解析 @RequestParam 等注解中省略的 name -->
         <maven.compiler.parameters>true</maven.compiler.parameters>
     </properties>

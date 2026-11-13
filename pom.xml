@@ -2,172 +2,159 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.gitee.dqcer</groupId>
-    <artifactId>mcdull</artifactId>
-    <version>${revision}</version>
+  <groupId>io.gitee.dqcer</groupId>
+  <artifactId>mcdull</artifactId>
+  <version>${revision}</version>
 
-    <name>mcdull</name>
-    <packaging>pom</packaging>
+  <name>mcdull</name>
+  <packaging>pom</packaging>
+  <description>企业级 Spring Cloud 微服务开发框架</description>
+  <url>https://gitee.com/dqcer/mcdull</url>
 
-    <description>mcdull</description>
-    <url>https://gitee/dqcer/mcdull</url>
+  <modules>
+    <module>mcdull-framework</module>
+    <module>mcdull-support</module>
+    <module>mcdull-business</module>
+    <module>mcdull-devtools</module>
+  </modules>
 
-    <modules>
-        <module>mcdull-business</module>
+  <properties>
+    <revision>1.0.0</revision>
+    <java.version>17</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <!-- 严格与技术栈保持一致 -->
+    <spring-boot.version>3.5.16</spring-boot.version>
+  </properties>
+
+  <build>
+    <!-- 精确控制资源过滤，防止破坏 .xlsx / .docx / .ttf 等二进制模板文件 -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>**/application*.yml</exclude>
+          <exclude>**/application*.yaml</exclude>
+          <exclude>**/application*.properties</exclude>
+          <exclude>**/bootstrap*.yml</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/application*.yml</include>
+          <include>**/application*.yaml</include>
+          <include>**/application*.properties</include>
+          <include>**/bootstrap*.yml</include>
+        </includes>
+      </resource>
+    </resources>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>repackage</goal>
+                <goal>build-info</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <encoding>${project.build.sourceEncoding}</encoding>
+          <!-- 保留方法参数名，避免 Spring/Feign 反射丢失参数名 -->
+          <parameters>true</parameters>
+        </configuration>
+      </plugin>
+
+      <!-- 保留 flatten 插件，确保 ${revision} 正确解析 -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <configuration>
+          <outputDirectory>${project.build.directory}</outputDirectory>
+          <flattenedPomFilename>.flattened-pom.xml</flattenedPomFilename>
+          <updatePomFile>true</updatePomFile>
+          <flattenMode>resolveCiFriendliesOnly</flattenMode>
+        </configuration>
+        <executions>
+          <execution>
+            <id>flatten</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>flatten.clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- 区分日常开发(默认)与生产精简打包(mvn clean package -Pprod) -->
+  <profiles>
+    <profile>
+      <id>prod</id>
+      <modules>
         <module>mcdull-framework</module>
         <module>mcdull-support</module>
-    </modules>
+        <module>mcdull-business</module>
+        <!-- 生产环境打包自动排除 devtools 和 examples，加快构建速度 -->
+      </modules>
+    </profile>
+  </profiles>
 
-    <properties>
-        <revision>1.0.0</revision>
-        <maven.compiler.target>17</maven.compiler.target>
-        <maven.compiler.source>17</maven.compiler.source>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-boot.version>3.5.16</spring-boot.version>
-    </properties>
-
-    <build>
-        <!-- maven渲染配置文件 -->
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-        <pluginManagement>
-            <plugins>
-                <!-- springboot打包(可以启动的子模块需显式引入) -->
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring-boot.version}</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>repackage</goal>
-                                <goal>build-info</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                    <configuration>
-                        <source>17</source>
-                        <target>17</target>
-                        <encoding>UTF-8</encoding>
-                    </configuration>
-            </plugin>
-            <!-- sonatype插件，发布使用-->
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.7.0</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
-            <!-- 生成源码包 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-            </plugin>
-            <!-- flatten-maven-plugin: 解析 ${revision} 占位符，确保 install/deploy 的 POM 中版本号为实际值 -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <configuration>
-                    <updatePomFile>true</updatePomFile>
-                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>flatten</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>flatten.clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
-<!--    <repositories>-->
-<!--        <repository>-->
-<!--            <id>central</id>-->
-<!--            <url>https://maven.aliyun.com/repository/central</url>-->
-<!--            <releases>-->
-<!--                <enabled>true</enabled>-->
-<!--            </releases>-->
-<!--            <snapshots>-->
-<!--                <enabled>true</enabled>-->
-<!--            </snapshots>-->
-<!--        </repository>-->
-<!--    </repositories>-->
-
-    <!--打包到sonatype的maven仓库中去-->
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-    <scm>
-        <url>https://gitee.com/dqcer/mcdull</url>
-        <connection>https://gitee.com/dqcer/mcdull.git</connection>
-        <developerConnection>scm:git:ssh://git@gitee.com:dqcer/mcdull.git</developerConnection>
-    </scm>
-    <developers>
-        <developer>
-            <name>dqcer</name>
-            <email>dqcer@sina.com</email>
-            <organization>https://gitee.com/dqcer</organization>
-            <timezone>+8</timezone>
-        </developer>
-    </developers>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <url>https://gitee.com/dqcer/mcdull</url>
+    <connection>https://gitee.com/dqcer/mcdull.git</connection>
+    <developerConnection>scm:git:ssh://git@gitee.com:dqcer/mcdull.git</developerConnection>
+  </scm>
+  <developers>
+    <developer>
+      <name>dqcer</name>
+      <email>dqcer@sina.com</email>
+      <organization>https://gitee.com/dqcer</organization>
+      <timezone>+8</timezone>
+    </developer>
+  </developers>
 </project>

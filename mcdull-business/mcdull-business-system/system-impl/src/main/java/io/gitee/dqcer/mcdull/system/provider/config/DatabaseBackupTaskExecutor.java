@@ -6,9 +6,12 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import com.github.kagkarlsson.scheduler.task.ExecutionContext;
 import com.github.kagkarlsson.scheduler.task.TaskInstance;
+
 import io.gitee.dqcer.mcdull.common.dump.SqlDumper;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
+import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import io.gitee.dqcer.mcdull.framework.mysql.datasource.SwitchableDataSource;
 import io.gitee.dqcer.mcdull.framework.scheduler.node.BackoffStrategy;
 import io.gitee.dqcer.mcdull.framework.scheduler.node.McdullScheduleDefinition;
@@ -91,6 +94,10 @@ public class DatabaseBackupTaskExecutor implements McdullScheduledTask<Void> {
             File zipFile = null;
             try (Connection connection = globalDataRoutingDataSource.getConnection()) {
                 UserContextHolder.setDefaultSession();
+                UnifySession session = UserContextHolder.getSession();
+                if (session.getTraceId() == null) {
+                    session.setTraceId(RandomUtil.uuid());
+                }
                 String schema = connection.getCatalog();
                 LogHelp.info(log, "start backup database. schema:{}", schema);
                 String tmpDirPath = FileUtil.getTmpDirPath();
