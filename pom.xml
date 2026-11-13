@@ -15,7 +15,7 @@
     <url>https://gitee/dqcer/mcdull</url>
 
     <modules>
-        <module>mcdull-bussiness</module>
+        <module>mcdull-business</module>
         <module>mcdull-framework</module>
         <module>mcdull-support</module>
     </modules>

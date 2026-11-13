@@ -442,7 +442,7 @@ mcdull/
 │       ├── mcdull-framework-starter-scheduler  # 定时任务（db-scheduler）
 │       ├── mcdull-framework-starter-security   # 安全认证（Sa-Token）
 │       └── mcdull-framework-starter-web        # Web 基础
-├── mcdull-bussiness/          # 业务层 — 具体业务实现（注：目录名含历史拼写）
+├── mcdull-business/           # 业务层 — 具体业务实现
 │   ├── mcdull-business-common     # 业务通用组件
 │   ├── mcdull-business-system     # 系统管理（用户、角色、权限、代码生成）
 │   ├── mcdull-business-blaze      # 核心业务模块

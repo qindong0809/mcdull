@@ -74,9 +74,9 @@
                         </manifest>
                         <manifestEntries>
                             <!--指定premain方法所在的类-->
-                            <Premain-Class>io.gitee.dqcer.cloud.ServiceLogAgent</Premain-Class>
+                            <Premain-Class>io.gitee.dqcer.mcdull.framework.agent.ServiceLogAgent</Premain-Class>
                             <!--添加这个即可-->
-                            <Agent-Class>io.gitee.dqcer.cloud.ServiceLogAgent</Agent-Class>
+                            <Agent-Class>io.gitee.dqcer.mcdull.framework.agent.ServiceLogAgent</Agent-Class>
                             <Can-Redefine-Classes>true</Can-Redefine-Classes>
                             <Can-Retransform-Classes>true</Can-Retransform-Classes>
                         </manifestEntries>

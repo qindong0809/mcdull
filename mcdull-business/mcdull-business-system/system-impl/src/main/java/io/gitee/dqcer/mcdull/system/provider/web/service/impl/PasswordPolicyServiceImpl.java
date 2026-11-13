@@ -1,0 +1,82 @@
+package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
+
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjUtil;
+import io.gitee.dqcer.mcdull.common.audit.Audit;
+import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
+import io.gitee.dqcer.mcdull.system.provider.model.audit.PasswordPolicyAudit;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.PasswordPolicyDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.entity.PasswordPolicyEntity;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.PasswordPolicyVO;
+import io.gitee.dqcer.mcdull.system.provider.web.dao.PasswordPolicyMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IPasswordPolicyService;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+
+/**
+ * Password Policy Service Impl
+ *
+ * @author dqcer
+ * @since 2024-04-29
+ */
+@Service
+public class PasswordPolicyServiceImpl
+        extends BasicCurdServiceImpl<PasswordPolicyMapper, PasswordPolicyEntity> implements IPasswordPolicyService {
+
+    @Resource
+    private IBizAuditService bizAuditService;
+
+    private static final String MODULE_NAME = "密码策略";
+
+    @Override
+    public PasswordPolicyVO detail() {
+        PasswordPolicyEntity passwordPolicy = this.get();
+        return this.convert(passwordPolicy);
+    }
+
+    private PasswordPolicyEntity get() {
+        List<PasswordPolicyEntity> list = super.list();
+        if (CollUtil.isEmpty(list)) {
+            LogicCheckUtil.throwDataNotExistException("is empty");
+        }
+        return list.get(0);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void update(PasswordPolicyDTO dto) {
+        PasswordPolicyEntity entity = this.get();
+        PasswordPolicyEntity oldEntity = ObjUtil.cloneByStream(entity);
+        entity.setRepeatablePasswordNumber(dto.getRepeatablePasswordNumber());
+        entity.setFailedLoginMaximumNumber(dto.getFailedLoginMaximumNumber());
+        entity.setFailedLoginMaximumTime(dto.getFailedLoginMaximumTime());
+        entity.setPasswordExpiredPeriod(dto.getPasswordExpiredPeriod());
+        super.updateById(entity);
+        bizAuditService.saveByUpdateEnum(MODULE_NAME, entity.getId(),
+                this.buildAuditLog(oldEntity), this.buildAuditLog(entity));
+    }
+
+    private Audit buildAuditLog(PasswordPolicyEntity entity) {
+        PasswordPolicyAudit audit = new PasswordPolicyAudit();
+        audit.setRepeatablePasswordNumber(entity.getRepeatablePasswordNumber());
+        audit.setFailedLoginMaximumNumber(entity.getFailedLoginMaximumNumber());
+        audit.setFailedLoginMaximumTime(entity.getFailedLoginMaximumTime());
+        audit.setPasswordExpiredPeriod(entity.getPasswordExpiredPeriod());
+        return audit;
+    }
+
+    private PasswordPolicyVO convert(PasswordPolicyEntity entity) {
+        PasswordPolicyVO vo = new PasswordPolicyVO();
+        vo.setRepeatablePasswordNumber(entity.getRepeatablePasswordNumber());
+        vo.setFailedLoginMaximumNumber(entity.getFailedLoginMaximumNumber());
+        vo.setFailedLoginMaximumTime(entity.getFailedLoginMaximumTime());
+        vo.setPasswordExpiredPeriod(entity.getPasswordExpiredPeriod());
+        return vo;
+    }
+}
