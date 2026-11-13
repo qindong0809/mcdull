@@ -1,14 +1,11 @@
-package io.gitee.dqcer.mcdull.system.provider.model.enums;
+package io.gitee.dqcer.mcdull.system.facade.model.enums;
 
 
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import lombok.Getter;
 
 /**
- * 登录设备类型
- *
- * @author dqcer
- * @since 2024/04/24
+ * 字典选择类型枚举（共享给业务模块）
  */
 @Getter
 public enum DictSelectTypeEnum implements IEnum<String> {

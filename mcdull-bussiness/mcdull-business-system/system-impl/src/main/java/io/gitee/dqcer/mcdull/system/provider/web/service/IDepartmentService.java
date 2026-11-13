@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DeptUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.DepartmentEntity;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentInfoVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.DepartmentInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentTreeInfoVO;
 
 import java.util.List;

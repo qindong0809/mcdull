@@ -14,7 +14,7 @@
     <groupId>io.gitee.dqcer</groupId>
     <artifactId>mcdull-framework-dependencies</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>${revision}</version>
     <name>${project.artifactId} v${project.version}</name>
     <description>Based on Spring Cloud dependencies</description>
     <url>https://gitee.com/dqcer/mcdull</url>
@@ -41,6 +41,8 @@
     </developers>
 
     <properties>
+        <!-- BOM 默认版本；根工程 reactor 构建时随根 POM 的 revision 联动，命令行 -Drevision=x.y.z 可统一覆盖 -->
+        <revision>1.0.0</revision>
         <mcdull.version>1.0.0</mcdull.version>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>

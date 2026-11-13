@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.system.provider.model.dto;
 import io.gitee.dqcer.mcdull.framework.base.annotation.EnumsIntValid;
 import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
-import io.gitee.dqcer.mcdull.system.provider.model.enums.GenderEnum;
+import io.gitee.dqcer.mcdull.system.facade.model.enums.GenderEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.system.provider.model.bo;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
 import io.gitee.dqcer.mcdull.framework.base.support.BO;
-import io.gitee.dqcer.mcdull.system.provider.model.enums.GenderEnum;
+import io.gitee.dqcer.mcdull.system.facade.model.enums.GenderEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.UserTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

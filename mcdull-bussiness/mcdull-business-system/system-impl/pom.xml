@@ -17,6 +17,12 @@
 
 
     <dependencies>
+        <!-- facade 是 impl 的编译期契约来源（共享 Model 类 + SPI 接口） -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>system-facade</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-system</artifactId>

@@ -21,7 +21,7 @@ import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
-import io.gitee.dqcer.mcdull.system.provider.model.enums.GenderEnum;
+import io.gitee.dqcer.mcdull.system.facade.model.enums.GenderEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.LogonVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.MenuVO;

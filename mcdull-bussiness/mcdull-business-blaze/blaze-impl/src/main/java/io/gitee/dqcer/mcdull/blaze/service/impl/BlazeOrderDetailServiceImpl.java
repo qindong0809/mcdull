@@ -29,10 +29,10 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
-import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.system.facade.service.def.CommonApiDef;
+import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.system.facade.service.def.FileApiDef;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,13 +56,13 @@ public class BlazeOrderDetailServiceImpl
     @Resource
     private IBlazeOrderService blazeOrderService;
     @Resource
-    private IUserService userService;
+    private UserApiDef sysUserFacade;
     @Resource
-    private ICommonManager commonManager;
+    private CommonApiDef sysCommonFacade;
     @Resource
     private IApproveService approveService;
     @Resource
-    private IFileService fileService;
+    private FileApiDef fileService;
 
     @Override
     public PagedVO<BlazeOrderDetailVO> queryPage(BlazeOrderDetailQueryDTO dto) {
@@ -77,10 +77,10 @@ public class BlazeOrderDetailServiceImpl
         PagedVO<BlazeOrderVO> page = blazeOrderService.queryPage(orderQueryDTO);
         List<BlazeOrderVO> orderVOList = CollUtil.defaultIfEmpty(page.getList(), new ArrayList<>());
         Map<Integer, BlazeOrderVO> orderMap = orderVOList.stream().collect(Collectors.toMap(BlazeOrderVO::getId, Function.identity()));
-        Map<Integer, UserEntity> responsibleMap = userService.getEntityMap(records.stream()
+        Map<Integer, UserVO> responsibleMap = sysUserFacade.getEntityMap(records.stream()
                 .map(BlazeOrderDetailEntity::getResponsibleUserId)
                 .filter(ObjUtil::isNotNull).collect(Collectors.toList()));
-        Map<Integer, String> nameMap = userService.getMap(records);
+        Map<Integer, String> nameMap = sysUserFacade.getMap(records);
         for (BlazeOrderDetailEntity entity : records) {
             BlazeOrderDetailVO vo = this.convertToVO(entity);
             Integer blazeOrderId = vo.getBlazeOrderId();
@@ -91,7 +91,7 @@ public class BlazeOrderDetailServiceImpl
                 vo.setCustomerCertTitle(orderVO.getCustomerCertName());
             }
             if (ObjUtil.isNotNull(responsibleMap.get(entity.getResponsibleUserId()))) {
-                UserEntity responsibleUser = responsibleMap.get(entity.getResponsibleUserId());
+                UserVO responsibleUser = responsibleMap.get(entity.getResponsibleUserId());
                 vo.setResponsibleUserName(responsibleUser.getActualName());
             }
             if (ObjUtil.isNotNull(entity.getInactive())) {
@@ -107,8 +107,8 @@ public class BlazeOrderDetailServiceImpl
             voList.add(vo);
         }
         approveService.setApproveVO(voList, records);
-        commonManager.setFileVO(voList, BlazeOrderDetailEntity.class);
-        commonManager.setDepartment(voList, UserContextHolder.userId());
+        sysCommonFacade.setFileVO(voList, BlazeOrderDetailEntity.class);
+        sysCommonFacade.setDepartment(voList, UserContextHolder.userId());
         return PageUtil.toPage(voList, entityPage);
     }
 
@@ -133,7 +133,7 @@ public class BlazeOrderDetailServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean exportData(BlazeOrderDetailQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList(dto.getIsTalent()));
+        sysCommonFacade.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList(dto.getIsTalent()));
         return true;
     }
 
@@ -263,7 +263,7 @@ public class BlazeOrderDetailServiceImpl
 
     @Override
     public List<LabelValueVO<Integer, String>> getResponsibleList() {
-        return userService.getResponsibleList();
+        return sysUserFacade.getResponsibleList();
     }
 
     @Override

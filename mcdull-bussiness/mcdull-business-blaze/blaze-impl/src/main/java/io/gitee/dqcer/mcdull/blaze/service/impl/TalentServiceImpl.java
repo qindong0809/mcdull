@@ -23,10 +23,9 @@ import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
-import io.gitee.dqcer.mcdull.system.provider.model.enums.GenderEnum;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IAreaService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.system.facade.service.def.CommonApiDef;
+import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
+import io.gitee.dqcer.mcdull.system.facade.model.enums.GenderEnum;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,13 +45,11 @@ public class TalentServiceImpl
         extends BasicServiceImpl<ITalentRepository> implements ITalentService {
 
     @Resource
-    private IAreaService areaService;
-    @Resource
     private ITalentCertificateService talentCertificateService;
     @Resource
-    private ICommonManager commonManager;
+    private CommonApiDef sysCommonFacade;
     @Resource
-    private IUserService userService;
+    private UserApiDef sysUserFacade;
 
     public PagedVO<TalentVO> queryPage(TalentQueryDTO dto) {
         List<TalentVO> voList = new ArrayList<>();
@@ -60,7 +57,7 @@ public class TalentServiceImpl
         List<TalentEntity> recordList = entityPage.getRecords();
         if (CollUtil.isNotEmpty(recordList)) {
             Set<Integer> collect = recordList.stream().map(TalentEntity::getResponsibleUserId).collect(Collectors.toSet());
-            Map<Integer, String> map = userService.getNameMap(new ArrayList<>(collect));
+            Map<Integer, String> map = sysUserFacade.getNameMap(new ArrayList<>(collect));
             for (TalentEntity entity : recordList) {
                 TalentVO vo = this.convertToVO(entity);
                 Integer gender = vo.getGender();
@@ -88,7 +85,7 @@ public class TalentServiceImpl
                 vo.setIdNumber(s);
                 voList.add(vo);
             }
-            areaService.set(voList);
+            sysCommonFacade.set(voList);
         }
         return PageUtil.toPage(voList, entityPage);
     }
@@ -109,7 +106,7 @@ public class TalentServiceImpl
 
     @Override
     public boolean exportData(TalentQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+        sysCommonFacade.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
         return true;
     }
 

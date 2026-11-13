@@ -17,7 +17,7 @@ import com.alibaba.excel.write.style.row.SimpleRowHeightStyleStrategy;
 import io.gitee.dqcer.mcdull.business.common.excel.CustomSheetWriteHandler;
 import io.gitee.dqcer.mcdull.business.common.excel.IndexStyleCellWriteHandler;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.system.provider.model.bo.DynamicFieldBO;
+import io.gitee.dqcer.mcdull.system.facade.model.bo.DynamicFieldBO;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;

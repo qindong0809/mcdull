@@ -19,10 +19,24 @@
             <artifactId>blaze-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- 运行时将 system 模块装配进来，让本地 SPI 实现生效 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>system-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-monitor</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <!-- system-facade 对 feign starter 是 provided 依赖，不会传递到运行时；
+             AuthApiHystrix 反射需要 ResultApi，必须在此显式引入 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-feign</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.system.provider.model.vo;
+package io.gitee.dqcer.mcdull.system.facade.model.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
@@ -12,10 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 用户视图对象
- *
- * @author dqcer
- * @since  2022/11/27
+ * 用户视图对象（共享给业务模块）
  */
 @Data
 @ToString

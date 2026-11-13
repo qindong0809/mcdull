@@ -5,10 +5,11 @@ import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserAllVO;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

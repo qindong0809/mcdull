@@ -7,10 +7,10 @@ import io.gitee.dqcer.mcdull.business.common.excel.DynamicFieldTemplate;
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.system.provider.model.bo.DynamicFieldBO;
+import io.gitee.dqcer.mcdull.system.facade.model.bo.DynamicFieldBO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FileEntity;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.ApproveVO;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.IFileVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.ApproveVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.IFileVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;

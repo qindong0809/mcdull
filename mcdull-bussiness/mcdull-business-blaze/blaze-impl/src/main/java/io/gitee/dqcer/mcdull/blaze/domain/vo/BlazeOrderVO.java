@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.ApproveVO;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.FileSimpleVO;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.IFileVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.ApproveVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.FileSimpleVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.IFileVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

@@ -1,8 +1,9 @@
 package io.gitee.dqcer.mcdull.system.facade.service.def;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
-import io.gitee.dqcer.mcdull.system.facade.vo.RemoteDeptVO;
+import io.gitee.dqcer.mcdull.framework.feign.rpc.RpcClient;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.DepartmentInfoVO;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -15,12 +16,19 @@ import java.util.Map;
  * @author dqcer
  * @since 2022/10/28
  */
+@RpcClient("mcdull-system")
 public interface DeptApiDef {
 
-    @PostMapping(GlobalConstant.INNER_API + GlobalConstant.SYSTEM + "/dept/list")
-    ResultApi<List<RemoteDeptVO>> getList();
+    /**
+     * 全量部门列表
+     */
+    @GetMapping(GlobalConstant.INNER_API + GlobalConstant.SYSTEM + "/dept/all")
+    List<DepartmentInfoVO> getAll();
 
-    @PostMapping(GlobalConstant.INNER_API + GlobalConstant.SYSTEM + "/dept/by-id/list")
-    ResultApi<Map<Integer, RemoteDeptVO>> getMapByIdList(@RequestBody List<Integer> idList);
+    /**
+     * 按 ID 批量查询部门名称
+     */
+    @PostMapping(GlobalConstant.INNER_API + GlobalConstant.SYSTEM + "/dept/name-map")
+    Map<Integer, String> getNameMap(@RequestBody List<Integer> idList);
 
 }

@@ -10,8 +10,8 @@ import io.gitee.dqcer.mcdull.blaze.service.IApproveService;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.ApproveVO;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.ApproveVO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ApproveServiceImpl implements IApproveService {
     @Resource
-    private IUserService userService;
+    private UserApiDef sysUserFacade;
     @Override
     public <T extends Approve> void approve(ApproveDTO dto, IRepository<T> baseRepository, Boolean existReferencedData) {
         Integer id = dto.getId();
@@ -64,7 +64,7 @@ public class ApproveServiceImpl implements IApproveService {
                 }
             }
             Set<Integer> collect = list.stream().map(ApproveVO::getResponsibleUserId).collect(Collectors.toSet());
-            Map<Integer, String> nameMap = userService.getNameMap(new ArrayList<>(collect));
+            Map<Integer, String> nameMap = sysUserFacade.getNameMap(new ArrayList<>(collect));
             for (ApproveVO vo : list) {
                 Integer responsibleUserId = vo.getResponsibleUserId();
                 if (ObjUtil.isNotNull(responsibleUserId)) {

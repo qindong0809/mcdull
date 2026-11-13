@@ -27,6 +27,9 @@ sa-token:
   # token 有效期（单位：秒） 1天（86400秒），-1 代表永久有效
   timeout: 86400
 mcdull:
+  rpc:
+    # local  = 单体合并运行（本地实现内存直调）；remote = 微服务拆分运行（Feign 远程调用）
+    mode: local
   oss:
     access-key:
     secret-key:

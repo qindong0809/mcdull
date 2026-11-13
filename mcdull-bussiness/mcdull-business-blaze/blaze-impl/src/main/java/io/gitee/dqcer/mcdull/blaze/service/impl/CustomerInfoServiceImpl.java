@@ -19,11 +19,9 @@ import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
-import io.gitee.dqcer.mcdull.system.provider.model.enums.DictSelectTypeEnum;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IAreaService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IDictValueService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.system.facade.service.def.CommonApiDef;
+import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
+import io.gitee.dqcer.mcdull.system.facade.model.enums.DictSelectTypeEnum;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,15 +41,11 @@ public class CustomerInfoServiceImpl
         extends BasicServiceImpl<ICustomerInfoRepository> implements ICustomerInfoService {
 
     @Resource
-    private IDictValueService dictValueService;
-    @Resource
-    private IUserService userService;
-    @Resource
-    private IAreaService areaService;
+    private UserApiDef userService;
     @Resource
     private ICertificateRequirementsService certificateRequirementsService;
     @Resource
-    private ICommonManager commonManager;
+    private CommonApiDef sysCommonFacade;
 
     public PagedVO<CustomerInfoVO> queryPage(CustomerInfoQueryDTO dto) {
         List<CustomerInfoVO> voList = new ArrayList<>();
@@ -63,11 +57,11 @@ public class CustomerInfoServiceImpl
             Map<Integer, String> nameMap = userService.getMap(recordList);
             for (CustomerInfoEntity entity : recordList) {
                 CustomerInfoVO vo = this.convertToVO(entity);
-                KeyValueBO<String, String> keyValue = dictValueService.dictVO(DictSelectTypeEnum.CUSTOMER_TYPE, vo.getCustomerType());
+                KeyValueBO<String, String> keyValue = sysCommonFacade.dictVO(DictSelectTypeEnum.CUSTOMER_TYPE, vo.getCustomerType());
                 if (ObjUtil.isNotNull(keyValue)) {
                     vo.setCustomerTypeName(keyValue.getValue());
                 }
-                KeyValueBO<String, String> inactiveKeyValue = dictValueService.dictVO(DictSelectTypeEnum.IN_ACTIVE, vo.getInactive().toString());
+                KeyValueBO<String, String> inactiveKeyValue = sysCommonFacade.dictVO(DictSelectTypeEnum.IN_ACTIVE, vo.getInactive().toString());
                 if (ObjUtil.isNotNull(inactiveKeyValue)) {
                     vo.setInactiveName(inactiveKeyValue.getValue());
                 }
@@ -78,7 +72,7 @@ public class CustomerInfoServiceImpl
                 vo.setPhoneNumber("");
                 voList.add(vo);
             }
-            areaService.set(voList);
+            sysCommonFacade.set(voList);
         }
         return PageUtil.toPage(voList, entityPage);
     }
@@ -99,7 +93,7 @@ public class CustomerInfoServiceImpl
 
     @Override
     public boolean exportData(CustomerInfoQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+        sysCommonFacade.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
         return true;
     }
 

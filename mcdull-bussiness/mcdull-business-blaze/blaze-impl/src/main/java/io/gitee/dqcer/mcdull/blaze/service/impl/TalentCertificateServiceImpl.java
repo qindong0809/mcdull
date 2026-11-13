@@ -30,11 +30,10 @@ import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
-import io.gitee.dqcer.mcdull.system.provider.model.bo.DynamicFieldBO;
-import io.gitee.dqcer.mcdull.system.provider.model.enums.FormItemControlTypeEnum;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IAreaService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
+import io.gitee.dqcer.mcdull.system.facade.service.def.CommonApiDef;
+import io.gitee.dqcer.mcdull.system.facade.model.bo.DynamicFieldBO;
+import io.gitee.dqcer.mcdull.system.facade.model.enums.FormItemControlTypeEnum;
+import io.gitee.dqcer.mcdull.system.facade.service.def.FileApiDef;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,11 +58,9 @@ public class TalentCertificateServiceImpl
     @Resource
     private ITalentService talentService;
     @Resource
-    private ICommonManager commonManager;
+    private CommonApiDef sysCommonFacade;
     @Resource
-    private IAreaService areaService;
-    @Resource
-    private IFileService fileService;
+    private FileApiDef fileService;
     @Resource
     private ICertificateRequirementsService certificateRequirementsService;
     @Resource
@@ -141,19 +138,19 @@ public class TalentCertificateServiceImpl
                     vo.setPositionSourceName(IEnum.getTextByCode(CertificatePositionSourceEnum.class, positionSource));
                 }
                 voList.add(vo);
-                areaService.set(voList);
+                sysCommonFacade.set(voList);
 
             }
             approveService.setApproveVO(voList, recordList);
-            commonManager.setFileVO(voList, TalentCertificateEntity.class);
-            commonManager.setDepartment(voList, UserContextHolder.userId());
+            sysCommonFacade.setFileVO(voList, TalentCertificateEntity.class);
+            sysCommonFacade.setDepartment(voList, UserContextHolder.userId());
         }
         return PageUtil.toPage(voList, entityPage);
     }
 
     @Override
     public boolean exportData(TalentCertificateQueryDTO dto) {
-        commonManager.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+        sysCommonFacade.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
         return true;
     }
 
@@ -202,7 +199,7 @@ public class TalentCertificateServiceImpl
         fieldList.add(new DynamicFieldBO("positionSource", "岗位来源", true, FormItemControlTypeEnum.SELECT, CertificatePositionSourceEnum.class));
         fieldList.add(new DynamicFieldBO("remarks", "备注", true, FormItemControlTypeEnum.TEXTAREA));
         sheetHeaderMap.put("模板", fieldList);
-        commonManager.downloadExcelTemplate(sheetHeaderMap, "证书需求模板");
+        sysCommonFacade.downloadExcelTemplate(sheetHeaderMap, "证书需求模板");
     }
 
     @Override
@@ -309,7 +306,7 @@ public class TalentCertificateServiceImpl
 
     private List<MultipartFile> convertFileList(Integer id) {
         List<MultipartFile> fileList = new ArrayList<>();
-        List<Pair<String, byte[]>> fileDateList = commonManager.getFileDateList(id, TalentCertificateEntity.class);
+        List<Pair<String, byte[]>> fileDateList = sysCommonFacade.getFileDateList(id, TalentCertificateEntity.class);
         if (CollUtil.isNotEmpty(fileDateList)) {
             for (Pair<String, byte[]> pair : fileDateList) {
                 MultipartFile multipartFile = new CustomMultipartFile(pair.getKey(), pair.getValue());
@@ -344,7 +341,7 @@ public class TalentCertificateServiceImpl
 
     private DynamicFieldBO getProvinceFieldBO() {
         DynamicFieldBO fieldBO = new DynamicFieldBO("provincesName", "省份", true, FormItemControlTypeEnum.SELECT);
-        List<LabelValueVO<String, String>> list = areaService.provinceList();
+        List<LabelValueVO<String, String>> list = sysCommonFacade.provinceList();
         fieldBO.setDropdownList(list.stream().map(LabelValueVO::getLabel).collect(Collectors.toList()));
         fieldBO.setExtraObj(list);
         return fieldBO;

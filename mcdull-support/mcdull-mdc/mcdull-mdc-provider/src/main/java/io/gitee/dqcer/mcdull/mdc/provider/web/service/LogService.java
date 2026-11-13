@@ -9,7 +9,6 @@ import io.gitee.dqcer.mcdull.mdc.provider.model.dto.LogLiteDTO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.dto.SysLogFeignDTO;
 import io.gitee.dqcer.mcdull.mdc.provider.model.entity.LogEntity;
 import io.gitee.dqcer.mcdull.mdc.provider.model.vo.LogVO;
-import io.gitee.dqcer.mcdull.system.facade.service.UserAip;
 import jakarta.annotation.Resource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -28,9 +27,6 @@ public class LogService {
 
 //    @Resource
 //    private ILogRepository logRepository;
-
-    @Resource
-    private UserAip userClientService;
 
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;

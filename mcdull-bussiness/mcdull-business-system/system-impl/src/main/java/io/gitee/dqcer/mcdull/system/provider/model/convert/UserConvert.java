@@ -5,7 +5,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.UserAddDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.UserUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserAllVO;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
 
 /**
  * 用户 对象转换工具类

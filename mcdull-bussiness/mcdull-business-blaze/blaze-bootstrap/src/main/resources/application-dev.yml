@@ -13,3 +13,13 @@ spring:
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
     poolType: Druid
+
+# RPC 部署形态开关
+mcdull:
+  rpc:
+    # local  = 单体合并运行：启动包内包含 system-impl，本地实现生效，走 JVM 内存调用，不初始化 Feign
+    # remote = 微服务拆分运行：启动包内不包含 system-impl，自动激活 Feign 代理，走 HTTP 远程调用
+    mode: local
+    # remote 模式下扫描的契约包，默认值为约定包路径；新增其它模块的契约包时在此追加
+    # base-packages: io.gitee.dqcer.mcdull.system.facade.service.def
+

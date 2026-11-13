@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.system.provider.web.controller;
 import cn.dev33.satoken.annotation.SaCheckEL;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.SerialNumberGenerateDTO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.SerialNumberGenerateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.SerialNumberRecordQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.SerialNumberRecordEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.SerialNumberVO;

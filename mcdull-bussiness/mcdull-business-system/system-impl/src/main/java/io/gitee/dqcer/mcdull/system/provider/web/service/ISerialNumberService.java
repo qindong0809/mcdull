@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service;
 
 import com.baomidou.mybatisplus.extension.repository.IRepository;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.SerialNumberGenerateDTO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.SerialNumberGenerateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.SerialNumberEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.SerialNumberRecordEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.SerialNumberVO;

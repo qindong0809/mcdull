@@ -28,9 +28,11 @@
             <artifactId>mcdull-framework-starter-web</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- 编译期只依赖 facade（SPI 接口 + 共享 Model 类） -->
+        <!-- 运行时由 workflow-bootstrap 把 system-impl 装配进来提供本地 SPI 实现 -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>system-impl</artifactId>
+            <artifactId>system-facade</artifactId>
             <version>${project.version}</version>
         </dependency>
 

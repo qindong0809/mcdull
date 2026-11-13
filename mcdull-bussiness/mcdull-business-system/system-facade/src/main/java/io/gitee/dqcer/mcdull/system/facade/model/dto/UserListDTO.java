@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.system.provider.model.dto;
+package io.gitee.dqcer.mcdull.system.facade.model.dto;
 
 import io.gitee.dqcer.mcdull.framework.base.dto.PagedDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,11 +11,8 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 /**
-* 用户 接收客户端参数
-*
-* @author dqcer
-* @since 2022-11-16
-*/
+ * 用户 接收客户端参数（共享给业务模块）
+ */
 @Setter
 @Getter
 @ToString

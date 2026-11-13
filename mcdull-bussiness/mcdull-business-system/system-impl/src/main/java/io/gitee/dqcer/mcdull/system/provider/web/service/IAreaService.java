@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.AreaQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.AreaEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.AreaVO;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.IArea;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.IArea;
 
 import java.util.List;
 

@@ -5,7 +5,7 @@ import io.gitee.dqcer.mcdull.blaze.domain.enums.TalentWorkUnitTypeEnum;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.IArea;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.IArea;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

@@ -4,7 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckEL;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DeptInsertDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DeptUpdateDTO;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentInfoVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.DepartmentInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentTreeInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDepartmentService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -7,8 +7,8 @@ import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.blaze.domain.form.PermissionDTO;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
-import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
 import jakarta.annotation.Resource;
 
 import java.util.List;
@@ -17,15 +17,15 @@ import java.util.function.Function;
 public class BlazeBasicController extends BasicController {
 
     @Resource
-    private IUserService userService;
+    private UserApiDef sysUserFacade;
 
     protected <VO, DTO extends PermissionDTO> VO executeByPermission(String code, VO emptyDefaultValue, DTO dto, Function<DTO, VO> function) {
         if (StrUtil.isNotBlank(code)) {
             boolean permissionApprove = StpUtil.hasPermission(code);
             if (permissionApprove) {
-                UserEntity userEntity = userService.get(UserContextHolder.userId());
-                Integer departmentId = userEntity.getDepartmentId();
-                List<Integer> userIdList = userService.getUserIdList(departmentId);
+                UserVO userVO = sysUserFacade.get(UserContextHolder.userId());
+                Integer departmentId = userVO.getDepartmentId();
+                List<Integer> userIdList = sysUserFacade.getUserIdList(departmentId);
                 if (CollUtil.isEmpty(userIdList)) {
                     return emptyDefaultValue;
                 }

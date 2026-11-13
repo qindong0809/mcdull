@@ -16,7 +16,7 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.AreaQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.AreaEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.AreaVO;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.IArea;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.IArea;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.AreaMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IAreaService;

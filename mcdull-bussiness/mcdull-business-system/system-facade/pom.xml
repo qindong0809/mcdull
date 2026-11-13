@@ -24,6 +24,13 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!-- 契约模块内的共享 Model 使用 Spring MVC 映射、Swagger 与 JSON 序列化注解 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-web</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

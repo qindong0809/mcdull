@@ -19,7 +19,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.FormEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormItemEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormRecordEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormRecordItemEntity;
-import io.gitee.dqcer.mcdull.system.provider.model.enums.FormItemControlTypeEnum;
+import io.gitee.dqcer.mcdull.system.facade.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FormRecordDataVO;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.IFormManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFormItemService;

@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 
 /**
@@ -35,6 +36,9 @@ public final class ArchitectureEnforcer {
         REQUIRED_RULES.add(doNamingRules());
         REQUIRED_RULES.add(voNamingRules());
         REQUIRED_RULES.add(enumNamingRules());
+
+        // facade 契约包不得依赖 provider 实现包（防止 facade/impl 拆分包复发）
+        REQUIRED_RULES.add(facadeDependencyRules());
 
         // 禁止使用e.printStackTrace, System.err/System.out
         REQUIRED_RULES.add(GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.as("禁止使用 e.printStackTrace, System.err/System.out"));
@@ -122,6 +126,20 @@ public final class ArchitectureEnforcer {
      */
     public static ArchRule enumNamingRules() {
         return classes().that().areEnums().should().haveSimpleNameEndingWith("Enum").as("枚举类应该以'Enum'结尾");
+    }
+
+    /**
+     * facade 依赖规则：对外契约包(facade)只允许被实现包(provider)依赖，不得反向依赖，
+     * 且 facade 与 impl 必须使用不同包名，杜绝拆分包(Split Package)
+     *
+     * @return {@link ArchRule}
+     */
+    public static ArchRule facadeDependencyRules() {
+        return noClasses()
+                .that().resideInAPackage("..facade..")
+                .should().dependOnClassesThat().resideInAPackage("..provider..")
+                .allowEmptyShould(true)
+                .as("facade 契约包不得依赖 provider 实现包（防止 Split Package 复发）");
     }
 
 

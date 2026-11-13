@@ -11,15 +11,13 @@ import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.UserListDTO;
-import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleEntity;
-import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentInfoVO;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.RoleVO;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.UserVO;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IDepartmentService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.UserListDTO;
+import io.gitee.dqcer.mcdull.system.facade.service.def.DeptApiDef;
+import io.gitee.dqcer.mcdull.system.facade.service.def.RoleApiDef;
+import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.DepartmentInfoVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.RoleVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.workflow.model.dto.FlowTaskDTO;
 import io.gitee.dqcer.mcdull.workflow.model.vo.FlowHisTaskVO;
 import io.gitee.dqcer.mcdull.workflow.model.vo.FlowTaskVO;
@@ -47,11 +45,11 @@ public class ExecuteServiceImpl implements IExecuteService {
     @Resource
     private UserService flowUserService;
     @Resource
-    private IUserService userService;
+    private UserApiDef sysUserFacade;
     @Resource
-    private IDepartmentService departmentService;
+    private DeptApiDef sysDeptFacade;
     @Resource
-    private IRoleService roleService;
+    private RoleApiDef sysRoleFacade;
 
     @Override
     public PagedVO<FlowTaskVO> toDoPage(FlowTaskDTO dto) {
@@ -108,7 +106,7 @@ public class ExecuteServiceImpl implements IExecuteService {
         List<FlowHisTaskVO> records = pageInfo.getRecords();
         if (CollUtil.isNotEmpty(records)) {
             List<Integer> userIdList = CollStreamUtil.toList(records, FlowHisTaskVO::getApproverUserId);
-            Map<Integer, String> userMap = userService.getNameMap(userIdList);
+            Map<Integer, String> userMap = sysUserFacade.getNameMap(userIdList);
             for (FlowHisTaskVO taskVo : records) {
                 taskVo.setApprover(userMap.get(taskVo.getApproverUserId()));
             }
@@ -118,19 +116,19 @@ public class ExecuteServiceImpl implements IExecuteService {
 
     private List<String> permissionList() {
         String userId = UserContextHolder.userIdStr();
-        Map<Integer, List<RoleEntity>> roleMap = roleService.getRoleMap(ListUtil.of(Convert.toInt(userId)));
+        Map<Integer, List<RoleVO>> roleMap = sysRoleFacade.getRoleMap(ListUtil.of(Convert.toInt(userId)));
 
         List<String> permissionList = new ArrayList<>();
         if (MapUtil.isNotEmpty(roleMap)) {
-            List<RoleEntity> entityList = roleMap.get(Convert.toInt(userId));
-            if (CollUtil.isNotEmpty(entityList)) {
-                permissionList = CollStreamUtil.toList(entityList, r -> "role:" + r.getId());
+            List<RoleVO> roleList = roleMap.get(Convert.toInt(userId));
+            if (CollUtil.isNotEmpty(roleList)) {
+                permissionList = CollStreamUtil.toList(roleList, r -> "role:" + r.getRoleId());
             }
         }
         permissionList.add(userId);
-        UserEntity userEntity = userService.get(Convert.toInt(userId));
-        if (Objects.nonNull(userEntity)) {
-            permissionList.add("dept:" + userEntity.getDepartmentId());
+        UserVO vo = sysUserFacade.get(Convert.toInt(userId));
+        if (Objects.nonNull(vo)) {
+            permissionList.add("dept:" + vo.getDepartmentId());
         }
         LogHelp.info(log, "当前用户权限[{}]", permissionList);
         return permissionList;
@@ -138,12 +136,12 @@ public class ExecuteServiceImpl implements IExecuteService {
 
     public String getName(String id) {
         UserListDTO userDTO = new UserListDTO();
-        List<UserVO> userList = PageUtil.getAllList(userDTO, r -> userService.listByPage(r));
+        List<UserVO> userList = sysUserFacade.listByPage(userDTO).getList();
         Map<Integer, String> userMap = StreamUtils.toMap(userList
                 , UserVO::getEmployeeId, UserVO::getActualName);
-        Map<Integer, String> deptMap = StreamUtils.toMap(departmentService.getAll()
+        Map<Integer, String> deptMap = StreamUtils.toMap(sysDeptFacade.getAll()
                 , DepartmentInfoVO::getDepartmentId, DepartmentInfoVO::getName);
-        Map<Integer, String> roleMap = StreamUtils.toMap(roleService.all()
+        Map<Integer, String> roleMap = StreamUtils.toMap(sysRoleFacade.all()
                 , RoleVO::getRoleId, RoleVO::getRoleName);
         if (StrUtil.isNotBlank(id)) {
             if (id.contains("user:")) {

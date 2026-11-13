@@ -1,14 +1,11 @@
-package io.gitee.dqcer.mcdull.system.provider.model.vo;
+package io.gitee.dqcer.mcdull.system.facade.model.vo;
 
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
- * 角色视图对象
- *
- * @author dqcer
- * @since  2022/11/27
+ * 角色视图对象（共享给业务模块）
  */
 @Data
 public class RoleVO implements VO {

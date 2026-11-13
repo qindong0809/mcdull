@@ -40,6 +40,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.MenuUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.MenuEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.MenuTypeEnum;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.*;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.MenuMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;

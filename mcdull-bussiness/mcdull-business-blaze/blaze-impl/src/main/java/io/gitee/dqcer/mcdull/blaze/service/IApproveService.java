@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.blaze.service;
 import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.blaze.domain.entity.Approve;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.ApproveVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.ApproveVO;
 
 import java.util.List;
 

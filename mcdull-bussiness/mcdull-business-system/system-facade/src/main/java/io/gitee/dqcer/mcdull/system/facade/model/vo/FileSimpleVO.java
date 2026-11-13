@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.system.provider.model.vo;
+package io.gitee.dqcer.mcdull.system.facade.model.vo;
 
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import lombok.Data;

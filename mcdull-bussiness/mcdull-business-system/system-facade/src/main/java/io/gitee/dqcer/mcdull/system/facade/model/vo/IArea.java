@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.system.provider.model.vo;
+package io.gitee.dqcer.mcdull.system.facade.model.vo;
 
 public interface IArea {
 

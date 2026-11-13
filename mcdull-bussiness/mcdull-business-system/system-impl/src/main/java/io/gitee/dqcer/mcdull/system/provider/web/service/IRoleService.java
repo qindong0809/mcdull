@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.framework.base.dto.ReasonDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleEntity;
-import io.gitee.dqcer.mcdull.system.provider.model.vo.RoleVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.RoleVO;
 
 import java.util.List;
 import java.util.Map;

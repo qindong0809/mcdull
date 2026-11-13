@@ -1,17 +1,14 @@
-package io.gitee.dqcer.mcdull.system.provider.model.bo;
+package io.gitee.dqcer.mcdull.system.facade.model.bo;
 
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
-import io.gitee.dqcer.mcdull.system.provider.model.enums.FormItemControlTypeEnum;
+import io.gitee.dqcer.mcdull.system.facade.model.enums.FormItemControlTypeEnum;
 import lombok.Data;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 动态字段
- *
- * @author dqcer
- * @since 2024/12/16
+ * 动态字段 BO（共享给业务模块）
  */
 @Data
 public class DynamicFieldBO {

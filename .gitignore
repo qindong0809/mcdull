@@ -29,3 +29,5 @@ rebel.xml
 .fleet
 .vscode
 *.flattened-pom.xml
+.openidea
+.workbuddy
