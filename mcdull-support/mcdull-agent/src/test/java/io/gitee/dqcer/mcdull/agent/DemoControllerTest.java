@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.agent;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,6 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
+@Disabled("集成测试：需依赖外部 LLM 服务（OpenAI/Ollama）及相应配置，仅在本地手动执行")
 class DemoControllerTest {
 
     @Autowired

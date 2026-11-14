@@ -31,3 +31,8 @@ rebel.xml
 *.flattened-pom.xml
 .openidea
 .workbuddy
+
+# 日志占位符残留目录（LOG_PATH 未解析时生成）
+LOG_PATH_IS_UNDEFINED/
+# flatten 插件万一落到模块根目录时的兜底
+**/.flattened-pom.xml

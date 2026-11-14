@@ -16,12 +16,10 @@
         <dependency>
             <groupId>org.dromara.warm</groupId>
             <artifactId>warm-flow-mybatis-plus-sb3-starter</artifactId>
-            <version>1.7.3</version>
         </dependency>
         <dependency>
             <groupId>org.dromara.warm</groupId>
             <artifactId>warm-flow-plugin-ui-sb-web</artifactId>
-            <version>1.7.3</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
