@@ -38,4 +38,13 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-devtools-notify</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

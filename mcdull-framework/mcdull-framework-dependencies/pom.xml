@@ -78,6 +78,10 @@
         <!-- 构建插件统一 -->
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <!-- mcdull-devtools-notify 插件所需依赖版本 -->
+        <jgit.version>6.10.0.202406032230-r</jgit.version>
+        <maven-plugin-api.version>3.9.6</maven-plugin-api.version>
+        <maven-plugin-annotations.version>3.13.1</maven-plugin-annotations.version>
     </properties>
 
     <dependencyManagement>
@@ -352,6 +356,27 @@
                 <groupId>com.documents4j</groupId>
                 <artifactId>documents4j-transformer-msoffice-word</artifactId>
                 <version>${documents4j.version}</version>
+            </dependency>
+            <!-- ===== mcdull-devtools-notify 插件依赖，构建期使用 ===== -->
+            <dependency>
+                <groupId>org.eclipse.jgit</groupId>
+                <artifactId>org.eclipse.jgit</artifactId>
+                <version>${jgit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>${maven-plugin-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-core</artifactId>
+                <version>${maven-plugin-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugin-tools</groupId>
+                <artifactId>maven-plugin-annotations</artifactId>
+                <version>${maven-plugin-annotations.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

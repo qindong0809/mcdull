@@ -15,6 +15,7 @@
 
   <modules>
     <module>mcdull-devtools-portal</module>
+    <module>mcdull-devtools-notify</module>
   </modules>
 
   <dependencyManagement>

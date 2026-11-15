@@ -6,8 +6,8 @@
 
 从真实线上环境中提炼，提供标准化、可扩展的微服务架构脚手架
 
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.4-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
-[![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2023.0.1-6DB33F?logo=spring&logoColor=white)](https://spring.io/projects/spring-cloud)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.16-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2025.0.3-6DB33F?logo=spring&logoColor=white)](https://spring.io/projects/spring-cloud)
 [![Java](https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk&logoColor=white)](https://openjdk.org/projects/jdk/17/)
 [![Sa-Token](https://img.shields.io/badge/Sa--Token-1.42.0-blue)](https://sa-token.cc)
 [![MyBatis Plus](https://img.shields.io/badge/MyBatis--Plus-3.5.16-blue)](https://baomidou.com)
@@ -38,8 +38,8 @@ McDull 是一个基于 **Spring Boot 3 + Spring Cloud** 的企业级微服务开
 
 | 类别 | 技术 | 版本 |
 |---|---|---|
-| 基础框架 | Spring Boot | 3.2.4 |
-| 微服务 | Spring Cloud / Spring Cloud Alibaba | 2023.0.1 / 2023.0.1.0 |
+| 基础框架 | Spring Boot | 3.5.16 |
+| 微服务 | Spring Cloud / Spring Cloud Alibaba | 2025.0.3 / 2025.0.0.0 |
 | 服务注册与配置 | Nacos | 2.x |
 | API 网关 | Spring Cloud Gateway | — |
 | 服务调用 | OpenFeign | — |
@@ -274,6 +274,32 @@ schedulerManager.resumeTask("db-backup");    // 恢复
 - **状态持久化**：StatefulTask 每次执行后更新持久化状态，下次执行可读取
 - **运行时管理**：`SchedulerManager` 提供手动触发/暂停/恢复，`TaskQueryService` 提供任务列表和执行历史查询
 
+### 📦 Facade 发布通知 Maven 插件
+
+`mcdull-devtools-notify` 在 Facade 模块执行 `mvn deploy` 后，自动向 IM 群机器人推送 **“发布了什么 · 改了什么 · 影响谁”**，解决上游接口发布后下游无感知、靠人工通知的问题。
+
+业务 Facade 只需引入插件，版本与默认配置由根 POM 的 `pluginManagement` 统一管理：
+
+```xml
+<plugin>
+    <groupId>io.gitee.dqcer</groupId>
+    <artifactId>mcdull-devtools-notify</artifactId>
+</plugin>
+```
+
+核心特性：
+- **变更摘要**：通过 JGit 自动获取当前分支、版本及最近提交，并生成可点击的 commit 链接
+- **下游影响**：分析 Maven Reactor 模块依赖，自动列出直接依赖当前 Facade 的下游模块
+- **默认安全**：默认跳过 SNAPSHOT 版本，未配置 Webhook 时静默跳过，不在仓库中保存机器人地址
+- **永不阻断构建**：Git 信息解析、下游分析或通知发送失败时仅记录警告，不影响 `deploy` 结果
+- **灵活配置**：支持通过命令行、环境变量、`settings.xml` 或 POM 设置 `mcdull.notify.*` 参数
+
+```bash
+mvn deploy "-Dmcdull.notify.webhook=https://oapi.dingtalk.com/robot/send?access_token=XXXX"
+```
+
+完整接入与配置说明见 [mcdull-devtools-notify/README.md](mcdull-devtools/mcdull-devtools-notify/README.md)。
+
 ### 🔌 Feign 跨服务异常透传
 
 `mcdull-framework-starter-feign` 解决微服务间 Feign 调用时异常信息丢失的问题：
@@ -442,6 +468,9 @@ mcdull/
 │       ├── mcdull-framework-starter-scheduler  # 定时任务（db-scheduler）
 │       ├── mcdull-framework-starter-security   # 安全认证（Sa-Token）
 │       └── mcdull-framework-starter-web        # Web 基础
+├── mcdull-devtools/           # 研发工具 — 开发辅助与发布协作
+│   ├── mcdull-devtools-portal  # 开发工具门户（日志查看、数据库导入）
+│   └── mcdull-devtools-notify  # Facade 发布通知 Maven 插件
 ├── mcdull-business/           # 业务层 — 具体业务实现
 │   ├── mcdull-business-common     # 业务通用组件
 │   ├── mcdull-business-system     # 系统管理（用户、角色、权限、代码生成）
@@ -451,10 +480,12 @@ mcdull/
 │   └── mcdull-business-demo       # 示例与最佳实践
 ├── mcdull-support/            # 支持层 — 运行支撑服务
 │   ├── mcdull-gateway         # API 网关
-│   ├── mcdull-mdc             # 元数据中心
-│   ├── mcdull-monitor         # 监控服务
-│   ├── mcdull-tools           # 开发工具
-│   └── mcdull-ai              # AI 相关功能
+│   ├── mcdull-mdc/            # 元数据中心
+│   │   ├── mcdull-mdc-client      # 元数据客户端
+│   │   └── mcdull-mdc-provider    # 元数据服务
+│   ├── mcdull-monitor-server  # 监控服务
+│   ├── mcdull-ai              # AI 相关功能
+│   └── mcdull-agent           # AI Agent 服务
 ├── doc/                       # 项目文档
 └── sql/                       # 数据库初始化脚本
 ```
@@ -541,15 +572,15 @@ mvn clean install -DskipTests
 
 ## 文档
 
-详细文档位于 `doc/project/` 目录：
+详细文档分布在 `doc/` 目录和各模块目录：
 
 | 文档 | 说明 |
 |---|---|
-| [deploy.md](doc/project/deploy.md) | 部署教程 |
-| [database.md](doc/project/database.md) | 数据库设计规范 |
-| [date.md](doc/project/date.md) | 多时区与日期格式使用说明 |
-| [archunit.md](doc/project/archunit.md) | ArchUnit 架构约束使用说明 |
-| [login.md](doc/project/login.md) | 登录认证接口说明 |
+| [打包部署指南.md](doc/打包部署指南.md) | 打包与部署教程 |
+| [mcdull-devtools-notify/README.md](mcdull-devtools/mcdull-devtools-notify/README.md) | Facade 发布通知插件使用说明 |
+| [mcdull-framework-agent/README.md](mcdull-framework/mcdull-framework-agent/README.md) | Java Agent 性能探针使用说明 |
+| [mcdull-framework-enforcer/README.md](mcdull-framework/mcdull-framework-enforcer/README.md) | ArchUnit 架构约束使用说明 |
+| [mcdull-framework-starter-scheduler/README.md](mcdull-framework/mcdull-framework-starters/mcdull-framework-starter-scheduler/README.md) | 定时任务调度使用说明 |
 
 ---
 

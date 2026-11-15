@@ -12,5 +12,13 @@
     <artifactId>workflow-facade</artifactId>
     <name>${project.artifactId} v${project.version}</name>
 
-    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.gitee.dqcer</groupId>
+                <artifactId>mcdull-devtools-notify</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
