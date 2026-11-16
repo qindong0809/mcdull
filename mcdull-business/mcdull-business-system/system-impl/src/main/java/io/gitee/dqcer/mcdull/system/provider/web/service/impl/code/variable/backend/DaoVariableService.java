@@ -2,8 +2,8 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.bac
 
 
 import cn.hutool.core.collection.CollUtil;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigForm;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateField;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateFieldDTO;
 import io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.CodeGenerateBaseVariableService;
 
 import java.util.*;
@@ -15,15 +15,15 @@ import java.util.stream.Collectors;
 public class DaoVariableService extends CodeGenerateBaseVariableService {
 
     @Override
-    public boolean isSupport(CodeGeneratorConfigForm form) {
+    public boolean isSupport(CodeGeneratorConfigDTO form) {
         return true;
     }
 
     @Override
-    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigForm form) {
+    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigDTO form) {
         Map<String, Object> variablesMap = new HashMap<>();
 
-        List<CodeInsertAndUpdateField> updateFieldList = form.getInsertAndUpdate().getFieldList().stream().filter(e -> Boolean.TRUE.equals(e.getInsertFlag())).collect(Collectors.toList());
+        List<CodeInsertAndUpdateFieldDTO> updateFieldList = form.getInsertAndUpdate().getFieldList().stream().filter(e -> Boolean.TRUE.equals(e.getInsertFlag())).collect(Collectors.toList());
         List<String> packageList = getPackageList(updateFieldList, form);
 
         variablesMap.put("packageName", form.getBasic().getJavaPackageName() + ".dao" );
@@ -33,7 +33,7 @@ public class DaoVariableService extends CodeGenerateBaseVariableService {
     }
 
 
-    public List<String> getPackageList(List<CodeInsertAndUpdateField> fields, CodeGeneratorConfigForm form) {
+    public List<String> getPackageList(List<CodeInsertAndUpdateFieldDTO> fields, CodeGeneratorConfigDTO form) {
         if (CollUtil.isEmpty(fields)) {
             return new ArrayList<>();
         }

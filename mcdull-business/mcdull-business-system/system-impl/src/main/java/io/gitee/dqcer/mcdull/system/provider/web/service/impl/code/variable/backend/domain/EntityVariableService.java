@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.backend.domain;
 
 import cn.hutool.core.collection.CollUtil;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeField;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigForm;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeFieldDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigDTO;
 import io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.CodeGenerateBaseVariableService;
 
 import java.util.*;
@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 public class EntityVariableService extends CodeGenerateBaseVariableService {
 
     @Override
-    public boolean isSupport(CodeGeneratorConfigForm form) {
+    public boolean isSupport(CodeGeneratorConfigDTO form) {
         return true;
     }
 
     @Override
-    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigForm form) {
+    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigDTO form) {
         Map<String, Object> variablesMap = new HashMap<>();
 
 
@@ -31,7 +31,7 @@ public class EntityVariableService extends CodeGenerateBaseVariableService {
     }
 
 
-    public List<String> getImportPackageList(List<CodeField> fields) {
+    public List<String> getImportPackageList(List<CodeFieldDTO> fields) {
         if (CollUtil.isEmpty(fields)) {
             return new ArrayList<>();
         }

@@ -3,10 +3,10 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.NamingCase;
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeField;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigForm;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdate;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateField;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeFieldDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateFieldDTO;
 
 import java.util.*;
 import java.util.function.Function;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 public abstract class CodeGenerateBaseVariableService {
 
-    public abstract Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigForm form);
+    public abstract Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigDTO form);
 
     /**
      * 是否支持 :
@@ -26,7 +26,7 @@ public abstract class CodeGenerateBaseVariableService {
      * @param form
      * @return
      */
-    public abstract boolean isSupport(CodeGeneratorConfigForm form);
+    public abstract boolean isSupport(CodeGeneratorConfigDTO form);
 
     /**
      * 获取所有javabean的 import 包名
@@ -34,7 +34,7 @@ public abstract class CodeGenerateBaseVariableService {
      * @param form
      * @return
      */
-    public List<String> getJavaBeanImportClass(CodeGeneratorConfigForm form) {
+    public List<String> getJavaBeanImportClass(CodeGeneratorConfigDTO form) {
 //        String upperCamelName = CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_CAMEL, form.getBasic().getModuleName());
         String upperCamelName = StrUtil.upperFirst(form.getBasic().getModuleName());
         ArrayList<String> list = new ArrayList<>();
@@ -51,10 +51,10 @@ public abstract class CodeGenerateBaseVariableService {
 
 
     /**
-     * 根据列名查找 CodeField
+     * 根据列名查找 CodeFieldDTO
      */
-    public CodeField getCodeFieldByColumnName(String columnName, CodeGeneratorConfigForm form) {
-        List<CodeField> fields = form.getFields();
+    public CodeFieldDTO getCodeFieldByColumnName(String columnName, CodeGeneratorConfigDTO form) {
+        List<CodeFieldDTO> fields = form.getFields();
         if (CollUtil.isEmpty(fields)) {
             return null;
         }
@@ -67,59 +67,59 @@ public abstract class CodeGenerateBaseVariableService {
     /**
      * 是否为文件上传字段
      */
-    protected boolean isFile(String columnName, CodeGeneratorConfigForm form) {
-        CodeInsertAndUpdate insertAndUpdate = form.getInsertAndUpdate();
+    protected boolean isFile(String columnName, CodeGeneratorConfigDTO form) {
+        CodeInsertAndUpdateDTO insertAndUpdate = form.getInsertAndUpdate();
         if (insertAndUpdate == null) {
             return false;
         }
 
-        List<CodeInsertAndUpdateField> fieldList = insertAndUpdate.getFieldList();
+        List<CodeInsertAndUpdateFieldDTO> fieldList = insertAndUpdate.getFieldList();
         if (CollUtil.isEmpty(fieldList)) {
             return false;
         }
 
-        Optional<CodeInsertAndUpdateField> first = fieldList.stream().filter(e -> columnName.equals(e.getColumnName())).findFirst();
+        Optional<CodeInsertAndUpdateFieldDTO> first = fieldList.stream().filter(e -> columnName.equals(e.getColumnName())).findFirst();
         if (!first.isPresent()) {
             return false;
         }
 
-        CodeInsertAndUpdateField field = first.get();
+        CodeInsertAndUpdateFieldDTO field = first.get();
         return StrUtil.contains(field.getFrontComponent(), "Upload" );
     }
 
     /**
      * 是否为 枚举
      */
-    protected boolean isDict(String columnName, CodeGeneratorConfigForm form) {
-        List<CodeField> fields = form.getFields();
+    protected boolean isDict(String columnName, CodeGeneratorConfigDTO form) {
+        List<CodeFieldDTO> fields = form.getFields();
         if (CollUtil.isEmpty(fields)) {
             return false;
         }
 
-        Optional<CodeField> first = fields.stream().filter(e -> columnName.equals(e.getColumnName())).findFirst();
+        Optional<CodeFieldDTO> first = fields.stream().filter(e -> columnName.equals(e.getColumnName())).findFirst();
         if (first.isPresent()) {
             return false;
         }
 
-        CodeField codeField = first.get();
+        CodeFieldDTO codeField = first.get();
         return codeField.getDict() != null;
     }
 
     /**
      * 是否为 枚举
      */
-    protected boolean isEnum(String columnName, CodeGeneratorConfigForm form) {
-        List<CodeField> fields = form.getFields();
+    protected boolean isEnum(String columnName, CodeGeneratorConfigDTO form) {
+        List<CodeFieldDTO> fields = form.getFields();
         if (CollUtil.isEmpty(fields)) {
             return false;
         }
 
-        Optional<CodeField> first = fields.stream().filter(e -> columnName.equals(e.getColumnName())).findFirst();
+        Optional<CodeFieldDTO> first = fields.stream().filter(e -> columnName.equals(e.getColumnName())).findFirst();
         if (first.isPresent()) {
             return false;
         }
 
-        CodeField codeField = first.get();
+        CodeFieldDTO codeField = first.get();
         return codeField.getEnumName() != null;
     }
 
@@ -129,13 +129,13 @@ public abstract class CodeGenerateBaseVariableService {
      * @param form
      * @return
      */
-    protected Map<String, CodeField> getFieldMap(CodeGeneratorConfigForm form) {
-        List<CodeField> fields = form.getFields();
+    protected Map<String, CodeFieldDTO> getFieldMap(CodeGeneratorConfigDTO form) {
+        List<CodeFieldDTO> fields = form.getFields();
         if (fields == null) {
             return new HashMap<>();
         }
 
-        return fields.stream().collect(Collectors.toMap(CodeField::getColumnName, Function.identity()));
+        return fields.stream().collect(Collectors.toMap(CodeFieldDTO::getColumnName, Function.identity()));
     }
 
     /**

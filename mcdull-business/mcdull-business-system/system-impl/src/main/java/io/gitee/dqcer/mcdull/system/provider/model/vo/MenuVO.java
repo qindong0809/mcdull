@@ -1,10 +1,10 @@
 package io.gitee.dqcer.mcdull.system.provider.model.vo;
 
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
-import io.gitee.dqcer.mcdull.system.provider.model.entity.MenuEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.util.Date;
 
 /**
  * 角色视图对象
@@ -12,9 +12,8 @@ import lombok.EqualsAndHashCode;
  * @author dqcer
  * @since  2022/11/27
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class MenuVO extends MenuEntity implements VO {
+public class MenuVO implements VO {
 
     @Schema(description = "菜单id")
     private Integer menuId;
@@ -66,4 +65,28 @@ public class MenuVO extends MenuEntity implements VO {
 
     @Schema(description = "是否可见")
     private Boolean visibleFlag;
+
+    // 以下 7 个字段原先由 MenuEntity 继承而来，MenuConvert.toVO 会逐个赋值，
+    // 已属于对外响应契约；显式声明是为了切断「视图对象继承持久化对象」，
+    // 字段本身要裁剪需另开一次前后端契约变更。
+    @Schema(description = "主键")
+    private Integer id;
+
+    @Schema(description = "创建时间")
+    private Date createdTime;
+
+    @Schema(description = "更新时间")
+    private Date updatedTime;
+
+    @Schema(description = "删除标记")
+    private Boolean delFlag;
+
+    @Schema(description = "创建人")
+    private Integer createdBy;
+
+    @Schema(description = "更新人")
+    private Integer updatedBy;
+
+    @Schema(description = "有效标记")
+    private Boolean inactive;
 }

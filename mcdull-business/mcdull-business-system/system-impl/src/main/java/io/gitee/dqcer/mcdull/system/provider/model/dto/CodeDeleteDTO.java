@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
  */
 
 @Data
-public class CodeDelete {
+public class CodeDeleteDTO {
 
     @Schema(description = "是否支持删除 ")
     @NotNull(message = "4.删除 是否支持删除 不能为空")

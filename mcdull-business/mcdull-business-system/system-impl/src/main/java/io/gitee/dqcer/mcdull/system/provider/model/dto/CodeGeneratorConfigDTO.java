@@ -21,7 +21,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CodeGeneratorConfigForm {
+public class CodeGeneratorConfigDTO {
 
     @NotBlank(message = "表名 不能为空")
     @Schema(description = "表名")
@@ -31,29 +31,29 @@ public class CodeGeneratorConfigForm {
     @Valid
     @NotNull(message = "基础信息不能为空")
     @Schema(description = "基础信息")
-    private CodeBasic basic;
+    private CodeBasicDTO basic;
 
     @Valid
     @NotNull(message = "字段信息不能为空")
     @Schema(description = "字段信息")
-    private List<CodeField> fields;
+    private List<CodeFieldDTO> fields;
 
     @Valid
     @NotNull(message = "增加、修改 信息 不能为空")
     @Schema(description = "增加、修改 信息")
-    private CodeInsertAndUpdate insertAndUpdate;
+    private CodeInsertAndUpdateDTO insertAndUpdate;
 
     @Valid
     @NotNull(message = "删除 信息 不能为空")
     @Schema(description = "删除 信息")
-    private CodeDelete deleteInfo;
+    private CodeDeleteDTO deleteInfo;
 
     @Valid
     @Schema(description = "查询字段")
-    private List<CodeQueryField> queryFields;
+    private List<CodeQueryFieldDTO> queryFields;
 
     @Valid
     @Schema(description = "列表字段")
-    private List<CodeTableField> tableFields;
+    private List<CodeTableFieldDTO> tableFields;
 
 }

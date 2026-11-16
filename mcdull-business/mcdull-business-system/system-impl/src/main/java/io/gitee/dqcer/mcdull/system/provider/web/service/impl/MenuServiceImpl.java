@@ -34,7 +34,7 @@ import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.MenuAudit;
 import io.gitee.dqcer.mcdull.system.provider.model.convert.MenuConvert;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.MenuAddDTO;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.MenuBaseForm;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.MenuBaseDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.MenuListDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.MenuUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.MenuEntity;
@@ -201,7 +201,7 @@ public class MenuServiceImpl
 
     }
 
-    private void setCommonField(MenuBaseForm dto, MenuEntity menuEntity) {
+    private void setCommonField(MenuBaseDTO dto, MenuEntity menuEntity) {
         menuEntity.setMenuName(dto.getMenuName());
         menuEntity.setMenuType(dto.getMenuType());
         menuEntity.setParentId(dto.getParentId());

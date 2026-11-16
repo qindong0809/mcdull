@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  */
 
 @Data
-public class CodeBasic {
+public class CodeBasicDTO {
 
     @Schema(description = "业务名称")
     @NotBlank(message = "1.基础命名 基础命名 不能为空")

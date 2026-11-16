@@ -3,9 +3,9 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.fro
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.NamingCase;
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeField;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigForm;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateField;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeFieldDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateFieldDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.CodeFrontComponentEnum;
 import io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.CodeGenerateBaseVariableService;
 
@@ -17,19 +17,19 @@ import java.util.*;
 public class FormVariableService extends CodeGenerateBaseVariableService {
 
     @Override
-    public boolean isSupport(CodeGeneratorConfigForm form) {
+    public boolean isSupport(CodeGeneratorConfigDTO form) {
         return true;
     }
 
     @Override
-    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigForm form) {
+    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigDTO form) {
         Map<String, Object> variablesMap = new HashMap<>();
         List<Map<String, Object>> fieldsVariableList = new ArrayList<>();
-        List<CodeInsertAndUpdateField> fieldList = form.getInsertAndUpdate().getFieldList();
+        List<CodeInsertAndUpdateFieldDTO> fieldList = form.getInsertAndUpdate().getFieldList();
 
         HashSet<String> frontImportSet = new HashSet<>();
 
-        for (CodeInsertAndUpdateField field : fieldList) {
+        for (CodeInsertAndUpdateFieldDTO field : fieldList) {
             // 不存在 添加 和 更新
             if (!(field.getInsertFlag() || field.getUpdateFlag())) {
                 continue;
@@ -37,7 +37,7 @@ public class FormVariableService extends CodeGenerateBaseVariableService {
 
             Map<String, Object> objectMap = BeanUtil.beanToMap(field);
 
-            CodeField codeField = getCodeFieldByColumnName(field.getColumnName(), form);
+            CodeFieldDTO codeField = getCodeFieldByColumnName(field.getColumnName(), form);
             if (codeField == null) {
                 continue;
             }

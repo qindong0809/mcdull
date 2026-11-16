@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.system.provider.web.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.TableQueryForm;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.TableQueryFormDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.CodeGeneratorConfigEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableColumnVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableVO;
@@ -20,7 +20,7 @@ public interface CodeGeneratorConfigMapper extends BaseMapper<CodeGeneratorConfi
 
     List<TableColumnVO> getByTable(@Param("tableName") String table);
 
-    List<TableVO> queryTableList(@Param("page") Page<?> page, @Param("queryForm") TableQueryForm queryForm);
+    List<TableVO> queryTableList(@Param("page") Page<?> page, @Param("queryForm") TableQueryFormDTO queryForm);
 
     long existByTable(@Param("tableName") String tableName);
 }

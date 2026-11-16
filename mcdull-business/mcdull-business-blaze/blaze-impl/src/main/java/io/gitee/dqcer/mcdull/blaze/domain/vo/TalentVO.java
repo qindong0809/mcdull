@@ -5,7 +5,7 @@ import io.gitee.dqcer.mcdull.blaze.domain.enums.TalentWorkUnitTypeEnum;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.IArea;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.IAreaVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -19,7 +19,7 @@ import java.util.Date;
  */
 
 @Data
-public class TalentVO implements IArea, VO {
+public class TalentVO implements IAreaVO, VO {
 
 
     @Schema(description = "id")

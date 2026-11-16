@@ -12,7 +12,7 @@ import io.gitee.dqcer.mcdull.system.facade.model.bo.DynamicFieldBO;
 import io.gitee.dqcer.mcdull.system.facade.model.dto.SerialNumberGenerateDTO;
 import io.gitee.dqcer.mcdull.system.facade.model.enums.DictSelectTypeEnum;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.ApproveVO;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.IArea;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.IAreaVO;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.IFileVO;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IAreaService;
@@ -95,7 +95,7 @@ public class CommonApiDefImpl implements CommonApiDef {
     }
 
     @Override
-    public void set(List<? extends IArea> voList) {
+    public void set(List<? extends IAreaVO> voList) {
         areaService.set(voList);
     }
 

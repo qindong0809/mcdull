@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 @Data
-public class CodeInsertAndUpdate {
+public class CodeInsertAndUpdateDTO {
 
     @NotNull(message = "3.增加、修改 是否支持增加、修改 不能为空")
     private Boolean isSupportInsertAndUpdate;
@@ -32,6 +32,6 @@ public class CodeInsertAndUpdate {
     private Integer countPerLine;
 
     @Schema(description = "字段列表")
-    private List<CodeInsertAndUpdateField> fieldList;
+    private List<CodeInsertAndUpdateFieldDTO> fieldList;
 
 }

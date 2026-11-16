@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.system.provider.util;
 
 import cn.hutool.core.util.StrUtil;
+import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import lombok.extern.slf4j.Slf4j;
 import org.lionsoul.ip2region.xdb.Searcher;
@@ -26,7 +27,7 @@ public class Ip2RegionUtil {
 
         } catch (Throwable e) {
             LogHelp.error(log, "初始化ip2region.xdb文件失败,报错信息:[{}]", e.getMessage(), e);
-            throw new RuntimeException("系统异常!");
+            throw new BusinessException("系统异常!");
         }
     }
 

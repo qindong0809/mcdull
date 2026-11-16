@@ -56,7 +56,7 @@ public class CodeGeneratorServiceImpl
     }
 
     @Override
-    public PagedVO<TableVO> queryTableList(TableQueryForm dto) {
+    public PagedVO<TableVO> queryTableList(TableQueryFormDTO dto) {
         Page<?> page = new Page<>(dto.getPageNum(), dto.getPageSize());
         List<TableVO> tableVOList = this.queryTableList(page, dto);
         return PageUtil.toPage(tableVOList, page);
@@ -67,12 +67,12 @@ public class CodeGeneratorServiceImpl
         CodeGeneratorConfigEntity config = this.getTableConfigEntity(table);
         if (ObjUtil.isNotNull(config)) {
             TableConfigVO vo = new TableConfigVO();
-            vo.setBasic(JSONUtil.parseObj(config.getBasic()).toBean(CodeBasic.class));
-            vo.setFields(JSONUtil.parseArray(config.getFields()).toList(CodeField.class));
-            vo.setInsertAndUpdate(JSONUtil.parseObj(config.getInsertAndUpdate()).toBean(CodeInsertAndUpdate.class));
-            vo.setQueryFields(JSONUtil.parseArray(config.getQueryFields()).toList(CodeQueryField.class));
-            vo.setTableFields(JSONUtil.parseArray(config.getTableFields()).toList(CodeTableField.class));
-            vo.setDeleteInfo(JSONUtil.parseObj(config.getDeleteInfo()).toBean(CodeDelete.class));
+            vo.setBasic(JSONUtil.parseObj(config.getBasic()).toBean(CodeBasicDTO.class));
+            vo.setFields(JSONUtil.parseArray(config.getFields()).toList(CodeFieldDTO.class));
+            vo.setInsertAndUpdate(JSONUtil.parseObj(config.getInsertAndUpdate()).toBean(CodeInsertAndUpdateDTO.class));
+            vo.setQueryFields(JSONUtil.parseArray(config.getQueryFields()).toList(CodeQueryFieldDTO.class));
+            vo.setTableFields(JSONUtil.parseArray(config.getTableFields()).toList(CodeTableFieldDTO.class));
+            vo.setDeleteInfo(JSONUtil.parseObj(config.getDeleteInfo()).toBean(CodeDeleteDTO.class));
             return vo;
         }
         LogHelp.warn(logger, "table config is null, tableName: {}", table);
@@ -81,7 +81,7 @@ public class CodeGeneratorServiceImpl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void updateConfig(CodeGeneratorConfigForm dto) {
+    public void updateConfig(CodeGeneratorConfigDTO dto) {
         checkParam(dto);
         CodeGeneratorConfigEntity config = this.getTableConfigEntity(dto.getTableName());
         if (ObjUtil.isNotNull(config)) {
@@ -95,7 +95,7 @@ public class CodeGeneratorServiceImpl
         baseMapper.insert(config);
     }
 
-    private void setFieldValue(CodeGeneratorConfigForm dto, CodeGeneratorConfigEntity config) {
+    private void setFieldValue(CodeGeneratorConfigDTO dto, CodeGeneratorConfigEntity config) {
         config.setBasic(JSONUtil.toJsonStr(dto.getBasic()));
         config.setFields(JSONUtil.toJsonStr(dto.getFields()));
         config.setInsertAndUpdate(JSONUtil.toJsonStr(dto.getInsertAndUpdate()));
@@ -104,7 +104,7 @@ public class CodeGeneratorServiceImpl
         config.setDeleteInfo(JSONUtil.toJsonStr(dto.getDeleteInfo()));
     }
 
-    private void checkParam(CodeGeneratorConfigForm dto) {
+    private void checkParam(CodeGeneratorConfigDTO dto) {
         List<TableColumnVO> tableColumns = getTableColumns(dto.getTableName());
         if (null != dto.getDeleteInfo() && dto.getDeleteInfo().getIsSupportDelete()
                 && !dto.getDeleteInfo().getIsPhysicallyDeleted()) {
@@ -120,7 +120,7 @@ public class CodeGeneratorServiceImpl
     }
 
     @Override
-    public String preview(CodeGeneratorPreviewForm dto) {
+    public String preview(CodeGeneratorPreviewDTO dto) {
         String tableName = dto.getTableName();
         CodeGeneratorConfigEntity codeGeneratorConfigEntity = this.getConfigInfo(tableName);
         return codeGeneratorTemplateService.generate(dto.getTableName(), dto.getTemplateFile(), codeGeneratorConfigEntity);
@@ -190,7 +190,7 @@ public class CodeGeneratorServiceImpl
         return baseMapper.getByTable(table);
     }
 
-    public List<TableVO> queryTableList(Page<?> page, TableQueryForm dto) {
+    public List<TableVO> queryTableList(Page<?> page, TableQueryFormDTO dto) {
         return baseMapper.queryTableList(page, dto);
     }
 

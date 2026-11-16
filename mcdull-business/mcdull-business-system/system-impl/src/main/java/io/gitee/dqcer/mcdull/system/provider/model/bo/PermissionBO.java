@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.system.provider.model.vo.administrator;
+package io.gitee.dqcer.mcdull.system.provider.model.bo;
 
 import io.gitee.dqcer.mcdull.framework.base.support.BO;
 import lombok.Data;

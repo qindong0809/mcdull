@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class MenuUpdateDTO extends MenuBaseForm {
+public class MenuUpdateDTO extends MenuBaseDTO {
 
     @Schema(description = "菜单ID")
     @NotNull(message = "菜单ID不能为空")

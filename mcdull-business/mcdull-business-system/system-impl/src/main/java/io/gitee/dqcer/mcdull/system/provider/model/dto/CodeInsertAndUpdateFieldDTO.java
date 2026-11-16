@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  */
 
 @Data
-public class CodeInsertAndUpdateField {
+public class CodeInsertAndUpdateFieldDTO {
 
     @NotBlank(message = "3.增加、修改 列名 不能为空")
     @Schema(description = "列名")

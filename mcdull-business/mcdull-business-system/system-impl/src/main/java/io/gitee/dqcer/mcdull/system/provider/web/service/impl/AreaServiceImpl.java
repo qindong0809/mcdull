@@ -16,7 +16,7 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.AreaQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.AreaEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.AreaVO;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.IArea;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.IAreaVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.AreaMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IAreaService;
@@ -107,10 +107,10 @@ public class AreaServiceImpl extends BasicCurdServiceImpl<AreaMapper, AreaEntity
     }
 
     @Override
-    public <T extends IArea> void set(List<T> list) {
+    public <T extends IAreaVO> void set(List<T> list) {
         if (CollUtil.isNotEmpty(list)) {
-            Set<String> provincesSet = list.stream().map(IArea::getProvincesCode).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
-            Set<String> citySet = list.stream().map(IArea::getCityCode).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+            Set<String> provincesSet = list.stream().map(IAreaVO::getProvincesCode).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
+            Set<String> citySet = list.stream().map(IAreaVO::getCityCode).filter(ObjUtil::isNotNull).collect(Collectors.toSet());
             Set<String> codList = new HashSet<>(provincesSet.size() + citySet.size());
             if (CollUtil.isNotEmpty(provincesSet)) {
                 codList.addAll(provincesSet);

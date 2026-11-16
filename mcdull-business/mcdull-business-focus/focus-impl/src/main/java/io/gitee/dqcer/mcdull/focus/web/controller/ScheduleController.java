@@ -2,11 +2,8 @@ package io.gitee.dqcer.mcdull.focus.web.controller;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.ObjectUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.gitee.dqcer.mcdull.focus.model.entity.AppScheduleEntity;
-import io.gitee.dqcer.mcdull.focus.web.mapper.AppScheduleMapper;
+import io.gitee.dqcer.mcdull.focus.web.service.IScheduleService;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -14,37 +11,27 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 public class ScheduleController extends BasicController {
-    @Resource
-    private AppScheduleMapper appScheduleMapper;
 
+    @Resource
+    private IScheduleService scheduleService;
 
     @Operation(summary = "schedule list")
     @PostMapping(GlobalConstant.APP_PATH + "/schedule/list")
     public Result<List<AppScheduleEntity>> list(@RequestBody Map<String, Object> param) {
-        LambdaQueryWrapper<AppScheduleEntity> query = Wrappers.lambdaQuery();
-        // 当日，本周，本月进行过滤筛选
         LogHelp.info(log, "schedule list param: {}", param);
-        Object startTime = param.get("startTime");
-        if (ObjectUtil.isNotNull(startTime)) {
-            query.ge(AppScheduleEntity::getStartTime, DateUtil.beginOfDay(DateUtil.parse(startTime.toString())));
-        }
-        Object endTime = param.get("endTime");
-        if (ObjectUtil.isNotNull(endTime)) {
-            query.le(AppScheduleEntity::getEndTime, DateUtil.endOfDay(DateUtil.parse(endTime.toString())));
-        }
-        query.eq(AppScheduleEntity::getCreatedBy, UserContextHolder.userId());
-        query.orderByAsc(AppScheduleEntity::getCreatedBy);
-        return Result.success(appScheduleMapper.selectList(query));
+        List<AppScheduleEntity> list = scheduleService.listByUser(UserContextHolder.userId(),
+            parseDate(param.get("startTime")), parseDate(param.get("endTime")));
+        return Result.success(list);
     }
 
     @Operation(summary = "schedule create")
@@ -52,7 +39,7 @@ public class ScheduleController extends BasicController {
     public Result<Void> create(@RequestBody AppScheduleEntity param) {
         param.setLocation(CharSequenceUtil.blankToDefault(param.getLocation(), ""));
         param.setCreatedBy(UserContextHolder.userId());
-        appScheduleMapper.insert(param);
+        scheduleService.save(param);
         return Result.success();
     }
 
@@ -61,7 +48,7 @@ public class ScheduleController extends BasicController {
     public Result<Void> update(@RequestBody AppScheduleEntity param) {
         param.setUpdatedBy(UserContextHolder.userId());
         param.setLocation(CharSequenceUtil.blankToDefault(param.getLocation(), ""));
-        appScheduleMapper.updateById(param);
+        scheduleService.updateById(param);
         return Result.success();
     }
 
@@ -69,11 +56,11 @@ public class ScheduleController extends BasicController {
     @PostMapping(GlobalConstant.APP_PATH + "/schedule/delete")
     public Result<Void> delete(@RequestBody Map<String, Object> param) {
         Integer id = (Integer) param.get("id");
-        // 校验归属权限：只能删除自己的日程
-        LambdaQueryWrapper<AppScheduleEntity> query = Wrappers.lambdaQuery();
-        query.eq(AppScheduleEntity::getId, id);
-        query.eq(AppScheduleEntity::getCreatedBy, UserContextHolder.userId());
-        appScheduleMapper.delete(query);
+        scheduleService.deleteOwnById(id, UserContextHolder.userId());
         return Result.success();
+    }
+
+    private Date parseDate(Object value) {
+        return value == null ? null : DateUtil.parse(value.toString());
     }
 }

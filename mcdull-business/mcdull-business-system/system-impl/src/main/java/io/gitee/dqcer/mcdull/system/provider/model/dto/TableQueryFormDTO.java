@@ -10,7 +10,7 @@ import lombok.Data;
  *
  */
 @Data
-public class TableQueryForm extends PagedDTO {
+public class TableQueryFormDTO extends PagedDTO {
 
     @Schema(description = "表名关键字")
     private String tableNameKeywords;

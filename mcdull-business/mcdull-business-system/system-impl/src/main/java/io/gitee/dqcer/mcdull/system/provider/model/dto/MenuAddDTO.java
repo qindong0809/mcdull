@@ -9,6 +9,6 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class MenuAddDTO extends MenuBaseForm {
+public class MenuAddDTO extends MenuBaseDTO {
 
 }

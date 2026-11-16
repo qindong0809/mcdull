@@ -8,6 +8,7 @@ import com.github.kagkarlsson.scheduler.task.ExecutionContext;
 import com.github.kagkarlsson.scheduler.task.TaskInstance;
 
 import io.gitee.dqcer.mcdull.common.dump.SqlDumper;
+import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -109,7 +110,7 @@ public class DatabaseBackupTaskExecutor implements McdullScheduledTask<Void> {
                 LogHelp.info(log, "backup database success. fileName:{}", fileName);
             } catch (SQLException e) {
                 log.error("backup database error", e);
-                throw new RuntimeException(e);
+                throw new BusinessException(e);
             } finally {
                 FileUtil.del(file);
                 FileUtil.del(zipFile);

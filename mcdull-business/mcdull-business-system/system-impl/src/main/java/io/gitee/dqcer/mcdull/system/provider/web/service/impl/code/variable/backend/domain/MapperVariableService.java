@@ -2,9 +2,9 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.bac
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigForm;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateField;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeQueryField;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateFieldDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeQueryFieldDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.CodeQueryFieldQueryTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.CodeGenerateBaseVariableService;
 
@@ -16,15 +16,15 @@ import java.util.*;
 public class MapperVariableService extends CodeGenerateBaseVariableService {
 
     @Override
-    public boolean isSupport(CodeGeneratorConfigForm form) {
+    public boolean isSupport(CodeGeneratorConfigDTO form) {
         return true;
     }
 
     @Override
-    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigForm form) {
+    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigDTO form) {
         Map<String, Object> variablesMap = new HashMap<>();
         List<Map<String, Object>> finalQueryFiledList = new ArrayList<>();
-        for (CodeQueryField queryField : form.getQueryFields()) {
+        for (CodeQueryFieldDTO queryField : form.getQueryFields()) {
             Map<String, Object> fieldMap = BeanUtil.beanToMap(queryField);
             finalQueryFiledList.add(fieldMap);
 
@@ -70,7 +70,7 @@ public class MapperVariableService extends CodeGenerateBaseVariableService {
     }
 
 
-    public List<String> getPackageList(List<CodeInsertAndUpdateField> fields, CodeGeneratorConfigForm form) {
+    public List<String> getPackageList(List<CodeInsertAndUpdateFieldDTO> fields, CodeGeneratorConfigDTO form) {
         if (CollUtil.isEmpty(fields)) {
             return new ArrayList<>();
         }

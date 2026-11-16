@@ -16,7 +16,7 @@ import java.util.List;
  */
 
 @Data
-public class CodeQueryField {
+public class CodeQueryFieldDTO {
 
     @NotBlank(message = "5、查询条件 条件名称 不能为空")
     @Schema(description = "条件名称")

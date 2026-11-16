@@ -16,20 +16,20 @@ import java.util.List;
 public class TableConfigVO {
 
     @Schema(description = "基础命名信息")
-    private CodeBasic basic;
+    private CodeBasicDTO basic;
 
     @Schema(description = "字段列")
-    private List<CodeField> fields;
+    private List<CodeFieldDTO> fields;
 
     @Schema(description = "增加、修改 信息")
-    private CodeInsertAndUpdate insertAndUpdate;
+    private CodeInsertAndUpdateDTO insertAndUpdate;
 
     @Schema(description = "删除 信息")
-    private CodeDelete deleteInfo;
+    private CodeDeleteDTO deleteInfo;
 
     @Schema(description = "查询字段")
-    private List<CodeQueryField> queryFields;
+    private List<CodeQueryFieldDTO> queryFields;
 
     @Schema(description = "列表字段")
-    private List<CodeTableField> tableFields;
+    private List<CodeTableFieldDTO> tableFields;
 }

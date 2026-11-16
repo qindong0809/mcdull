@@ -3,9 +3,9 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.bac
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeField;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigForm;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeTableField;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeFieldDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeTableFieldDTO;
 import io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.CodeGenerateBaseVariableService;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
@@ -18,16 +18,16 @@ import java.util.stream.Collectors;
 public class VOVariableService extends CodeGenerateBaseVariableService {
 
     @Override
-    public boolean isSupport(CodeGeneratorConfigForm form) {
+    public boolean isSupport(CodeGeneratorConfigDTO form) {
         return true;
     }
 
     @Override
-    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigForm form) {
+    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigDTO form) {
         Map<String, Object> variablesMap = new HashMap<>();
 
-        Map<String, CodeField> fieldMap = getFieldMap(form);
-        List<CodeTableField> updateFieldList = form.getTableFields().stream().filter(e -> Boolean.TRUE.equals(e.getShowFlag())).collect(Collectors.toList());
+        Map<String, CodeFieldDTO> fieldMap = getFieldMap(form);
+        List<CodeTableFieldDTO> updateFieldList = form.getTableFields().stream().filter(e -> Boolean.TRUE.equals(e.getShowFlag())).collect(Collectors.toList());
 
         ImmutablePair<List<String>, List<Map<String, Object>>> packageListAndFields = getPackageListAndFields(updateFieldList, form);
 
@@ -38,12 +38,12 @@ public class VOVariableService extends CodeGenerateBaseVariableService {
         return variablesMap;
     }
 
-    public ImmutablePair<List<String>, List<Map<String, Object>>> getPackageListAndFields(List<CodeTableField> fields, CodeGeneratorConfigForm form) {
+    public ImmutablePair<List<String>, List<Map<String, Object>>> getPackageListAndFields(List<CodeTableFieldDTO> fields, CodeGeneratorConfigDTO form) {
         if (CollUtil.isEmpty(fields)) {
             return ImmutablePair.of(new ArrayList<>(), new ArrayList<>());
         }
 
-        Map<String, CodeField> fieldMap = getFieldMap(form);
+        Map<String, CodeFieldDTO> fieldMap = getFieldMap(form);
         HashSet<String> packageList = new HashSet<>();
 
 
@@ -54,13 +54,13 @@ public class VOVariableService extends CodeGenerateBaseVariableService {
 
         List<Map<String, Object>> finalFieldList = new ArrayList<>();
 
-        for (CodeTableField field : fields) {
-            CodeField codeField = fieldMap.get(field.getColumnName());
+        for (CodeTableFieldDTO field : fields) {
+            CodeFieldDTO codeField = fieldMap.get(field.getColumnName());
             if (codeField == null) {
                 continue;
             }
 
-            // CodeField 和 CodeTableField 合并
+            // CodeFieldDTO 和 CodeTableFieldDTO 合并
             Map<String, Object> finalFieldMap = BeanUtil.beanToMap(field);
             finalFieldMap.putAll(BeanUtil.beanToMap(codeField));
 

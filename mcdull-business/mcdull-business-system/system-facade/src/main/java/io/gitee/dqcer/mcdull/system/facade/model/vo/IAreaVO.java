@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.facade.model.vo;
 
-public interface IArea {
+public interface IAreaVO {
 
     String getProvincesCode();
 

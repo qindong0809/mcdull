@@ -3,9 +3,9 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.bac
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeField;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigForm;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeQueryField;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeFieldDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeQueryFieldDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.CodeQueryFieldQueryTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.CodeGenerateBaseVariableService;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -21,12 +21,12 @@ public class QueryFormVariableService extends CodeGenerateBaseVariableService {
 
 
     @Override
-    public boolean isSupport(CodeGeneratorConfigForm form) {
+    public boolean isSupport(CodeGeneratorConfigDTO form) {
         return true;
     }
 
     @Override
-    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigForm form) {
+    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigDTO form) {
         Map<String, Object> variablesMap = new HashMap<>();
         ImmutablePair<List<String>, List<Map<String, Object>>> packageListAndFields = getPackageListAndFields(form);
         variablesMap.put("packageName", form.getBasic().getJavaPackageName() + ".domain.form");
@@ -36,8 +36,8 @@ public class QueryFormVariableService extends CodeGenerateBaseVariableService {
     }
 
 
-    public ImmutablePair<List<String>, List<Map<String, Object>>> getPackageListAndFields(CodeGeneratorConfigForm form) {
-        List<CodeQueryField> fields = form.getQueryFields();
+    public ImmutablePair<List<String>, List<Map<String, Object>>> getPackageListAndFields(CodeGeneratorConfigDTO form) {
+        List<CodeQueryFieldDTO> fields = form.getQueryFields();
         if (CollUtil.isEmpty(fields)) {
             return ImmutablePair.of(new ArrayList<>(), new ArrayList<>());
         }
@@ -52,9 +52,9 @@ public class QueryFormVariableService extends CodeGenerateBaseVariableService {
 
         List<Map<String, Object>> finalFieldList = new ArrayList<>();
 
-        for (CodeQueryField field : fields) {
+        for (CodeQueryFieldDTO field : fields) {
 
-            // CodeField 和 InsertAndUpdateField 合并
+            // CodeFieldDTO 和 InsertAndUpdateField 合并
             Map<String, Object> finalFieldMap = BeanUtil.beanToMap(field);
             finalFieldMap.putAll(BeanUtil.beanToMap(field));
 
@@ -69,7 +69,7 @@ public class QueryFormVariableService extends CodeGenerateBaseVariableService {
             finalFieldMap.put("apiModelProperty", apiModelProperty);
             packageList.add("import io.doc.v3.oas.annotations.media.Schema;");
 
-            CodeField codeField = null;
+            CodeFieldDTO codeField = null;
 
             switch (queryTypeEnum) {
                 case LIKE:

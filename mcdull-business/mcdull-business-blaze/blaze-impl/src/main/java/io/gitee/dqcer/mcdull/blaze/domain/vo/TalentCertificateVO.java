@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.ApproveVO;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.FileSimpleVO;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.IArea;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.IAreaVO;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.IFileVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -24,7 +24,7 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TalentCertificateVO extends ApproveVO implements IArea, IFileVO, VO {
+public class TalentCertificateVO extends ApproveVO implements IAreaVO, IFileVO, VO {
 
 
     @Schema(description = "id")

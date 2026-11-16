@@ -6,7 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.AreaQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.AreaEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.AreaVO;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.IArea;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.IAreaVO;
 
 import java.util.List;
 
@@ -27,5 +27,5 @@ public interface IAreaService extends IRepository<AreaEntity> {
 
     boolean exportData(AreaQueryDTO dto);
 
-    <T extends IArea> void set(List<T> list);
+    <T extends IAreaVO> void set(List<T> list);
 }

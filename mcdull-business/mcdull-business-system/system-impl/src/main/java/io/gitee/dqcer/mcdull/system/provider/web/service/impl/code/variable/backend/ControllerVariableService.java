@@ -3,8 +3,8 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.bac
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigForm;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateField;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateFieldDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.CodeDeleteEnum;
 import io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.CodeGenerateBaseVariableService;
 
@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
 public class ControllerVariableService extends CodeGenerateBaseVariableService {
 
     @Override
-    public boolean isSupport(CodeGeneratorConfigForm form) {
+    public boolean isSupport(CodeGeneratorConfigDTO form) {
         return true;
     }
 
     @Override
-    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigForm form) {
+    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigDTO form) {
         Map<String, Object> variablesMap = new HashMap<>();
 
-        List<CodeInsertAndUpdateField> updateFieldList = form.getInsertAndUpdate().getFieldList().stream().filter(e -> Boolean.TRUE.equals(e.getInsertFlag())).collect(Collectors.toList());
+        List<CodeInsertAndUpdateFieldDTO> updateFieldList = form.getInsertAndUpdate().getFieldList().stream().filter(e -> Boolean.TRUE.equals(e.getInsertFlag())).collect(Collectors.toList());
 
         variablesMap.put("packageName", form.getBasic().getJavaPackageName() + ".controller");
 
@@ -36,7 +36,7 @@ public class ControllerVariableService extends CodeGenerateBaseVariableService {
     }
 
 
-    public List<String> getPackageList(List<CodeInsertAndUpdateField> fields, CodeGeneratorConfigForm form) {
+    public List<String> getPackageList(List<CodeInsertAndUpdateFieldDTO> fields, CodeGeneratorConfigDTO form) {
         if (CollUtil.isEmpty(fields)) {
             return new ArrayList<>();
         }

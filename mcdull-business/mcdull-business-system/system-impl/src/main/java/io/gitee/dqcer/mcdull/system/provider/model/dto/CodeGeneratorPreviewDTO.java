@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotBlank;
  *
  */
 @Data
-public class CodeGeneratorPreviewForm {
+public class CodeGeneratorPreviewDTO {
 
     @NotBlank(message = "模板文件 不能为空")
     @Schema(description = "模板文件")

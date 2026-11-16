@@ -5,9 +5,9 @@ import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigForm;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorPreviewForm;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.TableQueryForm;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorPreviewDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.TableQueryFormDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableColumnVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableConfigVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.TableVO;
@@ -45,7 +45,7 @@ public class CodeGeneratorConfigController extends BasicController {
     @Operation(summary = "查询数据库表")
     @PostMapping("/codeGenerator/table/queryTableList")
     @SaCheckEL("stp.checkPermission('support:code_generator:read')")
-    public Result<PagedVO<TableVO>> queryTableList(@RequestBody @Valid TableQueryForm tableQueryForm) {
+    public Result<PagedVO<TableVO>> queryTableList(@RequestBody @Valid TableQueryFormDTO tableQueryForm) {
         return Result.success(codeGeneratorService.queryTableList(tableQueryForm));
     }
 
@@ -60,7 +60,7 @@ public class CodeGeneratorConfigController extends BasicController {
     @Operation(summary = "更新配置")
     @PostMapping("/codeGenerator/table/updateConfig")
     @SaCheckEL("stp.checkPermission('support:code_generator:write')")
-    public Result<Boolean> updateConfig(@RequestBody @Valid CodeGeneratorConfigForm form) {
+    public Result<Boolean> updateConfig(@RequestBody @Valid CodeGeneratorConfigDTO form) {
         codeGeneratorService.updateConfig(form);
         return Result.success(true);
     }
@@ -70,7 +70,7 @@ public class CodeGeneratorConfigController extends BasicController {
     @Operation(summary = "预览")
     @PostMapping("/codeGenerator/code/preview")
     @SaCheckEL("stp.checkPermission('support:code_generator:write')")
-    public Result<String> preview(@RequestBody @Valid CodeGeneratorPreviewForm form) {
+    public Result<String> preview(@RequestBody @Valid CodeGeneratorPreviewDTO form) {
         return Result.success(codeGeneratorService.preview(form));
     }
 

@@ -31,25 +31,36 @@ public final class ArchitectureEnforcer {
         // 层级调用关系检查
         REQUIRED_RULES.add(layerChecks());
 
+        // 命名按包判定，角色归属按标记接口判定，两者不可混用
         REQUIRED_RULES.add(mapperNamingRules());
         REQUIRED_RULES.add(dtoNamingRules());
-        REQUIRED_RULES.add(doNamingRules());
+        REQUIRED_RULES.add(entityNamingRules());
         REQUIRED_RULES.add(voNamingRules());
+        REQUIRED_RULES.add(boNamingRules());
         REQUIRED_RULES.add(enumNamingRules());
+
+        REQUIRED_RULES.add(dtoPlacementRules());
+        REQUIRED_RULES.add(voPlacementRules());
+        REQUIRED_RULES.add(entityPlacementRules());
+        // 不给 BO 设位置规则：implement() 取传递闭包，LogonVO extends UserBO 这种
+        // 「视图对象复用业务对象字段」是合法写法，BO 位置规则会把它误报成位置错误
 
         // facade 契约包不得依赖 provider 实现包（防止 facade/impl 拆分包复发）
         REQUIRED_RULES.add(facadeDependencyRules());
 
         // 禁止使用e.printStackTrace, System.err/System.out
-        REQUIRED_RULES.add(GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.as("禁止使用 e.printStackTrace, System.err/System.out"));
+        REQUIRED_RULES.add(noStandardStreamsRule());
 
         // 不能直接抛出 Throwable、Exception、RuntimeException异常
-        REQUIRED_RULES.add(GeneralCodingRules.NO_CLASSES_SHOULD_THROW_GENERIC_EXCEPTIONS.as("不能直接抛出 Throwable、Exception、RuntimeException异常"));
+        REQUIRED_RULES.add(noGenericExceptionsRule());
     }
 
 
     /**
      * 层级调用规则
+     * <p>
+     * 注意：{@code LayeredArchitecture.as(..)} 会覆盖整条复合规则的描述，只有最后一次生效，
+     * 因此此处只在链尾调用一次，不要把各层的说明写成多个 {@code as(..)}。
      *
      * @return {@link ArchRule}
      */
@@ -57,17 +68,21 @@ public final class ArchitectureEnforcer {
         return layeredArchitecture()
                 .consideringAllDependencies()
                 .layer("Controller").definedBy("..web.controller..")
-                .layer("ServerFeign").definedBy("..web.feign..")
+                .layer("Entry").definedBy("..web.feign..", "..web.def..", "..flow..", "..config..")
                 .layer("Service").definedBy("..web.service..")
                 .layer("Manager").definedBy("..web.manager..")
-                .layer("Repository").definedBy("..web.dao.repository..")
                 .layer("Mapper").definedBy("..web.dao.mapper..")
 
                 .whereLayer("Controller").mayNotBeAccessedByAnyLayer()
-                .whereLayer("Service").mayOnlyBeAccessedByLayers("Controller", "ServerFeign").as("Service业务层仅被Controller层和ServerFeign层调用")
-                .whereLayer("Manager").mayOnlyBeAccessedByLayers("Service").as("Manager数据库访问层仅被Service业务层调用")
-                .whereLayer("Repository").mayOnlyBeAccessedByLayers("Service", "Manager").as("Repository数据库包装层仅被Service业务层、Manager通用逻辑层调用")
-                .whereLayer("Mapper").mayOnlyBeAccessedByLayers("Repository").as("Mapper数据库访问层仅被Repository数据库包装层调用");
+                .whereLayer("Service").mayOnlyBeAccessedByLayers("Controller", "Entry", "Manager")
+                .whereLayer("Manager").mayOnlyBeAccessedByLayers("Service", "Entry")
+                .whereLayer("Mapper").mayOnlyBeAccessedByLayers("Service", "Manager")
+                .as("分层调用约束：Controller 不得被任何层访问；Service 可被 Controller/Entry/Manager 调用；"
+                        + "Manager 可被 Service/Entry 调用；仅 Service/Manager 可调用 Mapper")
+                .because("Entry 是对外/对框架的入口与基础设施适配（Feign 服务端、facade SPI、流程编排、监听器、"
+                        + "定时任务、序列化器与常量），其中序列化器和常量会被 model 反向引用，因此 Entry 本身不作为被访问方约束；"
+                        + "MyBatis-Plus 的 ServiceImpl<M,T> 使 Service 必然直接依赖 Mapper，"
+                        + "Repository 包装层只存在于代码生成模板，手写链路不经过它");
     }
 
     /**
@@ -86,36 +101,98 @@ public final class ArchitectureEnforcer {
     }
 
     /**
-     * DO 命名规则
+     * 持久化对象命名规则：按包判定，不看标记接口
      *
      * @return {@link ArchRule}
      */
-    public static ArchRule doNamingRules() {
-        return classes().that().implement(Entity.class)
-                .should().haveSimpleNameEndingWith("DO").allowEmptyShould(true)
-                .as("实现DO的类名应该以'DO'结尾");
+    public static ArchRule entityNamingRules() {
+        return roleNamingRule("..entity..", "Entity");
     }
 
     /**
-     * dto 命名规则
+     * dto 命名规则：按包判定，不看标记接口
      *
      * @return {@link ArchRule}
      */
     public static ArchRule dtoNamingRules() {
-        return classes().that().implement(DTO.class)
-                .should().haveSimpleNameEndingWith("DTO").allowEmptyShould(true)
-                .as("实现DTO的类名应该以'DTO'结尾");
+        return roleNamingRule("..dto..", "DTO");
     }
 
     /**
-     * vo 层命名规则
+     * vo 命名规则：按包判定，不看标记接口
      *
      * @return {@link ArchRule}
      */
     public static ArchRule voNamingRules() {
+        return roleNamingRule("..vo..", "VO");
+    }
+
+    /**
+     * bo 命名规则：按包判定，不看标记接口
+     *
+     * @return {@link ArchRule}
+     */
+    public static ArchRule boNamingRules() {
+        return roleNamingRule("..bo..", "BO");
+    }
+
+    /**
+     * 按包判定的角色命名规则。
+     * <p>
+     * 必须排除 {@code package-info} 与 Lombok {@code @Builder} 生成的嵌套 builder：
+     * 前者是包级元数据类，后者的名字由外层类名拼 {@code Builder} 决定，两者都不受业务命名约定支配。
+     * 这里用 {@code areNotNestedClasses} 而不是 {@code areNotInnerClasses}：
+     * Lombok 生成的是 static nested class，不属于 Java 语义的 inner class，后者一条也排除不掉。
+     *
+     * @param packagePattern 角色包
+     * @param suffix         要求的类名后缀
+     * @return {@link ArchRule}
+     */
+    private static ArchRule roleNamingRule(String packagePattern, String suffix) {
+        return classes()
+                .that().resideInAPackage(packagePattern)
+                .and().areNotNestedClasses()
+                .and().doNotHaveSimpleName("package-info")
+                .should().haveSimpleNameEndingWith(suffix).allowEmptyShould(true)
+                .as(String.format("%s 包下的类名应该以'%s'结尾", packagePattern, suffix));
+    }
+
+    /**
+     * 持久化对象位置规则：标记接口只用来判定角色归属，不用来判定命名。
+     * <p>
+     * {@code implement(..)} 取的是传递闭包，所以 {@code VO extends XxxEntity} 会被抓成
+     * 「视图对象不该是持久化对象」——这是真实缺陷；而把同一条判断写成命名规则，
+     * 报出来的却是「你名字没起对」，方向错，还会连累 {@code XxxQueryDTO extends PagedDTO}
+     * 这类完全合法的继承。
+     *
+     * @return {@link ArchRule}
+     */
+    public static ArchRule entityPlacementRules() {
+        return classes().that().implement(Entity.class)
+                .should().resideInAPackage("..entity..").allowEmptyShould(true)
+                .as("实现 Entity 标记接口的类应位于 ..entity.. 包下");
+    }
+
+    /**
+     * dto 位置规则
+     *
+     * @return {@link ArchRule}
+     */
+    public static ArchRule dtoPlacementRules() {
+        return classes().that().implement(DTO.class)
+                .should().resideInAPackage("..dto..").allowEmptyShould(true)
+                .as("实现 DTO 标记接口的类应位于 ..dto.. 包下");
+    }
+
+    /**
+     * vo 位置规则
+     *
+     * @return {@link ArchRule}
+     */
+    public static ArchRule voPlacementRules() {
         return classes().that().implement(VO.class)
-                .should().haveSimpleNameEndingWith("VO").allowEmptyShould(true)
-                .as("实现VO的类名应该以'VO'结尾");
+                .should().resideInAPackage("..vo..").allowEmptyShould(true)
+                .as("实现 VO 标记接口的类应位于 ..vo.. 包下");
     }
 
 
@@ -139,7 +216,27 @@ public final class ArchitectureEnforcer {
                 .that().resideInAPackage("..facade..")
                 .should().dependOnClassesThat().resideInAPackage("..provider..")
                 .allowEmptyShould(true)
-                .as("facade 契约包不得依赖 provider 实现包（防止 Split Package 复发）");
+                .as("facade 契约包不得依赖 impl 实现包（防止 Split Package 复发）");
+    }
+
+    /**
+     * 禁止访问标准输出流
+     *
+     * @return {@link ArchRule}
+     */
+    public static ArchRule noStandardStreamsRule() {
+        return GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS
+                .as("禁止使用 e.printStackTrace, System.err/System.out");
+    }
+
+    /**
+     * 禁止抛出泛型异常
+     *
+     * @return {@link ArchRule}
+     */
+    public static ArchRule noGenericExceptionsRule() {
+        return GeneralCodingRules.NO_CLASSES_SHOULD_THROW_GENERIC_EXCEPTIONS
+                .as("不能直接抛出 Throwable、Exception、RuntimeException异常");
     }
 
 

@@ -4,10 +4,10 @@ import cn.hutool.core.bean.BeanUtil;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeField;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigForm;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdate;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateField;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeFieldDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeInsertAndUpdateFieldDTO;
 import io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.CodeGenerateBaseVariableService;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
@@ -22,19 +22,19 @@ public class UpdateFormVariableService extends CodeGenerateBaseVariableService {
 
 
     @Override
-    public boolean isSupport(CodeGeneratorConfigForm form) {
-        CodeInsertAndUpdate insertAndUpdate = form.getInsertAndUpdate();
+    public boolean isSupport(CodeGeneratorConfigDTO form) {
+        CodeInsertAndUpdateDTO insertAndUpdate = form.getInsertAndUpdate();
         return insertAndUpdate != null && insertAndUpdate.getIsSupportInsertAndUpdate() != null && insertAndUpdate.getIsSupportInsertAndUpdate();
     }
 
     @Override
-    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigForm form) {
+    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigDTO form) {
         Map<String, Object> variablesMap = new HashMap<>();
 
-        Map<String, CodeField> fieldMap = getFieldMap(form);
-        List<CodeInsertAndUpdateField> updateFieldList = form.getInsertAndUpdate().getFieldList().stream().filter(e -> {
+        Map<String, CodeFieldDTO> fieldMap = getFieldMap(form);
+        List<CodeInsertAndUpdateFieldDTO> updateFieldList = form.getInsertAndUpdate().getFieldList().stream().filter(e -> {
                     boolean isUpdate = Boolean.TRUE.equals(e.getUpdateFlag());
-                    CodeField codeField = fieldMap.get(e.getColumnName());
+                    CodeFieldDTO codeField = fieldMap.get(e.getColumnName());
                     if (codeField == null) {
                         return false;
                     }
@@ -57,12 +57,12 @@ public class UpdateFormVariableService extends CodeGenerateBaseVariableService {
         return variablesMap;
     }
 
-    public ImmutablePair<List<String>, List<Map<String, Object>>> getPackageListAndFields(List<CodeInsertAndUpdateField> fields, CodeGeneratorConfigForm form) {
+    public ImmutablePair<List<String>, List<Map<String, Object>>> getPackageListAndFields(List<CodeInsertAndUpdateFieldDTO> fields, CodeGeneratorConfigDTO form) {
         if (CollUtil.isEmpty(fields)) {
             return ImmutablePair.of(new ArrayList<>(), new ArrayList<>());
         }
 
-        Map<String, CodeField> fieldMap = getFieldMap(form);
+        Map<String, CodeFieldDTO> fieldMap = getFieldMap(form);
         HashSet<String> packageList = new HashSet<>();
 
 
@@ -73,13 +73,13 @@ public class UpdateFormVariableService extends CodeGenerateBaseVariableService {
 
         List<Map<String, Object>> finalFieldList = new ArrayList<>();
 
-        for (CodeInsertAndUpdateField field : fields) {
-            CodeField codeField = fieldMap.get(field.getColumnName());
+        for (CodeInsertAndUpdateFieldDTO field : fields) {
+            CodeFieldDTO codeField = fieldMap.get(field.getColumnName());
             if (codeField == null) {
                 continue;
             }
 
-            // CodeField 和 InsertAndUpdateField 合并
+            // CodeFieldDTO 和 InsertAndUpdateField 合并
             Map<String, Object> finalFieldMap = BeanUtil.beanToMap(field);
             finalFieldMap.putAll(BeanUtil.beanToMap(codeField));
 

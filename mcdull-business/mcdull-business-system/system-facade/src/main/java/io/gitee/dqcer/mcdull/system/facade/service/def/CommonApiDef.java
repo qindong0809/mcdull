@@ -11,7 +11,7 @@ import io.gitee.dqcer.mcdull.system.facade.model.bo.DynamicFieldBO;
 import io.gitee.dqcer.mcdull.system.facade.model.dto.SerialNumberGenerateDTO;
 import io.gitee.dqcer.mcdull.system.facade.model.enums.DictSelectTypeEnum;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.ApproveVO;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.IArea;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.IAreaVO;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.IFileVO;
 
 import java.util.Date;
@@ -59,7 +59,7 @@ public interface CommonApiDef {
     /**
      * 按 VO 列表批量填充省/市名称
      */
-    void set(List<? extends IArea> voList);
+    void set(List<? extends IAreaVO> voList);
 
     /**
      * 省份下拉选项

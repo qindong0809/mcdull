@@ -76,7 +76,7 @@ public class CodeGeneratorTemplateService {
         File dir = new File(uuid);
 
         // 1、生产文件
-        CodeBasic basic = JSONUtil.toBean(codeGeneratorConfigEntity.getBasic(), CodeBasic.class);
+        CodeBasicDTO basic = JSONUtil.toBean(codeGeneratorConfigEntity.getBasic(), CodeBasicDTO.class);
         String moduleName = basic.getModuleName();
 
         for (Map.Entry<String, CodeGenerateBaseVariableService> entry : map.entrySet()) {
@@ -99,10 +99,10 @@ public class CodeGeneratorTemplateService {
         }
 
         // 2、后端的枚举文件
-        List<CodeField> fields = JSONUtil.toList(codeGeneratorConfigEntity.getFields(), CodeField.class);
+        List<CodeFieldDTO> fields = JSONUtil.toList(codeGeneratorConfigEntity.getFields(), CodeFieldDTO.class);
         if (CollUtil.isNotEmpty(fields)) {
-            List<CodeField> enumFiledList = fields.stream().filter(e -> StrUtil.isNotBlank(e.getEnumName())).collect(Collectors.toList());
-            for (CodeField codeField : enumFiledList) {
+            List<CodeFieldDTO> enumFiledList = fields.stream().filter(e -> StrUtil.isNotBlank(e.getEnumName())).collect(Collectors.toList());
+            for (CodeFieldDTO codeField : enumFiledList) {
                 Map<String, Object> variablesMap = new HashMap<>();
 
 //                String enumName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, codeField.getEnumName());
@@ -147,15 +147,15 @@ public class CodeGeneratorTemplateService {
             return "代码生成Service不存在，请检查相关代码！";
         }
 
-        CodeBasic basic = JSONUtil.toBean(codeGeneratorConfigEntity.getBasic(), CodeBasic.class);
-        List<CodeField> fields = JSONUtil.toList(codeGeneratorConfigEntity.getFields(), CodeField.class);
-        CodeInsertAndUpdate insertAndUpdate = JSONUtil.toBean(codeGeneratorConfigEntity.getInsertAndUpdate(), CodeInsertAndUpdate.class);
-        CodeDelete deleteInfo = JSONUtil.toBean(codeGeneratorConfigEntity.getDeleteInfo(), CodeDelete.class);
-        List<CodeQueryField> queryFields = JSONUtil.toList(codeGeneratorConfigEntity.getQueryFields(), CodeQueryField.class);
-        List<CodeTableField> tableFields = JSONUtil.toList(codeGeneratorConfigEntity.getTableFields(), CodeTableField.class);
+        CodeBasicDTO basic = JSONUtil.toBean(codeGeneratorConfigEntity.getBasic(), CodeBasicDTO.class);
+        List<CodeFieldDTO> fields = JSONUtil.toList(codeGeneratorConfigEntity.getFields(), CodeFieldDTO.class);
+        CodeInsertAndUpdateDTO insertAndUpdate = JSONUtil.toBean(codeGeneratorConfigEntity.getInsertAndUpdate(), CodeInsertAndUpdateDTO.class);
+        CodeDeleteDTO deleteInfo = JSONUtil.toBean(codeGeneratorConfigEntity.getDeleteInfo(), CodeDeleteDTO.class);
+        List<CodeQueryFieldDTO> queryFields = JSONUtil.toList(codeGeneratorConfigEntity.getQueryFields(), CodeQueryFieldDTO.class);
+        List<CodeTableFieldDTO> tableFields = JSONUtil.toList(codeGeneratorConfigEntity.getTableFields(), CodeTableFieldDTO.class);
         tableFields.forEach(e -> e.setWidth(e.getWidth() == null ? 0 : e.getWidth()));
 
-        CodeGeneratorConfigForm form = CodeGeneratorConfigForm.builder().basic(basic).fields(fields).insertAndUpdate(insertAndUpdate).deleteInfo(deleteInfo).queryFields(queryFields).tableFields(tableFields).deleteInfo(deleteInfo).build();
+        CodeGeneratorConfigDTO form = CodeGeneratorConfigDTO.builder().basic(basic).fields(fields).insertAndUpdate(insertAndUpdate).deleteInfo(deleteInfo).queryFields(queryFields).tableFields(tableFields).deleteInfo(deleteInfo).build();
         form.setTableName(tableName);
         if (!codeGenerateBaseVariableService.isSupport(form)) {
             return "业务不需要此功能，故没有生成代码；";
@@ -189,7 +189,7 @@ public class CodeGeneratorTemplateService {
         variablesMap.put("name", names);
 
         //主键字段名称和java类型
-        CodeField primaryKeycodeField = fields.stream().filter(CodeField::getPrimaryKeyFlag).findFirst().orElse(null);
+        CodeFieldDTO primaryKeycodeField = fields.stream().filter(CodeFieldDTO::getPrimaryKeyFlag).findFirst().orElse(null);
         if (primaryKeycodeField != null) {
             variablesMap.put("primaryKeyJavaType", primaryKeycodeField.getJavaType());
             variablesMap.put("primaryKeyFieldName", primaryKeycodeField.getFieldName());

@@ -67,22 +67,36 @@ McDull 是一个基于 **Spring Boot 3 + Spring Cloud** 的企业级微服务开
 
 ### 🏗️ ArchUnit 架构守护
 
-通过 `mcdull-framework-enforcer` 模块，将架构规范写成单元测试代码，在 CI 阶段强制检查，彻底杜绝规范只靠 Review 落地的问题。
+`mcdull-framework-enforcer` 提供规则库，由各业务模块在自己的 `src/test` 中声明 `@ArchTest` 落地检查。
 
-内置约束规则包括：
-- 严格的四层调用顺序：Controller → Service → Manager → Repository/Mapper，越层调用直接 CI 失败
-- 类命名规范：Mapper 类必须以 `Mapper` 结尾，DTO/VO/DO/Enum 类名必须符合对应后缀约定
-- 禁止使用 `System.out/err`、`e.printStackTrace()`
-- 禁止直接抛出 `Exception`、`RuntimeException`、`Throwable` 等泛型异常
+内置约束规则（以 system-impl 实测校准）：
+- 分层调用：`Controller` 不得被任何层访问；`Service` 可被 Controller/Entry/Manager 调用；`Manager` 可被 Service/Entry 调用；仅 Service/Manager 可调用 `Mapper`
+- `Entry` 层覆盖 Feign 服务端、facade SPI 实现、流程编排、监听器与定时任务等入口适配
+- 命名规范按包判定：`..dto..` ⇒ `DTO` 结尾、`..vo..` ⇒ `VO` 结尾、`..entity..` ⇒ `Entity` 结尾、`..bo..` ⇒ `BO` 结尾、`..dao.mapper..` ⇒ `Mapper` 结尾、枚举 ⇒ `Enum` 结尾
+- 角色归属按标记接口判定：实现 `DTO`/`VO`/`Entity` 的类必须位于对应角色包，防止 `MenuVO extends MenuEntity` 这类跨角色继承
+- `facade` 契约包不得依赖 `provider` 实现包，防止契约反向引用实现
+- 禁止 `System.out/err`、`e.printStackTrace()`
+- 禁止直接抛出 `Exception`、`RuntimeException`、`Throwable`
 
 ```java
-// 业务模块只需引入 enforcer 依赖，一行代码接入所有规则
-@AnalyzeClasses(packages = "com.yourcompany.yourapp")
-class ArchTest {
+// 按包根限定分析范围；不要排除 jar，否则同组的 *-facade 契约类不参与分析，
+// facade 隔离规则会 0 命中并静默通过
+@AnalyzeClasses(
+        packages = "io.gitee.dqcer.mcdull.system",
+        importOptions = ImportOption.DoNotIncludeTests.class)
+class SystemArchitectureTest {
+
     @ArchTest
-    static final List<ArchRule> rules = ArchitectureEnforcer.REQUIRED_RULES;
+    static final ArchRule LAYER_CALL_RULES = ArchitectureEnforcer.layerChecks();
+
+    @ArchTest
+    static final ArchRule FACADE_MUST_NOT_DEPEND_ON_PROVIDER =
+            ArchitectureEnforcer.facadeDependencyRules();
 }
 ```
+
+> `@ArchTest` 字段类型必须是 `ArchRule`，ArchUnit 不支持直接标注 `List<ArchRule>`。
+> 存量代码无法一次性合规时，用 `FreezingArchRule.freeze(rule)` 冻结基线、只拦截新增违规。
 
 ### 🔐 多端点认证体系（Sa-Token）
 

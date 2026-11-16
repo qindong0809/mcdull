@@ -3,8 +3,8 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.fro
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.NamingCase;
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigForm;
-import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeQueryField;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeGeneratorConfigDTO;
+import io.gitee.dqcer.mcdull.system.provider.model.dto.CodeQueryFieldDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.CodeQueryFieldQueryTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.web.service.impl.code.variable.CodeGenerateBaseVariableService;
 
@@ -16,21 +16,21 @@ import java.util.*;
 public class ListVariableService extends CodeGenerateBaseVariableService {
 
     @Override
-    public boolean isSupport(CodeGeneratorConfigForm form) {
+    public boolean isSupport(CodeGeneratorConfigDTO form) {
         return true;
     }
 
     @Override
-    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigForm form) {
+    public Map<String, Object> getInjectVariablesMap(CodeGeneratorConfigDTO form) {
         Map<String, Object> variablesMap = new HashMap<>();
 
         List<Map<String, Object>> variableList = new ArrayList<>();
-        List<CodeQueryField> queryFields = form.getQueryFields();
+        List<CodeQueryFieldDTO> queryFields = form.getQueryFields();
         HashSet<String> frontImportSet = new HashSet<>();
 //        frontImportSet.add("import " + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, form.getBasic().getModuleName()) + "Form from './" + CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, form.getBasic().getModuleName()) + "-form.vue';");
         frontImportSet.add("import " + StrUtil.lowerFirst(form.getBasic().getModuleName()) + "Form from './" + NamingCase.toKebabCase(form.getBasic().getModuleName()) + "-form.vue';");
 
-        for (CodeQueryField queryField : queryFields) {
+        for (CodeQueryFieldDTO queryField : queryFields) {
             Map<String, Object> objectMap = BeanUtil.beanToMap(queryField);
             variableList.add(objectMap);
 

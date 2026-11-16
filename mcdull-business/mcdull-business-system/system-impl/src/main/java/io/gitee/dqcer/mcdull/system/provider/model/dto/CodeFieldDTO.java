@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
  */
 
 @Data
-public class CodeField {
+public class CodeFieldDTO {
 
     @Schema(description = "列")
     @NotBlank(message = " 2.字段列表 列名 不能为空")

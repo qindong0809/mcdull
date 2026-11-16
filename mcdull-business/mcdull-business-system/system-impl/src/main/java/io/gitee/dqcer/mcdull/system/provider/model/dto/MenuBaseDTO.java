@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
  *
  */
 @Data
-public class MenuBaseForm {
+public class MenuBaseDTO {
 
     @Schema(description = "菜单名称")
     @NotBlank(message = "菜单名称不能为空")
