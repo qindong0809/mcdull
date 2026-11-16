@@ -1,7 +1,8 @@
 package io.gitee.dqcer.mcdull.mdc.client.service;
 
+import io.gitee.dqcer.mcdull.mdc.client.constants.MdcConstant;
 import io.gitee.dqcer.mcdull.mdc.client.service.def.ConfigurationApiDef;
-import io.gitee.dqcer.mcdull.mdc.client.service.hystrix.CustomPropertyApiHystrix;
+import io.gitee.dqcer.mcdull.mdc.client.service.hystrix.ConfigurationApiHystrix;
 import org.springframework.cloud.openfeign.FeignClient;
 
 /**
@@ -10,9 +11,9 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @since 2022/11/01 22:11:00
  */
 @FeignClient(
-        value = "${api:mdcName}",
+        value = MdcConstant.SERVICE_NAME,
         contextId = "configurationApi",
-        fallback = CustomPropertyApiHystrix.class)
+        fallback = ConfigurationApiHystrix.class)
 public interface ConfigurationApi extends ConfigurationApiDef {
 
 }

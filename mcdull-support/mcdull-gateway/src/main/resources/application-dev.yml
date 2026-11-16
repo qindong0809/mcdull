@@ -11,8 +11,9 @@ spring:
           lower-case-service-id: true
           enabled: true
       routes:
-        - id: mcdull-uac-provider
-          uri: lb://mcdull-uac-provider
+        # Path=/uac/** 是对外的历史路由名，改动会波及前端，故只修正转发目标
+        - id: system-bootstrap
+          uri: lb://system-bootstrap
           predicates:
             - Path=/uac/**
           filters:

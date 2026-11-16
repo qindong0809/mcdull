@@ -21,7 +21,7 @@ mcdull:
   tools:
     log:
       # Legacy fallback (used when targets list is empty)
-      dir: D:/var/log/mcdull-uac-provider
+      dir: D:/var/log/system-bootstrap
       active-file: out.log
       charset: UTF-8
       page-lines: 300
@@ -42,7 +42,7 @@ mcdull:
         - id: local
           env: 本机
           service: mcdull-tools
-          dir: D:/var/log/mcdull-uac-provider
+          dir: D:/var/log/system-bootstrap
           pattern: "out*.log*"
           active-file: out.log
           charset: UTF-8

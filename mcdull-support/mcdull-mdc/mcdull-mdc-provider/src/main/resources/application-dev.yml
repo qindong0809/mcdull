@@ -10,9 +10,6 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     host: mcdull.io
-mcdull:
-  feign:
-    uac: mcdull-uac-provider
 #请勿使用相对路径
 logging:
   file:

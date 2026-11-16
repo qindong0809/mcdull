@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.system.facade.service.def;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.feign.rpc.RpcClient;
+import io.gitee.dqcer.mcdull.system.facade.constants.SystemConstant;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.DepartmentInfoVO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,7 @@ import java.util.Map;
  * @author dqcer
  * @since 2022/10/28
  */
-@RpcClient("mcdull-system")
+@RpcClient(SystemConstant.SERVICE_NAME)
 public interface DeptApiDef {
 
     /**

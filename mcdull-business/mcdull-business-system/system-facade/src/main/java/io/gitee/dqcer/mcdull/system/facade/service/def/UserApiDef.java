@@ -4,6 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.feign.rpc.RpcClient;
+import io.gitee.dqcer.mcdull.system.facade.constants.SystemConstant;
 import io.gitee.dqcer.mcdull.system.facade.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ import java.util.Map;
  * @author dqcer
  * @since 2022/10/28
  */
-@RpcClient("mcdull-system")
+@RpcClient(SystemConstant.SERVICE_NAME)
 public interface UserApiDef {
 
     /**
