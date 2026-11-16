@@ -18,8 +18,11 @@ public final class SystemConstant {
 
     /**
      * 契约接口所在包，供消费方启用 Feign 代理时引用
+     * <p>
+     * 取 {@code service} 而不是 {@code service.def}：{@code @EnableFeignClients} 只向下递归扫描，
+     * 直接声明 {@code @FeignClient} 的 {@code AuthApi}、{@code ConfigApi} 在父包上，写成子包会漏掉它们。
      */
-    public static final String CLIENT_BASE_PACKAGE = "io.gitee.dqcer.mcdull.system.facade.service.def";
+    public static final String CLIENT_BASE_PACKAGE = "io.gitee.dqcer.mcdull.system.facade.service";
 
     private SystemConstant() {
     }

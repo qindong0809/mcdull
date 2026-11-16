@@ -17,7 +17,7 @@ import java.util.Map;
  * @author dqcer
  * @since 2022/10/28
  */
-@RpcClient(SystemConstant.SERVICE_NAME)
+@RpcClient(value = SystemConstant.SERVICE_NAME, contextId = "DeptApi")
 public interface DeptApiDef {
 
     /**

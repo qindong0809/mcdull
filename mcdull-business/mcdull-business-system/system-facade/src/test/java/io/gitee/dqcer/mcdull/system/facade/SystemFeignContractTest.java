@@ -3,7 +3,9 @@ package io.gitee.dqcer.mcdull.system.facade;
 import io.gitee.dqcer.mcdull.system.facade.constants.SystemConstant;
 import io.gitee.dqcer.mcdull.system.facade.service.AuthApi;
 import io.gitee.dqcer.mcdull.system.facade.service.ConfigApi;
+import io.gitee.dqcer.mcdull.system.facade.service.def.CommonApiDef;
 import io.gitee.dqcer.mcdull.system.facade.service.def.DeptApiDef;
+import io.gitee.dqcer.mcdull.system.facade.service.def.FileApiDef;
 import io.gitee.dqcer.mcdull.system.facade.service.def.RoleApiDef;
 import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
 import org.junit.jupiter.api.DisplayName;
@@ -46,6 +48,11 @@ class SystemFeignContractTest {
     private static final Set<Class<?>> META_ANNOTATED_CONTRACTS =
             Set.of(UserApiDef.class, DeptApiDef.class, RoleApiDef.class);
 
+    /**
+     * 实现类只有 {@code @Service}、没有 HTTP 暴露的契约，不能被注册成远程客户端
+     */
+    private static final Set<Class<?>> LOCAL_ONLY_CONTRACTS = Set.of(CommonApiDef.class, FileApiDef.class);
+
     @Test
     @DisplayName("直接声明的客户端必须指向契约里的服务名")
     void directClientsMustUseContractServiceName() {
@@ -81,9 +88,15 @@ class SystemFeignContractTest {
                 .map(BeanDefinition::getBeanClassName)
                 .collect(Collectors.toSet());
 
-        Set<String> expected = META_ANNOTATED_CONTRACTS.stream().map(Class::getName).collect(Collectors.toSet());
+        Set<String> expected = new java.util.HashSet<>();
+        DIRECT_CLIENTS.forEach(client -> expected.add(client.getName()));
+        META_ANNOTATED_CONTRACTS.forEach(contract -> expected.add(contract.getName()));
         assertEquals(expected, discovered,
                 "扫描 " + SystemConstant.CLIENT_BASE_PACKAGE + " 得到的客户端集合与预期不符，remote 模式会装配出多余或缺失的代理");
+
+        LOCAL_ONLY_CONTRACTS.forEach(contract -> org.junit.jupiter.api.Assertions.assertFalse(
+                discovered.contains(contract.getName()),
+                contract.getName() + " 只有 @Service 实现、没有 HTTP 服务端，注册成远程客户端后调用必然失败"));
     }
 
     /**
