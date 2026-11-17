@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.mdc.client.service.hystrix;
 
-import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.InnerResult;
 import io.gitee.dqcer.mcdull.mdc.client.service.EmailTemplateApi;
 import io.gitee.dqcer.mcdull.mdc.client.vo.EmailTemplateClientVO;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class EmailTemplateApiHystrix implements EmailTemplateApi {
 
     @Override
-    public ResultApi<EmailTemplateClientVO> get(String code) {
-        return ResultApi.error("hystrix fall back!");
+    public InnerResult<EmailTemplateClientVO> get(String code) {
+        return InnerResult.error("hystrix fall back!");
     }
 }

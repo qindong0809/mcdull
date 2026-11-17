@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.mdc.client.service.def;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
+import io.gitee.dqcer.mcdull.framework.base.feign.ResultApi;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

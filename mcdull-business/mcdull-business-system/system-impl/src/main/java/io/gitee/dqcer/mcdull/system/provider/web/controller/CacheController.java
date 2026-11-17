@@ -3,9 +3,9 @@ package io.gitee.dqcer.mcdull.system.provider.web.controller;
 import cn.dev33.satoken.annotation.SaCheckEL;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.json.JSON;
-import cn.hutool.json.JSONConfig;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.Map;
 
 
 /**
@@ -62,23 +63,27 @@ public class CacheController extends BasicController {
     @Operation(summary = "对应value")
     @PostMapping("/cache/key/value")
     @SaCheckEL("stp.checkPermission('support:cache:value')")
-    public Result<JSON> cacheKeys(@RequestBody @Valid CacheDeleteDTO dto) {
+    public Result<Object> cacheKeys(@RequestBody @Valid CacheDeleteDTO dto) {
         Object o = cacheService.cacheKey(dto.getCaffeineCacheFlag(), dto.getKey());
         if (o instanceof Collection) {
-            return Result.success(JSONUtil.parseArray(o));
+            return Result.success(JSONArray.from(o));
         }
-        JSON json;
+        Object json;
         if (o instanceof String) {
             String str = Convert.toStr(o);
-            if (JSONUtil.isTypeJSONArray(str)) {
-                json = JSONUtil.parseArray(str);
-            } else if (JSONUtil.isTypeJSONObject(str)) {
-                json = JSONUtil.parseObj(str, new JSONConfig());
+            if (JSON.isValidArray(str)) {
+                json = JSON.parseArray(str);
+            } else if (JSON.isValidObject(str)) {
+                json = JSON.parseObject(str);
             } else {
-                json = JSONUtil.parseArray(ListUtil.of(o));
+                json = JSONArray.from(ListUtil.of(o));
             }
             return Result.success(json);
         }
-        return Result.success(JSONUtil.parseObj(o));
+        if (o instanceof Map) {
+            return Result.success(JSONObject.from(o));
+        }
+        // 标量缓存值不是 JSON 对象，原样返回
+        return Result.success(o);
     }
 }

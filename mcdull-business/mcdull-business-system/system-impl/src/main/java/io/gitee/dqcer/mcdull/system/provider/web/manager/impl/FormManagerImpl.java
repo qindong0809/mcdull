@@ -7,10 +7,11 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
+import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
@@ -62,15 +63,18 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
 
     @Override
     public List<JSONObject> getFormItemList(String jsonText) {
-        JSONObject jsonObject = JSONUtil.parseObj(jsonText);
-        JSONArray objects = jsonObject.get("schemas", JSONArray.class);
+        if (StrUtil.isBlank(jsonText)) {
+            return Collections.emptyList();
+        }
+        JSONObject jsonObject = JSON.parseObject(jsonText);
+        JSONArray objects = jsonObject.getJSONArray("schemas");
         if (CollUtil.isEmpty(objects)) {
             return Collections.emptyList();
         }
         List<JSONObject> list = new ArrayList<>();
         for (Object object : objects) {
             if (ObjUtil.isNotNull(object)) {
-                JSONObject subJsonObject = JSONUtil.parseObj(object);
+                JSONObject subJsonObject = (JSONObject) object;
                 List<JSONObject> sub = extractLeafNodes(subJsonObject);
                 if (CollUtil.isNotEmpty(sub)) {
                     list.addAll(sub);
@@ -83,11 +87,10 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
 
     private static List<JSONObject> extractLeafNodes(JSONObject jsonObject) {
         List<JSONObject> list = new ArrayList<>();
-        Object value = jsonObject.get("children");
-        if (ObjUtil.isNotNull(value)) {
-            JSONArray objects = JSONUtil.parseArray(value);
+        JSONArray objects = jsonObject.getJSONArray("children");
+        if (ObjUtil.isNotNull(objects)) {
             for (Object object : objects) {
-                JSONObject subJsonObject = JSONUtil.parseObj(object);
+                JSONObject subJsonObject = (JSONObject) object;
                 List<JSONObject> sub = extractLeafNodes(subJsonObject);
                 if (CollUtil.isNotEmpty(sub)) {
                     list.addAll(sub);
@@ -108,7 +111,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             this.throwDataNotExistException(formId);
         }
         if (BooleanUtil.isTrue(entity.getPublish())) {
-            throw new RuntimeException("动态表单已发布，不能修改");
+            throw new BusinessException("动态表单已发布，不能修改");
         }
         entity.setJsonText(jsonText);
         formService.updateById(entity);
@@ -123,17 +126,17 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
         int i = 0;
         for (JSONObject jsonObject : formItemList) {
             if (ObjUtil.isNotNull(jsonObject)) {
-                String title = jsonObject.get("label", String.class);
-                String field = jsonObject.get("field", String.class);
+                String title = jsonObject.getString("label");
+                String field = jsonObject.getString("field");
                 if (StrUtil.isAllNotBlank(title, field)) {
                     FormItemEntity formItem = new FormItemEntity();
                     formItem.setFormId(formId);
                     formItem.setLabel(title);
-                    formItem.setControlType(jsonObject.get("type", String.class));
+                    formItem.setControlType(jsonObject.getString("type"));
                     formItem.setLabelCode(field);
-                    JSONObject componentProps = jsonObject.get("componentProps", JSONObject.class);
+                    JSONObject componentProps = jsonObject.getJSONObject("componentProps");
                     if (ObjUtil.isNotNull(componentProps)) {
-                        JSONArray objects = componentProps.get("options", JSONArray.class);
+                        JSONArray objects = componentProps.getJSONArray("options");
                         if (ObjUtil.isNotNull(objects)) {
                             formItem.setOptions(objects.toString());
                         } else {
@@ -141,12 +144,12 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                         }
                     }
                     formItem.setOrderNumber(i ++);
-                    JSONArray jsonArray = jsonObject.get("rules", JSONArray.class);
+                    JSONArray jsonArray = jsonObject.getJSONArray("rules");
                     if (CollUtil.isNotEmpty(jsonArray)) {
                         for (Object o : jsonArray) {
-                            JSONObject rules = JSONUtil.parseObj(o);
+                            JSONObject rules = (JSONObject) o;
                             if (ObjUtil.isNotNull(rules)) {
-                                Boolean required = rules.get("required", Boolean.class);
+                                Boolean required = rules.getBoolean("required");
                                 if (BooleanUtil.isTrue(required)) {
                                     formItem.setRequired(true);
                                 }
@@ -168,7 +171,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             this.throwDataNotExistException(formId);
         }
         if (BooleanUtil.isFalse(formEntity.getPublish())) {
-            throw new RuntimeException("动态表单未发布，不能添加数据");
+            throw new BusinessException("动态表单未发布，不能添加数据");
         }
         if (MapUtil.isEmpty(formDataMap)) {
             return;
@@ -194,7 +197,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                     formItemEntity.getControlType());
             if (FormItemControlTypeEnum.CHECKBOX.equals(controlTypeEnum)) {
                 if (obj != null) {
-                    recordItem.setCurrentValue(JSONUtil.parseArray(obj).toString());
+                    recordItem.setCurrentValue(toJsonArrayString(obj));
                 }
             } else {
                 recordItem.setCurrentValue(Convert.toStr(obj));
@@ -251,9 +254,9 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                             || FormItemControlTypeEnum.RADIO.equals(typeEnum)) {
                         String options = item.getOptions();
                         if (StrUtil.isNotBlank(options)) {
-                            JSONArray objects = JSONUtil.parseArray(options);
+                            JSONArray objects = JSON.parseArray(options);
                             if (ObjUtil.isNotNull(objects)) {
-                                List<LabelValueVO> list = objects.toList(LabelValueVO.class);
+                                List<LabelValueVO> list = objects.toJavaList(LabelValueVO.class);
                                 if (CollUtil.isNotEmpty(list)) {
                                     LabelValueVO<?, ?> vo = list.stream()
                                             .filter(i -> i.getValue().equals(currentValue))
@@ -268,10 +271,10 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                     }  else if (FormItemControlTypeEnum.SWITCH.equals(typeEnum)){
                         String options = item.getOptions();
                         if (StrUtil.isNotBlank(options)) {
-                            JSONObject jsonObject = JSONUtil.parseObj(options);
+                            JSONObject jsonObject = JSON.parseObject(options);
                             if (ObjUtil.isNotNull(jsonObject)) {
-                                String checkedValue = jsonObject.get("checkedValue", String.class);
-                                String unCheckedValue = jsonObject.get("unCheckedValue", String.class);
+                                String checkedValue = jsonObject.getString("checkedValue");
+                                String unCheckedValue = jsonObject.getString("unCheckedValue");
                                 if (StrUtil.isNotBlank(checkedValue) && StrUtil.isNotBlank(unCheckedValue)) {
                                     if (checkedValue.equals(currentValue)) {
                                         dataMap.put(item.getLabelCode(), Convert.toStr(jsonObject.get("checkedChildren")));
@@ -280,22 +283,22 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                                     }
                                 }
                             }
-                            if (StrUtil.isNotBlank(jsonObject.getStr(currentValue))) {
-                                dataMap.put(item.getLabelCode(), jsonObject.getStr(currentValue));
+                            if (StrUtil.isNotBlank(jsonObject.getString(currentValue))) {
+                                dataMap.put(item.getLabelCode(), jsonObject.getString(currentValue));
                             }
                         }
 
                     } else if (FormItemControlTypeEnum.CHECKBOX.equals(typeEnum)){
                         String options = item.getOptions();
                         if (StrUtil.isNotBlank(options)) {
-                            JSONArray objects = JSONUtil.parseArray(options);
+                            JSONArray objects = JSON.parseArray(options);
                             if (ObjUtil.isNotNull(objects)) {
-                                List<LabelValueVO> list = objects.toList(LabelValueVO.class);
+                                List<LabelValueVO> list = objects.toJavaList(LabelValueVO.class);
                                 if (CollUtil.isNotEmpty(list)) {
                                     if (StrUtil.isNotBlank(currentValue)) {
-                                        JSONArray parsedArray = JSONUtil.parseArray(currentValue);
+                                        JSONArray parsedArray = JSON.parseArray(currentValue);
                                         if (CollUtil.isNotEmpty(parsedArray)) {
-                                            List<String> checkboxValueList = parsedArray.toList(String.class);
+                                            List<String> checkboxValueList = parsedArray.toJavaList(String.class);
                                             if (CollUtil.isNotEmpty(checkboxValueList)) {
                                                 String checkboxValueJoin = list.stream()
                                                         .filter(i -> checkboxValueList.contains(Convert.toStr(i.getValue())))
@@ -377,7 +380,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                     formItem.getControlType());
             if (FormItemControlTypeEnum.CHECKBOX.equals(controlTypeEnum)) {
                 if (obj != null) {
-                    recordItem.setCurrentValue(JSONUtil.parseArray(obj).toString());
+                    recordItem.setCurrentValue(toJsonArrayString(obj));
                 }
             } else {
                 recordItem.setCurrentValue(Convert.toStr(obj));
@@ -421,5 +424,15 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             return result;
         }
         return Collections.emptyMap();
+    }
+
+    /**
+     * 复选框值可能已是集合，也可能是 JSON 字符串，统一存成 JSON 数组字符串
+     */
+    private static String toJsonArrayString(Object value) {
+        if (value instanceof CharSequence) {
+            return JSON.parseArray(value.toString()).toString();
+        }
+        return JSON.toJSONString(value);
     }
 }

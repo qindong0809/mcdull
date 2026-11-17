@@ -39,15 +39,13 @@ public class LoginController extends BasicController {
     private ICaptchaService captchaService;
     @Resource
     private ProcessFlow processFlow;
-    @Resource
-    private ICommonManager commonManager;
 
     @Operation(summary = "查看是否启用验证码")
     @GetMapping("/login/enabled-captcha")
     @SaIgnore
     public Result<Boolean> enabledCaptcha() {
          String suffix = CharSequenceUtil.format("login:enabled_captcha:ip_addr:{}", IpUtil.getIpAddr(super.getRequest()));
-        return Result.success(super.rateLimiter(suffix , 5, 1, () -> commonManager.isCaptchaEnabled()));
+        return Result.success(super.rateLimiter(suffix , 5, 1, () -> loginService.isCaptchaEnabled()));
     }
 
     @Operation(summary = "验证码")

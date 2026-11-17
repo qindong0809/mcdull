@@ -2,10 +2,9 @@ package io.gitee.dqcer.mcdull.gateway.config;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONUtil;
 import com.alibaba.cloud.nacos.NacosConfigManager;
 import com.alibaba.cloud.nacos.NacosConfigProperties;
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.config.listener.Listener;
 import com.alibaba.nacos.api.exception.NacosException;
@@ -157,8 +156,7 @@ public class DynamicRouteListener implements InitializingBean, ApplicationEventP
         }
         ROUTE_IDS.clear();
 
-        JSONArray objects = JSONUtil.parseArray(configInfo);
-        List<RouteDefinition> routeDefinitions = objects.toList(RouteDefinition.class);
+        List<RouteDefinition> routeDefinitions = JSON.parseArray(configInfo, RouteDefinition.class);
 
         if (CollUtil.isEmpty(routeDefinitions)) {
             return;

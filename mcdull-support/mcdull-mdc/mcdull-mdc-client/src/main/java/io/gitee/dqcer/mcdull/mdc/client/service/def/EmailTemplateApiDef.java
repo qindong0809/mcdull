@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.mdc.client.service.def;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.InnerResult;
 import io.gitee.dqcer.mcdull.mdc.client.vo.EmailTemplateClientVO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,9 +19,9 @@ public interface EmailTemplateApiDef {
      * get
      *
      * @param code 密码
-     * @return {@link ResultApi}<{@link EmailTemplateClientVO}>
+     * @return {@link InnerResult}<{@link EmailTemplateClientVO}>
      */
     @PostMapping({GlobalConstant.INNER_API + GlobalConstant.SERVICE_MDC +  "/email-template/detail"})
-    ResultApi<EmailTemplateClientVO> get(@RequestParam("code") String code);
+    InnerResult<EmailTemplateClientVO> get(@RequestParam("code") String code);
 
 }

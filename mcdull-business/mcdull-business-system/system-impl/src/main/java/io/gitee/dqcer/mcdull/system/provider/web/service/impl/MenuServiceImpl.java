@@ -11,10 +11,11 @@ import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.*;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONWriter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.gitee.dqcer.mcdull.common.audit.Audit;
@@ -411,7 +412,7 @@ public class MenuServiceImpl
             @Override
             public void invoke(Object o, AnalysisContext analysisContext) {
                 List<Pair<String, Func1<MenuVO, ?>>> titleList = getTitleList();
-                JSONObject jsonObject = JSONUtil.parseObj(o);
+                JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(o, JSONWriter.Feature.WriteNonStringKeyAsString));
                 MenuEntity entity = new MenuEntity();
                 for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
                     String key = entry.getKey();

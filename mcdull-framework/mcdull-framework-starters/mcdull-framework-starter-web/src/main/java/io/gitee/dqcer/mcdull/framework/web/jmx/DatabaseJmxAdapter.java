@@ -2,8 +2,7 @@ package io.gitee.dqcer.mcdull.framework.web.jmx;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -110,7 +109,6 @@ public class DatabaseJmxAdapter {
                 }
             }
         }
-        JSONArray objects = JSONUtil.parseArray(mapList);
-        return objects.toString();
+        return JSON.toJSONString(mapList);
     }
 }

@@ -16,8 +16,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.symmetric.AES;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -45,6 +44,7 @@ import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.web.enums.SexEnum;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
+import io.gitee.dqcer.mcdull.system.facade.vo.RemoteLogonUserVO;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.UserAudit;
 import io.gitee.dqcer.mcdull.system.facade.model.bo.DynamicFieldBO;
 import io.gitee.dqcer.mcdull.system.provider.model.convert.UserConvert;
@@ -856,17 +856,15 @@ public class UserServiceImpl
         String usedPassword = userEntity.getUsedPassword();
         List<String> passwordList = new ArrayList<>();
         if (CharSequenceUtil.isNotBlank(usedPassword)) {
-            boolean isArray = JSONUtil.isTypeJSONArray(usedPassword);
+            boolean isArray = JSON.isValidArray(usedPassword);
             if (isArray) {
-                JSONArray objects = JSONUtil.parseArray(usedPassword);
-                List<String> list = objects.toList(String.class);
-                list.add(password);
-                passwordList.addAll(list);
+                passwordList.addAll(JSON.parseArray(usedPassword, String.class));
+                passwordList.add(password);
             }
         } else {
             passwordList.add(password);
         }
-        entity.setUsedPassword(JSONUtil.toJsonStr(passwordList));
+        entity.setUsedPassword(JSON.toJSONString(passwordList));
         entity.setLastPasswordModifiedDate(UserContextHolder.getSession().getNow());
         return this.update(entity);
     }
@@ -944,6 +942,15 @@ public class UserServiceImpl
             return this.getNameMap(new ArrayList<>(createSet));
         }
         return Map.of();
+    }
+
+    @Override
+    public RemoteLogonUserVO getLogonUserInfo(Object loginId, String loginType) {
+        RemoteLogonUserVO remoteLogonUserVO = new RemoteLogonUserVO();
+        remoteLogonUserVO.setUserId(Convert.toInt(loginId));
+        // 当前默认单租户
+        remoteLogonUserVO.setTenantId(1);
+        return remoteLogonUserVO;
     }
 
 

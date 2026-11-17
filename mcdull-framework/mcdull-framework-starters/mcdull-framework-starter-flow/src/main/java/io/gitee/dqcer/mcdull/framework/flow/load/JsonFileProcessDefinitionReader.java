@@ -2,8 +2,7 @@ package io.gitee.dqcer.mcdull.framework.flow.load;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import io.gitee.dqcer.mcdull.framework.flow.properties.ProcessBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,8 +66,7 @@ public class JsonFileProcessDefinitionReader implements ProcessDefinitionReader 
         Resource[] resources = fileResolver.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + resourcePath);
         for (Resource resource : resources) {
             String read = IoUtil.readUtf8(resource.getInputStream());
-            JSONArray objects = JSONUtil.parseArray(read);
-            List<ProcessBean> list = objects.toList(ProcessBean.class);
+            List<ProcessBean> list = JSON.parseArray(read, ProcessBean.class);
             processBeanList.addAll(list);
         }
         return processBeanList;

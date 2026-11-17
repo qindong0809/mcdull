@@ -4,8 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSONArray;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.administrator.RoleSaveDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminRoleEntity;
@@ -65,8 +64,7 @@ public class AdminRoleServiceImpl extends ServiceImpl<AdminRoleMapper, AdminRole
     @Override
     public List<RolePermissionVO> getRoleTreeList() {
         List<MenuInfoBO> menuInfoBOS = adminMenuService.menuList();
-        JSONArray objects = JSONUtil.parseArray(menuInfoBOS);
-        List<RolePermissionVO> list = JSONUtil.toList(objects, RolePermissionVO.class);
+        List<RolePermissionVO> list = JSONArray.from(menuInfoBOS).toJavaList(RolePermissionVO.class);
         List<PermissionBO> permissionList = adminMenuService.permissionList();
         Map<Integer, List<PermissionBO>> permissionMap = permissionList.stream().collect(Collectors.groupingBy(PermissionBO::getParentId));
         this.buildTree(list, permissionMap);

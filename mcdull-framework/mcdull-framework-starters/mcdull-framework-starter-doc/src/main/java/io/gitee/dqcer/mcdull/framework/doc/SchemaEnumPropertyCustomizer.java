@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.doc;
 
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import io.gitee.dqcer.mcdull.framework.base.annotation.SchemaEnum;
 
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
@@ -42,8 +41,7 @@ public class SchemaEnumPropertyCustomizer implements PropertyCustomizer {
                     Object text = getEnumText(enumConstant);
                     list.add(new KeyValueVO<>(code, text));
                 }
-                JSONArray objects = JSONUtil.parseArray(list);
-                description.append(objects);
+                description.append(JSON.toJSONString(list));
             }
         }
         if (!description.isEmpty()) {

@@ -1,13 +1,8 @@
 package io.gitee.dqcer.mcdull.system.facade;
 
+import io.gitee.dqcer.mcdull.framework.feign.rpc.RpcClient;
 import io.gitee.dqcer.mcdull.system.facade.constants.SystemConstant;
-import io.gitee.dqcer.mcdull.system.facade.service.AuthApi;
-import io.gitee.dqcer.mcdull.system.facade.service.ConfigApi;
-import io.gitee.dqcer.mcdull.system.facade.service.def.CommonApiDef;
-import io.gitee.dqcer.mcdull.system.facade.service.def.DeptApiDef;
-import io.gitee.dqcer.mcdull.system.facade.service.def.FileApiDef;
-import io.gitee.dqcer.mcdull.system.facade.service.def.RoleApiDef;
-import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
+import io.gitee.dqcer.mcdull.system.facade.service.def.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -40,7 +35,7 @@ class SystemFeignContractTest {
     /**
      * 直接标注 {@code @FeignClient} 的客户端
      */
-    private static final List<Class<?>> DIRECT_CLIENTS = List.of(AuthApi.class, ConfigApi.class);
+    private static final List<Class<?>> DIRECT_CLIENTS = List.of(AuthApiDef.class, ConfigApiDef.class);
 
     /**
      * 通过元注解 {@code RpcClient} 声明、应当被扫描注册的契约
@@ -57,8 +52,8 @@ class SystemFeignContractTest {
     @DisplayName("直接声明的客户端必须指向契约里的服务名")
     void directClientsMustUseContractServiceName() {
         for (Class<?> client : DIRECT_CLIENTS) {
-            FeignClient feignClient = client.getAnnotation(FeignClient.class);
-            assertNotNull(feignClient, client.getName() + " 缺少 @FeignClient");
+            RpcClient feignClient = client.getAnnotation(RpcClient.class);
+            assertNotNull(feignClient, client.getName() + " 缺少 @RpcClient");
             assertEquals(SystemConstant.SERVICE_NAME, resolvedName(client), client.getName() + " 的目标服务名不是单一来源");
         }
     }

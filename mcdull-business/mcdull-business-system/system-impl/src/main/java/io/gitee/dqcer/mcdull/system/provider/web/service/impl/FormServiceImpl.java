@@ -8,7 +8,7 @@ import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -176,8 +176,8 @@ public class FormServiceImpl
         List<FormItemVO> list = new ArrayList<>();
         for (JSONObject jsonObject : formItemList) {
             if (ObjUtil.isNotNull(jsonObject)) {
-                String title = jsonObject.get("label", String.class);
-                String field = jsonObject.get("field", String.class);
+                String title = jsonObject.getString("label");
+                String field = jsonObject.getString("field");
                 if (StrUtil.isAllNotBlank(title, field)) {
                     FormItemVO itemVO = new FormItemVO();
                     itemVO.setName(title);

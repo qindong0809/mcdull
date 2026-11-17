@@ -26,6 +26,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.LogonVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.MenuVO;
 import io.gitee.dqcer.mcdull.system.provider.util.Ip2RegionUtil;
+import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;
 import jakarta.annotation.Resource;
 import org.springframework.cache.Cache;
@@ -57,7 +58,7 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
     @Resource
     private IDepartmentService departmentService;
     @Resource
-    private RedissonCache redisCache;
+    private ICommonManager commonManager;
 
 
     @Override
@@ -175,5 +176,10 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
         }
         LogHelp.error(log, "getCurrentUserInfo error, userId: {}", userId);
         return null;
+    }
+
+    @Override
+    public Boolean isCaptchaEnabled() {
+        return commonManager.isCaptchaEnabled();
     }
 }

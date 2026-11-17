@@ -6,7 +6,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -67,12 +67,12 @@ public class CodeGeneratorServiceImpl
         CodeGeneratorConfigEntity config = this.getTableConfigEntity(table);
         if (ObjUtil.isNotNull(config)) {
             TableConfigVO vo = new TableConfigVO();
-            vo.setBasic(JSONUtil.parseObj(config.getBasic()).toBean(CodeBasicDTO.class));
-            vo.setFields(JSONUtil.parseArray(config.getFields()).toList(CodeFieldDTO.class));
-            vo.setInsertAndUpdate(JSONUtil.parseObj(config.getInsertAndUpdate()).toBean(CodeInsertAndUpdateDTO.class));
-            vo.setQueryFields(JSONUtil.parseArray(config.getQueryFields()).toList(CodeQueryFieldDTO.class));
-            vo.setTableFields(JSONUtil.parseArray(config.getTableFields()).toList(CodeTableFieldDTO.class));
-            vo.setDeleteInfo(JSONUtil.parseObj(config.getDeleteInfo()).toBean(CodeDeleteDTO.class));
+            vo.setBasic(JSON.parseObject(config.getBasic(), CodeBasicDTO.class));
+            vo.setFields(JSON.parseArray(config.getFields(), CodeFieldDTO.class));
+            vo.setInsertAndUpdate(JSON.parseObject(config.getInsertAndUpdate(), CodeInsertAndUpdateDTO.class));
+            vo.setQueryFields(JSON.parseArray(config.getQueryFields(), CodeQueryFieldDTO.class));
+            vo.setTableFields(JSON.parseArray(config.getTableFields(), CodeTableFieldDTO.class));
+            vo.setDeleteInfo(JSON.parseObject(config.getDeleteInfo(), CodeDeleteDTO.class));
             return vo;
         }
         LogHelp.warn(logger, "table config is null, tableName: {}", table);
@@ -96,12 +96,12 @@ public class CodeGeneratorServiceImpl
     }
 
     private void setFieldValue(CodeGeneratorConfigDTO dto, CodeGeneratorConfigEntity config) {
-        config.setBasic(JSONUtil.toJsonStr(dto.getBasic()));
-        config.setFields(JSONUtil.toJsonStr(dto.getFields()));
-        config.setInsertAndUpdate(JSONUtil.toJsonStr(dto.getInsertAndUpdate()));
-        config.setQueryFields(JSONUtil.toJsonStr(dto.getQueryFields()));
-        config.setTableFields(JSONUtil.toJsonStr(dto.getTableFields()));
-        config.setDeleteInfo(JSONUtil.toJsonStr(dto.getDeleteInfo()));
+        config.setBasic(JSON.toJSONString(dto.getBasic()));
+        config.setFields(JSON.toJSONString(dto.getFields()));
+        config.setInsertAndUpdate(JSON.toJSONString(dto.getInsertAndUpdate()));
+        config.setQueryFields(JSON.toJSONString(dto.getQueryFields()));
+        config.setTableFields(JSON.toJSONString(dto.getTableFields()));
+        config.setDeleteInfo(JSON.toJSONString(dto.getDeleteInfo()));
     }
 
     private void checkParam(CodeGeneratorConfigDTO dto) {

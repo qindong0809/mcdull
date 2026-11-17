@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
+import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.system.provider.model.bo.EmailConfigBO;
@@ -56,7 +57,7 @@ public class EmailServiceImpl
     public MailAccount getMailAccount() {
         EmailConfigBO emailConfigBO = sysInfoService.getEmailConfig();
         if (emailConfigBO == null) {
-            throw new RuntimeException(I18nConstants.DATA_NOT_EXIST);
+            throw new BusinessException(I18nConstants.DATA_NOT_EXIST);
         }
         return new MailAccount()
                 .setHost(emailConfigBO.getHost())
@@ -88,7 +89,7 @@ public class EmailServiceImpl
         threadPoolTaskExecutor.submit(() -> {
             LogHelp.info(log, "sendEmailWithBytes. sendTo: {}, subject: {}, fileName: {}", sendTo, subject, fileName);
             try {
-                // TODO: 2024/3/25 send history save 
+                // TODO: 2024/3/25 send history save
                 MailUtil.send(sendTo, subject, text, false, FileUtil.writeBytes(bytes, new File(fileName)));
             } catch (Exception e) {
                 LogHelp.error(log, "send error. sendTo: {}, subject: {}, fileName: {}", sendTo, subject, fileName, e);

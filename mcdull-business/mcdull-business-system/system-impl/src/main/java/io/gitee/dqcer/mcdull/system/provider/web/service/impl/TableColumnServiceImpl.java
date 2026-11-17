@@ -5,7 +5,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -43,7 +43,7 @@ public class TableColumnServiceImpl
     @Override
     public void updateTableColumns(TableColumnUpdateDTO dto) {
         Integer userId = UserContextHolder.userId();
-        String string = JSONUtil.parseArray(dto.getColumnList()).toString();
+        String string = JSON.toJSONString(dto.getColumnList());
         List<TableColumnEntity> list = this.selectList(userId);
         if (CollUtil.isNotEmpty(list)) {
             Map<Integer, TableColumnEntity> map = list.stream()

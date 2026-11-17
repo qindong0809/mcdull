@@ -6,7 +6,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import io.gitee.dqcer.mcdull.focus.model.entity.AppUserEntity;
 import io.gitee.dqcer.mcdull.focus.web.service.IAppUserService;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
@@ -194,7 +194,7 @@ public class LoginController extends BasicController {
     @PostMapping("/app/daily/quote")
     public Result<String> dailyQuote() {
         String s = ResourceUtil.readUtf8Str("quote.json");
-        List<String> quoteList = JSONUtil.toList(s, String.class);
+        List<String> quoteList = JSON.parseArray(s, String.class);
         // 随机获取一条
         String quote = RandomUtil.randomEle(quoteList);
         return Result.success(quote);

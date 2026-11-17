@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.mdc.provider.web.feign;
 
-import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.InnerResult;
 import io.gitee.dqcer.mcdull.mdc.client.service.def.EmailApiDef;
 import io.gitee.dqcer.mcdull.mdc.provider.web.service.IEmailService;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,13 +20,13 @@ public class EmailServerFeign implements EmailApiDef {
     private IEmailService emailService;
 
     @Override
-    public ResultApi<Boolean> sendEmail(String sendTo, String subject, String text) {
-        return ResultApi.success(emailService.sendEmail(sendTo, subject, text));
+    public InnerResult<Boolean> sendEmail(String sendTo, String subject, String text) {
+        return InnerResult.success(emailService.sendEmail(sendTo, subject, text));
     }
 
     @Override
-    public ResultApi<Boolean> sendEmailWithBytes(byte[] bytes, String fileName, String sendTo, String subject,
-                                              String text) {
-        return ResultApi.success(emailService.sendEmailWithBytes(bytes, fileName, sendTo, subject, text));
+    public InnerResult<Boolean> sendEmailWithBytes(byte[] bytes, String fileName, String sendTo, String subject,
+                                                   String text) {
+        return InnerResult.success(emailService.sendEmailWithBytes(bytes, fileName, sendTo, subject, text));
     }
 }

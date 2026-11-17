@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.mdc.client.service.hystrix;
 
-import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.InnerResult;
 import io.gitee.dqcer.mcdull.mdc.client.dto.DictClientDTO;
 import io.gitee.dqcer.mcdull.mdc.client.service.DictTypeApi;
 import io.gitee.dqcer.mcdull.mdc.client.vo.DictTypeClientVO;
@@ -16,12 +16,12 @@ import java.util.List;
 public class DictClientTypeApiHystrix implements DictTypeApi {
 
     @Override
-    public ResultApi<DictTypeClientVO> one(DictClientDTO dto) {
-        return ResultApi.error("hystrix fall back!");
+    public InnerResult<DictTypeClientVO> one(DictClientDTO dto) {
+        return InnerResult.error("hystrix fall back!");
     }
 
     @Override
-    public ResultApi<List<DictTypeClientVO>> list(String selectType) {
-        return ResultApi.error("hystrix fall back!");
+    public InnerResult<List<DictTypeClientVO>> list(String selectType) {
+        return InnerResult.error("hystrix fall back!");
     }
 }

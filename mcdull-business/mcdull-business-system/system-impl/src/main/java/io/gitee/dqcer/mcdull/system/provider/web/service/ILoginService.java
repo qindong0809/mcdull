@@ -46,4 +46,12 @@ public interface ILoginService {
      * @return {@link LogonVO}
      */
     LogonVO getCurrentUserInfo();
+
+    /**
+     * 是否启用验证码
+     *
+     * @return {@link Boolean}
+     */
+    Boolean isCaptchaEnabled();
+
 }

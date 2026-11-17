@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.framework.web.aspect;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import io.gitee.dqcer.mcdull.framework.base.annotation.UnAuthorize;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
@@ -133,8 +133,8 @@ public class OperationLogsAspect {
         entity.setUserId(UserContextHolder.userId());
         entity.setClientIp(IpUtil.getIpAddr(request));
         entity.setUserAgent(ServletUtil.getUserAgent());
-        entity.setHeaders(JSONUtil.toJsonStr(headers));
-        entity.setParameterMap(JSONUtil.toJsonStr(params));
+        entity.setHeaders(JSON.toJSONString(headers));
+        entity.setParameterMap(JSON.toJSONString(params));
         entity.setPath(request.getRequestURI());
         entity.setMethod(request.getMethod());
         entity.setCreatedTime(UserContextHolder.getSession().getNow());

@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.system.provider.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckEL;
+import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
@@ -92,7 +93,7 @@ public class MenuController extends BasicController {
             try {
                 return menuService.importMenu(file);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new BusinessException(e);
             }
         }));
     }

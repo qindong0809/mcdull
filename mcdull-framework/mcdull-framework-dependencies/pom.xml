@@ -47,6 +47,7 @@
 
         <knife4j.version>4.5.0</knife4j.version>
         <fastjson.version>1.2.83</fastjson.version>
+        <fastjson2.version>2.0.42</fastjson2.version>
         <hutool.version>5.8.43</hutool.version>
         <archunit.version>1.0.1</archunit.version>
         <kaptcha.version>2.3.3</kaptcha.version>
@@ -149,6 +150,12 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+            <!-- 项目内 JSON 序列化统一使用 fastjson2，hutool-json 已移除 -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>

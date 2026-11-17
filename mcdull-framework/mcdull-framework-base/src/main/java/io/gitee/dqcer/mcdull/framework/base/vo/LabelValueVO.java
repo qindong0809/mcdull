@@ -17,6 +17,12 @@ public class LabelValueVO<V, L> implements VO {
      */
     protected L label;
 
+    /**
+     * fastjson2 反序列化只能走默认构造 + setter
+     */
+    public LabelValueVO() {
+    }
+
     public LabelValueVO(V value, L label) {
         this.value = value;
         this.label = label;

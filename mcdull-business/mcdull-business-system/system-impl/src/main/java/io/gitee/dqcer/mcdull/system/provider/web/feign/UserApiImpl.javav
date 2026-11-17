@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.system.provider.web.feign;
 
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.InnerResult;
 import io.gitee.dqcer.mcdull.uac.def.service.io.gitee.dqcer.mcdull.system.client.UserApiDef;
 import io.gitee.dqcer.mcdull.uac.vo.io.gitee.dqcer.mcdull.system.client.RemoteUserVO;
 import io.gitee.dqcer.mcdull.uac.service.web.io.gitee.dqcer.mcdull.system.provider.IUserService;

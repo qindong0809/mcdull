@@ -6,9 +6,10 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.text.NamingCase;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.CodeGeneratorConfigEntity;
 import io.gitee.dqcer.mcdull.system.provider.util.CodeGeneratorTool;
@@ -76,7 +77,7 @@ public class CodeGeneratorTemplateService {
         File dir = new File(uuid);
 
         // 1、生产文件
-        CodeBasicDTO basic = JSONUtil.toBean(codeGeneratorConfigEntity.getBasic(), CodeBasicDTO.class);
+        CodeBasicDTO basic = parseBean(codeGeneratorConfigEntity.getBasic(), CodeBasicDTO.class);
         String moduleName = basic.getModuleName();
 
         for (Map.Entry<String, CodeGenerateBaseVariableService> entry : map.entrySet()) {
@@ -99,7 +100,7 @@ public class CodeGeneratorTemplateService {
         }
 
         // 2、后端的枚举文件
-        List<CodeFieldDTO> fields = JSONUtil.toList(codeGeneratorConfigEntity.getFields(), CodeFieldDTO.class);
+        List<CodeFieldDTO> fields = parseArray(codeGeneratorConfigEntity.getFields(), CodeFieldDTO.class);
         if (CollUtil.isNotEmpty(fields)) {
             List<CodeFieldDTO> enumFiledList = fields.stream().filter(e -> StrUtil.isNotBlank(e.getEnumName())).collect(Collectors.toList());
             for (CodeFieldDTO codeField : enumFiledList) {
@@ -147,12 +148,12 @@ public class CodeGeneratorTemplateService {
             return "代码生成Service不存在，请检查相关代码！";
         }
 
-        CodeBasicDTO basic = JSONUtil.toBean(codeGeneratorConfigEntity.getBasic(), CodeBasicDTO.class);
-        List<CodeFieldDTO> fields = JSONUtil.toList(codeGeneratorConfigEntity.getFields(), CodeFieldDTO.class);
-        CodeInsertAndUpdateDTO insertAndUpdate = JSONUtil.toBean(codeGeneratorConfigEntity.getInsertAndUpdate(), CodeInsertAndUpdateDTO.class);
-        CodeDeleteDTO deleteInfo = JSONUtil.toBean(codeGeneratorConfigEntity.getDeleteInfo(), CodeDeleteDTO.class);
-        List<CodeQueryFieldDTO> queryFields = JSONUtil.toList(codeGeneratorConfigEntity.getQueryFields(), CodeQueryFieldDTO.class);
-        List<CodeTableFieldDTO> tableFields = JSONUtil.toList(codeGeneratorConfigEntity.getTableFields(), CodeTableFieldDTO.class);
+        CodeBasicDTO basic = parseBean(codeGeneratorConfigEntity.getBasic(), CodeBasicDTO.class);
+        List<CodeFieldDTO> fields = parseArray(codeGeneratorConfigEntity.getFields(), CodeFieldDTO.class);
+        CodeInsertAndUpdateDTO insertAndUpdate = parseBean(codeGeneratorConfigEntity.getInsertAndUpdate(), CodeInsertAndUpdateDTO.class);
+        CodeDeleteDTO deleteInfo = parseBean(codeGeneratorConfigEntity.getDeleteInfo(), CodeDeleteDTO.class);
+        List<CodeQueryFieldDTO> queryFields = parseArray(codeGeneratorConfigEntity.getQueryFields(), CodeQueryFieldDTO.class);
+        List<CodeTableFieldDTO> tableFields = parseArray(codeGeneratorConfigEntity.getTableFields(), CodeTableFieldDTO.class);
         tableFields.forEach(e -> e.setWidth(e.getWidth() == null ? 0 : e.getWidth()));
 
         CodeGeneratorConfigDTO form = CodeGeneratorConfigDTO.builder().basic(basic).fields(fields).insertAndUpdate(insertAndUpdate).deleteInfo(deleteInfo).queryFields(queryFields).tableFields(tableFields).deleteInfo(deleteInfo).build();
@@ -232,6 +233,19 @@ public class CodeGeneratorTemplateService {
         StringWriter sw = new StringWriter();
         template.merge(context, sw);
         return sw.toString();
+    }
+
+    /**
+     * 配置列可能为空，hutool 解析成空对象/空集合，fastjson2 返回 null，这里沿用非空语义
+     */
+    private static <T> T parseBean(String json, Class<T> clazz) {
+        T bean = JSON.parseObject(json, clazz);
+        return null != bean ? bean : ReflectUtil.newInstanceIfPossible(clazz);
+    }
+
+    private static <T> List<T> parseArray(String json, Class<T> clazz) {
+        List<T> list = JSON.parseArray(json, clazz);
+        return null != list ? list : new ArrayList<>();
     }
 
 }

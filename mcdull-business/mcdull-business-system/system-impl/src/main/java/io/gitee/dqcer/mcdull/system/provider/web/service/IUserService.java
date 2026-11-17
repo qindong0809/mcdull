@@ -6,6 +6,7 @@ import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.system.facade.model.dto.UserListDTO;
+import io.gitee.dqcer.mcdull.system.facade.vo.RemoteLogonUserVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserAllVO;
@@ -284,4 +285,13 @@ public interface IUserService extends IRepository<UserEntity> {
      * @return {@link Map }<{@link Integer }, {@link String }>
      */
     Map<Integer, String> getMap(List<? extends BaseEntity<Integer>> list);
+
+    /**
+     * 获取登录用户信息
+     *
+     * @param loginId   登录ID
+     * @param loginType 登录类型
+     * @return {@link RemoteLogonUserVO }
+     */
+    RemoteLogonUserVO getLogonUserInfo(Object loginId, String loginType);
 }

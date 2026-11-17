@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.mdc.provider.web.feign;
 
+import io.gitee.dqcer.mcdull.framework.base.wrapper.InnerResult;
 import io.gitee.dqcer.mcdull.framework.base.validator.ValidGroup;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.feign.ResultApi;
 import io.gitee.dqcer.mcdull.mdc.client.dto.DictClientDTO;
 import io.gitee.dqcer.mcdull.mdc.client.service.def.DictTypeApiDef;
 import io.gitee.dqcer.mcdull.mdc.client.vo.DictTypeClientVO;
@@ -26,8 +26,8 @@ public class DictTypeTypeServerFeign implements DictTypeApiDef {
     private IDictTypeService dictTypeService;
 
     @Override
-    public ResultApi<List<DictTypeClientVO>> list(String selectType) {
-        return ResultApi.success(dictTypeService.list(selectType));
+    public InnerResult<List<DictTypeClientVO>> list(String selectType) {
+        return InnerResult.success(dictTypeService.list(selectType));
     }
 
     /**
@@ -37,7 +37,7 @@ public class DictTypeTypeServerFeign implements DictTypeApiDef {
      * @return {@link Result}<{@link DictTypeClientVO}>
      */
     @Override
-    public ResultApi<DictTypeClientVO> one(@Validated(ValidGroup.One.class) DictClientDTO dto) {
-        return ResultApi.success();
+    public InnerResult<DictTypeClientVO> one(@Validated(ValidGroup.One.class) DictClientDTO dto) {
+        return InnerResult.success();
     }
 }

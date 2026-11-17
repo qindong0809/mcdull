@@ -1,8 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.redis.operation;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.redis.ICache;
@@ -70,7 +69,7 @@ public class RedissonCache implements ICache {
     public <T> T getOrSet(String key, Class<T> type, Supplier<T> supplier, long expire) {
         String jsonStr = this.get(key, String.class);
         if (CharSequenceUtil.isNotBlank(jsonStr)) {
-            return JSONUtil.toBean(jsonStr, type);
+            return JSON.parseObject(jsonStr, type);
         }
         T t = supplier.get();
         this.put(key, t, expire);
@@ -81,11 +80,10 @@ public class RedissonCache implements ICache {
         String jsonStr = this.get(key, String.class);
         if (CharSequenceUtil.isNotBlank(jsonStr)) {
             LogHelp.info(log, "redis缓存 key={} 缓存已命中 value:{}", key, jsonStr);
-            return JSONUtil.toList(jsonStr, type);
+            return JSON.parseArray(jsonStr, type);
         }
         List<T> t = supplier.get();
-        JSONArray jsonArray = JSONUtil.parseArray(JSONUtil.toJsonStr(t));
-        this.put(key, jsonArray.toString(), expire);
+        this.put(key, JSON.toJSONString(t), expire);
         return t;
     }
 

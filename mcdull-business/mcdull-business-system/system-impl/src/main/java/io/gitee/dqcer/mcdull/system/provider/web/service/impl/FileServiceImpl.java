@@ -302,7 +302,7 @@ public class FileServiceImpl
         // 获取类上的注解值
         TableName annotation = AnnotationUtil.getAnnotation(clazz, TableName.class);
         if (annotation == null) {
-            throw new RuntimeException("类上没有TableName注解");
+            throw new BusinessException("类上没有TableName注解");
         }
         return annotation.value();
     }

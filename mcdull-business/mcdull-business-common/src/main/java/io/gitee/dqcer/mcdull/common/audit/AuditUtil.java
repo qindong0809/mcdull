@@ -7,8 +7,9 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONWriter;
 import io.gitee.dqcer.mcdull.framework.base.constants.SymbolConstants;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,9 +23,9 @@ import java.util.*;
 public class AuditUtil {
 
     public static <T extends Audit> List<FieldDiff> compare(T after) {
-        JSONObject beforeJson = JSONUtil.parseObj(after, false);
+        JSONObject beforeJson = toJsonObject(after);
         List<FieldDiff> fieldDiffList = new ArrayList<>();
-        for (Map.Entry<String, Object> entry : beforeJson) {
+        for (Map.Entry<String, Object> entry : beforeJson.entrySet()) {
             String key = entry.getKey();
             Object afterValue = entry.getValue();
             Field field = ReflectUtil.getField(after.getClass(), key);
@@ -39,11 +40,11 @@ public class AuditUtil {
     }
 
     public static <T extends Audit> List<FieldDiff> compare(T before, T after) {
-        JSONObject beforeJson = JSONUtil.parseObj(before, false);
-        JSONObject afterJson = JSONUtil.parseObj(after, false);
+        JSONObject beforeJson = toJsonObject(before);
+        JSONObject afterJson = toJsonObject(after);
 
         List<FieldDiff> fieldDiffList = new ArrayList<>();
-        for (Map.Entry<String, Object> entry : beforeJson) {
+        for (Map.Entry<String, Object> entry : beforeJson.entrySet()) {
             String key = entry.getKey();
             Object beforeValue = entry.getValue();
             Object afterValue = afterJson.get(key);
@@ -59,6 +60,13 @@ public class AuditUtil {
         }
         CollUtil.sort(fieldDiffList, (o1, o2) -> NumberUtil.compare(o1.description.sort(), o2.description.sort()));
         return fieldDiffList;
+    }
+
+    /**
+     * 转成保留 null 字段的 JSON 视图：字段被清空成 null 时，也要能被比对出来。
+     */
+    private static JSONObject toJsonObject(Object bean) {
+        return JSON.parseObject(JSON.toJSONString(bean, JSONWriter.Feature.WriteNulls));
     }
 
     private static FieldDiff getFieldDiff(AuditDescription annotation, Object afterValue) {
