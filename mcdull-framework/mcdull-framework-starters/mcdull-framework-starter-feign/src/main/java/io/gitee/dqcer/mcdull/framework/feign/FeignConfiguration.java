@@ -1,63 +1,91 @@
 package io.gitee.dqcer.mcdull.framework.feign;
 
-
+import cn.hutool.core.util.StrUtil;
+import feign.Logger;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import feign.codec.ErrorDecoder;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import org.slf4j.Logger;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import jakarta.servlet.http.HttpServletRequest;
-
-
 /**
- * feign 配置
+ * Feign 自动装配与全局配置
  *
  * @author dqcer
  * @since 2022/06/12
  */
-@Configuration
+@AutoConfiguration
+@Import(FeignExceptionAdvice.class)
 public class FeignConfiguration implements RequestInterceptor {
 
-    private static final Logger log = LoggerFactory.getLogger(FeignConfiguration.class);
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(FeignConfiguration.class);
 
-    public FeignConfiguration() {
-    }
+    @Value("${spring.profiles.active:prod}")
+    private String activeProfile;
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
-        String path = requestTemplate.path();
-        if (log.isInfoEnabled()) {
-            log.info("Feign RequestInterceptor Path: {}", path);
+        if (log.isDebugEnabled()) {
+            log.debug("Feign RequestInterceptor Path: {}", requestTemplate.path());
         }
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attributes != null) {
-            UnifySession session = UserContextHolder.getSession();
-            if (session != null) {
-                requestTemplate.header(HttpHeaderConstants.U_ID, session.getUserId());
-                requestTemplate.header(HttpHeaderConstants.T_ID, session.getTenantId() + "");
-                requestTemplate.header(HttpHeaderConstants.TRACE_ID_HEADER, session.getTraceId());
 
-
-                return;
+        // 1. 优先从 UserContextHolder 获取会话（兼容异步线程池、定时任务等无 Web Request 场景）
+        UnifySession session = UserContextHolder.getSession();
+        if (session != null) {
+            setHeaderIfNotBlank(requestTemplate, HttpHeaderConstants.U_ID, session.getUserId());
+            if (session.getTenantId() != null) {
+                setHeaderIfNotBlank(requestTemplate, HttpHeaderConstants.T_ID, String.valueOf(session.getTenantId()));
             }
-            HttpServletRequest request = attributes.getRequest();
-            requestTemplate.header(HttpHeaderConstants.U_ID, request.getHeader(HttpHeaderConstants.U_ID));
-            requestTemplate.header(HttpHeaderConstants.T_ID, request.getHeader(HttpHeaderConstants.T_ID));
-            requestTemplate.header(HttpHeaderConstants.TRACE_ID_HEADER, request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER));
+            setHeaderIfNotBlank(requestTemplate, HttpHeaderConstants.TRACE_ID_HEADER, session.getTraceId());
             return;
         }
-        log.warn("RequestContextHolder.getRequestAttributes() is null");
+
+        // 2. 兜底从当前 Web 请求头透传（适用于未经过登录拦截器的内部透传场景）
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            setHeaderIfNotBlank(requestTemplate, HttpHeaderConstants.U_ID, request.getHeader(HttpHeaderConstants.U_ID));
+            setHeaderIfNotBlank(requestTemplate, HttpHeaderConstants.T_ID, request.getHeader(HttpHeaderConstants.T_ID));
+            setHeaderIfNotBlank(requestTemplate, HttpHeaderConstants.TRACE_ID_HEADER, request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER));
+            return;
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("Feign 调用无上下文会话信息, path: {}", requestTemplate.path());
+        }
+    }
+
+    private void setHeaderIfNotBlank(RequestTemplate template, String name, String value) {
+        if (StrUtil.isNotBlank(value)) {
+            template.header(name, value);
+        }
     }
 
     @Bean
-    public feign.Logger.Level loggerLevel() {
-        return feign.Logger.Level.FULL;
+    @ConditionalOnMissingBean
+    public ErrorDecoder feignErrorDecoder() {
+        return new FeignErrorDecoder();
+    }
+
+    /**
+     * 按环境动态控制日志级别：非生产环境打印 BASIC（请求方法、URL、耗时），生产环境仅记录 NONE
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public Logger.Level loggerLevel() {
+        if ("prod".equalsIgnoreCase(activeProfile)) {
+            return Logger.Level.NONE;
+        }
+        return Logger.Level.BASIC;
     }
 }

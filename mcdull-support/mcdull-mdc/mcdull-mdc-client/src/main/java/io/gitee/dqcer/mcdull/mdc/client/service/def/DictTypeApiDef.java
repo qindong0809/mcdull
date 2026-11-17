@@ -24,7 +24,7 @@ public interface DictTypeApiDef {
      * 单个
      *
      * @param dto dto
-     * @return {@link Result<  DictTypeClientVO  >}
+     * @return {@link Result<DictTypeClientVO>}
      */
     @GetMapping(GlobalConstant.INNER_API + GlobalConstant.SERVICE_MDC + "/dict/detail")
     InnerResult<DictTypeClientVO> one(@Validated(value = ValidGroup.One.class) DictClientDTO dto);

@@ -9,12 +9,10 @@ import io.gitee.dqcer.mcdull.system.facade.vo.RemoteLogonUserVO;
 import org.springframework.web.bind.annotation.PostMapping;
 
 /**
- * Config Api Def
  *
  * @author dqcer
  * @since 2022/10/28
  */
-@RpcClient(value = SystemConstant.SERVICE_NAME, contextId = "AuthApi", fallback = AuthApiHystrix.class)
 public interface AuthApiDef {
 
     @PostMapping(GlobalConstant.INNER_API + GlobalConstant.SYSTEM +"/auth/logon-user")

@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
  * @author dqcer
  * @since 2022/12/25
  */
-@Configuration
 public class FeignErrorDecoder implements ErrorDecoder {
 
     private static final Logger log = LoggerFactory.getLogger(FeignErrorDecoder.class);
@@ -30,8 +29,8 @@ public class FeignErrorDecoder implements ErrorDecoder {
     public Exception decode(String methodKey, Response response) {
         FeignException exception = FeignException.errorStatus(methodKey, response);
         Request request = exception.request();
-        // 使用原Feign Exception
-        log.error("feign 调用异常: {}", request);
+        // 仅打印请求方法、URL 和状态码，避免直接打印 Request 对象泄露敏感 Header
+        log.error("Feign HTTP 协议异常, status: {}, method: {}, url: {}, response: {}", response.status(), request.httpMethod(), request.url(), exception.contentUTF8());
         return exception;
     }
 }
