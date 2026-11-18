@@ -42,7 +42,6 @@ import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.web.enums.SexEnum;
-import io.gitee.dqcer.mcdull.framework.web.feign.model.UserPowerVO;
 import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.facade.vo.RemoteLogonUserVO;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.UserAudit;
@@ -375,40 +374,6 @@ public class UserServiceImpl
                 throw new BusinessException(I18nConstants.DATA_EXISTS);
             }
         }
-    }
-
-    @Override
-    public List<UserPowerVO> getResourceModuleList(Integer userId) {
-        Map<Integer, List<RoleEntity>> roleListMap = roleService.getRoleMap(ListUtil.of(userId));
-        List<RoleEntity> roleDOList = roleListMap.get(userId);
-        if (CollUtil.isEmpty(roleDOList)) {
-            LogHelp.warn(logger, "userId: {} 查无角色权限", userId);
-            return Collections.emptyList();
-        }
-        List<UserPowerVO> vos = roleDOList.stream().map(i-> {
-            UserPowerVO vo = new UserPowerVO();
-            vo.setRoleId(i.getId());
-            vo.setCode(i.getRoleCode());
-            return vo;
-        }).collect(Collectors.toList());
-        Set<Integer> roleSet = vos.stream().map(UserPowerVO::getRoleId).collect(Collectors.toSet());
-        Map<Integer, List<String>> keyRoleIdValueMenuCode = menuService
-                .getMenuCodeListMap(new ArrayList<>(roleSet));
-        for (UserPowerVO vo : vos) {
-            String code = vo.getCode();
-            if (ObjectUtil.equals(GlobalConstant.SUPER_ADMIN_ROLE, code)) {
-                List<String> allCodeList = menuService.getAllCodeList();
-                vo.setModules(allCodeList);
-                continue;
-            }
-            List<String> menuCodeList = keyRoleIdValueMenuCode.get(vo.getRoleId());
-            if (CollUtil.isEmpty(menuCodeList)) {
-                LogHelp.warn(logger, "userId: {} roleId: {} 查无模块权限", userId, vo.getRoleId());
-                menuCodeList = Collections.emptyList();
-            }
-            vo.setModules(menuCodeList);
-        }
-        return vos;
     }
 
     @Override

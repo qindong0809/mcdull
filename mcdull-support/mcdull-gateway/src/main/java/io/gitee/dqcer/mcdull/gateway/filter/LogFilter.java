@@ -3,7 +3,6 @@ package io.gitee.dqcer.mcdull.gateway.filter;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
-import io.gitee.dqcer.mcdull.gateway.utils.IpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -47,9 +46,9 @@ public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {
         addHeader(mutate, HttpHeaderConstants.TRACE_ID_HEADER, traceId);
         MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
 
-        if (log.isInfoEnabled()) {
-            log.info("请求地址:{} 来源Ip: {}", request.getURI(), IpUtils.getRealIp(request));
-        }
+//        if (log.isInfoEnabled()) {
+//            log.info("请求地址:{} 来源Ip: {}", request.getURI(), IpUtils.getRealIp(request));
+//        }
 
         // 打印请求头
         HttpHeaders headers = exchange.getRequest().getHeaders();

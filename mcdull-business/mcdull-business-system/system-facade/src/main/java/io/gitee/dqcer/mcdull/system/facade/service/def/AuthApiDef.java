@@ -7,6 +7,7 @@ import io.gitee.dqcer.mcdull.system.facade.constants.SystemConstant;
 import io.gitee.dqcer.mcdull.system.facade.service.hystrix.AuthApiHystrix;
 import io.gitee.dqcer.mcdull.system.facade.vo.RemoteLogonUserVO;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -16,5 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 public interface AuthApiDef {
 
     @PostMapping(GlobalConstant.INNER_API + GlobalConstant.SYSTEM +"/auth/logon-user")
-    InnerResult<RemoteLogonUserVO> getLogonUserInfo(Object loginId, String loginType);
+    InnerResult<RemoteLogonUserVO> getLogonUserInfo(@RequestParam("loginId") Object loginId,
+                                                    @RequestParam("loginType") String loginType);
 }

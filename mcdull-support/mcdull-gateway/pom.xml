@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
           <groupId>cn.dev33</groupId>
-          <artifactId>sa-token-reactor-spring-boot-starter</artifactId>
+          <artifactId>sa-token-reactor-spring-boot3-starter</artifactId>
         </dependency>
         <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
         <dependency>
@@ -58,14 +58,6 @@
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
         </dependency>
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-        </dependency>
-      <dependency>
-        <groupId>org.hibernate.validator</groupId>
-        <artifactId>hibernate-validator</artifactId>
-      </dependency>
     </dependencies>
     <build>
         <resources>

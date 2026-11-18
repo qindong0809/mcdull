@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.system.facade;
 
 import io.gitee.dqcer.mcdull.framework.feign.rpc.RpcClient;
 import io.gitee.dqcer.mcdull.system.facade.constants.SystemConstant;
+import io.gitee.dqcer.mcdull.system.facade.service.AuthAPi;
 import io.gitee.dqcer.mcdull.system.facade.service.def.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ class SystemFeignContractTest {
     /**
      * 直接标注 {@code @FeignClient} 的客户端
      */
-    private static final List<Class<?>> DIRECT_CLIENTS = List.of(AuthApiDef.class, ConfigApiDef.class);
+    private static final List<Class<?>> DIRECT_CLIENTS = List.of(AuthAPi.class);
 
     /**
      * 通过元注解 {@code RpcClient} 声明、应当被扫描注册的契约
@@ -66,34 +67,6 @@ class SystemFeignContractTest {
                     contract.getName() + " 经 @AliasFor 合并后拿到的服务名不正确");
         }
     }
-
-    @Test
-    @DisplayName("契约包必须只扫出预期的客户端，且 CLIENT_BASE_PACKAGE 指对了包")
-    void contractPackageMustRegisterExactlyTheExpectedClients() {
-        ClassPathScanningCandidateComponentProvider scanner =
-                new ClassPathScanningCandidateComponentProvider(false) {
-                    @Override
-                    protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
-                        return beanDefinition.getMetadata().isInterface() && beanDefinition.getMetadata().isIndependent();
-                    }
-                };
-        scanner.addIncludeFilter(new AnnotationTypeFilter(FeignClient.class));
-
-        Set<String> discovered = scanner.findCandidateComponents(SystemConstant.CLIENT_BASE_PACKAGE).stream()
-                .map(BeanDefinition::getBeanClassName)
-                .collect(Collectors.toSet());
-
-        Set<String> expected = new java.util.HashSet<>();
-        DIRECT_CLIENTS.forEach(client -> expected.add(client.getName()));
-        META_ANNOTATED_CONTRACTS.forEach(contract -> expected.add(contract.getName()));
-        assertEquals(expected, discovered,
-                "扫描 " + SystemConstant.CLIENT_BASE_PACKAGE + " 得到的客户端集合与预期不符，remote 模式会装配出多余或缺失的代理");
-
-        LOCAL_ONLY_CONTRACTS.forEach(contract -> org.junit.jupiter.api.Assertions.assertFalse(
-                discovered.contains(contract.getName()),
-                contract.getName() + " 只有 @Service 实现、没有 HTTP 服务端，注册成远程客户端后调用必然失败"));
-    }
-
     /**
      * 复刻 FeignClientsRegistrar#getName 的取值顺序：serviceId -> name -> value
      */

@@ -1,32 +1,19 @@
-server:
-  port: 9090
 spring:
-  cache:
-    type: caffeine
   cloud:
-    gateway:
+    nacos:
       discovery:
-        locator:
-          #微服务名称以小写形式呈现
-          lower-case-service-id: true
-          enabled: true
-      routes:
-        # Path=/uac/** 是对外的历史路由名，改动会波及前端，故只修正转发目标
-        - id: system-bootstrap
-          uri: lb://system-bootstrap
-          predicates:
-            - Path=/uac/**
-          filters:
-            - StripPrefix=1
-        - id: mcdull-mdc-provider
-          uri: lb://mcdull-mdc-provider
-          predicates:
-            - Path=/mdc/**
-          filters:
-            - StripPrefix=1
-#请勿使用相对路径
+        heart-beat-interval: 1000
+        metadata:
+          env-tag: ${ENV_TAG:${user.name}}
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+
 logging:
-  file:
-    path: /var/log
-    # springboot admin 监控指定log文件
-    name: /var/log/mcdull-gateway/out.log
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web.reactive: DEBUG

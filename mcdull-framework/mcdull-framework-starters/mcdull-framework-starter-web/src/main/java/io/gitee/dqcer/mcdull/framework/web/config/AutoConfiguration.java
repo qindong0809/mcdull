@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.mysql.datasource.SwitchableDataSource;
 import io.gitee.dqcer.mcdull.framework.web.advice.BaseExceptionAdvice;
 import io.gitee.dqcer.mcdull.framework.web.aspect.AuditAspect;
-import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsAspect;
+//import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsAspect;
 import io.gitee.dqcer.mcdull.framework.web.aspect.TranslatorAspect;
 import io.gitee.dqcer.mcdull.framework.web.component.ConcurrentRateLimiter;
 import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
@@ -70,10 +70,10 @@ public class AutoConfiguration {
         return new TranslatorAspect();
     }
 
-    @Bean
-    public OperationLogsAspect operationLogsAspect() {
-        return new OperationLogsAspect();
-    }
+//    @Bean
+//    public OperationLogsAspect operationLogsAspect() {
+//        return new OperationLogsAspect();
+//    }
 
     @Bean
     public AuditAspect auditAspect() {

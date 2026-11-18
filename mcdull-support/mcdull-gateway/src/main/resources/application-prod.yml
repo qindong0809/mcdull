@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        heart-beat-interval: 5000
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              # 生产环境严禁开启自动服务发现路由，防止内部接口绕过网关鉴权裸奔
+              enabled: false
+logging:
+  level:
+    org.springframework.cloud.gateway: WARN

@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.mdc.client.service.def;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.wrapper.InnerResult;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.base.feign.ResultApi;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,9 +25,9 @@ public interface EmailApiDef {
      * @return {@link Result}<{@link Boolean}>
      */
     @GetMapping(GlobalConstant.INNER_API + GlobalConstant.SERVICE_MDC + "/mail/send")
-    ResultApi<Boolean> sendEmail(@RequestParam("sendTo") String sendTo,
-                                 @RequestParam("subject") String subject,
-                                 @RequestParam("text") String text);
+    InnerResult<Boolean> sendEmail(@RequestParam("sendTo") String sendTo,
+                                   @RequestParam("subject") String subject,
+                                   @RequestParam("text") String text);
 
     /**
      * 用字节发送电子邮件
@@ -40,7 +40,7 @@ public interface EmailApiDef {
      * @return {@link Result}<{@link Boolean}>
      */
     @PostMapping({GlobalConstant.INNER_API + GlobalConstant.SERVICE_MDC +  "/mail/send-with-bytes"})
-    ResultApi<Boolean> sendEmailWithBytes(@RequestBody byte[] bytes,
+    InnerResult<Boolean> sendEmailWithBytes(@RequestBody byte[] bytes,
                                        @RequestParam("fileName") String fileName,
                                        @RequestParam("sendTo") String sendTo,
                                        @RequestParam("subject") String subject,
