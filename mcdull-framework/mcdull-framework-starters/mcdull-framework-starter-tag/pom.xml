@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.gitee.dqcer</groupId>
+    <artifactId>mcdull-framework-starters</artifactId>
+    <version>${revision}</version>
+  </parent>
+
+  <artifactId>mcdull-framework-starter-tag</artifactId>
+  <packaging>jar</packaging>
+
+  <name>${project.artifactId}</name>
+  <description>微服务全链路标签染色与路由隔离 Starter</description>
+
+  <dependencies>
+    <!-- 核心依赖：Spring Cloud LoadBalancer -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+    </dependency>
+
+    <!-- 核心依赖：阿里 TransmittableThreadLocal -->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>transmittable-thread-local</artifactId>
+      <version>2.14.5</version>
+    </dependency>
+
+    <!-- 可选依赖：仅 Servlet 微服务编译期使用，不传递给 WebFlux 网关 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- 可选依赖：仅引入了 OpenFeign 的服务才会激活透传拦截器 -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- 可选依赖：YAML 配置提示生成器 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+</project>

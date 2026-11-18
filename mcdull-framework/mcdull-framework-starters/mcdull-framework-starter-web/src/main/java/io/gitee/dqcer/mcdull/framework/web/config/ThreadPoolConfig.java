@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -20,9 +21,7 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -40,6 +39,8 @@ public class ThreadPoolConfig implements AsyncConfigurer {
 
     @Resource
     private McdullProperties mcdullProperties;
+    @Resource
+    private ObjectProvider<List<TaskDecorator>> taskDecoratorsProvider;
 
     @Bean("threadPoolTaskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
@@ -54,7 +55,11 @@ public class ThreadPoolConfig implements AsyncConfigurer {
         executor.setThreadNamePrefix(GlobalConstant.ROOT_PREFIX + "-");
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         // 传递上下文
-        executor.setTaskDecorator(new ThreadPoolDecorator());
+
+        // 传入扩展钩子列表
+        // 自动收集容器中所有的 TaskDecorator Bean（如 starter-tag 注册的 envTagTaskDecorator）
+        List<TaskDecorator> externalDecorators = taskDecoratorsProvider.getIfAvailable(Collections::emptyList);
+        executor.setTaskDecorator(new ThreadPoolDecorator(externalDecorators));
 
         // 优雅停机配置：等待任务完成，并设置最大阻塞等待时间（建议后续抽离到 ThreadPoolProperties 中配置）
         executor.setWaitForTasksToCompleteOnShutdown(true);
@@ -93,16 +98,28 @@ public class ThreadPoolConfig implements AsyncConfigurer {
      */
     static class ThreadPoolDecorator implements TaskDecorator {
 
+        private final List<TaskDecorator> delegates;
+
+        ThreadPoolDecorator(List<TaskDecorator> delegates) {
+            this.delegates = delegates;
+        }
+
         @Override
         public Runnable decorate(Runnable runnable) {
             ContextSnapshot captured = ContextSnapshot.capture();
+            // 逐层调用外部 TaskDecorator 包装（在提交线程捕获各自上下文）
+            Runnable wrappedTask = runnable;
+            for (TaskDecorator delegate : delegates) {
+                wrappedTask = delegate.decorate(wrappedTask);
+            }
+            final Runnable finalTask = wrappedTask;
+
             return () -> {
                 ContextSnapshot executorOwn = ContextSnapshot.capture();
                 captured.apply();
                 try {
-                    runnable.run();
+                    finalTask.run();
                 } catch (Throwable t) {
-                    // 仅记录底层异常，务必原样抛出，避免吞掉异常导致 CompletableFuture / Future.get() 无法感知失败
                     LogHelp.error(log, "ThreadPoolDecorator task execution error.", t);
                     throw t;
                 } finally {

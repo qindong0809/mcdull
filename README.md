@@ -43,6 +43,7 @@ McDull 是一个基于 **Spring Boot 3 + Spring Cloud** 的企业级微服务开
 | 服务注册与配置 | Nacos | 2.x |
 | API 网关 | Spring Cloud Gateway | — |
 | 服务调用 | OpenFeign | — |
+| 流量染色与灰度 | Spring Cloud LoadBalancer / TransmittableThreadLocal | — / 2.14.5 |
 | 认证授权 | Sa-Token | 1.42.0 |
 | ORM | MyBatis-Plus | 3.5.16 |
 | 数据库 | MySQL | 8.x |
@@ -321,6 +322,43 @@ mvn deploy "-Dmcdull.notify.webhook=https://oapi.dingtalk.com/robot/send?access_
 - `FeignErrorDecoder`：HTTP 非 2xx 响应时统一日志记录 + 封装为可识别异常
 - `ResultApiParse.getInstance()`：区分**系统异常**（`FeignServiceErrorException`）和**业务异常**（`FeignBizException`），调用方可分别捕获处理
 
+### 🎯 全链路流量染色与环境隔离（Tag Starter）
+
+`mcdull-framework-starter-tag` 基于 Spring Cloud LoadBalancer + TransmittableThreadLocal 实现灰度与泳道路由：请求头 `X-Env-Tag` 与 Nacos 实例元数据 `env-tag` 联动，业务代码零侵入。
+
+```yaml
+# 实例打标：本地开发自动携带环境变量或操作系统登录用户名
+spring:
+  cloud:
+    nacos:
+      discovery:
+        metadata:
+          env-tag: ${ENV_TAG:${user.name}}
+
+mcdull:
+  tag:
+    enabled: true        # 是否启用标签路由（默认 true）
+    strict: false        # true = 找不到标签实例直接阻断，绝不回流基准池（生产强隔离）
+    clean-header: false  # true = 网关剥离外部传入的 X-Env-Tag，防伪造染色
+```
+
+选址按三级漏斗降级，兼顾隔离精度与调用链可用性：
+
+| 级别 | 规则 |
+|---|---|
+| 精准匹配 | 取 `X-Env-Tag`（无请求头时取线程上下文），命中 `metadata.env-tag` 相同的健康实例 |
+| 基准兜底 | 未命中且 `strict=false` ⇒ 路由到 `env-tag` 为空的公共基准实例 |
+| 紧急容灾 | 连基准实例都不存在（如新服务仅在特性分支首次上线）⇒ 全部健康实例随机选取 |
+
+透传链路覆盖 `WebFlux 网关 → Servlet 微服务 → OpenFeign 下游 → @Async 线程池`，网关与业务微服务共用同一个依赖，各环节由条件注解按需装配（`WebFilter` / `FilterRegistrationBean` / `RequestInterceptor` / `TaskDecorator`）：
+
+- **异步线程池联动**：注册 `envTagTaskDecorator` Bean，被 `mcdull-framework-starter-web` 的 `ThreadPoolConfig` 自动收集；采用「捕获-替换-还原」语义，兼容 `CallerRunsPolicy` 拒绝策略
+- **生产安全**：网关开启 `clean-header=true` 后自动清洗外部染色头，内部灰度应在鉴权通过后由服务端写入
+- **典型场景**：多人共用一套开发环境的本地联调隔离、仅给改动的 1~2 个服务打标签的测试泳道（无需克隆整套测试集群）、生产金丝雀灰度
+
+> 保留字 `X-Env-Tag: default` 强制路由到无标签基准实例——本地起了服务但想直接对比公共开发服时，无需关闭 IDEA。
+> 完整接入与联调验证步骤见 [mcdull-framework-starter-tag/README.md](mcdull-framework/mcdull-framework-starters/mcdull-framework-starter-tag/README.md)。
+
 ### 🔬 Java Agent 零侵入性能探针
 
 `mcdull-framework-agent` 通过 JVM `-javaagent` 参数挂载，**无需修改任何业务代码**，采集内容远超普通 APM 埋点：
@@ -481,6 +519,7 @@ mcdull/
 │       ├── mcdull-framework-starter-redis      # Redis 集成
 │       ├── mcdull-framework-starter-scheduler  # 定时任务（db-scheduler）
 │       ├── mcdull-framework-starter-security   # 安全认证（Sa-Token）
+│       ├── mcdull-framework-starter-tag        # 流量染色与环境隔离
 │       └── mcdull-framework-starter-web        # Web 基础
 ├── mcdull-devtools/           # 研发工具 — 开发辅助与发布协作
 │   ├── mcdull-devtools-portal  # 开发工具门户（日志查看、数据库导入）
@@ -595,6 +634,7 @@ mvn clean install -DskipTests
 | [mcdull-framework-agent/README.md](mcdull-framework/mcdull-framework-agent/README.md) | Java Agent 性能探针使用说明 |
 | [mcdull-framework-enforcer/README.md](mcdull-framework/mcdull-framework-enforcer/README.md) | ArchUnit 架构约束使用说明 |
 | [mcdull-framework-starter-scheduler/README.md](mcdull-framework/mcdull-framework-starters/mcdull-framework-starter-scheduler/README.md) | 定时任务调度使用说明 |
+| [mcdull-framework-starter-tag/README.md](mcdull-framework/mcdull-framework-starters/mcdull-framework-starter-tag/README.md) | 全链路流量染色与环境隔离使用说明 |
 
 ---
 

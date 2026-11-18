@@ -58,6 +58,11 @@
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
         </dependency>
+      <dependency>
+        <groupId>io.gitee.dqcer</groupId>
+        <artifactId>mcdull-framework-starter-tag</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
     <build>
         <resources>

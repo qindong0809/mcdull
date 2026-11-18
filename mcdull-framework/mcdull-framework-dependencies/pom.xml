@@ -83,6 +83,9 @@
         <jgit.version>6.10.0.202406032230-r</jgit.version>
         <maven-plugin-api.version>3.9.6</maven-plugin-api.version>
         <maven-plugin-annotations.version>3.13.1</maven-plugin-annotations.version>
+
+      <!-- 覆盖 Spring Boot 3.5.16 默认传递的 8.0.3.Final，平滑升级至同代无漏洞补丁版 -->
+      <hibernate-validator.version>8.0.6.Final</hibernate-validator.version>
     </properties>
 
     <dependencyManagement>
