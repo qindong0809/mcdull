@@ -12,14 +12,13 @@ import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
+import io.gitee.dqcer.mcdull.system.facade.model.enums.GenderEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
-import io.gitee.dqcer.mcdull.system.facade.model.enums.GenderEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.LogonVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.MenuVO;
@@ -67,7 +66,9 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
         String ipAddr = IpUtil.getIpAddr(ServletUtil.getRequest());
         log.setLoginIp(ipAddr);
         log.setLoginIpRegion(Ip2RegionUtil.getRegion(ipAddr));
-        log.setLoginResult(resultTypeEnum.getCode());
+        if (ObjUtil.isNotNull(resultTypeEnum)) {
+            log.setLoginResult(resultTypeEnum.getCode());
+        }
         log.setUserAgent(ServletUtil.getUserAgent());
         log.setRemark(remark);
         loginLogService.add(log);

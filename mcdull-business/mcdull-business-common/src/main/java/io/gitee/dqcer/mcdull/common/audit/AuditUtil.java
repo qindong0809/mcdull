@@ -23,6 +23,9 @@ import java.util.*;
 public class AuditUtil {
 
     public static <T extends Audit> List<FieldDiff> compare(T after) {
+        if (after == null) {
+            return Collections.emptyList();
+        }
         JSONObject beforeJson = toJsonObject(after);
         List<FieldDiff> fieldDiffList = new ArrayList<>();
         for (Map.Entry<String, Object> entry : beforeJson.entrySet()) {

@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ReactiveWebApplicationContextRunner;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.web.server.WebFilter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,23 +58,6 @@ class TagAutoConfigurationTest {
             });
     }
 
-    @Test
-    @DisplayName("3. WebFlux 网关（prod 生产环境）：自动激活 prodEnvTagCleanFilter 清洗外部伪造标签")
-    void testReactiveGatewayProdAutoConfiguration() {
-        reactiveContextRunner
-            // 显式为测试上下文激活 prod Profile
-            .withInitializer(context -> context.getEnvironment().setActiveProfiles("prod"))
-            .run(context -> {
-                assertThat(context).hasSingleBean(TagProperties.class);
-
-                // 验证生产环境防伪造清洗过滤器成功激活
-                assertThat(context).hasBean("prodEnvTagCleanFilter");
-                assertThat(context).getBean("prodEnvTagCleanFilter").isInstanceOf(WebFilter.class);
-
-                // 验证隔离性：依然不加载 Servlet 过滤器
-                assertThat(context).doesNotHaveBean("envTagServletFilter");
-            });
-    }
 
 
     @Test

@@ -20,7 +20,7 @@ mcdull-framework-starter-doc 是 MCDull 框架的 API 文档生成组件，集�
 | 依赖 | 版本 | 说明 |
 |------|------|------|
 | knife4j-openapi3-jakarta-spring-boot-starter | - | Knife4j OpenAPI 3.0 集成 |
-| springdoc-openapi-ui | - | Spring OpenAPI 实现 |
+| springdoc-openapi-starter-webmvc-ui | - | Spring OpenAPI 实现（2.8.x，兼容 Spring Framework 6.2） |
 | mcdull-framework-base | provided | MCDull 框架基础模块 |
 | hutool-json | provided | JSON 工具库 |
 | sa-token-core | provided | 权限认证库 |
