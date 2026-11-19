@@ -59,6 +59,11 @@ public class ValidateCaptcha implements ProcessHandler<LoginContext> {
             LoginDTO dto = context.getLoginDTO();
             Dict dict = context.getDict();
             LoginLogResultTypeEnum typeEnum = (LoginLogResultTypeEnum) dict.get("typeEnum");
+            // 前置节点（如用户名密码校验）异常时不会设置 typeEnum，兜底为登录失败，
+            // 避免 login_result 为 null 导致 sys_login_log 插入失败
+            if (ObjUtil.isNull(typeEnum)) {
+                typeEnum = LoginLogResultTypeEnum.LOGIN_FAIL;
+            }
             String message = StrUtil.EMPTY;
             if (ObjUtil.isNotNull(exception)) {
                 BusinessException be = (BusinessException) exception;

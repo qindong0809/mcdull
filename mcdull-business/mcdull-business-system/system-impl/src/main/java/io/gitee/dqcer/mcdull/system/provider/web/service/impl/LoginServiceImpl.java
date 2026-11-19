@@ -61,17 +61,26 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
 
     @Override
     public void saveLoginLog(String loginName, LoginLogResultTypeEnum resultTypeEnum, String remark) {
-        LoginLogEntity log = new LoginLogEntity();
-        log.setLoginName(loginName);
+        LoginLogEntity loginLogEntity = new LoginLogEntity();
+        loginLogEntity.setLoginName(loginName);
         String ipAddr = IpUtil.getIpAddr(ServletUtil.getRequest());
-        log.setLoginIp(ipAddr);
-        log.setLoginIpRegion(Ip2RegionUtil.getRegion(ipAddr));
-        if (ObjUtil.isNotNull(resultTypeEnum)) {
-            log.setLoginResult(resultTypeEnum.getCode());
+        loginLogEntity.setLoginIp(ipAddr);
+        loginLogEntity.setLoginIpRegion(Ip2RegionUtil.getRegion(ipAddr));
+        // login_result 在库中为 NOT NULL 且无默认值，必须保证有值
+        if (ObjUtil.isNull(resultTypeEnum)) {
+            resultTypeEnum = LoginLogResultTypeEnum.LOGIN_FAIL;
         }
-        log.setUserAgent(ServletUtil.getUserAgent());
-        log.setRemark(remark);
-        loginLogService.add(log);
+        loginLogEntity.setLoginResult(resultTypeEnum.getCode());
+        loginLogEntity.setUserAgent(ServletUtil.getUserAgent());
+        loginLogEntity.setRemark(remark);
+        try {
+            loginLogService.add(loginLogEntity);
+        } catch (Exception e) {
+            // 登录日志是旁路记录，写失败不能让登录主流程回滚：
+            // ProcessFlow.run() 带 @Transactional，而 Sa-Token 登录写 Redis 不受回滚影响，
+            // 抛异常会导致「Redis 已登录但接口返回失败」，反复重试把会话顶下线。
+            LogHelp.error(log, "saveLoginLog error, loginName: {}", loginName, e);
+        }
     }
 
     @Override

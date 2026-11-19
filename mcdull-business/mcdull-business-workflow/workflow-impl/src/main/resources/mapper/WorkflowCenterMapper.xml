@@ -149,7 +149,7 @@
         LEFT JOIN flow_instance i ON t.instance_id = i.id
         LEFT JOIN flow_definition d ON t.definition_id = d.id
         LEFT JOIN flow_user fu ON fu.associated = t.id
-        LEFT JOIN sys_user u ON u.employee_id = cast(i.create_by as unsigned)
+        LEFT JOIN sys_user u ON u.id = cast(i.create_by as unsigned)
         <where>
             t.del_flag = '0' AND t.node_type = 1 AND t.flow_status = '1'
             <if test="p.userId != null and p.userId != ''">AND fu.processed_by = #{p.userId}</if>
@@ -211,7 +211,7 @@
                h.node_code, h.target_node_code
         FROM flow_his_task h
         LEFT JOIN flow_definition d ON h.definition_id = d.id
-        LEFT JOIN sys_user u ON u.employee_id = cast(h.approver as unsigned)
+        LEFT JOIN sys_user u ON u.id = cast(h.approver as unsigned)
         <where>
             h.del_flag = '0'
             <if test="p.result != null and p.result != ''">
