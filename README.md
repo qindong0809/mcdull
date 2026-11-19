@@ -165,6 +165,9 @@ public enum StatusEnum implements IEnum<Integer> {
 | **API 文档自动枚举** | `@SchemaEnum(StatusEnum.class)` 标在 DTO 字段，Knife4j 文档自动列出所有枚举值 |
 | **`@Transform` 翻译** | `TranslatorAspect` 直接识别 `IEnum` 类型，code → label 翻译零配置 |
 
+契约包（`*-facade`）例外：跨模块共享的枚举不实现 `IEnum`，只带 `code`/`text` 与自己的静态查找方法，
+避免契约包为了字典能力依赖 starter-web；下拉项由调用方解析成 `{code, text}` 后传给 `DynamicFieldBO`。
+
 ### 🌐 国际化 + 多时区 + 自定义日期格式
 
 三个能力组合，满足企业级多地区部署需求：

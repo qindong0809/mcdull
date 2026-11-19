@@ -1,14 +1,15 @@
 package io.gitee.dqcer.mcdull.system.facade.model.enums;
 
 
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import lombok.Getter;
 
 /**
  * 字典选择类型枚举（共享给业务模块）
+ * <p>
+ * 纯 POJO 枚举：code 是 sys_dict 的字典键，跨服务只按枚举名传输，不需要 starter-web 的字典池。
  */
 @Getter
-public enum DictSelectTypeEnum implements IEnum<String> {
+public enum DictSelectTypeEnum {
 
     /**
      * sys_user_sex
@@ -72,8 +73,14 @@ public enum DictSelectTypeEnum implements IEnum<String> {
     ;
 
 
+    private final String code;
+
+    private final String text;
+
+
     DictSelectTypeEnum(String selectType,  String text) {
-        init(selectType, text);
+        this.code = selectType;
+        this.text = text;
     }
 
 

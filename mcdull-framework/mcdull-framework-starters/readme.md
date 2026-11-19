@@ -116,6 +116,7 @@ public void executeFlow() {
 | `@EnableCache`、`RedisClient`、`RedissonCache` | `mcdull-framework-starter-redis` |
 | `@EnableFileStorage`、`OssService` | `mcdull-framework-starter-oss` |
 | `@Tag`、`@Operation`、`@Schema` 等 OpenAPI 注解与 `/doc.html` | `mcdull-framework-starter-doc` |
+| `IEnum`、`EnumVO`、`DictPool` 枚举字典能力 | `mcdull-framework-starter-web` |
 | actuator、spring-boot-admin、javamelody | `mcdull-framework-starter-monitor` |
 
 ### 日期序列化的归属
@@ -128,6 +129,15 @@ public void executeFlow() {
 `@DynamicDateFormat` + `@JsonSerialize(using = DynamicDateSerialize.class)`，而 facade 不该为了两个
 注解去依赖整个 starter-web。CRUD 基座反过来走另一条路：它们直接操作 `IRepository`/`BaseMapper`，
 属于持久化能力，因此落在 `starter-mysql`。
+
+### 契约包（facade）的枚举
+
+`IEnum`/`EnumVO`/`DictPool` 属于 starter-web，所以契约包里的枚举不实现它：facade 的枚举只写 `code`/`text`
+两个 final 字段和自己的静态查找方法（`of(code)`、`textOf(code)`），`system-facade` 因此不需要
+`mcdull-framework-starter-web`。代价是 i18n 取名、`@Deprecated` 过滤、字典注册这三项能力只留给 impl 侧枚举。
+
+需要给前端下拉项时，由调用方把枚举解析成 `{code, text}` 再交给 `DynamicFieldBO`，BO 不认识任何字典框架类型。
+`system-facade` 的 `extraObj` 输出形状不变，仍与 `EnumVO` 序列化结果逐字段一致。
 
 ### 鉴权闸门的装配
 

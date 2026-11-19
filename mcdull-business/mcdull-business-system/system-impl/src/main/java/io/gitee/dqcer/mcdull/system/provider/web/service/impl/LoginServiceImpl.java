@@ -14,7 +14,6 @@ import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.GenericLogic;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.DepartmentEntity;
@@ -84,7 +83,7 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
         vo.setDepartmentId(userEntity.getDepartmentId());
         vo.setAdministratorFlag(userEntity.getAdministratorFlag());
         vo.setGender(userEntity.getGender());
-        vo.setGenderName(IEnum.getTextByCode(GenderEnum.class, userEntity.getGender()));
+        vo.setGenderName(GenderEnum.textOf(userEntity.getGender()));
         vo.setPhone(userEntity.getPhone());
         vo.setIp(IpUtil.getIpAddr(ServletUtil.getRequest()));
         vo.setUserAgent(ServletUtil.getUserAgent());

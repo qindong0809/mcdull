@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.system.facade.model.bo;
 
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.system.facade.model.enums.FormItemControlTypeEnum;
 import lombok.Data;
 
@@ -35,11 +34,31 @@ public class DynamicFieldBO {
         this.required = required;
         this.controlTypeEnum = controlTypeEnum;
     }
-    @SuppressWarnings("unchecked")
-    public DynamicFieldBO(String code, String name, Boolean required, FormItemControlTypeEnum controlTypeEnum, Class clazz) {
+
+    /**
+     * 带下拉项的字段：下拉项由调用方解析好传进来，本类不认识任何字典框架类型。
+     *
+     * @param code             字段编码
+     * @param name             字段名称
+     * @param required         是否必填
+     * @param controlTypeEnum  控件类型
+     * @param options          下拉项，同时作为 extraObj 输出给前端
+     */
+    public DynamicFieldBO(String code, String name, Boolean required, FormItemControlTypeEnum controlTypeEnum,
+                          List<? extends Option<?>> options) {
         this(code, name, required, controlTypeEnum);
-        List<IEnum<Integer>> list = IEnum.getAll(clazz);
-        this.extraObj = list;
-        this.dropdownList = list.stream().map(IEnum::getText).collect(Collectors.toList());
+        this.extraObj = options;
+        this.dropdownList = options.stream().map(Option::getText).collect(Collectors.toList());
+    }
+
+    /**
+     * 下拉项，序列化为 {code,text}
+     */
+    @Data
+    public static class Option<T> {
+
+        private final T code;
+
+        private final String text;
     }
 }

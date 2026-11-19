@@ -18,7 +18,7 @@ import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicCurdServiceImpl;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
+import io.gitee.dqcer.mcdull.system.facade.model.enums.DictSelectTypeEnum;
 import io.gitee.dqcer.mcdull.framework.mysql.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.config.constants.CacheConstants;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.DictValueAudit;
@@ -221,7 +221,7 @@ public class DictValueServiceImpl
      * @return {@link RemoteDictTypeVO}
      */
     @Override
-    public KeyValueBO<String, String> dictVO(IEnum<String> selectTypeEnum, String code){
+    public KeyValueBO<String, String> dictVO(DictSelectTypeEnum selectTypeEnum, String code){
         if (ObjectUtil.isNull(selectTypeEnum) || CharSequenceUtil.isBlank(code)) {
             LogHelp.error(logger, "select: {} code: {}", selectTypeEnum, code);
             throw new IllegalArgumentException("参数异常");

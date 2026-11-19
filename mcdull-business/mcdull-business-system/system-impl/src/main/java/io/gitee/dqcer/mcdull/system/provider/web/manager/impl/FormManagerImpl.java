@@ -15,7 +15,6 @@ import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.GenericLogic;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormItemEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormRecordEntity;
@@ -193,8 +192,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             recordItem.setFormItemId(formItemEntity.getId());
             recordItem.setFormRecordId(recordId);
             recordItem.setFormId(formId);
-            FormItemControlTypeEnum controlTypeEnum = IEnum.getByCode(FormItemControlTypeEnum.class,
-                    formItemEntity.getControlType());
+            FormItemControlTypeEnum controlTypeEnum = FormItemControlTypeEnum.of(formItemEntity.getControlType());
             if (FormItemControlTypeEnum.CHECKBOX.equals(controlTypeEnum)) {
                 if (obj != null) {
                     recordItem.setCurrentValue(toJsonArrayString(obj));
@@ -249,7 +247,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                 if (ObjUtil.isNotNull(item)) {
                     String currentValue = formRecordItemEntity.getCurrentValue();
                     String controlType = item.getControlType();
-                    FormItemControlTypeEnum typeEnum = IEnum.getByCode(FormItemControlTypeEnum.class, controlType);
+                    FormItemControlTypeEnum typeEnum = FormItemControlTypeEnum.of(controlType);
                     if (FormItemControlTypeEnum.SELECT.equals(typeEnum)
                             || FormItemControlTypeEnum.RADIO.equals(typeEnum)) {
                         String options = item.getOptions();
@@ -376,8 +374,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             }
             String labelCode = formItem.getLabelCode();
             Object obj = formDataMap.get(labelCode);
-            FormItemControlTypeEnum controlTypeEnum = IEnum.getByCode(FormItemControlTypeEnum.class,
-                    formItem.getControlType());
+            FormItemControlTypeEnum controlTypeEnum = FormItemControlTypeEnum.of(formItem.getControlType());
             if (FormItemControlTypeEnum.CHECKBOX.equals(controlTypeEnum)) {
                 if (obj != null) {
                     recordItem.setCurrentValue(toJsonArrayString(obj));
@@ -413,8 +410,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
                 }
                 String labelCode = formItem.getLabelCode();
                 String currentValue = recordItem.getCurrentValue();
-                FormItemControlTypeEnum typeEnum = IEnum.getByCode(FormItemControlTypeEnum.class,
-                        formItem.getControlType());
+                FormItemControlTypeEnum typeEnum = FormItemControlTypeEnum.of(formItem.getControlType());
                 if (FormItemControlTypeEnum.NUMBER.equals(typeEnum)) {
                     result.put(labelCode, Convert.toNumber(currentValue));
                 }else {

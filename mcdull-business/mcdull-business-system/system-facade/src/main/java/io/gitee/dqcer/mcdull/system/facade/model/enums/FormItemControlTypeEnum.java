@@ -1,12 +1,17 @@
 package io.gitee.dqcer.mcdull.system.facade.model.enums;
 
 
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
+import lombok.Getter;
+
+import java.util.Arrays;
 
 /**
  * 表单控件类型枚举（共享给业务模块）
+ * <p>
+ * 纯 POJO 枚举，不依赖 starter-web：控件类型是契约，翻译与字典池是实现方的事。
  */
-public enum FormItemControlTypeEnum implements IEnum<String> {
+@Getter
+public enum FormItemControlTypeEnum {
 
     INPUT("input", "input"),
     TEXTAREA("textarea", "textarea"),
@@ -21,9 +26,24 @@ public enum FormItemControlTypeEnum implements IEnum<String> {
     FILE("file", "file"),
     ;
 
+    private final String code;
+
+    private final String text;
 
     FormItemControlTypeEnum(String code, String text) {
-        init(code, text);
+        this.code = code;
+        this.text = text;
     }
 
+    /**
+     * 按 code 取枚举，取不到返回 null
+     *
+     * @param code 编码
+     * @return {@link FormItemControlTypeEnum}
+     */
+    public static FormItemControlTypeEnum of(String code) {
+        return Arrays.stream(values())
+                .filter(e -> e.code.equals(code))
+                .findAny().orElse(null);
+    }
 }

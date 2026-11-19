@@ -56,7 +56,7 @@ business-module/
 
 ### 分层职责
 
-- **facade**: 定义服务接口、DTO和枚举，供其他模块调用
+- **facade**: 定义服务接口、DTO和枚举，供其他模块调用；枚举是不实现框架 `IEnum` 的纯 POJO，因此 facade 不依赖 `mcdull-framework-starter-web`
 - **impl**: 实现具体的业务逻辑，包含Controller、Service、Manager、DAO等
 - **bootstrap**: 应用启动类和配置，用于独立部署
 

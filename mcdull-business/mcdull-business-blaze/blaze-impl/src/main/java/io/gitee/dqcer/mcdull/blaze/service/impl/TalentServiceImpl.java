@@ -62,7 +62,7 @@ public class TalentServiceImpl
                 TalentVO vo = this.convertToVO(entity);
                 Integer gender = vo.getGender();
                 if (ObjUtil.isNotNull(gender)) {
-                    vo.setGenderName(IEnum.getTextByCode(GenderEnum.class, gender));
+                    vo.setGenderName(GenderEnum.textOf(gender));
                 }
                 Integer socialSecurityStatus = vo.getSocialSecurityStatus();
                 if (ObjUtil.isNotNull(socialSecurityStatus)) {

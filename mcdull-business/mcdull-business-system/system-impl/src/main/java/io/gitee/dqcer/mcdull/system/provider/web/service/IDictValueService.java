@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.system.provider.web.service;
 import com.baomidou.mybatisplus.extension.repository.IRepository;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
+import io.gitee.dqcer.mcdull.system.facade.model.enums.DictSelectTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DictValueAddDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DictValueQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.DictValueUpdateDTO;
@@ -65,7 +65,7 @@ public interface IDictValueService extends IRepository<DictValueEntity> {
      * @param code       代码
      * @return {@link RemoteDictTypeVO}
      */
-    KeyValueBO<String, String> dictVO(IEnum<String> selectTypeEnum, String code);
+    KeyValueBO<String, String> dictVO(DictSelectTypeEnum selectTypeEnum, String code);
 
 
     void clean();
