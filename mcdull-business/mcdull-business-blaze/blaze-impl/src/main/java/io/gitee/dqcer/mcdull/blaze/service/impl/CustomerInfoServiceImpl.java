@@ -18,7 +18,7 @@ import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.system.facade.service.def.CommonApiDef;
 import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
 import io.gitee.dqcer.mcdull.system.facade.model.enums.DictSelectTypeEnum;

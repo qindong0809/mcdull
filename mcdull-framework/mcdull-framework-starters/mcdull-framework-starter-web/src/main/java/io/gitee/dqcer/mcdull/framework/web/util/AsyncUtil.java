@@ -1,21 +1,21 @@
 package io.gitee.dqcer.mcdull.framework.web.util;
 
-import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.mysql.config.DynamicContextHolder;
+import io.gitee.dqcer.mcdull.framework.web.context.AsyncContextSupport;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
-import java.util.Deque;
-import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 /**
  * 异步工具类
+ *
  * @author dqcer
- * @since 2026/03/18
+ * @since 2026-03-18
  */
 public class AsyncUtil {
 
@@ -23,26 +23,16 @@ public class AsyncUtil {
         new ArrayBlockingQueue<>(100), new CustomizableThreadFactory("common-executor"), new ThreadPoolExecutor.CallerRunsPolicy());
 
 
-    public static  <T> CompletableFuture<T> supplyAsync(Supplier<T> supplier) {
-        UnifySession session = UserContextHolder.getSession();
-        Map<String,String> previous = MDC.getCopyOfContextMap();
-        Deque<String> deque = DynamicContextHolder.getAll();
-        return CompletableFuture.supplyAsync(() -> {
+    public static <T> CompletableFuture<T> supplyAsync(Supplier<T> supplier) {
+        Supplier<T> guarded = () -> {
             try {
-                UserContextHolder.setSession(session);
-                if (previous != null && !previous.isEmpty()) {
-                    MDC.setContextMap(previous);
-                }
-                DynamicContextHolder.setAll(deque);
                 return supplier.get();
             } catch (Exception e) {
                 LoggerFactory.getLogger(AsyncUtil.class).error("supplyAsync error", e);
-            }finally {
-                DynamicContextHolder.clear();
-                UserContextHolder.clearSession();
-                MDC.clear();
             }
             return null;
-        }, DEFAULT_EXECUTOR);
+        };
+        // wrap 在提交线程上执行，因此必须在当前线程调用才能捕获到提交线程的上下文
+        return CompletableFuture.supplyAsync(AsyncContextSupport.current().wrap(guarded), DEFAULT_EXECUTOR);
     }
 }

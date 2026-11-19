@@ -3,18 +3,17 @@ package io.gitee.dqcer.mcdull.framework.web.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
-import io.gitee.dqcer.mcdull.framework.mysql.datasource.SwitchableDataSource;
-import io.gitee.dqcer.mcdull.framework.web.advice.BaseExceptionAdvice;
-import io.gitee.dqcer.mcdull.framework.web.aspect.AuditAspect;
+import io.gitee.dqcer.mcdull.framework.spi.AsyncContextPropagator;
+import io.gitee.dqcer.mcdull.framework.spi.RequestDataRouting;
 //import io.gitee.dqcer.mcdull.framework.web.aspect.OperationLogsAspect;
 import io.gitee.dqcer.mcdull.framework.web.aspect.TranslatorAspect;
-import io.gitee.dqcer.mcdull.framework.web.component.ConcurrentRateLimiter;
-import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
-import io.gitee.dqcer.mcdull.framework.web.component.impl.ConcurrentRateLimiterImpl;
+import io.gitee.dqcer.mcdull.framework.spi.DynamicLocaleMessageSource;
 import io.gitee.dqcer.mcdull.framework.web.component.impl.DynamicLocaleMessageSourceImpl;
+import io.gitee.dqcer.mcdull.framework.web.context.AsyncContextSupport;
+import io.gitee.dqcer.mcdull.framework.web.context.MdcContextPropagator;
+import io.gitee.dqcer.mcdull.framework.web.context.UserSessionContextPropagator;
 import io.gitee.dqcer.mcdull.framework.web.filter.HttpTraceLogFilter;
-import jakarta.annotation.Resource;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,10 +30,6 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 @Configuration
 public class AutoConfiguration {
 
-    @Resource
-    private SwitchableDataSource globalDataRoutingDataSource;
-    @Resource
-    private McdullProperties mcdullProperties;
 
     /**
      * 跟踪日志过滤器bean注册
@@ -42,9 +37,9 @@ public class AutoConfiguration {
      * @return {@link FilterRegistrationBean}
      */
     @Bean
-    public FilterRegistrationBean<HttpTraceLogFilter> traceLogFilterRegistrationBean(DynamicLocaleMessageSource dynamicLocaleMessageSource, BaseExceptionAdvice baseExceptionAdvice) {
+    public FilterRegistrationBean<HttpTraceLogFilter> traceLogFilterRegistrationBean(ObjectProvider<RequestDataRouting> dataRoutingProvider) {
         FilterRegistrationBean<HttpTraceLogFilter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new HttpTraceLogFilter(globalDataRoutingDataSource, mcdullProperties, dynamicLocaleMessageSource, baseExceptionAdvice));
+        filterRegistrationBean.setFilter(new HttpTraceLogFilter(dataRoutingProvider.getIfAvailable(() -> RequestDataRouting.NOOP)));
         filterRegistrationBean.setOrder(2);
         filterRegistrationBean.setEnabled(true);
         filterRegistrationBean.addUrlPatterns("/*");
@@ -75,11 +70,6 @@ public class AutoConfiguration {
 //        return new OperationLogsAspect();
 //    }
 
-    @Bean
-    public AuditAspect auditAspect() {
-        return new AuditAspect();
-    }
-
     /**
      * 添加Long转json精度丢失的配置
      */
@@ -99,7 +89,22 @@ public class AutoConfiguration {
     }
 
     @Bean
-    public ConcurrentRateLimiter concurrentRateLimiter() {
-        return new ConcurrentRateLimiterImpl();
+    public AsyncContextPropagator mdcContextPropagator() {
+        return new MdcContextPropagator();
+    }
+
+    @Bean
+    public AsyncContextPropagator userSessionContextPropagator() {
+        return new UserSessionContextPropagator();
+    }
+
+    /**
+     * 汇集容器内全部上下文传播器（web 自带的日志/登录态，以及数据源等组件贡献的实现）
+     *
+     * @return {@link AsyncContextSupport}
+     */
+    @Bean
+    public AsyncContextSupport asyncContextSupport(ObjectProvider<AsyncContextPropagator> propagatorProvider) {
+        return new AsyncContextSupport(propagatorProvider.orderedStream().toList());
     }
 }

@@ -16,6 +16,13 @@
   <description>微服务全链路标签染色与路由隔离 Starter</description>
 
   <dependencies>
+    <!-- 跨 starter 的线程上下文传播契约 -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>mcdull-framework-spi</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!-- 核心依赖：Spring Cloud LoadBalancer -->
     <dependency>
       <groupId>org.springframework.cloud</groupId>

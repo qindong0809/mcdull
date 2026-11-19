@@ -18,6 +18,18 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!-- compile：SwitchableDataSource 对外继承 RequestDataRouting，下游编译期必须能看到该接口 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-spi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- LogicCheckUtil 直接使用 @Slf4j -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>

@@ -15,7 +15,7 @@ import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.EmailSendHistoryQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.EmailSendHistoryEntity;

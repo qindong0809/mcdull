@@ -21,7 +21,7 @@ import io.gitee.dqcer.mcdull.blaze.service.ITalentService;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.system.facade.service.def.CommonApiDef;
 import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;

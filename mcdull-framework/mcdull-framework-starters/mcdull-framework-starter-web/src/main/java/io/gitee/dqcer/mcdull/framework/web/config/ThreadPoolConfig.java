@@ -2,26 +2,23 @@ package io.gitee.dqcer.mcdull.framework.web.config;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
-import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.config.properties.ThreadPoolProperties;
-import io.gitee.dqcer.mcdull.framework.mysql.config.DynamicContextHolder;
+import io.gitee.dqcer.mcdull.framework.web.context.AsyncContextSupport;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -29,7 +26,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * 线程池配置
  *
  * @author dqcer
- * @since 2022/12/18
+ * @since 2022-12-18
  */
 @EnableAsync
 @Configuration
@@ -41,6 +38,8 @@ public class ThreadPoolConfig implements AsyncConfigurer {
     private McdullProperties mcdullProperties;
     @Resource
     private ObjectProvider<List<TaskDecorator>> taskDecoratorsProvider;
+    @Resource
+    private AsyncContextSupport asyncContextSupport;
 
     @Bean("threadPoolTaskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
@@ -54,12 +53,12 @@ public class ThreadPoolConfig implements AsyncConfigurer {
         executor.setQueueCapacity(threadPool.getQueueCapacity());
         executor.setThreadNamePrefix(GlobalConstant.ROOT_PREFIX + "-");
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        // 传递上下文
 
         // 传入扩展钩子列表
-        // 自动收集容器中所有的 TaskDecorator Bean（如 starter-tag 注册的 envTagTaskDecorator）
+        // 收集容器内其它 TaskDecorator bean，供应用做非上下文类装饰（改写任务、包装异常等）；
+        // 跨线程传递上下文请贡献 AsyncContextPropagator，由下面的 AsyncContextSupport 统一捕获-回放-还原
         List<TaskDecorator> externalDecorators = taskDecoratorsProvider.getIfAvailable(Collections::emptyList);
-        executor.setTaskDecorator(new ThreadPoolDecorator(externalDecorators));
+        executor.setTaskDecorator(new ThreadPoolDecorator(externalDecorators, asyncContextSupport));
 
         // 优雅停机配置：等待任务完成，并设置最大阻塞等待时间（建议后续抽离到 ThreadPoolProperties 中配置）
         executor.setWaitForTasksToCompleteOnShutdown(true);
@@ -89,79 +88,31 @@ public class ThreadPoolConfig implements AsyncConfigurer {
     /**
      * 线程池装饰 -> 解决异步多线程中传递上下文
      * <p>
-     * 采用「捕获-替换-还原」而不是原来的「捕获-替换-清空」：{@code CallerRunsPolicy} 在队列打满时会让任务
-     * 退化为在提交线程上同步执行，此时清空会连带抹掉提交线程自己的 traceId、登录态和数据源路由栈——请求后半段
-     * 丢日志链路，动态数据源静默回落默认库。还原成执行线程自己的前值，在池线程与提交线程两种执行位置都成立。
+     * 上下文本身由容器收集的 {@code AsyncContextPropagator} 决定，线程池只负责在提交线程捕获、
+     * 在执行线程回放并在结束后还原，因此新增一种跨线程上下文不需要改动这里。
      *
      * @author dqcer
-     * @since 2023/05/19
+     * @since 2023-05-19
      */
     static class ThreadPoolDecorator implements TaskDecorator {
 
         private final List<TaskDecorator> delegates;
 
-        ThreadPoolDecorator(List<TaskDecorator> delegates) {
+        private final AsyncContextSupport asyncContextSupport;
+
+        ThreadPoolDecorator(List<TaskDecorator> delegates, AsyncContextSupport asyncContextSupport) {
             this.delegates = delegates;
+            this.asyncContextSupport = asyncContextSupport;
         }
 
         @Override
         public Runnable decorate(Runnable runnable) {
-            ContextSnapshot captured = ContextSnapshot.capture();
             // 逐层调用外部 TaskDecorator 包装（在提交线程捕获各自上下文）
             Runnable wrappedTask = runnable;
             for (TaskDecorator delegate : delegates) {
                 wrappedTask = delegate.decorate(wrappedTask);
             }
-            final Runnable finalTask = wrappedTask;
-
-            return () -> {
-                ContextSnapshot executorOwn = ContextSnapshot.capture();
-                captured.apply();
-                try {
-                    finalTask.run();
-                } catch (Throwable t) {
-                    LogHelp.error(log, "ThreadPoolDecorator task execution error.", t);
-                    throw t;
-                } finally {
-                    executorOwn.apply();
-                }
-            };
-        }
-    }
-
-    /**
-     * 线程上下文快照。
-     * <p>
-     * 三个上下文都是可变共享对象，捕获时一律做防御性拷贝：
-     * {@code DynamicContextHolder.getAll()} 返回的是所属线程活着的 Deque，跨线程直接复用等于两个线程并发
-     * push/poll 同一个非线程安全的 {@code ArrayDeque}，异步任务里的数据源变更还会倒灌回请求线程。
-     */
-    private record ContextSnapshot(UnifySession session, Map<String, String> mdc, Deque<String> dataSources) {
-
-        static ContextSnapshot capture() {
-            // 注：如果 UnifySession 存在可变属性且异步线程会修改它，建议在此处调用 session.copy()
-            return new ContextSnapshot(
-                UserContextHolder.getSession(),
-                MDC.getCopyOfContextMap(),
-                new ArrayDeque<>(DynamicContextHolder.getAll())
-            );
-        }
-
-        void apply() {
-            if (session == null) {
-                UserContextHolder.clearSession();
-            } else {
-                UserContextHolder.setSession(session);
-            }
-
-            // 快照为空时也要显式清空，否则执行线程会沿用上一个任务残留的 traceId
-            if (mdc == null || mdc.isEmpty()) {
-                MDC.clear();
-            } else {
-                MDC.setContextMap(mdc);
-            }
-
-            DynamicContextHolder.setAll(new ArrayDeque<>(dataSources));
+            return asyncContextSupport.wrap(wrappedTask);
         }
     }
 }

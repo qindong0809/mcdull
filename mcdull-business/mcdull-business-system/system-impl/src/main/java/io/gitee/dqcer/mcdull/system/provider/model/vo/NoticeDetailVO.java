@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.system.provider.model.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
-import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
+import io.gitee.dqcer.mcdull.framework.json.serialize.DynamicDateFormat;
+import io.gitee.dqcer.mcdull.framework.json.serialize.DynamicDateSerialize;
 import io.gitee.dqcer.mcdull.system.provider.config.FileKeyVoSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

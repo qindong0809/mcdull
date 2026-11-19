@@ -1,8 +1,8 @@
 package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
-import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
+import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.mysql.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.NoticeTypeEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.NoticeTypeVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.NoticeTypeMapper;

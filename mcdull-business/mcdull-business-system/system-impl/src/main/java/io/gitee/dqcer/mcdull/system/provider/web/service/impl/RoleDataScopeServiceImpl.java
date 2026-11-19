@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.gitee.dqcer.mcdull.framework.base.engine.CompareBean;
 import io.gitee.dqcer.mcdull.framework.base.engine.DomainEngine;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.bo.DataScopeBO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.RoleDataScopeUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleDataScopeEntity;

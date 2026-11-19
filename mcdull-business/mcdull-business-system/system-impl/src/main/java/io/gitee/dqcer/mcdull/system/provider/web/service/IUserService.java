@@ -10,6 +10,7 @@ import io.gitee.dqcer.mcdull.system.facade.vo.RemoteLogonUserVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserAllVO;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.UserPowerVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -32,6 +33,14 @@ public interface IUserService extends IRepository<UserEntity> {
      * @return boolean
      */
     boolean passwordCheck(UserEntity entity, String passwordParam);
+
+    /**
+     * 获取资源模块列表
+     *
+     * @param userId 用户ID
+     * @return {@link List }<{@link UserPowerVO }>
+     */
+    List<UserPowerVO> getResourceModuleList(Integer userId);
 
     /**
      * 按页面列表

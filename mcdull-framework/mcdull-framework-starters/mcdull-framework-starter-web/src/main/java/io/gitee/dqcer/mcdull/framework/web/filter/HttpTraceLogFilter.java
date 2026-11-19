@@ -1,22 +1,11 @@
 package io.gitee.dqcer.mcdull.framework.web.filter;
 
-import cn.dev33.satoken.exception.SaTokenException;
-import cn.hutool.core.collection.CollUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.framework.base.storage.CacheUserSession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
-import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.config.properties.GatewayProperties;
-import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
-import io.gitee.dqcer.mcdull.framework.mysql.datasource.SwitchableDataSource;
-import io.gitee.dqcer.mcdull.framework.security.StpKit;
-import io.gitee.dqcer.mcdull.framework.web.advice.BaseExceptionAdvice;
-import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
+import io.gitee.dqcer.mcdull.framework.spi.RequestDataRouting;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,20 +13,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 /**
  * http日志
@@ -48,41 +30,11 @@ import java.util.List;
 public class HttpTraceLogFilter extends OncePerRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger(HttpTraceLogFilter.class);
-    private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
-    private static final String [] EXCLUDE_PATTERNS = {
-        GlobalConstant.LOGIN_URL + GlobalConstant.ALL_PATTERNS,
-        GlobalConstant.INNER_API + GlobalConstant.ALL_PATTERNS,
-        GlobalConstant.FAVICON_ICO,
-        GlobalConstant.ACTUATOR_ALL,
-        "/druid" + GlobalConstant.ALL_PATTERNS,
-        "/monitoring" + GlobalConstant.ALL_PATTERNS,
-        "/upload" + GlobalConstant.ALL_PATTERNS,
-        "/doc.html" + GlobalConstant.ALL_PATTERNS,
-        "/doc-ui.html" + GlobalConstant.ALL_PATTERNS,
-        "/doc-resources" + GlobalConstant.ALL_PATTERNS,
-        "/webjars" + GlobalConstant.ALL_PATTERNS,
-        "/error",
-        "/home/upload" + GlobalConstant.ALL_PATTERNS,
-        "/v3/def-docs" + GlobalConstant.ALL_PATTERNS,
-        "/v3/api-docs" + GlobalConstant.ALL_PATTERNS,
-        "/mp3" + GlobalConstant.ALL_PATTERNS,
-        "/error",
-    };
 
-    private final SwitchableDataSource globalDataRoutingDataSource;
-    private final McdullProperties mcdullProperties;
-    private final DynamicLocaleMessageSource dynamicLocaleMessageSource;
-    private final BaseExceptionAdvice baseExceptionAdvice;
+    private final RequestDataRouting dataRouting;
 
-
-    public HttpTraceLogFilter(SwitchableDataSource globalDataRoutingDataSource,
-                              McdullProperties mcdullProperties,
-                              DynamicLocaleMessageSource dynamicLocaleMessageSource,
-                              BaseExceptionAdvice baseExceptionAdvice) {
-        this.globalDataRoutingDataSource = globalDataRoutingDataSource;
-        this.mcdullProperties = mcdullProperties;
-        this.dynamicLocaleMessageSource = dynamicLocaleMessageSource;
-        this.baseExceptionAdvice = baseExceptionAdvice;
+    public HttpTraceLogFilter(RequestDataRouting dataRouting) {
+        this.dataRouting = dataRouting;
     }
 
     @Override
@@ -107,21 +59,11 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            globalDataRoutingDataSource.switchDataSource();
-            if (this.shouldSkipAuth(requestUrl)) {
-                LogHelp.debug(log, "Should skip auth. url：{}", requestUrl);
-                UserContextHolder.setDefaultSession();
-                filterChain.doFilter(request, response);
-                return;
-            }
-            CacheUserSession cacheUser = this.validateAndGetUser(requestUrl);
-            unifySession.copyCommon(cacheUser);
+            dataRouting.switchDataSource();
             filterChain.doFilter(request, response);
-        } catch (SaTokenException exception) {
-            this.errorResult(response, exception);
         } finally {
             LogHelp.debug(log, "Clean UnifySession.");
-            globalDataRoutingDataSource.removeDataSource();
+            dataRouting.removeDataSource();
             UserContextHolder.clearSession();
             MDC.remove(HttpHeaderConstants.LOG_TRACE_ID);
         }
@@ -134,45 +76,6 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
         response.setHeader("X-Frame-Options", "SAMEORIGIN");
         // 是否启用浏览器默认XSS防护： 0=禁用 | 1=启用 | 1; mode=block 启用, 并在检查到XSS攻击时，停止渲染页面
         response.setHeader("X-XSS-Protection", "1; mode=block");
-    }
-
-    private void errorResult(HttpServletResponse response, SaTokenException exception) {
-        Result<?> result = baseExceptionAdvice.getResult(exception, dynamicLocaleMessageSource);
-        OutputStream out = null;
-        try {
-            out = response.getOutputStream();
-            ObjectMapper mapper = new ObjectMapper();
-            // CORS响应头由高优先级的CorsFilter统一处理，此处不再手工设置（手工设置*且缺少凭证头会被浏览器拦截）
-            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-            mapper.writeValue(out, result);
-            out.flush();
-        } catch (IOException e) {
-            LogHelp.error(log, "logRequest error.", e);
-            throw new RuntimeException(e);
-        }
-    }
-
-    private CacheUserSession validateAndGetUser(String requestUrl) {
-        if (PATH_MATCHER.match(GlobalConstant.ADMINISTRATOR_PATH + GlobalConstant.ALL_PATTERNS, requestUrl)) {
-            return StpKit.ADMIN.getSession().get(GlobalConstant.CACHE_CURRENT_ADMINISTRATOR_USER, new CacheUserSession());
-        }
-        if (PATH_MATCHER.match(GlobalConstant.APP_PATH + GlobalConstant.ALL_PATTERNS, requestUrl)) {
-            return StpKit.APP_USER.getSession().get(GlobalConstant.CACHE_CURRENT_APP_USER, new CacheUserSession());
-        }
-        return StpKit.DEFAULT.getSession().get(GlobalConstant.CACHE_CURRENT_USER, new CacheUserSession());
-    }
-
-
-    public boolean shouldSkipAuth(String path) {
-        GatewayProperties gateway = mcdullProperties.getGateway();
-        List<String> allNoAuthList = new ArrayList<>();
-        List<String> noAuthList = gateway.getNoAuth();
-        if (CollUtil.isNotEmpty(noAuthList)) {
-            allNoAuthList.addAll(noAuthList);
-        }
-        allNoAuthList.addAll(Arrays.asList(EXCLUDE_PATTERNS));
-        allNoAuthList.add(GlobalConstant.IGNORE_URL + GlobalConstant.ALL_PATTERNS);
-        return allNoAuthList.stream().anyMatch(url -> PATH_MATCHER.match(url, path));
     }
 
 

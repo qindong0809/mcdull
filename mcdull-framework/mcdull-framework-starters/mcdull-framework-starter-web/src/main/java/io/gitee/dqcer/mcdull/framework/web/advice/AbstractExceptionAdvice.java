@@ -1,13 +1,11 @@
 package io.gitee.dqcer.mcdull.framework.web.advice;
 
-import cn.hutool.core.text.CharSequenceUtil;
-import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
+import io.gitee.dqcer.mcdull.framework.base.help.ExceptionHelp;
+import io.gitee.dqcer.mcdull.framework.spi.DynamicLocaleMessageSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.annotation.Resource;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 /**
  * abstract exception advice
@@ -24,15 +22,6 @@ public abstract class AbstractExceptionAdvice {
     protected DynamicLocaleMessageSource dynamicLocaleMessageSource;
 
     protected String buildExceptionStr(Exception exception) {
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter pw = new PrintWriter(stringWriter);
-        exception.printStackTrace(pw);
-        String errorStack = stringWriter.toString();
-        if (CharSequenceUtil.isNotBlank(errorStack)) {
-            if (errorStack.length() > 1000) {
-                return errorStack.substring(0, 1000);
-            }
-        }
-        return CharSequenceUtil.EMPTY;
+        return ExceptionHelp.buildStackStr(exception);
     }
 }

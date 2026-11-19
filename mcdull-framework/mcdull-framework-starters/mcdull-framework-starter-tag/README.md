@@ -97,7 +97,7 @@ mcdull:
 ## 五、 调试技巧与注意事项
 
 *   **临时跳过本地实例（防串台开关）**：开发者本地启动了微服务，但临时想直接调用公共开发服务器的接口进行对比测试时，无需关闭本地 IDEA，只需在请求头中传入保留字 **`X-Env-Tag: default`**，即可强制路由至无标签的公共基准实例。
-*   **异步线程池联动**：本组件会自动向 Spring 容器注册名为 `envTagTaskDecorator` 的 `TaskDecorator` Bean。配合 `mcdull-framework-starter-web` 中的 `ThreadPoolConfig`，所有提交至 `@Async` 或 `threadPoolTaskExecutor` 的异步任务均可自动继承并还原 `ENV_TAG` 上下文。
+*   **异步线程池联动**：本组件会向 Spring 容器注册名为 `envTagContextPropagator` 的 `AsyncContextPropagator` Bean（契约在 `mcdull-framework-spi`）。配合 `mcdull-framework-starter-web` 中的 `AsyncContextSupport`，所有提交至 `@Async` 或 `threadPoolTaskExecutor` 的异步任务均可自动继承并还原 `ENV_TAG` 上下文；未引入 starter-web 的应用（如 WebFlux 网关）注册了该 Bean 也不会生效。
 *   **生产环境安全限制**：建议在生产网关配置中开启 `mcdull.tag.clean-header=true`（或激活 `prod` Profile），确保外部请求无法伪造染色标签；若生产环境需实施内部员工灰度，请在网关鉴权过滤器验证身份后，通过 `ServerHttpRequest.mutate()` 在服务端内部安全写入标签。
 
 ---

@@ -113,7 +113,39 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-extra</artifactId>
         </dependency>
-    </dependencies>
+            <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-oss</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-redis</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-doc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-mysql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- 直接使用 StpKit/sa-token 注解鉴权，鉴权闸门也由本 starter 装配 -->
+        <dependency>
+            <groupId>io.gitee.dqcer</groupId>
+            <artifactId>mcdull-framework-starter-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- VO 的 @DynamicDateFormat 与 TimeZoneUtil 的时区格式化直接使用本模块 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-json</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+</dependencies>
     <build>
         <plugins>
             <plugin>

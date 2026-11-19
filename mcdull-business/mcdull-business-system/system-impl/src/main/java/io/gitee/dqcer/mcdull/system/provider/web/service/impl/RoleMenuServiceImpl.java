@@ -5,7 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleMenuEntity;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.RoleMenuMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleMenuService;

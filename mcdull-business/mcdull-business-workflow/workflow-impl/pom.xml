@@ -33,7 +33,18 @@
             <artifactId>system-facade</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- MyBatis-Plus 的 LambdaQueryWrapper/Wrappers/Page 由本模块直接使用 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-mysql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-    </dependencies>
+            <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-doc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+</dependencies>
 
 </project>

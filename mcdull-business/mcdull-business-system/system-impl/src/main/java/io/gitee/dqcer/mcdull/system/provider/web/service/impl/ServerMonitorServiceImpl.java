@@ -6,7 +6,7 @@ import cn.hutool.system.HostInfo;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
+import io.gitee.dqcer.mcdull.framework.mysql.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IServerMonitorService;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;

@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.web.enums;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import io.gitee.dqcer.mcdull.framework.web.component.DynamicLocaleMessageSource;
+import io.gitee.dqcer.mcdull.framework.spi.DynamicLocaleMessageSource;
 import io.gitee.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 
 import java.io.Serializable;

@@ -1,13 +1,13 @@
 package io.gitee.dqcer.mcdull.framework.tag.config;
 
 import feign.RequestInterceptor;
+import io.gitee.dqcer.mcdull.framework.spi.AsyncContextPropagator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ReactiveWebApplicationContextRunner;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.core.task.TaskDecorator;
 import org.springframework.web.server.WebFilter;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,12 +23,12 @@ class TagAutoConfigurationTest {
         .withConfiguration(AutoConfigurations.of(TagAutoConfiguration.class));
 
     @Test
-    @DisplayName("1. Servlet 业务微服务环境：自动装配 ServletFilter、Feign拦截器与异步装饰器，且不加载网关 WebFilter")
+    @DisplayName("1. Servlet 业务微服务环境：自动装配 ServletFilter、Feign拦截器与异步上下文传播器，且不加载网关 WebFilter")
     void testServletMicroserviceAutoConfiguration() {
         servletContextRunner.run(context -> {
             assertThat(context).hasSingleBean(TagProperties.class);
-            assertThat(context).hasBean("envTagTaskDecorator");
-            assertThat(context).getBean("envTagTaskDecorator").isInstanceOf(TaskDecorator.class);
+            assertThat(context).hasBean("envTagContextPropagator");
+            assertThat(context).getBean("envTagContextPropagator").isInstanceOf(AsyncContextPropagator.class);
 
             // 验证 Servlet 过滤器已注册
             assertThat(context).hasBean("envTagServletFilter");
@@ -49,7 +49,7 @@ class TagAutoConfigurationTest {
             .withPropertyValues("spring.profiles.active=dev")
             .run(context -> {
                 assertThat(context).hasSingleBean(TagProperties.class);
-                assertThat(context).hasBean("envTagTaskDecorator");
+                assertThat(context).hasBean("envTagContextPropagator");
 
                 // 验证隔离性：WebFlux 网关绝不能加载 Servlet 过滤器
                 assertThat(context).doesNotHaveBean("envTagServletFilter");
@@ -86,7 +86,7 @@ class TagAutoConfigurationTest {
             .run(context -> {
                 assertThat(context).doesNotHaveBean(TagAutoConfiguration.class);
                 assertThat(context).doesNotHaveBean(TagProperties.class);
-                assertThat(context).doesNotHaveBean("envTagTaskDecorator");
+                assertThat(context).doesNotHaveBean("envTagContextPropagator");
                 assertThat(context).doesNotHaveBean("envTagServletFilter");
                 assertThat(context).doesNotHaveBean(RequestInterceptor.class);
             });

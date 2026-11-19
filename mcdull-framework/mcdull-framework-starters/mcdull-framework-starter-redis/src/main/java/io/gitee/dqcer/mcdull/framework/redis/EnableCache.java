@@ -2,9 +2,11 @@ package io.gitee.dqcer.mcdull.framework.redis;
 
 
 import io.gitee.dqcer.mcdull.framework.redis.config.RedissonAutoConfiguration;
+import io.gitee.dqcer.mcdull.framework.redis.jmx.RedisJmxAdapter;
 import io.gitee.dqcer.mcdull.framework.redis.operation.CaffeineCache;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedisClient;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
+import io.gitee.dqcer.mcdull.framework.redis.ratelimit.ConcurrentRateLimiterImpl;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Import;
 
@@ -22,6 +24,7 @@ import java.lang.annotation.Target;
 @EnableCaching(proxyTargetClass = true)
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Import({RedissonAutoConfiguration.class ,CaffeineCache.class, RedisClient.class, RedissonCache.class})
+@Import({RedissonAutoConfiguration.class ,CaffeineCache.class, RedisClient.class, RedissonCache.class,
+        ConcurrentRateLimiterImpl.class, RedisJmxAdapter.class})
 public @interface EnableCache {
 }

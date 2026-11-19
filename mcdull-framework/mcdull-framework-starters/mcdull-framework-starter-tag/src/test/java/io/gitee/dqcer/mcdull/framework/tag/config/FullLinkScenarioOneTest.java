@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.framework.tag.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import io.gitee.dqcer.mcdull.framework.tag.context.EnvTagContextPropagator;
 import io.gitee.dqcer.mcdull.framework.tag.context.EnvTagContextHolder;
 import io.gitee.dqcer.mcdull.framework.tag.core.TagLoadBalancer;
 import jakarta.servlet.Filter;
@@ -71,12 +72,24 @@ class FullLinkScenarioOneTest {
         // 初始化针对用户服务 system-bootstrap 的负载均衡器
         userServiceLoadBalancer = createLoadBalancer("system-bootstrap", List.of(publicUserService), properties);
 
-        // 初始化框架组件（Servlet 过滤器、Feign 拦截器、带装饰器的异步线程池）
-        TagAutoConfiguration autoConfig = new TagAutoConfiguration();
+        // 初始化框架组件（Servlet 过滤器、Feign 拦截器、带上下文传播的异步线程池）
         serviceAServletFilter = new TagAutoConfiguration.ServletTagConfig().envTagServletFilter().getFilter();
         feignInterceptor = new TagAutoConfiguration.FeignTagConfig().envTagFeignInterceptor();
 
-        TaskDecorator taskDecorator = autoConfig.envTagTaskDecorator();
+        // 本模块不依赖 starter-web，这里按 AsyncContextSupport 的「捕获-回放-还原」就地复刻一层包装
+        EnvTagContextPropagator propagator = new EnvTagContextPropagator();
+        TaskDecorator taskDecorator = task -> {
+            Object captured = propagator.capture();
+            return () -> {
+                Object previous = propagator.capture();
+                propagator.apply(captured);
+                try {
+                    task.run();
+                } finally {
+                    propagator.apply(previous);
+                }
+            };
+        };
         serviceAAsyncExecutor = new ThreadPoolTaskExecutor();
         serviceAAsyncExecutor.setCorePoolSize(2);
         serviceAAsyncExecutor.setMaxPoolSize(2);

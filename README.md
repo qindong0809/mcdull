@@ -350,9 +350,9 @@ mcdull:
 | 基准兜底 | 未命中且 `strict=false` ⇒ 路由到 `env-tag` 为空的公共基准实例 |
 | 紧急容灾 | 连基准实例都不存在（如新服务仅在特性分支首次上线）⇒ 全部健康实例随机选取 |
 
-透传链路覆盖 `WebFlux 网关 → Servlet 微服务 → OpenFeign 下游 → @Async 线程池`，网关与业务微服务共用同一个依赖，各环节由条件注解按需装配（`WebFilter` / `FilterRegistrationBean` / `RequestInterceptor` / `TaskDecorator`）：
+透传链路覆盖 `WebFlux 网关 → Servlet 微服务 → OpenFeign 下游 → @Async 线程池`，网关与业务微服务共用同一个依赖，各环节由条件注解按需装配（`WebFilter` / `FilterRegistrationBean` / `RequestInterceptor` / `AsyncContextPropagator`）：
 
-- **异步线程池联动**：注册 `envTagTaskDecorator` Bean，被 `mcdull-framework-starter-web` 的 `ThreadPoolConfig` 自动收集；采用「捕获-替换-还原」语义，兼容 `CallerRunsPolicy` 拒绝策略
+- **异步线程池联动**：注册 `envTagContextPropagator` Bean（`mcdull-framework-spi` 的 `AsyncContextPropagator` 实现），被 `mcdull-framework-starter-web` 的 `AsyncContextSupport` 自动收集；「捕获-替换-还原」由线程池统一执行，兼容 `CallerRunsPolicy` 拒绝策略
 - **生产安全**：网关开启 `clean-header=true` 后自动清洗外部染色头，内部灰度应在鉴权通过后由服务端写入
 - **典型场景**：多人共用一套开发环境的本地联调隔离、仅给改动的 1~2 个服务打标签的测试泳道（无需克隆整套测试集群）、生产金丝雀灰度
 
@@ -503,6 +503,8 @@ mcdull/
 ├── mcdull-framework/          # 框架层 — 基础组件与通用功能
 │   ├── mcdull-framework-dependencies   # 统一依赖管理
 │   ├── mcdull-framework-base           # 基础组件
+│   ├── mcdull-framework-spi            # 跨 Starter 的扩展点契约（只放接口）
+│   ├── mcdull-framework-json           # 日期序列化契约（@DynamicDateFormat、TimeZoneUtil）
 │   ├── mcdull-framework-config         # 配置管理
 │   ├── mcdull-framework-agent          # Java Agent 性能探针
 │   ├── mcdull-framework-enforcer       # 架构约束（ArchUnit）
@@ -513,7 +515,7 @@ mcdull/
 │       ├── mcdull-framework-starter-flow       # 流程编排
 │       ├── mcdull-framework-starter-mongodb    # MongoDB 集成
 │       ├── mcdull-framework-starter-monitor    # 监控
-│       ├── mcdull-framework-starter-mysql      # MySQL 集成
+│       ├── mcdull-framework-starter-mysql      # MySQL 集成与 CRUD 基座
 │       ├── mcdull-framework-starter-nacos      # Nacos 集成
 │       ├── mcdull-framework-starter-oss        # 对象存储
 │       ├── mcdull-framework-starter-redis      # Redis 集成

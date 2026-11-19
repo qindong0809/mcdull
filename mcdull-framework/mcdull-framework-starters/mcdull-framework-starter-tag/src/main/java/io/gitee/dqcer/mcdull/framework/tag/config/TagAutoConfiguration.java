@@ -1,6 +1,8 @@
 package io.gitee.dqcer.mcdull.framework.tag.config;
 
 import feign.RequestInterceptor;
+import io.gitee.dqcer.mcdull.framework.spi.AsyncContextPropagator;
+import io.gitee.dqcer.mcdull.framework.tag.context.EnvTagContextPropagator;
 import io.gitee.dqcer.mcdull.framework.tag.context.EnvTagContextHolder;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,7 +20,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.task.TaskDecorator;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -34,30 +35,14 @@ import java.io.IOException;
 public class TagAutoConfiguration {
 
     /**
-     * 异步线程池上下文传递装饰器（与 starter-web 的 ThreadPoolConfig 自动联动，支持捕获-替换-还原）
+     * 染色标签的跨线程传播器。
+     * <p>
+     * 收集方是 starter-web 的 {@code AsyncContextSupport}（按 {@link AsyncContextPropagator} bean 汇集），
+     * 因此只有同时引入 starter-web 的应用才会真正传递；纯 WebFlux 网关没有该线程池，注册了也不起作用。
      */
-    @Bean("envTagTaskDecorator")
-    public TaskDecorator envTagTaskDecorator() {
-        return task -> {
-            String capturedTag = EnvTagContextHolder.getTag();
-            return () -> {
-                String executorOwnTag = EnvTagContextHolder.getTag();
-                if (StringUtils.hasText(capturedTag)) {
-                    EnvTagContextHolder.setTag(capturedTag);
-                } else {
-                    EnvTagContextHolder.clear();
-                }
-                try {
-                    task.run();
-                } finally {
-                    if (StringUtils.hasText(executorOwnTag)) {
-                        EnvTagContextHolder.setTag(executorOwnTag);
-                    } else {
-                        EnvTagContextHolder.clear();
-                    }
-                }
-            };
-        };
+    @Bean
+    public AsyncContextPropagator envTagContextPropagator() {
+        return new EnvTagContextPropagator();
     }
 
     /**

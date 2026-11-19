@@ -1,11 +1,9 @@
 package io.gitee.dqcer.mcdull.framework.web;
 
 
-import io.gitee.dqcer.mcdull.framework.web.advice.BaseExceptionAdvice;
 import io.gitee.dqcer.mcdull.framework.web.advice.ExceptionAdvice;
 import io.gitee.dqcer.mcdull.framework.web.config.*;
 import io.gitee.dqcer.mcdull.framework.web.jmx.DatabaseJmxAdapter;
-import io.gitee.dqcer.mcdull.framework.web.jmx.RedisJmxAdapter;
 import io.gitee.dqcer.mcdull.framework.web.jmx.ThreadPoolJmxAdapter;
 import io.gitee.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.version.VersionInfoImplComponent;
@@ -27,7 +25,6 @@ import java.lang.annotation.Target;
 @Import({
         BannerConfig.class,
         ExceptionAdvice.class,
-        BaseExceptionAdvice.class,
         AutoConfiguration.class,
         DateTimeConfig.class,
         MultipartFileConfig.class,
@@ -36,7 +33,6 @@ import java.lang.annotation.Target;
 //        UndertowConfig.class,
         SpringContextHolder.class,
         I18nConfig.class,
-        RedisJmxAdapter.class,
         ThreadPoolJmxAdapter.class,
         DatabaseJmxAdapter.class,
         SystemEnvironmentConfig.class,

@@ -26,6 +26,12 @@
       <groupId>org.dromara</groupId>
       <artifactId>x-easypdf-pdfbox</artifactId>
     </dependency>
+    <!-- MyBatis-Plus 的 BaseMapper/LambdaQueryWrapper/Page/@TableName 由本模块直接使用 -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>mcdull-framework-starter-mysql</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   <dependency>
     <groupId>com.documents4j</groupId>
     <artifactId>documents4j-local</artifactId>
@@ -39,5 +45,16 @@
           <groupId>cn.hutool</groupId>
           <artifactId>hutool-core</artifactId>
       </dependency>
-  </dependencies>
+          <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-doc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- 直接使用 StpKit/sa-token 注解鉴权，鉴权闸门也由本 starter 装配 -->
+        <dependency>
+            <groupId>io.gitee.dqcer</groupId>
+            <artifactId>mcdull-framework-starter-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+</dependencies>
 </project>

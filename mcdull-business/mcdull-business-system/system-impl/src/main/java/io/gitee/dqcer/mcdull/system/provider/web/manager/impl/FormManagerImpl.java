@@ -14,7 +14,7 @@ import io.gitee.dqcer.mcdull.framework.base.entity.IdEntity;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
+import io.gitee.dqcer.mcdull.framework.mysql.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormItemEntity;

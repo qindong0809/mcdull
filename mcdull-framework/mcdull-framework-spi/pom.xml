@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.gitee.dqcer</groupId>
+        <artifactId>mcdull-framework</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>mcdull-framework-spi</artifactId>
+    <name>${project.artifactId} v${project.version}</name>
+
+    <description>
+        跨 starter 的扩展点契约。只放接口，不依赖任何框架模块与三方库：
+        契约的消费方（如 starter-web）与实现方（如 starter-mysql、starter-redis）都只依赖本模块，
+        从而让依赖方向始终指向抽象，starter 之间不再互相直接引用。
+    </description>
+    <url>https://gitee.com/dqcer/mcdull</url>
+</project>

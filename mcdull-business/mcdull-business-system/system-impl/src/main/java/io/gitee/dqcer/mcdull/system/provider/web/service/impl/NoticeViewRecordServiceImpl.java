@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.system.provider.web.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.NoticeViewRecordEntity;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.NoticeViewRecordMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.INoticeViewRecordService;

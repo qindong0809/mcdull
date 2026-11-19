@@ -1,5 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.mysql.datasource;
 
+import io.gitee.dqcer.mcdull.framework.spi.RequestDataRouting;
+
 import javax.sql.DataSource;
 import java.util.function.Supplier;
 
@@ -9,7 +11,7 @@ import java.util.function.Supplier;
  * @author dqcer
  * @since 2024/12/19
  */
-public interface SwitchableDataSource extends DataSource {
+public interface SwitchableDataSource extends DataSource, RequestDataRouting {
 
     /**
      * 切换数据源

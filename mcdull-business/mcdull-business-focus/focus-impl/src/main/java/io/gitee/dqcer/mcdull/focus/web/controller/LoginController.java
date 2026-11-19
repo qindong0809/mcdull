@@ -16,7 +16,7 @@ import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.security.StpKit;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
-import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
+import io.gitee.dqcer.mcdull.framework.mysql.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;

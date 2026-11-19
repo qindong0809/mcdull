@@ -18,12 +18,6 @@
         <groupId>${project.groupId}</groupId>
         <artifactId>mcdull-framework-starter-web</artifactId>
         <version>${project.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-mysql</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -49,7 +43,22 @@
         <artifactId>jsch</artifactId>
         <version>0.2.18</version>
       </dependency>
-    </dependencies>
+            <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-oss</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-monitor</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- 控制器只用 @SaIgnore 放行，不需要鉴权闸门，仅声明注解所在的 sa-token-core -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-core</artifactId>
+        </dependency>
+</dependencies>
     <build>
       <resources>
         <resource>

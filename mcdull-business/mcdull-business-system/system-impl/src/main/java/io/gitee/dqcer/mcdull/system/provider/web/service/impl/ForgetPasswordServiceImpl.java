@@ -6,7 +6,7 @@ import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
-import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
+import io.gitee.dqcer.mcdull.framework.mysql.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.ForgetPasswordRequestDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.ForgetPasswordRestDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;

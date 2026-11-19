@@ -2,12 +2,13 @@ package io.gitee.dqcer.mcdull.framework.web.transform;
 
 import io.gitee.dqcer.mcdull.framework.base.annotation.ITransformer;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
+import io.gitee.dqcer.mcdull.framework.base.cache.ICache;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
-import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
-import jakarta.annotation.Resource;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.text.MessageFormat;
 
 /**
  * Abstract Transformer
@@ -17,12 +18,18 @@ import java.text.MessageFormat;
  */
 public abstract class AbstractTransformer implements ITransformer<Object> {
 
-    @Resource
-    private RedissonCache redissonCache;
+    /**
+     * 缓存键模板：模块名 + 原始值 + 取值参数。三者缺一，不同参数的翻译就会互相覆盖。
+     */
+    private static final String KEY_FORMAT = "framework:web:transform:%s:%s:%s";
 
-    private String keyFormat() {
-        return "framework:web:transform:{0}:{0}:{1}";
-    }
+    /**
+     * 缓存是可选能力：未引入缓存 starter 时降级为每次直查。按名限定是因为
+     * {@code caffeineCache} 与 {@code redissonCache} 同时注册为 {@link ICache}，按类型取会撞上多候选。
+     */
+    @Autowired
+    @Qualifier("redissonCache")
+    private ObjectProvider<ICache> cacheProvider;
 
     /**
      * 翻译
@@ -34,20 +41,22 @@ public abstract class AbstractTransformer implements ITransformer<Object> {
      */
     @Override
     public String transform(Object original, Class<?> datasource, String param) {
-        String keyFormat = keyFormat();
         String cacheName = cacheName();
         if (cacheName == null) {
             throw new BusinessException("继承 AbstractTransformer 类时， cacheName is not null");
         }
-        String key = MessageFormat.format(keyFormat, cacheName, original, param);
+        String key = String.format(KEY_FORMAT, cacheName, original, param);
 
-        KeyValueBO<?, ?> bo = redissonCache.get(key, KeyValueBO.class);
+        ICache cache = cacheProvider.getIfAvailable();
+        KeyValueBO<?, ?> bo = cache == null ? null : cache.get(key, KeyValueBO.class);
         if (bo != null) {
             return String.valueOf(bo.getValue());
         }
 
         bo = getKeyValueVO(original, param);
-        redissonCache.put(key, bo, cacheExpireTime());
+        if (cache != null) {
+            cache.put(key, bo, cacheExpireTime());
+        }
         return String.valueOf(bo.getValue());
     }
 

@@ -38,11 +38,11 @@ import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.web.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.web.enums.SexEnum;
-import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
+import io.gitee.dqcer.mcdull.framework.mysql.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.facade.vo.RemoteLogonUserVO;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.UserAudit;
 import io.gitee.dqcer.mcdull.system.facade.model.bo.DynamicFieldBO;
@@ -58,6 +58,7 @@ import io.gitee.dqcer.mcdull.system.facade.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.UserPowerVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.UserMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;
@@ -120,6 +121,40 @@ public class UserServiceImpl
             return password.equals(sha1);
         }
         return false;
+    }
+
+    @Override
+    public List<UserPowerVO> getResourceModuleList(Integer userId) {
+        Map<Integer, List<RoleEntity>> roleListMap = roleService.getRoleMap(ListUtil.of(userId));
+        List<RoleEntity> roleDOList = roleListMap.get(userId);
+        if (CollUtil.isEmpty(roleDOList)) {
+            LogHelp.warn(logger, "userId: {} 查无角色权限", userId);
+            return Collections.emptyList();
+        }
+        List<UserPowerVO> vos = roleDOList.stream().map(i-> {
+            UserPowerVO vo = new UserPowerVO();
+            vo.setRoleId(i.getId());
+            vo.setCode(i.getRoleCode());
+            return vo;
+        }).collect(Collectors.toList());
+        Set<Integer> roleSet = vos.stream().map(UserPowerVO::getRoleId).collect(Collectors.toSet());
+        Map<Integer, List<String>> keyRoleIdValueMenuCode = menuService
+            .getMenuCodeListMap(new ArrayList<>(roleSet));
+        for (UserPowerVO vo : vos) {
+            String code = vo.getCode();
+            if (ObjectUtil.equals(GlobalConstant.SUPER_ADMIN_ROLE, code)) {
+                List<String> allCodeList = menuService.getAllCodeList();
+                vo.setModules(allCodeList);
+                continue;
+            }
+            List<String> menuCodeList = keyRoleIdValueMenuCode.get(vo.getRoleId());
+            if (CollUtil.isEmpty(menuCodeList)) {
+                LogHelp.warn(logger, "userId: {} roleId: {} 查无模块权限", userId, vo.getRoleId());
+                menuCodeList = Collections.emptyList();
+            }
+            vo.setModules(menuCodeList);
+        }
+        return vos;
     }
 
     private String hash(String webPassword) {

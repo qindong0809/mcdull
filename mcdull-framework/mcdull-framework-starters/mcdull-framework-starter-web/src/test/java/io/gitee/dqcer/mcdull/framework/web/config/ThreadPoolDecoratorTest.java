@@ -2,12 +2,18 @@ package io.gitee.dqcer.mcdull.framework.web.config;
 
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.mysql.config.DynamicContextHolder;
+import io.gitee.dqcer.mcdull.framework.spi.AsyncContextPropagator;
+import io.gitee.dqcer.mcdull.framework.web.context.AsyncContextSupport;
+import io.gitee.dqcer.mcdull.framework.web.context.MdcContextPropagator;
+import io.gitee.dqcer.mcdull.framework.web.context.UserSessionContextPropagator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.MDC;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,19 +30,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * <p>
  * 直接调用 {@code decorate(task).run()} 就是在复现 {@code CallerRunsPolicy} 打满队列后的行为：
  * 任务落到提交线程上同步执行，因此这类用例能守住「执行完不许抹掉提交线程自己的上下文」这条底线。
+ * <p>
+ * 数据源路由用 {@link StackContextPropagator} 桩件替代 starter-mysql 的真实实现：web 只认
+ * {@link AsyncContextPropagator} 契约，栈语义（快照隔离、逐层还原）在桩上同样成立。
  */
 class ThreadPoolDecoratorTest {
 
     private static final String TRACE_ID = "traceId";
     private static final long AWAIT_SECONDS = 5L;
 
-    private final ThreadPoolConfig.ThreadPoolDecorator decorator = new ThreadPoolConfig.ThreadPoolDecorator();
+    private final StackContextPropagator dataSourcePropagator = new StackContextPropagator();
+
+    private final ThreadPoolConfig.ThreadPoolDecorator decorator =
+            new ThreadPoolConfig.ThreadPoolDecorator(List.of(), new AsyncContextSupport(List.of(
+                    new MdcContextPropagator(),
+                    new UserSessionContextPropagator(),
+                    dataSourcePropagator)));
 
     @AfterEach
     void resetContext() {
         MDC.clear();
         UserContextHolder.clearSession();
-        DynamicContextHolder.clear();
+        dataSourcePropagator.clear();
     }
 
     @Test
@@ -51,7 +66,7 @@ class ThreadPoolDecoratorTest {
         decorator.decorate(() -> {
             traceInTask.set(MDC.get(TRACE_ID));
             loginInTask.set(UserContextHolder.getSession().getLoginName());
-            dataSourceInTask.set(DynamicContextHolder.peek());
+            dataSourceInTask.set(dataSourcePropagator.peek());
         }).run();
 
         assertEquals("trace-owner", traceInTask.get(), "任务内应看到提交线程的 traceId");
@@ -60,7 +75,7 @@ class ThreadPoolDecoratorTest {
 
         assertEquals("trace-owner", MDC.get(TRACE_ID), "任务结束后提交线程的 traceId 被清掉了");
         assertNotNull(UserContextHolder.getSession(), "任务结束后提交线程的登录态被清掉了");
-        assertEquals("ds-owner", DynamicContextHolder.peek(),
+        assertEquals("ds-owner", dataSourcePropagator.peek(),
                 "任务结束后提交线程的数据源路由被清掉了，后续查询会静默回落默认库");
     }
 
@@ -69,10 +84,10 @@ class ThreadPoolDecoratorTest {
     void taskMustNotMutateSubmitterDataSourceStack() {
         establish(TRACE_ID, "trace-a", "user-a", "ds-a");
 
-        decorator.decorate(() -> DynamicContextHolder.push("ds-b")).run();
+        decorator.decorate(() -> dataSourcePropagator.push("ds-b")).run();
 
-        assertEquals("ds-a", DynamicContextHolder.peek(), "提交线程的数据源栈顶被异步任务改掉了");
-        assertEquals(1, DynamicContextHolder.getAll().size(), "提交线程的数据源栈长度被异步任务改掉了");
+        assertEquals("ds-a", dataSourcePropagator.peek(), "提交线程的数据源栈顶被异步任务改掉了");
+        assertEquals(1, dataSourcePropagator.depth(), "提交线程的数据源栈长度被异步任务改掉了");
     }
 
     @Test
@@ -89,7 +104,7 @@ class ThreadPoolDecoratorTest {
 
             runOn(worker, decorator.decorate(() -> {
                 traceInTask.set(MDC.get(TRACE_ID));
-                dataSourceInTask.set(DynamicContextHolder.peek());
+                dataSourceInTask.set(dataSourcePropagator.peek());
             }));
 
             assertEquals("trace-current", traceInTask.get(), "任务内应拿到提交线程的快照");
@@ -120,14 +135,14 @@ class ThreadPoolDecoratorTest {
         }
     }
 
-    private static void establish(String key, String traceId, String loginName, String dataSource) {
+    private void establish(String key, String traceId, String loginName, String dataSource) {
         MDC.put(key, traceId);
         UnifySession session = new UnifySession();
         session.setTraceId(traceId);
         session.setLoginName(loginName);
         UserContextHolder.setSession(session);
-        DynamicContextHolder.clear();
-        DynamicContextHolder.push(dataSource);
+        dataSourcePropagator.clear();
+        dataSourcePropagator.push(dataSource);
     }
 
     /**
@@ -143,5 +158,45 @@ class ThreadPoolDecoratorTest {
             }
         });
         assertTrue(finished.await(AWAIT_SECONDS, TimeUnit.SECONDS), "线程池任务未在超时内完成");
+    }
+
+    /**
+     * 数据源路由栈的测试桩，语义与 starter-mysql 的 {@code DataSourceContextPropagator} 一致：
+     * 快照必须是深拷贝，否则任务内的 push 会倒灌进提交线程。
+     */
+    private static class StackContextPropagator implements AsyncContextPropagator {
+
+        private final ThreadLocal<Deque<String>> stack = ThreadLocal.withInitial(ArrayDeque::new);
+
+        void push(String value) {
+            stack.get().push(value);
+        }
+
+        String peek() {
+            return stack.get().peek();
+        }
+
+        int depth() {
+            return stack.get().size();
+        }
+
+        void clear() {
+            stack.remove();
+        }
+
+        @Override
+        public Object capture() {
+            return new ArrayDeque<>(stack.get());
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public void apply(Object snapshot) {
+            if (snapshot == null) {
+                stack.remove();
+                return;
+            }
+            stack.set(new ArrayDeque<>((Deque<String>) snapshot));
+        }
     }
 }

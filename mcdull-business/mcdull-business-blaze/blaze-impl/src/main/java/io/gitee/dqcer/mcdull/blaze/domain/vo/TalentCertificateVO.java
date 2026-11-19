@@ -2,8 +2,8 @@ package io.gitee.dqcer.mcdull.blaze.domain.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
-import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateFormat;
-import io.gitee.dqcer.mcdull.framework.web.json.serialize.DynamicDateSerialize;
+import io.gitee.dqcer.mcdull.framework.json.serialize.DynamicDateFormat;
+import io.gitee.dqcer.mcdull.framework.json.serialize.DynamicDateSerialize;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.ApproveVO;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.FileSimpleVO;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.IAreaVO;

@@ -5,7 +5,7 @@ import com.google.code.kaptcha.impl.DefaultKaptcha;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedisClient;
-import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
+import io.gitee.dqcer.mcdull.framework.mysql.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.framework.web.config.SystemEnvironment;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.CaptchaVO;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ICaptchaService;

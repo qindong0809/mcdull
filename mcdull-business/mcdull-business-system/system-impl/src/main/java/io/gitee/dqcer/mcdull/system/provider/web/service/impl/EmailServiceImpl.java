@@ -7,7 +7,7 @@ import cn.hutool.extra.mail.MailUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.framework.web.basic.GenericLogic;
+import io.gitee.dqcer.mcdull.framework.mysql.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.system.provider.model.bo.EmailConfigBO;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.EmailTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IEmailSendHistoryService;

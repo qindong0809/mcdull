@@ -1,11 +1,11 @@
 package io.gitee.dqcer.mcdull.framework.tag.config;
 
 import feign.RequestTemplate;
+import io.gitee.dqcer.mcdull.framework.tag.context.EnvTagContextPropagator;
 import io.gitee.dqcer.mcdull.framework.tag.context.EnvTagContextHolder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.task.TaskDecorator;
 import org.springframework.mock.http.server.reactive.MockServerHttpRequest;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -18,8 +18,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TagPropagationAndFilterTest {
-
-    private final TagAutoConfiguration autoConfig = new TagAutoConfiguration();
 
     @AfterEach
     void tearDown() {
@@ -64,30 +62,34 @@ class TagPropagationAndFilterTest {
     }
 
     @Test
-    @DisplayName("3. 异步装饰器支持子线程继承，且在同步退化(CallerRunsPolicy)后精准还原主线程现场")
-    void testTaskDecoratorCaptureAndRestore() throws Exception {
-        TaskDecorator decorator = autoConfig.envTagTaskDecorator();
+    @DisplayName("3. 上下文传播器：捕获快照、回放到别的线程、空标签按无标签处理")
+    void testPropagatorCaptureAndApply() throws Exception {
+        var propagator = new EnvTagContextPropagator();
 
-        // 主线程提交任务时的标签为 "zhangsan"
         EnvTagContextHolder.setTag("zhangsan");
-        AtomicReference<String> tagInsideAsyncTask = new AtomicReference<>();
+        Object snapshot = propagator.capture();
 
-        Runnable decoratedTask = decorator.decorate(() -> {
-            tagInsideAsyncTask.set(EnvTagContextHolder.getTag());
+        // 场景 A：执行线程原本无标签，回放后必须看得到提交线程的标签
+        AtomicReference<String> tagInWorker = new AtomicReference<>();
+        Thread workerThread = new Thread(() -> {
+            propagator.apply(snapshot);
+            tagInWorker.set(EnvTagContextHolder.getTag());
         });
-
-        // 场景 A：模拟异步子线程执行（初始无标签）
-        EnvTagContextHolder.clear();
-        Thread workerThread = new Thread(decoratedTask);
         workerThread.start();
         workerThread.join();
-        assertEquals("zhangsan", tagInsideAsyncTask.get(), "异步子线程必须成功继承主线程标签");
+        assertEquals("zhangsan", tagInWorker.get(), "异步子线程必须成功继承主线程标签");
 
-        // 场景 B：模拟队列打满触发 CallerRunsPolicy，在另一个拥有 "lisi" 标签的线程上同步退化执行
-        EnvTagContextHolder.setTag("lisi");
-        decoratedTask.run();
-        assertEquals("zhangsan", tagInsideAsyncTask.get(), "任务执行期间应使用捕获的 zhangsan 标签");
-        assertEquals("lisi", EnvTagContextHolder.getTag(), "任务执行完毕后必须精准还原执行线程原有的 lisi 标签！");
+        // 场景 B：快照为空时按「无标签」处理，回放要清掉执行线程的残留值
+        EnvTagContextHolder.setTag("feat-order");
+        propagator.apply(null);
+        assertNull(EnvTagContextHolder.getTag(), "回放空快照必须清空，否则任务会沿用上一个任务的标签");
+
+        // 场景 C：空白串不构成标签
+        EnvTagContextHolder.setTag("  ");
+        assertNull(propagator.capture(), "空白标签应被视为无标签");
+
+        // 捕获-替换-还原中的「还原」由 starter-web 的 AsyncContextSupport 负责，
+        // 其 CallerRunsPolicy 现场还原语义在 starter-web 的 ThreadPoolDecoratorTest 中覆盖
     }
 
     @Test

@@ -25,7 +25,33 @@
         <artifactId>mcdull-framework-starter-monitor</artifactId>
         <version>${project.version}</version>
       </dependency>
-    </dependencies>
+            <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-redis</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-oss</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-mysql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- 运行时鉴权闸门：会话解析过滤器 + SaTokenExceptionAdvice -->
+        <dependency>
+            <groupId>io.gitee.dqcer</groupId>
+            <artifactId>mcdull-framework-starter-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+</dependencies>
     <build>
         <plugins>
             <plugin>

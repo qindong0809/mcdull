@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.gitee.dqcer</groupId>
+        <artifactId>mcdull-framework</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>mcdull-framework-json</artifactId>
+    <name>${project.artifactId} v${project.version}</name>
+
+    <description>
+        日期序列化和反序列化契约。放带时区与多语言能力的 Jackson 序列化器、@DynamicDateFormat 注解
+        与 TimeZoneUtil，只依赖 base 与 Jackson：facade 的 VO 需要按用户时区输出日期，
+        但契约包不该因此被迫依赖 starter-web。
+    </description>
+    <url>https://gitee.com/dqcer/mcdull</url>
+
+    <dependencies>
+        <!-- compile：CustomSerializer 的公开签名暴露 base.storage.UnifySession，下游编译期必须能看到 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+        </dependency>
+        <!-- 序列化器本身实现 Jackson 的 ContextualSerializer/ContextualDeserializer -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <!-- provided：只有 TimeZoneUtil 的两个 LocaleContextHolder 便捷重载用到，调用方自带 Spring 即可 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

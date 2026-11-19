@@ -11,7 +11,7 @@ import io.gitee.dqcer.mcdull.blaze.domain.entity.AppUserFocusTimeEntity;
 import io.gitee.dqcer.mcdull.blaze.service.IFlowFocusService;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.Md5Util;
-import io.gitee.dqcer.mcdull.framework.web.util.LogicCheckUtil;
+import io.gitee.dqcer.mcdull.framework.mysql.util.LogicCheckUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 

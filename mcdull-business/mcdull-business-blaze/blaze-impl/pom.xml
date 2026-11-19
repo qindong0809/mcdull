@@ -27,5 +27,28 @@
             <artifactId>mcdull-business-common</artifactId>
             <version>${project.version}</version>
         </dependency>
-    </dependencies>
+        <!-- MyBatis-Plus 的 IService/ServiceImpl/IRepository/Page 由本模块直接使用 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-mysql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+            <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-doc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- 直接使用 StpKit/sa-token 注解鉴权，鉴权闸门也由本 starter 装配 -->
+        <dependency>
+            <groupId>io.gitee.dqcer</groupId>
+            <artifactId>mcdull-framework-starter-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- VO 的 @DynamicDateFormat 与 @JsonSerialize(using = DynamicDateSerialize.class) 直接使用本模块 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-json</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+</dependencies>
 </project>

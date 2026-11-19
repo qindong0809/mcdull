@@ -17,7 +17,9 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.mysql.aspect.DataSourceAspect;
+import io.gitee.dqcer.mcdull.framework.mysql.context.DataSourceContextPropagator;
 import io.gitee.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
+import io.gitee.dqcer.mcdull.framework.spi.AsyncContextPropagator;
 import jakarta.annotation.Resource;
 import jakarta.servlet.*;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -126,6 +128,16 @@ public class MysqlAutoConfiguration {
     @Bean
     public DataSourceAspect dataSourceAspect() {
         return new DataSourceAspect();
+    }
+
+    /**
+     * 数据源路由栈随 @Async 线程池一起传递
+     *
+     * @return {@link AsyncContextPropagator}
+     */
+    @Bean
+    public AsyncContextPropagator dataSourceContextPropagator() {
+        return new DataSourceContextPropagator();
     }
 
     /**
