@@ -12,8 +12,8 @@ import java.lang.annotation.Target;
  * authentication, serialization, retry, and observability.
  *
  * <pre>
- * &#064;ExternalApi(name = "prodigy")
- * public interface ProdigyApi {
+ * &#064;ExternalApi(name = "demo")
+ * public interface DemoApi {
  *     &#064;ExternalPost("/upload/presign")
  *     PreSignVo presignUpload(&#064;Body PreSignRequest request);
  * }
@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
 @Documented
 public @interface ExternalApi {
 
-    /**
+    /**compa
      * External system instance name. Must match the configuration key
      * under {@code mcdull.external.clients.{name}}.
      */

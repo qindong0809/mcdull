@@ -27,7 +27,7 @@ public interface TokenExtractor {
      */
     String extract(JsonNode responseBody);
 
-    /** Default: reads {@code payload} field (mcdull/prodigy convention) */
+    /** Default: reads {@code payload} field (mcdull/demo convention) */
     static TokenExtractor ofField(String fieldName) {
         return body -> body.path(fieldName).asText();
     }

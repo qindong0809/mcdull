@@ -73,8 +73,8 @@ public class ManualIntegration {
 mcdull:
   external:
     clients:
-      prodigy:
-        base-url: https://prodigy.example.com
+      demo:
+        base-url: https://demo.example.com
         auth:
           type: jwt-account
           account-name: myAccount
@@ -83,14 +83,14 @@ mcdull:
 ```
 
 ```java
-@ExternalApi(name = "prodigy")
-public interface ProdigyApi {
+@ExternalApi(name = "demo")
+public interface DemoApi {
     @ExternalPost("/integration/upload/presign")
     PreSignVo presignUpload(@Body PreSignRequest request);
 }
 
 // 业务代码 — 无需关心 token 的任何细节
-PreSignVo result = prodigyApi.presignUpload(request);
+PreSignVo result = demoApi.presignUpload(request);
 ```
 
 ---
@@ -202,8 +202,8 @@ synchronized (this) {
 mcdull:
   external:
     clients:
-      prodigy:
-        base-url: https://prodigy.example.com
+      demo:
+        base-url: https://demo.example.com
         auth:
           type: jwt-account            # 认证类型：jwt-account | api-key | none
           account-name: my-service     # 服务账号
@@ -220,17 +220,17 @@ mcdull:
 ### 3. 声明 API 接口
 
 ```java
-@ExternalApi(name = "prodigy")
-public interface ProdigyApi {
+@ExternalApi(name = "demo")
+public interface DemoApi {
 
-    @ExternalPost("/sponsor/{sponsorId}/study/{studyId}/upload/presign")
-    PreSignVo presignUpload(@PathVar("sponsorId") String sponsorId,
-                            @PathVar("studyId") String studyId,
+    @ExternalPost("/company/{companyId}/user/{userId}/upload/presign")
+    PreSignVo presignUpload(@PathVar("companyId") String companyId,
+                            @PathVar("userId") String userId,
                             @Body PreSignRequest request);
 
-    @ExternalPost("/sponsor/{sponsorId}/study/{studyId}/upload/delivered")
-    DeliverVo deliverUpload(@PathVar("sponsorId") String sponsorId,
-                            @PathVar("studyId") String studyId,
+    @ExternalPost("/company/{companyId}/user/{userId}/upload/delivered")
+    DeliverVo deliverUpload(@PathVar("companyId") String companyId,
+                            @PathVar("userId") String userId,
                             @Body DeliverRequest request);
 
     @ExternalGet("/kb/files")
@@ -254,11 +254,11 @@ public class MyApplication { }
 public class MyService {
 
     @Resource
-    private ProdigyApi prodigyApi;
+    private DemoApi demoApi;
 
     public void sync() {
         // token 已透明管理，直接调业务方法
-        PreSignVo result = prodigyApi.presignUpload("sponsor1", "study1", request);
+        PreSignVo result = demoApi.presignUpload("company1", "user1", request);
     }
 }
 ```
@@ -301,7 +301,7 @@ auth:
 // {"data": {"token": "xxx"}}  →  自定义 TokenExtractor（见下方）
 ```
 
-### jwt-account（Prodigy 等 S2S 场景）
+### jwt-account（Demo 等 S2S 场景）
 
 ```yaml
 auth:
@@ -364,9 +364,9 @@ public class OAuth2AuthStrategy implements AuthStrategy {
 mcdull:
   external:
     clients:
-      prodigy:
-        base-url: https://prodigy.example.com
-        auth: { type: jwt-account, account-name: ctms, secret-key: xxx, token-path: /api/auth/token }
+      demo:
+        base-url: https://demo.example.com
+        auth: { type: jwt-account, account-name: demo, secret-key: xxx, token-path: /api/auth/token }
       wechat:
         base-url: https://api.weixin.qq.com
         auth: { type: none }

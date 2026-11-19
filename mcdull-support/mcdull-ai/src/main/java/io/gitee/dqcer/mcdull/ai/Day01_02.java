@@ -29,7 +29,7 @@ public class Day01_02 {
         systemMsg.put("content", "你可以调用工具来回答问题。当需要查询天气时，使用get_current_weather工具，不要编造数据。");
         messages.add(systemMsg);
 
-        chat("成都今天天气怎么样？");
+        chat("今天天气怎么样？");
     }
 
     private static void chat(String userContent) throws IOException, InterruptedException {

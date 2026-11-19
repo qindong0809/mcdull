@@ -227,23 +227,23 @@ public class ValidateCaptcha implements ProcessHandler<LoginContext> {
 mcdull:
   external:
     clients:
-      prodigy:
-        base-url: https://prodigy.example.com
+      demo:
+        base-url: https://demo.example.com
         auth:
           type: jwt-account   # none | jwt-account | credentials | api-key
-          account-name: ctms
+          account-name: admin
           secret-key: ${SECRET_KEY}
           token-path: /api/auth/token
 ```
 
 ```java
-@ExternalApi(name = "prodigy")
-public interface ProdigyClient {
+@ExternalApi(name = "demo")
+public interface DemoClient {
     @ExternalPost("/upload/presign")
     PreSignVO presignUpload(@Body PreSignRequest request);
 
-    @ExternalGet("/study/{studyId}/info")
-    StudyVO getStudy(@PathVar("studyId") Long studyId);
+    @ExternalGet("/user/{userId}/info")
+    UserVO getStudy(@PathVar("userId") Long userId);
 }
 ```
 
@@ -533,9 +533,6 @@ mcdull/
 │   └── mcdull-business-demo       # 示例与最佳实践
 ├── mcdull-support/            # 支持层 — 运行支撑服务
 │   ├── mcdull-gateway         # API 网关
-│   ├── mcdull-mdc/            # 元数据中心
-│   │   ├── mcdull-mdc-client      # 元数据客户端
-│   │   └── mcdull-mdc-provider    # 元数据服务
 │   ├── mcdull-monitor-server  # 监控服务
 │   ├── mcdull-ai              # AI 相关功能
 │   └── mcdull-agent           # AI Agent 服务

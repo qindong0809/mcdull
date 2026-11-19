@@ -14,13 +14,13 @@ import java.util.Map;
  * mcdull:
  *   external:
  *     clients:
- *       prodigy:
- *         base-url: https://prodigy.example.com
+ *       demo:
+ *         base-url: https://demo.example.com
  *         auth:
  *           type: jwt-account
- *           account-name: ctms
+ *           account-name: demo
  *           secret-key: xxx
- *           token-path: /api/prodigy/auth/token
+ *           token-path: /api/demo/auth/token
  * </pre>
  *
  * @author dqcer
