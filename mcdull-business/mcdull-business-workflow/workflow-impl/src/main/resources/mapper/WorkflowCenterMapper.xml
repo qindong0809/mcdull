@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.gitee.dqcer.mcdull.workflow.web.mapper.WorkflowCenterMapper">
+
+    <sql id="statusCase">
+        case
+            when i.flow_status in ('2','8') then 'completed'
+            when i.flow_status in ('4','5','6','10') then 'terminated'
+            else 'running'
+        end
+    </sql>
+
+    <select id="selectOverview" resultType="java.util.Map">
+        SELECT
+            (SELECT count(*) FROM flow_instance WHERE del_flag = '0' AND flow_status = '1') AS runningInstances,
+            (SELECT count(*) FROM flow_task WHERE del_flag = '0' AND node_type = 1) AS myTodos,
+            (SELECT count(*) FROM flow_instance WHERE del_flag = '0' AND flow_status IN ('2','8')
+                AND update_time &gt;= date_sub(curdate(), interval 7 day)) AS done7d,
+            (SELECT count(*) FROM flow_definition WHERE del_flag = '0') AS definitions,
+            (SELECT count(*) FROM flow_definition WHERE del_flag = '0' AND is_publish = 1) AS published,
+            (SELECT count(*) FROM flow_task WHERE del_flag = '0' AND node_type = 1
+                AND create_time &lt; date_sub(now(), interval 8 hour)) AS urgentTodos
+    </select>
+
+    <select id="selectTrend" resultType="java.util.Map">
+        SELECT date_format(create_time, '%m-%d') AS d,
+               count(*) AS a,
+               sum(case when flow_status IN ('2','8') then 1 else 0 end) AS b
+        FROM flow_instance
+        WHERE del_flag = '0' AND create_time &gt;= date_sub(curdate(), interval 6 day)
+        GROUP BY date_format(create_time, '%m-%d')
+        ORDER BY d
+    </select>
+
+    <select id="selectDefinitions" resultType="java.util.Map">
+        SELECT concat('def_', d.id) AS id,
+               d.flow_code AS code,
+               d.flow_name AS name,
+               d.category AS cat,
+               d.version,
+               case when d.is_publish = 1 then 'published' else 'draft' end AS status,
+               case when d.form_custom = 'Y' then '自定义表单' else '动态表单' end AS form,
+               coalesce(d.form_path, '') AS formPath,
+               d.ext,
+               date_format(d.update_time, '%Y-%m-%d %H:%i') AS updated,
+               (SELECT count(*) FROM flow_node n WHERE n.definition_id = d.id AND n.del_flag = '0') AS nodeCount,
+               (SELECT count(*) FROM flow_skip s WHERE s.definition_id = d.id AND s.del_flag = '0') AS skipCount,
+               (SELECT count(*) FROM flow_instance i WHERE i.definition_id = d.id AND i.del_flag = '0') AS inst,
+               (SELECT count(*) FROM flow_instance i WHERE i.definition_id = d.id AND i.del_flag = '0' AND i.flow_status = '1') AS running
+        FROM flow_definition d
+        <where>
+            d.del_flag = '0'
+            <if test="p.keyword != null and p.keyword != ''">
+                AND (d.flow_name LIKE concat('%', #{p.keyword}, '%') OR d.flow_code LIKE concat('%', #{p.keyword}, '%'))
+            </if>
+            <if test="p.cat != null and p.cat != ''">AND d.category = #{p.cat}</if>
+            <if test="p.status != null and p.status != ''">AND d.is_publish = #{p.publishFlag}</if>
+        </where>
+        ORDER BY d.update_time DESC
+    </select>
+
+    <select id="selectDefinition" resultType="java.util.Map">
+        SELECT concat('def_', d.id) AS id,
+               d.flow_code AS code, d.flow_name AS name, d.category AS cat, d.version, d.ext,
+               case when d.is_publish = 1 then 'published' else 'draft' end AS status,
+               case when d.form_custom = 'Y' then '自定义表单' else '动态表单' end AS form,
+               coalesce(d.form_path, '') AS formPath,
+               date_format(d.update_time, '%Y-%m-%d %H:%i') AS updated
+        FROM flow_definition d WHERE d.id = #{id} AND d.del_flag = '0'
+    </select>
+
+    <select id="selectNodes" resultType="java.util.Map">
+        SELECT n.node_code AS id, n.node_name AS name,
+               case n.node_type when 0 then 'start' when 1 then 'task' when 2 then 'end'
+                    when 3 then 'gateway' when 4 then 'parallel' else 'task' end AS type,
+               n.coordinate, n.handler_path AS assignee, n.permission_flag AS policy,
+               n.form_path AS formPath, n.ext
+        FROM flow_node n
+        WHERE n.definition_id = #{defId} AND n.del_flag = '0'
+        ORDER BY n.create_time ASC
+    </select>
+
+    <select id="selectSkips" resultType="java.util.Map">
+        SELECT s.now_node_code AS `from`, s.next_node_code AS `to`,
+               s.skip_condition AS cond, s.skip_name AS label, 1 AS priority
+        FROM flow_skip s
+        WHERE s.definition_id = #{defId} AND s.del_flag = '0'
+        ORDER BY s.create_time ASC
+    </select>
+
+    <select id="selectInstances" resultType="java.util.Map">
+        SELECT concat('FI-', i.id) AS id,
+               concat('def_', i.definition_id) AS defId,
+               coalesce(i.business_id, concat('BIZ-', i.id)) AS biz,
+               coalesce(i.business_id, i.node_name, concat('流程实例 ', i.id)) AS title,
+               i.create_by AS starter,
+               date_format(i.create_time, '%Y-%m-%d %H:%i') AS start,
+               i.node_code AS curNode, i.node_name AS cur,
+               <include refid="statusCase"/> AS status,
+               date_format(i.update_time, '%Y-%m-%d %H:%i') AS end,
+               d.flow_name AS defName, d.flow_code AS defCode, d.version AS defVersion
+        FROM flow_instance i
+        LEFT JOIN flow_definition d ON i.definition_id = d.id
+        <where>
+            i.del_flag = '0'
+            <if test="p.status != null and p.status != ''">
+                <choose>
+                    <when test="p.status == 'running'">AND i.flow_status IN ('0','1','9','11')</when>
+                    <when test="p.status == 'completed'">AND i.flow_status IN ('2','8')</when>
+                    <when test="p.status == 'terminated'">AND i.flow_status IN ('4','5','6','10')</when>
+                </choose>
+            </if>
+            <if test="p.keyword != null and p.keyword != ''">
+                AND (i.business_id LIKE concat('%', #{p.keyword}, '%') OR i.create_by LIKE concat('%', #{p.keyword}, '%')
+                     OR i.node_name LIKE concat('%', #{p.keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY i.create_time DESC
+    </select>
+
+    <select id="selectInstance" resultType="java.util.Map">
+        SELECT concat('FI-', i.id) AS id,
+               concat('def_', i.definition_id) AS defId,
+               coalesce(i.business_id, concat('BIZ-', i.id)) AS biz,
+               coalesce(i.business_id, i.node_name, concat('流程实例 ', i.id)) AS title,
+               i.create_by AS starter, i.variable,
+               date_format(i.create_time, '%Y-%m-%d %H:%i') AS start,
+               i.node_code AS curNode, i.node_name AS cur,
+               <include refid="statusCase"/> AS status,
+               date_format(i.update_time, '%Y-%m-%d %H:%i') AS end,
+               d.flow_name AS defName, d.flow_code AS defCode, d.version AS defVersion
+        FROM flow_instance i
+        LEFT JOIN flow_definition d ON i.definition_id = d.id
+        WHERE i.id = #{id} AND i.del_flag = '0'
+    </select>
+
+    <select id="selectTasks" resultType="java.util.Map">
+        SELECT concat('TK-', t.id) AS id,
+               concat('FI-', t.instance_id) AS instId,
+               concat('def_', t.definition_id) AS defId,
+               concat('TK-', t.id) AS taskNo,
+               t.node_name AS node,
+               coalesce(i.business_id, t.node_name) AS title,
+               coalesce(u.actual_name, i.create_by) AS starter,
+               date_format(t.create_time, '%Y-%m-%d %H:%i') AS arrived,
+               t.instance_id AS instanceId, t.definition_id AS definitionId,
+               i.variable, d.flow_name AS defName, d.version AS defVersion
+        FROM flow_task t
+        LEFT JOIN flow_instance i ON t.instance_id = i.id
+        LEFT JOIN flow_definition d ON t.definition_id = d.id
+        LEFT JOIN flow_user fu ON fu.associated = t.id
+        LEFT JOIN sys_user u ON u.employee_id = cast(i.create_by as unsigned)
+        <where>
+            t.del_flag = '0' AND t.node_type = 1 AND t.flow_status = '1'
+            <if test="p.userId != null and p.userId != ''">AND fu.processed_by = #{p.userId}</if>
+            <if test="p.keyword != null and p.keyword != ''">
+                AND (t.node_name LIKE concat('%', #{p.keyword}, '%') OR i.business_id LIKE concat('%', #{p.keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY t.create_time DESC
+    </select>
+
+    <select id="selectCopied" resultType="java.util.Map">
+        SELECT concat('CC-', i.id) AS id,
+               coalesce(i.business_id, i.node_name) AS title,
+               i.create_by AS `from`,
+               i.node_name AS node,
+               date_format(i.update_time, '%Y-%m-%d %H:%i') AS time,
+               concat('FI-', i.id) AS instId,
+               concat('def_', i.definition_id) AS defId
+        FROM flow_user a
+        LEFT JOIN flow_instance i ON a.associated = i.id
+        LEFT JOIN flow_definition d ON i.definition_id = d.id
+        WHERE a.type = 4 AND a.del_flag = '0' AND i.del_flag = '0'
+        ORDER BY i.update_time DESC
+    </select>
+
+    <select id="selectStarted" resultType="java.util.Map">
+        SELECT concat('FI-', i.id) AS id,
+               concat('def_', i.definition_id) AS defId,
+               coalesce(i.business_id, i.node_name) AS title,
+               i.node_name AS cur, i.node_code AS curNode,
+               i.create_by AS starter,
+               date_format(i.create_time, '%Y-%m-%d %H:%i') AS start,
+               <include refid="statusCase"/> AS status,
+               d.flow_name AS defName
+        FROM flow_instance i
+        LEFT JOIN flow_definition d ON i.definition_id = d.id
+        WHERE i.del_flag = '0' AND i.create_by = #{userId}
+        ORDER BY i.create_time DESC
+    </select>
+
+    <select id="selectHistories" resultType="java.util.Map">
+        SELECT concat('HT-', h.id) AS id,
+               concat('FI-', h.instance_id) AS instId,
+               concat('def_', h.definition_id) AS defId,
+               d.flow_name AS defName,
+               h.node_name AS node,
+               coalesce(u.actual_name, h.approver) AS handler,
+               case
+                   when h.cooperate_type = 2 then '转办'
+                   when h.cooperate_type = 3 then '委派'
+                   when h.cooperate_type = 6 then '加签'
+                   when h.skip_type = 'REJECT' then '驳回'
+                   when h.skip_type = 'PASS' then '同意'
+                   else '提交'
+               end AS result,
+               coalesce(h.message, '') AS opinion,
+               date_format(h.update_time, '%Y-%m-%d %H:%i') AS time,
+               timestampdiff(minute, h.create_time, h.update_time) AS cost,
+               h.node_code, h.target_node_code
+        FROM flow_his_task h
+        LEFT JOIN flow_definition d ON h.definition_id = d.id
+        LEFT JOIN sys_user u ON u.employee_id = cast(h.approver as unsigned)
+        <where>
+            h.del_flag = '0'
+            <if test="p.result != null and p.result != ''">
+                AND case
+                    when h.cooperate_type = 2 then '转办'
+                    when h.cooperate_type = 6 then '加签'
+                    when h.skip_type = 'REJECT' then '驳回'
+                    when h.skip_type = 'PASS' then '同意'
+                    else '提交'
+                end = #{p.result}
+            </if>
+            <if test="p.instanceId != null">AND h.instance_id = #{p.instanceId}</if>
+        </where>
+        ORDER BY h.update_time DESC
+    </select>
+
+    <select id="selectNextNode" resultType="java.util.Map">
+        SELECT s.next_node_code AS nodeCode, n.node_name AS nodeName
+        FROM flow_task t
+        LEFT JOIN flow_skip s ON s.definition_id = t.definition_id AND s.now_node_code = t.node_code AND s.del_flag = '0'
+        LEFT JOIN flow_node n ON n.definition_id = t.definition_id AND n.node_code = s.next_node_code AND n.del_flag = '0'
+        WHERE t.id = #{taskId} AND t.del_flag = '0'
+        LIMIT 1
+    </select>
+
+    <insert id="insertDefinition" parameterType="map">
+        INSERT INTO flow_definition
+            (id, flow_code, flow_name, category, version, is_publish, form_custom, form_path,
+             activity_status, ext, create_time, update_time, del_flag)
+        VALUES
+            (#{id}, #{flowCode}, #{flowName}, #{category}, #{version}, #{isPublish}, #{formCustom}, #{formPath},
+             1, #{ext}, now(), now(), '0')
+    </insert>
+
+    <update id="updateDefinition" parameterType="map">
+        UPDATE flow_definition
+        SET flow_name = #{flowName}, version = #{version}, is_publish = #{isPublish},
+            update_time = now()
+        WHERE id = #{id} AND del_flag = '0'
+    </update>
+
+    <update id="deleteNodes">
+        UPDATE flow_node SET del_flag = '1', update_time = now()
+        WHERE definition_id = #{defId} AND del_flag = '0'
+    </update>
+
+    <update id="deleteSkips">
+        UPDATE flow_skip SET del_flag = '1', update_time = now()
+        WHERE definition_id = #{defId} AND del_flag = '0'
+    </update>
+
+    <insert id="insertNode" parameterType="map">
+        INSERT INTO flow_node
+            (id, definition_id, node_type, node_code, node_name, coordinate,
+             handler_type, handler_path, permission_flag, form_path, ext,
+             create_time, update_time, del_flag)
+        VALUES
+            (#{id}, #{definitionId}, #{nodeType}, #{nodeCode}, #{nodeName}, #{coordinate},
+             #{handlerType}, #{handlerPath}, #{permissionFlag}, #{formPath}, #{ext},
+             now(), now(), '0')
+    </insert>
+
+    <insert id="insertSkip" parameterType="map">
+        INSERT INTO flow_skip
+            (id, definition_id, now_node_code, next_node_code, skip_name, skip_type, skip_condition,
+             coordinate, create_time, update_time, del_flag)
+        VALUES
+            (#{id}, #{definitionId}, #{from}, #{to}, #{label}, #{skipType}, #{cond},
+             '', now(), now(), '0')
+    </insert>
+
+    <select id="selectTaskInfo" resultType="java.util.Map">
+        SELECT t.id AS taskId, t.instance_id AS instanceId, t.definition_id AS definitionId,
+               t.node_code AS nodeCode, t.node_name AS nodeName, t.flow_status AS taskStatus,
+               i.flow_status AS instanceStatus
+        FROM flow_task t
+        LEFT JOIN flow_instance i ON t.instance_id = i.id
+        WHERE t.id = #{taskId} AND t.del_flag = '0'
+    </select>
+
+    <update id="completeTask">
+        UPDATE flow_task SET flow_status = #{status}, update_time = now()
+        WHERE id = #{taskId} AND del_flag = '0'
+    </update>
+
+    <insert id="insertHisTask" parameterType="map">
+        INSERT INTO flow_his_task
+            (id, definition_id, instance_id, task_id, node_code, node_name, target_node_code,
+             approver, cooperate_type, skip_type, flow_status, message,
+             create_time, update_time, del_flag)
+        VALUES
+            (#{id}, #{definitionId}, #{instanceId}, #{taskId}, #{nodeCode}, #{nodeName}, #{targetNodeCode},
+             #{approver}, #{cooperateType}, #{skipType}, #{flowStatus}, #{message},
+             now(), now(), '0')
+    </insert>
+
+    <update id="updateInstanceNode">
+        UPDATE flow_instance
+        SET node_code = #{nodeCode}, node_name = #{nodeName}, flow_status = #{status}, update_time = now()
+        WHERE id = #{instanceId} AND del_flag = '0'
+    </update>
+
+    <update id="terminateInstance">
+        UPDATE flow_instance SET flow_status = '4', update_time = now()
+        WHERE id = #{instanceId} AND del_flag = '0'
+    </update>
+
+</mapper>

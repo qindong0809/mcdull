@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>工作流中心 · warm-flow 集成原型</title>
+<style>
+:root{
+  --bg:#f4f6fa; --panel:#fff; --line:#e7ebf2; --line2:#f0f3f8;
+  --text:#1a1f29; --sub:#5f6b7f; --muted:#8b96a8;
+  --pri:#2563eb; --prih:#1d4ed8; --priw:#eef4ff;
+  --green:#0f9f6e; --greenw:#e9f8f1;
+  --amber:#b8770a; --amberw:#fdf3e2;
+  --red:#d92d20; --redw:#fdeceb;
+  --gray:#6b7688; --grayw:#f2f5f9;
+  --r:12px;
+  --shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.04);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:13px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button{font-family:inherit}
+h1,h2,h3,h4,p{margin:0}
+a{text-decoration:none;color:inherit}
+
+/* ---------- shell ---------- */
+.shell{display:flex;height:100vh;min-width:1080px}
+.sidebar{width:222px;flex:none;background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column}
+.brand{display:flex;gap:10px;align-items:center;padding:16px 16px 14px}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(140deg,#3b82f6,#1e40af);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;letter-spacing:.5px;box-shadow:0 2px 6px rgba(37,99,235,.35)}
+.brand-t{font-size:14px;font-weight:650;letter-spacing:-.2px}
+.brand-s{font-size:11px;color:var(--muted);margin-top:1px}
+.nav{padding:4px 10px 10px;flex:1;overflow:auto}
+.nav-group{font-size:11px;color:var(--muted);padding:12px 8px 6px;letter-spacing:.6px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;color:var(--sub);cursor:pointer;margin-bottom:2px;transition:background .15s,color .15s}
+.nav-item:hover{background:#f6f8fc;color:var(--text)}
+.nav-item.on{background:var(--priw);color:var(--pri);font-weight:600}
+.nav-item svg{flex:none;opacity:.85}
+.nav-item.on svg{opacity:1}
+.nav-badge{margin-left:auto;background:var(--pri);color:#fff;font-size:11px;height:18px;min-width:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 5px;font-weight:600}
+.nav-item.on .nav-badge{background:#fff;color:var(--pri)}
+.side-foot{border-top:1px solid var(--line);padding:12px 14px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.dot-live{width:6px;height:6px;border-radius:99px;background:var(--green)}
+
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{height:56px;flex:none;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 24px;gap:12px}
+.crumb{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:7px}
+.crumb b{color:var(--text);font-weight:600}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.ghost-chip{font-size:11.5px;color:var(--sub);border:1px solid var(--line);border-radius:20px;padding:3px 9px;display:flex;align-items:center;gap:5px}
+.avatar{width:28px;height:28px;border-radius:8px;background:#eef1f7;color:var(--sub);display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:600}
+.content{flex:1;overflow:auto;padding:20px 24px 40px}
+
+/* ---------- common ---------- */
+.page-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px}
+.page-head h1{font-size:20px;font-weight:650;letter-spacing:-.3px}
+.page-head p{color:var(--sub);font-size:12.5px;margin-top:4px}
+.page-head .acts{margin-left:auto;display:flex;gap:8px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.card-pad{padding:16px 18px}
+.card-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line2)}
+.card-head h3{font-size:13.5px;font-weight:650}
+.card-head .more{margin-left:auto;font-size:12px;color:var(--muted)}
+.btn{height:32px;padding:0 13px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--text);font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s;white-space:nowrap}
+.btn:hover{border-color:#c9d3e4;background:#fbfcfe}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff;box-shadow:0 1px 2px rgba(37,99,235,.25)}
+.btn.pri:hover{background:var(--prih);border-color:var(--prih)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--sub)}
+.btn.ghost:hover{background:#f3f6fb;color:var(--text)}
+.btn.danger{color:var(--red);border-color:#f2cdc9}
+.btn.danger:hover{background:var(--redw)}
+.btn.sm{height:27px;padding:0 10px;font-size:12px;border-radius:7px}
+.link{border:0;background:none;color:var(--pri);font-size:12.5px;cursor:pointer;padding:0 5px;border-radius:5px}
+.link:hover{background:var(--priw);text-decoration:underline}
+.link.mute{color:var(--sub)}
+.link.mute:hover{background:var(--grayw);color:var(--text);text-decoration:none}
+.inp{height:32px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:#fff;font-size:13px;color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s}
+.inp:focus{border-color:#9dbcf7;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.inp.search{padding-left:30px;width:220px}
+.sel{height:32px;border:1px solid var(--line);border-radius:8px;padding:0 8px;background:#fff;font-size:13px;color:var(--text);outline:none;cursor:pointer}
+.toolbar{display:flex;align-items:center;gap:9px;padding:12px 16px;border-bottom:1px solid var(--line2);flex-wrap:wrap}
+.toolbar .right{margin-left:auto;font-size:12px;color:var(--muted)}
+.searchwrap{position:relative;display:inline-flex;align-items:center}
+.searchwrap svg{position:absolute;left:9px;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;font-weight:500;white-space:nowrap}
+.chip i{width:5px;height:5px;border-radius:99px;background:currentColor}
+.t-blue{color:#1d4ed8;background:#eef4ff}
+.t-green{color:#0b7a55;background:var(--greenw)}
+.t-amber{color:var(--amber);background:var(--amberw)}
+.t-red{color:var(--red);background:var(--redw)}
+.t-gray{color:var(--gray);background:var(--grayw)}
+.t-teal{color:#0b7285;background:#e7f6f8}
+
+/* ---------- table ---------- */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:12px;font-weight:500;color:var(--muted);text-align:left;padding:9px 14px;background:#fafbfd;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:11px 14px;border-bottom:1px solid var(--line2);color:var(--sub);vertical-align:middle}
+.tbl tr:hover td{background:#f9fbfe}
+.tbl tr.clickable{cursor:pointer}
+.tbl th:first-child,.tbl td:first-child{padding-left:18px}
+.tbl th:last-child,.tbl td:last-child{padding-right:18px;text-align:right}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;color:var(--muted);letter-spacing:-.2px}
+.cell{display:flex;flex-direction:column;gap:1px}
+.cell .t{color:var(--text);font-size:13px;font-weight:500}
+.cell .s{font-size:11.5px;color:var(--muted)}
+.two{display:flex;align-items:center;gap:10px}
+.icn-sq{width:30px;height:30px;border-radius:8px;background:#f0f4fb;color:#3563c9;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex:none}
+.pager{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;font-size:12px;color:var(--muted)}
+.pager .btns{display:flex;gap:6px}
+
+/* ---------- kpi ---------- */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi .lb{font-size:12px;color:var(--sub);display:flex;align-items:center;gap:6px}
+.kpi .v{font-size:26px;font-weight:640;letter-spacing:-.6px;margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:12px;font-weight:500;color:var(--muted);margin-left:4px;letter-spacing:0}
+.kpi .ft{font-size:11.5px;color:var(--muted);margin-top:5px;display:flex;align-items:center;gap:5px}
+.up{color:var(--green)}
+.down{color:var(--red)}
+.kpi .glyph{position:absolute;right:12px;top:12px;opacity:.09}
+
+/* ---------- overview ---------- */
+.grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-bottom:14px}
+.list-row{display:flex;align-items:center;gap:11px;padding:11px 18px;border-bottom:1px solid var(--line2);cursor:pointer}
+.list-row:hover{background:#f9fbfe}
+.list-row:last-child{border-bottom:0}
+.li-main{flex:1;min-width:0}
+.li-t{font-size:12.8px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li-s{font-size:11.5px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bars{display:flex;align-items:flex-end;gap:20px;height:120px;padding:0 6px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bar-pair{display:flex;align-items:flex-end;gap:4px;height:96px}
+.bar{width:12px;border-radius:4px 4px 2px 2px;background:#cfe0ff;transition:height .3s}
+.bar.g{background:#bfeade}
+.bar-x{font-size:11px;color:var(--muted)}
+.legend{display:flex;gap:14px;font-size:11.5px;color:var(--sub)}
+.lg{display:flex;align-items:center;gap:5px}
+.lg i{width:9px;height:9px;border-radius:3px}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);padding:0 4px}
+.tab{padding:9px 13px;font-size:12.5px;color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;display:flex;align-items:center;gap:6px;margin-bottom:-1px}
+.tab:hover{color:var(--text)}
+.tab.on{color:var(--text);font-weight:600;border-bottom-color:var(--pri)}
+.tab .n{font-size:11px;color:var(--muted);background:#f2f5f9;border-radius:8px;padding:0 5px;height:16px;display:inline-flex;align-items:center}
+.tab.on .n{background:var(--priw);color:var(--pri)}
+
+/* ---------- drawer ---------- */
+.mask{position:fixed;inset:0;background:rgba(16,24,40,.34);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
+.mask.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:780px;max-width:94vw;background:#fff;z-index:41;display:flex;flex-direction:column;transform:translateX(102%);transition:transform .28s cubic-bezier(.32,.72,0,1);box-shadow:-16px 0 48px rgba(16,24,40,.14)}
+.drawer.on{transform:translateX(0)}
+.dr-head{padding:16px 22px 14px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.dr-head h3{font-size:16px;font-weight:650;letter-spacing:-.2px}
+.dr-head p{font-size:11.5px;color:var(--muted);margin-top:3px}
+.xbtn{margin-left:auto;width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--sub);cursor:pointer;font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center}
+.xbtn:hover{background:#f5f7fb;color:var(--text)}
+.dr-body{flex:1;overflow:auto;padding:16px 22px 28px}
+.dr-foot{padding:12px 22px;border-top:1px solid var(--line);display:flex;gap:9px;align-items:center;background:#fcfdff}
+.dr-foot .hint{font-size:11.5px;color:var(--muted)}
+.dr-foot .right{margin-left:auto;display:flex;gap:9px}
+
+/* ---------- detail bits ---------- */
+.kv{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.kv .i{padding:10px 14px;border-bottom:1px solid var(--line2);display:flex;gap:10px;font-size:12.5px}
+.kv .i:last-child{border-bottom:0}
+.kv .k{width:76px;flex:none;color:var(--muted)}
+.kv .v{color:var(--text);word-break:break-all}
+.sec-title{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.4px;margin:18px 0 9px}
+.mini-tbl{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:12.5px}
+.mini-tbl th{background:#fafbfd;color:var(--muted);font-weight:500;font-size:11.5px;padding:7px 12px;text-align:left;border-bottom:1px solid var(--line)}
+.mini-tbl td{padding:8px 12px;border-bottom:1px solid var(--line2);color:var(--sub)}
+.mini-tbl tr:last-child td{border-bottom:0}
+.legend-bar{display:flex;gap:16px;align-items:center;font-size:11.5px;color:var(--sub);padding:8px 2px}
+
+/* ---------- diagram ---------- */
+.diagram{width:100%;display:block;overflow:visible}
+.dcanvas{width:720px;height:560px;overflow:visible}
+.diagram .nd{cursor:move}
+.diagram .port{fill:#fff;stroke:#2563eb;stroke-width:1.6;opacity:.5;cursor:crosshair}
+.diagram .nd:hover .port{opacity:1}
+.dgram-wrap{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:10px 6px;overflow:hidden}
+.dgram-wrap .diagram{max-width:800px;margin:0 auto}
+.diagram .body{fill:#fff;stroke:#dae1ec;stroke-width:1.5;transition:stroke .2s}
+.diagram .nd-task .body{fill:#fff}
+.diagram .nd-start .body,.diagram .nd-end .body{fill:#f3f7fd;stroke:#c9d6ea}
+.diagram .nd-gateway .body,.diagram .nd-parallel .body{fill:#f7f5ff;stroke:#cfd2ea}
+.diagram .nd-done .body{fill:#ecfaf3;stroke:#0f9f6e}
+.diagram .nd-done .tname{fill:#0b7a55}
+.diagram .nd-cur .body{fill:#eef4ff;stroke:#2563eb;stroke-width:2;animation:pulse 2.2s ease-in-out infinite}
+.diagram .nd-cur .tname{fill:#1d4ed8}
+.diagram .nd-pending .body{fill:#fff;stroke:#dde3ed;stroke-dasharray:5 3}
+.diagram .tname{font-size:13px;font-weight:500;fill:#1f2937}
+.diagram .tname.sm{font-size:11px}
+.diagram .tname.xs{font-size:10px}
+.diagram .tsub{font-size:10.5px;fill:#8b96a8}
+.diagram .pmark{font-size:13px;fill:#8b96a8;font-weight:600}
+.diagram .bar{fill:#c7d6ef}
+.diagram .nd-done .bar{fill:#0f9f6e}
+.diagram .nd-cur .bar{fill:#2563eb}
+.diagram .edge-line{fill:none;stroke:#c3ccdb;stroke-width:1.6}
+.diagram .eg.done .edge-line{stroke:#7fd0b3}
+.diagram .eg.live .edge-line{stroke:#93b4f4;stroke-dasharray:6 4}
+.diagram .cond-bg{fill:#f6f8fc;stroke:#e3e9f3;stroke-width:1}
+.diagram .cond-tx{font-size:10.5px;fill:#5f6b7f}
+.diagram .nowtag{font-size:10px;fill:#2563eb;font-weight:600}
+@keyframes pulse{0%,100%{stroke-width:2}50%{stroke-width:3.6}}
+
+/* ---------- designer ---------- */
+.dwrap{height:calc(100vh - 96px);display:flex;flex-direction:column;gap:12px}
+.dbar{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);flex:none}
+.dbar .nm{font-size:14px;font-weight:650}
+.dbar .code{font-size:11px;color:var(--muted);font-family:ui-monospace,Menlo,monospace}
+.dbar .spacer{flex:1}
+.dbar .save-state{font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.dbody{flex:1;display:flex;gap:12px;min-height:0}
+.palette{width:168px;flex:none;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:12px;overflow:auto;box-shadow:var(--shadow)}
+.palette .pt{font-size:11px;color:var(--muted);letter-spacing:.5px;font-weight:600;margin-bottom:8px}
+.pal-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border:1px solid var(--line2);border-radius:9px;margin-bottom:7px;cursor:grab;background:#fff;transition:border-color .15s,box-shadow .15s,transform .1s}
+.pal-item:hover{border-color:#c9d8f5;box-shadow:0 2px 6px rgba(37,99,235,.1);transform:translateY(-1px)}
+.pal-item:active{cursor:grabbing}
+.pal-item .pi{width:26px;height:26px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:6px;background:#f5f8fd;color:#3b6bc9}
+.pal-item .pt-t{font-size:12.5px;font-weight:500;color:var(--text);line-height:1.2}
+.pal-item .pt-s{font-size:10.5px;color:var(--muted)}
+.pal-tip{font-size:11px;color:var(--muted);line-height:1.7;padding:6px 2px;border-top:1px dashed var(--line);margin-top:8px}
+.canvas-card{flex:1;min-width:0;background:#fff;border:1px solid var(--line);border-radius:var(--r);position:relative;overflow:auto;box-shadow:var(--shadow);background-image:radial-gradient(circle,#eef1f7 1px,transparent 1.2px);background-size:16px 16px}
+.canvas-card svg{display:block}
+.canvas-hint{position:absolute;left:14px;top:10px;font-size:11px;color:#a4afc0;pointer-events:none;background:rgba(255,255,255,.72);padding:2px 6px;border-radius:5px}
+.props{width:272px;flex:none;background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:auto;box-shadow:var(--shadow)}
+.props .ph{padding:12px 14px;border-bottom:1px solid var(--line2);display:flex;align-items:center;gap:8px}
+.props .ph h4{font-size:12.5px;font-weight:650}
+.props .ph .ty{margin-left:8px}
+.pbody{padding:12px 14px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11.5px;color:var(--sub);margin-bottom:5px}
+.field .inp,.field .sel{width:100%;height:30px;font-size:12.5px}
+.field textarea{width:100%;min-height:62px;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:12.5px;font-family:inherit;color:var(--text);outline:none;resize:vertical}
+.field textarea:focus{border-color:#9dbcf7;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.field .tip{font-size:10.5px;color:var(--muted);margin-top:4px}
+.check{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--sub);padding:5px 0;cursor:pointer}
+.check input{accent-color:var(--pri);width:14px;height:14px}
+.pempty{padding:26px 18px;text-align:center;color:var(--muted);font-size:12px;line-height:1.8}
+.pempty .big{font-size:22px;color:#d3daea;margin-bottom:6px}
+.check-panel{position:absolute;left:14px;bottom:14px;width:330px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 28px rgba(16,24,40,.14);z-index:5;overflow:hidden}
+.check-panel .cph{padding:9px 12px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--line2);font-size:12px;font-weight:600}
+.check-panel .cph .x{margin-left:auto;cursor:pointer;color:var(--muted);border:0;background:none;font-size:14px}
+.check-panel .list{max-height:190px;overflow:auto}
+.check-panel .row{padding:8px 12px;border-bottom:1px solid var(--line2);font-size:12px;color:var(--sub);display:flex;gap:7px;cursor:pointer}
+.check-panel .row:hover{background:#f9fbfe}
+.check-panel .row span.n{color:var(--red);flex:none}
+.check-panel .foot{padding:8px 12px;font-size:11px;color:var(--muted)}
+
+/* ---------- toast ---------- */
+.toast{position:fixed;left:50%;top:22px;transform:translate(-50%,-16px);background:#1f2937;color:#fff;font-size:13px;padding:9px 16px;border-radius:9px;box-shadow:0 8px 24px rgba(16,24,40,.22);opacity:0;pointer-events:none;transition:all .22s;z-index:60;display:flex;align-items:center;gap:8px}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast.ok{background:#0f7a5c}
+.toast.warn{background:#a5630a}
+
+/* ---------- task form ---------- */
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 16px;margin-top:6px}
+.form-grid .fg{padding:9px 12px;background:#fafbfd;border:1px solid var(--line2);border-radius:8px}
+.form-grid .fg .k{font-size:11px;color:var(--muted)}
+.form-grid .fg .v{font-size:12.5px;color:var(--text);margin-top:2px}
+.form-grid .wide{grid-column:1/-1}
+.timeline{position:relative;padding-left:22px}
+.timeline:before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:1px;background:var(--line)}
+.tl-item{position:relative;padding:0 0 18px 0}
+.tl-item:last-child{padding-bottom:0}
+.tl-dot{position:absolute;left:-22px;top:2px;width:13px;height:13px;border-radius:99px;background:#fff;border:2px solid #c9d3e4}
+.tl-item.now .tl-dot{border-color:var(--pri);background:var(--priw)}
+.tl-item.ok .tl-dot{border-color:var(--green);background:var(--greenw)}
+.tl-t{font-size:12.8px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tl-s{font-size:11.5px;color:var(--muted);margin-top:3px}
+.tl-o{font-size:12px;color:var(--sub);background:#f7f9fc;border:1px solid var(--line2);border-radius:7px;padding:7px 10px;margin-top:7px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">WF</div>
+      <div>
+        <div class="brand-t">工作流中心</div>
+        <div class="brand-s">warm-flow · 业务中台</div>
+      </div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot"><span class="dot-live"></span>引擎在线 · v1.7.2</div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <div class="crumb" id="crumb"></div>
+      <div class="top-right">
+        <span class="ghost-chip">生产环境</span>
+        <span class="ghost-chip">飞书个人版</span>
+        <div class="avatar">DQ</div>
+      </div>
+    </header>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<div class="mask" id="mask" data-act="close-drawer"></div>
+<aside class="drawer" id="drawer">
+  <header class="dr-head">
+    <div style="min-width:0">
+      <h3 id="drTitle">标题</h3>
+      <p id="drSub"></p>
+    </div>
+    <button class="xbtn" data-act="close-drawer">✕</button>
+  </header>
+  <div class="dr-body" id="drBody"></div>
+  <footer class="dr-foot" id="drFoot"></footer>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =======================================================================
+   工具
+   ======================================================================= */
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const cut = (s, n) => { s = String(s || ''); return s.length > n ? s.slice(0, n - 1) + '…' : s; };
+const num = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+const clone = (o) => JSON.parse(JSON.stringify(o));
+
+function chip(text, tone, dot) {
+  return '<span class="chip t-' + tone + '">' + (dot === false ? '' : '<i></i>') + text + '</span>';
+}
+let toastTimer = null;
+function toast(msg, tone) {
+  const t = $('#toast');
+  t.className = 'toast on ' + (tone || '');
+  t.textContent = msg;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = 'toast'; }, 2400);
+}
+
+/* =======================================================================
+   数据（按 warm-flow 模型组织）
+   ======================================================================= */
+const ME = { name: '李强', dept: '信息技术部', title: '部门主管' };
+
+const TYPES = {
+  start: { label: '开始节点', kind: 'start' },
+  task: { label: '审批节点', kind: 'task' },
+  gateway: { label: '排他网关', kind: 'gateway' },
+  parallel: { label: '并行网关', kind: 'parallel' },
+  end: { label: '结束节点', kind: 'end' }
+};
+
+const node = (id, name, type, x, y, o) => Object.assign({ id: id, name: name, type: type, x: x, y: y, assignee: '', policy: '单人办理', right: '可编辑' }, o || {});
+const edge = (from, to, cond) => ({ from: from, to: to, cond: cond || '' });
+
+const DEFS = [
+  {
+    id: 'def_001', code: 'LEAVE_APPLY', name: '请假申请审批', cat: '人事行政', version: 'v3',
+    status: 'published', form: '动态表单 · 请假申请单', owner: '张明', updated: '2026-11-16 10:22',
+    inst: 128, running: 1,
+    desc: '员工请假由直属主管审批：3 天以内交 HR 备案，超过 3 天需部门经理审批，最终人事复核。',
+    nodes: [
+      node('n1', '开始', 'start', 305, 16),
+      node('n2', '直属主管审批', 'task', 290, 96, { assignee: '部门主管' }),
+      node('n3', '请假天数判断', 'gateway', 312, 188),
+      node('n4', 'HR 备案', 'task', 80, 300, { assignee: 'HRBP', right: '只读' }),
+      node('n5', '部门经理审批', 'task', 450, 300, { assignee: '部门经理' }),
+      node('n6', '人事复核', 'task', 290, 396, { assignee: '人事专员', policy: '会签' }),
+      node('n7', '结束', 'end', 305, 486)
+    ],
+    edges: [edge('n1', 'n2'), edge('n2', 'n3'), edge('n3', 'n4', '请假天数 ≤ 3'), edge('n3', 'n5', '请假天数 > 3'), edge('n4', 'n6'), edge('n5', 'n6'), edge('n6', 'n7')]
+  },
+  {
+    id: 'def_002', code: 'EXPENSE_APPLY', name: '费用报销审批', cat: '财务', version: 'v2',
+    status: 'published', form: '动态表单 · 报销单', owner: '刘颖', updated: '2026-11-12 15:40',
+    inst: 246, running: 2,
+    desc: '报销单经主管审批、财务初审后按金额分流，5000 元以上需分管副总审批，最后由出纳付款。',
+    nodes: [
+      node('n1', '开始', 'start', 305, 16),
+      node('n2', '直属主管审批', 'task', 290, 88, { assignee: '部门主管' }),
+      node('n3', '财务初审', 'task', 290, 164, { assignee: '财务专员', policy: '或签' }),
+      node('n4', '金额判断', 'gateway', 312, 236),
+      node('n5', '分管副总审批', 'task', 80, 336, { assignee: '分管副总' }),
+      node('n6', '财务付款', 'task', 450, 336, { assignee: '财务出纳', right: '只读' }),
+      node('n7', '结束', 'end', 305, 420)
+    ],
+    edges: [edge('n1', 'n2'), edge('n2', 'n3'), edge('n3', 'n4'), edge('n4', 'n5', '金额 ≥ 5000'), edge('n4', 'n6', '金额 < 5000'), edge('n5', 'n6'), edge('n6', 'n7')]
+  },
+  {
+    id: 'def_003', code: 'PURCHASE_CONTRACT', name: '采购合同审批', cat: '供应链', version: 'v1.4',
+    status: 'published', form: '自定义表单 · 合同要素', owner: '赵倩', updated: '2026-11-09 09:18',
+    inst: 64, running: 1,
+    desc: '采购经办发起后，法务会签、财务核资金、分管副总终审，通过后进入合同用章。',
+    nodes: [
+      node('n1', '开始', 'start', 305, 40),
+      node('n2', '采购经办', 'task', 290, 124, { assignee: '采购专员' }),
+      node('n3', '法务审核', 'task', 290, 208, { assignee: '法务经理', policy: '会签' }),
+      node('n4', '财务资金审核', 'task', 290, 292, { assignee: '资金岗' }),
+      node('n5', '分管副总审批', 'task', 290, 376, { assignee: '分管副总' }),
+      node('n6', '结束', 'end', 305, 460)
+    ],
+    edges: [edge('n1', 'n2'), edge('n2', 'n3'), edge('n3', 'n4', '法务意见 = 同意'), edge('n4', 'n5'), edge('n5', 'n6')]
+  },
+  {
+    id: 'def_004', code: 'SEAL_APPLY', name: '用章申请审批', cat: '行政', version: 'v1',
+    status: 'draft', form: '动态表单 · 用章单', owner: '孙浩', updated: '2026-11-18 17:02',
+    inst: 0, running: 0,
+    desc: '草稿：部门负责人确认后由行政审核，分管领导终审，最后由印章管理员盖章并登记。',
+    nodes: [
+      node('n1', '开始', 'start', 305, 30),
+      node('n2', '部门负责人', 'task', 290, 116, { assignee: '部门负责人' }),
+      node('n3', '行政审核', 'task', 290, 202, { assignee: '行政专员' }),
+      node('n4', '分管领导终审', 'task', 290, 288, { assignee: '分管领导' }),
+      node('n5', '印章管理员', 'task', 290, 374, { assignee: '印章管理员' }),
+      node('n6', '结束', 'end', 305, 458)
+    ],
+    edges: [edge('n1', 'n2'), edge('n2', 'n3'), edge('n3', 'n4'), edge('n4', 'n5', '终审通过'), edge('n5', 'n6')]
+  },
+  {
+    id: 'def_005', code: 'ONBOARDING', name: '新员工入职办理', cat: '人事行政', version: 'v2',
+    status: 'published', form: '自定义表单 · 入职信息', owner: '周敏', updated: '2026-11-14 11:30',
+    inst: 41, running: 1,
+    desc: 'HR 建档后并行发起 IT 账号开通与行政物资领用，两路完成后流程结束。',
+    nodes: [
+      node('n1', '开始', 'start', 305, 16),
+      node('n2', 'HR 建档', 'task', 290, 92, { assignee: 'HRBP' }),
+      node('n3', '并行网关', 'parallel', 312, 168),
+      node('n4', 'IT 开通账号', 'task', 80, 272, { assignee: 'IT 运维' }),
+      node('n5', '行政领用物资', 'task', 450, 272, { assignee: '行政专员' }),
+      node('n6', '并行汇聚', 'parallel', 312, 372),
+      node('n7', '结束', 'end', 305, 448)
+    ],
+    edges: [edge('n1', 'n2'), edge('n2', 'n3'), edge('n3', 'n4'), edge('n3', 'n5'), edge('n4', 'n6'), edge('n5', 'n6'), edge('n6', 'n7')]
+  }
+];
+
+const INSTANCES = [
+  { id: 'FI-20261119-0012', defId: 'def_001', title: '王小雨的请假申请（3 天）', biz: 'LEAVE-2026-11041', starter: '王小雨', dept: '产品部', start: '2026-11-19 09:12', cur: '直属主管审批', curNode: 'n2', passed: ['n1'], status: 'running', cost: '2 小时 08 分' },
+  { id: 'FI-20261119-0006', defId: 'def_005', title: '郑楠的新员工入职办理', biz: 'HR-2026-0219', starter: '周敏', dept: '人事部', start: '2026-11-19 08:40', cur: 'IT 开通账号', curNode: 'n4', passed: ['n1', 'n2', 'n3'], status: 'running', cost: '2 小时 40 分' },
+  { id: 'FI-20261118-0043', defId: 'def_002', title: '陈立的差旅报销（¥6,480）', biz: 'EXP-2026-0842', starter: '陈立', dept: '销售部', start: '2026-11-18 15:02', cur: '财务付款', curNode: 'n6', passed: ['n1', 'n2', 'n3', 'n4', 'n5'], status: 'running', cost: '18 小时 20 分' },
+  { id: 'FI-20261118-0021', defId: 'def_003', title: '年度服务器采购合同（¥1,280,000）', biz: 'PO-2026-0077', starter: '赵倩', dept: '供应链中心', start: '2026-11-18 10:16', cur: '法务审核', curNode: 'n3', passed: ['n1', 'n2'], status: 'running', cost: '23 小时 04 分' },
+  { id: 'FI-20261117-0009', defId: 'def_001', title: '孙浩的请假申请（1 天）', biz: 'LEAVE-2026-10988', starter: '孙浩', dept: '技术部', start: '2026-11-17 09:30', cur: '—', curNode: '', passed: ['n1', 'n2', 'n3', 'n4', 'n6', 'n7'], status: 'completed', cost: '5 小时 12 分', end: '2026-11-17 14:42' },
+  { id: 'FI-20261117-0033', defId: 'def_002', title: '周敏的办公用品报销（¥820）', biz: 'EXP-2026-0836', starter: '周敏', dept: '人事部', start: '2026-11-17 11:08', cur: '—', curNode: '', passed: ['n1', 'n2', 'n3', 'n4', 'n6', 'n7'], status: 'completed', cost: '1 天 2 小时', end: '2026-11-18 16:20' },
+  { id: 'FI-20261116-0018', defId: 'def_003', title: '办公家具采购合同（¥96,000）', biz: 'PO-2026-0071', starter: '吴凡', dept: '行政部', start: '2026-11-16 14:20', cur: '—', curNode: '', passed: ['n1', 'n2', 'n3'], status: 'terminated', cost: '6 小时 05 分', end: '2026-11-16 20:25' },
+  { id: 'FI-20261119-0004', defId: 'def_002', title: '李想的客户招待报销（¥2,300）', biz: 'EXP-2026-0845', starter: '李想', dept: '销售部', start: '2026-11-19 10:05', cur: '财务初审', curNode: 'n3', passed: ['n1', 'n2'], status: 'running', cost: '1 小时 15 分' }
+];
+
+const TODOS = [
+  {
+    id: 'TK-20261119-0021', instId: 'FI-20261119-0012', defId: 'def_001', node: '直属主管审批', title: '王小雨的请假申请（3 天）',
+    starter: '王小雨', arrived: '2026-11-19 09:12', limit: '剩余 5 小时 52 分', pct: 74, level: '紧急',
+    form: [['请假类型', '事假'], ['开始时间', '2026-11-20 09:00'], ['结束时间', '2026-11-22 18:00'], ['请假天数', '3 天'], ['工作交接', '张倩（同组）'], ['请假事由', '家中有事需回老家处理，期间需求评审已交接给张倩，紧急问题可电话联系。']]
+  },
+  {
+    id: 'TK-20261119-0018', instId: 'FI-20261119-0004', defId: 'def_002', node: '财务初审', title: '李想的客户招待报销（¥2,300）',
+    starter: '李想', arrived: '2026-11-19 10:05', limit: '剩余 7 小时 40 分', pct: 62, level: '普通',
+    form: [['报销类型', '业务招待费'], ['发生日期', '2026-11-15'], ['报销金额', '¥2,300.00'], ['收款账户', '招商银行 尾号 8842'], ['费用说明', '客户到访接待，共 3 人，含餐费与交通。']]
+  },
+  {
+    id: 'TK-20261119-0015', instId: 'FI-20261118-0021', defId: 'def_003', node: '法务审核', title: '年度服务器采购合同（¥1,280,000）',
+    starter: '赵倩', arrived: '2026-11-18 12:40', limit: '已超时 2 小时', pct: 100, level: '紧急',
+    form: [['合同编号', 'HT-2026-0312'], ['供应商', '云启科技（北京）有限公司'], ['合同金额', '¥1,280,000.00'], ['付款方式', '3 : 5 : 2 分期'], ['履约周期', '12 个月'], ['风险提示', '违约条款未约定延迟交付的日万分之五违约金']]
+  },
+  {
+    id: 'TK-20261119-0011', instId: 'FI-20261119-0006', defId: 'def_005', node: 'IT 开通账号', title: '郑楠的新员工入职办理',
+    starter: '周敏', arrived: '2026-11-19 09:40', limit: '剩余 6 小时 20 分', pct: 55, level: '普通',
+    form: [['姓名', '郑楠'], ['部门', '产品部'], ['岗位', '产品经理'], ['入职日期', '2026-11-20'], ['所需权限', '飞书、GitLab、数据看板、Jira']]
+  },
+  {
+    id: 'TK-20261118-0112', instId: 'FI-20261118-0043', defId: 'def_002', node: '财务付款', title: '陈立的差旅报销（¥6,480）',
+    starter: '陈立', arrived: '2026-11-18 17:30', limit: '剩余 1 小时 12 分', pct: 88, level: '紧急',
+    form: [['报销类型', '差旅费'], ['行程', '成都 → 深圳（往返）'], ['报销金额', '¥6,480.00'], ['审批链路', '主管 → 财务初审 → 金额判断 → 分管副总'], ['费用说明', '客户现场支持 3 天，含机票、住宿及市内交通。']]
+  },
+  {
+    id: 'TK-20261118-0098', instId: 'FI-20261118-0021', defId: 'def_003', node: '财务资金审核', title: '年度服务器采购合同（¥1,280,000）',
+    starter: '赵倩', arrived: '2026-11-18 16:12', limit: '剩余 4 小时 30 分', pct: 45, level: '普通',
+    form: [['合同编号', 'HT-2026-0312'], ['预算科目', 'IT 基础设施 / 2026 年度'], ['已使用预算', '¥860,000'], ['本次占用', '¥1,280,000'], ['资金来源', '年度 IT 预算 + 追加申请']]
+  }
+];
+
+const HISTORY = [
+  { id: 'HT-0021', instId: 'FI-20261119-0012', defName: '请假申请审批', node: '发起申请', handler: '王小雨', result: '提交', opinion: '请假 3 天，工作已交接。', time: '2026-11-19 09:12', cost: '—' },
+  { id: 'HT-0020', instId: 'FI-20261119-0006', defName: '新员工入职办理', node: 'HR 建档', handler: '周敏', result: '同意', opinion: '资料齐全，已建档。', time: '2026-11-19 09:38', cost: '58 分' },
+  { id: 'HT-0019', instId: 'FI-20261118-0043', defName: '费用报销审批', node: '分管副总审批', handler: '钱伟', result: '同意', opinion: '金额合理，同意报销。', time: '2026-11-18 17:26', cost: '1 小时 12 分' },
+  { id: 'HT-0018', instId: 'FI-20261118-0043', defName: '费用报销审批', node: '主管审批', handler: '李强', result: '同意', opinion: '行程与客户拜访记录一致。', time: '2026-11-18 15:34', cost: '32 分' },
+  { id: 'HT-0017', instId: 'FI-20261118-0021', defName: '采购合同审批', node: '采购经办', handler: '赵倩', result: '提交', opinion: '已完成三家比价，选定云启科技。', time: '2026-11-18 10:16', cost: '—' },
+  { id: 'HT-0016', instId: 'FI-20261117-0009', defName: '请假申请审批', node: '人事复核', handler: '周敏', result: '同意', opinion: '已同步考勤，注意年假余额扣减。', time: '2026-11-17 14:42', cost: '26 分' },
+  { id: 'HT-0015', instId: 'FI-20261117-0033', defName: '费用报销审批', node: '财务付款', handler: '刘颖', result: '同意', opinion: '已付款，回单号 2026111800231。', time: '2026-11-18 16:20', cost: '2 小时 04 分' },
+  { id: 'HT-0014', instId: 'FI-20261116-0018', defName: '采购合同审批', node: '法务审核', handler: '何静', result: '驳回', opinion: '缺少供应商资质附件，违约金条款需补充。', time: '2026-11-16 19:50', cost: '5 小时 30 分' },
+  { id: 'HT-0013', instId: 'FI-20261116-0018', defName: '采购合同审批', node: '采购经办', handler: '吴凡', result: '转办', opinion: '出差中，转办给赵倩跟进。', time: '2026-11-16 16:02', cost: '1 小时 42 分' },
+  { id: 'HT-0012', instId: 'FI-20261119-0004', defName: '费用报销审批', node: '直属主管审批', handler: '李强', result: '加签', opinion: '金额涉及客户关系费用，加签销售总监。', time: '2026-11-19 10:40', cost: '35 分' },
+  { id: 'HT-0011', instId: 'FI-20261118-0043', defName: '费用报销审批', node: '财务初审', handler: '刘颖', result: '同意', opinion: '发票验真通过，附件完整。', time: '2026-11-18 16:14', cost: '1 小时 04 分' },
+  { id: 'HT-0010', instId: 'FI-20261119-0006', defName: '新员工入职办理', node: '部门报到', handler: '王芳', result: '同意', opinion: '已安排工位与导师。', time: '2026-11-19 10:02', cost: '24 分' }
+];
+
+const CC_LIST = [
+  { id: 'CC-001', title: '年度服务器采购合同（¥1,280,000）', from: '赵倩', node: '法务审核', time: '2026-11-18 12:40' },
+  { id: 'CC-002', title: '陈立的差旅报销（¥6,480）', from: '陈立', node: '财务付款', time: '2026-11-18 17:30' },
+  { id: 'CC-003', title: '王小雨的请假申请（3 天）', from: '王小雨', node: '直属主管审批', time: '2026-11-19 09:12' }
+];
+
+const TREND = [
+  { d: '11-13', a: 14, b: 11 }, { d: '11-14', a: 12, b: 15 }, { d: '11-15', a: 19, b: 13 },
+  { d: '11-16', a: 16, b: 18 }, { d: '11-17', a: 22, b: 17 }, { d: '11-18', a: 18, b: 21 },
+  { d: '11-19', a: 9, b: 7 }
+];
+
+/* =======================================================================
+   状态
+   ======================================================================= */
+const ui = { defQ: '', defStatus: 'all', defCat: 'all', instTab: 'all', instQ: '', todoTab: 'pending', hisResult: 'all', flowDef: 'def_001', flowInst: '' };
+let dr = { defId: null, tab: 'info', mode: 'def' };
+let designer = { defId: null, name: '', code: '', nodes: [], edges: [], selNode: null, selEdge: null, dirty: false, savedAt: '' };
+let designerActive = false;
+let seq = 20;
+
+/* =======================================================================
+   图标
+   ======================================================================= */
+const svgI = (p, size) => '<svg width="' + (size || 16) + '" height="' + (size || 16) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + p + '</svg>';
+const ICON = {
+  overview: svgI('<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>'),
+  definition: svgI('<path d="M12 3 3.5 7.6 12 12.2 20.5 7.6 12 3Z"/><path d="M3.5 12.4l8.5 4.6 8.5-4.6"/><path d="M3.5 16.9l8.5 4.6 8.5-4.6"/>'),
+  designer: svgI('<path d="M4 20h4.2L19 9.2 14.8 5 4 15.8V20Z"/><path d="M13.4 6.4 17.6 10.6"/>'),
+  instance: svgI('<circle cx="12" cy="12" r="8.2"/><path d="M10 8.6l5.4 3.4-5.4 3.4V8.6Z"/>'),
+  todo: svgI('<rect x="4" y="4" width="16" height="16" rx="3.4"/><path d="M8.2 12.2l2.6 2.6 5-5.6"/>'),
+  history: svgI('<circle cx="12" cy="12" r="8.2"/><path d="M12 7.6V12l3.6 2.2"/>'),
+  flow: svgI('<circle cx="6" cy="6.6" r="2.6"/><circle cx="18" cy="17.4" r="2.6"/><path d="M8.6 6.6h4.2a3.6 3.6 0 0 1 3.6 3.6v4.6"/>'),
+  search: svgI('<circle cx="10.8" cy="10.8" r="6.2"/><path d="M15.4 15.4 19.4 19.4"/>', 14),
+  plus: svgI('<path d="M12 5v14M5 12h14"/>', 14)
+};
+
+/* =======================================================================
+   导航 / 路由
+   ======================================================================= */
+const NAV = [
+  { seg: 'overview', label: '工作流概览', icon: 'overview' },
+  { seg: 'definition', label: '流程定义', icon: 'definition' },
+  { seg: 'designer', label: '流程设计器', icon: 'designer' },
+  { seg: 'instance', label: '流程实例', icon: 'instance' },
+  { seg: 'todo', label: '待办任务', icon: 'todo', badge: TODOS.length },
+  { seg: 'history', label: '历史任务', icon: 'history' },
+  { seg: 'flow', label: '流程图', icon: 'flow' }
+];
+
+function renderNav(active) {
+  $('#nav').innerHTML =
+    '<div class="nav-group">流程运营</div>' +
+    NAV.slice(0, 2).map((n) => navItem(n, active)).join('') +
+    '<div class="nav-group">流程设计</div>' +
+    NAV.slice(2, 3).map((n) => navItem(n, active)).join('') +
+    '<div class="nav-group">流程运行</div>' +
+    NAV.slice(3).map((n) => navItem(n, active)).join('');
+}
+function navItem(n, active) {
+  const badge = n.seg === 'todo' ? TODOS.length : n.badge;
+  return '<a class="nav-item ' + (n.seg === active ? 'on' : '') + '" href="#/' + n.seg + '">' + ICON[n.icon] + '<span>' + n.label + '</span>' +
+    (badge ? '<span class="nav-badge">' + badge + '</span>' : '') + '</a>';
+}
+
+const CRUMB = {
+  overview: '工作流概览', definition: '流程定义', designer: '流程设计器',
+  instance: '流程实例', todo: '待办任务', history: '历史任务', flow: '流程图'
+};
+
+/* =======================================================================
+   图形渲染（流程图 / 设计器共用）
+   ======================================================================= */
+function dims(n) {
+  if (n.type === 'start' || n.type === 'end') return { w: 110, h: 44 };
+  if (n.type === 'gateway' || n.type === 'parallel') return { w: 96, h: 72 };
+  return { w: 140, h: 56 };
+}
+function outPort(n) {
+  const d = dims(n);
+  return { x: n.x + d.w / 2, y: n.y + d.h };
+}
+function inPort(n) {
+  const d = dims(n);
+  return { x: n.x + d.w / 2, y: n.y };
+}
+function edgeGeom(a, b) {
+  const A = dims(a), B = dims(b);
+  const ac = { x: a.x + A.w / 2, y: a.y + A.h / 2 };
+  const bc = { x: b.x + B.w / 2, y: b.y + B.h / 2 };
+  if (bc.y - ac.y > 50) return { p1: { x: ac.x, y: a.y + A.h }, p2: { x: bc.x, y: b.y }, dir: 'v' };
+  return { p1: { x: a.x + A.w, y: ac.y }, p2: { x: b.x, y: bc.y }, dir: 'h' };
+}
+function curve(p1, p2, dir) {
+  if (dir === 'v') {
+    const dy = Math.max(26, Math.abs(p2.y - p1.y) / 2);
+    return 'M' + p1.x + ',' + p1.y + ' C' + p1.x + ',' + (p1.y + dy) + ' ' + p2.x + ',' + (p2.y - dy) + ' ' + p2.x + ',' + p2.y;
+  }
+  const dx = Math.max(30, Math.abs(p2.x - p1.x) / 2);
+  return 'M' + p1.x + ',' + p1.y + ' C' + (p1.x + dx) + ',' + p1.y + ' ' + (p2.x - dx) + ',' + p2.y + ' ' + p2.x + ',' + p2.y;
+}
+function nodeSVG(n, state, opt) {
+  opt = opt || {};
+  const d = dims(n);
+  const sel = opt.selected === n.id;
+  let body = '';
+  if (n.type === 'gateway' || n.type === 'parallel') {
+    const nm = cut(n.name, 8);
+    const l1 = nm.length > 4 ? nm.slice(0, 4) : nm;
+    const l2 = nm.length > 4 ? nm.slice(4) : '';
+    body = '<polygon class="body" points="48,0 96,36 48,72 0,36"/>' +
+      (l2
+        ? '<text class="tname xs" x="48" y="33" text-anchor="middle">' + esc(l1) + '</text>' +
+          '<text class="tname xs" x="48" y="46" text-anchor="middle">' + esc(l2) + '</text>'
+        : '<text class="tname xs" x="48" y="40" text-anchor="middle">' + esc(l1) + '</text>') +
+      (n.type === 'parallel' ? '<text class="pmark" x="48" y="20" text-anchor="middle">+</text>' : '');
+  } else if (n.type === 'start' || n.type === 'end') {
+    body = '<rect class="body" x="0" y="0" width="110" height="44" rx="22"/>' +
+      '<text class="tname" x="55" y="27" text-anchor="middle">' + esc(cut(n.name, 6)) + '</text>';
+  } else {
+    body = '<rect class="body" x="0" y="0" width="140" height="56" rx="9"/>' +
+      '<rect class="bar" x="0" y="10" width="3" height="36" rx="1.5"/>' +
+      '<text class="tname" x="70" y="25" text-anchor="middle">' + esc(cut(n.name, 9)) + '</text>' +
+      (n.assignee ? '<text class="tsub" x="70" y="42" text-anchor="middle">' + esc(cut(n.assignee, 11)) + '</text>' : '');
+  }
+  let extra = '';
+  if (sel) extra += '<rect class="selring" x="-7" y="-7" width="' + (d.w + 14) + '" height="' + (d.h + 14) + '" rx="13" fill="none" stroke="#2563eb" stroke-width="1.4" stroke-dasharray="4 3"/>';
+  if (state === 'current') extra += '<text class="nowtag" x="' + (d.w - 2) + '" y="-6" text-anchor="end">当前节点</text>';
+  let ports = '';
+  if (opt.editable && n.type !== 'end') {
+    const p = outPort(n);
+    ports = '<circle class="port" data-port="' + n.id + '" cx="' + (p.x - n.x) + '" cy="' + (p.y - n.y) + '" r="5.5"/>' +
+      '<circle class="port-hit" data-port="' + n.id + '" cx="' + (p.x - n.x) + '" cy="' + (p.y - n.y) + '" r="12" fill="transparent"/>';
+  }
+  return '<g class="nd nd-' + n.type + (state ? ' nd-' + state : '') + (sel ? ' is-sel' : '') + '" data-node="' + n.id + '" transform="translate(' + n.x + ',' + n.y + ')">' + extra + body + ports + '</g>';
+}
+
+function edgeLabel(e, p1, p2) {
+  if (!e.cond) return '';
+  const mx = (p1.x + p2.x) / 2, my = (p1.y + p2.y) / 2;
+  const w = Math.min(160, e.cond.length * 7 + 14);
+  return '<rect class="cond-bg" x="' + (mx - w / 2) + '" y="' + (my - 11) + '" width="' + w + '" height="19" rx="5" />' +
+    '<text class="cond-tx" x="' + mx + '" y="' + (my + 2) + '" text-anchor="middle">' + esc(e.cond) + '</text>';
+}
+
+function diagram(nodes, edges, opt) {
+  opt = opt || {};
+  const states = opt.states || {};
+  const defs = '<defs>' +
+    ['#c3ccdb', '#0f9f6e', '#2563eb'].map((c, i) =>
+      '<marker id="ar' + i + '" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto"><path d="M0,0 L7,3.2 L0,6.4 z" fill="' + c + '"/></marker>').join('') +
+    '<marker id="arS" markerWidth="8" markerHeight="8" refX="6.6" refY="2.8" orient="auto"><path d="M0,0 L6.6,2.8 L0,5.6 z" fill="#2563eb"/></marker>' +
+    '</defs>';
+  let es = '';
+  edges.forEach((e, i) => {
+    const a = nodes.find((n) => n.id === e.from), b = nodes.find((n) => n.id === e.to);
+    if (!a || !b) return;
+    const g = edgeGeom(a, b);
+    const p1 = g.p1, p2 = g.p2;
+    const d = curve(p1, p2, g.dir);
+    const done = states[e.from] === 'done' && states[e.to] === 'done';
+    const live = states[e.from] === 'done' && states[e.to] === 'current' && (!opt.liveFrom || opt.liveFrom === e.from);
+    const cls = done ? 'done' : (live ? 'live' : '');
+    const mk = done ? 'ar1' : (live ? 'ar2' : 'ar0');
+    const selEdge = opt.selEdge === i;
+    es += '<g class="eg ' + cls + (selEdge ? ' is-sel' : '') + '"' + (opt.editable ? ' data-edge="' + i + '"' : '') + '>' +
+      (opt.editable ? '<path class="edge-hit" d="' + d + '" stroke="transparent" stroke-width="12" fill="none"/>' : '') +
+      '<path class="edge-line" d="' + d + '" marker-end="url(#' + mk + ')"' + (selEdge ? ' style="stroke:#2563eb;stroke-width:2"' : '') + '/>' +
+      edgeLabel(e, p1, p2) + '</g>';
+  });
+  let ns = '';
+  nodes.forEach((n) => { ns += nodeSVG(n, states[n.id], opt); });
+  const inner = defs + es + ns;
+  if (opt.inner) return inner;
+  return '<svg viewBox="0 0 720 560" class="diagram" preserveAspectRatio="xMidYMid meet">' + inner + '</svg>';
+}
+
+/* =======================================================================
+   视图：概览
+   ======================================================================= */
+function viewOverview() {
+  const running = INSTANCES.filter((i) => i.status === 'running').length;
+  const done = INSTANCES.filter((i) => i.status === 'completed').length;
+  const urgent = TODOS.filter((t) => t.pct >= 70).length;
+  const pub = DEFS.filter((d) => d.status === 'published').length;
+  const max = Math.max.apply(null, TREND.map((t) => Math.max(t.a, t.b)));
+  return '<div class="page">' +
+    '<div class="page-head"><div><h1>工作流概览</h1><p>warm-flow 引擎接入现有业务系统，流程定义、实例、任务与流程图统一在此管理。</p></div>' +
+    '<div class="acts"><button class="btn" data-act="go" data-id="#/history">查看历史任务</button><button class="btn pri" data-act="go" data-id="#/designer">' + ICON.plus + '新建流程</button></div></div>' +
+    '<div class="kpis">' +
+    kpi('运行中实例', running, '占全部实例 ' + Math.round(running / INSTANCES.length * 100) + '%', '', '流程正在流转，等待处理') +
+    kpi('我的待办', TODOS.length, '其中 ' + urgent + ' 条临近超时', 'down', '需我处理的任务') +
+    kpi('近 7 天办结', done, '平均耗时 2.6 小时', '', '含同意与驳回') +
+    kpi('流程定义', DEFS.length, '已发布 ' + pub + ' 个', '', '覆盖 4 个业务域') +
+    '</div>' +
+    '<div class="grid2">' +
+    '<div class="card"><div class="card-head"><h3>我的待办</h3><span class="more">按到达时间排序</span></div>' +
+    TODOS.slice(0, 5).map((t) =>
+      '<div class="list-row" data-act="todo-open" data-id="' + t.id + '">' +
+      '<div class="icn-sq">' + esc(t.starter.slice(0, 1)) + '</div>' +
+      '<div class="li-main"><div class="li-t">' + esc(t.title) + '</div><div class="li-s">' + esc(t.node) + ' · 发起人 ' + esc(t.starter) + ' · ' + esc(t.arrived) + '</div></div>' +
+      (t.level === '紧急' ? chip('紧急', 'red') : chip('普通', 'gray')) +
+      '<span style="font-size:11.5px;color:#8b96a8;margin-left:4px">' + esc(t.limit) + '</span>' +
+      '</div>').join('') +
+    '</div>' +
+    '<div class="card"><div class="card-head"><h3>流程定义状态</h3><a class="more" href="#/definition">全部 →</a></div>' +
+    DEFS.map((d) =>
+      '<div class="list-row" data-act="def-open" data-id="' + d.id + '">' +
+      '<div class="li-main"><div class="li-t">' + esc(d.name) + ' <span class="mono">' + esc(d.code) + '</span></div>' +
+      '<div class="li-s">' + D(d.nodes.length) + ' 个节点 · 运行中 ' + d.running + ' · 累计 ' + d.inst + '</div></div>' +
+      (d.status === 'published' ? chip('已发布', 'green') : chip('草稿', 'amber')) +
+      '</div>').join('') +
+    '</div>' +
+    '</div>' +
+    '<div class="card card-pad"><div style="display:flex;align-items:center;margin-bottom:12px"><h3 style="font-size:13.5px">近 7 天流程发起 / 办结</h3>' +
+    '<div class="legend" style="margin-left:auto"><span class="lg"><i style="background:#cfe0ff"></i>发起</span><span class="lg"><i style="background:#bfeade"></i>办结</span></div></div>' +
+    '<div class="bars">' + TREND.map((t) =>
+      '<div class="bar-col"><div class="bar-pair">' +
+      '<div class="bar" style="height:' + Math.round(t.a / max * 92) + 'px"></div>' +
+      '<div class="bar g" style="height:' + Math.round(t.b / max * 92) + 'px"></div>' +
+      '</div><span class="bar-x">' + t.d + '</span></div>').join('') +
+    '</div></div></div>';
+}
+function D(n) { return n; }
+function kpi(lb, v, ft, dir, sub) {
+  return '<div class="kpi"><div class="lb">' + lb + '</div><div class="v">' + num(v) + '</div>' +
+    '<div class="ft"><span class="' + dir + '">' + ft + '</span><span style="color:#c2cad8">·</span>' + sub + '</div></div>';
+}
+
+/* =======================================================================
+   视图：流程定义
+   ======================================================================= */
+function filteredDefs() {
+  return DEFS.filter((d) => {
+    if (ui.defStatus !== 'all' && d.status !== ui.defStatus) return false;
+    if (ui.defCat !== 'all' && d.cat !== ui.defCat) return false;
+    if (ui.defQ && !(d.name + d.code).toLowerCase().includes(ui.defQ.toLowerCase())) return false;
+    return true;
+  });
+}
+function viewDefinition() {
+  const list = filteredDefs();
+  return '<div class="page">' +
+    '<div class="page-head"><div><h1>流程定义</h1><p>定义 = 节点（flow_node）+ 跳转（flow_skip），发布后按版本号固化，运行中的实例不受新版本影响。</p></div>' +
+    '<div class="acts"><button class="btn" data-act="import-def">导入定义文件</button><button class="btn pri" data-act="go" data-id="#/designer">' + ICON.plus + '新建流程</button></div></div>' +
+    '<div class="card"><div class="toolbar">' +
+    '<div class="searchwrap">' + ICON.search + '<input class="inp search" placeholder="搜索流程名称 / 编码" data-bind="defQ" value="' + esc(ui.defQ) + '"></div>' +
+    '<select class="sel" data-bind="defCat"><option value="all">全部类别</option>' + ['人事行政', '财务', '供应链', '行政'].map((c) => '<option value="' + c + '"' + (ui.defCat === c ? ' selected' : '') + '>' + c + '</option>').join('') + '</select>' +
+    '<select class="sel" data-bind="defStatus"><option value="all">全部状态</option><option value="published"' + (ui.defStatus === 'published' ? ' selected' : '') + '>已发布</option><option value="draft"' + (ui.defStatus === 'draft' ? ' selected' : '') + '>草稿</option></select>' +
+    '<span class="right">共 ' + list.length + ' 个定义 · 按更新时间倒序</span></div>' +
+    '<table class="tbl"><thead><tr><th style="width:26%">流程定义</th><th>类别</th><th>版本</th><th>表单</th><th>节点</th><th>实例</th><th>状态</th><th>更新</th><th style="width:110px">操作</th></tr></thead><tbody>' +
+    (list.length ? list.map(defRow).join('') : '<tr><td colspan="9" style="text-align:center;padding:50px;color:#8b96a8">没有匹配的流程定义</td></tr>') +
+    '</tbody></table>' +
+    '<div class="pager"><span>共 ' + list.length + ' 条 · 第 1 / 1 页</span><div class="btns"><button class="btn sm" disabled style="opacity:.5">上一页</button><button class="btn sm" disabled style="opacity:.5">下一页</button></div></div>' +
+    '</div></div>';
+}
+function defRow(d) {
+  const st = d.status === 'published' ? chip('已发布', 'green') : (d.status === 'draft' ? chip('草稿', 'amber') : chip('已停用', 'gray'));
+  return '<tr class="clickable" data-act="def-open" data-id="' + d.id + '">' +
+    '<td><div class="two"><div class="icn-sq">' + esc(d.name.slice(0, 1)) + '</div><div class="cell"><span class="t">' + esc(d.name) + '</span><span class="mono">' + esc(d.code) + '</span></div></div></td>' +
+    '<td>' + esc(d.cat) + '</td>' +
+    '<td><span class="mono" style="color:#5f6b7f">' + esc(d.version) + '</span></td>' +
+    '<td>' + esc(d.form) + '</td>' +
+    '<td>' + num(d.nodes.length) + ' 个</td>' +
+    '<td><div class="cell"><span style="color:#1a1f29">' + num(d.inst) + ' 累计</span><span class="s">运行中 ' + d.running + '</span></div></td>' +
+    '<td>' + st + '</td>' +
+    '<td><div class="cell"><span style="color:#1a1f29;font-size:12px">' + esc(d.owner) + '</span><span class="s">' + esc(d.updated) + '</span></div></td>' +
+    '<td style="text-align:right"><button class="link" data-act="def-design" data-id="' + d.id + '">设计</button><button class="link mute" data-act="def-open" data-id="' + d.id + '">详情</button></td>' +
+    '</tr>';
+}
+
+/* =======================================================================
+   视图：流程实例
+   ======================================================================= */
+function instStatusChip(s) {
+  return s === 'running' ? chip('审批中', 'blue') : (s === 'completed' ? chip('已完成', 'green') : chip('已终止', 'gray'));
+}
+function viewInstance() {
+  const tabs = [['all', '全部'], ['running', '审批中'], ['completed', '已完成'], ['terminated', '已终止']];
+  const counts = { all: INSTANCES.length };
+  tabs.forEach((t) => { if (t[0] !== 'all') counts[t[0]] = INSTANCES.filter((i) => i.status === t[0]).length; });
+  const list = INSTANCES.filter((i) => ui.instTab === 'all' || i.status === ui.instTab).filter((i) => !ui.instQ || (i.title + i.id + i.starter).toLowerCase().includes(ui.instQ.toLowerCase()));
+  return '<div class="page">' +
+    '<div class="page-head"><div><h1>流程实例</h1><p>每次发起生成一条 flow_instance，实例之间互不干扰；终止、挂起由引擎统一记录。</p></div>' +
+    '<div class="acts"><button class="btn" data-act="recalc">刷新状态</button></div></div>' +
+    '<div class="card"><div class="tabs" style="padding:0 12px">' +
+    tabs.map((t) => '<div class="tab ' + (ui.instTab === t[0] ? 'on' : '') + '" data-act="inst-tab" data-id="' + t[0] + '">' + t[1] + '<span class="n">' + (counts[t[0]] || 0) + '</span></div>').join('') +
+    '</div><div class="toolbar">' +
+    '<div class="searchwrap">' + ICON.search + '<input class="inp search" placeholder="搜索实例编号 / 标题 / 发起人" data-bind="instQ" value="' + esc(ui.instQ) + '"></div>' +
+    '<span class="right">共 ' + list.length + ' 条实例</span></div>' +
+    '<table class="tbl"><thead><tr><th style="width:24%">实例 / 业务标题</th><th>流程</th><th>发起人</th><th>当前节点</th><th>发起时间</th><th>耗时</th><th>状态</th><th style="width:120px">操作</th></tr></thead><tbody>' +
+    list.map((i) => {
+      const d = DEFS.find((x) => x.id === i.defId);
+      return '<tr class="clickable" data-act="inst-open" data-id="' + i.id + '">' +
+        '<td><div class="cell"><span class="t">' + esc(i.title) + '</span><span class="mono">' + esc(i.id) + '</span></div></td>' +
+        '<td><div class="cell"><span style="font-size:12.5px;color:#1a1f29">' + esc(d.name) + '</span><span class="s">' + esc(d.code) + '</span></div></td>' +
+        '<td><div class="cell"><span style="font-size:12.5px;color:#1a1f29">' + esc(i.starter) + '</span><span class="s">' + esc(i.dept) + '</span></div></td>' +
+        '<td>' + (i.curNode ? '<span style="color:#2563eb">' + esc(i.cur) + '</span>' : '<span style="color:#b3bccc">—</span>') + '</td>' +
+        '<td><span class="mono" style="color:#5f6b7f">' + esc(i.start) + '</span></td>' +
+        '<td>' + esc(i.cost) + '</td>' +
+        '<td>' + instStatusChip(i.status) + '</td>' +
+        '<td style="text-align:right"><button class="link" data-act="inst-flow" data-id="' + i.id + '">流程图</button><button class="link mute" data-act="inst-open" data-id="' + i.id + '">详情</button></td>' +
+        '</tr>';
+    }).join('') +
+    '</tbody></table></div></div>';
+}
+
+/* =======================================================================
+   视图：待办任务
+   ======================================================================= */
+function viewTodo() {
+  const tabs = [['pending', '我的待办', TODOS.length], ['started', '我发起的', 3], ['cc', '抄送我的', CC_LIST.length]];
+  let body = '';
+  if (ui.todoTab === 'pending') {
+    body = '<table class="tbl"><thead><tr><th style="width:26%">任务</th><th>流程 · 节点</th><th>发起人</th><th>到达时间</th><th style="width:150px">时限</th><th>优先级</th><th style="width:150px">操作</th></tr></thead><tbody>' +
+      TODOS.map((t) => {
+        const over = t.pct >= 100;
+        return '<tr class="clickable" data-act="todo-open" data-id="' + t.id + '">' +
+          '<td><div class="two"><div class="icn-sq">' + esc(t.starter.slice(0, 1)) + '</div><div class="cell"><span class="t">' + esc(t.title) + '</span><span class="mono">' + esc(t.id) + '</span></div></div></td>' +
+          '<td><div class="cell"><span style="font-size:12.5px;color:#1a1f29">' + esc(t.node) + '</span><span class="s">' + esc(DEFS.find((d) => d.id === t.defId).name) + '</span></div></td>' +
+          '<td>' + esc(t.starter) + '</td>' +
+          '<td><span class="mono" style="color:#5f6b7f">' + esc(t.arrived) + '</span></td>' +
+          '<td><div style="font-size:11.5px;color:' + (over ? '#d92d20' : '#5f6b7f') + ';margin-bottom:4px">' + esc(t.limit) + '</div>' +
+          '<div style="height:4px;background:#f0f3f8;border-radius:2px"><div style="height:4px;width:' + Math.min(100, t.pct) + '%;background:' + (over ? '#d92d20' : (t.pct > 70 ? '#d9a03a' : '#cfe0ff')) + ';border-radius:2px"></div></div></td>' +
+          '<td>' + (t.level === '紧急' ? chip('紧急', 'red') : chip('普通', 'gray')) + '</td>' +
+          '<td style="text-align:right"><button class="btn sm pri" data-act="todo-open" data-id="' + t.id + '">办理</button> <button class="link mute" data-act="todo-more">更多</button></td>' +
+          '</tr>';
+      }).join('') + '</tbody></table>';
+  } else if (ui.todoTab === 'started') {
+    body = '<table class="tbl"><thead><tr><th style="width:30%">标题</th><th>当前节点</th><th>发起时间</th><th>耗时</th><th>状态</th><th style="width:90px">操作</th></tr></thead><tbody>' +
+      INSTANCES.filter((i) => ['李强', '王小雨'].includes(i.starter)).map((i) => {
+        const d = DEFS.find((x) => x.id === i.defId);
+        return '<tr class="clickable" data-act="inst-open" data-id="' + i.id + '">' +
+          '<td><div class="cell"><span class="t">' + esc(i.title) + '</span><span class="s">' + esc(d.name) + '</span></div></td>' +
+          '<td>' + (i.curNode ? '<span style="color:#2563eb">' + esc(i.cur) + '</span>' : '—') + '</td>' +
+          '<td><span class="mono" style="color:#5f6b7f">' + esc(i.start) + '</span></td><td>' + esc(i.cost) + '</td>' +
+          '<td>' + instStatusChip(i.status) + '</td>' +
+          '<td style="text-align:right"><button class="link" data-act="inst-flow" data-id="' + i.id + '">流程图</button></td></tr>';
+      }).join('') + '</tbody></table>';
+  } else {
+    body = '<table class="tbl"><thead><tr><th style="width:34%">标题</th><th>抄送节点</th><th>抄送人</th><th>时间</th><th style="width:90px">操作</th></tr></thead><tbody>' +
+      CC_LIST.map((c) => '<tr class="clickable" data-act="cc-open" data-id="' + c.id + '">' +
+        '<td><span class="t">' + esc(c.title) + '</span></td><td>' + esc(c.node) + '</td><td>' + esc(c.from) + '</td>' +
+        '<td><span class="mono" style="color:#5f6b7f">' + esc(c.time) + '</span></td>' +
+        '<td style="text-align:right"><button class="link" data-act="cc-open" data-id="' + c.id + '">查看</button></td></tr>').join('') +
+      '</tbody></table>';
+  }
+  return '<div class="page">' +
+    '<div class="page-head"><div><h1>待办任务</h1><p>引擎按办理人写入 flow_task，认领、转办、加签、驳回都在任务层完成，不改变实例结构。</p></div>' +
+    '<div class="acts"><button class="btn" data-act="batch-transfer">批量转办</button></div></div>' +
+    '<div class="card"><div class="tabs" style="padding:0 12px">' +
+    tabs.map((t) => '<div class="tab ' + (ui.todoTab === t[0] ? 'on' : '') + '" data-act="todo-tab" data-id="' + t[0] + '">' + t[1] + '<span class="n">' + t[2] + '</span></div>').join('') +
+    '</div>' + body + '<div class="pager"><span>共 ' + (ui.todoTab === 'pending' ? TODOS.length : (ui.todoTab === 'cc' ? CC_LIST.length : 3)) + ' 条</span><span>按到达时间倒序</span></div></div></div>';
+}
+
+/* =======================================================================
+   视图：历史任务
+   ======================================================================= */
+function resultChip(r) {
+  const m = { '同意': 'green', '驳回': 'red', '转办': 'amber', '加签': 'blue', '提交': 'gray', '撤销': 'gray', '取回': 'gray' };
+  return chip(r, m[r] || 'gray');
+}
+function viewHistory() {
+  const Rs = ['all', '同意', '驳回', '转办', '加签'];
+  const list = HISTORY.filter((h) => ui.hisResult === 'all' || h.result === ui.hisResult);
+  return '<div class="page">' +
+    '<div class="page-head"><div><h1>历史任务</h1><p>每条办理动作写入 flow_his_task，含办理人、意见、耗时，可追溯到具体节点与实例。</p></div>' +
+    '<div class="acts"><button class="btn" data-act="export-his">导出记录</button></div></div>' +
+    '<div class="card"><div class="toolbar">' +
+    '<select class="sel" data-bind="hisResult"><option value="all">全部办理结果</option>' + Rs.slice(1).map((r) => '<option value="' + r + '"' + (ui.hisResult === r ? ' selected' : '') + '>' + r + '</option>').join('') + '</select>' +
+    '<span class="right">共 ' + list.length + ' 条历史任务</span></div>' +
+    '<table class="tbl"><thead><tr><th style="width:22%">任务编号 / 标题</th><th>流程 · 节点</th><th>办理人</th><th>结果</th><th style="width:22%">审批意见</th><th>完成时间</th><th>耗时</th></tr></thead><tbody>' +
+    list.map((h) => {
+      const inst = INSTANCES.find((i) => i.id === h.instId);
+      return '<tr class="clickable" data-act="his-open" data-id="' + h.id + '">' +
+        '<td><div class="cell"><span class="t">' + esc(inst ? inst.title : h.defName) + '</span><span class="mono">' + esc(h.id) + '</span></div></td>' +
+        '<td><div class="cell"><span style="font-size:12.5px;color:#1a1f29">' + esc(h.node) + '</span><span class="s">' + esc(h.defName) + '</span></div></td>' +
+        '<td>' + esc(h.handler) + '</td><td>' + resultChip(h.result) + '</td>' +
+        '<td style="color:#5f6b7f;font-size:12px">' + esc(cut(h.opinion, 22)) + '</td>' +
+        '<td><span class="mono" style="color:#5f6b7f">' + esc(h.time) + '</span></td><td>' + esc(h.cost) + '</td></tr>';
+    }).join('') +
+    '</tbody></table><div class="pager"><span>共 ' + list.length + ' 条</span><span>已保留 180 天</span></div></div></div>';
+}
+
+/* =======================================================================
+   视图：流程图
+   ======================================================================= */
+function liveFromOf(inst) {
+  if (!inst || !inst.curNode) return null;
+  const p = inst.passed || [];
+  return p.length ? p[p.length - 1] : null;
+}
+function statesFor(inst) {
+  const def = DEFS.find((d) => d.id === inst.defId);
+  const st = {};
+  def.nodes.forEach((n) => {
+    if (inst.status === 'completed') st[n.id] = 'done';
+    else if ((inst.passed || []).includes(n.id)) st[n.id] = 'done';
+    else if (n.id === inst.curNode) st[n.id] = 'current';
+    else st[n.id] = 'pending';
+  });
+  return st;
+}
+function viewFlow() {
+  const def = DEFS.find((d) => d.id === ui.flowDef) || DEFS[0];
+  const inst = INSTANCES.find((i) => i.id === ui.flowInst);
+  const states = inst ? statesFor(inst) : {};
+  const instOptions = INSTANCES.filter((i) => i.defId === def.id);
+  return '<div class="page">' +
+    '<div class="page-head"><div><h1>流程图</h1><p>由 flow_node + flow_skip 实时渲染，可挂载实例的流转状态，用于进度追踪与节点耗时分析。</p></div>' +
+    '<div class="acts"><button class="btn" data-act="def-design" data-id="' + def.id + '">在设计中打开</button></div></div>' +
+    '<div class="card"><div class="toolbar">' +
+    '<select class="sel" data-bind="flowDef">' + DEFS.map((d) => '<option value="' + d.id + '"' + (d.id === def.id ? ' selected' : '') + '>' + esc(d.name) + '（' + d.code + '）</option>').join('') + '</select>' +
+    '<select class="sel" data-bind="flowInst"><option value="">不叠加实例状态</option>' + instOptions.map((i) => '<option value="' + i.id + '"' + (i.id === ui.flowInst ? ' selected' : '') + '>' + esc(i.id) + ' · ' + esc(cut(i.title, 14)) + '</option>').join('') + '</select>' +
+    '<div class="legend" style="margin-left:auto">' +
+    '<span class="lg"><i style="background:#ecfaf3;border:1px solid #0f9f6e"></i>已办结</span>' +
+    '<span class="lg"><i style="background:#eef4ff;border:1px solid #2563eb"></i>当前节点</span>' +
+    '<span class="lg"><i style="background:#fff;border:1px solid #dde3ed"></i>未到达</span></div>' +
+    '</div>' +
+    '<div style="padding:14px 18px 6px">' + (inst ? '<div style="display:flex;align-items:center;gap:10px;font-size:12.5px;color:#5f6b7f">' + instStatusChip(inst.status) + '<span>' + esc(inst.id) + '</span><span style="color:#c2cad8">·</span><span>' + esc(inst.title) + '</span><span style="color:#c2cad8">·</span><span>当前节点：' + esc(inst.cur) + '</span></div>' : '<div style="font-size:12px;color:#8b96a8">当前展示定义全貌，选择实例后可叠加流转状态</div>') +
+    '</div>' +
+    '<div style="padding:8px 14px 16px"><div class="dgram-wrap">' + diagram(def.nodes, def.edges, { states: states, liveFrom: liveFromOf(inst) }) + '</div></div>' +
+    '<div style="padding:0 18px 16px"><table class="mini-tbl"><thead><tr><th>节点</th><th>类型</th><th>办理人</th><th>处理策略</th><th>出线条件</th><th>状态</th></tr></thead><tbody>' +
+    def.nodes.map((n) => {
+      const outs = def.edges.filter((e) => e.from === n.id);
+      const st = states[n.id];
+      return '<tr><td style="color:#1a1f29">' + esc(n.name) + '</td>' +
+        '<td>' + (TYPES[n.type] ? TYPES[n.type].label : n.type) + '</td>' +
+        '<td>' + esc(n.assignee || '—') + '</td><td>' + esc(n.type === 'task' ? n.policy : '—') + '</td>' +
+        '<td>' + (outs.length ? outs.map((o) => esc(o.cond || '无条件')).join(' / ') : '—') + '</td>' +
+        '<td>' + (st === 'done' ? chip('已办结', 'green') : st === 'current' ? chip('进行中', 'blue') : st === 'pending' ? chip('未到达', 'gray') : '—') + '</td></tr>';
+    }).join('') +
+    '</tbody></table></div></div></div>';
+}
+
+/* =======================================================================
+   视图：流程实例详情
+   ======================================================================= */
+function viewInstanceDetail(id) {
+  const inst = INSTANCES.find((i) => i.id === id);
+  if (!inst) return '<div class="page"><h1 style="font-size:18px">实例不存在</h1><p style="color:#5f6b7f;margin-top:8px">该实例可能已被归档。</p></div>';
+  const def = DEFS.find((d) => d.id === inst.defId);
+  const states = statesFor(inst);
+  const timeline = HISTORY.filter((h) => h.instId === inst.id).sort((a, b) => a.time < b.time ? 1 : -1);
+  return '<div class="page">' +
+    '<button class="btn ghost sm" data-act="go" data-id="#/instance" style="margin-bottom:12px;padding-left:2px">← 返回流程实例</button>' +
+    '<div class="page-head"><div><h1 style="font-size:19px">' + esc(inst.title) + '</h1>' +
+    '<p style="display:flex;align-items:center;gap:8px">' + instStatusChip(inst.status) + '<span class="mono">' + esc(inst.id) + '</span><span style="color:#c2cad8">·</span><span>' + esc(def.name) + ' ' + esc(def.version) + '</span></p></div>' +
+    '<div class="acts"><button class="btn" data-act="urge" data-id="' + inst.id + '">催办</button>' +
+    (inst.status === 'running' ? '<button class="btn danger" data-act="terminate" data-id="' + inst.id + '">终止实例</button>' : '<button class="btn" data-act="copy-id">复制实例编号</button>') +
+    '</div></div>' +
+    '<div class="grid2" style="grid-template-columns:1fr 1fr">' +
+    '<div class="card card-pad"><div class="sec-title" style="margin-top:0">基本信息</div><div class="kv" style="grid-template-columns:1fr">' +
+    kvRow('流程定义', def.name + ' · ' + def.code + ' · ' + def.version) +
+    kvRow('业务主键', inst.biz) +
+    kvRow('发起人', inst.starter + '（' + inst.dept + '）') +
+    kvRow('发起时间', inst.start) +
+    kvRow('当前节点', inst.curNode ? inst.cur : '—') +
+    kvRow('累计耗时', inst.cost) +
+    (inst.end ? kvRow('结束时间', inst.end) : '') +
+    '</div></div>' +
+    '<div class="card card-pad"><div class="sec-title" style="margin-top:0">流转概览</div>' +
+    '<div style="display:flex;gap:22px;margin-bottom:12px">' +
+    stat('已办节点', String((inst.passed || []).length)) + stat('总节点', String(def.nodes.length)) + stat('待办任务', String(TODOS.filter((t) => t.instId === inst.id).length)) +
+    '</div>' +
+    '<div style="font-size:12px;color:#5f6b7f;line-height:2">' +
+    '<div>业务表单：' + esc(def.form) + '</div>' +
+    '<div>引擎路径：flow_instance → flow_task → flow_his_task</div>' +
+    '<div>状态机：审批中 → 已完成 / 已终止（不可回退）</div>' +
+    '</div></div></div>' +
+    '<div class="card" style="margin-top:14px"><div class="card-head"><h3>流程图</h3><div class="legend" style="margin-left:auto">' +
+    '<span class="lg"><i style="background:#ecfaf3;border:1px solid #0f9f6e"></i>已办结</span>' +
+    '<span class="lg"><i style="background:#eef4ff;border:1px solid #2563eb"></i>当前节点</span>' +
+    '<span class="lg"><i style="background:#fff;border:1px solid #dde3ed"></i>未到达</span></div></div>' +
+    '<div style="padding:12px 14px"><div class="dgram-wrap">' + diagram(def.nodes, def.edges, { states: states, liveFrom: liveFromOf(inst) }) + '</div></div></div>' +
+    '<div class="card" style="margin-top:14px"><div class="card-head"><h3>流转记录</h3><span class="more">共 ' + timeline.length + ' 条</span></div>' +
+    '<div style="padding:16px 18px">' +
+    (timeline.length ? '<div class="timeline">' + timeline.map((h) =>
+      '<div class="tl-item ' + (h.result === '同意' || h.result === '提交' ? 'ok' : '') + '">' +
+      '<div class="tl-dot"></div>' +
+      '<div class="tl-t">' + esc(h.node) + resultChip(h.result) + '<span style="font-weight:400;color:#8b96a8;font-size:11.5px">' + esc(h.handler) + ' · ' + esc(h.time) + ' · 耗时 ' + esc(h.cost) + '</span></div>' +
+      (h.opinion ? '<div class="tl-o">' + esc(h.opinion) + '</div>' : '') +
+      '</div>').join('') + '</div>' : '<div style="color:#8b96a8;font-size:12.5px">暂无流转记录</div>') +
+    '</div></div></div>';
+}
+function kvRow(k, v) { return '<div class="i"><span class="k">' + k + '</span><span class="v">' + esc(v) + '</span></div>'; }
+function stat(l, v) {
+  return '<div><div style="font-size:11.5px;color:#8b96a8">' + l + '</div><div style="font-size:22px;font-weight:640;letter-spacing:-.4px;font-variant-numeric:tabular-nums">' + v + '</div></div>';
+}
+
+/* =======================================================================
+   视图：设计器
+   ======================================================================= */
+function initDesigner(defId) {
+  const def = DEFS.find((d) => d.id === defId) || DEFS[0];
+  const firstTask = def.nodes.find((n) => n.type === 'task');
+  designer = {
+    defId: def.id, name: def.name, code: def.code,
+    nodes: clone(def.nodes), edges: clone(def.edges),
+    selNode: firstTask ? firstTask.id : null, selEdge: null, dirty: false, savedAt: def.updated,
+    version: 'v3.9', draft: true
+  };
+}
+function viewDesigner(defId) {
+  if (!designer.defId || designer.defId !== defId) initDesigner(defId);
+  const d = designer;
+  const pal = Object.keys(TYPES).map((k) =>
+    '<div class="pal-item" draggable="true" data-type="' + k + '">' +
+    '<div class="pi">' + palIcon(k) + '</div>' +
+    '<div><div class="pt-t">' + TYPES[k].label + '</div><div class="pt-s">' + palHint(k) + '</div></div>' +
+    '</div>').join('');
+  return '<div class="dwrap">' +
+    '<div class="dbar">' +
+    '<div><div class="nm">' + esc(d.name) + ' <span style="font-size:11px;font-weight:500;color:#8b96a8">' + esc(d.code) + ' · ' + esc(d.version) + '（' + (d.draft ? '草稿' : '已发布') + '）</span></div>' +
+    '<div id="dcount" style="font-size:11px;color:#8b96a8;margin-top:2px">节点 ' + d.nodes.length + ' 个 · 跳线 ' + d.edges.length + ' 条 · 画布 720 × 560</div></div>' +
+    '<div class="spacer"></div>' +
+    '<div class="save-state" id="saveState"><span style="width:6px;height:6px;border-radius:9px;background:' + (d.dirty ? '#b8770a' : '#0f9f6e') + ';display:inline-block"></span>' + (d.dirty ? '有未保存修改' : '已保存 ' + esc(d.savedAt)) + '</div>' +
+    '<button class="btn" data-act="d-preview">预览流程图</button>' +
+    '<button class="btn" data-act="d-check">校验</button>' +
+    '<button class="btn" data-act="d-save">保存草稿</button>' +
+    '<button class="btn pri" data-act="d-publish">发布</button>' +
+    '</div>' +
+    '<div class="dbody">' +
+    '<div class="palette"><div class="pt">节点组件</div>' + pal +
+    '<div class="pal-tip">按住组件拖到画布即可添加。<br>拖动节点右侧小圆点可连线；选中节点后按 Delete 删除。</div></div>' +
+    '<div class="canvas-card" id="canvasCard"><div class="canvas-hint">从左侧拖入节点 · 拖动节点调整位置 · 拖动右侧圆点连线</div>' +
+    '<svg id="dcanvas" class="diagram dcanvas" width="720" height="560" viewBox="0 0 720 560"></svg>' +
+    '</div>' +
+    '<div class="props"><div class="ph"><h4>节点属性</h4><span class="ty" id="propType"></span></div><div class="pbody" id="props"></div></div>' +
+    '</div></div>';
+}
+function palIcon(t) {
+  if (t === 'start' || t === 'end') return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="18" height="8" rx="4"/></svg>';
+  if (t === 'task') return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12l2.6 2.6L16 9"/></svg>';
+  if (t === 'gateway') return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3.5 20.5 12 12 20.5 3.5 12 12 3.5Z"/></svg>';
+  return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3.5 20.5 12 12 20.5 3.5 12 12 3.5Z"/><path d="M12 9v6M9 12h6"/></svg>';
+}
+function palHint(t) {
+  return { start: '流程唯一入口', task: '人工办理 / 会签', gateway: '按条件走一条', parallel: '同时分流多路', end: '流程终点' }[t];
+}
+
+function renderCanvas() {
+  const svg = $('#dcanvas');
+  if (!svg) return;
+  const d = designer;
+  const nodes = d.nodes;
+  let body = '<rect x="0" y="0" width="720" height="560" fill="transparent"/>';
+  body += diagram(nodes, d.edges, { editable: true, selected: d.selNode, selEdge: d.selEdge, states: {}, inner: true });
+  svg.innerHTML = body;
+  const hint = $('#canvasCard .canvas-hint');
+  if (hint) hint.style.display = 'none';
+  const cnt = $('#dcount');
+  if (cnt) cnt.textContent = '节点 ' + d.nodes.length + ' 个 · 跳线 ' + d.edges.length + ' 条 · 画布 720 × 560';
+  const st = $('#saveState');
+  if (st) st.innerHTML = '<span style="width:6px;height:6px;border-radius:9px;background:' + (d.dirty ? '#b8770a' : '#0f9f6e') + ';display:inline-block"></span>' + (d.dirty ? '有未保存修改' : '已保存 ' + esc(d.savedAt));
+}
+
+function renderProps() {
+  const p = $('#props'), ty = $('#propType');
+  if (!p) return;
+  const d = designer;
+  if (d.selEdge != null && d.edges[d.selEdge]) {
+    const e = d.edges[d.selEdge];
+    const a = d.nodes.find((n) => n.id === e.from), b = d.nodes.find((n) => n.id === e.to);
+    ty.textContent = '跳线 flow_skip';
+    p.innerHTML =
+      '<div style="font-size:12px;color:#5f6b7f;background:#f7f9fc;border:1px solid #eff2f7;border-radius:8px;padding:8px 10px;margin-bottom:14px">' +
+      esc(a ? a.name : '?') + ' → ' + esc(b ? b.name : '?') + '</div>' +
+      '<div class="field"><label>条件表达式</label><textarea data-field="cond" placeholder="如：请假天数 &gt; 3 或 ${amount} &gt; 5000">' + esc(e.cond) + '</textarea>' +
+      '<div class="tip">满足条件时走这条线，多个分支按优先级从上到下匹配。</div></div>' +
+      '<div class="field"><label>优先级</label><input class="inp" type="number" data-field="priority" value="' + (e.priority || 1) + '"></div>' +
+      '<div class="field"><label>显示名称</label><input class="inp" data-field="label" value="' + esc(e.label || '') + '" placeholder="留空则显示表达式"></div>' +
+      '<button class="btn danger" style="width:100%;margin-top:6px" data-act="d-del-edge">删除这条连线</button>';
+    return;
+  }
+  if (d.selNode) {
+    const n = d.nodes.find((x) => x.id === d.selNode);
+    if (!n) { p.innerHTML = emptyProps(); return; }
+    ty.innerHTML = chip(TYPES[n.type].label, n.type === 'task' ? 'blue' : 'gray');
+    let f = '<div class="field"><label>节点名称</label><input class="inp" data-field="name" value="' + esc(n.name) + '"></div>' +
+      '<div class="field"><label>节点编码</label><input class="inp" value="' + esc(n.id) + '" disabled style="background:#f7f9fc;color:#8b96a8"></div>';
+    if (n.type === 'task') {
+      f += '<div class="field"><label>办理人</label><input class="inp" data-field="assignee" value="' + esc(n.assignee) + '" placeholder="角色 / 用户 / 表达式"></div>' +
+        '<div class="field"><label>多人处理策略</label><select class="sel" data-field="policy">' +
+        ['单人办理', '会签', '或签', '顺序审批'].map((o) => '<option' + (n.policy === o ? ' selected' : '') + '>' + o + '</option>').join('') + '</select>' +
+        '<div class="tip">会签 = 全部通过；或签 = 一人通过即流转。</div></div>' +
+        '<div class="field"><label>表单权限</label><select class="sel" data-field="right">' +
+        ['可编辑', '只读', '隐藏'].map((o) => '<option' + (n.right === o ? ' selected' : '') + '>' + o + '</option>').join('') + '</select></div>' +
+        '<div class="field"><label>超时提醒（小时）</label><input class="inp" type="number" data-field="timeout" value="' + (n.timeout || 8) + '"><div class="tip">超时后写入任务预警，可配置催办监听。</div></div>' +
+        '<label class="check"><input type="checkbox" data-field="allowReject"> 允许驳回上一节点</label>' +
+        '<label class="check"><input type="checkbox" data-field="allowTransfer"> 允许转办 / 加签</label>';
+    } else if (n.type === 'gateway') {
+      f += '<div class="field"><label>分支逻辑</label><select class="sel" data-field="mode"><option' + (n.mode !== 'default' ? ' selected' : '') + '>条件分支</option><option' + (n.mode === 'default' ? ' selected' : '') + '>默认分支</option></select>' +
+        '<div class="tip">排他网关只走一条线，条件不满足时走默认分支。</div></div>' +
+        '<div class="field"><label>条件变量</label><input class="inp" data-field="varName" value="' + esc(n.varName || 'days') + '"></div>';
+    } else if (n.type === 'parallel') {
+      f += '<div class="field"><label>分流模式</label><select class="sel" data-field="mode"><option' + (n.mode !== 'join' ? ' selected' : '') + '>分流（fork）</option><option' + (n.mode === 'join' ? ' selected' : '') + '>汇聚（join）</option></select>' +
+        '<div class="tip">汇聚节点会等待所有入线完成后再继续。</div></div>';
+    } else if (n.type === 'start') {
+      f += '<div class="field"><label>绑定表单</label><select class="sel" data-field="form"><option>动态表单 · 请假申请单</option><option>动态表单 · 报销单</option><option>自定义表单 · 合同要素</option></select></div>' +
+        '<div class="field"><label>发起人范围</label><input class="inp" data-field="scope" value="' + esc(n.scope || '全体正式员工') + '"></div>';
+    } else {
+      f += '<div class="field"><label>结束动作</label><select class="sel" data-field="finish"><option>仅结束流程</option><option>结束并触发回调</option><option>结束并归档业务数据</option></select></div>';
+    }
+    p.innerHTML = f +
+      '<div style="border-top:1px solid #eff2f7;margin-top:6px;padding-top:12px;display:flex;gap:8px">' +
+      '<button class="btn danger" style="flex:1" data-act="d-del-node">删除节点</button>' +
+      '<button class="btn" style="flex:1" data-act="d-dup-node">复制节点</button></div>';
+    return;
+  }
+  p.innerHTML = emptyProps();
+  ty.textContent = '';
+}
+function emptyProps() {
+  return '<div class="pempty"><div class="big">◇</div>选中画布上的节点或连线<br>在这里配置办理人、条件与表单权限</div>';
+}
+
+function bindDesigner() {
+  designerActive = true;
+  renderCanvas();
+  renderProps();
+  const svg = $('#dcanvas');
+  const card = $('#canvasCard');
+  if (!svg) return;
+
+  const toSvg = (ev) => {
+    const r = svg.getBoundingClientRect();
+    const k = 720 / r.width;
+    return { x: (ev.clientX - r.left) * k, y: (ev.clientY - r.top) * k };
+  };
+
+  let drag = null;
+  svg.addEventListener('pointerdown', (ev) => {
+    const port = ev.target.closest('[data-port]');
+    const nodeEl = ev.target.closest('[data-node]');
+    const edgeEl = ev.target.closest('[data-edge]');
+    if (port) {
+      ev.preventDefault();
+      drag = { type: 'link', from: port.dataset.port };
+      designer.selNode = port.dataset.port; designer.selEdge = null;
+      renderCanvas(); renderProps();
+      return;
+    }
+    if (nodeEl) {
+      ev.preventDefault();
+      const id = nodeEl.dataset.node;
+      designer.selNode = id; designer.selEdge = null;
+      const n = designer.nodes.find((x) => x.id === id);
+      drag = { type: 'node', id: id, sx: ev.clientX, sy: ev.clientY, ox: n.x, oy: n.y, moved: false };
+      renderCanvas(); renderProps();
+      return;
+    }
+    if (edgeEl) {
+      designer.selEdge = Number(edgeEl.dataset.edge); designer.selNode = null;
+      renderCanvas(); renderProps();
+      return;
+    }
+    designer.selNode = null; designer.selEdge = null;
+    renderCanvas(); renderProps();
+  });
+
+  window.addEventListener('pointermove', (ev) => {
+    if (!drag || !designerActive) return;
+    if (drag.type === 'node') {
+      const n = designer.nodes.find((x) => x.id === drag.id);
+      if (!n) return;
+      const dx = ev.clientX - drag.sx, dy = ev.clientY - drag.sy;
+      if (Math.abs(dx) > 2 || Math.abs(dy) > 2) drag.moved = true;
+      n.x = Math.max(8, Math.min(712 - dims(n).w, Math.round((drag.ox + dx) / 8) * 8));
+      n.y = Math.max(12, Math.min(548 - dims(n).h, Math.round((drag.oy + dy) / 8) * 8));
+      renderCanvas();
+    } else if (drag.type === 'link') {
+      const from = designer.nodes.find((x) => x.id === drag.from);
+      if (!from) return;
+      const p = outPort(from), m = toSvg(ev);
+      let tl = $('#tline');
+      if (!tl) {
+        tl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        tl.setAttribute('id', 'tline');
+        tl.setAttribute('fill', 'none');
+        tl.setAttribute('stroke', '#2563eb');
+        tl.setAttribute('stroke-width', '1.8');
+        tl.setAttribute('stroke-dasharray', '5 4');
+        tl.setAttribute('pointer-events', 'none');
+        svg.appendChild(tl);
+      }
+      tl.setAttribute('d', curve(p, m, 'v'));
+    }
+  });
+
+  window.addEventListener('pointerup', (ev) => {
+    if (!drag || !designerActive) return;
+    if (drag.type === 'node') {
+      if (drag.moved) { designer.dirty = true; renderCanvas(); }
+    } else if (drag.type === 'link') {
+      const el = document.elementFromPoint(ev.clientX, ev.clientY);
+      const tgt = el && el.closest ? el.closest('[data-node]') : null;
+      const toId = tgt ? tgt.dataset.node : null;
+      if (toId && toId !== drag.from) {
+        const exists = designer.edges.some((x) => x.from === drag.from && x.to === toId);
+        if (exists) toast('这两个节点之间已有连线', 'warn');
+        else { designer.edges.push({ from: drag.from, to: toId, cond: '', priority: 1, label: '' }); designer.dirty = true; }
+      }
+      const tl = $('#tline'); if (tl) tl.remove();
+      renderCanvas(); renderProps();
+    }
+    drag = null;
+  });
+
+  svg.addEventListener('dragover', (ev) => { ev.preventDefault(); ev.dataTransfer.dropEffect = 'copy'; });
+  svg.addEventListener('drop', (ev) => {
+    ev.preventDefault();
+    const type = ev.dataTransfer.getData('text/plain');
+    if (!type) return;
+    const p = toSvg(ev);
+    addNode(type, p.x, p.y);
+  });
+  $$('.pal-item').forEach((it) => {
+    it.addEventListener('dragstart', (ev) => {
+      ev.dataTransfer.setData('text/plain', it.dataset.type);
+      ev.dataTransfer.effectAllowed = 'copy';
+    });
+  });
+
+  $('#props').addEventListener('input', onPropInput);
+  $('#props').addEventListener('change', onPropInput);
+}
+function onPropInput(ev) {
+  const f = ev.target.dataset.field;
+  if (!f) return;
+  const v = ev.target.type === 'checkbox' ? ev.target.checked : ev.target.value;
+  const d = designer;
+  if (d.selEdge != null && d.edges[d.selEdge]) {
+    d.edges[d.selEdge][f] = v;
+    d.dirty = true;
+    renderCanvas();
+  } else if (d.selNode) {
+    const n = d.nodes.find((x) => x.id === d.selNode);
+    if (!n) return;
+    n[f] = v;
+    d.dirty = true;
+    if (f === 'name' || f === 'assignee') renderCanvas();
+  }
+}
+function addNode(type, x, y) {
+  const d = designer;
+  const id = 'n' + (++seq);
+  const w = dims({ type: type }).w, h = dims({ type: type }).h;
+  let n = { id: id, name: TYPES[type].label, type: type, x: Math.round(x - w / 2), y: Math.round(y - h / 2), assignee: '', policy: '单人办理', right: '可编辑' };
+  if (type === 'task') n.assignee = '部门主管';
+  if (type === 'gateway') { n.name = '条件判断'; n.mode = '条件分支'; n.varName = 'days'; }
+  if (type === 'parallel') { n.name = '并行网关'; n.mode = 'fork'; }
+  n.x = Math.max(8, Math.min(712 - w, n.x));
+  n.y = Math.max(12, Math.min(548 - h, n.y));
+  d.nodes.push(n);
+  d.selNode = id; d.selEdge = null; d.dirty = true;
+  renderCanvas(); renderProps();
+  toast('已添加「' + TYPES[type].label + '」', '');
+}
+function deleteSelected() {
+  const d = designer;
+  if (d.selEdge != null) {
+    d.edges.splice(d.selEdge, 1);
+    d.selEdge = null; d.dirty = true; renderCanvas(); renderProps(); toast('连线已删除', '');
+  } else if (d.selNode) {
+    const id = d.selNode;
+    d.nodes = d.nodes.filter((n) => n.id !== id);
+    d.edges = d.edges.filter((e) => e.from !== id && e.to !== id);
+    d.selNode = null; d.dirty = true; renderCanvas(); renderProps(); toast('节点及其连线已删除', '');
+  }
+}
+function validateDesigner() {
+  const d = designer, out = [];
+  const starts = d.nodes.filter((n) => n.type === 'start');
+  const ends = d.nodes.filter((n) => n.type === 'end');
+  if (starts.length !== 1) out.push({ id: starts[0] ? starts[0].id : null, msg: '开始节点必须且只能有 1 个，当前 ' + starts.length + ' 个' });
+  if (!ends.length) out.push({ id: null, msg: '缺少结束节点，流程无法归档' });
+  d.nodes.forEach((n) => {
+    if (n.type === 'task' && !n.assignee) out.push({ id: n.id, msg: '节点「' + n.name + '」未配置办理人' });
+    if (n.type !== 'end' && d.edges.filter((e) => e.from === n.id).length === 0) out.push({ id: n.id, msg: '节点「' + n.name + '」没有出线，流程会中断' });
+    if (n.type === 'start' && d.edges.filter((e) => e.to === n.id).length) out.push({ id: n.id, msg: '开始节点不能有入线' });
+  });
+  d.edges.forEach((e) => {
+    const a = d.nodes.find((n) => n.id === e.from);
+    if (a && a.type === 'gateway' && !e.cond && a.mode !== 'default') out.push({ id: e.from, msg: '网关「' + a.name + '」的分支缺少条件表达式' });
+  });
+  return out;
+}
+function showCheck() {
+  const card = $('#canvasCard');
+  if (!card) return;
+  const old = $('.check-panel', card);
+  if (old) old.remove();
+  const list = validateDesigner();
+  const panel = document.createElement('div');
+  panel.className = 'check-panel';
+  panel.innerHTML = '<div class="cph">' + (list.length ? '<span style="color:#d92d20">△</span> 校验发现 ' + list.length + ' 个问题' : '<span style="color:#0f9f6e">✓</span> 校验通过') +
+    '<button class="x" data-act="close-check">✕</button></div>' +
+    (list.length ? '<div class="list">' + list.map((it) =>
+      '<div class="row" data-act="d-locate" data-id="' + (it.id || '') + '"><span class="n">!</span><span>' + esc(it.msg) + '</span></div>').join('') + '</div>' +
+      '<div class="foot">点击问题可定位到对应节点</div>'
+      : '<div class="foot">节点、连线与办理人配置完整，可以发布。</div>');
+  card.appendChild(panel);
+}
+
+/* =======================================================================
+   抽屉
+   ======================================================================= */
+function openDrawer(title, sub, body, foot, width) {
+  $('#drTitle').textContent = title;
+  $('#drSub').textContent = sub || '';
+  $('#drBody').innerHTML = body;
+  $('#drFoot').innerHTML = foot || '';
+  $('#drFoot').style.display = foot ? 'flex' : 'none';
+  $('#drawer').style.width = (width || 780) + 'px';
+  $('#drawer').classList.add('on');
+  $('#mask').classList.add('on');
+}
+function closeDrawer() {
+  $('#drawer').classList.remove('on');
+  $('#mask').classList.remove('on');
+  dr.defId = null;
+}
+
+function openDefDrawer(defId, tab) {
+  const def = DEFS.find((d) => d.id === defId);
+  if (!def) return;
+  dr = { defId: defId, tab: tab || 'info', mode: 'def' };
+  renderDefDrawer();
+  $('#drawer').classList.add('on');
+  $('#mask').classList.add('on');
+}
+function renderDefDrawer() {
+  const def = DEFS.find((d) => d.id === dr.defId);
+  if (!def) return;
+  const tabs = [['info', '基本信息'], ['nodes', '节点清单'], ['chart', '流程图']];
+  const head = '<div class="two" style="margin-bottom:14px"><div class="icn-sq" style="width:36px;height:36px;font-size:14px">' + esc(def.name.slice(0, 1)) + '</div>' +
+    '<div class="cell"><span class="t" style="font-size:14px">' + esc(def.name) + '</span><span class="mono">' + esc(def.code) + ' · ' + esc(def.version) + '</span></div>' +
+    '<div style="margin-left:auto">' + (def.status === 'published' ? chip('已发布', 'green') : chip('草稿', 'amber')) + '</div></div>';
+  const bar = '<div class="tabs" style="margin-bottom:14px">' + tabs.map((t) =>
+    '<div class="tab ' + (dr.tab === t[0] ? 'on' : '') + '" data-act="dr-tab" data-id="' + t[0] + '">' + t[1] + '</div>').join('') + '</div>';
+  let content = '';
+  if (dr.tab === 'info') {
+    content = '<div class="kv">' +
+      kvRow('流程编码', def.code) + kvRow('版本号', def.version) +
+      kvRow('业务类别', def.cat) + kvRow('表单类型', def.form) +
+      kvRow('负责人', def.owner) + kvRow('更新时间', def.updated) +
+      '</div>' +
+      '<div class="sec-title">流程说明</div><div style="font-size:12.5px;color:#5f6b7f;line-height:1.9;background:#fafbfd;border:1px solid #f0f3f8;border-radius:9px;padding:10px 12px">' + esc(def.desc) + '</div>' +
+      '<div class="sec-title">存储映射（warm-flow）</div>' +
+      '<table class="mini-tbl"><thead><tr><th>数据表</th><th>记录数</th><th>说明</th></tr></thead><tbody>' +
+      [['flow_definition', '1', '定义主表：编码、版本、发布状态、表单类型'],
+       ['flow_node', String(def.nodes.length), '节点：类型、坐标、办理人、表单权限'],
+       ['flow_skip', String(def.edges.length), '跳线：节点间流向与条件表达式'],
+       ['flow_instance', String(def.inst), '实例：业务主键、当前节点、状态'],
+       ['flow_task', String(def.running), '待办：办理人、到达时间、认领状态'],
+       ['flow_his_task', String(def.inst * 4), '历史：办理结果、意见、耗时']].map((r) =>
+        '<tr><td class="mono" style="color:#1a1f29">' + r[0] + '</td><td>' + r[1] + '</td><td style="color:#8b96a8">' + r[2] + '</td></tr>').join('') +
+      '</tbody></table>';
+  } else if (dr.tab === 'nodes') {
+    content = '<table class="mini-tbl"><thead><tr><th>#</th><th>节点名称</th><th>类型</th><th>办理人</th><th>策略</th><th>表单权限</th><th>出线</th></tr></thead><tbody>' +
+      def.nodes.map((n, i) => {
+        const outs = def.edges.filter((e) => e.from === n.id);
+        return '<tr><td style="color:#8b96a8">' + (i + 1) + '</td><td style="color:#1a1f29">' + esc(n.name) + '</td>' +
+          '<td>' + TYPES[n.type].label + '</td><td>' + esc(n.assignee || '—') + '</td>' +
+          '<td>' + esc(n.type === 'task' ? n.policy : '—') + '</td><td>' + esc(n.type === 'task' ? n.right : '—') + '</td>' +
+          '<td style="color:#8b96a8">' + (outs.length ? outs.map((o) => esc(o.cond || (n.type === 'gateway' ? '默认分支' : '无条件'))).join(' / ') : '—') + '</td></tr>';
+      }).join('') + '</tbody></table>' +
+      '<div class="sec-title">跳线明细（flow_skip）</div>' +
+      '<table class="mini-tbl"><thead><tr><th>起点</th><th>终点</th><th>条件</th></tr></thead><tbody>' +
+      def.edges.map((e) => {
+        const a = def.nodes.find((n) => n.id === e.from), b = def.nodes.find((n) => n.id === e.to);
+        return '<tr><td>' + esc(a.name) + '</td><td>' + esc(b.name) + '</td><td style="color:#5f6b7f">' + esc(e.cond || '无条件') + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  } else {
+    content = '<div class="dgram-wrap">' + diagram(def.nodes, def.edges, {}) + '</div>';
+  }
+  const foot = '<span class="hint">' + def.nodes.length + ' 节点 · ' + def.edges.length + ' 跳线</span>' +
+    '<div class="right"><button class="btn" data-act="close-drawer">关闭</button>' +
+    '<button class="btn pri" data-act="def-design" data-id="' + def.id + '">进入设计器</button></div>';
+  openDrawer(def.name + ' · 流程定义详情', def.code + ' · ' + def.version + ' · ' + def.cat, head + bar + content, foot, 820);
+}
+
+/* =======================================================================
+   待办办理抽屉
+   ======================================================================= */
+function openTodoDrawer(id) {
+  const t = TODOS.find((x) => x.id === id);
+  if (!t) return;
+  const def = DEFS.find((d) => d.id === t.defId);
+  const inst = INSTANCES.find((i) => i.id === t.instId);
+  const formHtml = '<div class="form-grid">' + t.form.map((f, i) =>
+    '<div class="fg ' + (f[0].length > 4 || i === t.form.length - 1 ? 'wide' : '') + '"><div class="k">' + esc(f[0]) + '</div><div class="v">' + esc(f[1]) + '</div></div>').join('') + '</div>';
+  const flowMini = inst ? '<div class="dgram-wrap" style="margin-top:4px">' + diagram(def.nodes, def.edges, { states: statesFor(inst), liveFrom: liveFromOf(inst) }) + '</div>' : '';
+  const body = '<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">' +
+    (t.level === '紧急' ? chip('紧急', 'red') : chip('普通', 'gray')) + chip(t.limit, t.pct >= 100 ? 'red' : 'amber') +
+    '<span class="mono">' + esc(t.id) + '</span></div>' +
+    '<div class="sec-title" style="margin-top:0">业务表单</div>' + formHtml +
+    '<div class="sec-title">流程信息</div><div class="kv">' +
+    kvRow('流程定义', def.name + ' · ' + def.version) + kvRow('当前节点', t.node) +
+    kvRow('发起人', t.starter) + kvRow('到达时间', t.arrived) +
+    '</div>' +
+    '<div class="sec-title">流程位置</div>' + flowMini +
+    '<div class="sec-title">审批意见</div>' +
+    '<textarea id="opinion" placeholder="填写审批意见（驳回时必填）" style="width:100%;min-height:76px;border:1px solid #e7ebf2;border-radius:9px;padding:9px 11px;font-size:12.5px;font-family:inherit;outline:none;resize:vertical"></textarea>' +
+    '<div style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap">' +
+    ['同意，按计划执行', '材料不齐，请补充', '金额超预算，请说明'].map((s) => '<button class="link mute" data-act="fill-opinion" data-id="' + s + '">' + s + '</button>').join('') + '</div>';
+  const foot = '<span class="hint">处理后将写入 flow_his_task</span>' +
+    '<div class="right"><button class="btn" data-act="todo-transfer" data-id="' + t.id + '">转办</button>' +
+    '<button class="btn" data-act="todo-addsign" data-id="' + t.id + '">加签</button>' +
+    '<button class="btn danger" data-act="todo-reject" data-id="' + t.id + '">驳回</button>' +
+    '<button class="btn pri" data-act="todo-approve" data-id="' + t.id + '">同意</button></div>';
+  openDrawer(t.title, def.name + ' · ' + t.node + ' · 发起人 ' + t.starter, body, foot, 760);
+}
+
+/* =======================================================================
+   交互
+   ======================================================================= */
+document.addEventListener('click', (ev) => {
+  const el = ev.target.closest('[data-act]');
+  if (!el) return;
+  const act = el.dataset.act, id = el.dataset.id;
+  switch (act) {
+    case 'go': location.hash = id; break;
+    case 'close-drawer': closeDrawer(); break;
+    case 'def-open': openDefDrawer(id, 'info'); break;
+    case 'def-design': closeDrawer(); location.hash = '#/designer/' + id; break;
+    case 'dr-tab': dr.tab = id; renderDefDrawer(); break;
+    case 'inst-open': location.hash = '#/instance/' + id; break;
+    case 'inst-flow': openFlowDrawer(id); break;
+    case 'inst-tab': ui.instTab = id; renderRoute(); break;
+    case 'todo-tab': ui.todoTab = id; renderRoute(); break;
+    case 'todo-open': openTodoDrawer(id); break;
+    case 'todo-more': toast('更多操作：转办 / 加签 / 驳回 / 查看流程图', ''); break;
+    case 'his-open': openHisDrawer(id); break;
+    case 'cc-open': toast('抄送详情为只读视图（原型未展开）', ''); break;
+    case 'fill-opinion': { const t = $('#opinion'); if (t) { t.value = id; } break; }
+    case 'todo-approve': approveTask(id, '同意'); break;
+    case 'todo-reject': approveTask(id, '驳回'); break;
+    case 'todo-transfer': transferTask(id, '转办'); break;
+    case 'todo-addsign': transferTask(id, '加签'); break;
+    case 'urge': toast('已向当前办理人发送催办提醒', 'ok'); break;
+    case 'terminate': toast('终止需要二次确认，原型中未执行（实例状态会变为已终止）', 'warn'); break;
+    case 'copy-id': toast('实例编号已复制', 'ok'); break;
+    case 'recalc': renderRoute(); toast('实例状态已刷新', 'ok'); break;
+    case 'import-def': toast('支持导入 warm-flow JSON / BPMN 定义（原型为演示）', ''); break;
+    case 'export-his': toast('已生成导出任务，稍后可在下载中心查看', 'ok'); break;
+    case 'batch-transfer': toast('请勾选任务后批量转办（原型未展开）', ''); break;
+    /* 设计器 */
+    case 'd-check': showCheck(); break;
+    case 'close-check': { const cp = el.closest('.check-panel'); if (cp) cp.remove(); break; }
+    case 'd-locate':
+      if (id) { designer.selNode = id; designer.selEdge = null; renderCanvas(); renderProps(); const cp = el.closest('.check-panel'); if (cp) cp.remove(); }
+      break;
+    case 'd-save':
+      designer.dirty = false;
+      designer.savedAt = '2026-11-19 ' + nowHM();
+      renderCanvas(); toast('草稿已保存（示例：写 flow_definition 草稿态）', 'ok');
+      break;
+    case 'd-publish': {
+      const list = validateDesigner();
+      if (list.length) { showCheck(); toast('存在 ' + list.length + ' 个问题，修复后才能发布', 'warn'); }
+      else {
+        designer.dirty = false;
+        designer.draft = false;
+        const def = DEFS.find((d) => d.id === designer.defId);
+        if (def) { def.version = 'v3.9'; }
+        toast('发布成功，新实例将使用 v3.9 定义', 'ok');
+        renderRoute();
+      }
+      break;
+    }
+    case 'd-preview': openPreviewDrawer(); break;
+    case 'd-del-node': deleteSelected(); break;
+    case 'd-del-edge': deleteSelected(); break;
+    case 'd-dup-node': {
+      const n = designer.nodes.find((x) => x.id === designer.selNode);
+      if (!n) break;
+      const cp = clone(n);
+      cp.id = 'n' + (++seq); cp.x = Math.min(712 - dims(n).w, n.x + 24); cp.y = Math.min(548 - dims(n).h, n.y + 24); cp.name = n.name + ' 副本';
+      designer.nodes.push(cp); designer.selNode = cp.id; designer.dirty = true;
+      renderCanvas(); renderProps(); toast('节点已复制', '');
+      break;
+    }
+  }
+});
+
+document.addEventListener('input', (ev) => {
+  const b = ev.target.dataset.bind;
+  if (!b) return;
+  ui[b] = ev.target.value;
+  renderRoute();
+  const el = $('[data-bind="' + b + '"]');
+  if (el) { el.focus(); if (el.setSelectionRange && el.type !== 'number') { try { el.setSelectionRange(el.value.length, el.value.length); } catch (e) {} } }
+});
+document.addEventListener('change', (ev) => {
+  const b = ev.target.dataset.bind;
+  if (!b || ev.target.tagName !== 'SELECT') return;
+  ui[b] = ev.target.value;
+  if (b === 'flowDef') ui.flowInst = '';
+  renderRoute();
+});
+
+document.addEventListener('keydown', (ev) => {
+  if (!designerActive) return;
+  const tag = (ev.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+  if (ev.key === 'Delete' || ev.key === 'Backspace') {
+    if (designer.selNode || designer.selEdge != null) { ev.preventDefault(); deleteSelected(); }
+  }
+  if (ev.key === 'Escape') { designer.selNode = null; designer.selEdge = null; renderCanvas(); renderProps(); }
+});
+
+function nowHM() {
+  const d = new Date();
+  return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+}
+
+function approveTask(id, result) {
+  const idx = TODOS.findIndex((t) => t.id === id);
+  if (idx < 0) return;
+  const t = TODOS[idx];
+  const op = $('#opinion');
+  const txt = op && typeof op.value === 'string' ? op.value.trim() : '';
+  if (result === '驳回' && !txt) { toast('驳回需要填写审批意见', 'warn'); return; }
+  HISTORY.unshift({
+    id: 'HT-' + String(30 + (seq++)), instId: t.instId, defName: DEFS.find((d) => d.id === t.defId).name,
+    node: t.node, handler: ME.name, result: result, opinion: txt || (result === '同意' ? '同意' : ''),
+    time: '2026-11-19 ' + nowHM(), cost: '12 分'
+  });
+  TODOS.splice(idx, 1);
+  const navBadge = $('.nav-badge');
+  if (navBadge) navBadge.textContent = TODOS.length;
+  closeDrawer();
+  renderRoute();
+  toast(result === '同意' ? '已同意，流程流转到下一节点' : '已驳回，流程退回发起人', result === '同意' ? 'ok' : 'warn');
+}
+function transferTask(id, kind) {
+  const idx = TODOS.findIndex((t) => t.id === id);
+  if (idx < 0) return;
+  const t = TODOS[idx];
+  HISTORY.unshift({
+    id: 'HT-' + String(30 + (seq++)), instId: t.instId, defName: DEFS.find((d) => d.id === t.defId).name,
+    node: t.node, handler: ME.name, result: kind, opinion: kind === '转办' ? '转办给王芳处理' : '加签销售总监复核',
+    time: '2026-11-19 ' + nowHM(), cost: '—'
+  });
+  if (kind === '转办') TODOS.splice(idx, 1);
+  closeDrawer(); renderRoute();
+  toast(kind === '转办' ? '已转办给王芳' : '已加签销售总监，任务仍在你的待办中', 'ok');
+}
+
+function openHisDrawer(id) {
+  const h = HISTORY.find((x) => x.id === id);
+  if (!h) return;
+  const inst = INSTANCES.find((i) => i.id === h.instId);
+  const def = inst ? DEFS.find((d) => d.id === inst.defId) : null;
+  const body = '<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">' + resultChip(h.result) + '<span class="mono">' + esc(h.id) + '</span></div>' +
+    '<div class="kv">' + kvRow('所属流程', h.defName) + kvRow('节点', h.node) +
+    kvRow('办理人', h.handler) + kvRow('完成时间', h.time) + kvRow('节点耗时', h.cost) + kvRow('实例编号', h.instId) + '</div>' +
+    '<div class="sec-title">审批意见</div>' +
+    '<div style="font-size:12.5px;line-height:1.9;background:#fafbfd;border:1px solid #f0f3f8;border-radius:9px;padding:10px 12px;color:#5f6b7f">' + (esc(h.opinion) || '无') + '</div>' +
+    (def ? '<div class="sec-title">当时流程位置</div><div class="dgram-wrap">' + diagram(def.nodes, def.edges, { states: inst ? statesFor(inst) : {}, liveFrom: liveFromOf(inst) }) + '</div>' : '');
+  openDrawer(h.node + ' · ' + h.result, h.defName + ' · ' + (inst ? inst.title : ''), body,
+    '<span class="hint">记录保留 180 天，可按实例追溯</span><div class="right"><button class="btn" data-act="close-drawer">关闭</button>' +
+    (inst ? '<button class="btn pri" data-act="inst-open" data-id="' + inst.id + '">查看实例</button>' : '') + '</div>', 780);
+}
+
+function openFlowDrawer(instId) {
+  const inst = INSTANCES.find((i) => i.id === instId);
+  if (!inst) return;
+  const def = DEFS.find((d) => d.id === inst.defId);
+  const body = '<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">' + instStatusChip(inst.status) +
+    '<span style="font-size:12px;color:#5f6b7f">当前节点：' + esc(inst.cur) + '</span></div>' +
+    '<div class="dgram-wrap">' + diagram(def.nodes, def.edges, { states: statesFor(inst), liveFrom: liveFromOf(inst) }) + '</div>' +
+    '<div class="legend-bar"><span class="lg"><i style="background:#ecfaf3;border:1px solid #0f9f6e"></i>已办结</span>' +
+    '<span class="lg"><i style="background:#eef4ff;border:1px solid #2563eb"></i>当前节点</span>' +
+    '<span class="lg"><i style="background:#fff;border:1px solid #dde3ed"></i>未到达</span></div>';
+  openDrawer('流程图 · ' + inst.id, inst.title, body,
+    '<span class="hint">共 ' + (inst.passed || []).length + ' / ' + def.nodes.length + ' 个节点已办结</span>' +
+    '<div class="right"><button class="btn" data-act="close-drawer">关闭</button><button class="btn pri" data-act="inst-open" data-id="' + inst.id + '">实例详情</button></div>', 880);
+}
+
+function openPreviewDrawer() {
+  const d = designer;
+  openDrawer('流程图预览 · ' + d.name, d.code + ' · 未发布的草稿定义',
+    '<div class="dgram-wrap">' + diagram(d.nodes, d.edges, {}) + '</div>' +
+    '<div class="legend-bar">即将发布的节点 ' + d.nodes.length + ' 个 · 跳线 ' + d.edges.length + ' 条</div>',
+    '<span class="hint">预览为只读，关闭后继续编辑</span><div class="right"><button class="btn pri" data-act="close-drawer">关闭</button></div>', 880);
+}
+
+/* =======================================================================
+   路由
+   ======================================================================= */
+function renderRoute() {
+  if ($('#drawer').classList.contains('on')) closeDrawer();
+  const h = (location.hash || '#/overview').replace(/^#\/?/, '');
+  const seg = h.split('/')[0] || 'overview';
+  const arg = h.split('/')[1] || '';
+  let html = '';
+  designerActive = false;
+  if (seg === 'overview') html = viewOverview();
+  else if (seg === 'definition') html = viewDefinition();
+  else if (seg === 'designer') html = viewDesigner(arg || 'def_001');
+  else if (seg === 'instance') html = arg ? viewInstanceDetail(arg) : viewInstance();
+  else if (seg === 'todo') html = viewTodo();
+  else if (seg === 'history') html = viewHistory();
+  else if (seg === 'flow') html = viewFlow();
+  else html = viewOverview();
+  $('#content').innerHTML = html;
+  $('#content').scrollTop = 0;
+
+  const c = CRUMB[seg] || '工作流概览';
+  $('#crumb').innerHTML = '<span>工作流中心</span><span style="color:#c8d0dd">/</span><b>' + c + '</b>' +
+    (seg === 'instance' && arg ? '<span style="color:#c8d0dd">/</span><span class="mono">' + esc(arg) + '</span>' : '');
+  renderNav(seg);
+  if (seg === 'designer') bindDesigner();
+}
+
+window.addEventListener('hashchange', renderRoute);
+window.addEventListener('load', () => {
+  if (!location.hash) location.hash = '#/overview';
+  renderRoute();
+});
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  if (!location.hash) location.hash = '#/overview';
+  renderRoute();
+}
+</script>
+</body>
+</html>
