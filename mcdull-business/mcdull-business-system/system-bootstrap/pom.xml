@@ -35,6 +35,18 @@
             <artifactId>mcdull-framework-starter-oss</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- 流程引擎运行时装配：system-impl 只依赖 api-flow -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-flow</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- 调度器运行时装配：system-impl 只依赖 api-scheduler -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-scheduler</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-web</artifactId>

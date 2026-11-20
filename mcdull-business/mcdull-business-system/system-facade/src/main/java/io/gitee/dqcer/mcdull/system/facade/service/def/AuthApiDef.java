@@ -2,9 +2,6 @@ package io.gitee.dqcer.mcdull.system.facade.service.def;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.InnerResult;
-import io.gitee.dqcer.mcdull.framework.feign.rpc.RpcClient;
-import io.gitee.dqcer.mcdull.system.facade.constants.SystemConstant;
-import io.gitee.dqcer.mcdull.system.facade.service.hystrix.AuthApiHystrix;
 import io.gitee.dqcer.mcdull.system.facade.vo.RemoteLogonUserVO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

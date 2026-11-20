@@ -13,8 +13,53 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-web</artifactId>
+            <artifactId>demo-facade</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <!-- Controller 基类与字典枚举来自 api-web，Web 自动装配由 bootstrap 的 starter-web 提供 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-api-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- BaseMapper / LambdaQueryWrapper / Page 由实现层直接使用 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-core-mysql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- @Transactional 显式依赖，避免依赖 starter 传递 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+        <!-- @CacheExpire / @RedisLock 来自零依赖的 API 模块，自动装配由 bootstrap 的 starter-redis 提供 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-api-redis</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- @Operation / @SchemaEnum 的 OpenAPI 文档能力 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-doc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-enforcer</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

@@ -314,6 +314,11 @@
                 <version>${x-file-storage.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.dromara.x-file-storage</groupId>
+                <artifactId>x-file-storage-core</artifactId>
+                <version>${x-file-storage.version}</version>
+            </dependency>
+            <dependency>
               <groupId>io.github.burukeyou</groupId>
               <artifactId>jdframe</artifactId>
               <version>${jdframe.version}</version>

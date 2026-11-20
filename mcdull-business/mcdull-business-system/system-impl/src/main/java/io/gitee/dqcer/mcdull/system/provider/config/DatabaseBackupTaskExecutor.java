@@ -4,8 +4,6 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
-import com.github.kagkarlsson.scheduler.task.ExecutionContext;
-import com.github.kagkarlsson.scheduler.task.TaskInstance;
 
 import io.gitee.dqcer.mcdull.common.dump.SqlDumper;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
@@ -13,10 +11,11 @@ import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
-import io.gitee.dqcer.mcdull.framework.mysql.datasource.SwitchableDataSource;
+import io.gitee.dqcer.mcdull.framework.mysql.routing.SwitchableDataSource;
 import io.gitee.dqcer.mcdull.framework.scheduler.node.BackoffStrategy;
 import io.gitee.dqcer.mcdull.framework.scheduler.node.McdullScheduleDefinition;
 import io.gitee.dqcer.mcdull.framework.scheduler.node.McdullScheduledTask;
+import io.gitee.dqcer.mcdull.framework.scheduler.node.TaskContext;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFolderService;
@@ -84,7 +83,7 @@ public class DatabaseBackupTaskExecutor implements McdullScheduledTask<Void> {
     }
 
     @Override
-    public void execute(TaskInstance<Void> instance, ExecutionContext context) {
+    public void execute(TaskContext<Void> context) {
         startBackup();
     }
 

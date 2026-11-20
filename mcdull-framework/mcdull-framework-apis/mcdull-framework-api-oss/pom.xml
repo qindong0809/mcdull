@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>mcdull-framework-apis</artifactId>
+        <groupId>io.gitee.dqcer</groupId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>mcdull-framework-api-oss</artifactId>
+    <name>${project.artifactId} v${project.version}</name>
+    <description>Object storage contract, no auto-configuration</description>
+
+    <dependencies>
+        <!-- OssService 签名直接暴露 FileInfo / Downloader -->
+        <dependency>
+            <groupId>org.dromara.x-file-storage</groupId>
+            <artifactId>x-file-storage-core</artifactId>
+        </dependency>
+        <!-- MultipartFile -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+    </dependencies>
+</project>

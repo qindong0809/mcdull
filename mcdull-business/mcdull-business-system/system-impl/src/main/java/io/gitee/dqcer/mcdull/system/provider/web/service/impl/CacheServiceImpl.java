@@ -12,7 +12,7 @@ import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.redis.operation.RedisClient;
+import io.gitee.dqcer.mcdull.framework.redis.cache.IRedisClient;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.CacheQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
@@ -40,7 +40,7 @@ public class CacheServiceImpl extends GenericLogic implements ICacheService {
     @Resource
     private CaffeineCacheManager cacheManager;
     @Resource
-    private RedisClient redisClient;
+    private IRedisClient redisClient;
     @Resource
     private ICommonManager commonManager;
 

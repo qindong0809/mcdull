@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.system.provider.web.def;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
+import io.gitee.dqcer.mcdull.system.facade.service.UserApi;
 import io.gitee.dqcer.mcdull.system.facade.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  */
 @Primary
 @RestController
-public class UserApiDefImpl implements UserApiDef {
+public class UserApiDefImpl implements UserApi {
 
     @Resource
     private IUserService userService;

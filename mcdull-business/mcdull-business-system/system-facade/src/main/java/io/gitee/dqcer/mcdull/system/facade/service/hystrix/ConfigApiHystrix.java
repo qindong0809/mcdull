@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.system.facade.service.hystrix;
 
 import io.gitee.dqcer.mcdull.framework.base.wrapper.InnerResult;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.system.facade.service.def.ConfigApiDef;
+import io.gitee.dqcer.mcdull.system.facade.service.ConfigApi;
 import io.gitee.dqcer.mcdull.system.facade.vo.RemoteConfigVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class ConfigApiHystrix implements ConfigApiDef {
+public class ConfigApiHystrix implements ConfigApi {
 
     @Override
     public InnerResult<List<RemoteConfigVO>> getList() {

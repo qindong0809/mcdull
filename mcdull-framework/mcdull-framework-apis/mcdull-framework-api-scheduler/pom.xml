@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>mcdull-framework-apis</artifactId>
+        <groupId>io.gitee.dqcer</groupId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>mcdull-framework-api-scheduler</artifactId>
+    <name>${project.artifactId} v${project.version}</name>
+    <description>Scheduling contracts: task interface, definition, annotations and self-owned context, without leaking db-scheduler types</description>
+
+    <!-- 纯契约模块：只放签名所需的最小依赖，自动配置、适配器与 db-scheduler 运行时依赖留在 starter-scheduler -->
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

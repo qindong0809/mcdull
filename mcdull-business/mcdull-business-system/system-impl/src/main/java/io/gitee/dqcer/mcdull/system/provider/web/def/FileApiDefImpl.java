@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.def;
 
-import io.gitee.dqcer.mcdull.system.facade.service.def.FileApiDef;
+import io.gitee.dqcer.mcdull.system.facade.service.FileApi;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Primary;
@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Primary
 @Service
-public class FileApiDefImpl implements FileApiDef {
+public class FileApiDefImpl implements FileApi {
 
     @Resource
     private IFileService fileService;

@@ -2,6 +2,7 @@ package io.gitee.dqcer.mcdull.framework.mysql.datasource;
 
 import io.gitee.dqcer.mcdull.framework.mysql.config.DynamicContextHolder;
 import io.gitee.dqcer.mcdull.framework.mysql.config.RoutingDataSource;
+import io.gitee.dqcer.mcdull.framework.mysql.routing.SwitchableDataSource;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.redis.operation;
 
 import cn.hutool.core.collection.IterUtil;
+import io.gitee.dqcer.mcdull.framework.redis.cache.IRedisClient;
 import org.redisson.api.*;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.*;
@@ -19,7 +20,7 @@ import java.util.function.Consumer;
  * @since 2022/11/07
  */
 @SuppressWarnings("all")
-public final class RedisClient {
+public final class RedisClient implements IRedisClient {
 
     /**
      * 使用 RedissonClient 替换 redisTemplate
@@ -60,6 +61,7 @@ public final class RedisClient {
         return false;
     }
 
+    @Override
     public Set<String> getAllKey(){
         RKeys keys = redissonClient.getKeys();
         Iterable<String> iterable = keys.getKeysByPattern("*");
@@ -143,6 +145,7 @@ public final class RedisClient {
      *
      * @param key 键（一个或者多个）
      */
+    @Override
     public void delete(String... key) {
         if (key != null && key.length > 0) {
             RKeys keys = redissonClient.getKeys();
@@ -218,6 +221,7 @@ public final class RedisClient {
      * @return 值
      * @see #getMap
      */
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key) {
         RBucket<T> bucket = redissonClient.getBucket(key);
@@ -232,6 +236,7 @@ public final class RedisClient {
      * @param value   值
      * @param seconds 时间（秒），如果 time <= 0 则不设置失效时间
      */
+    @Override
     public void set(String key, Object value, int seconds) {
         RBucket<Object> bucket = redissonClient.getBucket(key);
         bucket.set(value, seconds, TimeUnit.SECONDS);

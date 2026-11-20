@@ -3,8 +3,6 @@ package io.gitee.dqcer.mcdull.system.facade.service.def;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.feign.rpc.RpcClient;
-import io.gitee.dqcer.mcdull.system.facade.constants.SystemConstant;
 import io.gitee.dqcer.mcdull.system.facade.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,13 +17,12 @@ import java.util.Map;
 /**
  * User Api Def
  * <p>
- * 单体模式：system-impl 中的本地实现生效，走 JVM 内存调用。
- * 微服务模式：容器无本地实现，自动注册 Feign 代理，走 HTTP 调用。
+ * 用户能力契约定义。对外 RPC 入口见 {@link io.gitee.dqcer.mcdull.system.facade.service.UserApi}；
+ * 单体模式走 {@code UserApiDefImpl} 本地实现，微服务模式由 UserApi 注册 Feign 代理。
  *
  * @author dqcer
  * @since 2022/10/28
  */
-@RpcClient(value = SystemConstant.SERVICE_NAME, contextId = "UserApi")
 public interface UserApiDef {
 
     /**

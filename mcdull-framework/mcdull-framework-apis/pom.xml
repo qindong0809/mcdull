@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>mcdull-framework</artifactId>
+        <groupId>io.gitee.dqcer</groupId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>mcdull-framework-apis</artifactId>
+    <packaging>pom</packaging>
+    <name>${project.artifactId} v${project.version}</name>
+    <description>Framework capability APIs, separated from starters</description>
+
+    <modules>
+        <module>mcdull-framework-api-redis</module>
+        <module>mcdull-framework-api-web</module>
+        <module>mcdull-framework-api-feign</module>
+        <module>mcdull-framework-api-oss</module>
+        <module>mcdull-framework-api-flow</module>
+        <module>mcdull-framework-api-scheduler</module>
+        <module>mcdull-framework-api-security</module>
+    </modules>
+</project>

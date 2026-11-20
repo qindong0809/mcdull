@@ -10,6 +10,21 @@
     <packaging>jar</packaging>
     <name>${project.artifactId} v${project.version}</name>
 
+    <dependencies>
+        <!-- 契约层只依赖标记接口与校验注解，不依赖任何 starter 实现 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-base</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

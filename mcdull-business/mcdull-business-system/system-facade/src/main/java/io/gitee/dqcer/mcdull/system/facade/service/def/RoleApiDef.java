@@ -1,8 +1,6 @@
 package io.gitee.dqcer.mcdull.system.facade.service.def;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
-import io.gitee.dqcer.mcdull.framework.feign.rpc.RpcClient;
-import io.gitee.dqcer.mcdull.system.facade.constants.SystemConstant;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.RoleVO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,11 +11,12 @@ import java.util.Map;
 
 /**
  * Role Api Def
+ * <p>
+ * 角色能力契约定义。对外 RPC 入口见 {@link io.gitee.dqcer.mcdull.system.facade.service.RoleApi}。
  *
  * @author dqcer
  * @since 2022/10/28
  */
-@RpcClient(value = SystemConstant.SERVICE_NAME, contextId = "RoleApi")
 public interface RoleApiDef {
 
     /**

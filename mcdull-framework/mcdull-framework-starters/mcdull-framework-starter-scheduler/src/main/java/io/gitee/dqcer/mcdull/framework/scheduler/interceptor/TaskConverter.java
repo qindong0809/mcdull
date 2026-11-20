@@ -12,6 +12,7 @@ import com.github.kagkarlsson.scheduler.task.schedule.Schedule;
 import io.gitee.dqcer.mcdull.framework.scheduler.annotation.McdullScheduledHolder;
 import io.gitee.dqcer.mcdull.framework.scheduler.node.McdullScheduledTask;
 import io.gitee.dqcer.mcdull.framework.scheduler.node.McdullScheduleDefinition;
+import io.gitee.dqcer.mcdull.framework.scheduler.node.TaskContext;
 
 import java.lang.reflect.Method;
 import java.time.Instant;
@@ -93,15 +94,16 @@ public final class TaskConverter {
         Exception error = null;
         boolean success = false;
 
+        TaskContext<T> taskContext = new SchedulerTaskContext<>(instance, ctx);
         Long recordId = interceptor.beforeExecution(taskName, instanceId,
-                scheduledAt(ctx), attemptNumber(ctx));
+                taskContext.scheduledAt(), taskContext.attemptNumber());
         try {
-            mcdullTask.execute(instance, ctx);
-            mcdullTask.onSuccess(instance, ctx);
+            mcdullTask.execute(taskContext);
+            mcdullTask.onSuccess(taskContext);
             success = true;
         } catch (Exception e) {
             error = e;
-            mcdullTask.onFailure(e, instance, ctx);
+            mcdullTask.onFailure(e, taskContext);
             throw e;
         } finally {
             long duration = System.currentTimeMillis() - start;

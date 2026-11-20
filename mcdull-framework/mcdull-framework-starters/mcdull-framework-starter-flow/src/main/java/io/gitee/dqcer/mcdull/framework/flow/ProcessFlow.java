@@ -17,12 +17,13 @@ import java.util.List;
  * @since 2023/01/07 20:01:01
  */
 @Component
-public class ProcessFlow {
+public class ProcessFlow implements IProcessFlow {
 
 
     @Resource
     private ProcessFactory processFactory;
 
+    @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Transactional(rollbackFor = Exception.class)
     public void run(Context context) {

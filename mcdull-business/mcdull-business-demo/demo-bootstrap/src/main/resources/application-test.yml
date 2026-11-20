@@ -1,0 +1,44 @@
+server:
+  port: ${DEMO_SERVER_PORT:6070}
+
+spring:
+  data:
+    redis:
+      host: ${DEMO_REDIS_HOST}
+      port: ${DEMO_REDIS_PORT:6379}
+      password: ${DEMO_REDIS_PASSWORD:}
+      database: ${DEMO_REDIS_DB:0}
+      timeout: ${DEMO_REDIS_TIMEOUT:3s}
+  datasource:
+    url: ${DEMO_DB_URL}
+    username: ${DEMO_DB_USER}
+    password: ${DEMO_DB_PASSWORD}
+
+mcdull:
+  tag:
+    enabled: ${DEMO_TAG_ENABLED:true}
+    strict: false
+    # 清洗请求头是网关职责，业务服务保持 false。
+    clean-header: false
+
+logging:
+  level:
+    io.gitee.dqcer.mcdull.demo: info
+
+# 可选增强：只有在确实需要配置中心/服务发现时，添加 mcdull-framework-starter-nacos 依赖后取消注释。
+# spring:
+#   cloud:
+#     nacos:
+#       server-addr: ${NACOS_ADDR:localhost:8848}
+#       discovery:
+#         namespace: ${NACOS_NAMESPACE:test}
+#         metadata:
+#           env-tag: ${ENV_TAG:}
+#       config:
+#         namespace: ${NACOS_NAMESPACE:test}
+#         file-extension: yaml
+#         refresh-enabled: true
+#   config:
+#     import:
+#       - optional:nacos:shared-datasource.yaml?group=DEFAULT_GROUP
+#       - optional:nacos:shared-redis.yaml?group=DEFAULT_GROUP

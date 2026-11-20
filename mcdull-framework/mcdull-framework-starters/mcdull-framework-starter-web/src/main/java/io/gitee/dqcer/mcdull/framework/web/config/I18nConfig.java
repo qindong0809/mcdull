@@ -2,7 +2,10 @@ package io.gitee.dqcer.mcdull.framework.web.config;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import io.gitee.dqcer.mcdull.framework.spi.DynamicLocaleMessageSource;
+import io.gitee.dqcer.mcdull.framework.web.enums.EnumVO;
 import io.gitee.dqcer.mcdull.framework.web.i18n.CustomizeLocaleResolver;
+import io.gitee.dqcer.mcdull.framework.web.transform.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.SmartInitializingSingleton;
@@ -64,6 +67,10 @@ public class I18nConfig implements SmartInitializingSingleton {
     @Override
     public void afterSingletonsInstantiated() {
         LogHelp.info(log, "i18nConfig i18n file loading...");
+        EnumVO.setTextResolver(text -> {
+            DynamicLocaleMessageSource messageSource = SpringContextHolder.getBean(DynamicLocaleMessageSource.class);
+            return messageSource.getMessage(text);
+        });
         this.reloadI18nFile();
     }
 

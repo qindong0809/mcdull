@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>mcdull-framework-apis</artifactId>
+        <groupId>io.gitee.dqcer</groupId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>mcdull-framework-api-security</artifactId>
+    <name>${project.artifactId} v${project.version}</name>
+    <description>Sa-Token based security contracts: session facades, auth base classes and password helper, without auto-configuration</description>
+
+    <!-- 纯契约模块：只放签名所需依赖；鉴权闸门、AOP、自动装配留在 starter-security。
+         业务代码直接使用 sa-token 注解与工具类，因此这些依赖以 compile 传递，业务只需依赖本模块。 -->
+    <dependencies>
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-el</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+</project>

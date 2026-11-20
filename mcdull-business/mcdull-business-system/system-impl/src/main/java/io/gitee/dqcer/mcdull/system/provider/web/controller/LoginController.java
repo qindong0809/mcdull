@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.system.provider.web.controller;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.hutool.core.text.CharSequenceUtil;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.framework.flow.ProcessFlow;
+import io.gitee.dqcer.mcdull.framework.flow.IProcessFlow;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.framework.web.util.IpUtil;
 import io.gitee.dqcer.mcdull.system.provider.flow.login.LoginContext;
@@ -38,7 +38,7 @@ public class LoginController extends BasicController {
     @Resource
     private ICaptchaService captchaService;
     @Resource
-    private ProcessFlow processFlow;
+    private IProcessFlow processFlow;
 
     @Operation(summary = "查看是否启用验证码")
     @GetMapping("/login/enabled-captcha")

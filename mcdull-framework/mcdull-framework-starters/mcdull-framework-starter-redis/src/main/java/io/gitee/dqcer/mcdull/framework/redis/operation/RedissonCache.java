@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSON;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.base.cache.ICache;
+import io.gitee.dqcer.mcdull.framework.redis.cache.IRedissonCache;
 import jakarta.annotation.Resource;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
@@ -24,7 +25,7 @@ import java.util.function.Supplier;
  */
 @Component
 //@ConditionalOnProperty
-public class RedissonCache implements ICache {
+public class RedissonCache implements ICache, IRedissonCache {
 
     protected static final Logger log = LoggerFactory.getLogger(RedissonCache.class);
 
@@ -66,6 +67,7 @@ public class RedissonCache implements ICache {
         bucket.set(value, expire, TimeUnit.SECONDS);
     }
 
+    @Override
     public <T> T getOrSet(String key, Class<T> type, Supplier<T> supplier, long expire) {
         String jsonStr = this.get(key, String.class);
         if (CharSequenceUtil.isNotBlank(jsonStr)) {
@@ -76,6 +78,7 @@ public class RedissonCache implements ICache {
         return t;
     }
 
+    @Override
     public <T> List<T> getListOrSet(String key, Class<T> type, Supplier<List<T>> supplier, long expire) {
         String jsonStr = this.get(key, String.class);
         if (CharSequenceUtil.isNotBlank(jsonStr)) {
@@ -88,6 +91,7 @@ public class RedissonCache implements ICache {
     }
 
 
+    @Override
     public <T> void putIfExists(String key, T value) {
         key = prefix() + key;
         if (log.isDebugEnabled()) {

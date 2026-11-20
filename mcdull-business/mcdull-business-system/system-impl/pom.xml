@@ -70,9 +70,8 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-web</artifactId>
+            <artifactId>mcdull-framework-api-web</artifactId>
             <version>${project.version}</version>
-<!--            <scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -80,14 +79,16 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- 业务只依赖流程契约；运行时装配由 system-bootstrap 的 starter-flow 提供 -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-flow</artifactId>
+            <artifactId>mcdull-framework-api-flow</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- 业务只依赖调度契约；运行时装配由 system-bootstrap 的 starter-scheduler 提供 -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-scheduler</artifactId>
+            <artifactId>mcdull-framework-api-scheduler</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -113,15 +114,31 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-extra</artifactId>
         </dependency>
-            <dependency>
+        <!-- 只注入 OssService 契约；运行时实现由各 bootstrap 的 starter-oss 提供 -->
+        <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-oss</artifactId>
+            <artifactId>mcdull-framework-api-oss</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <!-- FileRecorderService 直接使用 SpringFileStorageProperties -->
+        <dependency>
+            <groupId>org.dromara.x-file-storage</groupId>
+            <artifactId>x-file-storage-spring</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-redis</artifactId>
+            <artifactId>mcdull-framework-api-redis</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <!-- CacheServiceImpl 直接使用 Caffeine Cache，不再依赖 starter-redis 传递 -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+        <!-- CaffeineCacheManager 位于 spring-context-support，原先经 starter-security 间接传递，改为显式声明 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -130,13 +147,18 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-mysql</artifactId>
+            <artifactId>mcdull-framework-core-mysql</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- 直接使用 StpKit/sa-token 注解鉴权，鉴权闸门也由本 starter 装配 -->
+        <!-- Service 层直接使用 @Transactional，不再依赖 starter-mysql 传递 -->
         <dependency>
-            <groupId>io.gitee.dqcer</groupId>
-            <artifactId>mcdull-framework-starter-security</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+        <!-- 业务只依赖安全契约；鉴权闸门等运行时装配由各 bootstrap 的 starter-security 提供 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-api-security</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- VO 的 @DynamicDateFormat 与 TimeZoneUtil 的时区格式化直接使用本模块 -->

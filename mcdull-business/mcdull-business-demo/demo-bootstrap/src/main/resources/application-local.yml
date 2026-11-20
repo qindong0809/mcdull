@@ -1,0 +1,28 @@
+server:
+  port: 6070
+
+spring:
+  data:
+    redis:
+      host: ${DEMO_REDIS_HOST:localhost}
+      port: ${DEMO_REDIS_PORT:6379}
+      password: ${DEMO_REDIS_PASSWORD:}
+      database: ${DEMO_REDIS_DB:0}
+      timeout: ${DEMO_REDIS_TIMEOUT:3s}
+  datasource:
+    url: ${DEMO_DB_URL:jdbc:mysql://localhost:3306/demo?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai}
+    username: ${DEMO_DB_USER:root}
+    password: ${DEMO_DB_PASSWORD:123456}
+
+mcdull:
+  tag:
+    # 本地直连同机 MySQL/Redis，无 Nacos/网关/Feign 调用链，默认不需要 tag。
+    enabled: false
+    # 多人共用一套开发服务时：添加 starter-tag + Nacos 依赖后改为 true，
+    # 并在 spring.cloud.nacos.discovery.metadata.env-tag 中配置 ${ENV_TAG:${user.name}}。
+    strict: false
+    clean-header: false
+
+logging:
+  level:
+    io.gitee.dqcer.mcdull.demo: debug

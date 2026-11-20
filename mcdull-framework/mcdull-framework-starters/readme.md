@@ -101,22 +101,29 @@ public void executeFlow() {
 `mcdull-framework-starter-web` 只传递 `mcdull-framework-base`、`mcdull-framework-config`、
 `mcdull-framework-spi`。它**不再**传递 `starter-security`、`starter-oss`、`starter-doc`、
 `starter-monitor`、`starter-redis`、`starter-mysql`，也不再携带日期序列化器（已独立成
-`mcdull-framework-json`）与 CRUD 基座（已下沉到 `starter-mysql`）。
+`mcdull-framework-json`）与 CRUD 基座（已下沉到 `core-mysql`）。
 
-因此使用方必须显式声明自己直接引用的启动器，不要再依赖 web 的传递依赖：
+因此使用方必须显式声明自己直接引用的模块，不要再依赖 web 的传递依赖：
 
 | 你要用的能力 | 必须显式声明 |
 | --- | --- |
-| `StpKit`、`AbstractWebMvcConfigurer`、`AbstractUserDetailsService`、`PasswordUtil` | `mcdull-framework-starter-security` |
-| `@SaCheckEL`、`@SaCheckPermission` 等注解鉴权 + 登录态闸门 | `mcdull-framework-starter-security` |
-| `IService`、`ServiceImpl`、`IRepository`、`Page`、`LambdaQueryWrapper` 等 MyBatis-Plus 类型 | `mcdull-framework-starter-mysql` |
-| `@EnableDynamicDataSource`、`SwitchableDataSource`、`DynamicContextHolder` | `mcdull-framework-starter-mysql` |
-| `BasicServiceImpl`、`BasicCurdServiceImpl`、`GenericLogic`、`LogicCheckUtil` 等 CRUD 基座 | `mcdull-framework-starter-mysql` |
+| `StpKit`、`AbstractWebMvcConfigurer`、`AbstractUserDetailsService`、`PasswordUtil` | `mcdull-framework-api-security` |
+| `@SaCheckEL`、`@SaCheckPermission` 等注解鉴权 + 登录态闸门 | `mcdull-framework-starter-security`（`api-security` 传递 sa-token 注解） |
+| `IService`、`ServiceImpl`、`IRepository`、`Page`、`LambdaQueryWrapper` 等 MyBatis-Plus 类型 | `mcdull-framework-core-mysql` |
+| `@EnableDynamicDataSource`、`DynamicContextHolder` | `mcdull-framework-starter-mysql` |
+| `SwitchableDataSource`、`BasicServiceImpl`、`BasicCurdServiceImpl`、`GenericLogic`、`LogicCheckUtil` | `mcdull-framework-core-mysql` |
 | `@DynamicDateFormat`、`DynamicDateSerialize`、`CustomSerializer`、`TimeZoneUtil` | `mcdull-framework-json` |
-| `@EnableCache`、`RedisClient`、`RedissonCache` | `mcdull-framework-starter-redis` |
-| `@EnableFileStorage`、`OssService` | `mcdull-framework-starter-oss` |
+| `@EnableCache` | `mcdull-framework-starter-redis` |
+| `@CacheExpire`、`@RedisLock`、`IRedisClient`、`IRedissonCache` | `mcdull-framework-api-redis` |
+| `@EnableFileStorage` | `mcdull-framework-starter-oss` |
+| `OssService` | `mcdull-framework-api-oss` |
+| `ProcessHandler`、`@TreeNode`、`Context`、`IProcessFlow` | `mcdull-framework-api-flow` |
+| 流程引擎自动装配、节点注册、`ProcessFlow` 实现 | `mcdull-framework-starter-flow` |
+| `McdullScheduledTask`、`McdullScheduleDefinition`、`BackoffStrategy`、`TaskContext`、`@McdullScheduled` | `mcdull-framework-api-scheduler` |
+| 调度器自动装配、`SchedulerManager`、`TaskQueryService`、db-scheduler 运行时 | `mcdull-framework-starter-scheduler` |
 | `@Tag`、`@Operation`、`@Schema` 等 OpenAPI 注解与 `/doc.html` | `mcdull-framework-starter-doc` |
-| `IEnum`、`EnumVO`、`DictPool` 枚举字典能力 | `mcdull-framework-starter-web` |
+| `IEnum`、`EnumVO`、`BasicController`、`SystemEnvironment` 等 Web 契约与基类 | `mcdull-framework-api-web` |
+| `@EnableWebCore`、Filter/AOP/自动装配 | `mcdull-framework-starter-web` |
 | actuator、spring-boot-admin、javamelody | `mcdull-framework-starter-monitor` |
 
 ### 日期序列化的归属

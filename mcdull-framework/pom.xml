@@ -13,6 +13,8 @@
     <modules>
         <module>mcdull-framework-base</module>
         <module>mcdull-framework-spi</module>
+        <module>mcdull-framework-apis</module>
+        <module>mcdull-framework-cores</module>
         <module>mcdull-framework-json</module>
         <module>mcdull-framework-dependencies</module>
         <module>mcdull-framework-starters</module>

@@ -254,7 +254,11 @@ public interface DemoClient {
 
 ### ⏰ 定时任务调度（Scheduler Starter）
 
-`mcdull-framework-starter-scheduler` 基于 [db-scheduler](https://github.com/kagkarlsson/db-scheduler) 实现，提供集群安全、单表持久化、失败重试的企业级定时任务能力，替代 Spring 原生 `@Scheduled` 和 Hutool CronUtil。
+调度契约位于 `mcdull-framework-api-scheduler`，运行时由 `mcdull-framework-starter-scheduler` 基于
+[db-scheduler](https://github.com/kagkarlsson/db-scheduler) 装配，提供集群安全、单表持久化、
+失败重试的企业级定时任务能力，替代 Spring 原生 `@Scheduled` 和 Hutool CronUtil。
+业务模块只需依赖 `api-scheduler`，`db-scheduler` 的类型被适配器挡在 starter 内部，不会泄漏到业务代码。
+bootstrap 依赖 `starter-scheduler` 提供运行时装配。
 
 采用"三层暴露"设计，业务方按需选型：
 
@@ -274,8 +278,8 @@ public class DataSyncTask implements McdullScheduledTask<DataSyncState> {
             .stateful(true).build();
     }
     @Override
-    public void execute(TaskInstance<DataSyncState> instance, ExecutionContext ctx) {
-        // 可拿到上一次持久化的状态、可链式调度其他任务
+    public void execute(TaskContext<DataSyncState> context) {
+        // 可通过 context.data() 读取上次持久化的状态、拿到实例 ID 与执行诊断信息
     }
 }
 
@@ -289,7 +293,7 @@ schedulerManager.resumeTask("db-backup");    // 恢复
 - **集群安全**：所有调度器实例读写同一张 `scheduled_tasks` 表，数据库行锁保证多实例下单次执行
 - **自动建表**：启动时 `CREATE TABLE IF NOT EXISTS`，业务方无需手动建表
 - **失败重试**：支持 FIXED / EXPONENTIAL 退避策略
-- **状态持久化**：StatefulTask 每次执行后更新持久化状态，下次执行可读取
+- **状态持久化**：有状态任务由底层调度器维护 data，下次执行可通过 `TaskContext.data()` 读取
 - **运行时管理**：`SchedulerManager` 提供手动触发/暂停/恢复，`TaskQueryService` 提供任务列表和执行历史查询
 
 ### 📦 Facade 发布通知 Maven 插件
@@ -511,7 +515,12 @@ mcdull/
 │   ├── mcdull-framework-config         # 配置管理
 │   ├── mcdull-framework-agent          # Java Agent 性能探针
 │   ├── mcdull-framework-enforcer       # 架构约束（ArchUnit）
-│   └── mcdull-framework-starters/      # 功能 Starter 集合
+│   ├── mcdull-framework-apis/          # 能力契约层（业务只依赖这里，不含自动装配）
+│   │   ├── mcdull-framework-api-web / api-redis / api-feign
+│   │   ├── mcdull-framework-api-oss / api-flow / api-scheduler / api-security
+│   ├── mcdull-framework-cores/         # 可复用行为基类与工具（如 CRUD 基座）
+│   │   └── mcdull-framework-core-mysql
+│   └── mcdull-framework-starters/      # 功能 Starter 集合（自动配置与运行时实现）
 │       ├── mcdull-framework-starter-doc        # API 文档（Knife4j）
 │       ├── mcdull-framework-starter-external   # 外部系统对接
 │       ├── mcdull-framework-starter-feign      # 服务调用
@@ -535,7 +544,7 @@ mcdull/
 │   ├── mcdull-business-blaze      # 核心业务模块
 │   ├── mcdull-business-focus      # Focus 业务模块
 │   ├── mcdull-business-workflow   # 工作流业务
-│   └── mcdull-business-demo       # 示例与最佳实践
+│   └── mcdull-business-demo       # 可运行示例：CRUD + 架构守护 + 配置模板
 ├── mcdull-support/            # 支持层 — 运行支撑服务
 │   ├── mcdull-gateway         # API 网关
 │   ├── mcdull-monitor-server  # 监控服务
@@ -632,6 +641,7 @@ mvn clean install -DskipTests
 | 文档 | 说明 |
 |---|---|
 | [打包部署指南.md](doc/打包部署指南.md) | 打包与部署教程 |
+| [mcdull-business-demo/README.md](mcdull-business/mcdull-business-demo/README.md) | 业务模块脚手架示例与最佳实践 |
 | [mcdull-devtools-notify/README.md](mcdull-devtools/mcdull-devtools-notify/README.md) | Facade 发布通知插件使用说明 |
 | [mcdull-framework-agent/README.md](mcdull-framework/mcdull-framework-agent/README.md) | Java Agent 性能探针使用说明 |
 | [mcdull-framework-enforcer/README.md](mcdull-framework/mcdull-framework-enforcer/README.md) | ArchUnit 架构约束使用说明 |

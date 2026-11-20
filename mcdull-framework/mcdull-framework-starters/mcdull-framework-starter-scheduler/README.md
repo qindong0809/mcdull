@@ -4,7 +4,7 @@ mcdull-framework-starter-scheduler 是 McDull 框架的定时任务模块，基�
 
 ## 项目简介
 
-mcdull-framework-starter-scheduler 为 McDull 框架提供统一的定时任务调度能力。它封装了 db-scheduler 的核心调度引擎，采用"三层暴露"设计（注解 → 接口 → 底层），让业务方在简单场景下一行注解搞定，在复杂场景下也能拿到完整的 ExecutionContext 做状态管理和链式调度。
+mcdull-framework-starter-scheduler 为 McDull 框架提供统一的定时任务调度能力。它封装了 db-scheduler 的核心调度引擎，采用"三层暴露"设计（注解 → 接口 → 底层），让业务方在简单场景下一行注解搞定，在复杂场景下也能通过自有 `TaskContext` 读取持久化状态与执行诊断信息。任务契约位于 `mcdull-framework-api-scheduler`，业务模块只依赖该 API；db-scheduler 类型被 starter 内部的适配器隔离，不泄漏到业务代码。
 
 与 Spring 原生 `@Scheduled` 相比，该模块提供：
 - ✅ 集群安全：多实例部署时保证单个实例执行（数据库行锁）
@@ -44,7 +44,7 @@ db-scheduler 要求所有调度器实例读写同一张 `scheduled_tasks` 表才
   → 简单任务，一行注解搞定，和 @RedisLock 风格一致
 
 第二层：McdullScheduledTask<T> 接口（覆盖 15% 场景）
-  → 需要 ExecutionContext / StatefulTask / 链式调度
+  → 需要 TaskContext / 有状态任务 / 动态 cron / 回调用
   → 接口默认方法设计，和 ProcessHandler 风格一致
 
 第三层：SchedulerClient 直接暴露（覆盖 5% 场景）
@@ -56,8 +56,8 @@ db-scheduler 要求所有调度器实例读写同一张 `scheduled_tasks` 表才
 
 | 职责 | 放在哪里 |
 |---|---|
-| 注解定义、接口定义、自动配置 | ✅ Starter |
-| TaskRegistry 扫描收集 | ✅ Starter |
+| 注解定义、接口定义、`TaskContext`、`McdullScheduleDefinition`、`BackoffStrategy` | ✅ API（`mcdull-framework-api-scheduler`） |
+| 自动配置、db-scheduler 适配、TaskRegistry 扫描收集 | ✅ Starter |
 | Scheduler 创建与启动 | ✅ Starter |
 | scheduled_tasks 表 DDL 执行 | ✅ Starter |
 | JdbcTemplate 查询 scheduled_tasks | ✅ Starter（默认实现） |
@@ -106,12 +106,6 @@ mcdull-framework-starter-scheduler/
     ├── annotation/
     │   ├── McdullScheduled.java              # 声明式注解
     │   └── McdullScheduledHolder.java        # 注解元数据持有
-    ├── aspect/
-    │   └── ScheduledAnnotationAspect.java    # 注解扫描 AOP
-    ├── node/
-    │   ├── McdullScheduledTask.java          # 任务接口（对应 ProcessHandler）
-    │   ├── McdullScheduleDefinition.java     # 调度定义 POJO
-    │   └── BackoffStrategy.java              # 退避策略枚举
     ├── config/
     │   ├── SchedulerAutoConfiguration.java   # 核心自动配置
     │   ├── SchedulerProperties.java          # 配置属性类
@@ -128,16 +122,32 @@ mcdull-framework-starter-scheduler/
     │   └── SchedulerAlarmService.java        # 告警门面
     ├── interceptor/
     │   ├── McdullExecutionInterceptor.java   # 通用拦截器（TraceId、耗时）
-    │   └── AlarmExecutionInterceptor.java    # 告警拦截器
+    │   ├── TaskConverter.java                # 注解/接口任务 → db-scheduler RecurringTask
+    │   └── SchedulerTaskContext.java         # db-scheduler 类型 → 自有 TaskContext 适配器
     └── enable/
         └── EnableScheduler.java              # 一键启用注解
 ```
+
+任务契约（`McdullScheduledTask`、`McdullScheduleDefinition`、`BackoffStrategy`、`TaskContext`、
+`@McdullScheduled`）位于 `mcdull-framework-api-scheduler`，见 `../mcdull-framework-apis/`。
 
 ## 如何使用
 
 ### Maven 依赖
 
 在项目的 `pom.xml` 文件中添加：
+
+业务模块只需依赖契约：
+
+```xml
+<dependency>
+    <groupId>io.gitee.dqcer</groupId>
+    <artifactId>mcdull-framework-api-scheduler</artifactId>
+    <version>${mcdull.version}</version>
+</dependency>
+```
+
+bootstrap 模块依赖 starter 提供运行时装配（自动配置、任务扫描、db-scheduler 引擎）：
 
 ```xml
 <dependency>
@@ -247,7 +257,7 @@ public class TaskExecutor {
 
 ### 第二层：接口实现（15% 场景）
 
-需要 ExecutionContext、StatefulTask、链式调度、或者想从 Nacos 动态读 cron 的场景：
+需要自有 `TaskContext`、有状态任务、失败/成功回调，或者想从 Nacos 动态读 cron 的场景：
 
 ```java
 @Component
@@ -274,26 +284,18 @@ public class DataSyncTask implements McdullScheduledTask<DataSyncState> {
     }
 
     @Override
-    public void execute(TaskInstance<DataSyncState> instance, ExecutionContext context) {
+    public void execute(TaskContext<DataSyncState> context) {
         // 拿到上一次执行遗留的持久化状态
-        DataSyncState lastState = instance.getData();
+        DataSyncState lastState = context.data();
         long lastSyncId = lastState != null ? lastState.getLastSyncId() : 0L;
 
-        // 执行同步逻辑
-        DataSyncState newState = dataSyncService.syncFrom(lastSyncId);
-
-        // 链式调度下一个任务（可选）
-        context.getSchedulerClient().schedule(
-            TaskInstance.oneshot("data-sync-followup")
-        );
-
-        // 新的状态会自动持久化到 scheduled_tasks 表
-        context.persist(newState);
+        // 执行同步逻辑（新状态由底层调度器维护，下次执行可通过 context.data() 读取）
+        dataSyncService.syncFrom(lastSyncId);
     }
 
     /**
      * 是否为有状态任务
-     * 有状态任务的 data 会被持久化，下次执行时通过 instance.getData() 拿到
+     * 有状态任务的 data 由底层调度器维护，下次执行时通过 context.data() 拿到
      */
     @Override
     public boolean isStateful() {
@@ -305,23 +307,29 @@ public class DataSyncTask implements McdullScheduledTask<DataSyncState> {
      * 默认实现打日志，业务方可以 override 接钉钉/企微告警
      */
     @Override
-    public void onFailure(Exception e, TaskInstance<DataSyncState> instance, ExecutionContext context) {
-        log.error("data-sync task failed, instance: {}", instance.getId(), e);
+    public void onFailure(Exception e, TaskContext<DataSyncState> context) {
+        log.error("data-sync task failed, instance: {}", context.taskId(), e);
         schedulerAlarmService.onFailure("data-sync", e);
     }
 }
 ```
+
+> 需要链式调度、运行时动态增删任务等能力时，直接注入第三层的 `SchedulerClient`（db-scheduler 原生 Bean），
+> 不要在 `TaskContext` 上暴露底层类型。
 
 `McdullScheduledTask` 方法说明：
 
 | 方法 | 是否必填 | 说明 |
 |---|---|---|
 | `definition()` | ✅ | 返回调度定义（name、cron、retries 等） |
-| `execute(instance, context)` | ✅ | 任务执行逻辑 |
-| `isStateful()` | ❌ | 默认 false。true 时 data 会被持久化 |
-| `dataType()` | ❌ | 默认 Void.class。StatefulTask 时指定状态类型 |
-| `onFailure(e, instance, context)` | ❌ | 默认打日志。失败时回调 |
-| `onSuccess(instance, context)` | ❌ | 默认空实现。成功时回调 |
+| `execute(context)` | ✅ | 任务执行逻辑，context 为本模块自有 `TaskContext` |
+| `isStateful()` | ❌ | 默认 false。true 时 data 由底层调度器维护 |
+| `dataType()` | ❌ | 默认 Void.class。有状态任务时指定状态类型 |
+| `onFailure(e, context)` | ❌ | 默认打日志。失败时回调 |
+| `onSuccess(context)` | ❌ | 默认空实现。成功时回调 |
+
+`TaskContext<T>` 提供 `taskId()`、`data()`、`scheduledAt()`、`attemptNumber()` 四个只读方法，
+不含任何 db-scheduler 类型。
 
 ### 第三层：SchedulerClient 直接使用（5% 场景）
 
@@ -505,12 +513,14 @@ db-scheduler 通过 `SELECT ... FOR UPDATE` 行锁保证集群安全：
 public boolean isStateful() { return true; }
 
 @Override
-public void execute(TaskInstance<DataSyncState> instance, ExecutionContext context) {
-    DataSyncState lastState = instance.getData();  // 拿到上次执行遗留的状态
+public void execute(TaskContext<DataSyncState> context) {
+    DataSyncState lastState = context.data();  // 拿到上次执行遗留的状态
     // ... 执行逻辑 ...
-    context.persist(newState);  // 持久化新状态，下次执行时可用
 }
 ```
+
+> data 的持久化由底层调度器维护，业务通过 `TaskContext.data()` 读取；如需主动改写调度状态，
+> 直接注入 `SchedulerClient`。
 
 ### 5. 拦截器扩展
 
@@ -618,7 +628,7 @@ public class HistoryCleanupTask implements McdullScheduledTask<Void> {
     }
 
     @Override
-    public void execute(TaskInstance<Void> instance, ExecutionContext context) {
+    public void execute(TaskContext<Void> context) {
         // 先把超时未回写的 RUNNING 记录标记为 LOST（阈值需大于任务最长执行时间）
         historyRepository.markLost(TimeUnit.HOURS.toMillis(2));
         historyRepository.purgeExpired();

@@ -29,7 +29,7 @@
 
 ### 1. 引入依赖
 
-* **契约模块（`*-facade`）**：仅需引入 `mcdull-framework-base`（提供 `InnerResult` 与 `BusinessException`）及 `spring-cloud-openfeign-core`，保持零重型依赖污染。
+* **契约模块（`*-facade`）**：仅需引入 `mcdull-framework-base`（提供 `InnerResult` 与 `BusinessException`）及 `mcdull-framework-api-feign`（内含 `@RpcClient`，仅传递依赖 `spring-cloud-openfeign-core`），保持零重型依赖污染。
 * **服务实现与调用模块（`*-impl` / `*-bootstrap`）**：引入本 Starter：
 
 ```xml

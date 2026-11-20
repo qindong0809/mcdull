@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.provider.web.def;
 
-import io.gitee.dqcer.mcdull.system.facade.service.def.RoleApiDef;
+import io.gitee.dqcer.mcdull.system.facade.service.RoleApi;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleService;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 @Primary
 @RestController
-public class RoleApiDefImpl implements RoleApiDef {
+public class RoleApiDefImpl implements RoleApi {
 
     @Resource
     private IRoleService roleService;

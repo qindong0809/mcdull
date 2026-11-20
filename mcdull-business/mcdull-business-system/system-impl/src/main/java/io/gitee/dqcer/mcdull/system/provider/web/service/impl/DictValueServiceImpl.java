@@ -16,8 +16,8 @@ import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicCurdServiceImpl;
+import io.gitee.dqcer.mcdull.framework.redis.cache.IRedissonCache;
 import io.gitee.dqcer.mcdull.system.facade.model.enums.DictSelectTypeEnum;
 import io.gitee.dqcer.mcdull.framework.mysql.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.config.constants.CacheConstants;
@@ -58,7 +58,7 @@ public class DictValueServiceImpl
     @Resource
     private IDictKeyService dictKeyService;
     @Resource
-    private RedissonCache redissonCache;
+    private IRedissonCache redissonCache;
     @Resource
     private IBizAuditService bizAuditService;
 

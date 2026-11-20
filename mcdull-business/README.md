@@ -38,10 +38,11 @@
 ### Samples & Examples（示例演示模块）
 提供学习和参考的示例代码。
 
-- **mcdull-business-demo**: 演示模块
-  - 框架功能演示
-  - 最佳实践示例
-  - 开发参考代码
+- **mcdull-business-demo**: 可运行的演示模块
+  - 演示任务 CRUD：Controller → Service → Manager → Mapper 完整链路
+  - facade/provider 分包：契约枚举、DTO/VO、标记接口与校验注解
+  - 配置与验证：本地/生产配置模板、SQL 初始化脚本、ArchUnit 架构守护测试
+  - 详细接入说明见 [mcdull-business-demo/README.md](mcdull-business-demo/README.md)
 
 ## 模块架构
 
