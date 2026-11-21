@@ -25,6 +25,12 @@ public class KeyValueBO<K, V> implements KeyValue<K, V>, BO {
      */
     protected V value;
 
+    /**
+     * JSON 反序列化（如 Feign 响应解码）需要可访问的无参构造
+     */
+    public KeyValueBO() {
+    }
+
     public KeyValueBO(K key, V value) {
         this.key = key;
         this.value = value;

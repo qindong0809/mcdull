@@ -307,6 +307,78 @@ public class FileServiceImpl
         return annotation.value();
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void batchUploadByBizType(List<MultipartFile> fileList, Integer bizId, String bizType, List<Integer> deleteFileIdList) {
+        if (CollUtil.isNotEmpty(deleteFileIdList)) {
+            for (Integer deletedFileId : deleteFileIdList) {
+                this.removeFileByBiz(deletedFileId, bizId, bizType);
+            }
+        }
+        if (CollUtil.isNotEmpty(fileList)) {
+            Integer systemFolderId = folderService.getSystemFolderId();
+            String month = DatePattern.NORM_MONTH_FORMAT.format(new Date());
+            Integer bizFolderId = folderService.addIfAbsent(month, systemFolderId);
+            for (MultipartFile multipartFile : fileList) {
+                FileUploadVO fileUploadVO = this.fileUpload(multipartFile, bizFolderId);
+                fileBizService.save(ListUtil.of(fileUploadVO.getFileId()), bizId, bizType);
+            }
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void removeByBizType(Integer bizId, String bizType) {
+        Map<Integer, List<Integer>> listMap = fileBizService.get(bizType);
+        if (MapUtil.isNotEmpty(listMap)) {
+            List<Integer> fileIdList = listMap.get(bizId);
+            if (CollUtil.isNotEmpty(fileIdList)) {
+                super.removeByIds(fileIdList);
+            }
+            fileBizService.deleteByBizCode(bizId, bizType);
+        }
+    }
+
+    @Override
+    public Map<Integer, List<FileEntity>> getByBizType(List<Integer> bizIdList, String bizType) {
+        Map<Integer, List<Integer>> bizFileMap = fileBizService.get(bizType);
+        if (MapUtil.isEmpty(bizFileMap) || CollUtil.isEmpty(bizIdList)) {
+            return Map.of();
+        }
+        List<Integer> fileIdList = bizFileMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+        if (CollUtil.isEmpty(fileIdList)) {
+            return Map.of();
+        }
+        List<FileEntity> list = this.listByIds(fileIdList);
+        if (CollUtil.isEmpty(list)) {
+            return Map.of();
+        }
+        Map<Integer, List<FileEntity>> result = new HashMap<>();
+        for (Map.Entry<Integer, List<Integer>> entry : bizFileMap.entrySet()) {
+            Integer bizId = entry.getKey();
+            if (bizIdList.contains(bizId)) {
+                List<FileEntity> collect = list.stream()
+                        .filter(fileEntity -> entry.getValue().contains(fileEntity.getId()))
+                        .collect(Collectors.toList());
+                if (CollUtil.isNotEmpty(collect)) {
+                    result.put(bizId, collect);
+                }
+            }
+        }
+        return result;
+    }
+
+    private void removeFileByBiz(Integer fileId, Integer bizId, String bizType) {
+        Map<Integer, List<Integer>> listMap = fileBizService.get(bizType);
+        if (MapUtil.isNotEmpty(listMap)) {
+            List<Integer> fileIdList = listMap.get(bizId);
+            if (CollUtil.isNotEmpty(fileIdList) && fileIdList.contains(fileId)) {
+                super.removeById(fileId);
+            }
+            fileBizService.deleteByBizCode(fileId, bizId, bizType);
+        }
+    }
+
 
     /**
      * 根据ID获取单条数据

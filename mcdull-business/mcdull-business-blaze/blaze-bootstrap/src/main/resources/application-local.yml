@@ -7,7 +7,7 @@ spring:
       host: ${BLAZE_REDIS_HOST:localhost}
       port: ${BLAZE_REDIS_PORT:6379}
       password: ${BLAZE_REDIS_PASSWORD:}
-      database: ${BLAZE_REDIS_DB:0}
+      database: ${BLAZE_REDIS_DB:1}
       timeout: ${BLAZE_REDIS_TIMEOUT:3s}
   datasource:
     url: ${BLAZE_DB_URL:jdbc:mysql://localhost:3306/mcdull-cloud-3?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai}

@@ -9,6 +9,8 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.AreaVO;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.IAreaVO;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Area Service
@@ -28,4 +30,9 @@ public interface IAreaService extends IRepository<AreaEntity> {
     boolean exportData(AreaQueryDTO dto);
 
     <T extends IAreaVO> void set(List<T> list);
+
+    /**
+     * 按区域编码批量查询名称映射
+     */
+    Map<String, String> nameMap(Set<String> codeSet);
 }

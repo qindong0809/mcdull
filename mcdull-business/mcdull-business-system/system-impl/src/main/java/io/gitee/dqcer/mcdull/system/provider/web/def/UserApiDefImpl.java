@@ -1,12 +1,13 @@
 package io.gitee.dqcer.mcdull.system.provider.web.def;
 
+import cn.hutool.core.bean.BeanUtil;
 import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.facade.service.UserApi;
 import io.gitee.dqcer.mcdull.system.facade.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.UserDTO;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Primary;
@@ -32,12 +33,12 @@ public class UserApiDefImpl implements UserApi {
     private IUserService userService;
 
     @Override
-    public Map<Integer, UserVO> getEntityMap(List<Integer> userIdList) {
+    public Map<Integer, UserDTO> getEntityMap(List<Integer> userIdList) {
         Map<Integer, UserEntity> entityMap = userService.getEntityMap(userIdList);
         return entityMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        e -> toVO(e.getValue())
+                        e -> toDTO(e.getValue())
                 ));
     }
 
@@ -60,9 +61,9 @@ public class UserApiDefImpl implements UserApi {
     }
 
     @Override
-    public UserVO get(Integer userId) {
+    public UserDTO get(Integer userId) {
         UserEntity entity = userService.get(userId);
-        return entity != null ? toVO(entity) : null;
+        return entity != null ? toDTO(entity) : null;
     }
 
     @Override
@@ -76,25 +77,32 @@ public class UserApiDefImpl implements UserApi {
     }
 
     @Override
-    public PagedVO<UserVO> listByPage(UserListDTO dto) {
-        return userService.listByPage(dto);
+    public PagedVO<UserDTO> listByPage(UserListDTO dto) {
+        PagedVO<?> page = userService.listByPage(dto);
+        PagedVO<UserDTO> result = new PagedVO<>();
+        result.setTotal(page.getTotal());
+        result.setPageSize(page.getPageSize());
+        result.setPageNum(page.getPageNum());
+        result.setTotalPage((int) page.getTotalPage());
+        result.setList(BeanUtil.copyToList(page.getList(), UserDTO.class));
+        return result;
     }
 
-    private UserVO toVO(UserEntity entity) {
+    private UserDTO toDTO(UserEntity entity) {
         if (entity == null) {
             return null;
         }
-        UserVO vo = new UserVO();
-        vo.setEmployeeId(entity.getId());
-        vo.setLoginName(entity.getLoginName());
-        vo.setActualName(entity.getActualName());
-        vo.setGender(entity.getGender());
-        vo.setPhone(entity.getPhone());
-        vo.setEmail(entity.getEmail());
-        vo.setDepartmentId(entity.getDepartmentId());
-        vo.setCreatedBy(entity.getCreatedBy());
-        vo.setUpdatedBy(entity.getUpdatedBy());
-        vo.setInactive(entity.getInactive());
-        return vo;
+        UserDTO dto = new UserDTO();
+        dto.setEmployeeId(entity.getId());
+        dto.setLoginName(entity.getLoginName());
+        dto.setActualName(entity.getActualName());
+        dto.setGender(entity.getGender());
+        dto.setPhone(entity.getPhone());
+        dto.setEmail(entity.getEmail());
+        dto.setDepartmentId(entity.getDepartmentId());
+        dto.setCreatedBy(entity.getCreatedBy());
+        dto.setUpdatedBy(entity.getUpdatedBy());
+        dto.setInactive(entity.getInactive());
+        return dto;
     }
 }

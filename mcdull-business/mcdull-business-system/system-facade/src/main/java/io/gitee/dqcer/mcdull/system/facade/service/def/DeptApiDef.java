@@ -3,7 +3,7 @@ package io.gitee.dqcer.mcdull.system.facade.service.def;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.feign.rpc.RpcClient;
 import io.gitee.dqcer.mcdull.system.facade.constants.SystemConstant;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.DepartmentInfoVO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.DepartmentInfoDTO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +24,7 @@ public interface DeptApiDef {
      * 全量部门列表
      */
     @GetMapping(GlobalConstant.INNER_API + GlobalConstant.SYSTEM + "/dept/all")
-    List<DepartmentInfoVO> getAll();
+    List<DepartmentInfoDTO> getAll();
 
     /**
      * 按 ID 批量查询部门名称

@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.blaze.domain.form.PermissionDTO;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.UserDTO;
 import jakarta.annotation.Resource;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class BlazeBasicController extends BasicController {
         if (StrUtil.isNotBlank(code)) {
             boolean permissionApprove = StpUtil.hasPermission(code);
             if (permissionApprove) {
-                UserVO userVO = sysUserFacade.get(UserContextHolder.userId());
+                UserDTO userVO = sysUserFacade.get(UserContextHolder.userId());
                 Integer departmentId = userVO.getDepartmentId();
                 List<Integer> userIdList = sysUserFacade.getUserIdList(departmentId);
                 if (CollUtil.isEmpty(userIdList)) {

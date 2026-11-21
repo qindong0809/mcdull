@@ -7,7 +7,7 @@ spring:
       host: ${DEMO_REDIS_HOST:localhost}
       port: ${DEMO_REDIS_PORT:6379}
       password: ${DEMO_REDIS_PASSWORD:}
-      database: ${DEMO_REDIS_DB:0}
+      database: ${DEMO_REDIS_DB:1}
       timeout: ${DEMO_REDIS_TIMEOUT:3s}
   datasource:
     url: ${DEMO_DB_URL:jdbc:mysql://localhost:3306/demo?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai}

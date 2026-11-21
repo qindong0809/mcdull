@@ -1,9 +1,6 @@
-package io.gitee.dqcer.mcdull.system.facade.model.vo;
+package io.gitee.dqcer.mcdull.system.facade.model.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
-import io.gitee.dqcer.mcdull.framework.json.serialize.DynamicDateFormat;
-import io.gitee.dqcer.mcdull.framework.json.serialize.DynamicDateSerialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.ToString;
@@ -12,11 +9,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 用户视图对象（共享给业务模块）
+ * 用户传输对象（服务间共享，不绑定展示格式）
  */
 @Data
 @ToString
-public class UserVO implements VO {
+public class UserDTO implements VO {
 
     private static final long serialVersionUID = 1L;
 
@@ -69,14 +66,10 @@ public class UserVO implements VO {
     private String updatedByName;
 
     @Schema(description = "创建时间")
-    @DynamicDateFormat(enableTimezone = true)
-    @JsonSerialize(using = DynamicDateSerialize.class)
-    protected Date createdTime;
+    private Date createdTime;
 
     @Schema(description = "更新时间")
-    @DynamicDateFormat(enableTimezone = true)
-    @JsonSerialize(using = DynamicDateSerialize.class)
-    protected Date updatedTime;
+    private Date updatedTime;
 
     @Schema(description = "是否禁用")
     private Boolean inactive;

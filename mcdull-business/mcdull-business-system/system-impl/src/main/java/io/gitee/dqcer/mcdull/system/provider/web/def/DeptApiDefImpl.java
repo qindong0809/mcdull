@@ -1,7 +1,8 @@
 package io.gitee.dqcer.mcdull.system.provider.web.def;
 
+import cn.hutool.core.bean.BeanUtil;
 import io.gitee.dqcer.mcdull.system.facade.service.def.DeptApiDef;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.DepartmentInfoVO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.DepartmentInfoDTO;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDepartmentService;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Primary;
@@ -24,8 +25,8 @@ public class DeptApiDefImpl implements DeptApiDef {
     private IDepartmentService departmentService;
 
     @Override
-    public List<DepartmentInfoVO> getAll() {
-        return departmentService.getAll();
+    public List<DepartmentInfoDTO> getAll() {
+        return BeanUtil.copyToList(departmentService.getAll(), DepartmentInfoDTO.class);
     }
 
     @Override

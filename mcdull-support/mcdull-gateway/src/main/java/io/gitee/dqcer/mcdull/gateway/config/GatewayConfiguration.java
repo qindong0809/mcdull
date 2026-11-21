@@ -45,14 +45,16 @@ public class GatewayConfiguration {
     /**
      * 跨域处理
      *
-     * 注：仅开发环境使用，测试、生产环境使用nginx处理跨域；
+     * 仅 local 启用：前端直连网关调试时由网关统一加 CORS 头；
+     * 此时 system 服务的 CorsFilter 在 local 下已关闭（@Profile("!local")），避免响应出现重复头。
+     * dev / test / prod 由 nginx 或下游服务处理，网关不介入。
      * 必须以最高优先级注册，先于SaTokenConfigure的鉴权过滤器执行，
      * 否则token失效时鉴权过滤器直接写出的异常响应将没有CORS头，导致浏览器拦截
      *
      * @return {@link CorsWebFilter}
      */
     @Bean
-    @Profile("dev")
+    @Profile("local")
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public CorsWebFilter corsWebFilter() {
         log.info("CorsWebFilter ...");

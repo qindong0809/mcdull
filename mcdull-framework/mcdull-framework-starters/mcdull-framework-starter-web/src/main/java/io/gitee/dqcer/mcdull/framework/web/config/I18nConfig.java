@@ -1,11 +1,11 @@
 package io.gitee.dqcer.mcdull.framework.web.config;
 
-import cn.hutool.core.io.resource.ResourceUtil;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.spi.DynamicLocaleMessageSource;
 import io.gitee.dqcer.mcdull.framework.web.enums.EnumVO;
 import io.gitee.dqcer.mcdull.framework.web.i18n.CustomizeLocaleResolver;
 import io.gitee.dqcer.mcdull.framework.web.transform.SpringContextHolder;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.SmartInitializingSingleton;
@@ -13,8 +13,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-
-import jakarta.annotation.PostConstruct;
 import org.springframework.web.servlet.LocaleResolver;
 
 import java.nio.charset.StandardCharsets;
@@ -51,12 +49,12 @@ public class I18nConfig implements SmartInitializingSingleton {
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name());
-        boolean exists = ResourceUtil.getResource("i18n/message") != null;
-        if (exists) {
+//        boolean exists = ResourceUtil.getResource("i18n/message") != null;
+//        if (exists) {
             messageSource.setBasenames("classpath:i18n/framework", "classpath:i18n/message");
-        } else {
-            messageSource.setBasenames("classpath:i18n/framework");
-        }
+//        } else {
+//            messageSource.setBasenames("classpath:i18n/framework");
+//        }
 
         messageSource.setCacheSeconds(-1);
         // TODO: 2023/12/27 修改路径可读取外部文件

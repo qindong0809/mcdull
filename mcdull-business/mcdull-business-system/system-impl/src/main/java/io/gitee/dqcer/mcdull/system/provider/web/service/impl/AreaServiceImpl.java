@@ -90,6 +90,11 @@ public class AreaServiceImpl extends BasicCurdServiceImpl<AreaMapper, AreaEntity
         return true;
     }
 
+    @Override
+    public Map<String, String> nameMap(Set<String> codeSet) {
+        return this.map(codeSet);
+    }
+
     private Map<String, String> map(Set<String> codeSet) {
         if (CollUtil.isNotEmpty(codeSet)) {
             LambdaQueryWrapper<AreaEntity> query = Wrappers.lambdaQuery();

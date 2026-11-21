@@ -27,6 +27,7 @@ public class UserContextHolder {
         session.setDateFormat(DatePattern.NORM_DATETIME_PATTERN);
         session.setLanguage(Locale.SIMPLIFIED_CHINESE.getLanguage());
         session.setZoneIdStr("Asia/Shanghai");
+        session.setAppendTimezoneStyle(false);
         session.setTenantId(0);
         session.setLoginName("system");
         session.setUserId("0");

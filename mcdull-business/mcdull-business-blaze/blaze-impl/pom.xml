@@ -10,8 +10,7 @@
     <name>${project.artifactId} v${project.version}</name>
 
     <dependencies>
-        <!-- 编译期只依赖 facade（SPI 接口 + 共享 Model 类） -->
-        <!-- 运行时由 blaze-bootstrap 把 system-impl 装配进来提供本地 SPI 实现 -->
+        <!-- 只依赖 facade（RPC 契约 + 共享 Model 类），system 能力通过 Feign 远程调用 -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>system-facade</artifactId>

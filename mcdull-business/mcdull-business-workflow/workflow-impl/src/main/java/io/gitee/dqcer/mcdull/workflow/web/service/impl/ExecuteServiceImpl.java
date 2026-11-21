@@ -15,9 +15,9 @@ import io.gitee.dqcer.mcdull.system.facade.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.system.facade.service.def.DeptApiDef;
 import io.gitee.dqcer.mcdull.system.facade.service.def.RoleApiDef;
 import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.DepartmentInfoVO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.DepartmentInfoDTO;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.RoleVO;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.UserDTO;
 import io.gitee.dqcer.mcdull.workflow.model.dto.FlowTaskDTO;
 import io.gitee.dqcer.mcdull.workflow.model.vo.FlowHisTaskVO;
 import io.gitee.dqcer.mcdull.workflow.model.vo.FlowTaskVO;
@@ -126,7 +126,7 @@ public class ExecuteServiceImpl implements IExecuteService {
             }
         }
         permissionList.add(userId);
-        UserVO vo = sysUserFacade.get(Convert.toInt(userId));
+        UserDTO vo = sysUserFacade.get(Convert.toInt(userId));
         if (Objects.nonNull(vo)) {
             permissionList.add("dept:" + vo.getDepartmentId());
         }
@@ -136,11 +136,11 @@ public class ExecuteServiceImpl implements IExecuteService {
 
     public String getName(String id) {
         UserListDTO userDTO = new UserListDTO();
-        List<UserVO> userList = sysUserFacade.listByPage(userDTO).getList();
+        List<UserDTO> userList = sysUserFacade.listByPage(userDTO).getList();
         Map<Integer, String> userMap = StreamUtils.toMap(userList
-                , UserVO::getEmployeeId, UserVO::getActualName);
+                , UserDTO::getEmployeeId, UserDTO::getActualName);
         Map<Integer, String> deptMap = StreamUtils.toMap(sysDeptFacade.getAll()
-                , DepartmentInfoVO::getDepartmentId, DepartmentInfoVO::getName);
+                , DepartmentInfoDTO::getDepartmentId, DepartmentInfoDTO::getName);
         Map<Integer, String> roleMap = StreamUtils.toMap(sysRoleFacade.all()
                 , RoleVO::getRoleId, RoleVO::getRoleName);
         if (StrUtil.isNotBlank(id)) {

@@ -14,7 +14,7 @@
 ### 1.1 本地 local
 
 ```text
-SPRING_PROFILES_ACTIVE=local;NACOS_ADDR=mcdull.io:8848;NACOS_USER=nacos;NACOS_PWD=123456;GATEWAY_SERVER_PORT=9090;GATEWAY_LOG_PATH=./logs
+SPRING_PROFILES_ACTIVE=local;NACOS_ADDR=mcdull.io:8848;NACOS_USER=nacos;NACOS_PWD=123456;GATEWAY_SERVER_PORT=9090;GATEWAY_REDIS_HOST=mcdull.io;GATEWAY_REDIS_PORT=6379;GATEWAY_REDIS_DB=1;GATEWAY_REDIS_PASSWORD=;GATEWAY_REDIS_TIMEOUT=3s;GATEWAY_LOG_PATH=./logs
 ```
 
 粘贴到 IDEA 的 `Environment variables` 后，运行 `io.gitee.dqcer.mcdull.gateway.GatewayApplication` 即可。
@@ -25,13 +25,13 @@ SPRING_PROFILES_ACTIVE=local;NACOS_ADDR=mcdull.io:8848;NACOS_USER=nacos;NACOS_PW
 ### 1.2 测试 test
 
 ```text
-SPRING_PROFILES_ACTIVE=test;NACOS_ADDR=mcdull.io:8848;NACOS_USER=nacos;NACOS_PWD=123456;GATEWAY_SERVER_PORT=9090;GATEWAY_LOG_PATH=./logs;GATEWAY_TAG_ENABLED=true;SPRING_BOOT_ADMIN_URL=http://localhost:9000
+SPRING_PROFILES_ACTIVE=test;NACOS_ADDR=mcdull.io:8848;NACOS_USER=nacos;NACOS_PWD=123456;GATEWAY_SERVER_PORT=9090;GATEWAY_REDIS_HOST=mcdull.io;GATEWAY_REDIS_PORT=6379;GATEWAY_REDIS_DB=1;GATEWAY_REDIS_PASSWORD=;GATEWAY_REDIS_TIMEOUT=3s;GATEWAY_LOG_PATH=./logs;GATEWAY_TAG_ENABLED=true;SPRING_BOOT_ADMIN_URL=http://localhost:9000
 ```
 
 ### 1.3 生产 prod（示例值需替换为真实值）
 
 ```text
-SPRING_PROFILES_ACTIVE=prod;NACOS_ADDR=prod.mcdull.io:8848;NACOS_USER=prod_nacos;NACOS_PWD=请替换;GATEWAY_SERVER_PORT=9090;GATEWAY_LOG_PATH=/data/logs/mcdull-gateway;GATEWAY_TAG_ENABLED=true;SPRING_BOOT_ADMIN_URL=http://admin.prod:9000
+SPRING_PROFILES_ACTIVE=prod;NACOS_ADDR=prod.mcdull.io:8848;NACOS_USER=prod_nacos;NACOS_PWD=请替换;GATEWAY_SERVER_PORT=9090;GATEWAY_REDIS_HOST=prod.mcdull.io;GATEWAY_REDIS_PORT=6379;GATEWAY_REDIS_DB=1;GATEWAY_REDIS_PASSWORD=请替换;GATEWAY_REDIS_TIMEOUT=3s;GATEWAY_LOG_PATH=/data/logs/mcdull-gateway;GATEWAY_TAG_ENABLED=true;SPRING_BOOT_ADMIN_URL=http://admin.prod:9000
 ```
 
 ---
@@ -70,6 +70,11 @@ NACOS_NAMESPACE=local
 | `NACOS_NAMESPACE` | 否 | 空 | 默认 `public` 命名空间 |
 | `ENV_TAG` | 否 | 本机用户名 | `local` 下的流量染色标签 |
 | `GATEWAY_SERVER_PORT` | 否 | `9090` | 网关端口 |
+| `GATEWAY_REDIS_HOST` | local 否 / test、prod 是 | `localhost` | Redis 地址，全局限流与 Sa-Token 会话依赖 |
+| `GATEWAY_REDIS_PORT` | 否 | `6379` | Redis 端口 |
+| `GATEWAY_REDIS_DB` | 否 | `1` | Redis 库，需与 `SYSTEM_REDIS_DB` 保持一致 |
+| `GATEWAY_REDIS_PASSWORD` | 否 | 空 | Redis 密码 |
+| `GATEWAY_REDIS_TIMEOUT` | 否 | `3s` | Redis 连接超时 |
 | `GATEWAY_LOG_PATH` | 否 | `./logs` | 日志根目录 |
 | `GATEWAY_TAG_ENABLED` | 否 | `true` | 标签路由开关，`local` 固定关闭 |
 | `SPRING_BOOT_ADMIN_URL` | 否 | `http://localhost:9000` | `prod` 必填 |

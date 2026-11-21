@@ -44,5 +44,20 @@ public interface IFileService extends IRepository<FileEntity> {
 
     Map<Integer, List<FileEntity>> get(List<Integer> idList, Class<?> aClass);
 
+    /**
+     * 按业务表名批量上传（远程契约用）
+     */
+    void batchUploadByBizType(List<MultipartFile> fileList, Integer bizId, String bizType, List<Integer> deleteFileIdList);
+
+    /**
+     * 按业务表名删除业务关联文件（远程契约用）
+     */
+    void removeByBizType(Integer bizId, String bizType);
+
+    /**
+     * 按业务表名批量查询文件（远程契约用）
+     */
+    Map<Integer, List<FileEntity>> getByBizType(List<Integer> bizIdList, String bizType);
+
     FileEntity getByFileKey(String fileKey);
 }

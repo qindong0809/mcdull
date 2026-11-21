@@ -14,17 +14,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!-- 原先由 system-impl 传递；Demo 工具类直接使用 hutool-crypto，改微服务后需显式声明 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-crypto</artifactId>
+        </dependency>
         <dependency>
           <groupId>${project.groupId}</groupId>
             <artifactId>blaze-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- 运行时将 system 模块装配进来，让本地 SPI 实现生效 -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>system-impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+        <!-- system 能力改为微服务远程调用：不再装配 system-impl，由 Application 上的 @EnableSystemFeignClients 激活契约代理 -->
         <dependency>
           <groupId>${project.groupId}</groupId>
             <artifactId>workflow-impl</artifactId>
@@ -75,7 +75,7 @@
             <artifactId>mcdull-framework-starter-mysql</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- 流程引擎运行时装配：system-impl 只依赖 api-flow -->
+        <!-- 流程引擎运行时装配 -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-flow</artifactId>

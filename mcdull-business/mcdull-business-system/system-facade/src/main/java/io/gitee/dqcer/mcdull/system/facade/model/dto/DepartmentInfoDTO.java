@@ -1,9 +1,6 @@
-package io.gitee.dqcer.mcdull.system.facade.model.vo;
+package io.gitee.dqcer.mcdull.system.facade.model.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
-import io.gitee.dqcer.mcdull.framework.json.serialize.DynamicDateFormat;
-import io.gitee.dqcer.mcdull.framework.json.serialize.DynamicDateSerialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,12 +9,12 @@ import lombok.ToString;
 import java.util.Date;
 
 /**
- * 部门信息视图对象（共享给业务模块）
+ * 部门信息传输对象（服务间共享，不绑定展示格式）
  */
 @Getter
 @Setter
 @ToString
-public class DepartmentInfoVO implements VO {
+public class DepartmentInfoDTO implements VO {
 
     @Schema(description = "部门id")
     private Integer departmentId;
@@ -38,13 +35,9 @@ public class DepartmentInfoVO implements VO {
     private Integer sort;
 
     @Schema(description = "创建时间")
-    @DynamicDateFormat(enableTimezone = true)
-    @JsonSerialize(using = DynamicDateSerialize.class)
     private Date createTime;
 
     @Schema(description = "更新时间")
-    @DynamicDateFormat(enableTimezone = true)
-    @JsonSerialize(using = DynamicDateSerialize.class)
     private Date updateTime;
 
 }

@@ -7,7 +7,7 @@ spring:
       host: ${FOCUS_REDIS_HOST:localhost}
       port: ${FOCUS_REDIS_PORT:6379}
       password: ${FOCUS_REDIS_PASSWORD:}
-      database: ${FOCUS_REDIS_DB:0}
+      database: ${FOCUS_REDIS_DB:1}
       timeout: ${FOCUS_REDIS_TIMEOUT:3s}
   datasource:
     url: ${FOCUS_DB_URL:jdbc:mysql://localhost:3306/focus?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai}

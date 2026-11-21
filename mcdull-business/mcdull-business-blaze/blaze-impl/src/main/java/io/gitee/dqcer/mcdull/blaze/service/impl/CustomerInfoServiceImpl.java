@@ -14,12 +14,21 @@ import io.gitee.dqcer.mcdull.blaze.domain.vo.CustomerInfoVO;
 import io.gitee.dqcer.mcdull.blaze.repository.ICustomerInfoRepository;
 import io.gitee.dqcer.mcdull.blaze.service.ICertificateRequirementsService;
 import io.gitee.dqcer.mcdull.blaze.service.ICustomerInfoService;
+import io.gitee.dqcer.mcdull.common.CustomMultipartFile;
+import io.gitee.dqcer.mcdull.common.area.AreaFillUtil;
+import io.gitee.dqcer.mcdull.common.excel.ExcelExportUtil;
+import io.gitee.dqcer.mcdull.common.user.UserRefUtil;
 import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicServiceImpl;
-import io.gitee.dqcer.mcdull.system.facade.service.def.CommonApiDef;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.ExportContextVO;
+import io.gitee.dqcer.mcdull.system.facade.service.AreaApi;
+import io.gitee.dqcer.mcdull.system.facade.service.DictApi;
+import io.gitee.dqcer.mcdull.system.facade.service.ExportApi;
+import io.gitee.dqcer.mcdull.system.facade.service.FileRemoteApi;
 import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
 import io.gitee.dqcer.mcdull.system.facade.model.enums.DictSelectTypeEnum;
 import jakarta.annotation.Resource;
@@ -45,7 +54,13 @@ public class CustomerInfoServiceImpl
     @Resource
     private ICertificateRequirementsService certificateRequirementsService;
     @Resource
-    private CommonApiDef sysCommonFacade;
+    private DictApi dictApi;
+    @Resource
+    private AreaApi areaApi;
+    @Resource
+    private ExportApi exportApi;
+    @Resource
+    private FileRemoteApi fileRemoteApi;
 
     public PagedVO<CustomerInfoVO> queryPage(CustomerInfoQueryDTO dto) {
         List<CustomerInfoVO> voList = new ArrayList<>();
@@ -54,14 +69,14 @@ public class CustomerInfoServiceImpl
         if (CollUtil.isNotEmpty(recordList)) {
             Set<Integer> collect = recordList.stream().map(CustomerInfoEntity::getResponsibleUserId).collect(Collectors.toSet());
             Map<Integer, String> nameMap1 = userService.getNameMap(new ArrayList<>(collect));
-            Map<Integer, String> nameMap = userService.getMap(recordList);
+            Map<Integer, String> nameMap = userService.getNameMap(UserRefUtil.collectUserIds(recordList));
             for (CustomerInfoEntity entity : recordList) {
                 CustomerInfoVO vo = this.convertToVO(entity);
-                KeyValueBO<String, String> keyValue = sysCommonFacade.dictVO(DictSelectTypeEnum.CUSTOMER_TYPE, vo.getCustomerType());
+                KeyValueBO<String, String> keyValue = dictApi.translate(DictSelectTypeEnum.CUSTOMER_TYPE, vo.getCustomerType());
                 if (ObjUtil.isNotNull(keyValue)) {
                     vo.setCustomerTypeName(keyValue.getValue());
                 }
-                KeyValueBO<String, String> inactiveKeyValue = sysCommonFacade.dictVO(DictSelectTypeEnum.IN_ACTIVE, vo.getInactive().toString());
+                KeyValueBO<String, String> inactiveKeyValue = dictApi.translate(DictSelectTypeEnum.IN_ACTIVE, vo.getInactive().toString());
                 if (ObjUtil.isNotNull(inactiveKeyValue)) {
                     vo.setInactiveName(inactiveKeyValue.getValue());
                 }
@@ -72,7 +87,7 @@ public class CustomerInfoServiceImpl
                 vo.setPhoneNumber("");
                 voList.add(vo);
             }
-            sysCommonFacade.set(voList);
+            AreaFillUtil.fill(voList, areaApi.nameMap(AreaFillUtil.collectCodes(voList)));
         }
         return PageUtil.toPage(voList, entityPage);
     }
@@ -93,7 +108,20 @@ public class CustomerInfoServiceImpl
 
     @Override
     public boolean exportData(CustomerInfoQueryDTO dto) {
-        sysCommonFacade.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+        ExportContextVO context = exportApi.context();
+        List<CustomerInfoVO> list = this.queryPage(dto).getList();
+        java.io.ByteArrayOutputStream outputStream = new java.io.ByteArrayOutputStream();
+        ExcelExportUtil.write(outputStream, list, StrUtil.EMPTY,
+                context.getOperatorName(), context.getDateTimeStr(), this.getTitleList());
+        byte[] bytes = outputStream.toByteArray();
+        try (var responseStream = ServletUtil.getResponse().getOutputStream()) {
+            responseStream.write(bytes);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if (Boolean.TRUE.equals(context.getAutoStorage())) {
+            fileRemoteApi.uploadToSystemFolder(new CustomMultipartFile(context.getMenuName() + ".xlsx", bytes));
+        }
         return true;
     }
 

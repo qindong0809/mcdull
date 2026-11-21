@@ -4,7 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.facade.model.dto.UserListDTO;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.UserDTO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +29,7 @@ public interface UserApiDef {
      * 按 ID 批量查询用户
      */
     @PostMapping(GlobalConstant.INNER_API + GlobalConstant.SYSTEM + "/user/by-id/list")
-    Map<Integer, UserVO> getEntityMap(@RequestBody List<Integer> userIdList);
+    Map<Integer, UserDTO> getEntityMap(@RequestBody List<Integer> userIdList);
 
     /**
      * 按 ID 批量查询用户名称映射
@@ -50,7 +50,7 @@ public interface UserApiDef {
      * 按 ID 查询单个用户
      */
     @GetMapping(GlobalConstant.INNER_API + GlobalConstant.SYSTEM + "/user/{userId}")
-    UserVO get(@PathVariable("userId") Integer userId);
+    UserDTO get(@PathVariable("userId") Integer userId);
 
     /**
      * 按部门 ID 查询下级用户 ID
@@ -68,6 +68,6 @@ public interface UserApiDef {
      * 分页查询用户
      */
     @PostMapping(GlobalConstant.INNER_API + GlobalConstant.SYSTEM + "/user/page")
-    PagedVO<UserVO> listByPage(@RequestBody UserListDTO dto);
+    PagedVO<UserDTO> listByPage(@RequestBody UserListDTO dto);
 
 }

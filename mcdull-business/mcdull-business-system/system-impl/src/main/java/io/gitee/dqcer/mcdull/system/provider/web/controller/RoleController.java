@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.system.facade.model.dto.UserListDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.RoleVO;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IRoleService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;

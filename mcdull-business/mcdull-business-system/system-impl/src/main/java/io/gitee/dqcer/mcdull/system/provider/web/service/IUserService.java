@@ -5,7 +5,7 @@ import io.gitee.dqcer.mcdull.framework.base.entity.BaseEntity;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.system.facade.model.dto.UserListDTO;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.system.facade.vo.RemoteLogonUserVO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.*;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;

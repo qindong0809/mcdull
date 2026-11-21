@@ -57,7 +57,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.enums.EmailTypeEnum;
 import io.gitee.dqcer.mcdull.system.facade.model.enums.FormItemControlTypeEnum;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserAllVO;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserPowerVO;
 import io.gitee.dqcer.mcdull.system.provider.web.dao.UserMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;

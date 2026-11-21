@@ -141,7 +141,7 @@
                concat('TK-', t.id) AS taskNo,
                t.node_name AS node,
                coalesce(i.business_id, t.node_name) AS title,
-               coalesce(u.actual_name, i.create_by) AS starter,
+               coalesce(i.starter_name, i.create_by) AS starter,
                date_format(t.create_time, '%Y-%m-%d %H:%i') AS arrived,
                t.instance_id AS instanceId, t.definition_id AS definitionId,
                i.variable, d.flow_name AS defName, d.version AS defVersion
@@ -149,7 +149,6 @@
         LEFT JOIN flow_instance i ON t.instance_id = i.id
         LEFT JOIN flow_definition d ON t.definition_id = d.id
         LEFT JOIN flow_user fu ON fu.associated = t.id
-        LEFT JOIN sys_user u ON u.id = cast(i.create_by as unsigned)
         <where>
             t.del_flag = '0' AND t.node_type = 1 AND t.flow_status = '1'
             <if test="p.userId != null and p.userId != ''">AND fu.processed_by = #{p.userId}</if>
@@ -196,7 +195,7 @@
                concat('def_', h.definition_id) AS defId,
                d.flow_name AS defName,
                h.node_name AS node,
-               coalesce(u.actual_name, h.approver) AS handler,
+               coalesce(h.approver_name, h.approver) AS handler,
                case
                    when h.cooperate_type = 2 then '转办'
                    when h.cooperate_type = 3 then '委派'
@@ -211,7 +210,6 @@
                h.node_code, h.target_node_code
         FROM flow_his_task h
         LEFT JOIN flow_definition d ON h.definition_id = d.id
-        LEFT JOIN sys_user u ON u.id = cast(h.approver as unsigned)
         <where>
             h.del_flag = '0'
             <if test="p.result != null and p.result != ''">

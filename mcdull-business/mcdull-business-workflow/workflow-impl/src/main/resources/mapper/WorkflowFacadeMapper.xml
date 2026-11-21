@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.gitee.dqcer.mcdull.workflow.provider.mapper.WorkflowFacadeMapper">
+
+    <select id="selectDefinitionsByKeys" resultType="java.util.Map">
+        SELECT d.id AS definitionId,
+               d.flow_code AS flowCode,
+               d.flow_name AS flowName,
+               d.category,
+               d.version,
+               d.is_publish AS publishStatus,
+               d.activity_status AS activityStatus,
+               d.form_custom AS formCustom,
+               d.form_path AS formPath,
+               d.ext,
+               d.update_time AS updateTime
+        FROM flow_definition d
+        WHERE d.del_flag = '0'
+        AND d.tenant_id = #{tenantId}
+        AND (
+        <foreach collection="keys" item="k" separator=" OR ">
+            <choose>
+                <when test="k.type == 'ID'">
+                    d.id = #{k.value}
+                </when>
+                <otherwise>
+                    d.flow_code = #{k.value}
+                </otherwise>
+            </choose>
+        </foreach>
+        )
+    </select>
+
+    <select id="selectDefinitionNodes" resultType="java.util.Map">
+        SELECT n.definition_id AS definitionId,
+               n.node_code AS nodeCode,
+               n.node_name AS nodeName,
+               n.node_type AS nodeType,
+               n.coordinate,
+               n.handler_path AS handlerPath,
+               n.permission_flag AS permissionFlag
+        FROM flow_node n
+        WHERE n.del_flag = '0'
+        AND n.tenant_id = #{tenantId}
+        AND n.definition_id IN
+        <foreach collection="definitionIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ORDER BY n.definition_id, n.node_code
+    </select>
+
+    <select id="selectDefinitionSkips" resultType="java.util.Map">
+        SELECT s.definition_id AS definitionId,
+               s.now_node_code AS fromNodeCode,
+               s.next_node_code AS toNodeCode,
+               s.skip_name AS label,
+               s.skip_condition AS condition,
+               s.skip_type AS skipType
+        FROM flow_skip s
+        WHERE s.del_flag = '0'
+        AND s.tenant_id = #{tenantId}
+        AND s.definition_id IN
+        <foreach collection="definitionIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ORDER BY s.definition_id, s.now_node_code, s.next_node_code
+    </select>
+
+    <select id="selectDefinitionByCode" resultType="java.util.Map">
+        SELECT d.*
+        FROM flow_definition d
+        WHERE d.del_flag = '0'
+        AND d.tenant_id = #{tenantId}
+        AND d.flow_code = #{flowCode}
+        AND d.is_publish = 1
+        AND d.activity_status = 1
+        LIMIT 1
+    </select>
+
+    <select id="selectFirstNodes" resultType="java.util.Map">
+        SELECT n.*
+        FROM flow_node n
+        WHERE n.del_flag = '0'
+        AND n.tenant_id = #{tenantId}
+        AND n.definition_id = #{definitionId}
+        AND n.node_type = 1
+        AND n.node_code IN (
+            SELECT s.next_node_code
+            FROM flow_skip s
+            INNER JOIN flow_node startNode ON startNode.definition_id = s.definition_id
+                AND startNode.node_code = s.now_node_code
+                AND startNode.del_flag = '0'
+            WHERE s.definition_id = #{definitionId}
+            AND s.del_flag = '0'
+            AND startNode.node_type = 0
+        )
+    </select>
+
+    <select id="selectInstanceByBusinessKey" resultType="java.util.Map">
+        SELECT *
+        FROM flow_instance
+        WHERE del_flag = '0'
+        AND tenant_id = #{tenantId}
+        AND flow_code = #{flowCode}
+        AND business_id = #{businessId}
+        LIMIT 1
+    </select>
+
+    <select id="selectInstancesByBusinessKeys" resultType="java.util.Map">
+        SELECT *
+        FROM flow_instance
+        WHERE del_flag = '0'
+        AND tenant_id = #{tenantId}
+        AND (
+        <foreach collection="keys" item="k" separator=" OR ">
+            (flow_code = #{k.flowCode} AND business_id = #{k.businessId})
+        </foreach>
+        )
+    </select>
+
+    <select id="selectApproversByInstanceIds" resultType="java.util.Map">
+        SELECT i.id AS instanceId,
+               fu.associated AS taskId,
+               fu.processed_by AS assigneeId,
+               fu.processed_name AS assigneeName
+        FROM flow_user fu
+        INNER JOIN flow_task t ON t.id = fu.associated AND t.del_flag = '0'
+        INNER JOIN flow_instance i ON i.id = t.instance_id AND i.del_flag = '0'
+        WHERE fu.del_flag = '0'
+        AND fu.type = '1'
+        AND fu.tenant_id = #{tenantId}
+        AND i.id IN
+        <foreach collection="instanceIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <insert id="insertInstance">
+        INSERT INTO flow_instance
+            (id, definition_id, flow_code, business_id, business_type, business_title,
+             node_type, node_code, node_name, variable, flow_status, activity_status,
+             create_by, starter_id, starter_name, ext, revision,
+             create_time, update_time, del_flag, tenant_id)
+        VALUES
+            (#{row.id}, #{row.definitionId}, #{row.flowCode}, #{row.businessId}, #{row.businessType},
+             #{row.businessTitle}, #{row.nodeType}, #{row.nodeCode}, #{row.nodeName}, #{row.variable},
+             #{row.flowStatus}, #{row.activityStatus}, #{row.createBy}, #{row.starterId},
+             #{row.starterName}, #{row.ext}, #{row.revision}, now(), now(), '0', #{row.tenantId})
+    </insert>
+
+    <insert id="insertTask">
+        INSERT INTO flow_task
+            (id, definition_id, instance_id, node_code, node_name, node_type, flow_status,
+             form_custom, form_path, revision, create_time, update_time, del_flag, tenant_id)
+        VALUES
+            (#{row.id}, #{row.definitionId}, #{row.instanceId}, #{row.nodeCode}, #{row.nodeName},
+             #{row.nodeType}, #{row.flowStatus}, #{row.formCustom}, #{row.formPath}, #{row.revision},
+             now(), now(), '0', #{row.tenantId})
+    </insert>
+
+    <insert id="insertFlowUser">
+        INSERT INTO flow_user
+            (id, type, processed_by, processed_name, associated, create_by,
+             create_time, update_time, del_flag, tenant_id)
+        VALUES
+            (#{row.id}, #{row.type}, #{row.processedBy}, #{row.processedName}, #{row.associated},
+             #{row.createBy}, now(), now(), '0', #{row.tenantId})
+    </insert>
+
+    <insert id="insertEvent">
+        INSERT INTO flow_event_outbox
+            (id, tenant_id, event_type, aggregate_id, payload_json, status, retry_count,
+             next_retry_time, create_time, update_time, del_flag)
+        VALUES
+            (#{row.id}, #{row.tenantId}, #{row.eventType}, #{row.aggregateId}, #{row.payloadJson},
+             'PENDING', 0, now(), now(), now(), '0')
+    </insert>
+
+    <select id="selectIdempotency" resultType="java.util.Map">
+        SELECT *
+        FROM flow_idempotency
+        WHERE del_flag = '0'
+        AND tenant_id = #{tenantId}
+        AND idempotency_key = #{idempotencyKey}
+        LIMIT 1
+    </select>
+
+    <insert id="insertIdempotency">
+        INSERT INTO flow_idempotency
+            (id, tenant_id, idempotency_key, request_hash, status, expire_time,
+             create_time, update_time, del_flag)
+        VALUES
+            (#{row.id}, #{row.tenantId}, #{row.idempotencyKey}, #{row.requestHash}, 'PROCESSING',
+             date_add(now(), interval 7 day), now(), now(), '0')
+    </insert>
+
+    <update id="updateIdempotencySuccess">
+        UPDATE flow_idempotency
+        SET status = 'SUCCESS', response_json = #{responseJson}, update_time = now()
+        WHERE tenant_id = #{tenantId} AND idempotency_key = #{idempotencyKey}
+    </update>
+
+    <update id="updateIdempotencyFailed">
+        UPDATE flow_idempotency
+        SET status = 'FAILED', error_code = #{errorCode}, error_message = #{errorMessage}, update_time = now()
+        WHERE tenant_id = #{tenantId} AND idempotency_key = #{idempotencyKey}
+    </update>
+
+    <select id="selectTodoCounts" resultType="java.util.Map">
+        SELECT fu.processed_by AS assigneeId,
+        <choose>
+            <when test="groupBy == 'FLOW_CODE'">
+                i.flow_code AS flowCode,
+            </when>
+            <otherwise>
+                '' AS flowCode,
+            </otherwise>
+        </choose>
+        COUNT(*) AS cnt
+        FROM flow_task t
+        INNER JOIN flow_user fu ON fu.associated = t.id AND fu.type = '1' AND fu.del_flag = '0'
+        INNER JOIN flow_instance i ON i.id = t.instance_id AND i.del_flag = '0'
+        WHERE t.del_flag = '0'
+        AND t.tenant_id = #{tenantId}
+        AND t.flow_status = '1'
+        AND t.node_type = 1
+        AND fu.processed_by IN
+        <foreach collection="assigneeIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        <if test="flowCodes != null and flowCodes.size() > 0">
+            AND i.flow_code IN
+            <foreach collection="flowCodes" item="code" open="(" separator="," close=")">
+                #{code}
+            </foreach>
+        </if>
+        GROUP BY fu.processed_by
+        <if test="groupBy == 'FLOW_CODE'">
+            , i.flow_code
+        </if>
+    </select>
+
+    <select id="selectTodoPage" resultType="java.util.Map">
+        SELECT t.id AS taskId,
+               t.instance_id AS instanceId,
+               t.definition_id AS definitionId,
+               t.node_code AS nodeCode,
+               t.node_name AS nodeName,
+               t.flow_status AS flowStatus,
+               t.create_time AS createTime,
+               t.update_time AS updateTime,
+               t.revision,
+               i.flow_code AS flowCode,
+               i.business_id AS businessId,
+               i.business_title AS businessTitle,
+               i.starter_id AS starterId,
+               i.starter_name AS starterName
+        FROM flow_task t
+        INNER JOIN flow_user fu ON fu.associated = t.id AND fu.type = '1' AND fu.del_flag = '0'
+        INNER JOIN flow_instance i ON i.id = t.instance_id AND i.del_flag = '0'
+        WHERE t.del_flag = '0'
+        AND t.tenant_id = #{tenantId}
+        AND t.flow_status = '1'
+        AND t.node_type = 1
+        AND fu.processed_by = #{assigneeId}
+        <if test="keyword != null and keyword != ''">
+            AND (t.node_name LIKE concat('%', #{keyword}, '%') OR i.business_id LIKE concat('%', #{keyword}, '%'))
+        </if>
+        <if test="flowCode != null and flowCode != ''">
+            AND i.flow_code = #{flowCode}
+        </if>
+        <if test="cursorTime != null and cursorTime != ''">
+            AND (t.create_time &lt; #{cursorTime} OR (t.create_time = #{cursorTime} AND t.id &lt; #{cursorId}))
+        </if>
+        ORDER BY t.create_time DESC, t.id DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="countTodo" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM flow_task t
+        INNER JOIN flow_user fu ON fu.associated = t.id AND fu.type = '1' AND fu.del_flag = '0'
+        INNER JOIN flow_instance i ON i.id = t.instance_id AND i.del_flag = '0'
+        WHERE t.del_flag = '0'
+        AND t.tenant_id = #{tenantId}
+        AND t.flow_status = '1'
+        AND t.node_type = 1
+        AND fu.processed_by = #{assigneeId}
+        <if test="keyword != null and keyword != ''">
+            AND (t.node_name LIKE concat('%', #{keyword}, '%') OR i.business_id LIKE concat('%', #{keyword}, '%'))
+        </if>
+        <if test="flowCode != null and flowCode != ''">
+            AND i.flow_code = #{flowCode}
+        </if>
+    </select>
+
+    <select id="selectTasksByIds" resultType="java.util.Map">
+        SELECT t.id AS taskId,
+               t.instance_id AS instanceId,
+               t.definition_id AS definitionId,
+               t.node_code AS nodeCode,
+               t.node_name AS nodeName,
+               t.flow_status AS flowStatus,
+               t.create_time AS createTime,
+               t.update_time AS updateTime,
+               t.revision,
+               i.flow_code AS flowCode,
+               i.business_id AS businessId,
+               i.business_title AS businessTitle,
+               i.starter_id AS starterId,
+               i.starter_name AS starterName
+        FROM flow_task t
+        INNER JOIN flow_instance i ON i.id = t.instance_id AND i.del_flag = '0'
+        WHERE t.del_flag = '0'
+        AND t.tenant_id = #{tenantId}
+        AND t.id IN
+        <foreach collection="taskIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        <if test="assigneeId != null and assigneeId != ''">
+            AND EXISTS (
+                SELECT 1 FROM flow_user fu
+                WHERE fu.associated = t.id AND fu.type = '1' AND fu.del_flag = '0'
+                AND fu.processed_by = #{assigneeId}
+            )
+        </if>
+    </select>
+
+    <select id="selectAssigneesByIds" resultType="java.util.Map">
+        SELECT associated AS taskId,
+               processed_by AS assigneeId,
+               processed_name AS assigneeName,
+               type AS userType
+        FROM flow_user
+        WHERE del_flag = '0'
+        AND tenant_id = #{tenantId}
+        AND type = '1'
+        AND associated IN
+        <foreach collection="taskIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectHistoriesByInstanceIds" resultType="java.util.Map">
+        SELECT * FROM (
+            SELECT h.id AS historyId,
+                   h.instance_id AS instanceId,
+                   h.node_code AS nodeCode,
+                   h.node_name AS nodeName,
+                   h.approver_id AS handlerId,
+                   h.approver_name AS handlerName,
+                   h.skip_type AS skipType,
+                   h.cooperate_type AS cooperateType,
+                   h.message AS comment,
+                   h.create_time AS createTime,
+                   h.update_time AS updateTime,
+                   ROW_NUMBER() OVER (PARTITION BY h.instance_id ORDER BY h.update_time DESC, h.id DESC) AS rn
+            FROM flow_his_task h
+            WHERE h.del_flag = '0'
+            AND h.tenant_id = #{tenantId}
+            AND h.instance_id IN
+            <foreach collection="instanceIds" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        ) t
+        WHERE t.rn &lt;= #{limitPerInstance}
+        ORDER BY t.instanceId, t.updateTime DESC
+    </select>
+
+    <select id="selectLatestApprovals" resultType="java.util.Map">
+        SELECT * FROM (
+            SELECT i.id AS instanceId,
+                   i.flow_code AS flowCode,
+                   i.business_id AS businessId,
+                   i.flow_status AS flowStatus,
+                   h.approver_id AS handlerId,
+                   h.approver_name AS handlerName,
+                   h.skip_type AS skipType,
+                   h.cooperate_type AS cooperateType,
+                   h.message AS comment,
+                   h.update_time AS updateTime,
+                   ROW_NUMBER() OVER (PARTITION BY i.id ORDER BY h.update_time DESC, h.id DESC) AS rn
+            FROM flow_instance i
+            INNER JOIN flow_his_task h ON h.instance_id = i.id AND h.del_flag = '0'
+            WHERE i.del_flag = '0'
+            AND i.tenant_id = #{tenantId}
+            AND (
+            <foreach collection="keys" item="k" separator=" OR ">
+                (i.flow_code = #{k.flowCode} AND i.business_id = #{k.businessId})
+            </foreach>
+            )
+        ) t
+        WHERE t.rn = 1
+    </select>
+
+    <select id="selectTaskForHandle" resultType="java.util.Map">
+        SELECT t.id AS taskId,
+               t.instance_id AS instanceId,
+               t.definition_id AS definitionId,
+               t.node_code AS nodeCode,
+               t.node_name AS nodeName,
+               t.flow_status AS taskStatus,
+               t.revision AS taskRevision,
+               i.flow_code AS flowCode,
+               i.business_id AS businessId,
+               i.flow_status AS instanceStatus,
+               i.revision AS instanceRevision
+        FROM flow_task t
+        INNER JOIN flow_instance i ON i.id = t.instance_id AND i.del_flag = '0'
+        WHERE t.del_flag = '0'
+        AND t.tenant_id = #{tenantId}
+        AND t.id = #{taskId}
+        LIMIT 1
+    </select>
+
+    <select id="countAssignee" resultType="int">
+        SELECT COUNT(*)
+        FROM flow_user
+        WHERE del_flag = '0'
+        AND tenant_id = #{tenantId}
+        AND associated = #{taskId}
+        AND type = '1'
+        AND processed_by = #{operatorId}
+    </select>
+
+    <select id="selectNextNode" resultType="java.util.Map">
+        SELECT n.node_code AS nodeCode,
+               n.node_name AS nodeName
+        FROM flow_skip s
+        INNER JOIN flow_node n ON n.definition_id = s.definition_id
+            AND n.node_code = s.next_node_code
+            AND n.del_flag = '0'
+        WHERE s.del_flag = '0'
+        AND s.tenant_id = #{tenantId}
+        AND s.definition_id = #{definitionId}
+        AND s.now_node_code = #{nodeCode}
+        AND s.skip_type = 'PASS'
+        LIMIT 1
+    </select>
+
+    <insert id="insertHistory">
+        INSERT INTO flow_his_task
+            (id, definition_id, instance_id, task_id, node_code, node_name, target_node_code,
+             approver, approver_id, approver_name, collaborator_id, collaborator_name,
+             cooperate_type, skip_type, flow_status, message, variable,
+             create_time, update_time, del_flag, tenant_id)
+        VALUES
+            (#{row.id}, #{row.definitionId}, #{row.instanceId}, #{row.taskId}, #{row.nodeCode},
+             #{row.nodeName}, #{row.targetNodeCode}, #{row.approver}, #{row.approverId},
+             #{row.approverName}, #{row.collaboratorId}, #{row.collaboratorName},
+             #{row.cooperateType}, #{row.skipType}, #{row.flowStatus}, #{row.message}, #{row.variable},
+             now(), now(), '0', #{row.tenantId})
+    </insert>
+
+    <insert id="insertHandleUsers">
+        INSERT INTO flow_user
+            (id, type, processed_by, processed_name, associated, create_by,
+             create_time, update_time, del_flag, tenant_id)
+        VALUES
+        <foreach collection="rows" item="row" separator=",">
+            (#{row.id}, #{row.type}, #{row.processedBy}, #{row.processedName}, #{row.associated},
+             #{row.createBy}, now(), now(), '0', #{row.tenantId})
+        </foreach>
+    </insert>
+
+    <update id="completeTask">
+        UPDATE flow_task
+        SET flow_status = #{flowStatus}, revision = revision + 1, update_time = now()
+        WHERE del_flag = '0'
+        AND tenant_id = #{tenantId}
+        AND id = #{taskId}
+        AND flow_status = '1'
+        <if test="expectedRevision != null">
+            AND revision = #{expectedRevision}
+        </if>
+    </update>
+
+    <update id="updateInstanceForHandle">
+        UPDATE flow_instance
+        SET node_code = #{nodeCode}, node_name = #{nodeName}, flow_status = #{flowStatus},
+            revision = revision + 1, update_time = now()
+        WHERE del_flag = '0'
+        AND tenant_id = #{tenantId}
+        AND id = #{instanceId}
+        AND flow_status = '1'
+        <if test="expectedRevision != null">
+            AND revision = #{expectedRevision}
+        </if>
+    </update>
+
+</mapper>

@@ -38,6 +38,22 @@ spring:
               max-idle-time: 15000
           # 核心业务路由直接写在本地，随 Git 版本受控管理
           routes:
+            # 前端统一以 /api/{service} 前缀接入；StripPrefix=2 去掉 /api/system 或 /api/blaze 两段，后端 Controller 路径保持不变
+            - id: system-bootstrap-api
+              uri: lb://system-bootstrap
+              predicates:
+                - Path=/api/system/**
+              filters:
+                - StripPrefix=2
+
+            - id: blaze-bootstrap-api
+              uri: lb://blaze-bootstrap
+              predicates:
+                - Path=/api/blaze/**
+              filters:
+                - StripPrefix=2
+
+            # 兼容存量 /uac/** 调用（前端已切换为 /api/system，后续可清理）
             - id: system-bootstrap
               uri: lb://system-bootstrap
               predicates:
@@ -70,6 +86,20 @@ spring:
                 redis-rate-limiter.replenishRate: 50
                 redis-rate-limiter.burstCapacity: 100
                 key-resolver: "#{@ipKeyResolver}"
+
+# 与业务服务保持一致：网关直接读取前端提交的 Authorization token
+sa-token:
+  active-timeout: 1800
+  timeout: 86400
+  token-name: Authorization
+  is-concurrent: false
+  is-share: false
+  token-style: tik
+  auto-renew: true
+  is-log: true
+  log-level: info
+  is-print: false
+  is-read-cookie: false
 
 # 监控端点安全规范收归本地
 management:

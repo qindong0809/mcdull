@@ -36,6 +36,22 @@
             <artifactId>mcdull-framework-base</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- 公共工具需要按用户时区序列化日期 -->
+        <dependency>
+            <groupId>io.gitee.dqcer</groupId>
+            <artifactId>mcdull-framework-json</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- 模板工具复用 facade 中的共享模型 DynamicFieldBO / FormItemControlTypeEnum -->
+        <dependency>
+            <groupId>io.gitee.dqcer</groupId>
+            <artifactId>system-facade</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>ip2region</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>

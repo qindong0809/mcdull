@@ -7,7 +7,7 @@ spring:
       host: ${WORKFLOW_REDIS_HOST:localhost}
       port: ${WORKFLOW_REDIS_PORT:6379}
       password: ${WORKFLOW_REDIS_PASSWORD:}
-      database: ${WORKFLOW_REDIS_DB:0}
+      database: ${WORKFLOW_REDIS_DB:1}
       timeout: ${WORKFLOW_REDIS_TIMEOUT:3s}
   datasource:
     url: ${WORKFLOW_DB_URL:jdbc:mysql://localhost:3306/mcdull-cloud-3?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai}

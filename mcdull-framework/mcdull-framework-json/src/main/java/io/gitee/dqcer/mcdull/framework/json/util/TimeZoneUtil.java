@@ -88,7 +88,7 @@ public class TimeZoneUtil {
             }
         }
 
-        if (splicingTimezone) {
+        if (BooleanUtil.isTrue(splicingTimezone)) {
             ZoneRules rules = zoneId.getRules();
             ZoneOffset offset = rules.getOffset(date.toInstant());
             String offsetId = offset.getId();

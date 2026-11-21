@@ -33,6 +33,12 @@
             <artifactId>system-facade</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- 工作流服务间契约：provider 适配层实现该模块中的接口 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>workflow-facade</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- MyBatis-Plus 的 LambdaQueryWrapper/Wrappers/Page 由本模块直接使用 -->
         <dependency>
             <groupId>${project.groupId}</groupId>

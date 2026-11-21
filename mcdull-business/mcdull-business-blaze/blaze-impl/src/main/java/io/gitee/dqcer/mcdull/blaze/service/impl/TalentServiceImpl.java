@@ -22,8 +22,15 @@ import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.common.CustomMultipartFile;
+import io.gitee.dqcer.mcdull.common.area.AreaFillUtil;
+import io.gitee.dqcer.mcdull.common.excel.ExcelExportUtil;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
-import io.gitee.dqcer.mcdull.system.facade.service.def.CommonApiDef;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.ExportContextVO;
+import io.gitee.dqcer.mcdull.system.facade.service.AreaApi;
+import io.gitee.dqcer.mcdull.system.facade.service.ExportApi;
+import io.gitee.dqcer.mcdull.system.facade.service.FileRemoteApi;
 import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
 import io.gitee.dqcer.mcdull.system.facade.model.enums.GenderEnum;
 import jakarta.annotation.Resource;
@@ -47,7 +54,11 @@ public class TalentServiceImpl
     @Resource
     private ITalentCertificateService talentCertificateService;
     @Resource
-    private CommonApiDef sysCommonFacade;
+    private AreaApi areaApi;
+    @Resource
+    private ExportApi exportApi;
+    @Resource
+    private FileRemoteApi fileRemoteApi;
     @Resource
     private UserApiDef sysUserFacade;
 
@@ -85,7 +96,7 @@ public class TalentServiceImpl
                 vo.setIdNumber(s);
                 voList.add(vo);
             }
-            sysCommonFacade.set(voList);
+            AreaFillUtil.fill(voList, areaApi.nameMap(AreaFillUtil.collectCodes(voList)));
         }
         return PageUtil.toPage(voList, entityPage);
     }
@@ -106,7 +117,20 @@ public class TalentServiceImpl
 
     @Override
     public boolean exportData(TalentQueryDTO dto) {
-        sysCommonFacade.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+        ExportContextVO context = exportApi.context();
+        List<TalentVO> list = this.queryPage(dto).getList();
+        java.io.ByteArrayOutputStream outputStream = new java.io.ByteArrayOutputStream();
+        ExcelExportUtil.write(outputStream, list, StrUtil.EMPTY,
+                context.getOperatorName(), context.getDateTimeStr(), this.getTitleList());
+        byte[] bytes = outputStream.toByteArray();
+        try (var responseStream = ServletUtil.getResponse().getOutputStream()) {
+            responseStream.write(bytes);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if (Boolean.TRUE.equals(context.getAutoStorage())) {
+            fileRemoteApi.uploadToSystemFolder(new CustomMultipartFile(context.getMenuName() + ".xlsx", bytes));
+        }
         return true;
     }
 

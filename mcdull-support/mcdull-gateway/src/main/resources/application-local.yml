@@ -1,4 +1,12 @@
 spring:
+  # 全局限流 RequestRateLimiter 与 Sa-Token 会话均依赖 Redis
+  data:
+    redis:
+      host: ${GATEWAY_REDIS_HOST:localhost}
+      port: ${GATEWAY_REDIS_PORT:6379}
+      password: ${GATEWAY_REDIS_PASSWORD:}
+      database: ${GATEWAY_REDIS_DB:1}
+      timeout: ${GATEWAY_REDIS_TIMEOUT:3s}
   cloud:
     nacos:
       discovery:
@@ -22,6 +30,11 @@ mcdull:
     enabled: false
     strict: false
     clean-header: false
+
+# 与 system-bootstrap 的 local 配置保持一致
+sa-token:
+  active-timeout: 6000
+  timeout: 9000
 
 logging:
   level:

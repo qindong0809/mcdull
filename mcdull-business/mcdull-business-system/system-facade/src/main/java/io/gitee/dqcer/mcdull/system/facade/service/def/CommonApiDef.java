@@ -20,11 +20,16 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * 公共业务能力契约（仅本地直调）
+ * 公共业务能力契约（仅本地直调，已废弃）
  * <p>
  * 包含 Excel 导入导出、区域数据填充、文件 VO 回填、序列号生成、字典翻译等。
  * 这些能力依赖进程内的 VO 与回调函数，不适合跨服务远程调用，仅提供本地实现。
+ * <p>
+ * 自 blaze 拆分微服务后，DB 相关能力已按领域拆为独立 RPC 契约（AreaApi / DictApi /
+ * SerialNumberApi / ApproveApi / ExportApi / FileRemoteApi），纯逻辑下沉到
+ * {@code mcdull-business-common}。本契约仅保留给尚未迁移的本地调用方，禁止新增引用。
  */
+@Deprecated
 public interface CommonApiDef {
 
     // ======================== 工具方法 ========================

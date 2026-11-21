@@ -33,14 +33,28 @@ import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
+import io.gitee.dqcer.mcdull.common.CustomMultipartFile;
+import io.gitee.dqcer.mcdull.common.excel.ExcelExportUtil;
+import io.gitee.dqcer.mcdull.common.user.UserRefUtil;
+import io.gitee.dqcer.mcdull.blaze.util.TableNameUtil;
 import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
-import io.gitee.dqcer.mcdull.system.facade.service.def.CommonApiDef;
-import io.gitee.dqcer.mcdull.system.facade.service.def.DeptApiDef;
-import io.gitee.dqcer.mcdull.system.facade.service.def.FileApiDef;
-import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.ApproveDeptQueryDTO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.FileBizDTO;
 import io.gitee.dqcer.mcdull.system.facade.model.dto.SerialNumberGenerateDTO;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.DepartmentInfoVO;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.UserVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.ApproveDeptVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.ApproveVO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.DepartmentInfoDTO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.ExportContextVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.FileSimpleVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.IFileVO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.UserDTO;
+import io.gitee.dqcer.mcdull.system.facade.service.ApproveApi;
+import io.gitee.dqcer.mcdull.system.facade.service.ExportApi;
+import io.gitee.dqcer.mcdull.system.facade.service.FileRemoteApi;
+import io.gitee.dqcer.mcdull.system.facade.service.SerialNumberApi;
+import io.gitee.dqcer.mcdull.system.facade.service.def.DeptApiDef;
+import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,23 +80,27 @@ public class BlazeOrderServiceImpl
     @Resource
     private ITalentCertificateService talentCertificateService;
     @Resource
-    private CommonApiDef sysCommonFacade;
-    @Resource
     private UserApiDef sysUserFacade;
     @Resource
     private IBlazeOrderDetailService blazeOrderDetailService;
     @Resource
     private IApproveService approveService;
     @Resource
-    private FileApiDef sysFileFacade;
-    @Resource
     private DeptApiDef sysDeptFacade;
+    @Resource
+    private ApproveApi approveApi;
+    @Resource
+    private ExportApi exportApi;
+    @Resource
+    private FileRemoteApi fileRemoteApi;
+    @Resource
+    private SerialNumberApi serialNumberApi;
 
     public PagedVO<BlazeOrderVO> queryPage(BlazeOrderQueryDTO dto) {
         List<BlazeOrderVO> voList = new ArrayList<>();
         List<BlazeOrderEntity> recordList = baseRepository.selectList(dto);
         if (CollUtil.isNotEmpty(recordList)) {
-            Map<Integer, String> nameMap = sysUserFacade.getMap(recordList);
+            Map<Integer, String> nameMap = sysUserFacade.getNameMap(UserRefUtil.collectUserIds(recordList));
             List<Integer> orderIdList = recordList.stream().map(IdEntity::getId).toList();
             List<BlazeOrderDetailEntity> orderDetailList = blazeOrderDetailService.getByOrderId(orderIdList);
             List<LabelValueVO<Integer, String>> list = CollUtil.emptyIfNull(certificateRequirementsService.all(false));
@@ -144,16 +162,16 @@ public class BlazeOrderServiceImpl
             }
             Set<Integer> collect = voList.stream().map(BlazeOrderVO::getTalentResponsibleUserId).collect(Collectors.toSet());
             collect.addAll(voList.stream().map(BlazeOrderVO::getCustomerResponsibleUserId).collect(Collectors.toSet()));
-            Map<Integer, UserVO> userMap = sysUserFacade.getEntityMap(new ArrayList<>(collect));
+            Map<Integer, UserDTO> userMap = sysUserFacade.getEntityMap(new ArrayList<>(collect));
             for (BlazeOrderVO orderVO : voList) {
                 if (MapUtil.isNotEmpty(userMap)) {
-                    UserVO user = userMap.get(orderVO.getTalentResponsibleUserId());
+                    UserDTO user = userMap.get(orderVO.getTalentResponsibleUserId());
                     if (ObjUtil.isNotNull(user)) {
                         orderVO.setTalentResponsibleUserPhone(user.getPhone());
                         orderVO.setTalentResponsibleUserIdStr(user.getActualName());
                         orderVO.setTalentResponsibleDepartmentId(user.getDepartmentId());
                     }
-                    UserVO customerUser =  userMap.get(orderVO.getCustomerResponsibleUserId());
+                    UserDTO customerUser =  userMap.get(orderVO.getCustomerResponsibleUserId());
                     if (ObjUtil.isNotNull(customerUser)) {
                         orderVO.setCustomerResponsibleUserPhone(customerUser.getPhone());
                         orderVO.setCustomerResponsibleUserIdStr(customerUser.getActualName());
@@ -163,8 +181,8 @@ public class BlazeOrderServiceImpl
             }
             Set<Integer> collect1 = voList.stream().map(BlazeOrderVO::getTalentResponsibleDepartmentId).collect(Collectors.toSet());
             collect1.addAll(voList.stream().map(BlazeOrderVO::getCustomerResponsibleDepartmentId).collect(Collectors.toSet()));
-            List<DepartmentInfoVO> all = sysDeptFacade.getAll();
-            Map<Integer, String> departmentMap = all.stream().collect(Collectors.toMap(DepartmentInfoVO::getDepartmentId, DepartmentInfoVO::getName));
+            List<DepartmentInfoDTO> all = sysDeptFacade.getAll();
+            Map<Integer, String> departmentMap = all.stream().collect(Collectors.toMap(DepartmentInfoDTO::getDepartmentId, DepartmentInfoDTO::getName));
             for (BlazeOrderVO orderVO : voList) {
                 if (MapUtil.isNotEmpty(departmentMap)) {
                     orderVO.setTalentResponsibleDepartment(departmentMap.get(orderVO.getTalentResponsibleDepartmentId()));
@@ -172,8 +190,8 @@ public class BlazeOrderServiceImpl
                 }
             }
             approveService.setApproveVO(voList, recordList);
-            sysCommonFacade.setFileVO(voList, BlazeOrderEntity.class);
-            sysCommonFacade.setDepartment(voList, UserContextHolder.userId());
+            fillFileVO(voList);
+            fillDepartment(voList);
         }
         List<Integer> userIdList = CollUtil.defaultIfEmpty(dto.getResponsibleUserIdList(), new ArrayList<>());
         if (CollUtil.isNotEmpty(userIdList)) {
@@ -205,9 +223,58 @@ public class BlazeOrderServiceImpl
         return false;
     }
 
+    private void fillFileVO(List<BlazeOrderVO> voList) {
+        if (CollUtil.isEmpty(voList)) {
+            return;
+        }
+        FileBizDTO dto = new FileBizDTO();
+        dto.setBizType(TableNameUtil.tableName(BlazeOrderEntity.class));
+        dto.setBizIdList(voList.stream().map(IFileVO::getId).collect(Collectors.toList()));
+        Map<Integer, List<FileSimpleVO>> fileMap = fileRemoteApi.listFiles(dto);
+        for (BlazeOrderVO vo : voList) {
+            vo.setFileList(fileMap.get(vo.getId()));
+        }
+    }
+
+    private void fillDepartment(List<BlazeOrderVO> voList) {
+        if (CollUtil.isEmpty(voList)) {
+            return;
+        }
+        ApproveDeptQueryDTO dto = new ApproveDeptQueryDTO();
+        dto.setUserId(UserContextHolder.userId());
+        dto.setResponsibleUserIdList(voList.stream()
+                .map(ApproveVO::getResponsibleUserId)
+                .filter(ObjUtil::isNotNull)
+                .distinct()
+                .collect(Collectors.toList()));
+        Map<Integer, ApproveDeptVO> deptMap = approveApi.deptInfo(dto);
+        for (BlazeOrderVO vo : voList) {
+            ApproveDeptVO dept = deptMap.get(vo.getResponsibleUserId());
+            if (dept != null) {
+                vo.setIsSameDepartment(dept.getIsSameDepartment());
+                vo.setResponsibleUserDepartmentId(dept.getResponsibleUserDepartmentId());
+                vo.setResponsibleUserDepartmentName(dept.getResponsibleUserDepartmentName());
+                vo.setResponsibleUserPhone(dept.getResponsibleUserPhone());
+            }
+        }
+    }
+
     @Override
     public boolean exportData(BlazeOrderQueryDTO dto) {
-        sysCommonFacade.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+        ExportContextVO context = exportApi.context();
+        List<BlazeOrderVO> list = this.queryPage(dto).getList();
+        java.io.ByteArrayOutputStream outputStream = new java.io.ByteArrayOutputStream();
+        ExcelExportUtil.write(outputStream, list, StrUtil.EMPTY,
+                context.getOperatorName(), context.getDateTimeStr(), this.getTitleList());
+        byte[] bytes = outputStream.toByteArray();
+        try (var responseStream = ServletUtil.getResponse().getOutputStream()) {
+            responseStream.write(bytes);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if (Boolean.TRUE.equals(context.getAutoStorage())) {
+            fileRemoteApi.uploadToSystemFolder(new CustomMultipartFile(context.getMenuName() + ".xlsx", bytes));
+        }
         return true;
     }
 
@@ -507,10 +574,18 @@ public class BlazeOrderServiceImpl
         SerialNumberGenerateDTO generateDTO = new SerialNumberGenerateDTO();
         generateDTO.setCount(1);
         generateDTO.setSerialNumberId(2);
-        List<String> generate = sysCommonFacade.generate(generateDTO);
+        List<String> generate = serialNumberApi.generate(generateDTO);
         entity.setOrderNo(generate.get(0));
         baseRepository.save(entity);
-        sysFileFacade.batchFileUpload(fileList, entity.getId(), BlazeOrderEntity.class, null);
+        this.saveFiles(entity.getId(), fileList, null);
+    }
+
+    private void saveFiles(Integer bizId, List<MultipartFile> fileList, List<Integer> deleteFileIdList) {
+        FileBizDTO dto = new FileBizDTO();
+        dto.setBizId(bizId);
+        dto.setBizType(TableNameUtil.tableName(BlazeOrderEntity.class));
+        dto.setDeleteFileIdList(deleteFileIdList);
+        fileRemoteApi.batchUpload(dto, fileList);
     }
 
 
@@ -530,7 +605,7 @@ public class BlazeOrderServiceImpl
         }
         this.setUpdateFieldValue(dto, entity);
         baseRepository.updateById(entity);
-        sysFileFacade.batchFileUpload(fileList, entity.getId(), BlazeOrderEntity.class, dto.getDeleteFileIdList());
+        this.saveFiles(entity.getId(), fileList, dto.getDeleteFileIdList());
     }
     @Override
     public BlazeOrderVO detail(Integer id) {

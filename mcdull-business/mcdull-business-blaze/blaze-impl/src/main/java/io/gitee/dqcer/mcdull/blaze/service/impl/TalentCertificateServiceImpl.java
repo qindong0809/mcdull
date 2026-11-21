@@ -30,10 +30,26 @@ import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicServiceImpl;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
-import io.gitee.dqcer.mcdull.system.facade.service.def.CommonApiDef;
+import io.gitee.dqcer.mcdull.blaze.util.DropdownUtil;
+import io.gitee.dqcer.mcdull.common.area.AreaFillUtil;
+import io.gitee.dqcer.mcdull.common.excel.ExcelExportUtil;
+import io.gitee.dqcer.mcdull.common.excel.ExcelTemplateUtil;
+import io.gitee.dqcer.mcdull.blaze.util.TableNameUtil;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.system.facade.model.bo.DynamicFieldBO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.ApproveDeptQueryDTO;
+import io.gitee.dqcer.mcdull.system.facade.model.dto.FileBizDTO;
 import io.gitee.dqcer.mcdull.system.facade.model.enums.FormItemControlTypeEnum;
-import io.gitee.dqcer.mcdull.system.facade.service.def.FileApiDef;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.ApproveDeptVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.ApproveVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.ExportContextVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.FileBinaryVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.FileSimpleVO;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.IFileVO;
+import io.gitee.dqcer.mcdull.system.facade.service.AreaApi;
+import io.gitee.dqcer.mcdull.system.facade.service.ApproveApi;
+import io.gitee.dqcer.mcdull.system.facade.service.ExportApi;
+import io.gitee.dqcer.mcdull.system.facade.service.FileRemoteApi;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +60,6 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import io.gitee.dqcer.mcdull.blaze.util.DropdownUtil;
 
 /**
  * 证书需求表 Service
@@ -59,9 +74,13 @@ public class TalentCertificateServiceImpl
     @Resource
     private ITalentService talentService;
     @Resource
-    private CommonApiDef sysCommonFacade;
+    private AreaApi areaApi;
     @Resource
-    private FileApiDef fileService;
+    private ApproveApi approveApi;
+    @Resource
+    private ExportApi exportApi;
+    @Resource
+    private FileRemoteApi fileRemoteApi;
     @Resource
     private ICertificateRequirementsService certificateRequirementsService;
     @Resource
@@ -139,20 +158,73 @@ public class TalentCertificateServiceImpl
                     vo.setPositionSourceName(IEnum.getTextByCode(CertificatePositionSourceEnum.class, positionSource));
                 }
                 voList.add(vo);
-                sysCommonFacade.set(voList);
-
             }
+            AreaFillUtil.fill(voList, areaApi.nameMap(AreaFillUtil.collectCodes(voList)));
             approveService.setApproveVO(voList, recordList);
-            sysCommonFacade.setFileVO(voList, TalentCertificateEntity.class);
-            sysCommonFacade.setDepartment(voList, UserContextHolder.userId());
+            fillFileVO(voList);
+            fillDepartment(voList);
         }
         return PageUtil.toPage(voList, entityPage);
     }
 
+    private void fillFileVO(List<TalentCertificateVO> voList) {
+        if (CollUtil.isEmpty(voList)) {
+            return;
+        }
+        FileBizDTO dto = new FileBizDTO();
+        dto.setBizType(TableNameUtil.tableName(TalentCertificateEntity.class));
+        dto.setBizIdList(voList.stream().map(IFileVO::getId).collect(Collectors.toList()));
+        Map<Integer, List<FileSimpleVO>> fileMap = fileRemoteApi.listFiles(dto);
+        for (TalentCertificateVO vo : voList) {
+            vo.setFileList(fileMap.get(vo.getId()));
+        }
+    }
+
+    private void fillDepartment(List<TalentCertificateVO> voList) {
+        if (CollUtil.isEmpty(voList)) {
+            return;
+        }
+        ApproveDeptQueryDTO dto = new ApproveDeptQueryDTO();
+        dto.setUserId(UserContextHolder.userId());
+        dto.setResponsibleUserIdList(voList.stream()
+                .map(ApproveVO::getResponsibleUserId)
+                .filter(ObjUtil::isNotNull)
+                .distinct()
+                .collect(Collectors.toList()));
+        Map<Integer, ApproveDeptVO> deptMap = approveApi.deptInfo(dto);
+        for (TalentCertificateVO vo : voList) {
+            ApproveDeptVO dept = deptMap.get(vo.getResponsibleUserId());
+            if (dept != null) {
+                vo.setIsSameDepartment(dept.getIsSameDepartment());
+                vo.setResponsibleUserDepartmentId(dept.getResponsibleUserDepartmentId());
+                vo.setResponsibleUserDepartmentName(dept.getResponsibleUserDepartmentName());
+                vo.setResponsibleUserPhone(dept.getResponsibleUserPhone());
+            }
+        }
+    }
+
     @Override
     public boolean exportData(TalentCertificateQueryDTO dto) {
-        sysCommonFacade.exportExcel(dto, this::queryPage, StrUtil.EMPTY, this.getTitleList());
+        ExportContextVO context = exportApi.context();
+        List<TalentCertificateVO> list = this.queryPage(dto).getList();
+        byte[] bytes = this.toExportBytes(list, context);
+        try (var outputStream = ServletUtil.getResponse().getOutputStream()) {
+            outputStream.write(bytes);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if (Boolean.TRUE.equals(context.getAutoStorage())) {
+            fileRemoteApi.uploadToSystemFolder(new CustomMultipartFile(
+                    context.getMenuName() + ".xlsx", bytes));
+        }
         return true;
+    }
+
+    private byte[] toExportBytes(List<TalentCertificateVO> list, ExportContextVO context) {
+        java.io.ByteArrayOutputStream outputStream = new java.io.ByteArrayOutputStream();
+        ExcelExportUtil.write(outputStream, list, StrUtil.EMPTY,
+                context.getOperatorName(), context.getDateTimeStr(), this.getTitleList());
+        return outputStream.toByteArray();
     }
 
     private List<Pair<String, Func1<TalentCertificateVO, ?>>> getTitleList() {
@@ -200,7 +272,13 @@ public class TalentCertificateServiceImpl
         fieldList.add(new DynamicFieldBO("positionSource", "岗位来源", true, FormItemControlTypeEnum.SELECT, DropdownUtil.options(CertificatePositionSourceEnum.class)));
         fieldList.add(new DynamicFieldBO("remarks", "备注", true, FormItemControlTypeEnum.TEXTAREA));
         sheetHeaderMap.put("模板", fieldList);
-        sysCommonFacade.downloadExcelTemplate(sheetHeaderMap, "证书需求模板");
+        ExportContextVO context = exportApi.context();
+        try (var outputStream = ServletUtil.getResponse().getOutputStream()) {
+            ExcelTemplateUtil.write(outputStream, sheetHeaderMap,
+                    context.getOperatorName(), context.getDateTimeStr());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -307,10 +385,13 @@ public class TalentCertificateServiceImpl
 
     private List<MultipartFile> convertFileList(Integer id) {
         List<MultipartFile> fileList = new ArrayList<>();
-        List<Pair<String, byte[]>> fileDateList = sysCommonFacade.getFileDateList(id, TalentCertificateEntity.class);
+        FileBizDTO dto = new FileBizDTO();
+        dto.setBizId(id);
+        dto.setBizType(TableNameUtil.tableName(TalentCertificateEntity.class));
+        List<FileBinaryVO> fileDateList = fileRemoteApi.downloadFiles(dto);
         if (CollUtil.isNotEmpty(fileDateList)) {
-            for (Pair<String, byte[]> pair : fileDateList) {
-                MultipartFile multipartFile = new CustomMultipartFile(pair.getKey(), pair.getValue());
+            for (FileBinaryVO item : fileDateList) {
+                MultipartFile multipartFile = new CustomMultipartFile(item.getFileName(), item.getContent());
                 fileList.add(multipartFile);
             }
         }
@@ -342,7 +423,7 @@ public class TalentCertificateServiceImpl
 
     private DynamicFieldBO getProvinceFieldBO() {
         DynamicFieldBO fieldBO = new DynamicFieldBO("provincesName", "省份", true, FormItemControlTypeEnum.SELECT);
-        List<LabelValueVO<String, String>> list = sysCommonFacade.provinceList();
+        List<LabelValueVO<String, String>> list = areaApi.provinceList();
         fieldBO.setDropdownList(list.stream().map(LabelValueVO::getLabel).collect(Collectors.toList()));
         fieldBO.setExtraObj(list);
         return fieldBO;
@@ -440,7 +521,15 @@ public class TalentCertificateServiceImpl
         String positionTitle = StrUtil.isBlank(dto.getPositionTitle()) ? this.builderPositionTitle(entity) : dto.getPositionTitle();
         entity.setPositionTitle(positionTitle);
         baseRepository.updateById(entity);
-        fileService.batchFileUpload(fileList, entity.getId(), TalentCertificateEntity.class, null);
+        this.saveFiles(entity.getId(), fileList, null);
+    }
+
+    private void saveFiles(Integer bizId, List<MultipartFile> fileList, List<Integer> deleteFileIdList) {
+        FileBizDTO dto = new FileBizDTO();
+        dto.setBizId(bizId);
+        dto.setBizType(TableNameUtil.tableName(TalentCertificateEntity.class));
+        dto.setDeleteFileIdList(deleteFileIdList);
+        fileRemoteApi.batchUpload(dto, fileList);
     }
 
     private String builderPositionTitle(TalentCertificateEntity entity) {
@@ -473,7 +562,7 @@ public class TalentCertificateServiceImpl
         entity.setPositionTitle(positionTitle);
         baseRepository.updateById(entity);
         Integer delFileId = dto.getDelFileId();
-        fileService.batchFileUpload(fileList, entity.getId(), TalentCertificateEntity.class, ListUtil.of(delFileId));
+        this.saveFiles(entity.getId(), fileList, ListUtil.of(delFileId));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -488,7 +577,10 @@ public class TalentCertificateServiceImpl
         }
         baseRepository.removeBatchByIds(idList);
         for (TalentCertificateEntity entity : entityList) {
-            fileService.remove(entity.getId(), TalentCertificateEntity.class);
+            FileBizDTO dto = new FileBizDTO();
+            dto.setBizId(entity.getId());
+            dto.setBizType(TableNameUtil.tableName(TalentCertificateEntity.class));
+            fileRemoteApi.remove(dto);
         }
     }
 }
