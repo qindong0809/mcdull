@@ -3,6 +3,8 @@ spring:
     nacos:
       discovery:
         heart-beat-interval: 5000
+        metadata:
+          env-tag: ${ENV_TAG:}
     gateway:
       server:
         webflux:
@@ -10,6 +12,19 @@ spring:
             locator:
               # 生产环境严禁开启自动服务发现路由，防止内部接口绕过网关鉴权裸奔
               enabled: false
+  boot:
+    admin:
+      client:
+        url: ${SPRING_BOOT_ADMIN_URL}
+
+mcdull:
+  tag:
+    enabled: ${GATEWAY_TAG_ENABLED:true}
+    strict: true
+    # 网关负责清洗外部传入的染色头，防止客户端伪造 X-Env-Tag
+    clean-header: true
+
 logging:
   level:
     org.springframework.cloud.gateway: WARN
+    org.springframework.web.reactive: WARN

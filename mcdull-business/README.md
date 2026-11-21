@@ -79,5 +79,6 @@ business-module/
 
 1. **避免循环依赖**: 设计模块依赖关系时要避免循环引用
 2. **接口优先**: 模块间通信优先使用facade接口
-3. **配置管理**: 使用Nacos进行集中配置管理
-4. **事务处理**: 跨模块操作时注意分布式事务处理
+3. **配置管理**: 使用Nacos进行集中配置管理；环境配置（含 `application*.yml` 与 `logback*.xml`）统一放在各 `*-bootstrap/src/main/resources`，`*-impl` 只保留 mapper、i18n、模板等静态业务资源
+4. **环境命名**: 全链路统一 `local` / `test` / `prod`，`SPRING_PROFILES_ACTIVE` 必填（fail-fast）
+5. **事务处理**: 跨模块操作时注意分布式事务处理

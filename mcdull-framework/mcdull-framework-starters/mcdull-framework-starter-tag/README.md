@@ -30,7 +30,7 @@
 
 ### 2. 配置实例元数据（打标）
 
-#### ① 本地开发环境（`application-dev.yml`）
+#### ① 本地开发环境（`application-local.yml`）
 建议在开发配置文件中开启自动打标，默认读取环境变量 `ENV_TAG` 或当前操作系统登录用户名：
 
 ```yaml
@@ -47,7 +47,7 @@ spring:
 
 ```bash
 docker run -d --name mcdull-gateway -p 9090:9090 \
-  -e SPRING_PROFILES_ACTIVE=dev \
+  -e SPRING_PROFILES_ACTIVE=local \
   -e ENV_TAG="" \
   mcdull-gateway:latest
 ```
@@ -106,6 +106,6 @@ mcdull:
 
 代码编译通过并接入后，建议按以下 3 步快速验证全链路是否闭环：
 
-1.  **验证 1（网关单跳隔离）**：本地启动 `mcdull-gateway` 和 `system-bootstrap`（IDEA `dev` 环境自动带本机用户名标签），用 Postman 请求网关并带上 `X-Env-Tag: 你的用户名`，确认断点命中本地 `system-bootstrap`。
+1.  **验证 1（网关单跳隔离）**：本地启动 `mcdull-gateway` 和 `system-bootstrap`（IDEA `local` 环境自动带本机用户名标签），用 Postman 请求网关并带上 `X-Env-Tag: 你的用户名`，确认断点命中本地 `system-bootstrap`。
 2.  **验证 2（基准兜底能力）**：将请求头改为 `X-Env-Tag: default` 或不传该请求头，确认请求直接路由到开发服务器的公共实例。
 3.  **验证 3（异步线程与 Feign 接力）**：在 `system-bootstrap` 的接口里开一个 `@Async` 异步方法调用另一个微服务，确认下游微服务的 `EnvTagContextHolder.getTag()` 依然能准确打印出你的标签。

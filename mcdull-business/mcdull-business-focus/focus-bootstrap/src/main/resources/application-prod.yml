@@ -1,0 +1,31 @@
+server:
+  port: ${FOCUS_SERVER_PORT:6060}
+  shutdown: graceful
+
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+  data:
+    redis:
+      host: ${FOCUS_REDIS_HOST}
+      port: ${FOCUS_REDIS_PORT:6379}
+      password: ${FOCUS_REDIS_PASSWORD:}
+      database: ${FOCUS_REDIS_DB:0}
+      timeout: ${FOCUS_REDIS_TIMEOUT:3s}
+  datasource:
+    url: ${FOCUS_DB_URL}
+    username: ${FOCUS_DB_USER}
+    password: ${FOCUS_DB_PASSWORD}
+
+mcdull:
+  tag:
+    enabled: ${FOCUS_TAG_ENABLED:false}
+    strict: true
+    clean-header: false
+
+logging:
+  level:
+    io.gitee.dqcer.mcdull.focus: info
+
+knife4j:
+  production: true

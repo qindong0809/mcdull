@@ -72,13 +72,19 @@
             <artifactId>mcdull-framework-starter-security</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- 全环境默认接入 Nacos：服务发现 + 共享配置导入 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-nacos</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- 流量染色与环境隔离：local 默认关闭，test/prod 按 profile 开启 -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-tag</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- 生产可观测端点：不绑定 Nacos，按需直接引入 actuator/prometheus -->
+        <!-- 生产可观测端点：actuator/prometheus 由 nacos starter 传递引入 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>

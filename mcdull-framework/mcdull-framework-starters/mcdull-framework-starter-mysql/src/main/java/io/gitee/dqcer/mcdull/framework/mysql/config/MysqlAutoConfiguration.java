@@ -196,8 +196,14 @@ public class MysqlAutoConfiguration {
         // 这些参数可以在 com.alibaba.druid.support.http.StatViewServlet
         // 的父类 com.alibaba.druid.support.http.ResourceServlet 中找到
         Map<String, String> initParams = new HashMap<>(100);
-        initParams.put("loginUsername", dataSourceProperties.getAdminUser());
-        initParams.put("loginPassword", dataSourceProperties.getAdminPassword());
+        String adminUser = dataSourceProperties.getAdminUser();
+        String adminPassword = dataSourceProperties.getAdminPassword();
+        if (adminUser != null && !adminUser.isEmpty()) {
+            initParams.put("loginUsername", adminUser);
+        }
+        if (adminPassword != null && !adminPassword.isEmpty()) {
+            initParams.put("loginPassword", adminPassword);
+        }
 
         //后台允许谁可以访问
         //initParams.put("allow", "localhost")：表示只有本机可以访问

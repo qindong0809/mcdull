@@ -32,11 +32,11 @@ administration:
           - title: 部门管理
             id: 101
             component: system/dept/index
+            icon: mind-mapping
+            name: SystemDept
             parentId: 10
             type: 2
             path: /system/dept
-            name: SystemDept
-            icon: mind-mapping
             permission:
             sort: 2
             isCache: false
@@ -45,11 +45,11 @@ administration:
           - title: 角色管理
             id: 103
             component: system/role/index
+            icon: user-management
+            name: SystemRole
             parentId: 10
             type: 2
             path: /system/role
-            name: SystemRole
-            icon: user-management
             permission:
             sort: 3
             isCache: false

@@ -43,7 +43,10 @@
         <mybatis-plus-bom.version>3.5.16</mybatis-plus-bom.version>
         <mysql.version>8.3.0</mysql.version>
         <druid.version>1.2.23</druid.version>
-        <redisson.spring.boot.version>3.43.0</redisson.spring.boot.version>
+        <!-- 必须与 Spring Boot 3.5.x / Spring Data Redis 3.5.x 对齐：3.48.0 起 starter 才携带
+             redisson-spring-data-35；低版本的 -34 适配层未实现 pExpire(key, millis, Condition)，
+             会导致 DefaultedRedisConnection.pExpire 无限递归并抛出 StackOverflowError -->
+        <redisson.spring.boot.version>3.48.0</redisson.spring.boot.version>
 
         <knife4j.version>4.5.0</knife4j.version>
         <!-- knife4j 4.5.0 传递的 springdoc 2.3.0 / swagger 2.2.19 不兼容 Spring Framework 6.2 (Boot 3.5) -->

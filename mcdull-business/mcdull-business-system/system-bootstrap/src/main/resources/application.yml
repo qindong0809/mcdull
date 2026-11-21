@@ -1,0 +1,148 @@
+spring:
+  application:
+    name: system-bootstrap
+  profiles:
+    # 不设默认值：缺失时直接启动失败，避免生产误用本地配置
+    active: ${SPRING_PROFILES_ACTIVE}
+    include:
+      - menu
+  main:
+    allow-circular-references: true
+  cloud:
+    nacos:
+      server-addr: ${NACOS_ADDR:mcdull.io:8848}
+      username: ${NACOS_USER:nacos}
+      password: ${NACOS_PWD:nacos}
+      discovery:
+        namespace: ${NACOS_NAMESPACE:}
+        metadata:
+          env-tag: ${ENV_TAG:${user.name}}
+      config:
+        namespace: ${NACOS_NAMESPACE:}
+        group: DEFAULT_GROUP
+        file-extension: yaml
+        refresh-enabled: true
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=10m
+  boot:
+    admin:
+      client:
+        url: ${SPRING_BOOT_ADMIN_URL:http://localhost:9000}
+  jmx:
+    enabled: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    poolType: Druid
+    initialSize: 1
+    minIdle: 1
+    maxActive: 10
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+    logSlowSql: true
+    adminUser: ${SYSTEM_DRUID_ADMIN_USER:root}
+    adminPassword: ${SYSTEM_DRUID_ADMIN_PASSWORD:}
+
+logging:
+  # Ip2RegionListener 在 EnvironmentPrepared 阶段读取该属性，用于释放 ip2region.xdb
+  file:
+    path: ${SYSTEM_LOG_PATH:./logs}
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  global-config:
+    db-config:
+      logic-delete-field: delFlag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${SPRING_PROFILES_ACTIVE}
+
+server:
+  undertow:
+    buffer-size: 1024
+    io-threads: 4
+    worker-threads: 20
+    max-initial-line-length: 10MB
+    max-parameter-size: 10MB
+    max-header-size: 10MB
+    max-post-size: 10MB
+
+sa-token:
+  active-timeout: 1800
+  timeout: 86400
+  token-name: Authorization
+  is-concurrent: false
+  is-share: false
+  token-style: tik
+  auto-renew: true
+  is-log: true
+  log-level: info
+  is-print: false
+  is-read-cookie: false
+
+mcdull:
+  gateway:
+    no-auth:
+      - /administrator/auth/login
+      - /administrator/captcha/image
+      - /doc.html
+      - /swagger-ui/**
+      - /swagger-ui.html
+      - /v3/api-docs/**
+      - /webjars/**
+      - /favicon.ico
+      - /error
+  oss:
+    access-key:
+    secret-key:
+    max-file-size: 10000
+    max-request-size: 10000
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
+dromara:
+  x-file-storage:
+    default-platform: local-plus-1
+    thumbnail-suffix: ".min.jpg"
+    local-plus:
+      - platform: local-plus-1
+        enable-storage: true
+        enable-access: true
+        domain: ${SYSTEM_FILE_DOMAIN:http://localhost:8099/upload/}
+        path-patterns: /upload/**
+        storage-path: ${SYSTEM_FILE_STORAGE_PATH:./upload/}

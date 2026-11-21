@@ -1,0 +1,25 @@
+server:
+  port: ${FOCUS_SERVER_PORT:6060}
+
+spring:
+  data:
+    redis:
+      host: ${FOCUS_REDIS_HOST:localhost}
+      port: ${FOCUS_REDIS_PORT:6379}
+      password: ${FOCUS_REDIS_PASSWORD:}
+      database: ${FOCUS_REDIS_DB:0}
+      timeout: ${FOCUS_REDIS_TIMEOUT:3s}
+  datasource:
+    url: ${FOCUS_DB_URL:jdbc:mysql://localhost:3306/focus?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai}
+    username: ${FOCUS_DB_USER:root}
+    password: ${FOCUS_DB_PASSWORD:123456}
+
+mcdull:
+  tag:
+    enabled: false
+    strict: false
+    clean-header: false
+
+logging:
+  level:
+    io.gitee.dqcer.mcdull.focus: debug

@@ -266,11 +266,11 @@
     <insert id="insertNode" parameterType="map">
         INSERT INTO flow_node
             (id, definition_id, node_type, node_code, node_name, coordinate,
-             handler_type, handler_path, permission_flag, form_path, ext,
+             handler_type, handler_path, permission_flag, form_path, ext, version,
              create_time, update_time, del_flag)
         VALUES
             (#{id}, #{definitionId}, #{nodeType}, #{nodeCode}, #{nodeName}, #{coordinate},
-             #{handlerType}, #{handlerPath}, #{permissionFlag}, #{formPath}, #{ext},
+             #{handlerType}, #{handlerPath}, #{permissionFlag}, #{formPath}, #{ext}, #{version},
              now(), now(), '0')
     </insert>
 

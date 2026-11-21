@@ -1,22 +1,31 @@
-server:
-  port: 6060
 spring:
   application:
     name: focus-bootstrap
-  data:
-    redis:
-      host: mcdull.io
-      port: 6379
+  profiles:
+    # 不设默认值：缺失时直接启动失败，避免生产误用本地配置
+    active: ${SPRING_PROFILES_ACTIVE}
+  cloud:
+    nacos:
+      server-addr: ${NACOS_ADDR:mcdull.io:8848}
+      username: ${NACOS_USER:nacos}
+      password: ${NACOS_PWD:nacos}
+      discovery:
+        namespace: ${NACOS_NAMESPACE:}
+        metadata:
+          env-tag: ${ENV_TAG:${user.name}}
+      config:
+        namespace: ${NACOS_NAMESPACE:}
+        group: DEFAULT_GROUP
+        file-extension: yaml
+        refresh-enabled: true
   datasource:
-    url: jdbc:mysql://mcdull.io:3306/focus?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
-    username: root
-    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     poolType: Druid
-    maxActive: 10
     initialSize: 1
-    maxWait: 60000
     minIdle: 1
+    maxActive: 10
+    maxWait: 60000
     timeBetweenEvictionRunsMillis: 60000
     minEvictableIdleTimeMillis: 300000
     validationQuery: select 'x'
@@ -26,19 +35,58 @@ spring:
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
     logSlowSql: true
-    allow:
-    adminUser: root
-    adminPassword: 8YTJWOuA7XRK17wRQnw4
+    adminUser: ${FOCUS_DRUID_ADMIN_USER:root}
+    adminPassword: ${FOCUS_DRUID_ADMIN_PASSWORD:}
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${SPRING_PROFILES_ACTIVE}
+
+sa-token:
+  active-timeout: 864000
+  timeout: -1
+  token-name: Authorization
+
 mcdull:
   gateway:
     no-auth:
       - /register
       - /login
       - /guest-mode
-sa-token:
-  # token 最低活跃频率（单位：秒），如果 token 超过此时间没有访问系统就会被冻结，默认-1 代表不限制，永不冻结
-  active-timeout: 864000
-  # token 有效期（单位：秒） 1天（86400秒），-1 代表永久有效
-  timeout: -1
-  # token 名称（同时也是 cookie 名称）
-  token-name: Authorization
+      - /doc.html
+      - /swagger-ui/**
+      - /swagger-ui.html
+      - /v3/api-docs/**
+      - /webjars/**
+      - /favicon.ico
+      - /error
+  oss:
+    access-key:
+    secret-key:
+    max-file-size: 10000
+    max-request-size: 10000
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn

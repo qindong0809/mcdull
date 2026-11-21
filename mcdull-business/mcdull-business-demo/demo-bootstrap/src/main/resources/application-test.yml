@@ -25,20 +25,5 @@ logging:
   level:
     io.gitee.dqcer.mcdull.demo: info
 
-# 可选增强：只有在确实需要配置中心/服务发现时，添加 mcdull-framework-starter-nacos 依赖后取消注释。
-# spring:
-#   cloud:
-#     nacos:
-#       server-addr: ${NACOS_ADDR:localhost:8848}
-#       discovery:
-#         namespace: ${NACOS_NAMESPACE:test}
-#         metadata:
-#           env-tag: ${ENV_TAG:}
-#       config:
-#         namespace: ${NACOS_NAMESPACE:test}
-#         file-extension: yaml
-#         refresh-enabled: true
-#   config:
-#     import:
-#       - optional:nacos:shared-datasource.yaml?group=DEFAULT_GROUP
-#       - optional:nacos:shared-redis.yaml?group=DEFAULT_GROUP
+knife4j:
+  production: true

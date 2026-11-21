@@ -1,0 +1,36 @@
+server:
+  port: ${SYSTEM_SERVER_PORT:8099}
+
+spring:
+  data:
+    redis:
+      host: ${SYSTEM_REDIS_HOST:localhost}
+      port: ${SYSTEM_REDIS_PORT:6379}
+      password: ${SYSTEM_REDIS_PASSWORD:}
+      database: ${SYSTEM_REDIS_DB:1}
+      timeout: ${SYSTEM_REDIS_TIMEOUT:10s}
+      lettuce:
+        pool:
+          max-active: 200
+          max-wait: -1ms
+          max-idle: 10
+          min-idle: 0
+  datasource:
+    url: ${SYSTEM_DB_URL:jdbc:mysql://localhost:3306/mcdull-cloud-3?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai}
+    username: ${SYSTEM_DB_USER:root}
+    password: ${SYSTEM_DB_PASSWORD:123456}
+
+mcdull:
+  tag:
+    enabled: false
+    strict: false
+    clean-header: false
+
+sa-token:
+  # 保留原 application-dev.yml 的本地短超时设置，便于开发调试
+  active-timeout: 6000
+  timeout: 9000
+
+logging:
+  level:
+    io.gitee.dqcer.mcdull.system: debug

@@ -16,6 +16,7 @@ import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.StringCodec;
 import org.redisson.config.Config;
+import org.redisson.config.SingleServerConfig;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
@@ -59,11 +60,14 @@ public class RedissonAutoConfiguration implements CachingConfigurer {
         Config config = new Config();
         // 默认编码为性能最优 可视化可以用 setCodec(new StringCodec());
         config.setCodec(new StringCodec());
-        config.useSingleServer()
+        SingleServerConfig singleServer = config.useSingleServer()
                 .setAddress("redis://" + properties.getHost() + ":" + properties.getPort())
-                .setPassword(properties.getPassword())
                 .setConnectionPoolSize(50)
                 .setDatabase(properties.getDatabase());
+        String password = properties.getPassword();
+        if (password != null && !password.isBlank()) {
+            singleServer.setPassword(password);
+        }
         return Redisson.create(config);
 //        return null;
 }

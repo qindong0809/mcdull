@@ -1,0 +1,29 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        heart-beat-interval: 5000
+        metadata:
+          env-tag: ${ENV_TAG:}
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              # 自动服务发现路由会让内部接口绕过网关鉴权，test/prod 一律关闭
+              enabled: false
+  boot:
+    admin:
+      client:
+        url: ${SPRING_BOOT_ADMIN_URL:http://localhost:9000}
+
+mcdull:
+  tag:
+    enabled: ${GATEWAY_TAG_ENABLED:true}
+    strict: false
+    clean-header: false
+
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    org.springframework.web.reactive: INFO

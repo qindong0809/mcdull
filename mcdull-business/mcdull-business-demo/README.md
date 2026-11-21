@@ -204,6 +204,9 @@ SPRING_PROFILES_ACTIVE=prod java -jar demo-bootstrap-1.0.0.jar
 | `DEMO_LOG_PATH` | 日志根目录，默认 `./logs` | `/data/logs/demo-bootstrap` |
 | `DEMO_TAG_ENABLED` | 是否启用标签路由 | `true` |
 | `ENV_TAG` | 实例标签，空值表示公共基准实例 | `gray-demo` |
+| `NACOS_ADDR` | Nacos 地址，默认 `mcdull.io:8848` | `nacos.prod:8848` |
+| `NACOS_USER` / `NACOS_PWD` | Nacos 账号密码 | `nacos` / `******` |
+| `NACOS_NAMESPACE` | 命名空间，默认 `public` | `prod` |
 
 #### 变量的注入方式
 
@@ -217,7 +220,7 @@ SPRING_PROFILES_ACTIVE=prod java -jar demo-bootstrap-1.0.0.jar
 | `SPRING_APPLICATION_JSON` | `SPRING_APPLICATION_JSON='{"DEMO_DB_URL":"..."}'` | 容器平台批量注入 | 一个变量传多值，注意转义 |
 | 外部配置文件 | `--spring.config.additional-location=file:/etc/demo/` | 证书、复杂配置 | 配置挂载到容器，仍不进镜像 |
 | profile yml 直写 | `application-local.yml` | 仅本地 | 生产禁止把凭据写进 yml |
-| 配置中心 | Nacos / Apollo | 可选增强 | demo 默认关闭，不作为前提 |
+| 配置中心 | Nacos | 全环境默认启用 | 启动即导入 `datasource.yaml` / `redis.yaml` 等基线 Data ID 与服务私有 Data ID |
 
 简化后的优先级：命令行参数 > `SPRING_APPLICATION_JSON` > JVM 系统属性 > 操作系统环境变量 > 外部配置文件 > jar 内 yml。
 
@@ -265,13 +268,13 @@ env:
 
 - **local**：直接使用 `application-local.yml` 的默认值；需要临时覆盖时用 IDE Run Configuration 或 PowerShell 环境变量。
 - **test / prod**：由部署平台注入环境变量；普通配置用 ConfigMap / `env_file`，密码用 Secret，避免命令行参数和 `-D` 传敏感值。
-- **大量模板化配置或证书**：使用外部挂载配置目录；配置中心按需引入，不是 demo 的默认路径。
+- **大量模板化配置或证书**：使用外部挂载配置目录，或通过 Nacos Data ID 管理。
 
 这样做的原因：
 
 - 环境变量由部署平台或 Secret 管理，镜像本身不携带具体环境凭据。
-- Nacos 配置中心不是 demo 的默认依赖；`test` / `prod` 文件底部保留了可选配置示例，确实需要时再添加 `mcdull-framework-starter-nacos` 并取消注释。
-- 开启 Actuator 的 `health/info/prometheus/metrics/loggers` 端点，并启用优雅停机。
+- Nacos 全环境默认启用：`application.yml` 中已声明 `datasource.yaml`、`redis.yaml`、`sa-token.yaml`、`log-level.properties`、`springboot-admin.yaml` 以及 `<service>-<profile>.yaml` 的导入，需提前在 Nacos 的 `DEFAULT_GROUP` 中创建（默认 `public` 命名空间）。
+- 开启 Actuator 的 `health/info/prometheus` 端点，并启用优雅停机。
 - 灰度 tag 默认关闭；开启后 `strict=true`，不允许流量回流到基准实例。
 
 #### 日志配置

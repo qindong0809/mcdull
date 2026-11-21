@@ -1,11 +1,12 @@
 server:
-  port: 9090
+  port: ${GATEWAY_SERVER_PORT:9090}
 
 spring:
   application:
     name: mcdull-gateway
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
+    # 不设默认值：缺失时直接启动失败，避免生产误用本地配置
+    active: ${SPRING_PROFILES_ACTIVE}
   cache:
     type: caffeine
   cloud:
@@ -14,11 +15,12 @@ spring:
       username: ${NACOS_USER:nacos}
       password: ${NACOS_PWD:nacos}
       discovery:
-        # 保留服务发现与命名空间隔离（核心注册中心能力）
-        namespace: ${NACOS_NAMESPACE:${spring.profiles.active}}
+        namespace: ${NACOS_NAMESPACE:}
       config:
-        namespace: ${NACOS_NAMESPACE:${spring.profiles.active}}
+        namespace: ${NACOS_NAMESPACE:}
+        group: DEFAULT_GROUP
         file-extension: yaml
+        refresh-enabled: true
     inetutils:
       ignored-interfaces:
         - docker0
@@ -27,14 +29,14 @@ spring:
     gateway:
       server:
         webflux:
-          # 1. 全局超时保护收归本地
+          # 全局超时保护收归本地
           httpclient:
             connect-timeout: 5000
             response-timeout: 30000
             pool:
               type: elastic
               max-idle-time: 15000
-          # 2. 核心业务路由直接写在本地，随 Git 版本受控管理
+          # 核心业务路由直接写在本地，随 Git 版本受控管理
           routes:
             - id: system-bootstrap
               uri: lb://system-bootstrap
@@ -42,6 +44,11 @@ spring:
                 - Path=/uac/**
               filters:
                 - StripPrefix=1
+
+            - id: workflow-bootstrap
+              uri: lb://workflow-bootstrap
+              predicates:
+                - Path=/workflow/**
 
             - id: mcdull-mdc-provider
               uri: lb://mcdull-mdc-provider
@@ -56,20 +63,13 @@ spring:
                 - Path=/httpbin/**
               filters:
                 - StripPrefix=1
-          # 3. 全局默认过滤器收归本地
+          # 全局默认过滤器收归本地
           default-filters:
             - name: RequestRateLimiter
               args:
                 redis-rate-limiter.replenishRate: 50
                 redis-rate-limiter.burstCapacity: 100
                 key-resolver: "#{@ipKeyResolver}"
-
-  # 仅导入跨微服务共享的基础中间件配置，彻底移除 mcdull-gateway.yaml
-  config:
-    import:
-      - optional:nacos:sa-token.yaml?group=DEFAULT_GROUP
-      - optional:nacos:redis.yaml?group=DEFAULT_GROUP
-      - optional:nacos:springboot-admin.yaml?group=DEFAULT_GROUP
 
 # 监控端点安全规范收归本地
 management:
@@ -80,3 +80,7 @@ management:
   endpoint:
     health:
       show-details: when_authorized
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${SPRING_PROFILES_ACTIVE}

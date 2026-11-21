@@ -1,0 +1,28 @@
+server:
+  port: ${BLAZE_SERVER_PORT:8090}
+
+spring:
+  data:
+    redis:
+      host: ${BLAZE_REDIS_HOST}
+      port: ${BLAZE_REDIS_PORT:6379}
+      password: ${BLAZE_REDIS_PASSWORD:}
+      database: ${BLAZE_REDIS_DB:0}
+      timeout: ${BLAZE_REDIS_TIMEOUT:3s}
+  datasource:
+    url: ${BLAZE_DB_URL}
+    username: ${BLAZE_DB_USER}
+    password: ${BLAZE_DB_PASSWORD}
+
+mcdull:
+  tag:
+    enabled: ${BLAZE_TAG_ENABLED:true}
+    strict: false
+    clean-header: false
+
+logging:
+  level:
+    io.gitee.dqcer.mcdull.blaze: info
+
+knife4j:
+  production: true

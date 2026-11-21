@@ -609,10 +609,18 @@ sql/warm-flow.sql
 
 **3. 配置 Nacos**
 
-启动 Nacos 服务后，导入配置：
-- 配置文件：`doc/nacos_config_export_20240421173102.zip`
+业务服务全环境默认接入 Nacos（服务发现 + 共享配置导入）。启动 Nacos 后，可导入 `doc/nacos_config_export_20240421173102.zip` 作为基线，并确认 `DEFAULT_GROUP` 下存在以下共享 Data ID：
 
-修改业务服务的 `application-dev.yml`，填入本地数据库和 Redis 连接信息。
+- `datasource.yaml`
+- `redis.yaml`
+- `sa-token.yaml`
+- `log-level.properties`
+- `springboot-admin.yaml`
+- 各服务私有配置：`<service>-local.yaml`、`<service>-test.yaml`、`<service>-prod.yaml`
+
+这些配置位于 `DEFAULT_GROUP`，默认使用 Nacos `public` 命名空间；如需隔离，可设置 `NACOS_NAMESPACE`。
+
+环境差异通过 `SPRING_PROFILES_ACTIVE`（`local` / `test` / `prod`）以及各服务前缀的环境变量注入，无需修改 jar 内 yml。
 
 **4. 编译项目**
 
@@ -626,7 +634,7 @@ mvn clean install -DskipTests
 1. Nacos（配置中心 + 服务注册）
 2. `mcdull-gateway`（API 网关）
 3. `mcdull-business-system`（系统核心服务，其他服务依赖）
-4. 其他业务服务（按需启动）
+4. 其他业务服务（system / blaze / focus / workflow / demo，按需启动）
 
 **6. 启动前端**
 
@@ -641,6 +649,7 @@ mvn clean install -DskipTests
 | 文档 | 说明 |
 |---|---|
 | [打包部署指南.md](doc/打包部署指南.md) | 打包与部署教程 |
+| [本地启动说明.md](doc/本地启动说明.md) | 每个服务一键复制的环境变量与本地启动说明 |
 | [mcdull-business-demo/README.md](mcdull-business/mcdull-business-demo/README.md) | 业务模块脚手架示例与最佳实践 |
 | [mcdull-devtools-notify/README.md](mcdull-devtools/mcdull-devtools-notify/README.md) | Facade 发布通知插件使用说明 |
 | [mcdull-framework-agent/README.md](mcdull-framework/mcdull-framework-agent/README.md) | Java Agent 性能探针使用说明 |
@@ -674,16 +683,18 @@ mvn clean install -DskipTests
 ### 本地开发
 
 - IDE：IntelliJ IDEA（推荐）
-- 配置文件：`application-dev.yml`
-- 数据库 / Redis：本地实例
+- 激活 profile：`SPRING_PROFILES_ACTIVE=local`
+- 配置文件：各 `*-bootstrap/src/main/resources/application-local.yml`（仅本地默认值）
+- 数据库 / Redis：默认本机实例，可用 `SYSTEM_DB_URL` / `BLAZE_DB_URL` 等环境变量覆盖
+- Nacos：全环境默认启用，需保证 `NACOS_ADDR` 可达
 
-### 生产环境
+### 测试 / 生产环境
 
 - 部署方式：Docker 容器
-- 配置文件：`application-prod.yml`
-- 数据库：MySQL 集群
-- 缓存：Redis 集群
-- 服务注册与配置：Nacos 集群
+- 激活 profile：`test` 或 `prod`
+- 配置文件：各 `*-bootstrap` 下的 `application-test.yml` / `application-prod.yml`（只含环境变量占位符）
+- 数据库 / Redis / 凭据：由部署平台以环境变量或 Secret 注入
+- 服务注册与配置：Nacos 集群（`NACOS_ADDR`、`NACOS_NAMESPACE`）
 
 ---
 

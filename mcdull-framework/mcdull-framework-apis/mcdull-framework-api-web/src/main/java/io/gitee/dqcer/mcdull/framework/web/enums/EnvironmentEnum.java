@@ -10,7 +10,9 @@ public enum EnvironmentEnum implements IEnum<String> {
 
     PROD("prod", "生产环境"),
     TEST("test", "测试环境"),
-    DEV("dev", "开发环境");
+    DEV("dev", "开发环境"),
+    LOCAL("local", "本地环境"),
+    ;
 
     EnvironmentEnum(String code, String text) {
         init(code, text);

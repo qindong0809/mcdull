@@ -4,17 +4,39 @@ spring:
   profiles:
     # 不设默认值：缺失时直接启动失败，避免生产误用本地配置
     active: ${SPRING_PROFILES_ACTIVE}
+  cloud:
+    nacos:
+      server-addr: ${NACOS_ADDR:mcdull.io:8848}
+      username: ${NACOS_USER:nacos}
+      password: ${NACOS_PWD:nacos}
+      discovery:
+        namespace: ${NACOS_NAMESPACE:}
+        metadata:
+          env-tag: ${ENV_TAG:${user.name}}
+      config:
+        namespace: ${NACOS_NAMESPACE:}
+        group: DEFAULT_GROUP
+        file-extension: yaml
+        refresh-enabled: true
   datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     poolType: Druid
     initialSize: 1
     minIdle: 1
     maxActive: 10
     maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
     validationQuery: select 'x'
     testWhileIdle: true
     testOnBorrow: false
     testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+    logSlowSql: true
+    adminUser: ${DEMO_DRUID_ADMIN_USER:root}
+    adminPassword: ${DEMO_DRUID_ADMIN_PASSWORD:}
 
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*.xml
@@ -48,3 +70,16 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${SPRING_PROFILES_ACTIVE}

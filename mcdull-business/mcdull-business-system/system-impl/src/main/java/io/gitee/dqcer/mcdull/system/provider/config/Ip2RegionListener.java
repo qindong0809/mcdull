@@ -34,16 +34,17 @@ public class Ip2RegionListener implements ApplicationListener<ApplicationEnviron
 
         ConfigurableEnvironment environment = applicationEvent.getEnvironment();
         String logDirectoryPath = environment.getProperty(LOG_DIRECTORY);
-        if (logDirectoryPath == null) {
-            throw new ExceptionInInitializerError("环境变量为空：" + LOG_DIRECTORY);
+        if (StrUtil.isBlank(logDirectoryPath)) {
+            logDirectoryPath = "./logs";
+        }
+
+        // 目录不可创建时降级到 JVM 临时目录，避免 ip2region 初始化阻断服务启动
+        File logDirectoryFile = new File(logDirectoryPath);
+        if (!logDirectoryFile.exists() && !logDirectoryFile.mkdirs()) {
+            log.warn("无法创建日志目录 {}，ip2region.xdb 改用临时目录", logDirectoryPath);
+            logDirectoryPath = System.getProperty("java.io.tmpdir");
         }
         System.setProperty(LOG_DIRECTORY, logDirectoryPath);
-
-        // 1、从jar中的ip2region.xdb文件复制到服务器目录中
-        File logDirectoryFile = new File(logDirectoryPath);
-        if (!logDirectoryFile.exists()) {
-            logDirectoryFile.mkdirs();
-        }
 
         String tempFilePath;
         if (logDirectoryPath.endsWith(StrUtil.SLASH) || logDirectoryPath.endsWith(StrUtil.BACKSLASH)) {
@@ -55,19 +56,15 @@ public class Ip2RegionListener implements ApplicationListener<ApplicationEnviron
         File tempFile = new File(tempFilePath);
         try {
             Resource resourceObj = ResourceUtil.getResourceObj(IP_FILE_NAME);
-            resourceObj.readBytes();
             FileUtil.writeBytes(resourceObj.readBytes(), tempFile);
             Ip2RegionUtil.init(tempFilePath);
-
+            log.info("ip2region.xdb 初始化完成，路径: {}", tempFilePath);
         } catch (Exception e) {
-            LogHelp.error(log, "无法复制ip数据文件 ip2region.xdb", e);
-            throw new ExceptionInInitializerError("无法复制ip数据文件");
+            // IP 归属地解析失败时返回空结果，不影响服务启动与核心业务
+            LogHelp.error(log, "无法复制ip数据文件 ip2region.xdb，IP 归属地能力将不可用", e);
         } finally {
-            if (tempFile.exists()) {
-                boolean delete = tempFile.delete();
-                if (!delete) {
-                    LogHelp.error(log, "无法删除临时文件");
-                }
+            if (tempFile.exists() && !tempFile.delete()) {
+                LogHelp.error(log, "无法删除临时文件");
             }
         }
 

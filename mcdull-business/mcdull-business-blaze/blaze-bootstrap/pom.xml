@@ -31,6 +31,17 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- 全环境默认接入 Nacos：服务发现 + 共享配置导入 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-nacos</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-tag</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-monitor</artifactId>
@@ -62,6 +73,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-mysql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- 流程引擎运行时装配：system-impl 只依赖 api-flow -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-starter-flow</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- 运行时鉴权闸门：会话解析过滤器 + SaTokenExceptionAdvice -->

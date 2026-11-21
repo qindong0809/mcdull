@@ -3,8 +3,6 @@ server:
   shutdown: graceful
 
 spring:
-  application:
-    name: demo-bootstrap
   lifecycle:
     timeout-per-shutdown-phase: 30s
   data:
@@ -28,45 +26,9 @@ mcdull:
     # 生产网关应设置 clean-header=true；业务服务不要清洗，否则下游拿不到标签。
     clean-header: false
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,prometheus,metrics,loggers
-  endpoint:
-    health:
-      show-details: when_authorized
-  metrics:
-    tags:
-      application: ${spring.application.name}
-      environment: prod
-
 logging:
   level:
     io.gitee.dqcer.mcdull.demo: info
 
-# 可选增强：生产通常由部署平台注入环境变量，配置中心不是 demo 的默认值。
-# 如需接入 Nacos，添加 mcdull-framework-starter-nacos 依赖后取消注释，
-# 并把 DB/Redis/Sa-Token 等易变配置迁移到对应 dataId。
-# spring:
-#   cloud:
-#     nacos:
-#       server-addr: ${NACOS_ADDR}
-#       username: ${NACOS_USER}
-#       password: ${NACOS_PWD}
-#       discovery:
-#         namespace: ${NACOS_NAMESPACE:prod}
-#         metadata:
-#           env-tag: ${ENV_TAG:}
-#       config:
-#         namespace: ${NACOS_NAMESPACE:prod}
-#         group: DEFAULT_GROUP
-#         file-extension: yaml
-#         refresh-enabled: true
-#   config:
-#     import:
-#       - optional:nacos:demo-bootstrap-prod.yaml?group=DEFAULT_GROUP
-#       - optional:nacos:shared-datasource.yaml?group=DEFAULT_GROUP
-#       - optional:nacos:shared-redis.yaml?group=DEFAULT_GROUP
-#       - optional:nacos:shared-sa-token.yaml?group=DEFAULT_GROUP
-#       - optional:nacos:shared-logging.yaml?group=DEFAULT_GROUP
+knife4j:
+  production: true

@@ -118,6 +118,7 @@ public class WorkflowCenterServiceImpl implements IWorkflowCenterService {
             row.put("permissionFlag", Convert.toStr(n.get("policy"), ""));
             row.put("formPath", Convert.toStr(n.get("form"), ""));
             row.put("ext", "right:" + Convert.toStr(n.get("right"), "可编辑") + ";timeout:" + Convert.toInt(n.get("timeout"), 8));
+            row.put("version", version);
             workflowCenterMapper.insertNode(row);
         }
 

@@ -1,0 +1,31 @@
+server:
+  port: ${WORKFLOW_SERVER_PORT:6080}
+  shutdown: graceful
+
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+  data:
+    redis:
+      host: ${WORKFLOW_REDIS_HOST}
+      port: ${WORKFLOW_REDIS_PORT:6379}
+      password: ${WORKFLOW_REDIS_PASSWORD:}
+      database: ${WORKFLOW_REDIS_DB:0}
+      timeout: ${WORKFLOW_REDIS_TIMEOUT:3s}
+  datasource:
+    url: ${WORKFLOW_DB_URL}
+    username: ${WORKFLOW_DB_USER}
+    password: ${WORKFLOW_DB_PASSWORD}
+
+mcdull:
+  tag:
+    enabled: ${WORKFLOW_TAG_ENABLED:false}
+    strict: true
+    clean-header: false
+
+logging:
+  level:
+    io.gitee.dqcer.mcdull.workflow: info
+
+knife4j:
+  production: true

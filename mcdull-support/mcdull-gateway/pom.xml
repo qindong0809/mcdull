@@ -12,6 +12,41 @@
     <name>${project.artifactId} v${project.version}</name>
 
     <dependencies>
+      <dependency>
+        <groupId>io.gitee.dqcer</groupId>
+        <artifactId>mcdull-framework-starter-tag</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mcdull-framework-starter-feign</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>system-facade</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mcdull-framework-starter-nacos</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mcdull-framework-base</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mcdull-framework-config</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mcdull-framework-starter-monitor</artifactId>
+        <version>${project.version}</version>
+      </dependency>
         <dependency>
           <groupId>cn.dev33</groupId>
           <artifactId>sa-token-reactor-spring-boot3-starter</artifactId>
@@ -26,43 +61,13 @@
             <artifactId>commons-pool2</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-feign</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>system-facade</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-nacos</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-base</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-config</artifactId>
-            <version>${project.version}</version>
+            <artifactId>spring-cloud-starter-gateway-server-webflux</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
         </dependency>
-      <dependency>
-        <groupId>io.gitee.dqcer</groupId>
-        <artifactId>mcdull-framework-starter-tag</artifactId>
-        <version>${project.version}</version>
-      </dependency>
     </dependencies>
     <build>
         <resources>

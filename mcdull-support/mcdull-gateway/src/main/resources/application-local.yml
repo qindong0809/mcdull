@@ -12,6 +12,16 @@ spring:
             locator:
               enabled: true
               lower-case-service-id: true
+  boot:
+    admin:
+      client:
+        url: ${SPRING_BOOT_ADMIN_URL:http://localhost:9000}
+
+mcdull:
+  tag:
+    enabled: false
+    strict: false
+    clean-header: false
 
 logging:
   level:

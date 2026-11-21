@@ -1,5 +1,5 @@
 server:
-  port: 6070
+  port: ${DEMO_SERVER_PORT:6070}
 
 spring:
   data:
@@ -16,10 +16,8 @@ spring:
 
 mcdull:
   tag:
-    # 本地直连同机 MySQL/Redis，无 Nacos/网关/Feign 调用链，默认不需要 tag。
+    # 本地直连本机 MySQL/Redis，无 Feign 调用链时不需要 tag。
     enabled: false
-    # 多人共用一套开发服务时：添加 starter-tag + Nacos 依赖后改为 true，
-    # 并在 spring.cloud.nacos.discovery.metadata.env-tag 中配置 ${ENV_TAG:${user.name}}。
     strict: false
     clean-header: false
 

@@ -1,0 +1,28 @@
+server:
+  port: ${WORKFLOW_SERVER_PORT:6080}
+
+spring:
+  data:
+    redis:
+      host: ${WORKFLOW_REDIS_HOST}
+      port: ${WORKFLOW_REDIS_PORT:6379}
+      password: ${WORKFLOW_REDIS_PASSWORD:}
+      database: ${WORKFLOW_REDIS_DB:0}
+      timeout: ${WORKFLOW_REDIS_TIMEOUT:3s}
+  datasource:
+    url: ${WORKFLOW_DB_URL}
+    username: ${WORKFLOW_DB_USER}
+    password: ${WORKFLOW_DB_PASSWORD}
+
+mcdull:
+  tag:
+    enabled: ${WORKFLOW_TAG_ENABLED:true}
+    strict: false
+    clean-header: false
+
+logging:
+  level:
+    io.gitee.dqcer.mcdull.workflow: info
+
+knife4j:
+  production: true

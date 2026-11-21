@@ -1,68 +1,106 @@
 # `mcdull-gateway` 快速开始说明书
 
-**`mcdull-gateway` 是基于 Spring Cloud Gateway 搭建的统一微服务网关，默认监听 `9090` 端口。** 该项目采用“本地路由受控 + Nacos 基础配置共享”的云原生架构，支持通过启动环境变量无缝切换开发与生产环境。
+`mcdull-gateway` 是基于 Spring Cloud Gateway 的统一微服务网关，默认监听 `9090` 端口。配置规范与业务服务保持一致：
+
+- profile 统一为 `local` / `test` / `prod`
+- `SPRING_PROFILES_ACTIVE` 必填，缺失时启动失败（fail-fast）
+- 全环境默认接入 Nacos：服务发现 + 共享配置导入
+- 核心路由写在本地并随 Git 版本受控管理
 
 ---
 
+## 1. 一键复制环境变量
 
-## 三、 多环境启动指南
+### 1.1 本地 local
 
-本项目支持“一次构建，处处运行”，通过注入环境变量即可动态切换环境。
-
-### 1. 本地 IDEA 开发启动（默认 `dev` 环境）
-
-*   **直接启动**：无需配置任何参数，直接运行网关启动类即可。系统默认使用 `SPRING_PROFILES_ACTIVE=dev`，自动连接 `mcdull.io:8848` 的 `dev` 命名空间。
-*   **自定义本地参数**：如需连接本地单机 Nacos，可在 IDEA 的 **Run/Debug Configurations -> Environment variables** 中注入：
-    ```text
-    SPRING_PROFILES_ACTIVE=dev;NACOS_ADDR=mcdull.io:8848;NACOS_PWD=nacos
-    ```
-
-### 2. Linux 服务器 Jar 包部署（`prod` 环境）
-
-使用 `export` 导出环境变量后再启动 Jar 包，可避免敏感密码暴露在进程列表中：
-
-```bash
-export SPRING_PROFILES_ACTIVE=prod
-export NACOS_ADDR=prod.mcdull.io:8848
-export NACOS_USER=prod_nacos
-export NACOS_PWD=StrongProdPwd@2026
-
-nohup java -jar mcdull-gateway.jar > /dev/null 2>&1 &
+```text
+SPRING_PROFILES_ACTIVE=local;NACOS_ADDR=mcdull.io:8848;NACOS_USER=nacos;NACOS_PWD=123456;GATEWAY_SERVER_PORT=9090;GATEWAY_LOG_PATH=./logs
 ```
 
-### 3. Docker 容器化部署
+粘贴到 IDEA 的 `Environment variables` 后，运行 `io.gitee.dqcer.mcdull.gateway.GatewayApplication` 即可。
 
-通过 `-e` 参数注入环境变量即可直接运行镜像：
+> 若本机 Nacos 仍是默认的 `nacos/nacos`，把 `NACOS_PWD=123456` 改为 `NACOS_PWD=nacos`。
+> 若 Nacos 在本地，把 `NACOS_ADDR` 改为 `localhost:8848`。
 
-```bash
-docker run -d --name mcdull-gateway -p 9090:9090 \
-  -e SPRING_PROFILES_ACTIVE=prod \
-  -e NACOS_ADDR=10.0.2.100:8848 \
-  -e NACOS_USER=prod_nacos \
-  -e NACOS_PWD=StrongProdPwd@2026 \
-  mcdull-gateway:latest
+### 1.2 测试 test
+
+```text
+SPRING_PROFILES_ACTIVE=test;NACOS_ADDR=mcdull.io:8848;NACOS_USER=nacos;NACOS_PWD=123456;GATEWAY_SERVER_PORT=9090;GATEWAY_LOG_PATH=./logs;GATEWAY_TAG_ENABLED=true;SPRING_BOOT_ADMIN_URL=http://localhost:9000
+```
+
+### 1.3 生产 prod（示例值需替换为真实值）
+
+```text
+SPRING_PROFILES_ACTIVE=prod;NACOS_ADDR=prod.mcdull.io:8848;NACOS_USER=prod_nacos;NACOS_PWD=请替换;GATEWAY_SERVER_PORT=9090;GATEWAY_LOG_PATH=/data/logs/mcdull-gateway;GATEWAY_TAG_ENABLED=true;SPRING_BOOT_ADMIN_URL=http://admin.prod:9000
 ```
 
 ---
 
-## 四、 核心环境变量速查表
+## 2. Nacos 配置
 
-| 环境变量名 | 必填 | 默认值 | 说明 |
-| :--- | :--- | :--- | :--- |
-| **`SPRING_PROFILES_ACTIVE`** | 否 | `dev` | 激活的环境标识（可选 `dev`、`test`、`prod`）。 |
-| **`NACOS_ADDR`** | 否 | `mcdull.io:8848` | Nacos 注册中心与配置中心地址。 |
-| **`NACOS_USER`** | 否 | `nacos` | Nacos 登录用户名。 |
-| **`NACOS_PWD`** | 否 | `nacos` | Nacos 登录密码（生产环境务必覆盖）。 |
-| **`NACOS_NAMESPACE`** | 否 | 跟随 `active` 值 | 强制指定 Nacos 命名空间 ID，默认自动与当前激活环境保持一致。 |
-| **`ENV_TAG`** | 否 | 本机系统用户名 | 仅在 `dev` 环境生效，用于全链路开发联调流量染色隔离。 |
+默认使用 Nacos 的 `public` 命名空间。若需要使用独立命名空间，追加：
+
+```text
+NACOS_NAMESPACE=local
+```
+
+`DEFAULT_GROUP` 下需准备以下 Data ID（可导入 `doc/nacos_config_export_20240421173102.zip` 作为基线）：
+
+| Data ID | 用途 |
+|---|---|
+| `datasource.yaml` | 数据源公共配置 |
+| `redis.yaml` | Redis 公共配置 |
+| `sa-token.yaml` | Sa-Token 公共配置 |
+| `log-level.properties` | 日志级别公共配置 |
+| `springboot-admin.yaml` | Spring Boot Admin 公共配置 |
+| `mcdull-gateway-local.yaml` | 网关私有配置（按需） |
+
+导入均使用 `optional:nacos:`，缺少某个 Data ID 不会阻断启动，但对应配置不会生效。
 
 ---
 
-## 五、 路由转发规则与快速验证
+## 3. 环境变量速查
 
-启动成功后，可通过以下路径验证网关是否正常工作：
+| 变量 | 必填 | 示例值 | 说明 |
+|---|---|---|---|
+| `SPRING_PROFILES_ACTIVE` | 是 | `local` | 可选 `local` / `test` / `prod` |
+| `NACOS_ADDR` | 否 | `mcdull.io:8848` | Nacos 地址 |
+| `NACOS_USER` | 否 | `nacos` | Nacos 账号 |
+| `NACOS_PWD` | 否 | `123456` | Nacos 密码，按实际环境调整 |
+| `NACOS_NAMESPACE` | 否 | 空 | 默认 `public` 命名空间 |
+| `ENV_TAG` | 否 | 本机用户名 | `local` 下的流量染色标签 |
+| `GATEWAY_SERVER_PORT` | 否 | `9090` | 网关端口 |
+| `GATEWAY_LOG_PATH` | 否 | `./logs` | 日志根目录 |
+| `GATEWAY_TAG_ENABLED` | 否 | `true` | 标签路由开关，`local` 固定关闭 |
+| `SPRING_BOOT_ADMIN_URL` | 否 | `http://localhost:9000` | `prod` 必填 |
 
-*   **网关健康检查**：访问 `http://localhost:9090/actuator/health`，返回 `{"status":"UP"}` 表示网关已就绪。
-*   **外部示例路由测试**：访问 `http://localhost:9090/httpbin/get`，网关会自动剥离 `/httpbin` 前缀并转发至 `https://httpbin.org`（注意该公共测试服务单 IP 限流约 17 QPS）。
-*   **权限模块转发**：访问 `http://localhost:9090/uac/xxx`，转发至微服务 `system-bootstrap` 的 `/xxx` 接口。
-*   **MDC 模块转发**：访问 `http://localhost:9090/mdc/xxx`，转发至微服务 `mcdull-mdc-provider` 的 `/xxx` 接口。
+---
+
+## 4. 路由规则
+
+当前本地受控路由：
+
+| 路由 ID | 路径 | 目标服务 | 说明 |
+|---|---|---|---|
+| `system-bootstrap` | `/uac/**` | `lb://system-bootstrap` | `StripPrefix=1` |
+| `workflow-bootstrap` | `/workflow/**` | `lb://workflow-bootstrap` | 保留原路径 |
+| `mcdull-mdc-provider` | `/mdc/**` | `lb://mcdull-mdc-provider` | `StripPrefix=1` |
+| `demo-http` | `/httpbin/**` | `https://httpbin.org` | 外部演示路由 |
+
+`local` 开启服务发现自动路由，`test` / `prod` 一律关闭，避免内部接口绕过网关鉴权。
+
+---
+
+## 5. 启动与验证
+
+```bash
+mvn -pl mcdull-support/mcdull-gateway spring-boot:run
+```
+
+启动成功后验证：
+
+- 健康检查：`http://localhost:9090/actuator/health`
+- 外部示例路由：`http://localhost:9090/httpbin/get`
+- 权限模块转发：`http://localhost:9090/uac/xxx`
+- 工作流转发：`http://localhost:9090/workflow/center/overview`
+- MDC 模块转发：`http://localhost:9090/mdc/xxx`
