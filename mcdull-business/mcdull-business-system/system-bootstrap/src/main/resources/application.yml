@@ -17,11 +17,6 @@ spring:
         namespace: ${NACOS_NAMESPACE:}
         metadata:
           env-tag: ${ENV_TAG:${user.name}}
-      config:
-        namespace: ${NACOS_NAMESPACE:}
-        group: DEFAULT_GROUP
-        file-extension: yaml
-        refresh-enabled: true
   cache:
     type: caffeine
     caffeine:

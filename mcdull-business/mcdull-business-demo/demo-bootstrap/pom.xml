@@ -45,15 +45,10 @@
             <artifactId>demo-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- 启动类直接使用 @EnableCache / @EnableFileStorage / @EnableWebCore / @EnableDynamicDataSource -->
+        <!-- 启动类直接使用 @EnableCache / @EnableWebCore / @EnableDynamicDataSource -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-redis</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-oss</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

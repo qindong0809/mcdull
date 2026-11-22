@@ -16,7 +16,7 @@ spring:
           max-idle: 10
           min-idle: 0
   datasource:
-    url: ${SYSTEM_DB_URL}
+    url: jdbc:mysql://${SYSTEM_DB_HOST}:3306/mcdull-cloud-3?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
     username: ${SYSTEM_DB_USER}
     password: ${SYSTEM_DB_PASSWORD}
 

@@ -4,7 +4,7 @@
 
 - profile 统一为 `local` / `test` / `prod`
 - `SPRING_PROFILES_ACTIVE` 必填，缺失时启动失败（fail-fast）
-- 全环境默认接入 Nacos：服务发现 + 共享配置导入
+- 全环境默认接入 Nacos：仅作为服务注册中心（服务发现），不接入配置中心
 - 核心路由写在本地并随 Git 版本受控管理
 
 ---
@@ -36,26 +36,15 @@ SPRING_PROFILES_ACTIVE=prod;NACOS_ADDR=prod.mcdull.io:8848;NACOS_USER=prod_nacos
 
 ---
 
-## 2. Nacos 配置
+## 2. Nacos 注册中心
 
-默认使用 Nacos 的 `public` 命名空间。若需要使用独立命名空间，追加：
+Nacos 仅作为服务注册中心使用，不接入配置中心，无需准备任何共享 Data ID。默认使用 `public` 命名空间；若需要独立命名空间，追加：
 
 ```text
 NACOS_NAMESPACE=local
 ```
 
-`DEFAULT_GROUP` 下需准备以下 Data ID（可导入 `doc/nacos_config_export_20240421173102.zip` 作为基线）：
-
-| Data ID | 用途 |
-|---|---|
-| `datasource.yaml` | 数据源公共配置 |
-| `redis.yaml` | Redis 公共配置 |
-| `sa-token.yaml` | Sa-Token 公共配置 |
-| `log-level.properties` | 日志级别公共配置 |
-| `springboot-admin.yaml` | Spring Boot Admin 公共配置 |
-| `mcdull-gateway-local.yaml` | 网关私有配置（按需） |
-
-导入均使用 `optional:nacos:`，缺少某个 Data ID 不会阻断启动，但对应配置不会生效。
+业务配置（数据源、Redis、Sa-Token、限流、日志级别等）全部通过环境变量或本地 `application-*.yml` 注入。
 
 ---
 

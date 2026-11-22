@@ -62,11 +62,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-oss</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-web</artifactId>
             <version>${project.version}</version>
         </dependency>

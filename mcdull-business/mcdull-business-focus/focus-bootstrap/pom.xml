@@ -85,11 +85,6 @@
             <artifactId>mcdull-framework-starter-redis</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mcdull-framework-starter-oss</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <!-- 全环境默认接入 Nacos：服务发现 + 共享配置导入 -->
         <dependency>
             <groupId>${project.groupId}</groupId>

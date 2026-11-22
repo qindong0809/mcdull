@@ -609,16 +609,7 @@ sql/warm-flow.sql
 
 **3. 配置 Nacos**
 
-业务服务全环境默认接入 Nacos（服务发现 + 共享配置导入）。启动 Nacos 后，可导入 `doc/nacos_config_export_20240421173102.zip` 作为基线，并确认 `DEFAULT_GROUP` 下存在以下共享 Data ID：
-
-- `datasource.yaml`
-- `redis.yaml`
-- `sa-token.yaml`
-- `log-level.properties`
-- `springboot-admin.yaml`
-- 各服务私有配置：`<service>-local.yaml`、`<service>-test.yaml`、`<service>-prod.yaml`
-
-这些配置位于 `DEFAULT_GROUP`，默认使用 Nacos `public` 命名空间；如需隔离，可设置 `NACOS_NAMESPACE`。
+业务服务全环境默认接入 Nacos，**仅作为服务注册中心**（服务注册与发现），不承载业务配置。Nacos 默认使用 `public` 命名空间；如需隔离，可设置 `NACOS_NAMESPACE`。业务配置通过环境变量或本地 `application-*.yml` 注入，无需在 Nacos 中创建共享 Data ID。
 
 环境差异通过 `SPRING_PROFILES_ACTIVE`（`local` / `test` / `prod`）以及各服务前缀的环境变量注入，无需修改 jar 内 yml。
 
@@ -631,7 +622,7 @@ mvn clean install -DskipTests
 **5. 启动服务**
 
 按以下顺序启动：
-1. Nacos（配置中心 + 服务注册）
+1. Nacos（服务注册中心）
 2. `mcdull-gateway`（API 网关）
 3. `mcdull-business-system`（系统核心服务，其他服务依赖）
 4. 其他业务服务（system / blaze / focus / workflow / demo，按需启动）
@@ -685,7 +676,7 @@ mvn clean install -DskipTests
 - IDE：IntelliJ IDEA（推荐）
 - 激活 profile：`SPRING_PROFILES_ACTIVE=local`
 - 配置文件：各 `*-bootstrap/src/main/resources/application-local.yml`（仅本地默认值）
-- 数据库 / Redis：默认本机实例，可用 `SYSTEM_DB_URL` / `BLAZE_DB_URL` 等环境变量覆盖
+- 数据库 / Redis：默认本机实例，可用 `SYSTEM_DB_HOST` / `BLAZE_DB_HOST` 等环境变量覆盖（`*_DB_HOST` 只写主机名，端口与库名在 yml 中写死）
 - Nacos：全环境默认启用，需保证 `NACOS_ADDR` 可达
 
 ### 测试 / 生产环境

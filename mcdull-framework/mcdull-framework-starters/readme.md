@@ -24,7 +24,7 @@
 ### Integration & Service Starters（集成服务启动器）
 处理微服务间通信和外部服务集成。
 
-- **mcdull-framework-starter-nacos**: Nacos服务发现和配置中心集成
+- **mcdull-framework-starter-nacos**: Nacos 服务注册与发现集成（仅注册中心，不接入配置中心）
 - **mcdull-framework-starter-feign**: 基于Feign的服务间调用组件
 - **mcdull-framework-starter-oss**: 对象存储服务集成，支持阿里云OSS等
 

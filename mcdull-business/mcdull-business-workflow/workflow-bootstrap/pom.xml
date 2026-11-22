@@ -54,10 +54,10 @@
             <artifactId>workflow-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- 运行时提供 system facade 的本地 SPI 实现 -->
+        <!-- system 能力改为微服务远程调用：由 Application 上的 @EnableSystemFeignClients 激活契约代理 -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>system-impl</artifactId>
+            <artifactId>system-facade</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

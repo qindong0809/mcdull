@@ -10,9 +10,9 @@ spring:
       database: ${BLAZE_REDIS_DB:1}
       timeout: ${BLAZE_REDIS_TIMEOUT:3s}
   datasource:
-    url: ${BLAZE_DB_URL:jdbc:mysql://localhost:3306/mcdull-cloud-3?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai}
-    username: ${BLAZE_DB_USER:root}
-    password: ${BLAZE_DB_PASSWORD:123456}
+    url: jdbc:mysql://${BLAZE_DB_HOST}:3306/mcdull-cloud-3?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: ${BLAZE_DB_USER}
+    password: ${BLAZE_DB_PASSWORD}
   boot:
     admin:
       client:

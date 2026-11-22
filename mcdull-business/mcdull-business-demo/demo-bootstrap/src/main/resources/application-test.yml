@@ -10,7 +10,7 @@ spring:
       database: ${DEMO_REDIS_DB:1}
       timeout: ${DEMO_REDIS_TIMEOUT:3s}
   datasource:
-    url: ${DEMO_DB_URL}
+    url: jdbc:mysql://${DEMO_DB_HOST}:3306/demo?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
     username: ${DEMO_DB_USER}
     password: ${DEMO_DB_PASSWORD}
 

@@ -79,7 +79,8 @@ import java.util.concurrent.TimeUnit;
  * @author dqcer
  * @since 2022/10/26
  */
-@Component
+// 临时关闭：Nacos 仅作为服务注册中心，网关路由已全部收敛到本地 application.yml
+// @Component
 public class DynamicRouteListener implements InitializingBean, ApplicationEventPublisherAware {
 
     private static final Logger log = LoggerFactory.getLogger(DynamicRouteListener.class);

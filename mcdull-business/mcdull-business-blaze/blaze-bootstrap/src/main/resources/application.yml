@@ -16,11 +16,6 @@ spring:
         namespace: ${NACOS_NAMESPACE:}
         metadata:
           env-tag: ${ENV_TAG:${user.name}}
-      config:
-        namespace: ${NACOS_NAMESPACE:}
-        group: DEFAULT_GROUP
-        file-extension: yaml
-        refresh-enabled: true
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -62,7 +57,7 @@ mybatis-plus:
     map-underscore-to-camel-case: true
 
 logging:
-  # Ip2RegionListener 在 EnvironmentPrepared 阶段读取该属性，用于释放 ip2region.xdb
+  # 日志文件目录
   file:
     path: ${BLAZE_LOG_PATH:./logs}
 
@@ -111,15 +106,3 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
-
-dromara:
-  x-file-storage:
-    default-platform: local-plus-1
-    thumbnail-suffix: ".min.jpg"
-    local-plus:
-      - platform: local-plus-1
-        enable-storage: true
-        enable-access: true
-        domain: ${BLAZE_FILE_DOMAIN:http://localhost:8090/upload/}
-        path-patterns: /upload/**
-        storage-path: ${BLAZE_FILE_STORAGE_PATH:./upload/}

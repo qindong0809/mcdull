@@ -4,7 +4,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.system.provider.util.Ip2RegionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
@@ -33,41 +32,55 @@ public class Ip2RegionListener implements ApplicationListener<ApplicationEnviron
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent applicationEvent) {
 
         ConfigurableEnvironment environment = applicationEvent.getEnvironment();
-        String logDirectoryPath = environment.getProperty(LOG_DIRECTORY);
+        String logDirectoryPath = StrUtil.trim(environment.getProperty(LOG_DIRECTORY));
         if (StrUtil.isBlank(logDirectoryPath)) {
             logDirectoryPath = "./logs";
         }
-
-        // 目录不可创建时降级到 JVM 临时目录，避免 ip2region 初始化阻断服务启动
-        File logDirectoryFile = new File(logDirectoryPath);
-        if (!logDirectoryFile.exists() && !logDirectoryFile.mkdirs()) {
-            log.warn("无法创建日志目录 {}，ip2region.xdb 改用临时目录", logDirectoryPath);
-            logDirectoryPath = System.getProperty("java.io.tmpdir");
-        }
         System.setProperty(LOG_DIRECTORY, logDirectoryPath);
 
-        String tempFilePath;
-        if (logDirectoryPath.endsWith(StrUtil.SLASH) || logDirectoryPath.endsWith(StrUtil.BACKSLASH)) {
-            tempFilePath = logDirectoryPath + IP_FILE_NAME;
-        } else {
-            tempFilePath = logDirectoryPath + File.separator + IP_FILE_NAME;
+        if (initIp2Region(buildPath(logDirectoryPath))) {
+            return;
         }
 
-        File tempFile = new File(tempFilePath);
+        // 日志目录不可写时降级到 JVM 临时目录，避免 ip2region 初始化影响服务启动
+        String tmpDirectory = StrUtil.trim(System.getProperty("java.io.tmpdir"));
+        if (!StrUtil.equals(tmpDirectory, logDirectoryPath)
+                && initIp2Region(buildPath(tmpDirectory))) {
+            return;
+        }
+        log.warn("无法初始化 ip2region.xdb，IP 归属地能力将不可用");
+    }
+
+    private static String buildPath(String directory) {
+        if (directory.endsWith(StrUtil.SLASH) || directory.endsWith(StrUtil.BACKSLASH)) {
+            return directory + IP_FILE_NAME;
+        }
+        return directory + File.separator + IP_FILE_NAME;
+    }
+
+    private boolean initIp2Region(String filePath) {
+        File tempFile = new File(filePath);
+        File directory = tempFile.getParentFile();
         try {
+            if (directory != null && directory.exists() && !directory.isDirectory()) {
+                return false;
+            }
+            if (directory != null && !directory.exists() && !directory.mkdirs()) {
+                return false;
+            }
             Resource resourceObj = ResourceUtil.getResourceObj(IP_FILE_NAME);
             FileUtil.writeBytes(resourceObj.readBytes(), tempFile);
-            Ip2RegionUtil.init(tempFilePath);
-            log.info("ip2region.xdb 初始化完成，路径: {}", tempFilePath);
+            Ip2RegionUtil.init(tempFile.getAbsolutePath());
+            log.info("ip2region.xdb 初始化完成，路径: {}", tempFile.getAbsolutePath());
+            return true;
         } catch (Exception e) {
-            // IP 归属地解析失败时返回空结果，不影响服务启动与核心业务
-            LogHelp.error(log, "无法复制ip数据文件 ip2region.xdb，IP 归属地能力将不可用", e);
+            log.warn("在目录 {} 初始化 ip2region.xdb 失败: {}", directory, e.getMessage());
+            return false;
         } finally {
             if (tempFile.exists() && !tempFile.delete()) {
-                LogHelp.error(log, "无法删除临时文件");
+                log.warn("无法删除临时文件 {}", tempFile.getAbsolutePath());
             }
         }
-
     }
 
 

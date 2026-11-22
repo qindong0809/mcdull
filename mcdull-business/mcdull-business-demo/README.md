@@ -58,7 +58,7 @@ demo-bootstrap  ──依赖──▶  demo-impl  ──依赖──▶  demo-fa
 | `mcdull-framework-api-redis` | 是 | 否 | impl 用 `@CacheExpire` / `@RedisLock` / `IRedissonCache` / `IRedisClient`，零依赖 API 模块 |
 | `mcdull-framework-starter-redis` | 否 | 是 | bootstrap 用 `@EnableCache`；starter 依赖 api-redis |
 | `mcdull-framework-starter-doc` | 是 | 否 | impl 用 `@Operation` / `@SchemaEnum`；bootstrap 不直接引用，由传递依赖提供 |
-| `mcdull-framework-starter-oss` | 否 | 是 | bootstrap 用 `@EnableFileStorage` |
+| `mcdull-framework-starter-oss` | 否 | 否 | 文件能力统一由 system 提供 |
 | `mcdull-framework-starter-security` | 否 | 是 | 运行时鉴权过滤器，由 bootstrap 组装 |
 | `mcdull-framework-starter-tag` | 否 | 是 | 自动配置 + 请求头生效，demo 代码未直接引用；放 impl 会把运行时能力绑进业务 jar |
 | actuator / prometheus | 否 | 是 | 生产可观测端点，由 bootstrap 组装 |
@@ -195,7 +195,7 @@ SPRING_PROFILES_ACTIVE=prod java -jar demo-bootstrap-1.0.0.jar
 | 变量 | 说明 | 示例 |
 |---|---|---|
 | `DEMO_SERVER_PORT` | 服务端口 | `6070` |
-| `DEMO_DB_URL` | JDBC 地址 | `jdbc:mysql://db:3306/demo` |
+| `DEMO_DB_HOST` | 数据库主机名（端口 3306、库名 demo 已写死在 yml） | `db` |
 | `DEMO_DB_USER` | 数据库账号 | `demo` |
 | `DEMO_DB_PASSWORD` | 数据库密码 | `******` |
 | `DEMO_REDIS_HOST` | Redis 地址 | `redis` |
@@ -210,17 +210,17 @@ SPRING_PROFILES_ACTIVE=prod java -jar demo-bootstrap-1.0.0.jar
 
 #### 变量的注入方式
 
-`${DEMO_DB_URL}` 这类占位符会从 Spring `Environment` 的各类 PropertySource 中解析，常见方式如下：
+`${DEMO_DB_HOST}` 这类占位符会从 Spring `Environment` 的各类 PropertySource 中解析，常见方式如下：
 
 | 方式 | 示例 | 适用场景 | 说明 |
 |---|---|---|---|
-| 操作系统环境变量 | `DEMO_DB_URL=jdbc:... java -jar ...` | **test / prod 推荐** | 镜像不带值，平台可审计、可重新注入 |
-| JVM 系统属性 | `java -DDEMO_DB_URL=jdbc:... -jar ...` | 临时排障 | 密码会出现在进程参数中，生产不推荐 |
-| 命令行参数 | `java -jar ... --DEMO_DB_URL=jdbc:...` | 临时覆盖 | 优先级最高，同样不要传密码 |
-| `SPRING_APPLICATION_JSON` | `SPRING_APPLICATION_JSON='{"DEMO_DB_URL":"..."}'` | 容器平台批量注入 | 一个变量传多值，注意转义 |
+| 操作系统环境变量 | `DEMO_DB_HOST=db java -jar ...` | **test / prod 推荐** | 镜像不带值，平台可审计、可重新注入 |
+| JVM 系统属性 | `java -DDEMO_DB_HOST=db -jar ...` | 临时排障 | 密码会出现在进程参数中，生产不推荐 |
+| 命令行参数 | `java -jar ... --DEMO_DB_HOST=db` | 临时覆盖 | 优先级最高，同样不要传密码 |
+| `SPRING_APPLICATION_JSON` | `SPRING_APPLICATION_JSON='{"DEMO_DB_HOST":"db"}'` | 容器平台批量注入 | 一个变量传多值，注意转义 |
 | 外部配置文件 | `--spring.config.additional-location=file:/etc/demo/` | 证书、复杂配置 | 配置挂载到容器，仍不进镜像 |
 | profile yml 直写 | `application-local.yml` | 仅本地 | 生产禁止把凭据写进 yml |
-| 配置中心 | Nacos | 全环境默认启用 | 启动即导入 `datasource.yaml` / `redis.yaml` 等基线 Data ID 与服务私有 Data ID |
+| 服务注册中心 | Nacos | 全环境默认启用 | 仅用于服务注册与发现，业务配置通过环境变量或本地 yml 注入 |
 
 简化后的优先级：命令行参数 > `SPRING_APPLICATION_JSON` > JVM 系统属性 > 操作系统环境变量 > 外部配置文件 > jar 内 yml。
 
@@ -232,19 +232,15 @@ SPRING_PROFILES_ACTIVE=prod java -jar demo-bootstrap-1.0.0.jar
 4. 在 `Environment variables` 中按表格逐行添加，或在旧版单行输入框中粘贴以下内容（Windows 用 `;` 分隔，macOS/Linux 用 `:` 分隔）：
 
 ```text
-SPRING_PROFILES_ACTIVE=local;DEMO_DB_URL=jdbc:mysql://mcdull.io:3306/demo?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai;DEMO_DB_USER=root;DEMO_DB_PASSWORD=123456;DEMO_REDIS_HOST=mcdull.io;DEMO_REDIS_PORT=6379;DEMO_REDIS_PASSWORD=;DEMO_TAG_ENABLED=false
+SPRING_PROFILES_ACTIVE=local;DEMO_DB_HOST=mcdull.io;DEMO_DB_USER=root;DEMO_DB_PASSWORD=123456;DEMO_REDIS_HOST=mcdull.io
 ```
 
-如果本地 DB/Redis 与默认值完全一致，可以只填：
-
-```text
-SPRING_PROFILES_ACTIVE=local
-```
+`DEMO_DB_HOST` / `DEMO_DB_USER` / `DEMO_DB_PASSWORD` 无默认值，必须显式提供；即使连本机 MySQL，也要写 `DEMO_DB_HOST=localhost`，否则启动失败。
 
 本地命令行临时覆盖示例（PowerShell）：
 
 ```powershell
-$env:DEMO_DB_URL = "jdbc:mysql://localhost:3306/demo"
+$env:DEMO_DB_HOST = "localhost"
 $env:DEMO_DB_USER = "root"
 $env:DEMO_DB_PASSWORD = "123456"
 $env:SPRING_PROFILES_ACTIVE = "local"
@@ -255,8 +251,8 @@ Kubernetes 生产注入示例：
 
 ```yaml
 env:
-  - name: DEMO_DB_URL
-    value: "jdbc:mysql://mysql.prod:3306/demo"
+  - name: DEMO_DB_HOST
+    value: "mysql.prod"
   - name: DEMO_DB_PASSWORD
     valueFrom:
       secretKeyRef:
@@ -273,7 +269,7 @@ env:
 这样做的原因：
 
 - 环境变量由部署平台或 Secret 管理，镜像本身不携带具体环境凭据。
-- Nacos 全环境默认启用：`application.yml` 中已声明 `datasource.yaml`、`redis.yaml`、`sa-token.yaml`、`log-level.properties`、`springboot-admin.yaml` 以及 `<service>-<profile>.yaml` 的导入，需提前在 Nacos 的 `DEFAULT_GROUP` 中创建（默认 `public` 命名空间）。
+- Nacos 全环境默认启用，仅作为服务注册中心：服务注册与发现通过 `NACOS_ADDR` / `NACOS_NAMESPACE` 接入；业务配置通过环境变量或本地 `application-*.yml` 注入，无需在 Nacos 中创建共享 Data ID。
 - 开启 Actuator 的 `health/info/prometheus` 端点，并启用优雅停机。
 - 灰度 tag 默认关闭；开启后 `strict=true`，不允许流量回流到基准实例。
 

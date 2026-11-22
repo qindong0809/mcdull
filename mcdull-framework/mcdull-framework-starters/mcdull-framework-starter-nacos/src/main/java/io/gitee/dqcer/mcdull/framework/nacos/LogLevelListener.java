@@ -36,7 +36,8 @@ import java.util.concurrent.TimeUnit;
  * @author dqcer
  * @since 2022/10/24
  */
-@Component
+// 临时关闭：业务服务仅将 Nacos 作为注册中心，不加载配置中心的日志级别监听器
+// @Component
 public class LogLevelListener implements InitializingBean {
 
     private static final Logger log = LoggerFactory.getLogger(LogLevelListener.class);

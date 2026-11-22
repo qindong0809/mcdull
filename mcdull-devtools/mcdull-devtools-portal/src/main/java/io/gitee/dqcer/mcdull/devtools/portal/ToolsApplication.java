@@ -1,10 +1,8 @@
 package io.gitee.dqcer.mcdull.devtools.portal;
 
-import org.dromara.x.file.storage.spring.EnableFileStorage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-@EnableFileStorage
 @SpringBootApplication(
     scanBasePackages = "io.gitee.dqcer.mcdull.tools",
     exclude = {

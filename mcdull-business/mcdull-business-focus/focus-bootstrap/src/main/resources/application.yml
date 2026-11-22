@@ -13,11 +13,6 @@ spring:
         namespace: ${NACOS_NAMESPACE:}
         metadata:
           env-tag: ${ENV_TAG:${user.name}}
-      config:
-        namespace: ${NACOS_NAMESPACE:}
-        group: DEFAULT_GROUP
-        file-extension: yaml
-        refresh-enabled: true
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
