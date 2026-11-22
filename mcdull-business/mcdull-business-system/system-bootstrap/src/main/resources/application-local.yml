@@ -34,3 +34,11 @@ sa-token:
 logging:
   level:
     io.gitee.dqcer.mcdull.system: debug
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"

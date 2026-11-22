@@ -27,3 +27,11 @@ mcdull:
 logging:
   level:
     io.gitee.dqcer.mcdull.blaze: debug
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
