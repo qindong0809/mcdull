@@ -3,12 +3,14 @@ package io.gitee.dqcer.mcdull.framework.redis.config;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import io.gitee.dqcer.mcdull.framework.json.deserialize.DynamicDateDeserialize;
 import io.gitee.dqcer.mcdull.framework.redis.aspect.CacheExpireAspect;
 import io.gitee.dqcer.mcdull.framework.redis.aspect.RedisLockAspect;
 import io.gitee.dqcer.mcdull.framework.redis.jmx.RedisJmxAdapter;
@@ -20,9 +22,10 @@ import org.redisson.api.RedissonClient;
 import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.config.Config;
 import org.redisson.config.SingleServerConfig;
+import org.redisson.spring.starter.RedissonAutoConfigurationV2;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.cache.annotation.EnableCaching;
@@ -43,6 +46,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -53,7 +57,7 @@ import java.util.stream.Stream;
  * @author dqcer
  * @since 2021/09/10
  */
-@AutoConfiguration(after = RedisAutoConfiguration.class)
+@AutoConfiguration(before = RedissonAutoConfigurationV2.class)
 @ConditionalOnClass({RedissonClient.class, RedisConnectionFactory.class})
 @EnableCaching(proxyTargetClass = true)
 @Import({RedissonCache.class, ConcurrentRateLimiterImpl.class, RedisJmxAdapter.class})
@@ -76,6 +80,7 @@ public class RedissonAutoConfiguration implements CachingConfigurer {
 
 
     @Bean
+    @ConditionalOnMissingBean(RedissonClient.class)
     public RedissonClient redissonClient(RedisProperties properties) {
         Config config = new Config();
         // 与 Spring Cache 共用同一套 Jackson 序列化，避免同一 Redis 中多种数据格式并存
@@ -115,6 +120,11 @@ public class RedissonAutoConfiguration implements CachingConfigurer {
                 .addSerializer(LocalDate.class, new LocalDateSerializer(dateFormatter))
                 .addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(timeFormatter));
         objectMapper.registerModule(timeModule);
+        // DynamicDateSerialize 会把 Date 写成 "yyyy-MM-dd HH:mm:ss" 一类字符串，
+        // 缓存回读时必须使用对称的反序列化器，否则 Jackson 默认只认 ISO-8601 会报错。
+        SimpleModule dateModule = new SimpleModule();
+        dateModule.addDeserializer(Date.class, new DynamicDateDeserialize());
+        objectMapper.registerModule(dateModule);
         BasicPolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator.builder()
                 .allowIfSubType("io.gitee.dqcer.mcdull.")
                 .allowIfSubType("java.util.")

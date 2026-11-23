@@ -19,6 +19,7 @@ import io.gitee.dqcer.mcdull.system.facade.model.enums.GenderEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.LoginLogEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
+import io.gitee.dqcer.mcdull.system.provider.model.enums.ApplicationEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.LogonVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.MenuVO;
@@ -164,9 +165,10 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
     }
 
     @Override
-    public LogonVO getCurrentUserInfo() {
+    public LogonVO getCurrentUserInfo(String code) {
         Integer userId = UserContextHolder.userId();
-        String key = StrUtil.format("current:user:{}:role:list", userId);
+        String appCode = StrUtil.blankToDefault(code, "all");
+        String key = StrUtil.format("current:user:{}:app:{}:v2:role:list", userId, appCode);
         Cache cache = cacheManager.getCache(CacheConstants.BUSINESS_CACHE);
         if (ObjUtil.isNotNull(cache)) {
             LogonVO vo = cache.get(key, LogonVO.class);
@@ -178,13 +180,54 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
         if (ObjUtil.isNotNull(userEntity)) {
             LogonVO vo = this.buildLogonVo(userEntity);
             vo.setToken(StpUtil.getTokenValue());
+            vo.setCurrentAppCode(appCode);
+            vo.setMenuList(this.filterMenuByApp(vo.getMenuList(), code));
             if (ObjUtil.isNotNull(cache)) {
                 cache.put(key, vo);
             }
             return vo;
         }
-        LogHelp.error(log, "getCurrentUserInfo error, userId: {}", userId);
+        LogHelp.error(log, "getCurrentUserInfo error, userId: {}, appCode: {}", userId, appCode);
         return null;
+    }
+
+    private List<MenuVO> filterMenuByApp(List<MenuVO> menuList, String appCode) {
+        if (StrUtil.isBlank(appCode) || CollUtil.isEmpty(menuList)) {
+            return menuList;
+        }
+        ApplicationEnum application = Arrays.stream(ApplicationEnum.values())
+                .filter(item -> item.getCode().equals(appCode))
+                .findFirst()
+                .orElse(null);
+        if (ObjUtil.isNull(application)) {
+            return menuList;
+        }
+        String prefix = application.getPermissionPrefix();
+        String pathPrefix = application.getPathPrefix();
+        Map<Integer, MenuVO> menuMap = menuList.stream()
+                .filter(menu -> ObjUtil.isNotNull(menu.getMenuId()))
+                .collect(Collectors.toMap(MenuVO::getMenuId, menu -> menu, (a, b) -> a));
+        Set<Integer> keepIds = new HashSet<>();
+        for (MenuVO menu : menuList) {
+            String webPerms = StrUtil.blankToDefault(menu.getWebPerms(), "");
+            String apiPerms = StrUtil.blankToDefault(menu.getApiPerms(), "");
+            String path = StrUtil.blankToDefault(menu.getPath(), "");
+            boolean matched = StrUtil.startWith(webPerms, prefix)
+                    || StrUtil.startWith(apiPerms, prefix)
+                    || (StrUtil.isNotBlank(pathPrefix) && StrUtil.contains(path, pathPrefix));
+            if (matched && ObjUtil.isNotNull(menu.getMenuId())) {
+                keepIds.add(menu.getMenuId());
+                Integer parentId = menu.getParentId();
+                while (ObjUtil.isNotNull(parentId) && menuMap.containsKey(parentId)) {
+                    keepIds.add(parentId);
+                    parentId = menuMap.get(parentId).getParentId();
+                }
+            }
+        }
+        if (keepIds.isEmpty()) {
+            return menuList;
+        }
+        return menuList.stream().filter(menu -> keepIds.contains(menu.getMenuId())).collect(Collectors.toList());
     }
 
     @Override

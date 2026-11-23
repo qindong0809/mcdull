@@ -43,9 +43,10 @@ public interface ILoginService {
     /**
      * 获取当前用户信息
      *
+     * @param code 应用编码，来自门户系统卡片
      * @return {@link LogonVO}
      */
-    LogonVO getCurrentUserInfo();
+    LogonVO getCurrentUserInfo(String code);
 
     /**
      * 是否启用验证码

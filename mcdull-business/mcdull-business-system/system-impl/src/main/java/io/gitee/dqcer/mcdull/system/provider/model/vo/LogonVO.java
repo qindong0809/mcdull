@@ -1,8 +1,10 @@
 package io.gitee.dqcer.mcdull.system.provider.model.vo;
 
 import cn.hutool.core.date.DatePattern;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.gitee.dqcer.mcdull.framework.json.deserialize.DynamicDateDeserialize;
 import io.gitee.dqcer.mcdull.framework.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.json.serialize.DynamicDateSerialize;
 import io.gitee.dqcer.mcdull.system.provider.model.bo.UserBO;
@@ -28,6 +30,9 @@ public class LogonVO extends UserBO implements VO {
     @Schema(description = "token")
     private String token;
 
+    @Schema(description = "当前应用编码")
+    private String currentAppCode;
+
     @Schema(description = "菜单列表")
     private List<MenuVO> menuList;
 
@@ -43,5 +48,6 @@ public class LogonVO extends UserBO implements VO {
     @Schema(description = "上次登录时间")
     @DynamicDateFormat(dateFormat = DatePattern.NORM_DATETIME_PATTERN)
     @JsonSerialize(using = DynamicDateSerialize.class)
+    @JsonDeserialize(using = DynamicDateDeserialize.class)
     private Date lastLoginTime;
 }

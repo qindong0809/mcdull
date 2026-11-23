@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.annotation.Resource;
@@ -78,8 +79,8 @@ public class LoginController extends BasicController {
     @Deprecated
     @GetMapping("/current/user-info")
     @Operation(summary = "登录人信息", description = "角色、权限、个人信息")
-    public Result<LogonVO> getCurrentUserInfo() {
-        return Result.success(loginService.getCurrentUserInfo());
+    public Result<LogonVO> getCurrentUserInfo(@RequestParam(value = "code", required = false) String code) {
+        return Result.success(loginService.getCurrentUserInfo(code));
     }
 
     @Operation(summary = "注销")
