@@ -25,7 +25,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminRol
 import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminUserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.*;
 import io.gitee.dqcer.mcdull.system.provider.model.bo.*;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.administrator.AdminUserMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.administrator.AdminUserMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ICaptchaService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.administrator.*;
 import jakarta.annotation.Resource;

@@ -18,7 +18,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.dto.HelpDocCatalogAddDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.HelpDocCatalogUpdateDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.HelpDocCatalogEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.HelpDocCatalogVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.HelpDocCatalogMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.HelpDocCatalogMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IHelpDocCatalogService;
 import jakarta.annotation.Resource;

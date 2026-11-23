@@ -157,8 +157,11 @@ commit 短链会按 host 自动生成可点击地址：
 一条命令即可，**无需 bootstrap**：
 
 ```powershell
-mvn -B -DskipTests clean install
+mvn -B clean install
 ```
+
+> 该命令默认会执行单元测试与各模块的 ArchUnit 架构检查。若只是本地快速迭代插件逻辑，可临时加
+> `-DskipTests`；但"能否从零构建成功"这类验证必须以不带 `-DskipTests` 的命令为准。
 
 之所以能一条搞定，依赖三处工程约定，改动它们会破坏这条命令：
 
@@ -179,8 +182,8 @@ mvn -B -pl mcdull-business/mcdull-business-blaze/blaze-facade -am clean package
 ### 6.2 用自建测试群单独验一次
 
 ```powershell
-# 先 install 让插件进本地仓库
-mvn -B -DskipTests clean install
+# 先 install 让插件进本地仓库（默认执行测试；本地反复调试时可临时加 -DskipTests）
+mvn -B clean install
 # 临时指向一个测试群 webhook
 mvn -B -pl mcdull-business/mcdull-business-blaze/blaze-facade deploy "-Dmcdull.notify.webhook=https://oapi.dingtalk.com/robot/send?access_token=测试token" "-Dmcdull.notify.skipSnapshot=false"
 ```

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FormRecordItemEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.FormRecordItemMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.FormRecordItemMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFormRecordItemService;
 import org.springframework.stereotype.Service;
 

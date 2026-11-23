@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.FileBizEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.FileBizMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.FileBizMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileBizService;
 import org.springframework.stereotype.Service;
 

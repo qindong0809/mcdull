@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.demo.provider.web.dao.mapper;
+package io.gitee.dqcer.mcdull.demo.provider.web.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.gitee.dqcer.mcdull.demo.provider.model.entity.DemoTaskEntity;

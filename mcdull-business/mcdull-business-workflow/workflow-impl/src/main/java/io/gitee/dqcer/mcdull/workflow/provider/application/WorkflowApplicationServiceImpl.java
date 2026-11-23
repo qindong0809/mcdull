@@ -37,7 +37,7 @@ import io.gitee.dqcer.mcdull.workflow.facade.model.vo.StartProcessResult;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.TaskHandleResult;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.TaskVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.TodoCountVO;
-import io.gitee.dqcer.mcdull.workflow.provider.mapper.WorkflowFacadeMapper;
+import io.gitee.dqcer.mcdull.workflow.web.mapper.WorkflowFacadeMapper;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DuplicateKeyException;

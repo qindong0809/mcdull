@@ -99,6 +99,19 @@ class SystemArchitectureTest {
 > `@ArchTest` 字段类型必须是 `ArchRule`，ArchUnit 不支持直接标注 `List<ArchRule>`。
 > 存量代码无法一次性合规时，用 `FreezingArchRule.freeze(rule)` 冻结基线、只拦截新增违规。
 
+运行架构测试（与单元测试同一套生命周期，默认就会执行）：
+
+```bash
+# 全部模块的单元测试 + 架构测试
+mvn test
+
+# 只跑某个模块
+mvn -B -pl mcdull-business/mcdull-business-system/system-impl test
+
+# 只跑某个架构测试类
+mvn -B -pl mcdull-business/mcdull-business-system/system-impl test -Dtest=SystemArchitectureTest
+```
+
 ### 🔐 多端点认证体系（Sa-Token）
 
 基于 Sa-Token 实现管理端、App 端、普通用户端三套独立的会话体系，通过 `StpKit` 统一管理。每次请求由 `HttpTraceLogFilter` 完成：
@@ -128,9 +141,9 @@ public void submitOrder(Long userId) { ... }
 public UserVO getUser(Long id) { ... }
 ```
 
-### 🗂️ 本地 + Redis 两级缓存
+### 🗂️ Redis 缓存
 
-`CaffeineCache` + `RedissonCache` 双层缓存机制，热点数据优先命中本地 Caffeine（软引用，内存不足自动回收），减少 Redis 网络开销，`AbstractTransformer` 的字段翻译直接使用该机制做数据词典缓存。
+基于 Redisson 的分布式缓存，多实例共享同一份数据；通过 `@Cacheable` / `@CacheEvict` 注解使用，或直接注入 `ICache` 契约操作。
 
 ### 🏷️ @Transform — 返回值字段自动翻译
 
@@ -616,8 +629,11 @@ sql/warm-flow.sql
 **4. 编译项目**
 
 ```bash
-mvn clean install -DskipTests
+# 默认执行单元测试与 ArchUnit 架构检查（比 -DskipTests 多花 1~2 分钟，请勿省略）
+mvn clean install
 ```
+
+> **关于跳过测试**：`skipTests` 只能由命令行 `-DskipTests` 显式传入，仅限本地紧急排查或热修时使用，提交前与主干合并必须以 `mvn clean install` 通过为准。各模块 POM 中**不得**写死 `<skipTests>`——它会静默关掉该模块及其后续新增的全部测试。
 
 **5. 启动服务**
 
@@ -658,12 +674,38 @@ mvn clean install -DskipTests
 - 统一异常处理与日志管理
 - 严格遵守 Controller → Service → Manager → DAO 四层架构
 - 模块间通信通过 facade 接口，禁止跨模块直接依赖 impl 层
-- 使用 ArchUnit 单元测试验证架构约束，CI 阶段强制通过
+- 使用 ArchUnit 验证架构约束：提交前 `mvn test` 必须全绿，各模块 `*ArchitectureTest` 不得跳过
+
+### 测试
+
+**默认执行**：`mvn clean install` 与 `mvn test` 会跑全部单元测试和各模块的 ArchUnit 架构测试，无需任何额外参数。
+
+```bash
+# 全部测试
+mvn test
+
+# 单个模块
+mvn -B -pl mcdull-business/mcdull-business-common test
+
+# 单个测试类
+mvn -B -pl mcdull-business/mcdull-business-common test -Dtest=CsvUtilTest
+```
+
+**工程约定**
+
+| 约定 | 原因 |
+|---|---|
+| `maven-surefire-plugin` 的版本与行为只在根 `pom.xml` 的 `pluginManagement` 中定义 | 避免各模块版本漂移；模块 POM 不再声明 surefire |
+| 任何模块 POM **不得**写死 `<skipTests>` | 写死会静默关掉该模块及后续新增的全部测试；且 POM 里的 `<skipTests>` 会**覆盖**命令行 `-DskipTests`，让"临时跳过"永久化 |
+| 跳过测试只允许命令行 `-DskipTests` | 仅限本地紧急排查或热修，提交前必须用 `mvn clean install` 复验 |
+| 集成测试用 `@Disabled` 并写清原因 | 跳过必须是可见、可审计的；不要注释掉 `@Test` 冒充"这个模块没有测试" |
+
+**当前基线**：16 个测试类、93 个用例（含 4 个带原因的显式跳过）、0 失败；其中 66 个用例是 ArchUnit 架构规则检查。
 
 ### 开发流程
 
 1. 从 `master` 创建功能分支
-2. 完成功能开发和测试（包含 ArchUnit 架构检查）
+2. 完成功能开发和测试，确保 `mvn clean install` 全绿（含 ArchUnit 架构检查）
 3. 提交代码，发起 Pull Request
 4. 代码审查通过后合并
 

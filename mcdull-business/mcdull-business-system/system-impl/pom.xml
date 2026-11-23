@@ -130,16 +130,6 @@
             <artifactId>mcdull-framework-api-redis</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- CacheServiceImpl 直接使用 Caffeine Cache，不再依赖 starter-redis 传递 -->
-        <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
-        </dependency>
-        <!-- CaffeineCacheManager 位于 spring-context-support，原先经 starter-security 间接传递，改为显式声明 -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-starter-doc</artifactId>

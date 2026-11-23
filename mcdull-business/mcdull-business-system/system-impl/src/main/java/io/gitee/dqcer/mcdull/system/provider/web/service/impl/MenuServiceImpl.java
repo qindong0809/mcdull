@@ -43,7 +43,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.RoleEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.MenuTypeEnum;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.*;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.MenuMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.MenuMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IMenuService;
@@ -332,7 +332,7 @@ public class MenuServiceImpl
         return null;
     }
 
-//    @Cacheable(cacheNames = GlobalConstant.CAFFEINE_CACHE, key = "#onlyMenu")
+//    @Cacheable(cacheNames = CacheConstants.BUSINESS_CACHE, key = "#onlyMenu")
     @Override
     public List<MenuTreeVO> queryMenuTree(Boolean onlyMenu) {
         List<MenuEntity> list = this.listOnlyMenu(onlyMenu);

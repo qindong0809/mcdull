@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminUserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminUserMenuEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.administrator.AdminUserMenuMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.administrator.AdminUserMenuMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.administrator.IAdminUserMenuService;
 import org.springframework.stereotype.Service;
 

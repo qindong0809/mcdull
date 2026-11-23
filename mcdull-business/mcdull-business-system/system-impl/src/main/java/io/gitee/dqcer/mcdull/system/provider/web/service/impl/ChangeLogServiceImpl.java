@@ -26,7 +26,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.ChangeLogEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.ChangeLogTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ChangeLogAndVersionVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.ChangeLogVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.ChangeLogMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.ChangeLogMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IChangeLogService;

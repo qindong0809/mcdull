@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.framework.mysql.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.UserFilterDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserFilterEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserFilterVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.UserFilterMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.UserFilterMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserFilterService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

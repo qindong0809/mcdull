@@ -9,7 +9,7 @@ import io.gitee.dqcer.mcdull.framework.base.entity.RelEntity;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicCurdServiceImpl;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.HelpDocViewRecordQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.HelpDocViewRecordEntity;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.HelpDocViewRecordMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.HelpDocViewRecordMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IHelpDocViewRecordService;
 import org.springframework.stereotype.Service;
 

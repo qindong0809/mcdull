@@ -11,7 +11,6 @@ mcdull-framework-starter-web 是 MCDull 框架的 Web 启动器组件，整合�
 - 整合多个核心模块，提供一站式 Web 应用解决方案
 - 集成安全认证功能（基于 Sa-Token）
 - 集成 API 文档生成功能（基于 Knife4j）
-- 集成 Redis 缓存功能
 - 集成 MySQL 数据库访问功能（基于 MyBatis-Plus）
 - 集成文件存储功能（基于 OSS）
 - 集成服务调用功能（基于 Feign）
@@ -29,7 +28,6 @@ mcdull-framework-starter-web 是 MCDull 框架的 Web 启动器组件，整合�
 | mcdull-framework-starter-doc | - | API 文档模块 |
 | mcdull-framework-starter-security | - | 安全认证模块 |
 | mcdull-framework-base | - | 基础模块 |
-| mcdull-framework-starter-redis | - | Redis 缓存模块 |
 | mcdull-framework-starter-feign | provided | 服务调用模块 |
 | mcdull-framework-config | - | 配置模块 |
 | mcdull-framework-starter-mysql | - | MySQL 数据库模块 |
@@ -87,14 +85,6 @@ spring:
     url: jdbc:mysql://localhost:3306/mydb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
     password: password
-
-# Redis 配置
-spring:
-  redis:
-    host: localhost
-    port: 6379
-    password: 
-    database: 0
 
 # Sa-Token 配置
 sa-token:

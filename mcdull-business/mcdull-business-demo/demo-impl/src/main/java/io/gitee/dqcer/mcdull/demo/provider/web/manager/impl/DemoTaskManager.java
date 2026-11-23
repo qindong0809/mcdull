@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.gitee.dqcer.mcdull.demo.facade.model.dto.DemoTaskQueryDTO;
 import io.gitee.dqcer.mcdull.demo.provider.model.entity.DemoTaskEntity;
-import io.gitee.dqcer.mcdull.demo.provider.web.dao.mapper.DemoTaskMapper;
+import io.gitee.dqcer.mcdull.demo.provider.web.mapper.DemoTaskMapper;
 import io.gitee.dqcer.mcdull.demo.provider.web.manager.IDemoTaskManager;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;

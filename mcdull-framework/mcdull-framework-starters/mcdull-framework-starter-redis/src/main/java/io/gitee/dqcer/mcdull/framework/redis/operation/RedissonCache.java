@@ -1,13 +1,11 @@
 package io.gitee.dqcer.mcdull.framework.redis.operation;
 
-import cn.hutool.core.text.CharSequenceUtil;
-import com.alibaba.fastjson2.JSON;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
-import io.gitee.dqcer.mcdull.framework.base.cache.ICache;
-import io.gitee.dqcer.mcdull.framework.redis.cache.IRedissonCache;
+import io.gitee.dqcer.mcdull.framework.redis.cache.ICache;
 import jakarta.annotation.Resource;
 import org.redisson.api.RBucket;
+import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -25,9 +24,14 @@ import java.util.function.Supplier;
  */
 @Component
 //@ConditionalOnProperty
-public class RedissonCache implements ICache, IRedissonCache {
+public class RedissonCache implements ICache {
 
     protected static final Logger log = LoggerFactory.getLogger(RedissonCache.class);
+
+    /**
+     * 回源加锁的最大等待时间（秒）。超时则直接回源，避免缓存失效时把请求全部堵在锁上。
+     */
+    private static final long LOAD_LOCK_WAIT_SECONDS = 10;
 
     @Resource
     private RedissonClient redissonClient;
@@ -69,25 +73,57 @@ public class RedissonCache implements ICache, IRedissonCache {
 
     @Override
     public <T> T getOrSet(String key, Class<T> type, Supplier<T> supplier, long expire) {
-        String jsonStr = this.get(key, String.class);
-        if (CharSequenceUtil.isNotBlank(jsonStr)) {
-            return JSON.parseObject(jsonStr, type);
-        }
-        T t = supplier.get();
-        this.put(key, t, expire);
-        return t;
+        return loadWithLock(key, () -> this.get(key, type), supplier, value -> this.put(key, value, expire));
     }
 
     @Override
     public <T> List<T> getListOrSet(String key, Class<T> type, Supplier<List<T>> supplier, long expire) {
-        String jsonStr = this.get(key, String.class);
-        if (CharSequenceUtil.isNotBlank(jsonStr)) {
-            LogHelp.info(log, "redis缓存 key={} 缓存已命中 value:{}", key, jsonStr);
-            return JSON.parseArray(jsonStr, type);
+        // Jackson 的 defaultTyping 已保留元素类型，无需再按 type 手动反序列化
+        @SuppressWarnings("unchecked")
+        Supplier<List<T>> reader = () -> (List<T>) this.get(key, Object.class);
+        return loadWithLock(key, reader, supplier, value -> {
+            LogHelp.info(log, "redis缓存 key={} 回源写入", key);
+            this.put(key, value, expire);
+        });
+    }
+
+    /**
+     * 缓存击穿防护：未命中时加分布式锁，仅一个线程回源，其余线程在锁内二次读缓存。
+     * 锁等待超时或被中断时降级为直接回源（不写缓存），保证可用性。
+     */
+    private <T> T loadWithLock(String key, Supplier<T> reader, Supplier<T> loader, Consumer<T> writer) {
+        T value = reader.get();
+        if (value != null) {
+            return value;
         }
-        List<T> t = supplier.get();
-        this.put(key, JSON.toJSONString(t), expire);
-        return t;
+
+        String lockKey = prefix() + "cache:load:lock:" + key;
+        RLock lock = redissonClient.getLock(lockKey);
+        boolean locked = false;
+        try {
+            locked = lock.tryLock(LOAD_LOCK_WAIT_SECONDS, -1, TimeUnit.SECONDS);
+            if (!locked) {
+                LogHelp.warn(log, "redis缓存 key={} 回源锁等待超时，降级直接回源", key);
+                return loader.get();
+            }
+            value = reader.get();
+            if (value != null) {
+                return value;
+            }
+            value = loader.get();
+            if (value != null) {
+                writer.accept(value);
+            }
+            return value;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            LogHelp.warn(log, "redis缓存 key={} 回源被中断，降级直接回源", key);
+            return loader.get();
+        } finally {
+            if (locked && lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
+        }
     }
 
 

@@ -20,7 +20,7 @@ import io.gitee.dqcer.mcdull.framework.mysql.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.LoginFailQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.LoginLockedEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.LoginLockedVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.LoginLockedMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.LoginLockedMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ILoginLockedService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;

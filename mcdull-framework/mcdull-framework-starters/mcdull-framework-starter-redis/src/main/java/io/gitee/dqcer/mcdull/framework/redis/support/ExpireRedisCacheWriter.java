@@ -281,6 +281,8 @@ public class ExpireRedisCacheWriter implements RedisCacheWriter {
     }
 
     private Duration getExpiredTime(Duration ttl) {
-        return Optional.ofNullable(CacheExpireHolder.get()).map(Duration::ofSeconds).orElse(ttl);
+        // CacheExpireAspect 存入的是毫秒（见 CacheExpireAspect#around），此处必须按毫秒换算。
+        // 原先用 ofSeconds 会把 TTL 放大 1000 倍（@CacheExpire(60) 会变成约 16.7 小时）。
+        return Optional.ofNullable(CacheExpireHolder.get()).map(Duration::ofMillis).orElse(ttl);
     }
 }

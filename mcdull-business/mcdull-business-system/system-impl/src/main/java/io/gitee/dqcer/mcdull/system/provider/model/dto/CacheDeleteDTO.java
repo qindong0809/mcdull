@@ -18,7 +18,7 @@ import jakarta.validation.constraints.NotNull;
 public class CacheDeleteDTO implements DTO {
 
     @NotNull
-    @Schema(description = "caffeineCacheFlag")
+    @Schema(description = "true=经 Spring Cache 操作，false=按 Redis key 操作（兼容旧字段名）")
     private Boolean caffeineCacheFlag;
 
     @NotBlank

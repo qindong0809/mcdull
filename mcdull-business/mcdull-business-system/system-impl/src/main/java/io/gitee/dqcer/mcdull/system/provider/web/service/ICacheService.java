@@ -23,20 +23,20 @@ public interface ICacheService {
     /**
      * 删除缓存
      *
-     * @param caffeineCache 咖啡因缓存
+     * @param businessCache true 表示经 Spring Cache 删除，false 表示按 Redis key 删除
      * @param name          名字
      * @return boolean
      */
-    boolean removeCache(Boolean caffeineCache, String name);
+    boolean removeCache(Boolean businessCache, String name);
 
     /**
      * 缓存键
      *
-     * @param caffeineCacheFlag 咖啡因缓存标志
-     * @param cacheName         缓存名称
+     * @param businessCache true 表示经 Spring Cache 读取，false 表示按 Redis key 读取
+     * @param cacheName     缓存名称
      * @return {@link Object }
      */
-    Object cacheKey(Boolean caffeineCacheFlag, String cacheName);
+    Object cacheKey(Boolean businessCache, String cacheName);
 
     /**
      * 导出数据

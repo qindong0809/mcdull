@@ -1,6 +1,5 @@
 //package io.gitee.dqcer.mcdull.system.provider;
 //
-//import io.gitee.dqcer.mcdull.framework.redis.EnableCache;
 //import io.gitee.dqcer.mcdull.framework.web.EnableWebCore;
 //import io.gitee.dqcer.mcdull.system.provider.config.EnableMapperScan;
 //import io.gitee.dqcer.mcdull.system.provider.config.Ip2RegionListener;
@@ -20,7 +19,6 @@
 // */
 //@EnableWebCore
 //@EnableMapperScan
-//@EnableCache
 //@SpringBootApplication
 //@RestController
 //public class SystemApplication {

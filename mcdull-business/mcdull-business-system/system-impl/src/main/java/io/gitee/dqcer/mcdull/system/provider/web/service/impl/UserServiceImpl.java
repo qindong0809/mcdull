@@ -59,7 +59,7 @@ import io.gitee.dqcer.mcdull.system.facade.model.vo.RoleVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserAllVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserPowerVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.UserMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.UserMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;
 import jakarta.annotation.Resource;

@@ -42,7 +42,7 @@
             <artifactId>mcdull-framework-json</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- 模板工具复用 facade 中的共享模型 DynamicFieldBO / FormItemControlTypeEnum -->
+        <!-- AreaFillUtil 复用 facade 中的共享接口 IAreaVO -->
         <dependency>
             <groupId>io.gitee.dqcer</groupId>
             <artifactId>system-facade</artifactId>
@@ -67,14 +67,6 @@
         </dependency>
         <!--word end-->
         <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-http</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-extra</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
         </dependency>
@@ -83,17 +75,8 @@
             <artifactId>hutool-db</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

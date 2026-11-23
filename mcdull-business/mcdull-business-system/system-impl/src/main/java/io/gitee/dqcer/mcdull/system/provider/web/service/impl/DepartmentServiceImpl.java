@@ -8,6 +8,7 @@ import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.gitee.dqcer.mcdull.common.audit.Audit;
+import io.gitee.dqcer.mcdull.system.provider.config.constants.CacheConstants;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
@@ -20,7 +21,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.DepartmentEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentTreeInfoVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.DepartmentMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.DepartmentMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDepartmentService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
@@ -73,7 +74,7 @@ public class DepartmentServiceImpl
     }
 
 
-    @CacheEvict(cacheNames = "caffeineCache", key = "'department-all'", allEntries=true)
+    @CacheEvict(cacheNames = CacheConstants.BUSINESS_CACHE, key = "'department-all'", allEntries=true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean insert(DeptInsertDTO dto) {
@@ -122,7 +123,7 @@ public class DepartmentServiceImpl
 
     }
 
-    @CacheEvict(cacheNames = "caffeineCache", key = "'department-all'", allEntries=true)
+    @CacheEvict(cacheNames = CacheConstants.BUSINESS_CACHE, key = "'department-all'", allEntries=true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean update(Integer id, DeptUpdateDTO dto) {
@@ -150,7 +151,7 @@ public class DepartmentServiceImpl
         entity.setSort(dto.getSort());
     }
 
-    @CacheEvict(cacheNames = "caffeineCache", key = "'department-all'", allEntries=true)
+    @CacheEvict(cacheNames = CacheConstants.BUSINESS_CACHE, key = "'department-all'", allEntries=true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean delete(Integer id) {

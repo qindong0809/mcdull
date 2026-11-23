@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.blaze.util;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import com.alibaba.fastjson2.JSON;
-import io.gitee.dqcer.mcdull.blaze.domain.bo.CertificateBO;
+import io.gitee.dqcer.mcdull.blaze.model.bo.CertificateBO;
 
 import java.util.List;
 import java.util.Map;

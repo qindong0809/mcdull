@@ -17,7 +17,7 @@ import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicCurdServiceImpl;
-import io.gitee.dqcer.mcdull.framework.redis.cache.IRedissonCache;
+import io.gitee.dqcer.mcdull.framework.redis.cache.ICache;
 import io.gitee.dqcer.mcdull.system.facade.model.enums.DictSelectTypeEnum;
 import io.gitee.dqcer.mcdull.framework.mysql.util.LogicCheckUtil;
 import io.gitee.dqcer.mcdull.system.provider.config.constants.CacheConstants;
@@ -30,7 +30,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.DictValueEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DictKeyVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.DictValueVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.RemoteDictTypeVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.DictValueMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.DictValueMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDictKeyService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDictValueService;
@@ -58,7 +58,7 @@ public class DictValueServiceImpl
     @Resource
     private IDictKeyService dictKeyService;
     @Resource
-    private IRedissonCache redissonCache;
+    private ICache redissonCache;
     @Resource
     private IBizAuditService bizAuditService;
 

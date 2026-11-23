@@ -25,7 +25,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.BizAuditEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.BizAuditFieldEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.OperationTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.BizAuditVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.BizAuditMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.BizAuditMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditFieldService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;

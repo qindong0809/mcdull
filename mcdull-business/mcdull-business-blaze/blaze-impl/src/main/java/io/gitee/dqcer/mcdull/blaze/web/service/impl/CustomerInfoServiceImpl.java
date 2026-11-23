@@ -1,0 +1,236 @@
+package io.gitee.dqcer.mcdull.blaze.web.service.impl;
+import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
+
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Pair;
+import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.blaze.model.entity.CustomerInfoEntity;
+import io.gitee.dqcer.mcdull.blaze.model.dto.CustomerInfoAddDTO;
+import io.gitee.dqcer.mcdull.blaze.model.dto.CustomerInfoQueryDTO;
+import io.gitee.dqcer.mcdull.blaze.model.dto.CustomerInfoUpdateDTO;
+import io.gitee.dqcer.mcdull.blaze.model.vo.CustomerInfoVO;
+import io.gitee.dqcer.mcdull.blaze.web.manager.ICustomerInfoRepository;
+import io.gitee.dqcer.mcdull.blaze.web.service.ICertificateRequirementsService;
+import io.gitee.dqcer.mcdull.blaze.web.service.ICustomerInfoService;
+import io.gitee.dqcer.mcdull.common.CustomMultipartFile;
+import io.gitee.dqcer.mcdull.common.area.AreaFillUtil;
+import io.gitee.dqcer.mcdull.common.excel.ExcelExportUtil;
+import io.gitee.dqcer.mcdull.common.user.UserRefUtil;
+import io.gitee.dqcer.mcdull.framework.base.bo.KeyValueBO;
+import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
+import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
+import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicServiceImpl;
+import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
+import io.gitee.dqcer.mcdull.system.facade.model.vo.ExportContextVO;
+import io.gitee.dqcer.mcdull.system.facade.service.AreaApi;
+import io.gitee.dqcer.mcdull.system.facade.service.DictApi;
+import io.gitee.dqcer.mcdull.system.facade.service.ExportApi;
+import io.gitee.dqcer.mcdull.system.facade.service.FileRemoteApi;
+import io.gitee.dqcer.mcdull.system.facade.service.def.UserApiDef;
+import io.gitee.dqcer.mcdull.system.facade.model.enums.DictSelectTypeEnum;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+/**
+ * 企业信息 Service
+ *
+ * @author dqcer
+ * @since 2024-06-24 22:28:36
+ */
+
+@Service
+public class CustomerInfoServiceImpl
+        extends BasicServiceImpl<ICustomerInfoRepository> implements ICustomerInfoService {
+
+    @Resource
+    private UserApiDef userService;
+    @Resource
+    private ICertificateRequirementsService certificateRequirementsService;
+    @Resource
+    private DictApi dictApi;
+    @Resource
+    private AreaApi areaApi;
+    @Resource
+    private ExportApi exportApi;
+    @Resource
+    private FileRemoteApi fileRemoteApi;
+
+    public PagedVO<CustomerInfoVO> queryPage(CustomerInfoQueryDTO dto) {
+        List<CustomerInfoVO> voList = new ArrayList<>();
+        Page<CustomerInfoEntity> entityPage = baseRepository.selectPage(dto);
+        List<CustomerInfoEntity> recordList = entityPage.getRecords();
+        if (CollUtil.isNotEmpty(recordList)) {
+            Set<Integer> collect = recordList.stream().map(CustomerInfoEntity::getResponsibleUserId).collect(Collectors.toSet());
+            Map<Integer, String> nameMap1 = userService.getNameMap(new ArrayList<>(collect));
+            Map<Integer, String> nameMap = userService.getNameMap(UserRefUtil.collectUserIds(recordList));
+            for (CustomerInfoEntity entity : recordList) {
+                CustomerInfoVO vo = this.convertToVO(entity);
+                KeyValueBO<String, String> keyValue = dictApi.translate(DictSelectTypeEnum.CUSTOMER_TYPE, vo.getCustomerType());
+                if (ObjUtil.isNotNull(keyValue)) {
+                    vo.setCustomerTypeName(keyValue.getValue());
+                }
+                KeyValueBO<String, String> inactiveKeyValue = dictApi.translate(DictSelectTypeEnum.IN_ACTIVE, vo.getInactive().toString());
+                if (ObjUtil.isNotNull(inactiveKeyValue)) {
+                    vo.setInactiveName(inactiveKeyValue.getValue());
+                }
+                vo.setResponsibleUserId(entity.getResponsibleUserId());
+                vo.setResponsibleUserIdStr(nameMap1.get(vo.getResponsibleUserId()));
+                vo.setCreatedName(nameMap.get(vo.getCreatedBy()));
+                vo.setUpdatedName(nameMap.get(vo.getUpdatedBy()));
+                vo.setPhoneNumber("");
+                voList.add(vo);
+            }
+            AreaFillUtil.fill(voList, areaApi.nameMap(AreaFillUtil.collectCodes(voList)));
+        }
+        return PageUtil.toPage(voList, entityPage);
+    }
+
+    @Override
+    public List<LabelValueVO<Integer, String>> list() {
+        List<CustomerInfoEntity> list = baseRepository.list();
+        if (CollUtil.isNotEmpty(list)) {
+            List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
+            for (CustomerInfoEntity entity : list) {
+                voList.add(new LabelValueVO<>(entity.getId(), entity.getName()));
+            }
+            voList.sort(Comparator.comparing(LabelValueVO::getLabel));
+            return voList;
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean exportData(CustomerInfoQueryDTO dto) {
+        ExportContextVO context = exportApi.context();
+        List<CustomerInfoVO> list = this.queryPage(dto).getList();
+        java.io.ByteArrayOutputStream outputStream = new java.io.ByteArrayOutputStream();
+        ExcelExportUtil.write(outputStream, list, StrUtil.EMPTY,
+                context.getOperatorName(), context.getDateTimeStr(), this.getTitleList());
+        byte[] bytes = outputStream.toByteArray();
+        try (var responseStream = ServletUtil.getResponse().getOutputStream()) {
+            responseStream.write(bytes);
+        } catch (Exception e) {
+            throw new BusinessException(e);
+        }
+        if (Boolean.TRUE.equals(context.getAutoStorage())) {
+            fileRemoteApi.uploadToSystemFolder(new CustomMultipartFile(context.getMenuName() + ".xlsx", bytes));
+        }
+        return true;
+    }
+
+    private List<Pair<String, Func1<CustomerInfoVO, ?>>> getTitleList() {
+        List<Pair<String, Func1<CustomerInfoVO, ?>>> list = new ArrayList<>();
+        list.add(Pair.of("企业名称", CustomerInfoVO::getName));
+        list.add(Pair.of("所在地省代码", CustomerInfoVO::getProvincesCode));
+        list.add(Pair.of("所在地省名称", CustomerInfoVO::getProvincesName));
+        list.add(Pair.of("所在市代码", CustomerInfoVO::getCityCode));
+        list.add(Pair.of("所在市名称", CustomerInfoVO::getCityName));
+        list.add(Pair.of("联系人", CustomerInfoVO::getContactPerson));
+        list.add(Pair.of("客户类型", CustomerInfoVO::getCustomerTypeName));
+        list.add(Pair.of("备注", CustomerInfoVO::getRemark));
+        list.add(Pair.of("创建人", CustomerInfoVO::getCreatedName));
+        list.add(Pair.of("创建时间", CustomerInfoVO::getCreatedTime));
+        list.add(Pair.of("更新人", CustomerInfoVO::getUpdatedName));
+        list.add(Pair.of("更新时间", CustomerInfoVO::getUpdatedTime));
+        list.add(Pair.of("状态", CustomerInfoVO::getInactiveName));
+        return list;
+    }
+
+    private CustomerInfoVO convertToVO(CustomerInfoEntity item){
+        CustomerInfoVO vo = new CustomerInfoVO();
+        vo.setId(item.getId());
+        vo.setName(item.getName());
+        vo.setProvincesCode(item.getProvincesCode());
+        vo.setCityCode(item.getCityCode());
+        vo.setContactPerson(item.getContactPerson());
+        vo.setPhoneNumber(item.getPhoneNumber());
+        vo.setCustomerType(item.getCustomerType());
+        vo.setRemark(item.getRemark());
+        vo.setCreatedBy(item.getCreatedBy());
+        vo.setCreatedTime(item.getCreatedTime());
+        vo.setUpdatedBy(item.getUpdatedBy());
+        vo.setUpdatedTime(item.getUpdatedTime());
+        vo.setInactive(item.getInactive());
+        return vo;
+    }
+
+    private void setUpdateFieldValue(CustomerInfoUpdateDTO item, CustomerInfoEntity entity){
+        entity.setId(item.getId());
+        entity.setName(item.getName());
+        entity.setProvincesCode(item.getProvincesCode());
+        entity.setCityCode(item.getCityCode());
+        entity.setContactPerson(item.getContactPerson());
+        entity.setPhoneNumber(item.getPhoneNumber());
+        entity.setCustomerType(item.getCustomerType());
+        entity.setRemark(item.getRemark());
+        entity.setInactive(item.getInactive());
+    }
+
+    private CustomerInfoEntity convertToEntity(CustomerInfoAddDTO item){
+            CustomerInfoEntity entity = new CustomerInfoEntity();
+        entity.setName(item.getName());
+        entity.setProvincesCode(item.getProvincesCode());
+        entity.setCityCode(item.getCityCode());
+        entity.setContactPerson(item.getContactPerson());
+        entity.setPhoneNumber(item.getPhoneNumber());
+        entity.setCustomerType(item.getCustomerType());
+        entity.setRemark(item.getRemark());
+        entity.setInactive(item.getInactive());
+        entity.setResponsibleUserId(item.getResponsibleUserId());
+        return entity;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void insert(CustomerInfoAddDTO dto) {
+        CustomerInfoEntity entity = this.convertToEntity(dto);
+        baseRepository.save(entity);
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    public void update(CustomerInfoUpdateDTO dto) {
+        Integer id = dto.getId();
+        CustomerInfoEntity entity = baseRepository.getById(id);
+        if (ObjUtil.isNull(entity)) {
+            this.throwDataNotExistException(id);
+        }
+        this.setUpdateFieldValue(dto, entity);
+        baseRepository.updateById(entity);
+    }
+    @Override
+    public CustomerInfoVO detail(Integer id) {
+        CustomerInfoEntity entity = baseRepository.getById(id);
+        if (ObjUtil.isNull(entity)) {
+            this.throwDataNotExistException(id);
+        }
+        return this.convertToVO(entity);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void batchDelete(List<Integer> idList) {
+       this.delete(idList.get(0));
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Integer id) {
+        CustomerInfoEntity entity = baseRepository.getById(id);
+        if (ObjUtil.isNull(entity)) {
+            this.throwDataNotExistException(id);
+        }
+        boolean exist = certificateRequirementsService.existByCustomerId(id);
+        if (exist) {
+            super.throwDataExistAssociated(id);
+        }
+        baseRepository.removeById(id);
+    }
+}

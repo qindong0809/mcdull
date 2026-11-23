@@ -136,9 +136,15 @@ freeze.store.default.allowStoreCreation=true
 
 `mcdull-business/mcdull-business-system/system-impl/src/test/java/io/gitee/dqcer/mcdull/system/SystemArchitectureTest.java`
 
-运行：
+运行（先备依赖，再单独跑目标测试）：
 
 ```bash
-mvn -B -DskipTests -pl mcdull-business/mcdull-business-system/system-impl -am install
+# 1) 构建依赖模块；只想快速准备依赖时可临时加 -DskipTests，正式构建请保持默认
+mvn -B -pl mcdull-business/mcdull-business-system/system-impl -am install
+
+# 2) 单独跑某一个架构测试类
 mvn -B -pl mcdull-business/mcdull-business-system/system-impl test -Dtest=SystemArchitectureTest
 ```
+
+> 全量跑架构检查直接 `mvn test` 即可：各业务模块的 `*ArchitectureTest` 会在自己的测试阶段执行，无需额外配置。
+> 注意 `-DskipTests` 会把架构测试一起跳过，因此不要用于正式构建或提交前的自检。

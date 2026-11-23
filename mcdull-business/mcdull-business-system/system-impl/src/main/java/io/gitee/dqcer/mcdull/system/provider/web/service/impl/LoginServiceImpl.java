@@ -9,7 +9,7 @@ import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.system.provider.config.constants.CacheConstants;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.GenericLogic;
@@ -28,7 +28,7 @@ import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;
 import jakarta.annotation.Resource;
 import org.springframework.cache.Cache;
-import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +52,7 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
     @Resource
     private ILoginLogService loginLogService;
     @Resource
-    private CaffeineCacheManager cacheManager;
+    private CacheManager cacheManager;
     @Resource
     private IDepartmentService departmentService;
     @Resource
@@ -167,7 +167,7 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
     public LogonVO getCurrentUserInfo() {
         Integer userId = UserContextHolder.userId();
         String key = StrUtil.format("current:user:{}:role:list", userId);
-        Cache cache = cacheManager.getCache(GlobalConstant.CAFFEINE_CACHE);
+        Cache cache = cacheManager.getCache(CacheConstants.BUSINESS_CACHE);
         if (ObjUtil.isNotNull(cache)) {
             LogonVO vo = cache.get(key, LogonVO.class);
             if (ObjUtil.isNotNull(vo)) {

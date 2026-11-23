@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.administrator;
+package io.gitee.dqcer.mcdull.system.provider.web.mapper.administrator;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminDeptEntity;

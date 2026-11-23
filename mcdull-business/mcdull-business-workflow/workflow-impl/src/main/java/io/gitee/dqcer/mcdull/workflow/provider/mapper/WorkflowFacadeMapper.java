@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.workflow.provider.mapper;
+package io.gitee.dqcer.mcdull.workflow.web.mapper;
 
 import io.gitee.dqcer.mcdull.workflow.facade.model.common.ProcessBusinessKey;
 import org.apache.ibatis.annotations.Param;

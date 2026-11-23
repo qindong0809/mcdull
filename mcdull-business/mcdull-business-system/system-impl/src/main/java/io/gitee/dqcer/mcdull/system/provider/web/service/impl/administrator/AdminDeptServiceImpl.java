@@ -12,7 +12,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminDep
 import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.AdminDeptInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.AdminDeptListTreeVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.AdminDeptTreeVO;
-import io.gitee.dqcer.mcdull.system.provider.web.dao.mapper.administrator.AdminDeptMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.administrator.AdminDeptMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.administrator.IAdminDeptService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.administrator.IAdminUserService;
 import jakarta.annotation.Resource;

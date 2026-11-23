@@ -35,7 +35,7 @@ import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.redis.cache.IRedissonCache;
+import io.gitee.dqcer.mcdull.framework.redis.cache.ICache;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import io.gitee.dqcer.mcdull.framework.json.util.TimeZoneUtil;
 import io.gitee.dqcer.mcdull.system.facade.model.bo.DynamicFieldBO;
@@ -79,7 +79,7 @@ public class CommonManagerImpl implements ICommonManager {
     @Resource
     private IConfigService configService;
     @Resource
-    private IRedissonCache redisCache;
+    private ICache redisCache;
     @Resource
     private IFolderService folderService;
     @Resource

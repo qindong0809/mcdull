@@ -8,7 +8,7 @@ public class ApproveVO {
     private Integer id;
 
     /**
-     * {@link io.gitee.dqcer.blaze.domain.enums.ApproveEnum}
+     * 审批状态，取值参见 blaze 模块 ApproveEnum
      */
     private Integer approve;
 

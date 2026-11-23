@@ -68,10 +68,10 @@ public final class ArchitectureEnforcer {
         return layeredArchitecture()
                 .consideringAllDependencies()
                 .layer("Controller").definedBy("..web.controller..")
-                .layer("Entry").definedBy("..web.feign..", "..web.def..", "..flow..", "..config..")
-                .layer("Service").definedBy("..web.service..")
-                .layer("Manager").definedBy("..web.manager..")
-                .layer("Mapper").definedBy("..web.dao.mapper..")
+                .optionalLayer("Entry").definedBy("..web.feign..", "..web.def..", "..flow..", "..config..")
+                .layer("Service").definedBy("..web.service..", "..provider.application..")
+                .optionalLayer("Manager").definedBy("..web.manager..")
+                .layer("Mapper").definedBy("..web.mapper..")
 
                 .whereLayer("Controller").mayNotBeAccessedByAnyLayer()
                 .whereLayer("Service").mayOnlyBeAccessedByLayers("Controller", "Entry", "Manager")
@@ -93,7 +93,7 @@ public final class ArchitectureEnforcer {
     public static ArchRule mapperNamingRules() {
         return classes()
                 .that()
-                .resideInAPackage("..dao.mapper..")
+                .resideInAPackage("..mapper..")
                 .should()
                 .haveSimpleNameEndingWith("Mapper")
                 .allowEmptyShould(true)
@@ -124,7 +124,14 @@ public final class ArchitectureEnforcer {
      * @return {@link ArchRule}
      */
     public static ArchRule voNamingRules() {
-        return roleNamingRule("..vo..", "VO");
+        return classes()
+                .that().resideInAPackage("..vo..")
+                .and().resideOutsideOfPackage("..facade..")
+                .and().areNotNestedClasses()
+                .and().doNotHaveSimpleName("package-info")
+                .should().haveSimpleNameEndingWith("VO").allowEmptyShould(true)
+                .as("..vo.. 包下的类名应该以'VO'结尾（facade 契约层除外："
+                        + "契约结果对象按业务语义命名，如 StartProcessResult）");
     }
 
     /**
@@ -191,8 +198,10 @@ public final class ArchitectureEnforcer {
      */
     public static ArchRule voPlacementRules() {
         return classes().that().implement(VO.class)
+                .and().resideOutsideOfPackage("..facade..")
                 .should().resideInAPackage("..vo..").allowEmptyShould(true)
-                .as("实现 VO 标记接口的类应位于 ..vo.. 包下");
+                .as("实现 VO 标记接口的类应位于 ..vo.. 包下（facade 契约层除外："
+                        + "facade 中的传输对象作为 VO 基类被 UserVO extends UserDTO 复用，位置由契约层约定）");
     }
 
 

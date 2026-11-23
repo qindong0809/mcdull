@@ -6,7 +6,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.redis.cache.IRedissonCache;
+import io.gitee.dqcer.mcdull.framework.redis.cache.ICache;
 import io.gitee.dqcer.mcdull.framework.security.AbstractUserDetailsService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ILoginService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
@@ -24,7 +24,7 @@ public class StpInterfaceImpl extends AbstractUserDetailsService {
     @Resource
     private ILoginService loginService;
     @Resource
-    private IRedissonCache redissonCache;
+    private ICache redissonCache;
     @Resource
     private IUserService userService;
 

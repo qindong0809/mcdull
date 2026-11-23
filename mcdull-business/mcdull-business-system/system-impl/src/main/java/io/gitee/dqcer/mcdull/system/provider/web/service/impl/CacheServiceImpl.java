@@ -14,14 +14,14 @@ import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.redis.cache.IRedisClient;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.GenericLogic;
+import io.gitee.dqcer.mcdull.system.provider.config.constants.CacheConstants;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.CacheQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ICacheService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
-import org.springframework.cache.caffeine.CaffeineCache;
-import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 public class CacheServiceImpl extends GenericLogic implements ICacheService {
 
     @Resource
-    private CaffeineCacheManager cacheManager;
+    private CacheManager cacheManager;
     @Resource
     private IRedisClient redisClient;
     @Resource
@@ -47,16 +47,8 @@ public class CacheServiceImpl extends GenericLogic implements ICacheService {
     @Override
     public PagedVO<KeyValueVO<String, String>> queryPage(CacheQueryDTO dto) {
         List<KeyValueVO<String, String>> cacheNameList = new ArrayList<>();
-        Cache caffeineCache = cacheManager.getCache(GlobalConstant.CAFFEINE_CACHE);
-        if (caffeineCache instanceof CaffeineCache) {
-            CaffeineCache cache = (CaffeineCache) caffeineCache;
-            Set<Object> keySet = cache.getNativeCache().asMap().keySet();
-            if (CollUtil.isNotEmpty(keySet)) {
-                for (Object objKey : keySet) {
-                    cacheNameList.add(new KeyValueVO<>(Convert.toStr(objKey), "caffeine"));
-                }
-            }
-        }
+        // @Cacheable 与 RedissonCache 写入的 key 现在都在 Redis 里，统一从 Redis 枚举，
+        // 不再区分"本地缓存 / 远程缓存"两类来源。
         Collection<String> redisCacheList = redisClient.getAllKey();
         if (CollUtil.isNotEmpty(redisCacheList)) {
             for (String key : redisCacheList) {
@@ -85,9 +77,9 @@ public class CacheServiceImpl extends GenericLogic implements ICacheService {
     }
 
     @Override
-    public Object cacheKey(Boolean caffeineCacheFlag, String cacheName) {
-        if (BooleanUtil.isTrue(caffeineCacheFlag)) {
-            CaffeineCache cache = (CaffeineCache) cacheManager.getCache(GlobalConstant.CAFFEINE_CACHE);
+    public Object cacheKey(Boolean businessCache, String cacheName) {
+        if (BooleanUtil.isTrue(businessCache)) {
+            Cache cache = cacheManager.getCache(CacheConstants.BUSINESS_CACHE);
             if (cache != null) {
                 Cache.ValueWrapper wrapper = cache.get(cacheName);
                 if (wrapper != null) {
@@ -113,10 +105,10 @@ public class CacheServiceImpl extends GenericLogic implements ICacheService {
     }
 
     @Override
-    public boolean removeCache(Boolean caffeineCacheFlag, String cacheName) {
+    public boolean removeCache(Boolean businessCache, String cacheName) {
         LogHelp.warn(log, "removeCache", "cacheName:{}", cacheName);
-        if (BooleanUtil.isTrue(caffeineCacheFlag)) {
-            CaffeineCache cache = (CaffeineCache) cacheManager.getCache(cacheName);
+        if (BooleanUtil.isTrue(businessCache)) {
+            Cache cache = cacheManager.getCache(cacheName);
             if (cache != null) {
                 cache.clear();
             }
