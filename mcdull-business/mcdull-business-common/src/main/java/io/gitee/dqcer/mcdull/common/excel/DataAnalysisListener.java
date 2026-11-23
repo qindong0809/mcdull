@@ -122,18 +122,16 @@ public class DataAnalysisListener extends AnalysisEventListener<Map<Integer, Str
                 return false;
             }
         }
-        FormItemControlTypeEnum controlTypeEnum = fieldTemplate.getControlTypeEnum();
-        if (controlTypeEnum != null) {
-            if (controlTypeEnum.equals(FormItemControlTypeEnum.NUMBER)) {
+        String controlType = fieldTemplate.getControlType();
+        if (controlType != null) {
+            if ("number".equals(controlType)) {
                 try {
                     Integer.parseInt(value);
                 } catch (NumberFormatException e) {
                     value = "0";
                 }
             }
-            if (controlTypeEnum.equals(FormItemControlTypeEnum.DATE)
-                    || controlTypeEnum.equals(FormItemControlTypeEnum.DATETIME)) {
-            }
+            // 日期/日期时间类型暂不做转换，保留分支以便后续扩展
         }
         return true;
     }

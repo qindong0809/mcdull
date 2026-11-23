@@ -124,9 +124,8 @@ mcdull-framework-starter-scheduler/
     │   ├── McdullExecutionInterceptor.java   # 通用拦截器（TraceId、耗时）
     │   ├── TaskConverter.java                # 注解/接口任务 → db-scheduler RecurringTask
     │   └── SchedulerTaskContext.java         # db-scheduler 类型 → 自有 TaskContext 适配器
-    └── enable/
-        └── EnableScheduler.java              # 一键启用注解
 ```
+
 
 任务契约（`McdullScheduledTask`、`McdullScheduleDefinition`、`BackoffStrategy`、`TaskContext`、
 `@McdullScheduled`）位于 `mcdull-framework-api-scheduler`，见 `../mcdull-framework-apis/`。
@@ -159,17 +158,7 @@ bootstrap 模块依赖 starter 提供运行时装配（自动配置、任务扫�
 
 ### 启用调度器
 
-在每个业务模块的启动类上标记 `@EnableScheduler`：
-
-```java
-@SpringBootApplication
-@EnableScheduler
-public class SystemBootstrap {
-    public static void main(String[] args) {
-        SpringApplication.run(SystemBootstrap.class, args);
-    }
-}
-```
+引入 `mcdull-framework-starter-scheduler` 依赖即自动生效，无需在启动类标注任何启用注解。
 
 ### 配置示例
 

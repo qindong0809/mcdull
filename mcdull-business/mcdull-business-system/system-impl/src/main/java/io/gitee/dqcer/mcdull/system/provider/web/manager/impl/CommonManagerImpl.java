@@ -327,7 +327,7 @@ public class CommonManagerImpl implements ICommonManager {
 
     @Override
     public String getConfig(String key) {
-        List<ConfigEntity> entityList = redisCache.getListOrSet("sys_config", ConfigEntity.class, () -> configService.list(), 60 * 60 * 24);
+        List<ConfigEntity> entityList = redisCache.getListOrSetPrefixed("sys_config", ConfigEntity.class, () -> configService.list(), 60 * 60 * 24);
         if (CollUtil.isNotEmpty(entityList)) {
             Map<String, String> map = entityList.stream().collect(Collectors.toMap(ConfigEntity::getConfigKey, ConfigEntity::getConfigValue));
             return map.get(key);

@@ -691,21 +691,22 @@ public class UserServiceImpl
     public void downloadTemplate() {
         Map<String, List<DynamicFieldBO>> sheetHeaderMap = new HashMap<>(8);
         List<DynamicFieldBO> fieldList = new ArrayList<>();
-        fieldList.add(new DynamicFieldBO("username", "姓名", true, FormItemControlTypeEnum.INPUT));
+        fieldList.add(new DynamicFieldBO("actualName", "姓名", true, FormItemControlTypeEnum.INPUT));
         fieldList.add(this.getSexFieldBO());
         fieldList.add(new DynamicFieldBO("loginName", "登录账号", true, FormItemControlTypeEnum.INPUT));
+        fieldList.add(new DynamicFieldBO("phone", "手机号", true, FormItemControlTypeEnum.INPUT));
         fieldList.add(this.getStatusFieldBO());
         fieldList.add(this.getRoleFieldBO());
         fieldList.add(this.getDepartmentFieldBO());
         fieldList.add(new DynamicFieldBO("email", "邮箱", true, FormItemControlTypeEnum.INPUT));
-        sheetHeaderMap.put("模板", fieldList);
+        sheetHeaderMap.put("部门人员模板", fieldList);
         commonManager.downloadExcelTemplate(sheetHeaderMap, "部门人员模板");
     }
 
     private DynamicFieldBO getStatusFieldBO() {
-        DynamicFieldBO statusBO = new DynamicFieldBO("status", "状态", true, FormItemControlTypeEnum.SELECT);
+        DynamicFieldBO statusBO = new DynamicFieldBO("inactive", "状态", true, FormItemControlTypeEnum.SELECT);
         statusBO.setDropdownList(IEnum.getAll(InactiveEnum.class).stream().map(IEnum::getText).collect(Collectors.toList()));
-        statusBO.setExtraObj(IEnum.getAll(SexEnum.class));
+        statusBO.setExtraObj(IEnum.getAll(InactiveEnum.class));
         return statusBO;
     }
 
@@ -744,6 +745,8 @@ public class UserServiceImpl
     }
 
     private void saveData(List<Pair<String, DataAnalysisListener>> pairList) {
+        Map<String, Integer> roleNameIdMap = roleService.all().stream()
+                .collect(Collectors.toMap(RoleVO::getRoleName, RoleVO::getRoleId, (a, b) -> a));
         for (Pair<String, DataAnalysisListener> pair : pairList) {
             List<Tuple> dataList = pair.getValue().getDataList();
             if (CollUtil.isNotEmpty(dataList)) {
@@ -752,11 +755,29 @@ public class UserServiceImpl
                     UserAddDTO userAddDTO = new UserAddDTO();
                     userAddDTO.setActualName(this.getByKey(oneRowDataList, "actualName", String.class));
                     userAddDTO.setLoginName(this.getByKey(oneRowDataList, "loginName", String.class));
-                    userAddDTO.setGender(this.getByKey(oneRowDataList, "sex", Integer.class));
-                    userAddDTO.setDepartmentId(this.getByKey(oneRowDataList, "departmentName", Integer.class));
+                    String sexText = this.getByKey(oneRowDataList, "sex", String.class);
+                    userAddDTO.setGender(IEnum.getCodeByText(SexEnum.class, sexText));
+                    String departmentText = this.getByKey(oneRowDataList, "departmentName", String.class);
+                    if (StrUtil.isNotBlank(departmentText)) {
+                        DepartmentEntity department = departmentService.getOne(
+                                Wrappers.<DepartmentEntity>lambdaQuery()
+                                        .eq(DepartmentEntity::getName, departmentText)
+                                        .last("limit 1"), false);
+                        if (department != null) {
+                            userAddDTO.setDepartmentId(department.getId());
+                        }
+                    }
                     userAddDTO.setPhone(this.getByKey(oneRowDataList, "phone", String.class));
                     userAddDTO.setEmail(this.getByKey(oneRowDataList, "email", String.class));
-                    userAddDTO.setDisabledFlag(this.getByKey(oneRowDataList, "inactive", Boolean.class));
+                    String inactiveText = this.getByKey(oneRowDataList, "inactive", String.class);
+                    userAddDTO.setDisabledFlag(IEnum.getCodeByText(InactiveEnum.class, inactiveText));
+                    String roleText = this.getByKey(oneRowDataList, "roleName", String.class);
+                    if (StrUtil.isNotBlank(roleText)) {
+                        Integer roleId = roleNameIdMap.get(roleText);
+                        if (roleId != null) {
+                            userAddDTO.setRoleIdList(ListUtil.of(roleId));
+                        }
+                    }
                     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
                     Validator validator = factory.getValidator();
                     Set<ConstraintViolation<UserAddDTO>> violations = validator.validate(userAddDTO);
@@ -783,11 +804,18 @@ public class UserServiceImpl
 
     private List<DynamicFieldTemplate> getFieldBOList(String fileName) {
         List<DynamicFieldTemplate> fieldBOList = new ArrayList<>();
-        switch (fileName) {
-            case "部门人员模板":
-            default:
-                break;
+        if (!"部门人员模板".equals(fileName)) {
+            return fieldBOList;
         }
+        // name 必须匹配 Excel 表头中文名；code 必须匹配 saveData 的 getByKey key
+        fieldBOList.add(new DynamicFieldTemplate("actualName", "姓名", true, "input"));
+        fieldBOList.add(new DynamicFieldTemplate("sex", "性别", true, "select"));
+        fieldBOList.add(new DynamicFieldTemplate("loginName", "登录账号", true, "input"));
+        fieldBOList.add(new DynamicFieldTemplate("phone", "手机号", true, "input"));
+        fieldBOList.add(new DynamicFieldTemplate("inactive", "状态", true, "select"));
+        fieldBOList.add(new DynamicFieldTemplate("roleName", "角色", false, "select"));
+        fieldBOList.add(new DynamicFieldTemplate("departmentName", "部门名称", true, "select"));
+        fieldBOList.add(new DynamicFieldTemplate("email", "邮箱", true, "input"));
         return fieldBOList;
     }
 

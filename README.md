@@ -235,13 +235,13 @@ public class ValidateCaptcha implements ProcessHandler<LoginContext> {
 
 `SwitchableDataSource` 接口统一抽象切换行为，业务代码通过 `get(supplier)` 模式在指定数据源上执行，自动 finally 清理上下文。
 
-### 🔗 声明式第三方系统对接（External Client Starter）
+### 🔗 声明式第三方系统对接（Integration Starter）
 
-`mcdull-framework-starter-external` 提供类似 OpenFeign 的编程模型，专门用于对接外部第三方 HTTP 系统。只需定义接口 + 注解，框架自动生成动态代理，处理认证、序列化、重试和日志，业务代码零侵入。
+`mcdull-framework-starter-integration` 提供类似 OpenFeign 的编程模型，专门用于对接外部第三方 HTTP 系统。只需定义接口 + 注解，框架自动生成动态代理，处理认证、序列化、重试和日志，业务代码零侵入。
 
 ```yaml
 mcdull:
-  external:
+  integration:
     clients:
       demo:
         base-url: https://demo.example.com
@@ -253,12 +253,12 @@ mcdull:
 ```
 
 ```java
-@ExternalApi(name = "demo")
+@IntegrationApi(name = "demo")
 public interface DemoClient {
-    @ExternalPost("/upload/presign")
+    @IntegrationPost("/upload/presign")
     PreSignVO presignUpload(@Body PreSignRequest request);
 
-    @ExternalGet("/user/{userId}/info")
+    @IntegrationGet("/user/{userId}/info")
     UserVO getStudy(@PathVar("userId") Long userId);
 }
 ```
@@ -535,7 +535,7 @@ mcdull/
 │   │   └── mcdull-framework-core-mysql
 │   └── mcdull-framework-starters/      # 功能 Starter 集合（自动配置与运行时实现）
 │       ├── mcdull-framework-starter-doc        # API 文档（Knife4j）
-│       ├── mcdull-framework-starter-external   # 外部系统对接
+│       ├── mcdull-framework-starter-integration # 外部系统对接
 │       ├── mcdull-framework-starter-feign      # 服务调用
 │       ├── mcdull-framework-starter-flow       # 流程编排
 │       ├── mcdull-framework-starter-mongodb    # MongoDB 集成

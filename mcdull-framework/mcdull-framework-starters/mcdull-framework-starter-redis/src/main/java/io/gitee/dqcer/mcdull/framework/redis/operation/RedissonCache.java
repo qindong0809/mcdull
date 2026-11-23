@@ -3,15 +3,19 @@ package io.gitee.dqcer.mcdull.framework.redis.operation;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.redis.cache.ICache;
+import cn.hutool.core.collection.IterUtil;
 import jakarta.annotation.Resource;
 import org.redisson.api.RBucket;
+import org.redisson.api.RKeys;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -46,7 +50,7 @@ public class RedissonCache implements ICache {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T get(String key, Class<T> type) {
+    public <T> T getPrefixed(String key, Class<T> type) {
         key = prefix() + key;
         Object o = redissonClient.getBucket(key).get();
         if (null != o) {
@@ -62,7 +66,7 @@ public class RedissonCache implements ICache {
     }
 
     @Override
-    public <T> void put(String key, T value, long expire) {
+    public <T> void putPrefixed(String key, T value, long expire) {
         key = prefix() + key;
         if (log.isDebugEnabled()) {
             log.debug("redis缓存 key={} 缓存已存入", key);
@@ -72,18 +76,18 @@ public class RedissonCache implements ICache {
     }
 
     @Override
-    public <T> T getOrSet(String key, Class<T> type, Supplier<T> supplier, long expire) {
-        return loadWithLock(key, () -> this.get(key, type), supplier, value -> this.put(key, value, expire));
+    public <T> T getOrSetPrefixed(String key, Class<T> type, Supplier<T> supplier, long expire) {
+        return loadWithLock(key, () -> this.getPrefixed(key, type), supplier, value -> this.putPrefixed(key, value, expire));
     }
 
     @Override
-    public <T> List<T> getListOrSet(String key, Class<T> type, Supplier<List<T>> supplier, long expire) {
+    public <T> List<T> getListOrSetPrefixed(String key, Class<T> type, Supplier<List<T>> supplier, long expire) {
         // Jackson 的 defaultTyping 已保留元素类型，无需再按 type 手动反序列化
         @SuppressWarnings("unchecked")
-        Supplier<List<T>> reader = () -> (List<T>) this.get(key, Object.class);
+        Supplier<List<T>> reader = () -> (List<T>) this.getPrefixed(key, Object.class);
         return loadWithLock(key, reader, supplier, value -> {
             LogHelp.info(log, "redis缓存 key={} 回源写入", key);
-            this.put(key, value, expire);
+            this.putPrefixed(key, value, expire);
         });
     }
 
@@ -128,7 +132,7 @@ public class RedissonCache implements ICache {
 
 
     @Override
-    public <T> void putIfExists(String key, T value) {
+    public <T> void putIfExistsPrefixed(String key, T value) {
         key = prefix() + key;
         if (log.isDebugEnabled()) {
             log.debug("redis缓存 key={} 缓存已存入", key);
@@ -138,7 +142,7 @@ public class RedissonCache implements ICache {
     }
 
     @Override
-    public void evict(String... keys) {
+    public void evictPrefixed(String... keys) {
         for (String key : keys) {
             key = prefix() + key;
             if (log.isDebugEnabled()) {
@@ -148,6 +152,87 @@ public class RedissonCache implements ICache {
             RBucket<Object> bucket = redissonClient.getBucket(key);
             bucket.delete();
         }
+    }
+
+    // ============ 常用 KV 操作（直接操作原始 key，不加前缀）============
+
+    @Override
+    public void set(String key, Object value, long seconds) {
+        RBucket<Object> bucket = redissonClient.getBucket(key);
+        if (seconds > 0) {
+            bucket.set(value, seconds, TimeUnit.SECONDS);
+        } else {
+            bucket.set(value);
+        }
+    }
+
+    @Override
+    public <T> T get(String key) {
+        return redissonClient.<T>getBucket(key).get();
+    }
+
+    @Override
+    public void delete(String... keys) {
+        if (keys != null && keys.length > 0) {
+            redissonClient.getKeys().delete(keys);
+        }
+    }
+
+    @Override
+    public Set<String> getAllKey() {
+        return keysByPattern("*");
+    }
+
+    @Override
+    public Set<String> keysByPrefix(String prefix) {
+        if (prefix == null || "*".equals(prefix)) {
+            return new HashSet<>();
+        }
+        return keysByPattern(prefix + "*");
+    }
+
+    @Override
+    public boolean exists(String key) {
+        return redissonClient.getBucket(key).isExists();
+    }
+
+    @Override
+    public boolean expire(String key, long seconds) {
+        if (seconds <= 0) {
+            return false;
+        }
+        return redissonClient.getBucket(key).expire(seconds, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public boolean setIfAbsent(String key, Object value, long seconds) {
+        RBucket<Object> bucket = redissonClient.getBucket(key);
+        if (seconds > 0) {
+            return bucket.trySet(value, seconds, TimeUnit.SECONDS);
+        }
+        return bucket.trySet(value);
+    }
+
+    @Override
+    public long increment(String key) {
+        return increment(key, 1L);
+    }
+
+    @Override
+    public long increment(String key, long delta) {
+        return redissonClient.getAtomicLong(key).addAndGet(delta);
+    }
+
+    private Set<String> keysByPattern(String pattern) {
+        RKeys keys = redissonClient.getKeys();
+        Iterable<String> iterable = keys.getKeysByPattern(pattern);
+        Set<String> result = new HashSet<>();
+        if (IterUtil.isNotEmpty(iterable)) {
+            for (String key : iterable) {
+                result.add(key);
+            }
+        }
+        return result;
     }
 }
 

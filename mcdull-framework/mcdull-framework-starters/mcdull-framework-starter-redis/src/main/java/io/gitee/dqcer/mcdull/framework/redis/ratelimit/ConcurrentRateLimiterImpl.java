@@ -3,8 +3,11 @@ package io.gitee.dqcer.mcdull.framework.redis.ratelimit;
 import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.framework.redis.operation.RedisClient;
-import io.gitee.dqcer.mcdull.framework.base.ratelimit.ConcurrentRateLimiter;
+import org.redisson.api.RRateLimiter;
+import org.redisson.api.RateIntervalUnit;
+import org.redisson.api.RateType;
+import org.redisson.api.RedissonClient;
+import io.gitee.dqcer.mcdull.framework.redis.ratelimit.ConcurrentRateLimiter;
 import org.redisson.api.RLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,18 +27,20 @@ public class ConcurrentRateLimiterImpl implements ConcurrentRateLimiter {
     protected Logger log = LoggerFactory.getLogger(getClass());
 
     @Resource
-    private RedisClient redisClient;
+    private RedissonClient redissonClient;
 
     @Override
     public boolean limiter(String key, int quantity, int time) {
         LogHelp.info(log, "RateLimiter. key:{}, quantity:{}, time:{}", key, quantity, time);
-        return redisClient.rateLimit(key, quantity, time);
+        RRateLimiter rateLimiter = redissonClient.getRateLimiter(key);
+        rateLimiter.trySetRate(RateType.OVERALL, quantity, time, RateIntervalUnit.SECONDS);
+        return rateLimiter.tryAcquire(1);
     }
 
     @Override
     public <T> T locker(String key, long timeout, Supplier<T> function) {
         LogHelp.info(log, "Locker. key:{}, timeout:{}", key, timeout);
-        RLock lock = redisClient.getLock(key);
+        RLock lock = redissonClient.getLock(key);
         boolean locked = false;
         try {
             locked = lock.tryLock(timeout, TimeUnit.SECONDS);
@@ -59,7 +64,7 @@ public class ConcurrentRateLimiterImpl implements ConcurrentRateLimiter {
     @Override
     public <T> void locker(String key, long timeout, Supplier<T> function, boolean throwException) {
         LogHelp.info(log, "Locker. key:{}, timeout:{}", key, timeout);
-        RLock lock = redisClient.getLock(key);
+        RLock lock = redissonClient.getLock(key);
         boolean locked = false;
         try {
             locked = lock.tryLock(timeout, TimeUnit.SECONDS);

@@ -10,7 +10,7 @@ mcdull-framework-starter-redis 是 MCDull 框架的 Redis 集成模块，基于 
 
 - 集成 Redisson，提供 Redis 客户端能力
 - 集成 Spring Cache，支持 `@Cacheable` / `@CacheEvict` 注解式缓存
-- 提供 `ICache` 契约，支持对象缓存与回源
+- 提供 `ICache` 统一契约，支持对象缓存（含回源防击穿）与常用 KV 操作
 - 基于 `@RedisLock` 的分布式锁
 - 基于 `@CacheExpire` 的缓存 TTL 控制
 - 分布式限流
@@ -74,12 +74,19 @@ public class UserService {
 
 ### 使用 ICache
 
+`*Prefixed` 方法自动加应用名前缀，无后缀方法直接操作原始 key：
+
 ```java
 @Resource
 private ICache cache;
 
-cache.put("user:1", user, 60);
-User user = cache.getOrSet("user:1", User.class, () -> loadFromDb(1), 60);
+// 应用作用域缓存（自动加前缀）
+cache.putPrefixed("user:1", user, 60);
+User user = cache.getOrSetPrefixed("user:1", User.class, () -> loadFromDb(1), 60);
+
+// 原始 key 操作（不加前缀）
+cache.set("captcha:uuid", text, 120);
+String text = cache.get("captcha:uuid");
 ```
 
 ### 使用分布式锁

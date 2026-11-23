@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.common.area;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
-import io.gitee.dqcer.mcdull.system.facade.model.vo.IAreaVO;
+import io.gitee.dqcer.mcdull.framework.base.vo.IAreaVO;
 
 import java.util.Collection;
 import java.util.HashMap;

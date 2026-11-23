@@ -1,7 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.gitee.dqcer.mcdull.framework.nacos.PrometheusConfiguration,\
-  io.gitee.dqcer.mcdull.framework.nacos.ShutdownDiscovery
-# 临时关闭：业务服务仅将 Nacos 作为注册中心，不加载配置中心的日志级别监听器
-# io.gitee.dqcer.mcdull.framework.nacos.LogLevelListener
-
-

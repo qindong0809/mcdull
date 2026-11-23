@@ -55,7 +55,7 @@ demo-bootstrap  ──依赖──▶  demo-impl  ──依赖──▶  demo-fa
 | `mcdull-framework-starter-web` | 否 | 是 | bootstrap 用 `@EnableWebCore`；starter 依赖 api-web |
 | `mcdull-framework-core-mysql` | 是 | 否 | impl 用 `LogicCheckUtil` / `BaseMapper` / `Page` 等数据库基类与工具 |
 | `mcdull-framework-starter-mysql` | 否 | 是 | bootstrap 用 `@EnableDynamicDataSource` / `@MapperScan`；starter 依赖 core-mysql |
-| `mcdull-framework-api-redis` | 是 | 否 | impl 用 `@CacheExpire` / `@RedisLock` / `ICache` / `IRedisClient`，零依赖 API 模块 |
+| `mcdull-framework-api-redis` | 是 | 否 | impl 用 `@CacheExpire` / `@RedisLock` / `ICache`，零依赖 API 模块 |
 | `mcdull-framework-starter-redis` | 否 | 是 | bootstrap 仅引入依赖，自动装配；starter 依赖 api-redis |
 | `mcdull-framework-starter-doc` | 是 | 否 | impl 用 `@Operation` / `@SchemaEnum`；bootstrap 不直接引用，由传递依赖提供 |
 | `mcdull-framework-starter-oss` | 否 | 否 | 文件能力统一由 system 提供 |
@@ -69,7 +69,7 @@ demo-bootstrap  ──依赖──▶  demo-impl  ──依赖──▶  demo-fa
 
 - Starter 的本质是**依赖聚合 + 自动装配**，不是“业务代码不能引用它”。使用 `@Cacheable`、`@FeignClient`、`@RedisLock` 这类注解很正常。
 - 但如果 Starter **自身的注解/基类**被业务代码大量直接引用，说明 API 与自动装配没有拆干净。更理想的结构是拆成 `*-api` / `*-core` 放注解、SPI、常量和轻量基类，`*-starter` 只放自动配置、切面、过滤器，并依赖 `*-api`。
-- mcdull 已经有 `mcdull-framework-spi` 这种 API 模块思想；redis、web、feign 已拆出 `api-*` 模块，原 package 保持不变，切面、Filter、自动装配留在对应 starter。web 的 `EnumVO` 通过可注入的 `TextResolver` 解耦 Spring 容器，由 starter 的 `I18nConfig` 注入 i18n 实现；redis 的 `RedissonCache` / `RedisClient` 是运行时组件，不迁入 API，而是在 api-redis 中提供 `ICache` / `IRedisClient` 契约，业务代码注入接口。
+- mcdull 已经有 `mcdull-framework-spi` 这种 API 模块思想；redis、web、feign 已拆出 `api-*` 模块，原 package 保持不变，切面、Filter、自动装配留在对应 starter。web 的 `EnumVO` 通过可注入的 `TextResolver` 解耦 Spring 容器，由 starter 的 `I18nConfig` 注入 i18n 实现；redis 的 `RedissonCache` 是运行时组件，不迁入 API，而是在 api-redis 中提供 `ICache` / `ConcurrentRateLimiter` 契约，业务代码注入接口。
 - mysql 的可复用基类和工具带行为，按业界习惯命名为 `mcdull-framework-core-mysql`；自动配置、AOP 与数据源实现仍留在 `mcdull-framework-starter-mysql`。后续若把 mysql 能力上升为 db，artifact 将成对改名为 `core-db` / `starter-db`，Java package 届时同步迁移。
 
 ### 2.2 impl 内部四层

@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import io.gitee.dqcer.mcdull.framework.redis.aspect.CacheExpireAspect;
 import io.gitee.dqcer.mcdull.framework.redis.aspect.RedisLockAspect;
 import io.gitee.dqcer.mcdull.framework.redis.jmx.RedisJmxAdapter;
-import io.gitee.dqcer.mcdull.framework.redis.operation.RedisClient;
 import io.gitee.dqcer.mcdull.framework.redis.operation.RedissonCache;
 import io.gitee.dqcer.mcdull.framework.redis.ratelimit.ConcurrentRateLimiterImpl;
 import io.gitee.dqcer.mcdull.framework.redis.support.ExpireRedisCacheWriter;
@@ -57,7 +56,7 @@ import java.util.stream.Stream;
 @AutoConfiguration(after = RedisAutoConfiguration.class)
 @ConditionalOnClass({RedissonClient.class, RedisConnectionFactory.class})
 @EnableCaching(proxyTargetClass = true)
-@Import({RedisClient.class, RedissonCache.class, ConcurrentRateLimiterImpl.class, RedisJmxAdapter.class})
+@Import({RedissonCache.class, ConcurrentRateLimiterImpl.class, RedisJmxAdapter.class})
 public class RedissonAutoConfiguration implements CachingConfigurer {
 
     /**

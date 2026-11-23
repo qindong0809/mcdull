@@ -114,7 +114,7 @@ public void executeFlow() {
 | `SwitchableDataSource`、`BasicServiceImpl`、`BasicCurdServiceImpl`、`GenericLogic`、`LogicCheckUtil` | `mcdull-framework-core-mysql` |
 | `@DynamicDateFormat`、`DynamicDateSerialize`、`CustomSerializer`、`TimeZoneUtil` | `mcdull-framework-json` |
 | Redis 自动配置（引入 starter 即生效） | `mcdull-framework-starter-redis` |
-| `@CacheExpire`、`@RedisLock`、`IRedisClient`、`ICache` | `mcdull-framework-api-redis` |
+| `@CacheExpire`、`@RedisLock`、`ICache`、`ConcurrentRateLimiter` | `mcdull-framework-api-redis` |
 | `@EnableFileStorage` | `mcdull-framework-starter-oss` |
 | `OssService` | `mcdull-framework-api-oss` |
 | `ProcessHandler`、`@TreeNode`、`Context`、`IProcessFlow` | `mcdull-framework-api-flow` |
@@ -181,7 +181,7 @@ web 通过它反向解耦，而不是直接依赖能力实现：
 同时注意 bean 装配入口的归属已经随能力一起迁移：
 
 - `ConcurrentRateLimiter` 的 Redis 实现由 `RedissonAutoConfiguration` 自动注册（原先挂在 `@EnableWebCore` 上），
-  接口本身位于 `mcdull-framework-base` 的 `base.ratelimit` 包。
+  接口本身位于 `mcdull-framework-api-redis` 的 `redis.ratelimit` 包。
 - `RedisJmxAdapter` 由 `RedissonAutoConfiguration` 自动注册，不再属于 `@EnableWebCore`。
 - 不使用 Redis 的应用可自行注册一个 `ConcurrentRateLimiter` 空实现，
   参考 `mcdull-devtools-portal` 的 `ToolsAutoConfiguration`。

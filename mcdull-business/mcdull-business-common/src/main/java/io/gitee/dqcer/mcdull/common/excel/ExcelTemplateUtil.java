@@ -11,9 +11,8 @@ import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.alibaba.excel.write.style.row.SimpleRowHeightStyleStrategy;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.support.ExcelField;
 import io.gitee.dqcer.mcdull.framework.json.util.TimeZoneUtil;
-import io.gitee.dqcer.mcdull.system.facade.model.bo.DynamicFieldBO;
-import io.gitee.dqcer.mcdull.system.facade.model.enums.FormItemControlTypeEnum;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class ExcelTemplateUtil {
     }
 
     public static void write(OutputStream outputStream,
-                             Map<String, List<DynamicFieldBO>> sheetTemplateMap,
+                             Map<String, ? extends List<? extends ExcelField>> sheetTemplateMap,
                              String operatorName,
                              String dateTimeStr) {
         if (MapUtil.isEmpty(sheetTemplateMap)) {
@@ -64,11 +63,11 @@ public class ExcelTemplateUtil {
         }
     }
 
-    private static Map<String, List<List<String>>> getSheetHeadMap(Map<String, List<DynamicFieldBO>> sheetTemplateMap) {
+    private static Map<String, List<List<String>>> getSheetHeadMap(Map<String, ? extends List<? extends ExcelField>> sheetTemplateMap) {
         Map<String, List<List<String>>> sheetHeadMap = new HashMap<>(8);
-        for (Map.Entry<String, List<DynamicFieldBO>> entry : sheetTemplateMap.entrySet()) {
+        for (Map.Entry<String, ? extends List<? extends ExcelField>> entry : sheetTemplateMap.entrySet()) {
             List<List<String>> headList = new ArrayList<>();
-            for (DynamicFieldBO field : entry.getValue()) {
+            for (ExcelField field : entry.getValue()) {
                 headList.add(List.of(field.getName()));
             }
             sheetHeadMap.put(entry.getKey(), headList);
@@ -76,21 +75,15 @@ public class ExcelTemplateUtil {
         return sheetHeadMap;
     }
 
-    private static Map<String, Map<Integer, String[]>> getDropdownMap(Map<String, List<DynamicFieldBO>> mapField) {
+    private static Map<String, Map<Integer, String[]>> getDropdownMap(Map<String, ? extends List<? extends ExcelField>> mapField) {
         Map<String, Map<Integer, String[]>> sheetMap = new HashMap<>(8);
-        for (Map.Entry<String, List<DynamicFieldBO>> entry : mapField.entrySet()) {
+        for (Map.Entry<String, ? extends List<? extends ExcelField>> entry : mapField.entrySet()) {
             Map<Integer, String[]> map = new HashMap<>(16);
-            List<DynamicFieldBO> headers = entry.getValue();
+            List<? extends ExcelField> headers = entry.getValue();
             for (int i = 0; i < headers.size(); i++) {
-                DynamicFieldBO field = headers.get(i);
+                ExcelField field = headers.get(i);
                 List<String> dropdownList = field.getDropdownList();
-                FormItemControlTypeEnum controlType = field.getControlTypeEnum();
-                if (controlType != null
-                        && (controlType == FormItemControlTypeEnum.SELECT
-                        || controlType == FormItemControlTypeEnum.RADIO
-                        || controlType == FormItemControlTypeEnum.SWITCH
-                        || controlType == FormItemControlTypeEnum.CHECKBOX)
-                        && CollectionUtil.isNotEmpty(dropdownList)) {
+                if (field.isSelectable() && CollectionUtil.isNotEmpty(dropdownList)) {
                     map.put(i, ArrayUtil.toArray(dropdownList, String.class));
                 }
             }
@@ -99,7 +92,7 @@ public class ExcelTemplateUtil {
         return sheetMap;
     }
 
-    private static List<List<Object>> emptyDataList(List<DynamicFieldBO> fieldList, int num) {
+    private static List<List<Object>> emptyDataList(List<? extends ExcelField> fieldList, int num) {
         List<List<Object>> list = new ArrayList<>();
         for (int i = 0; i < num; i++) {
             List<Object> data = new ArrayList<>();

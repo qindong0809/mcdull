@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.devtools.portal.config;
 
 import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
-import io.gitee.dqcer.mcdull.framework.base.ratelimit.ConcurrentRateLimiter;
+import io.gitee.dqcer.mcdull.framework.redis.ratelimit.ConcurrentRateLimiter;
 import io.gitee.dqcer.mcdull.framework.spi.DynamicLocaleMessageSource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

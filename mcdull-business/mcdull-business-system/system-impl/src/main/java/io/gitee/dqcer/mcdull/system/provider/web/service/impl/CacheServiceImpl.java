@@ -12,7 +12,7 @@ import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.KeyValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
-import io.gitee.dqcer.mcdull.framework.redis.cache.IRedisClient;
+import io.gitee.dqcer.mcdull.framework.redis.cache.ICache;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.system.provider.config.constants.CacheConstants;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.CacheQueryDTO;
@@ -40,7 +40,7 @@ public class CacheServiceImpl extends GenericLogic implements ICacheService {
     @Resource
     private CacheManager cacheManager;
     @Resource
-    private IRedisClient redisClient;
+    private ICache cache;
     @Resource
     private ICommonManager commonManager;
 
@@ -49,7 +49,7 @@ public class CacheServiceImpl extends GenericLogic implements ICacheService {
         List<KeyValueVO<String, String>> cacheNameList = new ArrayList<>();
         // @Cacheable 与 RedissonCache 写入的 key 现在都在 Redis 里，统一从 Redis 枚举，
         // 不再区分"本地缓存 / 远程缓存"两类来源。
-        Collection<String> redisCacheList = redisClient.getAllKey();
+        Collection<String> redisCacheList = cache.getAllKey();
         if (CollUtil.isNotEmpty(redisCacheList)) {
             for (String key : redisCacheList) {
                 if (!key.startsWith(GlobalConstant.RATE_LIMITER) && !key.startsWith("{" + GlobalConstant.RATE_LIMITER)
@@ -88,7 +88,7 @@ public class CacheServiceImpl extends GenericLogic implements ICacheService {
             }
             return null;
         }
-        return redisClient.get(cacheName);
+        return cache.get(cacheName);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class CacheServiceImpl extends GenericLogic implements ICacheService {
                 cache.clear();
             }
         } else {
-            redisClient.delete(cacheName);
+            cache.delete(cacheName);
         }
         return true;
     }

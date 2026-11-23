@@ -42,12 +42,6 @@
             <artifactId>mcdull-framework-json</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- AreaFillUtil 复用 facade 中的共享接口 IAreaVO -->
-        <dependency>
-            <groupId>io.gitee.dqcer</groupId>
-            <artifactId>system-facade</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>

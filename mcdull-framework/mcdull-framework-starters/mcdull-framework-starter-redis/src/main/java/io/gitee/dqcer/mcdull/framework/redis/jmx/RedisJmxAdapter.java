@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.framework.redis.jmx;
 
 import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.framework.redis.operation.RedisClient;
+import io.gitee.dqcer.mcdull.framework.redis.cache.ICache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jmx.export.annotation.ManagedOperation;
@@ -36,7 +36,7 @@ public class RedisJmxAdapter {
     private static final String JMX_TOKEN_KEY = "MCDULL_JMX_TOKEN";
 
     @Resource
-    private RedisClient redisClient;
+    private ICache cache;
 
     @ManagedOperation(description = "clear all key (requires MCDULL_JMX_TOKEN)")
     @ManagedOperationParameters({
@@ -48,10 +48,10 @@ public class RedisJmxAdapter {
             LogHelp.warn(log, "cleanAllKey rejected: {}", errorMsg);
             return errorMsg;
         }
-        Set<String> allKey = redisClient.getAllKey();
+        Set<String> allKey = cache.getAllKey();
         LogHelp.warn(log, "cleanAllKey accepted, keys={}", allKey.size());
         for (String cacheKey : allKey) {
-            redisClient.delete(cacheKey);
+            cache.delete(cacheKey);
         }
         return "success, removed=" + allKey.size();
     }
@@ -70,10 +70,10 @@ public class RedisJmxAdapter {
         if (StrUtil.isEmpty(keyPrefix)) {
             return "key prefix is empty";
         }
-        Set<String> cacheKeys = redisClient.keysByPrefix(keyPrefix);
+        Set<String> cacheKeys = cache.keysByPrefix(keyPrefix);
         LogHelp.warn(log, "removeByKeyPrefix accepted, prefix={}, keys={}", keyPrefix, cacheKeys.size());
         for (String cacheKey : cacheKeys) {
-            redisClient.delete(cacheKey);
+            cache.delete(cacheKey);
         }
         return "success, removed=" + cacheKeys.size();
     }

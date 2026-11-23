@@ -1,5 +1,6 @@
 package io.gitee.dqcer.mcdull.system.facade.model.bo;
 
+import io.gitee.dqcer.mcdull.framework.base.support.ExcelField;
 import io.gitee.dqcer.mcdull.system.facade.model.enums.FormItemControlTypeEnum;
 import lombok.Data;
 
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
  * 动态字段 BO（共享给业务模块）
  */
 @Data
-public class DynamicFieldBO {
+public class DynamicFieldBO implements ExcelField {
 
     private String code;
 
@@ -60,5 +61,13 @@ public class DynamicFieldBO {
         private final T code;
 
         private final String text;
+    }
+
+    @Override
+    public boolean isSelectable() {
+        return controlTypeEnum == FormItemControlTypeEnum.SELECT
+                || controlTypeEnum == FormItemControlTypeEnum.RADIO
+                || controlTypeEnum == FormItemControlTypeEnum.SWITCH
+                || controlTypeEnum == FormItemControlTypeEnum.CHECKBOX;
     }
 }

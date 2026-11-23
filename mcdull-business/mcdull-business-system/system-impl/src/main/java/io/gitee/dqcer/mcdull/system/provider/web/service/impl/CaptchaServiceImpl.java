@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.framework.redis.cache.IRedisClient;
+import io.gitee.dqcer.mcdull.framework.redis.cache.ICache;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.GenericLogic;
 import io.gitee.dqcer.mcdull.framework.web.env.SystemEnvironment;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.CaptchaVO;
@@ -25,7 +25,7 @@ public class CaptchaServiceImpl
     @Resource
     private DefaultKaptcha defaultKaptcha;
     @Resource
-    private IRedisClient redisClient;
+    private ICache cache;
     @Resource
     private SystemEnvironment systemEnvironment;
 
@@ -53,7 +53,7 @@ public class CaptchaServiceImpl
             captchaVO.setCaptchaText(captchaText);
         }
         String key = StrUtil.format(CAPTCHA_KEY, uuid);
-        redisClient.set(key, captchaText, EXPIRE_SECOND);
+        cache.set(key, captchaText, EXPIRE_SECOND);
         return captchaVO;
 
     }
@@ -61,11 +61,11 @@ public class CaptchaServiceImpl
     @Override
     public void checkCaptcha(String code, String uuid) {
         String key = StrUtil.format(CAPTCHA_KEY, uuid);
-        String redisCaptchaCode = redisClient.get(key);
+        String redisCaptchaCode = cache.get(key);
         if (StrUtil.isBlank(redisCaptchaCode) || !StrUtil.equals(redisCaptchaCode, code)) {
             throw  new BusinessException("验证码错误或已过期，请输入正确的验证码或刷新后重新输入");
         }
         // 删除已使用的验证码
-        redisClient.delete(key);
+        cache.delete(key);
     }
 }

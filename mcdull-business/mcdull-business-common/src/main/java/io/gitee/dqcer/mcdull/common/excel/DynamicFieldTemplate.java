@@ -5,7 +5,10 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * 动态字段
+ * 动态字段（Excel 读取侧模板）。
+ * <p>
+ * controlType 用 String code，使 common 不依赖任何业务枚举。
+ * 取值由调用方按业务枚举的 code 传入（如 "number"/"date"/"datetime"）。
  *
  * @author dqcer
  * @since 2024/12/16
@@ -19,7 +22,7 @@ public class DynamicFieldTemplate {
 
     private Boolean required;
 
-    private FormItemControlTypeEnum controlTypeEnum;
+    private String controlType;
 
     private String dataType;
 
@@ -29,10 +32,10 @@ public class DynamicFieldTemplate {
 
     private Object extraObj;
 
-    public DynamicFieldTemplate(String code, String name, Boolean required, FormItemControlTypeEnum controlTypeEnum) {
+    public DynamicFieldTemplate(String code, String name, Boolean required, String controlType) {
         this.code = code;
         this.name = name;
         this.required = required;
-        this.controlTypeEnum = controlTypeEnum;
+        this.controlType = controlType;
     }
 }

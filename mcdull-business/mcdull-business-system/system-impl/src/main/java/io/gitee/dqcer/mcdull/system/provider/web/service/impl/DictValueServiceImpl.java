@@ -235,7 +235,7 @@ public class DictValueServiceImpl
 
     @Override
     public void clean() {
-        redissonCache.evict(CacheConstants.DICT_LIST);
+        redissonCache.evictPrefixed(CacheConstants.DICT_LIST);
     }
 
     private Map<String, String> getMap(String selectCode) {
@@ -243,7 +243,7 @@ public class DictValueServiceImpl
             throw new IllegalArgumentException("'selectCode' is null.");
         }
         String key = CharSequenceUtil.format(CacheConstants.DICT_LIST,  selectCode);
-        List<DictValueVO> dbList = redissonCache.getListOrSet(key, DictValueVO.class, () -> this.selectByKeyCode(selectCode), CacheConstants.DICT_EXPIRE);
+        List<DictValueVO> dbList = redissonCache.getListOrSetPrefixed(key, DictValueVO.class, () -> this.selectByKeyCode(selectCode), CacheConstants.DICT_EXPIRE);
         if (CollUtil.isNotEmpty(dbList)) {
             return dbList.stream().collect(Collectors.toMap(DictValueVO::getValueCode, DictValueVO::getValueName, (k1, k2) -> k1));
         }

@@ -21,7 +21,7 @@
         <module>mcdull-framework-starter-security</module>
         <module>mcdull-framework-starter-doc</module>
         <module>mcdull-framework-starter-monitor</module>
-        <module>mcdull-framework-starter-external</module>
+        <module>mcdull-framework-starter-integration</module>
         <module>mcdull-framework-starter-scheduler</module>
         <module>mcdull-framework-starter-tag</module>
     </modules>
