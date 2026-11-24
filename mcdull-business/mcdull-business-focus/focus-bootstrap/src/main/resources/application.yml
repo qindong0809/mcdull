@@ -62,11 +62,6 @@ mcdull:
       - /register
       - /login
       - /guest-mode
-      - /doc.html
-      - /swagger-ui/**
-      - /swagger-ui.html
-      - /v3/api-docs/**
-      - /webjars/**
       - /favicon.ico
       - /error
   oss:
@@ -77,11 +72,13 @@ mcdull:
 
 springdoc:
   api-docs:
+    enabled: ${SPRINGDOC_API_DOCS_ENABLED:false}
     path: /v3/api-docs
   swagger-ui:
+    enabled: ${SPRINGDOC_SWAGGER_UI_ENABLED:false}
     path: /swagger-ui.html
 
 knife4j:
-  enable: true
+  enable: ${KNIFE4J_ENABLED:false}
   setting:
     language: zh_cn

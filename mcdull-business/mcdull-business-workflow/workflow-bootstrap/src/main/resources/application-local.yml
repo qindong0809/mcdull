@@ -15,6 +15,15 @@ spring:
     password: ${WORKFLOW_DB_PASSWORD}
 
 mcdull:
+  gateway:
+    no-auth:
+      - /doc.html
+      - /swagger-ui/**
+      - /swagger-ui.html
+      - /v3/api-docs/**
+      - /webjars/**
+      - /favicon.ico
+      - /error
   tag:
     enabled: false
     strict: false
@@ -23,3 +32,12 @@ mcdull:
 logging:
   level:
     io.gitee.dqcer.mcdull.workflow: debug
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+knife4j:
+  enable: true

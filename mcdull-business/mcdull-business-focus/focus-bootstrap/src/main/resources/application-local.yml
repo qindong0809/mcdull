@@ -15,6 +15,18 @@ spring:
     password: ${FOCUS_DB_PASSWORD}
 
 mcdull:
+  gateway:
+    no-auth:
+      - /register
+      - /login
+      - /guest-mode
+      - /doc.html
+      - /swagger-ui/**
+      - /swagger-ui.html
+      - /v3/api-docs/**
+      - /webjars/**
+      - /favicon.ico
+      - /error
   tag:
     enabled: false
     strict: false
@@ -23,3 +35,12 @@ mcdull:
 logging:
   level:
     io.gitee.dqcer.mcdull.focus: debug
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+knife4j:
+  enable: true

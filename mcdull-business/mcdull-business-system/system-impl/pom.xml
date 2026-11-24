@@ -10,12 +10,6 @@
     <artifactId>system-impl</artifactId>
     <name>${project.artifactId} v${project.version}</name>
 
-    <properties>
-        <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
-        <jna.version>5.8.0</jna.version>
-    </properties>
-
-
     <dependencies>
         <!-- facade 是 impl 的编译期契约来源（共享 Model 类 + SPI 接口） -->
         <dependency>
@@ -163,7 +157,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.2</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
                     <nonFilteredFileExtensions>
@@ -174,7 +167,6 @@
             <plugin>
                 <groupId>io.github.git-commit-id</groupId>
                 <artifactId>git-commit-id-maven-plugin</artifactId>
-                <version>4.9.9</version>
                 <executions>
                     <execution>
                         <id>get-the-git-infos</id>

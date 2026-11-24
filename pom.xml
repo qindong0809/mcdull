@@ -29,6 +29,10 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!-- 严格与技术栈保持一致 -->
     <spring-boot.version>3.5.16</spring-boot.version>
+    <!-- 构建插件版本统一在根 POM 管理，模块 POM 不再内联 -->
+    <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+    <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+    <git-commit-id-plugin.version>4.9.9</git-commit-id-plugin.version>
     <!-- mcdull-devtools-notify 默认值；可在 settings.xml profile / -D 中覆盖 -->
     <mcdull.notify.enabled>true</mcdull.notify.enabled>
     <mcdull.notify.skipSnapshot>true</mcdull.notify.skipSnapshot>
@@ -85,13 +89,23 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.2.5</version>
+          <version>${maven-surefire-plugin.version}</version>
         </plugin>
         <!-- 生成 maven-plugin descriptor，供 mcdull-devtools-notify 使用 -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
           <version>3.13.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${maven-resources-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>io.github.git-commit-id</groupId>
+          <artifactId>git-commit-id-maven-plugin</artifactId>
+          <version>${git-commit-id-plugin.version}</version>
         </plugin>
         <!-- facade deploy 完成后的 IM 通知插件，业务方 pom 只需引用 groupId+artifactId -->
         <plugin>

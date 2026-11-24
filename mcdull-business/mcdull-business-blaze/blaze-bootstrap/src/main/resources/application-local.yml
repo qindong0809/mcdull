@@ -19,6 +19,16 @@ spring:
         url: ${SPRING_BOOT_ADMIN_URL:http://localhost:9000}
 
 mcdull:
+  gateway:
+    no-auth:
+      - /pub/**
+      - /doc.html
+      - /swagger-ui/**
+      - /swagger-ui.html
+      - /v3/api-docs/**
+      - /webjars/**
+      - /favicon.ico
+      - /error
   tag:
     enabled: false
     strict: false
@@ -35,3 +45,12 @@ management:
     web:
       exposure:
         include: "*"
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+knife4j:
+  enable: true

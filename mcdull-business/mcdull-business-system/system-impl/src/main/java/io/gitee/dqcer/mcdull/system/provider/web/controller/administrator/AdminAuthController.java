@@ -1,4 +1,4 @@
-package io.gitee.dqcer.mcdull.system.provider.web.controller.administraotr;
+package io.gitee.dqcer.mcdull.system.provider.web.controller.administrator;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.hutool.core.date.DateTime;

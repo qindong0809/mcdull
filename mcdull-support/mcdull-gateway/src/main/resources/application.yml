@@ -48,39 +48,11 @@ spring:
               filters:
                 - StripPrefix=2
 
-            # 兼容存量 /uac/** 调用（前端已切换为 /api/system，后续可清理）
-            - id: system-bootstrap
-              uri: lb://system-bootstrap
-              predicates:
-                - Path=/uac/**
-              filters:
-                - StripPrefix=1
-
             # 前端已统一以 /api/workflow 前缀接入；后端 Controller 自带 /workflow 前缀，StripPrefix=1 仅剥离 /api
             - id: workflow-bootstrap-api
               uri: lb://workflow-bootstrap
               predicates:
                 - Path=/api/workflow/**
-              filters:
-                - StripPrefix=1
-
-            # 兼容存量 /workflow/** 调用（前端已切换为 /api/workflow，后续可清理）
-            - id: workflow-bootstrap
-              uri: lb://workflow-bootstrap
-              predicates:
-                - Path=/workflow/**
-
-            - id: mcdull-mdc-provider
-              uri: lb://mcdull-mdc-provider
-              predicates:
-                - Path=/mdc/**
-              filters:
-                - StripPrefix=1
-
-            - id: demo-http
-              uri: https://httpbin.org
-              predicates:
-                - Path=/httpbin/**
               filters:
                 - StripPrefix=1
           # 全局默认过滤器收归本地

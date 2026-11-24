@@ -15,6 +15,16 @@ spring:
     password: ${DEMO_DB_PASSWORD}
 
 mcdull:
+  gateway:
+    no-auth:
+      - /demo/**
+      - /doc.html
+      - /swagger-ui/**
+      - /swagger-ui.html
+      - /v3/api-docs/**
+      - /webjars/**
+      - /favicon.ico
+      - /error
   tag:
     # 本地直连本机 MySQL/Redis，无 Feign 调用链时不需要 tag。
     enabled: false
@@ -32,3 +42,12 @@ management:
     web:
       exposure:
         include: "*"
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+knife4j:
+  enable: true

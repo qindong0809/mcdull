@@ -53,14 +53,8 @@ public class AuthSessionFilter extends OncePerRequestFilter {
         "/druid" + GlobalConstant.ALL_PATTERNS,
         "/monitoring" + GlobalConstant.ALL_PATTERNS,
         "/upload" + GlobalConstant.ALL_PATTERNS,
-        "/doc.html" + GlobalConstant.ALL_PATTERNS,
-        "/doc-ui.html" + GlobalConstant.ALL_PATTERNS,
-        "/doc-resources" + GlobalConstant.ALL_PATTERNS,
-        "/webjars" + GlobalConstant.ALL_PATTERNS,
         "/error",
         "/home/upload" + GlobalConstant.ALL_PATTERNS,
-        "/v3/def-docs" + GlobalConstant.ALL_PATTERNS,
-        "/v3/api-docs" + GlobalConstant.ALL_PATTERNS,
         "/mp3" + GlobalConstant.ALL_PATTERNS,
     };
 
