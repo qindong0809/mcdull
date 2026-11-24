@@ -6,7 +6,14 @@ import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 import io.gitee.dqcer.mcdull.framework.enforcer.ArchitectureEnforcer;
 
-/** focus 模块架构守护测试。 */
+/**
+ * focus 模块架构守护测试。
+ *
+ * <p>focus-facade 仅有一个不在 {@code ..facade..} 包内的 Main，
+ * 分析范围内没有 facade 契约类，因此不声明 {@code facadeDependencyRules} ——
+ * 该规则在这种情况下 0 命中静默通过，属于假守护。
+ * 架构规则采用零容忍策略，任何违规都会导致构建失败。
+ */
 @AnalyzeClasses(
         packages = "io.gitee.dqcer.mcdull.focus",
         importOptions = ImportOption.DoNotIncludeTests.class)
@@ -41,9 +48,6 @@ class FocusArchitectureTest {
 
     @ArchTest
     static final ArchRule ENTITY_PLACEMENT_RULES = ArchitectureEnforcer.entityPlacementRules();
-
-    @ArchTest
-    static final ArchRule FACADE_MUST_NOT_DEPEND_ON_PROVIDER = ArchitectureEnforcer.facadeDependencyRules();
 
     @ArchTest
     static final ArchRule NO_STANDARD_STREAMS = ArchitectureEnforcer.noStandardStreamsRule();

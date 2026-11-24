@@ -73,7 +73,7 @@ McDull 是一个基于 **Spring Boot 3 + Spring Cloud** 的企业级微服务开
 内置约束规则（以 system-impl 实测校准）：
 - 分层调用：`Controller` 不得被任何层访问；`Service` 可被 Controller/Entry/Manager 调用；`Manager` 可被 Service/Entry 调用；仅 Service/Manager 可调用 `Mapper`
 - `Entry` 层覆盖 Feign 服务端、facade SPI 实现、流程编排、监听器与定时任务等入口适配
-- 命名规范按包判定：`..dto..` ⇒ `DTO` 结尾、`..vo..` ⇒ `VO` 结尾、`..entity..` ⇒ `Entity` 结尾、`..bo..` ⇒ `BO` 结尾、`..dao.mapper..` ⇒ `Mapper` 结尾、枚举 ⇒ `Enum` 结尾
+- 命名规范按包判定：`..dto..` ⇒ `DTO` 结尾、`..vo..` ⇒ `VO` 结尾、`..entity..` ⇒ `Entity` 结尾、`..bo..` ⇒ `BO` 结尾、`..web.mapper..` ⇒ `Mapper` 结尾、枚举 ⇒ `Enum` 结尾
 - 角色归属按标记接口判定：实现 `DTO`/`VO`/`Entity` 的类必须位于对应角色包，防止 `MenuVO extends MenuEntity` 这类跨角色继承
 - `facade` 契约包不得依赖 `provider` 实现包，防止契约反向引用实现
 - 禁止 `System.out/err`、`e.printStackTrace()`
@@ -81,11 +81,15 @@ McDull 是一个基于 **Spring Boot 3 + Spring Cloud** 的企业级微服务开
 
 ```java
 // 按包根限定分析范围；不要排除 jar，否则同组的 *-facade 契约类不参与分析，
-// facade 隔离规则会 0 命中并静默通过
+// facade 隔离规则会 0 命中并静默通过（现由 facadeClassesLoadedRule 自动校验）
 @AnalyzeClasses(
         packages = "io.gitee.dqcer.mcdull.system",
         importOptions = ImportOption.DoNotIncludeTests.class)
 class SystemArchitectureTest {
+
+    // 自动校验 facade 契约类已进入测试 classpath，取代原先靠注释维持的约束
+    @ArchTest
+    static final ArchRule FACADE_CLASSES_LOADED = ArchitectureEnforcer.facadeClassesLoadedRule();
 
     @ArchTest
     static final ArchRule LAYER_CALL_RULES = ArchitectureEnforcer.layerChecks();
@@ -97,7 +101,9 @@ class SystemArchitectureTest {
 ```
 
 > `@ArchTest` 字段类型必须是 `ArchRule`，ArchUnit 不支持直接标注 `List<ArchRule>`。
-> 存量代码无法一次性合规时，用 `FreezingArchRule.freeze(rule)` 冻结基线、只拦截新增违规。
+> 架构守护采用**零容忍**策略：规则直接声明，任何违规都会导致构建失败，不生成基线文件。
+> 若某模块确有无法立即整改的存量违规，可临时改用 `ArchitectureEnforcer.frozen(...)` 冻结基线；此时需在测试 classpath 提供 `archunit.properties` 开启 `freeze.store.default.allowStoreCreation=true`，并将生成的 `archunit_store/` 基线文件随代码提交（否则 CI 每次都相当于首次运行）。基线只是过渡手段，目标仍是清零后回到零容忍。
+> `facadeClassesLoadedRule()` 用 `allowEmptyShould(false)` 把“0 命中”变成失败；仅适用于 facade 中确有契约类的模块（system / workflow / demo）。blaze 的 facade 为空模块、focus-facade 仅有一个不在 `facade` 包的 Main，这两个模块不声明该规则，也不声明本就空跑的 `facadeDependencyRules`。
 
 运行架构测试（与单元测试同一套生命周期，默认就会执行）：
 
@@ -699,7 +705,7 @@ mvn -B -pl mcdull-business/mcdull-business-demo/demo-impl test -Dtest=DemoTaskEn
 | 跳过测试只允许命令行 `-DskipTests` | 仅限本地紧急排查或热修，提交前必须用 `mvn clean install` 复验 |
 | 集成测试用 `@Disabled` 并写清原因 | 跳过必须是可见、可审计的；不要注释掉 `@Test` 冒充"这个模块没有测试" |
 
-**当前基线**：14 个测试类、91 个用例（含 2 个带原因的显式跳过）、0 失败；其中 65 个用例是 ArchUnit 架构规则，另有 1 个无断言的架构诊断用例（`ArchitectureDiagnosticTest`），仅用于输出报告，不作为门禁。
+**当前基线**：14 个测试类、92 个用例（含 2 个带原因的显式跳过）、0 失败；其中 66 个用例是 ArchUnit 架构规则（含 3 个 facade 契约类装载校验），另有 1 个无断言的架构诊断用例（`ArchitectureDiagnosticTest`），仅用于输出报告，不作为门禁。
 
 ### 开发流程
 

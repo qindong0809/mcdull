@@ -7,8 +7,8 @@ import io.gitee.dqcer.mcdull.framework.flow.load.ProcessDefinitionReader;
 import io.gitee.dqcer.mcdull.framework.flow.registry.NodeBeanPostProcessor;
 import io.gitee.dqcer.mcdull.framework.flow.registry.NodeRegistry;
 import io.gitee.dqcer.mcdull.framework.flow.registry.ProcessFlowRegistry;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * 工作流程自动配置
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  * @author dqcer
  * @since 2023/01/07 20:01:41
  */
-@Configuration
+@AutoConfiguration
 public class ProcessFlowAutoConfiguration {
 
     @Bean
@@ -30,7 +30,9 @@ public class ProcessFlowAutoConfiguration {
     }
 
     @Bean
-    public ProcessFlowRegistry processNodeAssembler(NodeRegistry nodeRegistry, ProcessDefinitionRegistry processDefinitionRegistry){
-        return new ProcessFlowRegistry(nodeRegistry,processDefinitionRegistry,processDefinitionReader());
+    public ProcessFlowRegistry processNodeAssembler(NodeRegistry nodeRegistry,
+                                                     ProcessDefinitionRegistry processDefinitionRegistry,
+                                                     ProcessDefinitionReader processDefinitionReader){
+        return new ProcessFlowRegistry(nodeRegistry,processDefinitionRegistry,processDefinitionReader);
     }
 }

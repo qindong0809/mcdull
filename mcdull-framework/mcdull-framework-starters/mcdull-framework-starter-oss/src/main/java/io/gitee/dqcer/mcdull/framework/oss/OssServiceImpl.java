@@ -10,7 +10,6 @@ import org.dromara.x.file.storage.core.FileStorageProperties;
 import org.dromara.x.file.storage.core.FileStorageService;
 import org.dromara.x.file.storage.core.upload.UploadPretreatment;
 import org.dromara.x.file.storage.spring.SpringFileStorageProperties;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.List;
  * @author dqcer
  * @since 2025/05/22
  */
-@Service
 public class OssServiceImpl implements OssService{
     public static final String FOLDER_TYPE = "folderType";
 

@@ -11,8 +11,8 @@ import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,7 @@ import java.util.Map;
  *
  * @author dqcer
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 @AutoConfigureBefore(Knife4jAutoConfiguration.class)
 @ConditionalOnProperty(name = "knife4j.enable", havingValue = "true")
 public class Knife4jCompatConfiguration {

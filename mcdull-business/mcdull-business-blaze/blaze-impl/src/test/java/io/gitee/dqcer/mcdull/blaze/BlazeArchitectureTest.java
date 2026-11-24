@@ -8,9 +8,10 @@ import io.gitee.dqcer.mcdull.framework.enforcer.ArchitectureEnforcer;
 
 /**
  * blaze 模块架构守护测试。
- * <p>
- * 不排除 jar：同组 facade 以 jar 形式进入测试 classpath，
- * 排除 jar 会让 facade 隔离规则静默通过。
+ *
+ * <p>blaze-facade 是空模块，分析范围内没有 {@code ..facade..} 契约类，
+ * 因此不声明 {@code facadeDependencyRules} —— 该规则在这种情况下 0 命中静默通过，属于假守护。
+ * 架构规则采用零容忍策略，任何违规都会导致构建失败。
  */
 @AnalyzeClasses(
         packages = "io.gitee.dqcer.mcdull.blaze",
@@ -46,9 +47,6 @@ class BlazeArchitectureTest {
 
     @ArchTest
     static final ArchRule ENTITY_PLACEMENT_RULES = ArchitectureEnforcer.entityPlacementRules();
-
-    @ArchTest
-    static final ArchRule FACADE_MUST_NOT_DEPEND_ON_PROVIDER = ArchitectureEnforcer.facadeDependencyRules();
 
     @ArchTest
     static final ArchRule NO_STANDARD_STREAMS = ArchitectureEnforcer.noStandardStreamsRule();

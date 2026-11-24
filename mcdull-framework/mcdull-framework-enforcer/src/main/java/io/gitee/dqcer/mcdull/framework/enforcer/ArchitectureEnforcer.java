@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.enforcer;
 
 import com.tngtech.archunit.lang.ArchRule;
+import com.tngtech.archunit.library.freeze.FreezingArchRule;
 import com.tngtech.archunit.library.GeneralCodingRules;
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
 import io.gitee.dqcer.mcdull.framework.base.support.Entity;
@@ -53,6 +54,45 @@ public final class ArchitectureEnforcer {
 
         // 不能直接抛出 Throwable、Exception、RuntimeException异常
         REQUIRED_RULES.add(noGenericExceptionsRule());
+    }
+
+    /**
+     * 冻结规则基线：首次运行记录当前违规，后续仅拦截新增违规。
+     * <p>
+     * 默认架构守护采用零容忍策略，业务测试类直接声明规则，不使用本方法。
+     * 仅当某模块存在无法立即整改的存量违规、需要渐进治理时，才用它包装规则。
+     * <p>
+     * 使用时需在测试 classpath 提供 {@code archunit.properties} 并开启
+     * {@code freeze.store.default.allowStoreCreation=true}，且将生成的 {@code archunit_store/}
+     * 基线文件随代码提交，否则 CI 每次都相当于首次运行，新增违规会被自动冻结。
+     * 基线只是过渡手段，目标仍是清零后回到零容忍。
+     *
+     * @param rule 原始规则
+     * @return 冻结后的规则
+     */
+    public static ArchRule frozen(ArchRule rule) {
+        return FreezingArchRule.freeze(rule);
+    }
+
+    /**
+     * facade 契约类必须已进入测试 classpath。
+     * <p>
+     * {@code @AnalyzeClasses} 若误加 {@code DoNotIncludeJars}，{@code ..facade..} 内将无类可查，
+     * {@link #facadeDependencyRules()} 会 0 命中静默通过。本规则用 {@code allowEmptyShould(false)}
+     * 将"0 命中"变为失败，把原先靠注释维持的约束变成可执行检查。
+     * <p>
+     * 仅适用于 facade 中确有契约类的模块（system / workflow / demo）。
+     * blaze 的 facade 为空模块、focus-facade 仅有一个不在 facade 包的 Main，
+     * 这两个模块的 facadeDependencyRules 无实际检查对象，不应声明本规则。
+     *
+     * @return 类加载校验规则
+     */
+    public static ArchRule facadeClassesLoadedRule() {
+        return classes()
+                .that().resideInAPackage("..facade..")
+                .should().haveNameMatching(".*")
+                .allowEmptyShould(false)
+                .as("facade 契约类必须已进入测试 classpath（禁止排除 jar）");
     }
 
 

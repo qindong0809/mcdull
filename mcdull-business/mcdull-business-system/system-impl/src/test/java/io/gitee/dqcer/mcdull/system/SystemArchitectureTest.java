@@ -8,14 +8,18 @@ import io.gitee.dqcer.mcdull.framework.enforcer.ArchitectureEnforcer;
 
 /**
  * system 模块架构守护测试。
- * <p>
- * 只按包根限定分析范围，不排除 jar：system-facade 在本模块中以 jar 形式存在，
- * 若开启 DoNotIncludeJars 则 ..facade.. 内无类可查，facade 隔离规则会静默通过。
+ *
+ * <p>不排除 jar：system-facade 以 jar 形式进入测试 classpath。
+ * jar 是否真正加载由 {@link #FACADE_CLASSES_LOADED} 自动校验，不再依赖注释维持。
+ * 架构规则采用零容忍策略，任何违规都会导致构建失败。
  */
 @AnalyzeClasses(
         packages = "io.gitee.dqcer.mcdull.system",
         importOptions = ImportOption.DoNotIncludeTests.class)
 class SystemArchitectureTest {
+
+    @ArchTest
+    static final ArchRule FACADE_CLASSES_LOADED = ArchitectureEnforcer.facadeClassesLoadedRule();
 
     @ArchTest
     static final ArchRule LAYER_CALL_RULES = ArchitectureEnforcer.layerChecks();

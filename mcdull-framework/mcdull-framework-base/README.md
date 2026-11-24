@@ -1,38 +1,24 @@
 # mcdull-framework-base
 
-mcdull-framework-base 是 MCDull 框架的基础模块，提供了核心依赖和基础功能支持。
+基础契约层：69 个 Java / 15 包。只定义稳定“形状”，不承载业务语义。
 
-## 项目简介
+非 BOM、非 Starter、无自动装配；易变值集合禁止下沉。
 
-mcdull-framework-base 是 MCDull 框架的基础组件，为其他模块提供通用的依赖管理和基础功能。该模块包含了框架运行所需的核心依赖，确保各模块间的依赖一致性。
-
-## 功能特性
-
-- 提供统一的依赖管理
-- 集成常用工具库
-- 支持数据验证
-- 提供日志支持
-
-## 核心依赖
-
-| 依赖 | 版本 | 说明 |
-|------|------|------|
-| mybatis-plus-core | provided | MyBatis-Plus 核心库（按需引入） |
-| hibernate-validator | - | 数据验证框架 |
-| slf4j-api | - | 日志接口 |
-| hutool-core | - | 工具类库 |
-
-## 如何使用
-
-### Maven 依赖
-
-在项目的 `pom.xml` 文件中添加以下依赖：
+## 接入
 
 ```xml
 <dependency>
-    <groupId>io.gitee.dqcer</groupId>
-    <artifactId>mcdull-framework-base</artifactId>
-    <version>${mcdull.version}</version>
+  <groupId>io.gitee.dqcer</groupId>
+  <artifactId>mcdull-framework-base</artifactId>
+  <version>${revision}</version>
 </dependency>
 ```
+
+## 注意
+
+- `InnerResult`：`unwrap()` 失败还原异常且 null 抛错；`unwrapOrNull()` 允许 null；`checkOk()` 只校验状态。
+- `@UnAuthorize` 当前无人消费；放行走安全模块白名单或 `@SaIgnore`。
+- `@EnumsIntValid(required=false)` 直接放行，不做枚举反查。
+- `@Transform` 由 `starter-web`、`@SchemaEnum` 由 `starter-doc` 消费；仅引入 base 不生效。
+- 新增/删除公开类时同步更新上表。
 

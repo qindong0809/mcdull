@@ -7,8 +7,9 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 
 
@@ -19,7 +20,8 @@ import org.springframework.http.HttpHeaders;
  * @author dqcer
  * @since  2023/12/13
  */
-@Configuration
+@AutoConfiguration
+@Import({SchemaEnumPropertyCustomizer.class, Knife4jOperationCustomizer.class})
 public class OpenApiConfig {
 
     public static final String SAME_TOKEN = "Authorization";
