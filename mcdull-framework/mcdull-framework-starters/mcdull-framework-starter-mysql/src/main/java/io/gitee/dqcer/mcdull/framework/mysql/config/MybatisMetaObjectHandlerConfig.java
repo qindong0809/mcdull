@@ -52,7 +52,6 @@ public class MybatisMetaObjectHandlerConfig implements MetaObjectHandler {
                 if (baseEntity.getCreatedBy() == null) {
                     baseEntity.setCreatedBy(UserContextHolder.userId());
                 }
-                baseEntity.setCreatedBy(UserContextHolder.userId());
                 if (baseEntity.getUpdatedTime() == null) {
                     baseEntity.setUpdatedTime(UserContextHolder.getSession().getNow());
                 }

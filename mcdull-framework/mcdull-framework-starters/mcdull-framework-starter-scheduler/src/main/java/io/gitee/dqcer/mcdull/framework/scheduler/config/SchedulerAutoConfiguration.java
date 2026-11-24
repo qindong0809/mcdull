@@ -30,6 +30,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -290,22 +291,40 @@ public class SchedulerAutoConfiguration {
     // ==================== 私有工具方法 ====================
 
     private void createScheduledTasksTable(DataSource dataSource) {
-        try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(CREATE_SCHEDULED_TASKS_DDL);
-            log.info("[mcdull-scheduler] 已确认 scheduled_tasks 表存在");
-        } catch (Exception e) {
-            log.warn("[mcdull-scheduler] 自动建表失败（可能表已存在或无权限）: {}", e.getMessage());
-        }
+        ensureTable(dataSource, CREATE_SCHEDULED_TASKS_DDL, "scheduled_tasks");
     }
 
     private void createTaskExecutionTable(DataSource dataSource) {
+        ensureTable(dataSource, CREATE_TASK_EXECUTION_DDL, "scheduler_task_execution");
+    }
+
+    /**
+     * 确认调度表可用：优先自动建表；失败时若表已存在（账号无 DDL 权限）则放行，
+     * 表确实缺失则 fail-fast，避免服务启动后调度静默失效。
+     */
+    void ensureTable(DataSource dataSource, String ddl, String tableName) {
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement()) {
-            stmt.execute(CREATE_TASK_EXECUTION_DDL);
-            log.info("[mcdull-scheduler] 已确认 scheduler_task_execution 表存在");
+            stmt.execute(ddl);
+            log.info("[mcdull-scheduler] 已确认 {} 表存在", tableName);
         } catch (Exception e) {
-            log.warn("[mcdull-scheduler] 自动创建执行历史表失败: {}", e.getMessage());
+            if (tableExists(dataSource, tableName)) {
+                log.info("[mcdull-scheduler] {} 表已存在，跳过自动建表（当前账号无 DDL 权限）: {}",
+                        tableName, e.getMessage());
+                return;
+            }
+            throw new IllegalStateException("[mcdull-scheduler] 调度表 " + tableName
+                    + " 不存在且自动创建失败，服务无法启动", e);
+        }
+    }
+
+    private boolean tableExists(DataSource dataSource, String tableName) {
+        try (Connection conn = dataSource.getConnection();
+             ResultSet rs = conn.getMetaData().getTables(conn.getCatalog(), null, tableName, new String[]{"TABLE"})) {
+            return rs.next();
+        } catch (Exception e) {
+            log.warn("[mcdull-scheduler] 检查表 {} 是否存在失败: {}", tableName, e.getMessage());
+            return false;
         }
     }
 

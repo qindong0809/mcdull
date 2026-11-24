@@ -1,1 +1,2 @@
 io.gitee.dqcer.mcdull.framework.scheduler.config.SchedulerAutoConfiguration
+io.gitee.dqcer.mcdull.framework.scheduler.config.SchedulerHealthAutoConfiguration
