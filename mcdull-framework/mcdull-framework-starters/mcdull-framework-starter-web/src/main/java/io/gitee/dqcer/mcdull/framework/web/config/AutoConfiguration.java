@@ -54,7 +54,7 @@ public class AutoConfiguration {
         filter.setIncludeClientInfo(true);
         filter.setIncludeQueryString(true);
         filter.setIncludePayload(true);
-        filter.setIncludeHeaders(true);
+        filter.setIncludeHeaders(false);
         filter.setMaxPayloadLength(1000);
         registrationBean.setFilter(filter);
         return registrationBean;

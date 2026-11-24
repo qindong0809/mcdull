@@ -1,6 +1,5 @@
 package io.gitee.dqcer.mcdull.gateway.filter;
 
-import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
 import io.gitee.dqcer.mcdull.framework.base.util.RandomUtil;
 import org.slf4j.Logger;
@@ -11,7 +10,6 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -20,7 +18,7 @@ import reactor.core.publisher.Mono;
 
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -36,6 +34,9 @@ public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {
 
     private static final String START_TIME = "startTime";
 
+    private static final List<String> LOG_HEADER_ALLOWLIST =
+            List.of("User-Agent", "Content-Type", "Accept", "X-Forwarded-For");
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
@@ -46,19 +47,16 @@ public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {
         addHeader(mutate, HttpHeaderConstants.TRACE_ID_HEADER, traceId);
         MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
 
-//        if (log.isInfoEnabled()) {
-//            log.info("请求地址:{} 来源Ip: {}", request.getURI(), IpUtils.getRealIp(request));
-//        }
-
-        // 打印请求头
-        HttpHeaders headers = exchange.getRequest().getHeaders();
-        StringJoiner keyValue = new StringJoiner(StrUtil.COMMA + StrUtil.SPACE);
-        headers.forEach((headerName, headerValue) -> {
-            keyValue.add(headerName + StrUtil.COLON + String.join(",", headerValue));
-        });
+        StringBuilder headerSummary = new StringBuilder();
+        for (String name : LOG_HEADER_ALLOWLIST) {
+            String value = request.getHeaders().getFirst(name);
+            headerSummary.append(name).append(':')
+                    .append(value == null || value.isEmpty() ? "-" : value)
+                    .append(", ");
+        }
 
         if (log.isInfoEnabled()) {
-            log.info("===Headers===  {}", keyValue);
+            log.info("===Headers=== {}", headerSummary);
         }
 
         exchange.getAttributes().put(START_TIME, System.currentTimeMillis());
