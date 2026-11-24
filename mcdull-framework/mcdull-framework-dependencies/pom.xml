@@ -25,7 +25,6 @@
         <mcdull.version>1.0.0</mcdull.version>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
-        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
         <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
         <maven-site-plugin.version>3.11.0</maven-site-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
@@ -52,13 +51,13 @@
         <!-- knife4j 4.5.0 传递的 springdoc 2.3.0 / swagger 2.2.19 不兼容 Spring Framework 6.2 (Boot 3.5) -->
         <springdoc.version>2.8.17</springdoc.version>
         <swagger-api.version>2.2.47</swagger-api.version>
-        <fastjson.version>1.2.83</fastjson.version>
         <fastjson2.version>2.0.42</fastjson2.version>
         <hutool.version>5.8.43</hutool.version>
         <archunit.version>1.0.1</archunit.version>
         <kaptcha.version>2.3.3</kaptcha.version>
         <easyexcel.version>4.0.1</easyexcel.version>
-        <poi.version>4.1.2</poi.version>
+        <!-- 与 easyexcel-core 4.0.1 的传递依赖对齐，避免 POI 4.x 与 EasyExcel 4.x 二进制不兼容 -->
+        <poi.version>5.2.5</poi.version>
         <itext7.version>7.2.5</itext7.version>
         <html2pdf.version>4.0.5</html2pdf.version>
         <sa-token.version>1.42.0</sa-token.version>
@@ -74,7 +73,6 @@
         <!-- ===== 上收各业务/框架模块此前内联的第三方版本，单一来源管理 ===== -->
         <jjwt.version>0.12.6</jjwt.version>
         <warm-flow.version>1.7.3</warm-flow.version>
-        <jsch.version>0.1.55</jsch.version>
         <ganymed-ssh2.version>build210</ganymed-ssh2.version>
         <ip2region.version>2.7.0</ip2region.version>
         <velocity.version>2.3</velocity.version>
@@ -209,11 +207,6 @@
                 <version>${mysql.version}</version>
             </dependency>
             <!--参数效验 hibernate-validator 的坐标与版本统一由 spring-boot-dependencies 管理，这里不再声明 -->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson.version}</version>
-            </dependency>
             <!-- 项目内 JSON 序列化统一使用 fastjson2，hutool-json 已移除 -->
             <dependency>
                 <groupId>com.alibaba.fastjson2</groupId>
@@ -384,11 +377,6 @@
             </dependency>
             <!-- SSH / 远程 -->
             <dependency>
-                <groupId>com.jcraft</groupId>
-                <artifactId>jsch</artifactId>
-                <version>${jsch.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>ch.ethz.ganymed</groupId>
                 <artifactId>ganymed-ssh2</artifactId>
                 <version>${ganymed-ssh2.version}</version>
@@ -516,15 +504,6 @@
             </resource>
         </resources>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

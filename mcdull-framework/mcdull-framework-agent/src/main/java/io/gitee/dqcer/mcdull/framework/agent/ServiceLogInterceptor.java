@@ -2,9 +2,8 @@ package io.gitee.dqcer.mcdull.framework.agent;
 
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONWriter;
 import io.gitee.dqcer.mcdull.framework.agent.model.ServiceGcLog;
 import io.gitee.dqcer.mcdull.framework.agent.model.ServiceLog;
 import net.bytebuddy.implementation.bind.annotation.*;
@@ -67,7 +66,7 @@ public class ServiceLogInterceptor {
             // 原有函数执行
             result = callable.call();
 
-            respResult = JSONObject.toJSONString(result, SerializerFeature.IgnoreErrorGetter);
+            respResult = JSON.toJSONString(result, JSONWriter.Feature.IgnoreErrorGetter);
 
             return result;
         } catch (Exception e){
@@ -111,7 +110,7 @@ public class ServiceLogInterceptor {
         serviceLog.setStatus(status);
         serviceLog.setTraceId(MDC.get("traceId"));
 
-        log.info("Agent: {}, GC: {}", JSONObject.toJSONString(serviceLog, SerializerFeature.IgnoreErrorGetter), JSONArray.toJSONString(gcInfos));
+        log.info("Agent: {}, GC: {}", JSON.toJSONString(serviceLog, JSONWriter.Feature.IgnoreErrorGetter), JSON.toJSONString(gcInfos));
         try {
             savedb(serviceLog, gcInfos);
         } catch (SQLException e) {
@@ -128,7 +127,7 @@ public class ServiceLogInterceptor {
      */
     public ServiceLog getBaseInfoArgs(ServiceLog serviceLog, Object[] args, Method method){
         serviceLog.setMethodName(method.getName());
-        serviceLog.setReqArgs(JSONObject.toJSONString(args, SerializerFeature.IgnoreErrorGetter));
+        serviceLog.setReqArgs(JSON.toJSONString(args, JSONWriter.Feature.IgnoreErrorGetter));
         serviceLog.setClassName(method.getDeclaringClass().getName());
         return serviceLog;
     }
