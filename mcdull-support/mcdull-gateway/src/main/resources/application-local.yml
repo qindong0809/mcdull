@@ -38,8 +38,9 @@ sa-token:
 
 logging:
   level:
-    org.springframework.cloud.gateway: DEBUG
-    org.springframework.web.reactive: DEBUG
+    org.springframework.cloud.gateway: INFO
+    org.springframework.web.reactive: INFO
+    io.gitee.dqcer.mcdull.gateway: INFO
 management:
   endpoint:
     health:

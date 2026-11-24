@@ -29,7 +29,6 @@ mcdull-framework-starter-web 是 MCDull 框架的 Web 启动器组件，整合�
 | mcdull-framework-starter-security | - | 安全认证模块 |
 | mcdull-framework-base | - | 基础模块 |
 | mcdull-framework-starter-feign | provided | 服务调用模块 |
-| mcdull-framework-config | - | 配置模块 |
 | mcdull-framework-starter-mysql | - | MySQL 数据库模块 |
 | mcdull-framework-starter-monitor | - | 监控模块 |
 | hutool-json | - | JSON 工具库 |

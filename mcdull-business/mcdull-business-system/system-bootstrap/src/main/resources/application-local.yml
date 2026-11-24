@@ -44,7 +44,7 @@ sa-token:
 
 logging:
   level:
-    io.gitee.dqcer.mcdull.system: debug
+    io.gitee.dqcer.mcdull.system: INFO
 management:
   endpoint:
     health:

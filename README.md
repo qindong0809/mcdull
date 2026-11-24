@@ -525,7 +525,6 @@ mcdull/
 │   ├── mcdull-framework-base           # 基础组件
 │   ├── mcdull-framework-spi            # 跨 Starter 的扩展点契约（只放接口）
 │   ├── mcdull-framework-json           # 日期序列化契约（@DynamicDateFormat、TimeZoneUtil）
-│   ├── mcdull-framework-config         # 配置管理
 │   ├── mcdull-framework-agent          # Java Agent 性能探针
 │   ├── mcdull-framework-enforcer       # 架构约束（ArchUnit）
 │   ├── mcdull-framework-apis/          # 能力契约层（业务只依赖这里，不含自动装配）

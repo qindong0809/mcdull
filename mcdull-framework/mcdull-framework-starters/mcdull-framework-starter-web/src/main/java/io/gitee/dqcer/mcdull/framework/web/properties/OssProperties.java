@@ -1,4 +1,6 @@
-package io.gitee.dqcer.mcdull.framework.config.properties;
+package io.gitee.dqcer.mcdull.framework.web.properties;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * oss属性
@@ -6,6 +8,7 @@ package io.gitee.dqcer.mcdull.framework.config.properties;
  * @author dqcer
  * @since 2023/03/21
  */
+@ConfigurationProperties(prefix = "mcdull.oss")
 public class OssProperties {
 
     public static final Long DEFAULT_MAX_FILE_SIZE = 5L;

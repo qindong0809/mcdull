@@ -1,7 +1,7 @@
 package io.gitee.dqcer.mcdull.framework.redis.operation;
 
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
+import org.springframework.beans.factory.annotation.Value;
 import io.gitee.dqcer.mcdull.framework.redis.cache.ICache;
 import cn.hutool.core.collection.IterUtil;
 import jakarta.annotation.Resource;
@@ -40,12 +40,11 @@ public class RedissonCache implements ICache {
     @Resource
     private RedissonClient redissonClient;
 
-    @Resource
-    private McdullProperties mcdullProperties;
-
+    @Value("${spring.application.name:unknown}")
+    private String applicationName;
 
     private String prefix() {
-        return mcdullProperties.getApplicationName() + ":";
+        return applicationName + ":";
     }
 
     @Override

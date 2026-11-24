@@ -1,10 +1,8 @@
 package io.gitee.dqcer.mcdull.devtools.portal.config;
 
-import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.redis.ratelimit.ConcurrentRateLimiter;
 import io.gitee.dqcer.mcdull.framework.spi.DynamicLocaleMessageSource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +16,6 @@ import java.util.function.Supplier;
  * @author tools
  */
 @Configuration
-@EnableConfigurationProperties(McdullProperties.class)
 public class ToolsAutoConfiguration {
 
     @Bean

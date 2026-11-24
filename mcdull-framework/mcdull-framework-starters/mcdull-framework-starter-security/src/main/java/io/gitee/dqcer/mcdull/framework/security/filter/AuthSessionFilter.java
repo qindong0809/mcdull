@@ -8,8 +8,7 @@ import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.CacheUserSession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.config.properties.GatewayProperties;
-import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
+import io.gitee.dqcer.mcdull.framework.security.config.GatewayProperties;
 import io.gitee.dqcer.mcdull.framework.security.StpKit;
 import io.gitee.dqcer.mcdull.framework.security.advice.SaTokenExceptionAdvice;
 import jakarta.servlet.FilterChain;
@@ -58,11 +57,11 @@ public class AuthSessionFilter extends OncePerRequestFilter {
         "/mp3" + GlobalConstant.ALL_PATTERNS,
     };
 
-    private final McdullProperties mcdullProperties;
+    private final GatewayProperties gatewayProperties;
     private final SaTokenExceptionAdvice saTokenExceptionAdvice;
 
-    public AuthSessionFilter(McdullProperties mcdullProperties, SaTokenExceptionAdvice saTokenExceptionAdvice) {
-        this.mcdullProperties = mcdullProperties;
+    public AuthSessionFilter(GatewayProperties gatewayProperties, SaTokenExceptionAdvice saTokenExceptionAdvice) {
+        this.gatewayProperties = gatewayProperties;
         this.saTokenExceptionAdvice = saTokenExceptionAdvice;
     }
 
@@ -105,9 +104,8 @@ public class AuthSessionFilter extends OncePerRequestFilter {
     }
 
     public boolean shouldSkipAuth(String path) {
-        GatewayProperties gateway = mcdullProperties.getGateway();
         List<String> allNoAuthList = new ArrayList<>();
-        List<String> noAuthList = gateway.getNoAuth();
+        List<String> noAuthList = gatewayProperties.getNoAuth();
         if (CollUtil.isNotEmpty(noAuthList)) {
             allNoAuthList.addAll(noAuthList);
         }

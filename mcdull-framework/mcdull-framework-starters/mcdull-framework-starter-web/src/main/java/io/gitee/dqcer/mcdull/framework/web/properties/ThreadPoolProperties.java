@@ -1,4 +1,6 @@
-package io.gitee.dqcer.mcdull.framework.config.properties;
+package io.gitee.dqcer.mcdull.framework.web.properties;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.concurrent.TimeUnit;
 
@@ -8,6 +10,7 @@ import java.util.concurrent.TimeUnit;
  * @author dqcer
  * @since 2022/12/18
  */
+@ConfigurationProperties(prefix = "mcdull.thread-pool")
 public class ThreadPoolProperties {
 
     /**

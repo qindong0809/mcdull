@@ -1,12 +1,10 @@
 package io.gitee.dqcer.mcdull.framework.security.config;
 
-import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import io.gitee.dqcer.mcdull.framework.security.advice.SaTokenExceptionAdvice;
 import io.gitee.dqcer.mcdull.framework.security.aspect.AuditAspect;
 import io.gitee.dqcer.mcdull.framework.security.filter.AuthSessionFilter;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +21,6 @@ import org.springframework.context.annotation.Import;
  */
 @AutoConfiguration
 @Import(SaTokenExceptionAdvice.class)
-@EnableConfigurationProperties(McdullProperties.class)
 public class AuthAutoConfiguration {
 
     /**
@@ -43,9 +40,9 @@ public class AuthAutoConfiguration {
 
         @Bean
         public FilterRegistrationBean<AuthSessionFilter> authSessionFilterRegistrationBean(
-                McdullProperties mcdullProperties, SaTokenExceptionAdvice saTokenExceptionAdvice) {
+                GatewayProperties gatewayProperties, SaTokenExceptionAdvice saTokenExceptionAdvice) {
             FilterRegistrationBean<AuthSessionFilter> registrationBean = new FilterRegistrationBean<>();
-            registrationBean.setFilter(new AuthSessionFilter(mcdullProperties, saTokenExceptionAdvice));
+            registrationBean.setFilter(new AuthSessionFilter(gatewayProperties, saTokenExceptionAdvice));
             // 晚于 starter-web 的 HttpTraceLogFilter(order=2)：需要它先建好 UnifySession 再回填登录态
             registrationBean.setOrder(3);
             registrationBean.setEnabled(true);

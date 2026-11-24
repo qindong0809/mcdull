@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.gateway.config;
 
 
 import io.gitee.dqcer.mcdull.gateway.handler.ExceptionHandler;
-import io.gitee.dqcer.mcdull.gateway.properties.McdullGatewayProperties;
+import io.gitee.dqcer.mcdull.gateway.properties.GatewayProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -32,7 +32,7 @@ import java.util.List;
  * @since 2022/10/26
  */
 @Configuration
-@EnableConfigurationProperties(McdullGatewayProperties.class)
+@EnableConfigurationProperties(GatewayProperties.class)
 public class GatewayConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(GatewayConfiguration.class);

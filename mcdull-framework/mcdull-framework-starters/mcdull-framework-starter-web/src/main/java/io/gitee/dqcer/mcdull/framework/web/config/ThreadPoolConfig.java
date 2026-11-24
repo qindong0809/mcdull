@@ -2,8 +2,7 @@ package io.gitee.dqcer.mcdull.framework.web.config;
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
-import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
-import io.gitee.dqcer.mcdull.framework.config.properties.ThreadPoolProperties;
+import io.gitee.dqcer.mcdull.framework.web.properties.ThreadPoolProperties;
 import io.gitee.dqcer.mcdull.framework.web.context.AsyncContextSupport;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
@@ -35,7 +34,7 @@ public class ThreadPoolConfig implements AsyncConfigurer {
     private static final Logger log = LoggerFactory.getLogger(ThreadPoolConfig.class);
 
     @Resource
-    private McdullProperties mcdullProperties;
+    private ThreadPoolProperties threadPoolProperties;
     @Resource
     private ObjectProvider<List<TaskDecorator>> taskDecoratorsProvider;
     @Resource
@@ -43,7 +42,7 @@ public class ThreadPoolConfig implements AsyncConfigurer {
 
     @Bean("threadPoolTaskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
-        ThreadPoolProperties threadPool = mcdullProperties.getThreadPool();
+        ThreadPoolProperties threadPool = threadPoolProperties;
         LogHelp.info(log, "Init Thread Pool Config: {}", threadPool);
 
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

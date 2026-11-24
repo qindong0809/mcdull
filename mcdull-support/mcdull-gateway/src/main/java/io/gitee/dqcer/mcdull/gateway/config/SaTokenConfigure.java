@@ -5,7 +5,7 @@ import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpLogic;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
-import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
+import io.gitee.dqcer.mcdull.gateway.properties.GatewayProperties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
@@ -24,10 +24,10 @@ public class SaTokenConfigure {
             "/api/system/administrator/**",
     };
 
-    private final McdullProperties mcdullProperties;
+    private final GatewayProperties gatewayProperties;
 
-    public SaTokenConfigure(McdullProperties mcdullProperties) {
-        this.mcdullProperties = mcdullProperties;
+    public SaTokenConfigure(GatewayProperties gatewayProperties) {
+        this.gatewayProperties = gatewayProperties;
     }
 
     @Bean
@@ -38,7 +38,7 @@ public class SaTokenConfigure {
 
         // 免鉴权地址来自 mcdull.gateway.no-auth，与业务服务共用同一套配置约定；
         // 登录相关接口必须放行，否则未登录时请求验证码会被判定未登录，前端 401 后 reload 形成死循环
-        List<String> noAuth = mcdullProperties.getGateway().getNoAuth();
+        List<String> noAuth = gatewayProperties.getNoAuth();
         if (noAuth.isEmpty()) {
             log.warn("mcdull.gateway.no-auth 为空，登录接口也会被鉴权拦截");
         }

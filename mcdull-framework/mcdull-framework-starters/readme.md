@@ -98,8 +98,8 @@ public void executeFlow() {
 
 ## 依赖契约
 
-`mcdull-framework-starter-web` 只传递 `mcdull-framework-base`、`mcdull-framework-config`、
-`mcdull-framework-spi`。它**不再**传递 `starter-security`、`starter-oss`、`starter-doc`、
+`mcdull-framework-starter-web` 只传递 `mcdull-framework-base`、`mcdull-framework-spi`。
+它**不再**传递 `starter-security`、`starter-oss`、`starter-doc`、
 `starter-monitor`、`starter-redis`、`starter-mysql`，也不再携带日期序列化器（已独立成
 `mcdull-framework-json`）与 CRUD 基座（已下沉到 `core-mysql`）。
 
@@ -149,13 +149,14 @@ public void executeFlow() {
 ### 鉴权闸门的装配
 
 starter-security 自带装配入口（`META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`
-→ `AuthAutoConfiguration`），把 jar 放到 classpath 即完成接入，消费方不需要 `@Import`：
+→ `AuthAutoConfiguration`、`SecurityPropertiesAutoConfiguration`），把 jar 放到 classpath 即完成接入，
+消费方不需要 `@Import`：
 
 - `AuthSessionFilter`（order=3）：按路径选择 `StpKit.ADMIN/APP_USER/DEFAULT` 会话并回填 `UnifySession`，
   未登录时渲染 401。它依赖 servlet，非 servlet 应用由 `@ConditionalOnWebApplication(type = SERVLET)` 跳过。
 - `SaTokenExceptionAdvice`：处理过滤器链内抛出、由 MVC 接管的 `SaTokenException`。
 - `AuditAspect`：把 `@SaCheckEL` 校验到的权限码写进会话；注解本身的拦截由 `sa-token-spring-el` 完成。
-- 白名单仍读 `mcdull.gateway.no-auth`（`McdullProperties`），语义与迁移前一致；`mcdull-devtools-portal`
+- 白名单仍读 `mcdull.gateway.no-auth`（starter-security 本地的 `GatewayProperties`），语义与迁移前一致；`mcdull-devtools-portal`
   配的是 `/**` 全量放行，因此它只需 `cn.dev33:sa-token-core` 提供 `@SaIgnore` 注解，不需要闸门。
 
 web 的 `HttpTraceLogFilter`（order=2）只做 traceId、`UnifySession` 骨架与数据源路由，闸门晚一层执行，

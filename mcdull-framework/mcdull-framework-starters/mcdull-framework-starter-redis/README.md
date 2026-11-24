@@ -25,7 +25,6 @@ mcdull-framework-starter-redis 是 MCDull 框架的 Redis 集成模块，基于 
 | aspectjweaver | 切面支持 |
 | mcdull-framework-api-redis | 零依赖契约包 |
 | mcdull-framework-base | provided |
-| mcdull-framework-config | provided |
 
 ## 如何使用
 

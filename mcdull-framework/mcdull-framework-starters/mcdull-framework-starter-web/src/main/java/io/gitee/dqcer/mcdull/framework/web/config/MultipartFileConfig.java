@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.framework.web.config;
 
-import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
-import io.gitee.dqcer.mcdull.framework.config.properties.OssProperties;
+import io.gitee.dqcer.mcdull.framework.web.properties.OssProperties;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,11 +19,11 @@ import jakarta.servlet.MultipartConfigElement;
 public class MultipartFileConfig {
 
     @Resource
-    private McdullProperties mcdullProperties;
+    private OssProperties ossProperties;
 
     @Bean
     public MultipartConfigElement multipartConfigElement() {
-        OssProperties oss = mcdullProperties.getOss();
+        OssProperties oss = ossProperties;
         MultipartConfigFactory factory = new MultipartConfigFactory();
         factory.setMaxFileSize(DataSize.ofGigabytes(oss.getMaxFileSize()));
         factory.setMaxRequestSize(DataSize.ofGigabytes(oss.getMaxRequestSize()));

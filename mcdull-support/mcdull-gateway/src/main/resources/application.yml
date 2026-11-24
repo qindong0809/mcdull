@@ -83,15 +83,16 @@ mcdull:
   gateway:
     no-auth:
       - /favicon.ico
+      - /actuator/**
       - /api/system/login/getCaptcha
       - /api/system/login/enabled-captcha
       - /api/system/login
       # 管理端登录与验证码：使用 ADMIN 会话签发 token，必须在网关放行
       - /api/system/administrator/auth/login
       - /api/system/administrator/auth/captcha/image
-      # 兼容 /uac/** 存量路由
-      - /uac/administrator/auth/login
-      - /uac/administrator/auth/captcha/image
+      # 兼容 /api/** 存量路由
+      - /api/administrator/auth/login
+      - /api/administrator/auth/captcha/image
 
 # 监控端点安全规范收归本地
 management:

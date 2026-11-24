@@ -8,7 +8,7 @@ import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.redis.ratelimit.ConcurrentRateLimiter;
 import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
-import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
+import org.springframework.beans.factory.annotation.Value;
 import io.gitee.dqcer.mcdull.framework.spi.DynamicLocaleMessageSource;
 import io.gitee.dqcer.mcdull.framework.web.util.ServletUtil;
 import jakarta.annotation.Resource;
@@ -35,8 +35,8 @@ public abstract class BasicController {
     @Resource
     protected DynamicLocaleMessageSource dynamicLocaleMessageSource;
 
-    @Resource
-    protected McdullProperties mcdullProperties;
+    @Value("${spring.application.name:unknown}")
+    protected String applicationName;
 
     protected Logger log = LoggerFactory.getLogger(getClass());
 
@@ -67,7 +67,7 @@ public abstract class BasicController {
     }
 
     private String buildKeyName(String key) {
-        return mcdullProperties.getApplicationName() + ":" + GlobalConstant.RATE_LIMITER + key;
+        return applicationName + ":" + GlobalConstant.RATE_LIMITER + key;
     }
 
     protected <T> void rateLimiter(String key, int quantity, int seconds, Consumer<T> function) {
@@ -89,7 +89,6 @@ public abstract class BasicController {
      * @return T
      */
     protected <T> T locker(String key, long timeout, Supplier<T> function) {
-        String applicationName = mcdullProperties.getApplicationName();
         String logKey = StrUtil.format("{}_{}_{}:{}", GlobalConstant.ROOT_PREFIX, applicationName, key);
         return concurrentRateLimiter.locker(key, timeout, function);
     }

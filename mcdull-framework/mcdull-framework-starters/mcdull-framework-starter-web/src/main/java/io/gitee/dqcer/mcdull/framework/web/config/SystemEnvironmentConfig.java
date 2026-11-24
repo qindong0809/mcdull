@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import io.gitee.dqcer.mcdull.framework.web.env.SystemEnvironment;
 import io.gitee.dqcer.mcdull.framework.web.enums.EnvironmentEnum;
 import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
-import io.gitee.dqcer.mcdull.framework.config.properties.McdullProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Condition;
@@ -13,7 +12,6 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
-import jakarta.annotation.Resource;
 
 /**
  * system environment config
@@ -27,8 +25,8 @@ public class SystemEnvironmentConfig implements Condition {
     @Value("${spring.profiles.active:dev}")
     private String systemEnvironment;
 
-    @Resource
-    private McdullProperties mcdullProperties;
+    @Value("${spring.application.name:unknown}")
+    private String applicationName;
 
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
@@ -51,7 +49,7 @@ public class SystemEnvironmentConfig implements Condition {
         }
         SystemEnvironment environment = new SystemEnvironment();
         environment.setProd(EnvironmentEnum.PROD.getCode().equals(environmentEnum.getCode()));
-        environment.setProjectName(mcdullProperties.getApplicationName());
+        environment.setProjectName(applicationName);
         environment.setEnvironment(environmentEnum.getCode());
         return environment;
     }

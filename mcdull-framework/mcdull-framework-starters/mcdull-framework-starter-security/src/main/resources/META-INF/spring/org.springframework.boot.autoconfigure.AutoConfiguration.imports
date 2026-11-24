@@ -1,1 +1,2 @@
 io.gitee.dqcer.mcdull.framework.security.config.AuthAutoConfiguration
+io.gitee.dqcer.mcdull.framework.security.config.SecurityPropertiesAutoConfiguration

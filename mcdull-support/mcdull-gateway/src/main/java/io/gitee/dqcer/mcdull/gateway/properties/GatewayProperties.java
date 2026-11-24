@@ -1,19 +1,16 @@
-package io.gitee.dqcer.mcdull.framework.config.properties;
+package io.gitee.dqcer.mcdull.gateway.properties;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 网关属性
- *
- * @author dqcer
- * @since 2022/12/25
+ * 网关免鉴权配置，对应 mcdull.gateway.no-auth。
  */
+@ConfigurationProperties(prefix = "mcdull.gateway")
 public class GatewayProperties {
 
-    /**
-     * 不需要身份验证
-     */
     private List<String> noAuth = new ArrayList<>();
 
     public List<String> getNoAuth() {
