@@ -34,13 +34,15 @@ class SystemArchitectureTest {
 }
 ```
 
-### 两条必须知道的坑
+### 三条必须知道的坑
 
 1. **`@ArchTest` 字段类型只能是 `ArchRule`。** 形如 `static final List<ArchRule> rules = ...` 的写法不被
    ArchUnit 引擎支持，会在测试发现阶段抛初始化异常。每条规则单独声明一个字段，违规报告才能按规则定位。
 2. **不要使用 `ImportOption.Predefined.DO_NOT_INCLUDE_JARS`。** 本项目的 `xxx-facade` 在测试 classpath 上
    以 jar 形式存在，排除 jar 会让 `..facade..` 内无类可查，`facadeDependencyRules()` 命中 0 条并静默通过。
    正确做法是用 `packages` 限定包根，保留 jar 扫描。
+3. **0 命中不等于通过。** 部分命名规则带 `allowEmptyShould(true)`，空集合也会 PASS。看到诊断报告出现
+   `PASS 0` 时，必须先确认 `classes.size() > 0` 且包路径与代码一致，否则属于守护静默失效。
 
 ## 内置规则
 
@@ -52,7 +54,7 @@ class SystemArchitectureTest {
 | Entry | `..web.feign..`、`..web.def..`、`..flow..`、`..config..` | 不约束 |
 | Service | `..web.service..` | Controller、Entry、Manager |
 | Manager | `..web.manager..` | Service、Entry |
-| Mapper | `..web.dao.mapper..` | Service、Manager |
+| Mapper | `..web.mapper..` | Service、Manager |
 
 Entry 不约束被访问方，是因为 `config` 下的 Jackson 序列化器与常量会被 `model.dto` / `model.vo`
 反向引用；把它当作「只能向外」的入口层会产生大量假阳性。
@@ -70,7 +72,7 @@ Entry 不约束被访问方，是因为 `config` 下的 Jackson 序列化器与�
 
 | 规则 | 判定依据 | 要求 |
 | --- | --- | --- |
-| `mapperNamingRules()` | 包 `..dao.mapper..` | 类名以 `Mapper` 结尾 |
+| `mapperNamingRules()` | 包 `..mapper..` | 类名以 `Mapper` 结尾 |
 | `dtoNamingRules()` | 包 `..dto..` | 类名以 `DTO` 结尾 |
 | `voNamingRules()` | 包 `..vo..` | 类名以 `VO` 结尾 |
 | `entityNamingRules()` | 包 `..entity..` | 类名以 `Entity` 结尾 |

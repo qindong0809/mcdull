@@ -47,7 +47,7 @@ McDull 是一个基于 **Spring Boot 3 + Spring Cloud** 的企业级微服务开
 | 认证授权 | Sa-Token | 1.42.0 |
 | ORM | MyBatis-Plus | 3.5.16 |
 | 数据库 | MySQL | 8.x |
-| 缓存 | Redis (Redisson) | 3.43.0 |
+| 缓存 | Redis (Redisson) | 3.48.0 |
 | 文档数据库 | MongoDB | — |
 | 流程引擎 | Warm Flow | — |
 | 对象存储 | x-file-storage | 2.2.1 |
@@ -655,7 +655,7 @@ mvn clean install
 
 | 文档 | 说明 |
 |---|---|
-| [打包部署指南.md](doc/打包部署指南.md) | 打包与部署教程 |
+| [部署说明](#部署说明) | 打包与部署说明（见本文） |
 | [本地启动说明.md](doc/本地启动说明.md) | 每个服务一键复制的环境变量与本地启动说明 |
 | [mcdull-business-demo/README.md](mcdull-business/mcdull-business-demo/README.md) | 业务模块脚手架示例与最佳实践 |
 | [mcdull-devtools-notify/README.md](mcdull-devtools/mcdull-devtools-notify/README.md) | Facade 发布通知插件使用说明 |
@@ -688,7 +688,7 @@ mvn test
 mvn -B -pl mcdull-business/mcdull-business-common test
 
 # 单个测试类
-mvn -B -pl mcdull-business/mcdull-business-common test -Dtest=CsvUtilTest
+mvn -B -pl mcdull-business/mcdull-business-demo/demo-impl test -Dtest=DemoTaskEnumTest
 ```
 
 **工程约定**
@@ -700,7 +700,7 @@ mvn -B -pl mcdull-business/mcdull-business-common test -Dtest=CsvUtilTest
 | 跳过测试只允许命令行 `-DskipTests` | 仅限本地紧急排查或热修，提交前必须用 `mvn clean install` 复验 |
 | 集成测试用 `@Disabled` 并写清原因 | 跳过必须是可见、可审计的；不要注释掉 `@Test` 冒充"这个模块没有测试" |
 
-**当前基线**：16 个测试类、93 个用例（含 4 个带原因的显式跳过）、0 失败；其中 66 个用例是 ArchUnit 架构规则检查。
+**当前基线**：14 个测试类、91 个用例（含 2 个带原因的显式跳过）、0 失败；其中 65 个用例是 ArchUnit 架构规则，另有 1 个无断言的架构诊断用例（`ArchitectureDiagnosticTest`），仅用于输出报告，不作为门禁。
 
 ### 开发流程
 

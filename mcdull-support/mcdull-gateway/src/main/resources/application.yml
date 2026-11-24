@@ -77,6 +77,22 @@ sa-token:
   is-print: false
   is-read-cookie: false
 
+# 网关免鉴权路径：与业务服务共用 mcdull.gateway.no-auth 配置约定
+# 登录相关接口必须放行，否则未登录时请求验证码会被判定未登录，前端 401 后 reload 形成死循环
+mcdull:
+  gateway:
+    no-auth:
+      - /favicon.ico
+      - /api/system/login/getCaptcha
+      - /api/system/login/enabled-captcha
+      - /api/system/login
+      # 管理端登录与验证码：使用 ADMIN 会话签发 token，必须在网关放行
+      - /api/system/administrator/auth/login
+      - /api/system/administrator/auth/captcha/image
+      # 兼容 /uac/** 存量路由
+      - /uac/administrator/auth/login
+      - /uac/administrator/auth/captcha/image
+
 # 监控端点安全规范收归本地
 management:
   endpoints:

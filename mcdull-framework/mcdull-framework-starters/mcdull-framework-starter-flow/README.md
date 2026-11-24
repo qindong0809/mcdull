@@ -1,143 +1,145 @@
 # mcdull-framework-starter-flow
 
-mcdull-framework-starter-flow 是 MCDull 框架的工作流模块，提供了工作流的定义、执行和管理功能。
+`mcdull-framework-starter-flow` 是进程内的轻量流程编排 Starter。它按 JSON 中声明的节点顺序调用 Spring Bean，适用于登录、校验、数据装配等不需要持久化的短流程。
 
-## 项目简介
+它**不是**完整工作流引擎：流程实例、人工任务、审批历史和 UI 由 Warm Flow 承担。需要可持久化的审批流时，应使用 `mcdull-business-workflow` / Warm Flow，而不是本模块。
 
-mcdull-framework-starter-flow 是 MCDull 框架的工作流组件，为应用提供了工作流的定义、执行和管理能力。该模块支持流程的配置和执行，帮助开发者快速构建具有工作流功能的应用。
+## 能力边界
 
-## 功能特性
+- 按 `nodeList` 顺序执行节点。
+- 节点通过 `@TreeNode(code = "...")` 注册到流程注册表。
+- 支持节点级 `catchException` / `finallyException` 回调，以及子节点继承父节点回调。
+- `ProcessFlow.run()` 带 `@Transactional(rollbackFor = Exception.class)`。
+- 不提供流程实例持久化、人工任务、流程状态机、UI 或动态配置开关。
 
-- 支持工作流的定义和配置
-- 提供工作流执行引擎
-- 支持流程状态管理
-- 集成 Spring 上下文
-- 支持事务管理
+## 模块职责
 
-## 核心依赖
+| 模块 | 内容 |
+|---|---|
+| `mcdull-framework-api-flow` | `IProcessFlow`、`Context`、`ProcessHandler`、`@TreeNode` |
+| `mcdull-framework-starter-flow` | `ProcessFlow` 实现、JSON 读取、节点注册、自动装配 |
 
-| 依赖 | 版本 | 说明 |
-|------|------|------|
-| spring-context | provided | Spring 上下文 |
-| spring-web | provided | Spring Web |
-| spring-tx | provided | Spring 事务 |
-| hutool-json | provided | JSON 工具库 |
-| jakarta.annotation-api | 2.1.1 | Jakarta 注解 API |
-| mcdull-framework-base | provided | MCDull 框架基础模块 |
+## 核心 API
 
-## 项目结构
+| API | 说明 |
+|---|---|
+| `IProcessFlow.run(Context)` | 执行流程，无返回值；结果由业务自定义 Context 承载 |
+| `Context.getId()` | 返回流程 id，必须与 JSON 中的 `id` 一致 |
+| `ProcessHandler<C>.execute(C)` | 节点业务逻辑，必须实现 |
+| `ProcessHandler<C>.endNode()` | 返回 `true` 时提前终止流程，默认 `false` |
+| `ProcessHandler<C>.extendParentNodeTryAttr()` | 异常时是否复用父节点的回调，默认 `false` |
+| `ProcessHandler<C>.catchException(Exception, C)` | 节点异常回调，默认记录日志 |
+| `ProcessHandler<C>.finallyException(ProcessHandler, Exception, C)` | 节点 finally 回调，默认记录日志 |
 
-```
-mcdull-framework-starter-flow/
-├── src/
-│   └── main/
-│       └── resources/
-│           ├── META-INF/
-│           │   └── spring.factories                  # Spring 自动配置文件
-│           └── flow/
-│               └── process_flow_simple.json         # 简单流程定义示例
-├── README.md          # 项目说明文档
-└── pom.xml            # Maven 配置文件
-```
+## 快速开始
 
-## 如何使用
-
-### Maven 依赖
-
-在项目的 `pom.xml` 文件中添加以下依赖：
+### 1. 引入依赖
 
 ```xml
 <dependency>
     <groupId>io.gitee.dqcer</groupId>
     <artifactId>mcdull-framework-starter-flow</artifactId>
-    <version>${mcdull.version}</version>
+    <version>${project.version}</version>
 </dependency>
 ```
 
-### 流程定义
-
-在 `resources/flow` 目录下创建流程定义文件，例如 `process_flow_simple.json`：
-
-```json
-{
-  "id": "simple-flow",
-  "name": "简单流程",
-  "description": "一个简单的工作流程示例",
-  "steps": [
-    {
-      "id": "step1",
-      "name": "第一步",
-      "description": "流程的第一步",
-      "type": "task",
-      "next": "step2"
-    },
-    {
-      "id": "step2",
-      "name": "第二步",
-      "description": "流程的第二步",
-      "type": "task",
-      "next": "end"
-    },
-    {
-      "id": "end",
-      "name": "结束",
-      "description": "流程结束",
-      "type": "end"
-    }
-  ]
-}
-```
-
-### 流程执行
+### 2. 定义流程节点
 
 ```java
-@Autowired
-private FlowEngine flowEngine;
+@TreeNode(code = "user.param.check")
+public class ParamCheck implements ProcessHandler<SimpleContext> {
 
-public void executeFlow() {
-    // 初始化流程参数
-    Map<String, Object> params = new HashMap<>();
-    params.put("userId", 123L);
-    params.put("action", "submit");
-    
-    // 执行流程
-    FlowResult result = flowEngine.execute("simple-flow", params);
-    
-    // 处理执行结果
-    if (result.isSuccess()) {
-        System.out.println("流程执行成功");
-    } else {
-        System.out.println("流程执行失败: " + result.getErrorMsg());
+    @Override
+    public void execute(SimpleContext context) {
+        // 参数校验逻辑
     }
 }
 ```
 
-## 核心功能
+`code` 是节点在流程定义中的唯一标识，不能重复。
 
-### 1. 流程定义管理
+### 3. 定义流程
 
-支持通过 JSON 文件定义工作流程，包括流程步骤、条件和转换规则。
+在 `resources/flow/` 下创建 `process_flow_*.json`。默认扫描路径为 `classpath*:flow/process_flow_*.json`。
 
-### 2. 流程执行引擎
-
-提供流程执行引擎，负责按照流程定义执行工作流，处理流程状态和转换。
-
-### 3. 状态管理
-
-支持流程状态的管理，包括流程的启动、暂停、恢复和终止。
-
-### 4. 事务支持
-
-集成 Spring 事务管理，确保流程执行的原子性和一致性。
-
-## 配置示例
-
-在 `application.yml` 或 `application.properties` 文件中添加配置：
-
-```yaml
-mcdull:
-  flow:
-    enabled: true
-    base-path: classpath:flow/
-    default-process: simple-flow
+```json
+[{
+  "id": "process_flow_simple",
+  "remark": "test process flow",
+  "nodeList": [
+    "user.param.check",
+    "user.get.id"
+  ]
+}]
 ```
+
+字段说明：
+
+| 字段 | 说明 |
+|---|---|
+| `id` | 业务唯一标识，`Context.getId()` 必须返回它 |
+| `remark` | 流程描述 |
+| `nodeList` | 节点 `code` 的有序列表 |
+
+### 4. 执行流程
+
+```java
+@Resource
+private IProcessFlow processFlow;
+
+public void executeFlow() {
+    SimpleContext context = new SimpleContext();
+    context.setId("process_flow_simple");
+    processFlow.run(context);
+}
+```
+
+`SimpleContext` 是业务自定义上下文，实现 `Context` 接口：
+
+```java
+public class SimpleContext implements Context {
+
+    private String id;
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+}
+```
+
+## 自动装配
+
+自动配置类通过 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` 注册：
+
+```text
+io.gitee.dqcer.mcdull.framework.flow.config.ProcessFlowAutoConfiguration
+```
+
+它注册 `ProcessFlow`、`ProcessFlowRegistry`、`NodeBeanPostProcessor` 和 `JsonFileProcessDefinitionReader`。当前没有 `mcdull.flow.*` 配置项；流程定义只能通过 classpath 下的 JSON 文件提供。
+
+## 事务与外部副作用
+
+`ProcessFlow.run()` 整体带数据库事务。节点内部如果写 Redis、调用 Sa-Token 登录或发起 Feign 调用，这些外部副作用**不会随数据库事务回滚**。
+
+典型场景：登录节点在事务内调用 `StpUtil.login()` 写 Redis，若后续节点失败，数据库回滚但 Redis 会话已存在。因此：
+
+- 外部副作用尽量放到流程成功后的事件或 after-commit 回调中。
+- 如果暂时无法改造，必须为外部副作用设计补偿逻辑。
+- 不要在带事务的流程节点中直接吞掉关键异常。
+
+## 与 Warm Flow 的关系
+
+| 能力 | 本模块 | Warm Flow |
+|---|---|---|
+| 进程内节点编排 | 支持 | 不负责 |
+| 流程实例持久化 | 不支持 | 支持 |
+| 人工任务 / 审批 | 不支持 | 支持 |
+| 流程历史与 UI | 不支持 | 支持 |
+| 事务包裹 | `ProcessFlow.run()` 整体事务 | 由业务 Service 控制 |
+
+简单判断：**登录、校验、装配用 starter-flow；审批、任务、历史用 Warm Flow。**

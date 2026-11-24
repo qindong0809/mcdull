@@ -18,16 +18,16 @@ mcdull-framework-dependencies 是 MCDull 框架的依赖管理组件，采用 Ma
 
 | 类别 | 依赖 | 版本 |
 |------|------|------|
-| 基础框架 | Spring Boot | 3.2.4 |
-| 微服务 | Spring Cloud | 2023.0.1 |
-| 微服务生态 | Spring Cloud Alibaba | 2023.0.1.0 |
-| 监控 | Spring Boot Admin | 3.0.4 |
-| ORM | MyBatis-Plus | 3.5.10.1 |
+| 基础框架 | Spring Boot | 3.5.16 |
+| 微服务 | Spring Cloud | 2025.0.3 |
+| 微服务生态 | Spring Cloud Alibaba | 2025.0.0.0 |
+| 监控 | Spring Boot Admin | 3.5.10 |
+| ORM | MyBatis-Plus | 3.5.16 |
 | 数据库 | MySQL | 8.3.0 |
-| 验证 | Hibernate Validator | 6.2.5.Final |
+| 验证 | Hibernate Validator | 8.0.6.Final |
 | API文档 | Knife4j | 4.5.0 |
 | JSON | Fastjson | 1.2.83 |
-| 缓存 | Redisson | 3.43.0 |
+| 缓存 | Redisson | 3.48.0 |
 | 工具库 | Hutool | 5.8.43 |
 | 架构测试 | ArchUnit | 1.0.1 |
 | 数据源 | Druid | 1.2.23 |
@@ -52,22 +52,9 @@ mcdull-framework-dependencies/
 
 ## 如何使用
 
-### 作为父项目使用
+### 作为依赖管理导入
 
-在项目的 `pom.xml` 文件中继承此依赖管理模块：
-
-```xml
-<parent>
-    <groupId>io.gitee.dqcer</groupId>
-    <artifactId>mcdull-framework-dependencies</artifactId>
-    <version>${mcdull.version}</version>
-    <relativePath/>
-</parent>
-```
-
-### 作为依赖管理使用
-
-在项目的 `pom.xml` 文件中导入此依赖管理模块：
+在项目的 `pom.xml` 中通过 `dependencyManagement` 导入。不要把它当作 parent：它本身继承 `spring-boot-starter-parent`，单独作为 parent 会改变项目的父级链。
 
 ```xml
 <dependencyManagement>
@@ -85,12 +72,7 @@ mcdull-framework-dependencies/
 
 ### 环境配置
 
-模块支持多种环境配置，可通过 Maven  profiles 激活不同环境：
-
-- `dev`：开发环境（默认）
-- `test`：测试环境
-- `pre`：预发布环境
-- `prod`：生产环境
+本 BOM 不定义 Maven 环境 profile。运行时环境由各服务的 `SPRING_PROFILES_ACTIVE`（`local` / `test` / `prod`）控制；根工程的 `prod` profile 用于生产打包时排除 devtools。
 
 ## 版本管理
 
