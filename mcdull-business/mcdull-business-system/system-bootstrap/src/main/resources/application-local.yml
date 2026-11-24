@@ -32,13 +32,14 @@ mcdull:
       - /webjars/**
       - /favicon.ico
       - /error
+    # 是否校验网关下发的 Same-Token 本地直连子服务调试时可关闭；默认开启，确保外部请求都经过网关
+    same-token-enabled: false
   tag:
     enabled: false
     strict: false
     clean-header: false
 
 sa-token:
-  # 保留原 application-dev.yml 的本地短超时设置，便于开发调试
   active-timeout: 6000
   timeout: 9000
 
