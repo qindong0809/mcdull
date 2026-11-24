@@ -51,6 +51,11 @@ public class HttpHeaderConstants {
     public static final String TRACE_ID_HEADER = "x-trace-header";
 
     /**
+     * traceId 合法格式：32 位十六进制，与 {@code RandomUtil.uuid()} 输出一致
+     */
+    public static final String TRACE_ID_PATTERN = "[0-9a-fA-F]{32}";
+
+    /**
      * 日志跟踪id
      * eg: MDC.put(LOG_TRACE_ID, "uuid);
      */

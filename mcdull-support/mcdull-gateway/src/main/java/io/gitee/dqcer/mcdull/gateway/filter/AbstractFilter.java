@@ -33,6 +33,21 @@ public abstract class AbstractFilter {
     }
 
     /**
+     * 覆盖请求头（addHeader 为追加语义，traceId 等单一值头必须使用本方法）
+     *
+     * @param mutate 变异
+     * @param name   的名字
+     * @param value 值
+     */
+    protected void replaceHeader(ServerHttpRequest.Builder mutate, String name, Object value) {
+        if (value == null) {
+            return;
+        }
+        String valueStr = value.toString();
+        mutate.headers(headers -> headers.set(name, valueStr));
+    }
+
+    /**
      * 错误响应
      *
      * @param response 响应

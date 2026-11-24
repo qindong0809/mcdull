@@ -19,11 +19,12 @@ public class ForwardAuthFilter implements GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        String sameToken = SaSameUtil.getToken();
         ServerHttpRequest newRequest = exchange
             .getRequest()
             .mutate()
-            // 为请求追加 Same-Token 参数
-            .header(SaSameUtil.SAME_TOKEN, SaSameUtil.getToken())
+            // 覆盖客户端传入的 Same-Token，防止伪造内部信任凭证
+            .headers(headers -> headers.set(SaSameUtil.SAME_TOKEN, sameToken))
             .build();
         ServerWebExchange newExchange = exchange.mutate().request(newRequest).build();
         return chain.filter(newExchange);

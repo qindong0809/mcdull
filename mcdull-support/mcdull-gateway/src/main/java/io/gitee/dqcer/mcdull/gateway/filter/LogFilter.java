@@ -19,6 +19,7 @@ import reactor.core.publisher.Mono;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -42,9 +43,12 @@ public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpRequest.Builder mutate = request.mutate();
 
-        // 浏览器传traceId,暂不进行强制限制
-        String traceId = RandomUtil.uuid();
-        addHeader(mutate, HttpHeaderConstants.TRACE_ID_HEADER, traceId);
+        // 优先透传合法的浏览器 traceId，非法或缺失时统一生成
+        String incoming = request.getHeaders().getFirst(HttpHeaderConstants.TRACE_ID_HEADER);
+        String traceId = (incoming != null && incoming.trim().matches(HttpHeaderConstants.TRACE_ID_PATTERN))
+                ? incoming.trim().toLowerCase(Locale.ROOT)
+                : RandomUtil.uuid();
+        replaceHeader(mutate, HttpHeaderConstants.TRACE_ID_HEADER, traceId);
         MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
 
         StringBuilder headerSummary = new StringBuilder();
@@ -60,7 +64,7 @@ public class LogFilter extends AbstractFilter implements GlobalFilter, Ordered {
         }
 
         exchange.getAttributes().put(START_TIME, System.currentTimeMillis());
-        return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+        return chain.filter(exchange.mutate().request(mutate.build()).build()).then(Mono.fromRunnable(() -> {
             Long startTime = exchange.getAttribute(START_TIME);
             long executeTime = 0L;
             if (startTime != null) {

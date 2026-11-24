@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * http日志
@@ -81,7 +82,9 @@ public class HttpTraceLogFilter extends OncePerRequestFilter {
 
     private String getTraceId(HttpServletRequest request) {
         String header = request.getHeader(HttpHeaderConstants.TRACE_ID_HEADER);
-        String traceId = (header == null || header.isBlank()) ? RandomUtil.uuid() : header.trim();
+        String traceId = (header != null && header.trim().matches(HttpHeaderConstants.TRACE_ID_PATTERN))
+                ? header.trim().toLowerCase(Locale.ROOT)
+                : RandomUtil.uuid();
         MDC.put(HttpHeaderConstants.LOG_TRACE_ID, traceId);
         return traceId;
     }
