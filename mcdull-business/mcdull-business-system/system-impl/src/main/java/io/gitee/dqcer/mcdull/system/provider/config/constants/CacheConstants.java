@@ -9,10 +9,10 @@ package io.gitee.dqcer.mcdull.system.provider.config.constants;
 public final class CacheConstants {
 
     /**
-     * 业务缓存名称。历史上对应本地 Caffeine 缓存，现已统一为 Redis，
-     * 保留原值 "caffeineCache" 以兼容既有缓存 key，避免前缀变化。
+     * 业务缓存名称。所有 @Cacheable / @CacheEvict 统一由 RedisCacheManager 落到 Redis，
+     * 不再保留历史本地 Caffeine 缓存名。
      */
-    public static final String BUSINESS_CACHE = "caffeineCache";
+    public static final String BUSINESS_CACHE = "businessCache";
 
     /**
      * 码表缓存

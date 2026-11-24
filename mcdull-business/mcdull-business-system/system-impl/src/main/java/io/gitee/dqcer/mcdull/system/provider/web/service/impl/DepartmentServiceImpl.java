@@ -49,7 +49,7 @@ public class DepartmentServiceImpl
     @Resource
     private IBizAuditService bizAuditService;
 
-//    @Cacheable(cacheNames = "caffeineCache", key = "'department-all'")
+//    @Cacheable(cacheNames = CacheConstants.BUSINESS_CACHE, key = "'department-all'")
     @Override
     public List<DepartmentInfoVO> getAll() {
         List<DepartmentInfoVO> list = new ArrayList<>();

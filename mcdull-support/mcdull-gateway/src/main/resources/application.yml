@@ -7,8 +7,6 @@ spring:
   profiles:
     # 不设默认值：缺失时直接启动失败，避免生产误用本地配置
     active: ${SPRING_PROFILES_ACTIVE}
-  cache:
-    type: caffeine
   cloud:
     nacos:
       server-addr: ${NACOS_ADDR:mcdull.io:8848}

@@ -17,10 +17,6 @@ spring:
         namespace: ${NACOS_NAMESPACE:}
         metadata:
           env-tag: ${ENV_TAG:${user.name}}
-  cache:
-    type: caffeine
-    caffeine:
-      spec: maximumSize=500,expireAfterWrite=10m
   boot:
     admin:
       client:
