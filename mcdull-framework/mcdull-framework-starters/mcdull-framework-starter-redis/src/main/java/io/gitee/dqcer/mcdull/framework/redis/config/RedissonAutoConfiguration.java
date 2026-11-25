@@ -155,7 +155,9 @@ public class RedissonAutoConfiguration implements CachingConfigurer {
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig()
                 // 默认 30 分钟；需要更短或更长的缓存用 @CacheExpire 在方法上单独指定
                 .entryTtl(Duration.ofMinutes(DEFAULT_CACHE_TTL_MINUTES))
-                .disableCachingNullValues()
+                // 缓存空值防穿透：Spring 用 NullValue 哨兵序列化，读取时自动还原为 null。
+                // 注意：空值的 TTL 与正常值相同（30 分钟或 @CacheExpire 指定），
+                // 因此「数据从无到有」最多延迟一个 TTL 可见——对当前仅 demo 使用 @Cacheable 的现状可接受。
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer()));
         return RedisCacheManager.builder(cacheWriter).cacheDefaults(configuration).build();

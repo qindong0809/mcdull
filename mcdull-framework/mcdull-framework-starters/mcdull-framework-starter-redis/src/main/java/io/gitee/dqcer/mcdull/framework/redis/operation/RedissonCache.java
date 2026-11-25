@@ -3,6 +3,7 @@ package io.gitee.dqcer.mcdull.framework.redis.operation;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import org.springframework.beans.factory.annotation.Value;
 import io.gitee.dqcer.mcdull.framework.redis.cache.ICache;
+import io.gitee.dqcer.mcdull.framework.redis.cache.NullCacheValue;
 import cn.hutool.core.collection.IterUtil;
 import jakarta.annotation.Resource;
 import org.redisson.api.RBucket;
@@ -37,6 +38,12 @@ public class RedissonCache implements ICache {
      */
     private static final long LOAD_LOCK_WAIT_SECONDS = 10;
 
+    /**
+     * 空值哨兵的过期时间（秒）。短于业务正常 TTL，避免「数据从无到有」后长时间不可见。
+     * 用固定短周期而非业务 expire：业务缓存常为 300s+，空值缓存 300s 会造成不可接受的延迟。
+     */
+    private static final long NULL_CACHE_TTL_SECONDS = 30;
+
     @Resource
     private RedissonClient redissonClient;
 
@@ -53,6 +60,10 @@ public class RedissonCache implements ICache {
         key = prefix() + key;
         Object o = redissonClient.getBucket(key).get();
         if (null != o) {
+            // 命中空值哨兵：对外仍表现为「未命中」，由 loadWithLock 决定是否回源
+            if (o instanceof NullCacheValue) {
+                return null;
+            }
             if (!type.isInstance(o)) {
                 throw new IllegalArgumentException("缓存值的类型不能是" + type.getName());
             }
@@ -76,25 +87,65 @@ public class RedissonCache implements ICache {
 
     @Override
     public <T> T getOrSetPrefixed(String key, Class<T> type, Supplier<T> supplier, long expire) {
-        return loadWithLock(key, () -> this.getPrefixed(key, type), supplier, value -> this.putPrefixed(key, value, expire));
+        T value = loadWithLock(key, () -> this.getRawPrefixed(key, type), supplier,
+                v -> this.putPrefixed(key, v, expire), true);
+        return unwrapNull(value);
     }
 
     @Override
     public <T> List<T> getListOrSetPrefixed(String key, Class<T> type, Supplier<List<T>> supplier, long expire) {
+        return getListOrSetPrefixed(key, type, supplier, expire, true);
+    }
+
+    @Override
+    public <T> List<T> getListOrSetPrefixed(String key, Class<T> type, Supplier<List<T>> supplier,
+                                            long expire, boolean cacheNull) {
         // Jackson 的 defaultTyping 已保留元素类型，无需再按 type 手动反序列化
         @SuppressWarnings("unchecked")
-        Supplier<List<T>> reader = () -> (List<T>) this.getPrefixed(key, Object.class);
-        return loadWithLock(key, reader, supplier, value -> {
+        Supplier<List<T>> reader = () -> (List<T>) this.getRawPrefixed(key, Object.class);
+        List<T> value = loadWithLock(key, reader, supplier, v -> {
             LogHelp.info(log, "redis缓存 key={} 回源写入", key);
-            this.putPrefixed(key, value, expire);
-        });
+            this.putPrefixed(key, v, expire);
+        }, cacheNull);
+        return unwrapNull(value);
     }
 
     /**
-     * 缓存击穿防护：未命中时加分布式锁，仅一个线程回源，其余线程在锁内二次读缓存。
+     * 原始读取：命中哨兵时返回哨兵对象本身（而非 null），供 loadWithLock 区分
+     * 「已缓存空值」与「完全未命中」——前者不应再次回源。
+     */
+    @SuppressWarnings("unchecked")
+    private <T> T getRawPrefixed(String key, Class<T> type) {
+        String fullKey = prefix() + key;
+        Object o = redissonClient.getBucket(fullKey).get();
+        if (null == o) {
+            return null;
+        }
+        if (o instanceof NullCacheValue) {
+            return (T) o;
+        }
+        if (!type.isInstance(o)) {
+            throw new IllegalArgumentException("缓存值的类型不能是" + type.getName());
+        }
+        return (T) o;
+    }
+
+    /** 对外转换：哨兵统一还原为 null。 */
+    @SuppressWarnings("unchecked")
+    private <T> T unwrapNull(T value) {
+        return value instanceof NullCacheValue ? null : value;
+    }
+
+    /**
+     * 缓存击穿 + 穿透防护：未命中时加分布式锁，仅一个线程回源，其余线程在锁内二次读缓存。
+     * <p>
+     * 命中空值哨兵视为有效命中直接返回（由外层 unwrapNull 还原为 null），不再回源。
+     * 回源结果为空且 cacheNull=true 时写入哨兵，TTL 用 {@link #NULL_CACHE_TTL_SECONDS}，防止穿透。
      * 锁等待超时或被中断时降级为直接回源（不写缓存），保证可用性。
      */
-    private <T> T loadWithLock(String key, Supplier<T> reader, Supplier<T> loader, Consumer<T> writer) {
+    @SuppressWarnings("unchecked")
+    private <T> T loadWithLock(String key, Supplier<T> reader, Supplier<T> loader,
+                               Consumer<T> writer, boolean cacheNull) {
         T value = reader.get();
         if (value != null) {
             return value;
@@ -116,8 +167,12 @@ public class RedissonCache implements ICache {
             value = loader.get();
             if (value != null) {
                 writer.accept(value);
+            } else if (cacheNull) {
+                // 穿透防护：回源为空时写入短 TTL 哨兵，避免同一 key 反复打到 DB
+                LogHelp.info(log, "redis缓存 key={} 回源为空，写入空值哨兵 TTL={}s", key, NULL_CACHE_TTL_SECONDS);
+                putPrefixed(key, NullCacheValue.INSTANCE, NULL_CACHE_TTL_SECONDS);
             }
-            return value;
+            return value == null ? (T) NullCacheValue.INSTANCE : value;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             LogHelp.warn(log, "redis缓存 key={} 回源被中断，降级直接回源", key);

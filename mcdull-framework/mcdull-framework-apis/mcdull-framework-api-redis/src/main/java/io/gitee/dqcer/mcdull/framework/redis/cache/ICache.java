@@ -66,6 +66,24 @@ public interface ICache {
     <T> List<T> getListOrSetPrefixed(String key, Class<T> type, Supplier<List<T>> supplier, long expire);
 
     /**
+     * 读列表缓存，未命中时回源并回填，可控制是否缓存空结果。
+     * <p>
+     * 默认方法 {@link #getListOrSetPrefixed(String, Class, Supplier, long)} 等价于 cacheNull=true。
+     * 对于权限、角色等「空结果必须尽快对新数据可见」的场景，应传 false 关闭空值缓存，
+     * 避免短暂的数据延迟（如刚授予角色后仍被判定无权限）。
+     *
+     * @param key       缓存 key
+     * @param type      列表元素类型
+     * @param supplier  回源逻辑
+     * @param expire    过期时间（秒）
+     * @param cacheNull 回源结果为空时是否写入空值哨兵（哨兵 TTL 固定为短周期，不使用 expire）
+     * @param <T>       列表元素泛型
+     * @return 缓存列表
+     */
+    <T> List<T> getListOrSetPrefixed(String key, Class<T> type, Supplier<List<T>> supplier,
+                                     long expire, boolean cacheNull);
+
+    /**
      * 仅当 key 已存在时更新值。
      *
      * @param key   缓存 key

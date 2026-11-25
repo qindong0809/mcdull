@@ -35,14 +35,16 @@ public class StpInterfaceImpl extends AbstractUserDetailsService {
         if (UserContextHolder.isAdmin()) {
             return ListUtil.of(GlobalConstant.ALL_CODE);
         }
-        return redissonCache.getListOrSetPrefixed(cacheKeyFormat, String.class, () -> loginService.getPermissionList(id), 60);
+        // 权限为空不缓存：避免刚授予权限后 30 秒内仍被判定无权限
+        return redissonCache.getListOrSetPrefixed(cacheKeyFormat, String.class, () -> loginService.getPermissionList(id), 60, false);
     }
 
     @Override
     protected List<String> roleList(Object userId) {
         Integer id = Convert.toInt(userId);
         String cacheKeyFormat = CharSequenceUtil.format( "current:user:{}:role:list", id);
-        return redissonCache.getListOrSetPrefixed(cacheKeyFormat, String.class, () -> loginService.getRoleList(id), 60);
+        // 角色为空不缓存：避免刚分配角色后 30 秒内仍被判定无角色
+        return redissonCache.getListOrSetPrefixed(cacheKeyFormat, String.class, () -> loginService.getRoleList(id), 60, false);
     }
 
 }
