@@ -88,7 +88,7 @@ Entry 不约束被访问方，是因为 `config` 下的 Jackson 序列化器与�
 却只得到一句「你的名字没起对」。拆开后命名规则抓漂移、位置规则抓角色错位，各说各的事。
 
 `BO` 只有命名规则、没有位置规则，是同一个传递闭包特性的主动取舍：
-`LogonVO extends UserBO` 让 VO 间接 `implement(BO)`，而视图对象复用业务对象的字段
+`LogonVO extends UserSessionBO` 让 VO 间接 `implement(BO)`，而视图对象复用会话快照的字段
 并不泄漏持久化语义，加 `implement(BO) ⇒ ..bo..` 只会把合法写法报成位置错误。
 BO 的错位（如 `MenuInfoBO` 曾放在 `..vo..`）由 `boNamingRules()` 与 `voNamingRules()` 双向夹住。
 

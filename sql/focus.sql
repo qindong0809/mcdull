@@ -1,7 +1,7 @@
 drop table if exists `app_user`;
 create table if not exists `app_user` (
 `id` int not null auto_increment comment '主键',
-`login_name` varchar(512) NOT NULL,
+`login_name` varchar(64) NOT NULL comment '登录账号',
 `login_pwd` varchar(64)  not null comment '登录密码',
 `email` varchar(64)  not null comment '邮箱',
 `gender` varchar(16)  default null comment '性别',
@@ -14,8 +14,10 @@ create table if not exists `app_user` (
 `updated_time` datetime default null comment '更新时间',
 `inactive` tinyint(0) not null default 0 comment '状态（true/已失活 false/未失活）',
 `del_flag` tinyint(0) not null default 0 comment '删除标识（true/已删除 false/未删除）',
-primary key (`id`)
-)  comment='app 用户';
+`login_name_key` varchar(64) generated always as (case when `del_flag` = 0 then lower(`login_name`) else null end) stored comment '活跃账号唯一键：删除后置 NULL 允许同名重建，小写化统一大小写',
+primary key (`id`),
+unique key `uk_login_name_active` (`login_name_key`)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_unicode_ci comment='app 用户';
 
 drop table if exists `app_task`;
 create table if not exists `app_task` (

@@ -53,7 +53,7 @@
         <swagger-api.version>2.2.47</swagger-api.version>
         <fastjson2.version>2.0.42</fastjson2.version>
         <hutool.version>5.8.43</hutool.version>
-        <archunit.version>1.0.1</archunit.version>
+        <archunit.version>1.5.0</archunit.version>
         <kaptcha.version>2.3.3</kaptcha.version>
         <easyexcel.version>4.0.1</easyexcel.version>
         <!-- 与 easyexcel-core 4.0.1 的传递依赖对齐，避免 POI 4.x 与 EasyExcel 4.x 二进制不兼容 -->

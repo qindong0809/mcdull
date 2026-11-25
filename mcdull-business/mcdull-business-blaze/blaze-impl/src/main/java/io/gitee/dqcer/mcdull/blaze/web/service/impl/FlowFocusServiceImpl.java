@@ -13,6 +13,7 @@ import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.util.Md5Util;
 import io.gitee.dqcer.mcdull.framework.mysql.util.LogicCheckUtil;
 import jakarta.annotation.Resource;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,7 +55,11 @@ public class FlowFocusServiceImpl implements IFlowFocusService {
         entity.setLoginName(loginName);
         entity.setLoginPwd(Md5Util.getMd5(password));
         entity.setEmail(email);
-        appUserMapper.insert(entity);
+        try {
+            appUserMapper.insert(entity);
+        } catch (DuplicateKeyException e) {
+            LogicCheckUtil.throwDataExistException(loginName);
+        }
     }
 
     @Override

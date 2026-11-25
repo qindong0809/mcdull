@@ -1,6 +1,12 @@
 package io.gitee.dqcer.mcdull.framework.enforcer;
 
+import com.tngtech.archunit.core.domain.JavaClass;
+import com.tngtech.archunit.core.domain.JavaMethod;
+import com.tngtech.archunit.core.domain.JavaModifier;
+import com.tngtech.archunit.lang.ArchCondition;
 import com.tngtech.archunit.lang.ArchRule;
+import com.tngtech.archunit.lang.ConditionEvents;
+import com.tngtech.archunit.lang.SimpleConditionEvent;
 import com.tngtech.archunit.library.freeze.FreezingArchRule;
 import com.tngtech.archunit.library.GeneralCodingRules;
 import io.gitee.dqcer.mcdull.framework.base.support.DTO;
@@ -32,6 +38,9 @@ public final class ArchitectureEnforcer {
         // 层级调用关系检查
         REQUIRED_RULES.add(layerChecks());
 
+        // 模型边界：Entity 不得出现在 Controller 公共方法签名
+        REQUIRED_RULES.add(entityMustNotLeakToControllerRule());
+
         // 命名按包判定，角色归属按标记接口判定，两者不可混用
         REQUIRED_RULES.add(mapperNamingRules());
         REQUIRED_RULES.add(dtoNamingRules());
@@ -43,8 +52,8 @@ public final class ArchitectureEnforcer {
         REQUIRED_RULES.add(dtoPlacementRules());
         REQUIRED_RULES.add(voPlacementRules());
         REQUIRED_RULES.add(entityPlacementRules());
-        // 不给 BO 设位置规则：implement() 取传递闭包，LogonVO extends UserBO 这种
-        // 「视图对象复用业务对象字段」是合法写法，BO 位置规则会把它误报成位置错误
+        // 不给 BO 设位置规则：implement() 取传递闭包，LogonVO extends UserSessionBO 这种
+        // 「视图对象复用会话快照字段」是合法写法，BO 位置规则会把它误报成位置错误
 
         // facade 契约包不得依赖 provider 实现包（防止 facade/impl 拆分包复发）
         REQUIRED_RULES.add(facadeDependencyRules());
@@ -123,6 +132,44 @@ public final class ArchitectureEnforcer {
                         + "定时任务、序列化器与常量），其中序列化器和常量会被 model 反向引用，因此 Entry 本身不作为被访问方约束；"
                         + "MyBatis-Plus 的 ServiceImpl<M,T> 使 Service 必然直接依赖 Mapper，"
                         + "Repository 包装层只存在于代码生成模板，手写链路不经过它");
+    }
+
+    /**
+     * 模型边界规则：Controller 公共方法不得以 Entity（或实现 Entity 标记接口的类型）作为返回类型。
+     * <p>
+     * 防止表结构与内部字段（如 loginPwd、usedPassword）随响应外泄；Controller 应返回 VO / DTO。
+     * <p>
+     * 已知边界：本规则检查方法的原始返回类型，因此能拦截 {@code UserEntity get()}，
+     * 但不能识别 {@code Result<UserEntity>} 之类泛型参数中的 Entity——该场景由 code review 与
+     * {@code doc/架构分层与依赖治理规范.md} 第七节共同覆盖，避免为单一规则引入复杂的泛型递归解析。
+     *
+     * @return {@link ArchRule}
+     */
+    public static ArchRule entityMustNotLeakToControllerRule() {
+        return noClasses()
+                .that()
+                .resideInAPackage("..web.controller..")
+                .should(new ArchCondition<JavaClass>("not return Entity from public methods") {
+                    @Override
+                    public void check(JavaClass javaClass, ConditionEvents events) {
+                        for (JavaMethod method : javaClass.getMethods()) {
+                            if (!method.getModifiers().contains(JavaModifier.PUBLIC)) {
+                                continue;
+                            }
+                            JavaClass returnType = method.getRawReturnType();
+                            boolean isEntity = returnType.getName().equals(Entity.class.getName())
+                                    || returnType.getInterfaces().stream()
+                                            .anyMatch(i -> i.getName().equals(Entity.class.getName()));
+                            if (isEntity) {
+                                events.add(SimpleConditionEvent.violated(method,
+                                        method.getDescription() + " returns Entity " + returnType.getName()));
+                            }
+                        }
+                    }
+                })
+                .allowEmptyShould(true)
+                .as("Controller 公共方法不得返回 Entity（含实现 Entity 标记接口的类型）")
+                .because("Entity 携带表结构与敏感字段，必须转换为 VO/DTO 后才能出 Controller 边界");
     }
 
     /**

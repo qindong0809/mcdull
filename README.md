@@ -53,7 +53,7 @@ McDull 是一个基于 **Spring Boot 3 + Spring Cloud** 的企业级微服务开
 | 对象存储 | x-file-storage | 2.2.1 |
 | API 文档 | Knife4j | 4.5.0 |
 | 监控 | Spring Boot Admin / JavaMelody | — |
-| 架构检查 | ArchUnit | 1.0.1 |
+| 架构检查 | ArchUnit | 1.5.0 |
 | 构建工具 | Maven | 3.6+ |
 | CI/CD | Gitee Go 流水线 | — |
 

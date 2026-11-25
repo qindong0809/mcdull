@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.framework.base.support.VO;
 import io.gitee.dqcer.mcdull.framework.json.deserialize.DynamicDateDeserialize;
 import io.gitee.dqcer.mcdull.framework.json.serialize.DynamicDateFormat;
 import io.gitee.dqcer.mcdull.framework.json.serialize.DynamicDateSerialize;
-import io.gitee.dqcer.mcdull.system.provider.model.bo.UserBO;
+import io.gitee.dqcer.mcdull.system.provider.model.bo.UserSessionBO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +25,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class LogonVO extends UserBO implements VO {
+public class LogonVO extends UserSessionBO implements VO {
 
     @Schema(description = "token")
     private String token;

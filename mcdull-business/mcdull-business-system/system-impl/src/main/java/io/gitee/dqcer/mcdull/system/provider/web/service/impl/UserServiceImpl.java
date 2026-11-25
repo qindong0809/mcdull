@@ -66,6 +66,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -218,7 +219,11 @@ public class UserServiceImpl
         UserEntity entity = UserConvert.insertDtoToEntity(dto);
         entity.setLoginPwd(this.getDefaultPassword());
         entity.setAdministratorFlag(false);
-        this.insert(entity);
+        try {
+            this.insert(entity);
+        } catch (DuplicateKeyException e) {
+            throw new BusinessException(I18nConstants.DATA_EXISTS);
+        }
         Integer userId = entity.getId();
         threadPoolTaskExecutor.execute(() -> this.sendCreateAccountEmail(entity));
         userRoleService.batchUserListByRoleId(userId, dto.getRoleIdList());
@@ -314,10 +319,10 @@ public class UserServiceImpl
     }
 
     private void checkParam(UserAddDTO dto) {
-        List<UserEntity> list = super.list();
-        if (CollUtil.isNotEmpty(list)) {
-            LogicCheckUtil.validNameExist(null, dto.getLoginName(), list,
-                    i -> i.getLoginName().equals(dto.getLoginName()));
+        LambdaQueryWrapper<UserEntity> query = Wrappers.lambdaQuery();
+        query.eq(UserEntity::getLoginName, dto.getLoginName());
+        if (super.baseMapper.exists(query)) {
+            throw new BusinessException(I18nConstants.DATA_EXISTS);
         }
     }
 

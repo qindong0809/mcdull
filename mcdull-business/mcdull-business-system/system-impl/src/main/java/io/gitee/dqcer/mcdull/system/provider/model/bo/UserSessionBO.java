@@ -10,7 +10,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 用户bo
+ * 用户会话快照：登录态相关的展示数据（含登录来源 ip、user-agent、用户类型）。
+ * <p>
+ * 本对象不是 UserEntity 的另一种表示，而是「会话视角」的只读快照，
+ * 因此字段集合与用户本体不同（如 ip / userAgent / userType 不属于用户实体）。
  *
  * @author dqcer
  * @since 2024/05/20
@@ -18,7 +21,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class UserBO implements BO {
+public class UserSessionBO implements BO {
 
     @Schema(description = "员工id")
     private Integer employeeId;
