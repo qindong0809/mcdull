@@ -15,7 +15,6 @@ import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.symmetric.AES;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -35,7 +34,6 @@ import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
-import io.gitee.dqcer.mcdull.framework.base.util.Sha1Util;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
 import io.gitee.dqcer.mcdull.framework.base.vo.PagedVO;
 import io.gitee.dqcer.mcdull.framework.mysql.basic.BasicCurdServiceImpl;
@@ -61,6 +59,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.UserVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserPowerVO;
 import io.gitee.dqcer.mcdull.system.provider.web.mapper.UserMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
+import io.gitee.dqcer.mcdull.system.provider.web.manager.IPasswordManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;
 import jakarta.annotation.Resource;
 import jakarta.validation.ConstraintViolation;
@@ -73,7 +72,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -110,17 +108,36 @@ public class UserServiceImpl
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
     @Resource
     private IFolderService folderService;
-
-    private static final String AES_KEY = "1024abcd1024abcd1024abcd1024abcd";
+    @Resource
+    private IPasswordManager passwordManager;
 
     @Override
     public boolean passwordCheck(UserEntity entity, String passwordParam) {
         if (ObjUtil.isNotNull(entity) && StrUtil.isNotBlank(passwordParam)) {
-            String password = entity.getLoginPwd();
-            String sha1 = hash(passwordParam);
-            return password.equals(sha1);
+            return passwordManager.matches(passwordParam, entity.getLoginPwd());
         }
         return false;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean upgradePassword(UserEntity entity, String passwordParam) {
+        if (ObjUtil.isNull(entity) || StrUtil.isBlank(passwordParam)
+                || !passwordManager.needsUpgrade(entity.getLoginPwd())) {
+            return false;
+        }
+        String raw = passwordManager.decrypt(passwordParam);
+        if (StrUtil.isEmpty(raw)) {
+            return false;
+        }
+        UserEntity update = new UserEntity();
+        update.setId(entity.getId());
+        update.setLoginPwd(passwordManager.encode(raw));
+        boolean result = this.update(update);
+        if (result) {
+            entity.setLoginPwd(update.getLoginPwd());
+        }
+        return result;
     }
 
     @Override
@@ -157,26 +174,8 @@ public class UserServiceImpl
         return vos;
     }
 
-    private String hash(String webPassword) {
-        return Sha1Util.getSha1(decrypt(webPassword));
-    }
-
-    public String decrypt(String data) {
-        try {
-            // 第一步： Base64 解码
-            byte[] base64Decode = Base64.getDecoder().decode(data);
-            // 第二步： AES 解密
-            AES aes = new AES(AES_KEY.getBytes(StandardCharsets.UTF_8));
-            byte[] decryptedBytes = aes.decrypt(base64Decode);
-            return new String(decryptedBytes, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            LogHelp.error(logger, "密码解密失败", e);
-            return StrUtil.EMPTY;
-        }
-    }
-
     public String buildPassword(String param) {
-        return hash(param);
+        return passwordManager.encodeFromWeb(param);
     }
 
     @Override
@@ -269,7 +268,7 @@ public class UserServiceImpl
     private String getDefaultPassword() {
         String value = commonManager.getConfig("init-account-password");
         if (StrUtil.isNotBlank(value)) {
-            return Sha1Util.getSha1(value);
+            return passwordManager.encode(value);
         }
         return StrUtil.EMPTY;
     }

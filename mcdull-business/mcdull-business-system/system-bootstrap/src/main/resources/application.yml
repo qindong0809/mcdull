@@ -96,6 +96,12 @@ sa-token:
   is-read-cookie: false
 
 mcdull:
+  security:
+    password:
+      # 保持默认即可兼容现有前端；生产建议用环境变量覆盖（需前后端同步）
+      aes-key: ${MCDULL_PASSWORD_AES_KEY:1024abcd1024abcd1024abcd1024abcd}
+      # 迁移完成后改为 false，拒绝存量 SHA1 口令
+      legacy-enabled: ${MCDULL_PASSWORD_LEGACY_ENABLED:true}
   gateway:
     no-auth:
       - /administrator/auth/login

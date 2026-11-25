@@ -17,8 +17,10 @@ import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import java.util.Date;
 
+@Slf4j
 @Component(value = "ValidateLoginNamePassword")
 @TreeNode(code = "Validate Login Name Password")
 public class ValidateLoginNamePassword implements ProcessHandler<LoginContext> {
@@ -49,6 +51,12 @@ public class ValidateLoginNamePassword implements ProcessHandler<LoginContext> {
             if (isOk) {
                 if (Boolean.TRUE.equals(userEntity.getInactive())) {
                     throw new BusinessException("user.account.not.active");
+                }
+                try {
+                    userService.upgradePassword(userEntity, passwordDTO);
+                } catch (Exception e) {
+                    // 透明升级是数据迁移逻辑，失败不得阻断登录
+                    log.warn("Password transparent upgrade failed, userId={}", userEntity.getId(), e);
                 }
                 loginLockedService.inactive(username);
                 Dict dict = Dict.create();

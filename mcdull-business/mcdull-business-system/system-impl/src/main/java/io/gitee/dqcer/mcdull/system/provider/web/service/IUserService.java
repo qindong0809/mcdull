@@ -35,6 +35,15 @@ public interface IUserService extends IRepository<UserEntity> {
     boolean passwordCheck(UserEntity entity, String passwordParam);
 
     /**
+     * 登录成功后将存量 SHA1 口令透明升级为 BCrypt。失败不影响登录。
+     *
+     * @param entity        用户实体（升级成功后其 loginPwd 会同步更新）
+     * @param passwordParam 前端密文密码
+     * @return boolean 是否发生升级
+     */
+    boolean upgradePassword(UserEntity entity, String passwordParam);
+
+    /**
      * 获取资源模块列表
      *
      * @param userId 用户ID

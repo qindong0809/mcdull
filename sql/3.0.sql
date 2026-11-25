@@ -82,7 +82,7 @@ drop table if exists `sys_user`;
 create table if not exists `sys_user` (
 `id` int not null auto_increment comment '主键',
 `login_name` varchar(30)  not null comment '登录帐号',
-`login_pwd` varchar(50)  not null comment '登录密码',
+`login_pwd` varchar(255) not null comment '登录密码（BCrypt）',
 `actual_name` varchar(30)  not null comment '用户名称',
 `email` varchar(300)  not null comment 'email',
 `gender` tinyint(1) not null default 0 comment '性别',
