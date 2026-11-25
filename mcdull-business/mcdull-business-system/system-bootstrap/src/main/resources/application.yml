@@ -6,8 +6,6 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE}
     include:
       - menu
-  main:
-    allow-circular-references: true
   cloud:
     nacos:
       server-addr: ${NACOS_ADDR:mcdull.io:8848}

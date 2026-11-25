@@ -24,10 +24,10 @@
             <artifactId>blaze-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- system 能力改为微服务远程调用：不再装配 system-impl，由 Application 上的 @EnableSystemFeignClients 激活契约代理 -->
+        <!-- 工作流能力通过契约远程调用：只引入 facade，避免 workflow-impl 被宽泛包扫描意外装配进 blaze 上下文 -->
         <dependency>
           <groupId>${project.groupId}</groupId>
-            <artifactId>workflow-impl</artifactId>
+            <artifactId>workflow-facade</artifactId>
             <version>${project.version}</version>
         </dependency>
 

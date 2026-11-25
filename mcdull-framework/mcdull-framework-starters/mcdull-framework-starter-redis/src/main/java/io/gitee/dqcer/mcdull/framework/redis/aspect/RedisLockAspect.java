@@ -2,7 +2,9 @@ package io.gitee.dqcer.mcdull.framework.redis.aspect;
 
 
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
+import io.gitee.dqcer.mcdull.framework.base.constants.I18nConstants;
 import io.gitee.dqcer.mcdull.framework.base.constants.SymbolConstants;
+import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock;
 import jakarta.annotation.Resource;
@@ -53,7 +55,7 @@ public class RedisLockAspect {
      * @return {@link Object}
      */
     @Around("@annotation(io.gitee.dqcer.mcdull.framework.redis.annotation.RedisLock)")
-    public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+    public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         if (log.isDebugEnabled()) {
             log.debug("分布式锁开始执行");
         }
@@ -63,37 +65,63 @@ public class RedisLockAspect {
             throw new IllegalArgumentException("the Annotation @RedisLock must used on method!");
         }
 
-        MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature) signature;
         Method method = methodSignature.getMethod();
         RedisLock redisLock = method.getAnnotation(RedisLock.class);
 
-        if(redisLock.key() == null || redisLock.key().trim().length() == 0) {
+        if (redisLock.key() == null || redisLock.key().trim().isEmpty()) {
             return proceedingJoinPoint.proceed();
         }
-        String key = calculateValue(redisLock.key(), ((MethodSignature) signature).getMethod(), proceedingJoinPoint.getArgs());
+        String key = calculateValue(redisLock.key(), method, proceedingJoinPoint.getArgs());
         long timeout = redisLock.timeout() < 1 ? 10 : redisLock.timeout();
         RLock lock = redissonClient.getLock(key);
+        boolean locked;
         try {
-            if (lock.tryLock(timeout, TimeUnit.SECONDS)) {
-                LogHelp.debug(log, "分布式锁成功加锁. key: {}", key);
-                try {
-                    return proceedingJoinPoint.proceed();
-                }catch (Exception e){
-                    LogHelp.error(log, e.getMessage(), e);
-                    throw e;
-                } finally {
+            locked = lock.tryLock(timeout, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            LogHelp.error(log, "Interrupted while acquiring distributed lock. key: {}", key, e);
+            throw lockFailure(redisLock, e);
+        }
+        if (!locked) {
+            LogHelp.warn(log, "Failed to acquire distributed lock. key: {}, method: {}",
+                    key, methodSignature.toLongString());
+            if (redisLock.throwOnFailure()) {
+                throw lockFailure(redisLock, null);
+            }
+            return null;
+        }
+
+        try {
+            LogHelp.debug(log, "分布式锁成功加锁. key: {}", key);
+            try {
+                return proceedingJoinPoint.proceed();
+            } catch (Exception e) {
+                LogHelp.error(log, e.getMessage(), e);
+                throw e;
+            }
+        } finally {
+            try {
+                if (lock.isHeldByCurrentThread()) {
                     lock.unlock();
                     LogHelp.debug(log, "分布式锁成功释放锁. key: {}", key);
                 }
+            } catch (Exception e) {
+                LogHelp.warn(log, "Failed to release distributed lock. key: {}", key, e);
             }
-//            throw new BusinessException(I18nConstants.SYSTEM_BUSY);
-        } catch (InterruptedException e) {
-            LogHelp.error(log, "Interrupted! {} ", e.getMessage(), e);
-            Thread.currentThread().interrupt();
-//            throw new BusinessException(I18nConstants.SYSTEM_BUSY);
-            throw e;
         }
-        return null;
+    }
+
+    private BusinessException lockFailure(RedisLock redisLock, Throwable cause) {
+        String messageCode = redisLock.messageCode();
+        if (messageCode == null || messageCode.trim().isEmpty()) {
+            messageCode = I18nConstants.SYSTEM_BUSY;
+        }
+        BusinessException exception = new BusinessException(messageCode);
+        if (cause != null) {
+            exception.initCause(cause);
+        }
+        return exception;
     }
 
     /**

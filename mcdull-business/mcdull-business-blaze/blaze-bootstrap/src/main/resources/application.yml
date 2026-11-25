@@ -1,9 +1,6 @@
 spring:
   application:
     name: blaze-bootstrap
-  main:
-    # 允许循环引用
-    allow-circular-references: true
   profiles:
     # 不设默认值：缺失时直接启动失败，避免生产误用本地配置
     active: ${SPRING_PROFILES_ACTIVE}
