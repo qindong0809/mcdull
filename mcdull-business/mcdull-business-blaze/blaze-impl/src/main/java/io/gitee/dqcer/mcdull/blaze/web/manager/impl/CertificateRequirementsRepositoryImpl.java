@@ -55,4 +55,14 @@ public class CertificateRequirementsRepositoryImpl extends
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 
+    @Override
+    public boolean existByCustomerId(Integer customerId) {
+        if (ObjUtil.isNull(customerId)) {
+            return false;
+        }
+        LambdaQueryWrapper<CertificateRequirementsEntity> query = Wrappers.lambdaQuery();
+        query.eq(CertificateRequirementsEntity::getCustomerId, customerId);
+        return baseMapper.exists(query);
+    }
+
 }

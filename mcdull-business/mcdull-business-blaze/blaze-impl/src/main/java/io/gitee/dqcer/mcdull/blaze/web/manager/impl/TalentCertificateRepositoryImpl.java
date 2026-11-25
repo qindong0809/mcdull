@@ -57,4 +57,14 @@ public class TalentCertificateRepositoryImpl extends
         return baseMapper.selectPage(new Page<>(param.getPageNum(), param.getPageSize()), lambda);
     }
 
+    @Override
+    public boolean existByTalentId(Integer talentId) {
+        if (ObjUtil.isNull(talentId)) {
+            return false;
+        }
+        LambdaQueryWrapper<TalentCertificateEntity> query = Wrappers.lambdaQuery();
+        query.eq(TalentCertificateEntity::getTalentId, talentId);
+        return baseMapper.exists(query);
+    }
+
 }

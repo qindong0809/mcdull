@@ -24,6 +24,7 @@ import io.gitee.dqcer.mcdull.blaze.model.dto.BlazeOrderQueryDTO;
 import io.gitee.dqcer.mcdull.blaze.model.dto.BlazeOrderSearchDTO;
 import io.gitee.dqcer.mcdull.blaze.model.dto.BlazeOrderUpdateDTO;
 import io.gitee.dqcer.mcdull.blaze.model.vo.BlazeOrderVO;
+import io.gitee.dqcer.mcdull.blaze.web.manager.IBlazeOrderDetailRepository;
 import io.gitee.dqcer.mcdull.blaze.web.manager.IBlazeOrderRepository;
 import io.gitee.dqcer.mcdull.blaze.web.service.*;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
@@ -83,7 +84,7 @@ public class BlazeOrderServiceImpl
     @Resource
     private UserApiDef sysUserFacade;
     @Resource
-    private IBlazeOrderDetailService blazeOrderDetailService;
+    private IBlazeOrderDetailRepository blazeOrderDetailRepository;
     @Resource
     private IApproveService approveService;
     @Resource
@@ -103,7 +104,7 @@ public class BlazeOrderServiceImpl
         if (CollUtil.isNotEmpty(recordList)) {
             Map<Integer, String> nameMap = sysUserFacade.getNameMap(UserRefUtil.collectUserIds(recordList));
             List<Integer> orderIdList = recordList.stream().map(IdEntity::getId).toList();
-            List<BlazeOrderDetailEntity> orderDetailList = blazeOrderDetailService.getByOrderId(orderIdList);
+            List<BlazeOrderDetailEntity> orderDetailList = blazeOrderDetailRepository.getByOrderId(orderIdList);
             List<LabelValueVO<Integer, String>> list = CollUtil.emptyIfNull(certificateRequirementsService.all(false));
             Map<Integer, String> map = list.stream().collect(Collectors.toMap(LabelValueVO::getValue, LabelValueVO::getLabel));
             List<LabelValueVO<Integer, String>> talentList = CollUtil.emptyIfNull(talentCertificateService.list(null, false));
@@ -206,22 +207,12 @@ public class BlazeOrderServiceImpl
 
     @Override
     public boolean existByTalentCertificateId(List<Integer> talentCertificateIdList) {
-        if (CollUtil.isNotEmpty(talentCertificateIdList)) {
-            LambdaQueryWrapper<BlazeOrderEntity> query = Wrappers.lambdaQuery();
-            query.in(BlazeOrderEntity::getTalentCertId, talentCertificateIdList);
-            return baseRepository.exists(query);
-        }
-        return false;
+        return baseRepository.existByTalentCertificateId(talentCertificateIdList);
     }
 
     @Override
     public boolean existByCertificateRequirementsIdList(List<Integer> certificateRequirementsIdList) {
-        if (CollUtil.isNotEmpty(certificateRequirementsIdList)) {
-            LambdaQueryWrapper<BlazeOrderEntity> query = Wrappers.lambdaQuery();
-            query.in(BlazeOrderEntity::getCustomerCertId, certificateRequirementsIdList);
-            return baseRepository.exists(query);
-        }
-        return false;
+        return baseRepository.existByCertificateRequirementsIdList(certificateRequirementsIdList);
     }
 
     private void fillFileVO(List<BlazeOrderVO> voList) {
@@ -281,38 +272,12 @@ public class BlazeOrderServiceImpl
 
     @Override
     public Map<Integer, Boolean> getMapByTalentCertId(Set<Integer> collect) {
-        if (CollUtil.isNotEmpty(collect)) {
-            LambdaQueryWrapper<BlazeOrderEntity> query = Wrappers.lambdaQuery();
-            query.in(BlazeOrderEntity::getTalentCertId, collect);
-            List<BlazeOrderEntity> list = baseRepository.list(query);
-            if (CollUtil.isNotEmpty(list)) {
-                Map<Integer, Boolean> map = new HashMap<>();
-                for (Integer id : collect) {
-                    boolean exist = list.stream().anyMatch(entity -> entity.getTalentCertId().equals(id));
-                    map.put(id, exist);
-                }
-                return map;
-            }
-        }
-        return Map.of();
+        return baseRepository.getMapByTalentCertId(collect);
     }
 
     @Override
     public Map<Integer, Boolean> getMapByCustomerCertId(Collection<Integer> collect) {
-        if (CollUtil.isNotEmpty(collect)) {
-            LambdaQueryWrapper<BlazeOrderEntity> query = Wrappers.lambdaQuery();
-            query.in(BlazeOrderEntity::getTalentCertId, collect);
-            List<BlazeOrderEntity> list = baseRepository.list(query);
-            if (CollUtil.isNotEmpty(list)) {
-                Map<Integer, Boolean> map = new HashMap<>();
-                for (Integer id : collect) {
-                    boolean exist = list.stream().anyMatch(entity -> entity.getCustomerCertId().equals(id));
-                    map.put(id, exist);
-                }
-                return map;
-            }
-        }
-        return Map.of();
+        return baseRepository.getMapByCustomerCertId(collect);
     }
 
     @Override
@@ -379,7 +344,7 @@ public class BlazeOrderServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void approve(ApproveDTO dto) {
-        BlazeOrderDetailEntity entity = blazeOrderDetailService.getByOrderId(dto.getId());
+        BlazeOrderDetailEntity entity = blazeOrderDetailRepository.getByOrderId(dto.getId());
         approveService.approve(dto, baseRepository, ObjUtil.isNotNull(entity));
     }
 
@@ -452,24 +417,12 @@ public class BlazeOrderServiceImpl
 
     @Override
     public BlazeOrderEntity getByCustomerCertId(Integer customerCertId) {
-        LambdaQueryWrapper<BlazeOrderEntity> query = Wrappers.lambdaQuery();
-        query.eq(BlazeOrderEntity::getCustomerCertId, customerCertId);
-        List<BlazeOrderEntity> list = baseRepository.list(query);
-        if (CollUtil.isNotEmpty(list)) {
-            return list.get(0);
-        }
-        return null;
+        return baseRepository.getByCustomerCertId(customerCertId);
     }
 
     @Override
     public BlazeOrderEntity getByTalentCertId(Integer talentCertId) {
-        LambdaQueryWrapper<BlazeOrderEntity> query = Wrappers.lambdaQuery();
-        query.eq(BlazeOrderEntity::getTalentCertId, talentCertId);
-        List<BlazeOrderEntity> list = baseRepository.list(query);
-        if (CollUtil.isNotEmpty(list)) {
-            return list.get(0);
-        }
-        return null;
+        return baseRepository.getByTalentCertId(talentCertId);
     }
 
     private List<Pair<String, Func1<BlazeOrderVO, ?>>> getTitleList() {
@@ -599,7 +552,7 @@ public class BlazeOrderServiceImpl
         }
         if (!ObjUtil.equals(entity.getCustomerCertId(), dto.getCustomerCertId())
                 || !ObjUtil.equals(entity.getTalentCertId(), dto.getTalentCertId())) {
-            BlazeOrderDetailEntity detailEntity = blazeOrderDetailService.getByOrderId(id);
+            BlazeOrderDetailEntity detailEntity = blazeOrderDetailRepository.getByOrderId(id);
             if (ObjUtil.isNotNull(detailEntity)) {
                 super.throwDataExistAssociated(id);
             }
@@ -624,7 +577,7 @@ public class BlazeOrderServiceImpl
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
         }
-        BlazeOrderDetailEntity detailEntity = blazeOrderDetailService.getByOrderId(id);
+        BlazeOrderDetailEntity detailEntity = blazeOrderDetailRepository.getByOrderId(id);
         if (ObjUtil.isNotNull(detailEntity)) {
             super.throwDataExistAssociated(id);
         }

@@ -7,6 +7,7 @@ import io.gitee.dqcer.mcdull.blaze.model.dto.CertificateRequirementsAddDTO;
 import io.gitee.dqcer.mcdull.blaze.model.dto.CertificateRequirementsQueryDTO;
 import io.gitee.dqcer.mcdull.blaze.model.dto.CertificateRequirementsUpdateDTO;
 import io.gitee.dqcer.mcdull.blaze.model.vo.CertificateRequirementsVO;
+import io.gitee.dqcer.mcdull.blaze.web.service.ICertificateOrderReportService;
 import io.gitee.dqcer.mcdull.blaze.web.service.ICertificateRequirementsService;
 import io.gitee.dqcer.mcdull.blaze.util.CertificateUtil;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
@@ -37,6 +38,8 @@ public class CertificateRequirementsController extends BlazeBasicController {
 
     @Resource
     private ICertificateRequirementsService certificateRequirementsService;
+    @Resource
+    private ICertificateOrderReportService certificateOrderReportService;
 
     @Operation(summary = "证书级别")
     @GetMapping("/CertificateRequirements/getCertificateLevelList")
@@ -80,7 +83,7 @@ public class CertificateRequirementsController extends BlazeBasicController {
     @SaCheckEL("stp.checkPermission('blaze:certificate_requirements:export')")
     @PostMapping(value = "/{customerId}/blazeOrder/record-export-pdf", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void getExportCustomerOrderDetailPdf(@PathVariable(value = "customerId") Integer customerId) throws IOException {
-        certificateRequirementsService.getExportCustomerOrderDetailPdf(customerId);
+        certificateOrderReportService.getExportCustomerOrderDetailPdf(customerId);
     }
 
     @Operation(summary = "下载模板")

@@ -41,7 +41,7 @@ import io.gitee.dqcer.mcdull.system.provider.web.mapper.FileMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileBizService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFileService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFolderService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserQueryManager;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.dromara.x.file.storage.core.Downloader;
@@ -64,7 +64,7 @@ public class FileServiceImpl
     @Resource
     private OssService ossService;
     @Resource
-    private IUserService userService;
+    private IUserQueryManager userQueryManager;
     @Resource
     private IFolderService folderService;
     @Resource
@@ -76,7 +76,7 @@ public class FileServiceImpl
         String creatorName = dto.getCreatorName();
         List<Integer> userIdList = new ArrayList<>();
         if (StrUtil.isNotBlank(creatorName)) {
-            List<UserEntity> entityList = userService.getLike(creatorName);
+            List<UserEntity> entityList = userQueryManager.getLike(creatorName);
             userIdList = entityList.stream().map(IdEntity::getId).collect(Collectors.toList());
             if (CollUtil.isEmpty(userIdList)) {
                 return PageUtil.empty(dto);
@@ -95,7 +95,7 @@ public class FileServiceImpl
         List<FileEntity> records = entityPage.getRecords();
         if (CollUtil.isNotEmpty(records)) {
             Map<Integer, String> folderMap = folderService.getMap(records.stream().map(FileEntity::getFolderType).collect(Collectors.toSet()));
-            Map<Integer, String> userMap = userService.getMap(records);
+            Map<Integer, String> userMap = userQueryManager.getMap(records);
             for (FileEntity entity : records) {
                 FileVO fileVO = FileConvert.convertToEntity(entity);
                 fileVO.setFileUrl(ossService.getUrl(entity.getFileKey()));

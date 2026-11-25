@@ -21,7 +21,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.FolderInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.FolderTreeInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.web.mapper.FolderMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFolderService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IMenuService;
+import io.gitee.dqcer.mcdull.system.provider.web.manager.IMenuQueryManager;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +44,7 @@ public class FolderServiceImpl
 //    @Resource
 //    private IAuditManager auditManager;
     @Resource
-    private IMenuService menuService;
+    private IMenuQueryManager menuQueryManager;
 
     @Override
     public List<FolderInfoVO> getAll() {
@@ -62,7 +62,7 @@ public class FolderServiceImpl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Integer getSystemFolderId() {
-        List<String> menuNameList = menuService.getCurrentMenuName();
+        List<String> menuNameList = menuQueryManager.getCurrentMenuName();
         FolderEntity entity = this.getSystemFolderId(0, SYSTEM_FOLDER);
         Integer systemId;
         if (ObjUtil.isNull(entity)) {

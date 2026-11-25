@@ -21,7 +21,7 @@ import io.gitee.dqcer.mcdull.blaze.model.vo.BlazeOrderVO;
 import io.gitee.dqcer.mcdull.blaze.web.manager.IBlazeOrderDetailRepository;
 import io.gitee.dqcer.mcdull.blaze.web.service.IApproveService;
 import io.gitee.dqcer.mcdull.blaze.web.service.IBlazeOrderDetailService;
-import io.gitee.dqcer.mcdull.blaze.web.service.IBlazeOrderService;
+import io.gitee.dqcer.mcdull.blaze.web.manager.IBlazeOrderRepository;
 import io.gitee.dqcer.mcdull.framework.base.dto.ApproveDTO;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
@@ -68,7 +68,7 @@ public class BlazeOrderDetailServiceImpl
         extends BasicServiceImpl<IBlazeOrderDetailRepository> implements IBlazeOrderDetailService {
 
     @Resource
-    private IBlazeOrderService blazeOrderService;
+    private IBlazeOrderRepository orderRepository;
     @Resource
     private UserApiDef sysUserFacade;
     @Resource
@@ -90,9 +90,8 @@ public class BlazeOrderDetailServiceImpl
         }
         BlazeOrderQueryDTO orderQueryDTO = new BlazeOrderQueryDTO();
         PageUtil.setMaxPageSize(orderQueryDTO);
-        PagedVO<BlazeOrderVO> page = blazeOrderService.queryPage(orderQueryDTO);
-        List<BlazeOrderVO> orderVOList = CollUtil.defaultIfEmpty(page.getList(), new ArrayList<>());
-        Map<Integer, BlazeOrderVO> orderMap = orderVOList.stream().collect(Collectors.toMap(BlazeOrderVO::getId, Function.identity()));
+        Map<Integer, BlazeOrderDetailListVO> orderMap = orderRepository.listBrief(orderQueryDTO).stream()
+                .collect(Collectors.toMap(BlazeOrderDetailListVO::getBlazeOrderId, Function.identity(), (a, b) -> a));
         Map<Integer, UserDTO> responsibleMap = sysUserFacade.getEntityMap(records.stream()
                 .map(BlazeOrderDetailEntity::getResponsibleUserId)
                 .filter(ObjUtil::isNotNull).collect(Collectors.toList()));
@@ -101,10 +100,10 @@ public class BlazeOrderDetailServiceImpl
             BlazeOrderDetailVO vo = this.convertToVO(entity);
             Integer blazeOrderId = vo.getBlazeOrderId();
             if (ObjUtil.isNotNull(orderMap.get(blazeOrderId))) {
-                BlazeOrderVO orderVO = orderMap.get(blazeOrderId);
-                vo.setOrderNo(orderVO.getOrderNo());
-                vo.setTalentCertTitle(orderVO.getTalentCertName());
-                vo.setCustomerCertTitle(orderVO.getCustomerCertName());
+                BlazeOrderDetailListVO orderBrief = orderMap.get(blazeOrderId);
+                vo.setOrderNo(orderBrief.getOrderNo());
+                vo.setTalentCertTitle(orderBrief.getTalentCertTitle());
+                vo.setCustomerCertTitle(orderBrief.getCustomerCertTitle());
             }
             if (ObjUtil.isNotNull(responsibleMap.get(entity.getResponsibleUserId()))) {
                 UserDTO responsibleUser = responsibleMap.get(entity.getResponsibleUserId());
@@ -289,21 +288,7 @@ public class BlazeOrderDetailServiceImpl
         BlazeOrderQueryDTO dto = new BlazeOrderQueryDTO();
         dto.setApprove(ApproveEnum.APPROVE.getCode());
         PageUtil.setMaxPageSize(dto);
-        PagedVO<BlazeOrderVO> page = blazeOrderService.queryPage(dto);
-        if (CollUtil.isNotEmpty(page.getList())) {
-            List<BlazeOrderDetailListVO> voList = new ArrayList<>();
-            List<BlazeOrderVO> list = page.getList();
-            for (BlazeOrderVO blazeOrderVO : list) {
-                BlazeOrderDetailListVO vo = new BlazeOrderDetailListVO();
-                vo.setBlazeOrderId(blazeOrderVO.getId());
-                vo.setOrderNo(blazeOrderVO.getOrderNo());
-                vo.setTalentCertTitle(blazeOrderVO.getTalentCertName());
-                vo.setCustomerCertTitle(blazeOrderVO.getCustomerCertName());
-                voList.add(vo);
-            }
-            return voList;
-        }
-        return List.of();
+        return orderRepository.listBrief(dto);
     }
 
     @Override
@@ -311,21 +296,7 @@ public class BlazeOrderDetailServiceImpl
         BlazeOrderQueryDTO dto = new BlazeOrderQueryDTO();
         PageUtil.setMaxPageSize(dto);
         // todo 状态过滤，打款完成过滤
-        PagedVO<BlazeOrderVO> page = blazeOrderService.queryPage(dto);
-        if (CollUtil.isNotEmpty(page.getList())) {
-            List<BlazeOrderDetailListVO> voList = new ArrayList<>();
-            List<BlazeOrderVO> list = page.getList();
-            for (BlazeOrderVO blazeOrderVO : list) {
-                BlazeOrderDetailListVO vo = new BlazeOrderDetailListVO();
-                vo.setBlazeOrderId(blazeOrderVO.getId());
-                vo.setOrderNo(blazeOrderVO.getOrderNo());
-                vo.setTalentCertTitle(blazeOrderVO.getTalentCertName());
-                vo.setCustomerCertTitle(blazeOrderVO.getCustomerCertName());
-                voList.add(vo);
-            }
-            return voList;
-        }
-        return List.of();
+        return orderRepository.listBrief(dto);
     }
 
     @Override

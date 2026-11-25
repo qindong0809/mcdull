@@ -11,6 +11,8 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.blaze.web.manager.IBlazeOrderRepository;
+import io.gitee.dqcer.mcdull.blaze.web.manager.ICertificateRequirementsRepository;
 import io.gitee.dqcer.mcdull.blaze.web.manager.ITalentCertificateRepository;
 import io.gitee.dqcer.mcdull.blaze.model.bo.CertificateBO;
 import io.gitee.dqcer.mcdull.blaze.model.entity.BlazeOrderEntity;
@@ -83,9 +85,9 @@ public class TalentCertificateServiceImpl
     @Resource
     private FileRemoteApi fileRemoteApi;
     @Resource
-    private ICertificateRequirementsService certificateRequirementsService;
+    private ICertificateRequirementsRepository certificateRequirementsRepository;
     @Resource
-    private IBlazeOrderService orderService;
+    private IBlazeOrderRepository orderRepository;
     @Resource
     private IApproveService approveService;
 
@@ -286,7 +288,7 @@ public class TalentCertificateServiceImpl
     public List<LabelValueVO<Integer, String>> list(Integer customerCertId, boolean isFilter) {
         TalentCertificateQueryDTO dto = new TalentCertificateQueryDTO();
         if (ObjUtil.isNotNull(customerCertId)) {
-            CertificateRequirementsEntity entity = certificateRequirementsService.get(customerCertId);
+            CertificateRequirementsEntity entity = certificateRequirementsRepository.getById(customerCertId);
             dto.setCertificateLevel(entity.getCertificateLevel());
             dto.setSpecialty(entity.getSpecialty());
             dto.setSocialSecurityRequirement(entity.getSocialSecurityRequirement());
@@ -297,7 +299,7 @@ public class TalentCertificateServiceImpl
         if (ObjUtil.isNotNull(page)) {
             List<TalentCertificateVO> list = page.getList();
             if (CollUtil.isNotEmpty(list)) {
-                Map<Integer, Boolean> map = orderService.getMapByTalentCertId(list.stream().map(TalentCertificateVO::getId).collect(Collectors.toSet()));
+                Map<Integer, Boolean> map = orderRepository.getMapByTalentCertId(list.stream().map(TalentCertificateVO::getId).collect(Collectors.toSet()));
                 List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
                 for (TalentCertificateVO vo : list) {
                     Integer id = vo.getId();
@@ -329,18 +331,13 @@ public class TalentCertificateServiceImpl
 
     @Override
     public boolean existByTalentId(Integer talentId) {
-        if (ObjUtil.isNotNull(talentId)) {
-            LambdaQueryWrapper<TalentCertificateEntity> query = Wrappers.lambdaQuery();
-            query.eq(TalentCertificateEntity::getTalentId, talentId);
-            return baseRepository.exists(query);
-        }
-        return false;
+        return baseRepository.existByTalentId(talentId);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void approve(ApproveDTO dto) {
-        BlazeOrderEntity entity = orderService.getByTalentCertId(dto.getId());
+        BlazeOrderEntity entity = orderRepository.getByTalentCertId(dto.getId());
         approveService.approve(dto, baseRepository, ObjUtil.isNotNull(entity));
     }
 
@@ -349,7 +346,7 @@ public class TalentCertificateServiceImpl
         TalentCertificateQueryDTO dto = new TalentCertificateQueryDTO();
         dto.setApprove(ApproveEnum.APPROVE.getCode());
         if (ObjUtil.isNotNull(customerCertId)) {
-            CertificateRequirementsEntity entity = certificateRequirementsService.get(customerCertId);
+            CertificateRequirementsEntity entity = certificateRequirementsRepository.getById(customerCertId);
             dto.setCertificateLevel(entity.getCertificateLevel());
         }
         List<TalentCertificateVO> list = PageUtil.getAllList(dto, this::queryPage);
@@ -572,7 +569,7 @@ public class TalentCertificateServiceImpl
         if (entityList.size() != idList.size()) {
             this.throwDataNotExistException(idList);
         }
-        boolean exist = orderService.existByTalentCertificateId(idList);
+        boolean exist = orderRepository.existByTalentCertificateId(idList);
         if (exist) {
             super.throwDataExistAssociated(idList);
         }

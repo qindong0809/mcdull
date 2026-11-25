@@ -20,4 +20,6 @@ public interface ITalentCertificateRepository extends IService<TalentCertificate
 
     Page<TalentCertificateEntity> selectPage(TalentCertificateQueryDTO dto);
 
+    boolean existByTalentId(Integer talentId);
+
 }

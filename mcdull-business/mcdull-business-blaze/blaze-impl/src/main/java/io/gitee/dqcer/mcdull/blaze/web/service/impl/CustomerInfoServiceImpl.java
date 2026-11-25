@@ -13,7 +13,7 @@ import io.gitee.dqcer.mcdull.blaze.model.dto.CustomerInfoQueryDTO;
 import io.gitee.dqcer.mcdull.blaze.model.dto.CustomerInfoUpdateDTO;
 import io.gitee.dqcer.mcdull.blaze.model.vo.CustomerInfoVO;
 import io.gitee.dqcer.mcdull.blaze.web.manager.ICustomerInfoRepository;
-import io.gitee.dqcer.mcdull.blaze.web.service.ICertificateRequirementsService;
+import io.gitee.dqcer.mcdull.blaze.web.manager.ICertificateRequirementsRepository;
 import io.gitee.dqcer.mcdull.blaze.web.service.ICustomerInfoService;
 import io.gitee.dqcer.mcdull.common.CustomMultipartFile;
 import io.gitee.dqcer.mcdull.common.area.AreaFillUtil;
@@ -53,7 +53,7 @@ public class CustomerInfoServiceImpl
     @Resource
     private UserApiDef userService;
     @Resource
-    private ICertificateRequirementsService certificateRequirementsService;
+    private ICertificateRequirementsRepository certificateRequirementsRepository;
     @Resource
     private DictApi dictApi;
     @Resource
@@ -227,7 +227,7 @@ public class CustomerInfoServiceImpl
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
         }
-        boolean exist = certificateRequirementsService.existByCustomerId(id);
+        boolean exist = certificateRequirementsRepository.existByCustomerId(id);
         if (exist) {
             super.throwDataExistAssociated(id);
         }

@@ -18,4 +18,6 @@ public interface IBlazeOrderDetailRepository extends IService<BlazeOrderDetailEn
     Page<BlazeOrderDetailEntity> selectPage(BlazeOrderDetailQueryDTO dto);
 
     List<BlazeOrderDetailEntity> getByOrderId(List<Integer> orderIdList);
+
+    BlazeOrderDetailEntity getByOrderId(Integer orderId);
 }

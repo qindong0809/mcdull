@@ -17,7 +17,7 @@ import io.gitee.dqcer.mcdull.blaze.model.dto.TalentQueryDTO;
 import io.gitee.dqcer.mcdull.blaze.model.dto.TalentUpdateDTO;
 import io.gitee.dqcer.mcdull.blaze.model.vo.TalentVO;
 import io.gitee.dqcer.mcdull.blaze.web.manager.ITalentRepository;
-import io.gitee.dqcer.mcdull.blaze.web.service.ITalentCertificateService;
+import io.gitee.dqcer.mcdull.blaze.web.manager.ITalentCertificateRepository;
 import io.gitee.dqcer.mcdull.blaze.web.service.ITalentService;
 import io.gitee.dqcer.mcdull.framework.base.util.PageUtil;
 import io.gitee.dqcer.mcdull.framework.base.vo.LabelValueVO;
@@ -53,7 +53,7 @@ public class TalentServiceImpl
         extends BasicServiceImpl<ITalentRepository> implements ITalentService {
 
     @Resource
-    private ITalentCertificateService talentCertificateService;
+    private ITalentCertificateRepository talentCertificateRepository;
     @Resource
     private AreaApi areaApi;
     @Resource
@@ -232,7 +232,7 @@ public class TalentServiceImpl
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(id);
         }
-        boolean exist = talentCertificateService.existByTalentId(id);
+        boolean exist = talentCertificateRepository.existByTalentId(id);
         if (exist) {
             super.throwDataExistAssociated(id);
         }

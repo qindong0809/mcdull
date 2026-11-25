@@ -21,4 +21,6 @@ public interface ICertificateRequirementsRepository extends IService<Certificate
 
     Page<CertificateRequirementsEntity> selectPage(CertificateRequirementsQueryDTO dto);
 
+    boolean existByCustomerId(Integer customerId);
+
 }

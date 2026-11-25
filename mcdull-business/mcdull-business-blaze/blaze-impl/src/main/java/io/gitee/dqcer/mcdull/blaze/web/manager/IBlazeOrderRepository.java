@@ -3,8 +3,12 @@ package io.gitee.dqcer.mcdull.blaze.web.manager;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.gitee.dqcer.mcdull.blaze.model.entity.BlazeOrderEntity;
 import io.gitee.dqcer.mcdull.blaze.model.dto.BlazeOrderQueryDTO;
+import io.gitee.dqcer.mcdull.blaze.model.vo.BlazeOrderDetailListVO;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -19,5 +23,19 @@ public interface IBlazeOrderRepository extends IService<BlazeOrderEntity> {
     List<BlazeOrderEntity> queryListByIds(List<Integer> idList);
 
     List<BlazeOrderEntity> selectList(BlazeOrderQueryDTO dto);
+
+    Map<Integer, Boolean> getMapByCustomerCertId(Collection<Integer> ids);
+
+    BlazeOrderEntity getByCustomerCertId(Integer customerCertId);
+
+    boolean existByCertificateRequirementsIdList(List<Integer> certificateRequirementsIdList);
+
+    Map<Integer, Boolean> getMapByTalentCertId(Set<Integer> ids);
+
+    BlazeOrderEntity getByTalentCertId(Integer talentCertId);
+
+    boolean existByTalentCertificateId(List<Integer> talentCertificateIdList);
+
+    List<BlazeOrderDetailListVO> listBrief(BlazeOrderQueryDTO dto);
 
 }

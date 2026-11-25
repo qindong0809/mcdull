@@ -24,7 +24,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.DepartmentTreeInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.web.mapper.DepartmentMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDepartmentService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IUserService;
+import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserQueryManager;
 import jakarta.annotation.Resource;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -44,7 +44,7 @@ public class DepartmentServiceImpl
         extends BasicCurdServiceImpl<DepartmentMapper, DepartmentEntity> implements IDepartmentService {
 
     @Resource
-    private IUserService userService;
+    private IUserQueryManager userQueryManager;
 
     @Resource
     private IBizAuditService bizAuditService;
@@ -64,7 +64,7 @@ public class DepartmentServiceImpl
                     .filter(ObjUtil::isNotNull)
                     .collect(Collectors.toSet());
             if (CollUtil.isNotEmpty(userSet)) {
-                Map<Integer, String> userMap = userService.getNameMap(new ArrayList<>(userSet));
+                Map<Integer, String> userMap = userQueryManager.getNameMap(new ArrayList<>(userSet));
                 for (DepartmentInfoVO vo : list) {
                     vo.setManagerName(userMap.get(vo.getManagerId()));
                 }
@@ -98,7 +98,7 @@ public class DepartmentServiceImpl
         audit.setSort(menu.getSort());
         Integer managerId = menu.getManagerId();
         if (ObjUtil.isNotNull(managerId)) {
-            UserEntity user = userService.get(managerId);
+            UserEntity user = userQueryManager.get(managerId);
             if (ObjUtil.isNotNull(user)) {
                 audit.setManagerName(user.getActualName());
             }
@@ -163,7 +163,7 @@ public class DepartmentServiceImpl
         List<DepartmentEntity> currentList = this.getChildNodeByParentId(all, id);
         if (CollUtil.isNotEmpty(currentList)) {
             List<Integer> deptIdList = currentList.stream().map(DepartmentEntity::getId).collect(Collectors.toList());
-            List<UserEntity> userList =userService.listByDeptList(deptIdList);
+            List<UserEntity> userList =userQueryManager.listByDeptList(deptIdList);
             if (CollUtil.isNotEmpty(userList)) {
                 LogHelp.error(logger, "exist data. {}", () ->
                         userList.stream().map(UserEntity::getLoginName).collect(Collectors.toList()));

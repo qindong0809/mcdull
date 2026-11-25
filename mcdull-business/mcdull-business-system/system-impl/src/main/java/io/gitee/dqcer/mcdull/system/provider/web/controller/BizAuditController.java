@@ -7,7 +7,7 @@ import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
 import io.gitee.dqcer.mcdull.framework.web.basic.BasicController;
 import io.gitee.dqcer.mcdull.system.provider.model.dto.BizAuditQueryDTO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.BizAuditVO;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.IBizAuditQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -27,25 +27,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class BizAuditController extends BasicController {
 
     @Resource
-    private IBizAuditService bizAuditService;
+    private IBizAuditQueryService bizAuditQueryService;
 
     @Operation(summary = "分页查询")
     @PostMapping("/system/biz-audit/query")
     public Result<PagedVO<BizAuditVO>> queryPage(@RequestBody @Valid BizAuditQueryDTO dto) {
-        return Result.success(bizAuditService.queryPage(dto));
+        return Result.success(bizAuditQueryService.queryPage(dto));
     }
 
     @Operation(summary = "导出数据")
     @SaCheckEL("stp.checkPermission('system:biz_audit:export')")
     @PostMapping(value = "/system/biz-audit/record-export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void exportData(@RequestBody @Valid BizAuditQueryDTO dto) {
-        super.locker(null, () -> bizAuditService.exportData(dto));
+        super.locker(null, () -> bizAuditQueryService.exportData(dto));
     }
 
     @Operation(summary = "分页查询")
     @PostMapping("/system/user-biz-audit/query")
     public Result<PagedVO<BizAuditVO>> queryPageByLoginUser(@RequestBody @Valid BizAuditQueryDTO dto) {
         dto.setOperator(UserContextHolder.getSession().getLoginName());
-        return Result.success(bizAuditService.queryPage(dto));
+        return Result.success(bizAuditQueryService.queryPage(dto));
     }
 }

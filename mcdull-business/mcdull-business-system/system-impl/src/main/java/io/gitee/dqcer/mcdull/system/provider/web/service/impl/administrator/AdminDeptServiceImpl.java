@@ -14,7 +14,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.AdminDeptLis
 import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.AdminDeptTreeVO;
 import io.gitee.dqcer.mcdull.system.provider.web.mapper.administrator.AdminDeptMapper;
 import io.gitee.dqcer.mcdull.system.provider.web.service.administrator.IAdminDeptService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.administrator.IAdminUserService;
+import io.gitee.dqcer.mcdull.system.provider.web.manager.IAdminUserQueryManager;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class AdminDeptServiceImpl extends ServiceImpl<AdminDeptMapper, AdminDeptEntity> implements IAdminDeptService {
 
     @Resource
-    private IAdminUserService adminUserService;
+    private IAdminUserQueryManager adminUserQueryManager;
 
 
     @Override
@@ -53,7 +53,7 @@ public class AdminDeptServiceImpl extends ServiceImpl<AdminDeptMapper, AdminDept
     @Override
     public AdminDeptListTreeVO getDeptListTree() {
         List<AdminDeptEntity> list = getList();
-        Map<Integer, String> userNameMap = adminUserService.getUserNameMap();
+        Map<Integer, String> userNameMap = adminUserQueryManager.getUserNameMap();
         Tree<Integer> build = TreeUtil.buildSingle(list, 0, (e, v) -> {
             v.setId(e.getId());
             v.setParentId(e.getParentId());

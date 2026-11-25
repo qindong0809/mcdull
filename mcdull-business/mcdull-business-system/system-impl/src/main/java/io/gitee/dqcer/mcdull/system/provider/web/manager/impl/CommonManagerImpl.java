@@ -50,6 +50,9 @@ import io.gitee.dqcer.mcdull.system.facade.model.vo.FileSimpleVO;
 import io.gitee.dqcer.mcdull.system.facade.model.vo.IFileVO;
 import io.gitee.dqcer.mcdull.system.provider.util.ExcelUtil;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
+import io.gitee.dqcer.mcdull.system.provider.web.manager.IUserQueryManager;
+import io.gitee.dqcer.mcdull.system.provider.web.manager.IMenuQueryManager;
+import io.gitee.dqcer.mcdull.system.provider.web.manager.ISystemConfigManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
@@ -73,17 +76,15 @@ import java.util.stream.Collectors;
 public class CommonManagerImpl implements ICommonManager {
 
     @Resource
-    private IUserService userService;
+    private IUserQueryManager userQueryManager;
     @Resource
     private IFileService fileService;
     @Resource
-    private IConfigService configService;
-    @Resource
-    private ICache redisCache;
+    private ISystemConfigManager systemConfigManager;
     @Resource
     private IFolderService folderService;
     @Resource
-    private IMenuService menuService;
+    private IMenuQueryManager menuQueryManager;
     @Resource
     private IDepartmentService departmentService;
 
@@ -228,7 +229,7 @@ public class CommonManagerImpl implements ICommonManager {
     }
 
     private String getUserName(Integer userId) {
-        Map<Integer, String> nameMap = userService.getNameMap(ListUtil.of(userId));
+        Map<Integer, String> nameMap = userQueryManager.getNameMap(ListUtil.of(userId));
         return nameMap.get(userId);
     }
 
@@ -287,7 +288,7 @@ public class CommonManagerImpl implements ICommonManager {
         ExcelUtil.exportExcelByMap(outputStream, sheetName,
                 conditions, actualName, s, pairList, mapList);
         byte[] byteArray = outputStream.toByteArray();
-        List<String> menuName = menuService.getCurrentMenuName();
+        List<String> menuName = menuQueryManager.getCurrentMenuName();
         String fileName = this.getFileName(FileExtensionTypeEnum.EXCEL_X, StrUtil.join(StrUtil.UNDERLINE, menuName));
         Boolean exportAutoStorage = this.getConfigToBool("export-auto-storage");
         if (BooleanUtil.isTrue(exportAutoStorage)) {
@@ -327,30 +328,17 @@ public class CommonManagerImpl implements ICommonManager {
 
     @Override
     public String getConfig(String key) {
-        List<ConfigEntity> entityList = redisCache.getListOrSetPrefixed("sys_config", ConfigEntity.class, () -> configService.list(), 60 * 60 * 24);
-        if (CollUtil.isNotEmpty(entityList)) {
-            Map<String, String> map = entityList.stream().collect(Collectors.toMap(ConfigEntity::getConfigKey, ConfigEntity::getConfigValue));
-            return map.get(key);
-        }
-        return null;
+        return systemConfigManager.getConfig(key);
     }
 
     @Override
     public Boolean isCaptchaEnabled() {
-        String config = this.getConfig("login-captcha");
-        if (StrUtil.isNotBlank(config)) {
-            return BooleanUtil.toBooleanObject(config);
-        }
-        return false;
+        return systemConfigManager.isCaptchaEnabled();
     }
 
     @Override
     public Boolean getConfigToBool(String key) {
-        String config = this.getConfig(key);
-        if (StrUtil.isNotBlank(config)) {
-            return BooleanUtil.toBooleanObject(config);
-        }
-        return null;
+        return systemConfigManager.getConfigToBool(key);
     }
 
     @Override
@@ -411,7 +399,7 @@ public class CommonManagerImpl implements ICommonManager {
             List<DepartmentEntity> list = departmentService.list();
             Set<Integer> userIdSet = voList.stream().map(ApproveVO::getResponsibleUserId).collect(Collectors.toSet());
             userIdSet.add(userId);
-            Map<Integer, UserEntity> entityMap = userService.getEntityMap(new ArrayList<>(userIdSet));
+            Map<Integer, UserEntity> entityMap = userQueryManager.getEntityMap(new ArrayList<>(userIdSet));
             UserEntity user = entityMap.get(userId);
             Integer userRootDepartmentId = this.getRootDepartmentId(list, user.getDepartmentId());
 

@@ -50,4 +50,13 @@ public class BlazeOrderDetailRepositoryImpl extends
         }
         return baseMapper.selectList(query);
     }
+
+    @Override
+    public BlazeOrderDetailEntity getByOrderId(Integer orderId) {
+        if (ObjUtil.isNull(orderId)) {
+            return null;
+        }
+        List<BlazeOrderDetailEntity> list = this.getByOrderId(ListUtil.of(orderId));
+        return CollUtil.isEmpty(list) ? null : list.get(0);
+    }
 }

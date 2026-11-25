@@ -14,7 +14,9 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.gitee.dqcer.mcdull.blaze.web.manager.IBlazeOrderRepository;
 import io.gitee.dqcer.mcdull.blaze.web.manager.ICertificateRequirementsRepository;
+import io.gitee.dqcer.mcdull.blaze.web.manager.ITalentCertificateRepository;
 import io.gitee.dqcer.mcdull.blaze.model.bo.CertificateBO;
 import io.gitee.dqcer.mcdull.blaze.model.entity.BlazeOrderEntity;
 import io.gitee.dqcer.mcdull.blaze.model.entity.CertificateRequirementsEntity;
@@ -91,13 +93,11 @@ public class CertificateRequirementsServiceImpl
     @Resource
     private FileRemoteApi fileRemoteApi;
     @Resource
-    private IBlazeOrderService orderService;
+    private IBlazeOrderRepository orderRepository;
     @Resource
     private IApproveService approveService;
     @Resource
-    private ITalentCertificateService talentCertificateService;
-    @Resource
-    private IBlazeOrderDetailService orderDetailsService;
+    private ITalentCertificateRepository talentCertificateRepository;
 
     @Override
     public PagedVO<CertificateRequirementsVO> queryPage(CertificateRequirementsQueryDTO dto) {
@@ -278,8 +278,8 @@ public class CertificateRequirementsServiceImpl
         PageUtil.setMaxPageSize(dto);
         PagedVO<CertificateRequirementsVO> page = this.queryPage(dto);
         if (ObjUtil.isNotNull(page)) {
-            List<BlazeOrderEntity> orderEntityList = CollUtil.defaultIfEmpty(orderService.list(), new ArrayList<>());
-            Map<Integer, Boolean> map = orderService.getMapByCustomerCertId(orderEntityList.stream().map(BlazeOrderEntity::getCustomerCertId).collect(Collectors.toSet()));
+            List<BlazeOrderEntity> orderEntityList = CollUtil.defaultIfEmpty(orderRepository.list(), new ArrayList<>());
+            Map<Integer, Boolean> map = orderRepository.getMapByCustomerCertId(orderEntityList.stream().map(BlazeOrderEntity::getCustomerCertId).collect(Collectors.toSet()));
             List<CertificateRequirementsVO> list = page.getList();
             if (CollUtil.isNotEmpty(list)) {
                 List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
@@ -318,17 +318,12 @@ public class CertificateRequirementsServiceImpl
 
     @Override
     public boolean existByCustomerId(Integer customerId) {
-        if (ObjUtil.isNotNull(customerId)) {
-            LambdaQueryWrapper<CertificateRequirementsEntity> query = Wrappers.lambdaQuery();
-            query.eq(CertificateRequirementsEntity::getCustomerId, customerId);
-            return baseRepository.exists(query);
-        }
-        return false;
+        return baseRepository.existByCustomerId(customerId);
     }
 
     @Override
     public void approve(ApproveDTO dto) {
-        BlazeOrderEntity entity = orderService.getByCustomerCertId(dto.getId());
+        BlazeOrderEntity entity = orderRepository.getByCustomerCertId(dto.getId());
         approveService.approve(dto, baseRepository, ObjUtil.isNotNull(entity));
     }
 
@@ -337,8 +332,8 @@ public class CertificateRequirementsServiceImpl
         CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
         dto.setApprove(ApproveEnum.APPROVE.getCode());
         List<CertificateRequirementsVO> list = PageUtil.getAllList(dto, this::queryPage);
-        List<BlazeOrderEntity> orderEntityList = CollUtil.defaultIfEmpty(orderService.list(), new ArrayList<>());
-        Map<Integer, Boolean> map = orderService.getMapByCustomerCertId(orderEntityList.stream().map(BlazeOrderEntity::getCustomerCertId).collect(Collectors.toSet()));
+        List<BlazeOrderEntity> orderEntityList = CollUtil.defaultIfEmpty(orderRepository.list(), new ArrayList<>());
+        Map<Integer, Boolean> map = orderRepository.getMapByCustomerCertId(orderEntityList.stream().map(BlazeOrderEntity::getCustomerCertId).collect(Collectors.toSet()));
         if (CollUtil.isNotEmpty(list)) {
             List<LabelValueVO<Integer, String>> voList = new ArrayList<>();
             for (CertificateRequirementsVO vo : list) {
@@ -363,7 +358,7 @@ public class CertificateRequirementsServiceImpl
         CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
         dto.setApprove(ApproveEnum.APPROVE.getCode());
         if (ObjUtil.isNotNull(talentCertId)) {
-            TalentCertificateEntity talentCertificateEntity = talentCertificateService.get(talentCertId);
+            TalentCertificateEntity talentCertificateEntity = talentCertificateRepository.getById(talentCertId);
             if (ObjUtil.isNotNull(talentCertificateEntity)) {
                 dto.setCertificateLevel(talentCertificateEntity.getCertificateLevel());
             }
@@ -377,89 +372,6 @@ public class CertificateRequirementsServiceImpl
             return voList;
         }
         return List.of();
-    }
-
-    @Override
-    public void getExportCustomerOrderDetailPdf(Integer customerId) throws IOException {
-        CertificateRequirementsQueryDTO dto = new CertificateRequirementsQueryDTO();
-        dto.setId(customerId);
-        PagedVO<CertificateRequirementsVO> certificateRequirementsVOPagedVO = this.queryPage(dto);
-        if (ObjUtil.isNotNull(certificateRequirementsVOPagedVO)) {
-            List<CertificateRequirementsVO> list = certificateRequirementsVOPagedVO.getList();
-            if (CollUtil.isNotEmpty(list)) {
-                CertificateRequirementsVO vo = list.get(0);
-                Map<String, String> map = new HashMap<>();
-                map.put(LambdaUtil.getFieldName(CertificateRequirementsVO::getCustomerName), vo.getCustomerName());
-                map.put(LambdaUtil.getFieldName(CertificateRequirementsVO::getResponsibleUserIdStr), vo.getResponsibleUserIdStr());
-                map.put(LambdaUtil.getFieldName(CertificateRequirementsVO::getResponsibleUserPhone), vo.getResponsibleUserPhone());
-                map.put(LambdaUtil.getFieldName(CertificateRequirementsVO::getResponsibleUserDepartmentName), vo.getResponsibleUserDepartmentName());
-                map.put(LambdaUtil.getFieldName(CertificateRequirementsVO::getCertificateLevelName), vo.getCertificateLevelName());
-                map.put(LambdaUtil.getFieldName(CertificateRequirementsVO::getSpecialtyName), vo.getSpecialtyName());
-                map.put(LambdaUtil.getFieldName(CertificateRequirementsVO::getSocialSecurityRequirementName), vo.getSocialSecurityRequirementName());
-                String body = "";
-
-                BlazeOrderQueryDTO orderDto = new BlazeOrderQueryDTO();
-                orderDto.setCustomerCertId(vo.getId());
-                PagedVO<BlazeOrderVO> voPagedVO = orderService.queryPage(orderDto);
-                if (ObjUtil.isNotNull(voPagedVO)) {
-                    List<BlazeOrderVO> orderList = voPagedVO.getList();
-                    if (CollUtil.isNotEmpty(orderList)) {
-                        for (BlazeOrderVO orderVO : orderList) {
-                            body += " <div class=\"descriptions\">\n" +
-                                    "                    <div class=\"descriptions-title\">匹配人才订单号:" + orderVO.getOrderNo()+"</div>\n" +
-                                    "                    <div class=\"descriptions-content\">\n" +
-                                    "                        <div class=\"descriptions-item\">\n" +
-                                    "                            <div class=\"descriptions-label\">对接人</div>\n" +
-                                    "                            <div class=\"descriptions-value\">"+orderVO.getTalentResponsibleUserIdStr()+"</div>\n" +
-                                    "                        </div>\n" +
-                                    "                        <div class=\"descriptions-item\">\n" +
-                                    "                            <div class=\"descriptions-label\">电话</div>\n" +
-                                    "                            <div class=\"descriptions-value\">"+orderVO.getTalentResponsibleUserPhone()+"</div>\n" +
-                                    "                        </div>\n" +
-                                    "                        <div class=\"descriptions-item\">\n" +
-                                    "                            <div class=\"descriptions-label\">所属</div>\n" +
-                                    "                            <div class=\"descriptions-value\">" +orderVO.getTalentResponsibleDepartment()+ "</div>\n" +
-                                    "                        </div>\n" +
-                                    "                        <div class=\"descriptions-item\">\n" +
-                                    "                            <div class=\"descriptions-label\">人才</div>\n" +
-                                    "                            <div class=\"descriptions-value\">" +orderVO.getTalentCertName()+ "</div>\n" +
-                                    "                        </div>\n" +
-                                    "                    </div>\n" +
-                                    "                </div> <br /> <br /> <br />";
-                        }
-                        List<Integer> orderIdList = orderList.stream().map(BlazeOrderVO::getId).collect(Collectors.toList());
-                        BlazeOrderDetailQueryDTO detailQueryDTO = new BlazeOrderDetailQueryDTO();
-                        detailQueryDTO.setOrderIdList(orderIdList);
-                        detailQueryDTO.setIsTalent(false);
-                        PagedVO<BlazeOrderDetailVO> orderDetailVOPagedVO = orderDetailsService.queryPage(detailQueryDTO);
-                        if (ObjUtil.isNotNull(orderDetailVOPagedVO)) {
-                            List<BlazeOrderDetailVO> orderDetailList = orderDetailVOPagedVO.getList();
-                            if (CollUtil.isNotEmpty(orderDetailList)) {
-                                StringJoiner joiner = new StringJoiner("。<br /> <br />");
-                                for (BlazeOrderDetailVO orderDetailVO : orderDetailList) {
-                                    String date = TimeZoneUtil.serializeDate(orderDetailVO.getOperationTimeStr(), null, null, null, null, false);
-                                    String format = StrUtil.format("日期：{} 操作人【{}】收到回款【{}】元", date, orderDetailVO.getResponsibleUserName(), orderDetailVO.getPrice());
-                                    joiner.add(format);
-                                }
-                                body += joiner.toString();
-                            }
-                        }
-                    }
-                }
-                String html = HtmlConvertPdf.getHtml(body, "pdf.html");
-                for (Map.Entry<String, String> entry : map.entrySet()) {
-                    html = StrUtil.replace(html, StrUtil.format("${{}}", entry.getKey()), entry.getValue());
-                }
-                html = StrUtil.format(html, body);
-                ByteArrayInOutConvert byteArrayInOutStream = new HtmlConvertPdf().generatePdf(html);
-                String message =  TimeZoneUtil.serializeDate(new Date(), "yyyyMMdd_HHmmss", false);
-                String fileName = StrUtil.format("{}_{}_{}_{}.pdf", vo.getCustomerName(), vo.getCertificateLevelName(), vo.getSpecialtyName(), message);
-                String pafPathParent = FileUtil.getTmpDirPath() + File.separator + System.currentTimeMillis();
-                String pdfPath = pafPathParent + File.separator + fileName;
-                HtmlConvertPdf.updatePdfLeftFooter(byteArrayInOutStream.getInputStream(), pdfPath, message);
-                ServletUtil.download(fileName, FileUtil.readBytes(pdfPath));
-            }
-        }
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -704,7 +616,7 @@ public class CertificateRequirementsServiceImpl
         if (entityList.size() != idList.size()) {
             this.throwDataNotExistException(idList);
         }
-        boolean exist = orderService.existByCertificateRequirementsIdList(idList);
+        boolean exist = orderRepository.existByCertificateRequirementsIdList(idList);
         if (exist) {
             super.throwDataExistAssociated(idList);
         }

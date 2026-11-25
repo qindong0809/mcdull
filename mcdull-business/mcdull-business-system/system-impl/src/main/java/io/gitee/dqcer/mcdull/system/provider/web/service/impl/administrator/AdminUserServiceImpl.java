@@ -26,6 +26,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.administrator.AdminUse
 import io.gitee.dqcer.mcdull.system.provider.model.vo.administrator.*;
 import io.gitee.dqcer.mcdull.system.provider.model.bo.*;
 import io.gitee.dqcer.mcdull.system.provider.web.mapper.administrator.AdminUserMapper;
+import io.gitee.dqcer.mcdull.system.provider.web.manager.IAdminRoleQueryManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ICaptchaService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.administrator.*;
 import jakarta.annotation.Resource;
@@ -47,7 +48,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     @Resource
     private IAdminDeptService adminDeptService;
     @Resource
-    private IAdminRoleService adminRoleService;
+    private IAdminRoleQueryManager adminRoleQueryManager;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -100,7 +101,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
                 for (String roleId : roleArray) {
                     roleIdList.add(Integer.valueOf(roleId));
                 }
-                List<AdminRoleEntity> roleList = adminRoleService.listByIds(roleIdList);
+                List<AdminRoleEntity> roleList = adminRoleQueryManager.listByIds(roleIdList);
                 vo.setRoles(roleList.stream().map(AdminRoleEntity::getCode).collect(Collectors.toSet()));
                 vo.setRoleNames(roleList.stream().map(AdminRoleEntity::getName).collect(Collectors.toList()));
             }
@@ -194,7 +195,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         for (String roleJoin : collect) {
             String[] split = roleJoin.split(",");
             roleIdList.addAll(Arrays.stream(split).map(Integer::parseInt).toList());
-            List<AdminRoleEntity> roleList = adminRoleService.listByIds(roleIdList);
+            List<AdminRoleEntity> roleList = adminRoleQueryManager.listByIds(roleIdList);
             roleNameMap = roleList.stream().collect(Collectors.toMap(AdminRoleEntity::getId, AdminRoleEntity::getName));
         }
         Map<Integer, String> userNameMap = this.getUserNameMap();
@@ -250,7 +251,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
             roleIds.add(Integer.parseInt(s));
         }
         vo.setRoleIds(roleIds);
-        vo.setRoleNames(adminRoleService.listByIds(vo.getRoleIds()).stream().map(AdminRoleEntity::getName).toList());
+        vo.setRoleNames(adminRoleQueryManager.listByIds(vo.getRoleIds()).stream().map(AdminRoleEntity::getName).toList());
         vo.setIsSystem(entity.getAdministratorFlag());
         vo.setStatus(entity.getInactive() ? 2 : 1);
         Map<Integer, String> userNameMap = this.getUserNameMap();

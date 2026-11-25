@@ -25,7 +25,7 @@ import io.gitee.dqcer.mcdull.system.provider.web.manager.IFormManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFormItemService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFormRecordItemService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IFormRecordService;
-import io.gitee.dqcer.mcdull.system.provider.web.service.IFormService;
+import io.gitee.dqcer.mcdull.system.provider.web.mapper.FormMapper;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
     private static final Logger log = LoggerFactory.getLogger(FormManagerImpl.class);
 
     @Resource
-    private IFormService formService;
+    private FormMapper formMapper;
     @Resource
     private IFormItemService formItemService;
     @Resource
@@ -105,7 +105,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void initFormAndFormItem(Integer formId, String jsonText) {
-        FormEntity entity = formService.getById(formId);
+        FormEntity entity = formMapper.selectById(formId);
         if (ObjUtil.isNull(entity)) {
             this.throwDataNotExistException(formId);
         }
@@ -113,7 +113,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             throw new BusinessException("动态表单已发布，不能修改");
         }
         entity.setJsonText(jsonText);
-        formService.updateById(entity);
+        formMapper.updateById(entity);
 
         formItemService.deleteByFormId(formId);
 
@@ -165,7 +165,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
 
     @Override
     public void addFormRecordData(Integer formId, Map<String, Object> formDataMap) {
-        FormEntity formEntity = formService.getById(formId);
+        FormEntity formEntity = formMapper.selectById(formId);
         if (ObjUtil.isNull(formEntity)) {
             this.throwDataNotExistException(formId);
         }
@@ -210,7 +210,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
         if (ObjUtil.isNull(formId)) {
             return Collections.emptyList();
         }
-        if (BooleanUtil.isFalse(formService.getById(formId).getPublish())) {
+        if (BooleanUtil.isFalse(formMapper.selectById(formId).getPublish())) {
             return Collections.emptyList();
         }
         List<FormItemEntity> itemList = formItemService.selectByFormId(formId);
@@ -322,7 +322,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
 
     @Override
     public void formConfigReady(Integer formId) {
-        FormEntity form = formService.getById(formId);
+        FormEntity form = formMapper.selectById(formId);
         if (ObjUtil.isNull(form)) {
             this.throwDataNotExistException(formId);
         }
@@ -330,7 +330,7 @@ public class FormManagerImpl extends GenericLogic implements IFormManager {
             return;
         }
         form.setPublish(true);
-        formService.updateById(form);
+        formMapper.updateById(form);
     }
 
     @Override
