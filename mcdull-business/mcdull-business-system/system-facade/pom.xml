@@ -24,6 +24,13 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Feign → UserDataSourceResolver  SPI 适配器：把远程 DTO 转成框架无业务语义的 UserDataSource -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-spi</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- VO 字段上的 @DynamicDateFormat + @JsonSerialize(using = DynamicDateSerialize.class) 按用户时区输出日期 -->
         <dependency>
             <groupId>${project.groupId}</groupId>

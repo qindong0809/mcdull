@@ -18,7 +18,9 @@ import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.mysql.aspect.DataSourceAspect;
 import io.gitee.dqcer.mcdull.framework.mysql.context.DataSourceContextPropagator;
+import io.gitee.dqcer.mcdull.framework.mysql.filter.UserDataSourceBindFilter;
 import io.gitee.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
+import io.gitee.dqcer.mcdull.framework.mysql.service.UserDataSourceBindingService;
 import io.gitee.dqcer.mcdull.framework.spi.AsyncContextPropagator;
 import jakarta.annotation.Resource;
 import jakarta.servlet.*;
@@ -27,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -128,6 +131,27 @@ public class MysqlAutoConfiguration {
     @Bean
     public DataSourceAspect dataSourceAspect() {
         return new DataSourceAspect();
+    }
+
+    /**
+     * 用户数据源绑定过滤器注册：非 web 应用（如纯 Feign 客户端）不注册。
+     * <p>
+     * order=4，晚于 starter-web 的 HttpTraceLogFilter(2) 与 starter-security 的 AuthSessionFilter(3)，
+     * 保证执行时会话里已有已认证用户 ID。
+     */
+    @Configuration(proxyBeanMethods = false)
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    static class UserDataSourceBindFilterConfiguration {
+
+        @Bean
+        public FilterRegistrationBean<UserDataSourceBindFilter> userDataSourceBindFilterRegistrationBean(
+                UserDataSourceBindingService bindingService) {
+            FilterRegistrationBean<UserDataSourceBindFilter> registration = new FilterRegistrationBean<>();
+            registration.setFilter(new UserDataSourceBindFilter(bindingService));
+            registration.setOrder(4);
+            registration.addUrlPatterns("/*");
+            return registration;
+        }
     }
 
     /**

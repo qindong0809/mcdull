@@ -31,4 +31,18 @@ public interface SwitchableDataSource extends DataSource, RequestDataRouting {
      * @return 操作结果
      */
     <T> T get(Supplier<T> supplier);
+
+    /** 指定 lookupKey 的数据源是否已注册 */
+    boolean containsDataSource(String lookupKey);
+
+    /** 已注册数据源数量（含默认数据源） */
+    int dataSourceCount();
+
+    /**
+     * 注册一个外部构造的数据源。
+     * <p>
+     * 参数用 JDK 的 {@link DataSource} 而非 starter 层的 Database，
+     * 避免 core-mysql 反向依赖 starter-mysql。调用方负责构造连接池。
+     */
+    void addDataSource(String lookupKey, DataSource dataSource);
 }

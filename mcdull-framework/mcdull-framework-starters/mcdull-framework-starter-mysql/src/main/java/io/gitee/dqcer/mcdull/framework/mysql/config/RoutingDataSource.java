@@ -46,6 +46,11 @@ public abstract class RoutingDataSource extends AbstractRoutingDataSource {
         return dataSourceMap.containsKey(lookupKey);
     }
 
+    /** 已注册数据源数量（含默认数据源），用于租户数据源上限保护 */
+    public int dataSourceCount() {
+        return dataSourceMap.size();
+    }
+
     public synchronized void addDataSource(String lookupKey, DataSource dataSource) {
         dataSourceMap.put(lookupKey, dataSource);
         this.afterPropertiesSet();
