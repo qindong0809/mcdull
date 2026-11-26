@@ -25,6 +25,11 @@ public interface IUserSession {
 
     void setTenantId(Integer tenantId);
 
+    /** 用户被授权的租户 ID 集合 */
+    java.util.Set<Integer> getTenantIds();
+
+    void setTenantIds(java.util.Set<Integer> tenantIds);
+
     Boolean getAdministratorFlag();
 
     void setAdministratorFlag(Boolean administratorFlag);

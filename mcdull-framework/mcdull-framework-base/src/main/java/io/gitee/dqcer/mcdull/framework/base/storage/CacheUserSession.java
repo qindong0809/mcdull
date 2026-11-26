@@ -18,6 +18,9 @@ public class CacheUserSession implements IUserSession, Serializable {
 
     private Integer tenantId;
 
+    /** 用户被授权的租户 ID 集合，登录时写入 */
+    private java.util.Set<Integer> tenantIds;
+
     private Boolean administratorFlag;
 
     private String language;
@@ -76,6 +79,16 @@ public class CacheUserSession implements IUserSession, Serializable {
     @Override
     public void setTenantId(Integer tenantId) {
         this.tenantId = tenantId;
+    }
+
+    @Override
+    public java.util.Set<Integer> getTenantIds() {
+        return tenantIds;
+    }
+
+    @Override
+    public void setTenantIds(java.util.Set<Integer> tenantIds) {
+        this.tenantIds = tenantIds;
     }
 
     @Override

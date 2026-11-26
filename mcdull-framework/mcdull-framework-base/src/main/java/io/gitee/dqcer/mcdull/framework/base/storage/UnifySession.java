@@ -34,6 +34,11 @@ public class UnifySession implements IUserSession, Serializable {
     private Integer tenantId;
 
     /**
+     * 用户被授权的租户 ID 集合
+     */
+    private java.util.Set<Integer> tenantIds;
+
+    /**
      * 角色id
      */
     private Integer roleId;
@@ -90,6 +95,7 @@ public class UnifySession implements IUserSession, Serializable {
         this.setUserType(cacheUser.getUserType());
         this.setAdministratorFlag(cacheUser.getAdministratorFlag());
         this.setTenantId(cacheUser.getTenantId());
+        this.setTenantIds(cacheUser.getTenantIds());
         this.setLoginName(cacheUser.getLoginName());
         this.setZoneIdStr(cacheUser.getZoneIdStr());
         this.setDateFormat(cacheUser.getDateFormat());
@@ -143,6 +149,16 @@ public class UnifySession implements IUserSession, Serializable {
     @Override
     public void setTenantId(Integer tenantId) {
         this.tenantId = tenantId;
+    }
+
+    @Override
+    public java.util.Set<Integer> getTenantIds() {
+        return tenantIds;
+    }
+
+    @Override
+    public void setTenantIds(java.util.Set<Integer> tenantIds) {
+        this.tenantIds = tenantIds;
     }
 
     @Override

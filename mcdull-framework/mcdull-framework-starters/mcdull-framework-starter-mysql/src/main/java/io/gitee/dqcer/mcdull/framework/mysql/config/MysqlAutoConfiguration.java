@@ -18,15 +18,17 @@ import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.mysql.aspect.DataSourceAspect;
 import io.gitee.dqcer.mcdull.framework.mysql.context.DataSourceContextPropagator;
-import io.gitee.dqcer.mcdull.framework.mysql.filter.UserDataSourceBindFilter;
+import io.gitee.dqcer.mcdull.framework.mysql.interceptor.DynamicDatasourceInterceptor;
 import io.gitee.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
-import io.gitee.dqcer.mcdull.framework.mysql.service.UserDataSourceBindingService;
+import io.gitee.dqcer.mcdull.framework.mysql.routing.SwitchableDataSource;
 import io.gitee.dqcer.mcdull.framework.spi.AsyncContextPropagator;
+import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSourceResolver;
 import jakarta.annotation.Resource;
 import jakarta.servlet.*;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -41,6 +43,8 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -134,23 +138,32 @@ public class MysqlAutoConfiguration {
     }
 
     /**
-     * 用户数据源绑定过滤器注册：非 web 应用（如纯 Feign 客户端）不注册。
+     * 租户数据源 MVC 拦截器：默认关闭，需 spring.datasource.tenant-routing-enabled=true。
      * <p>
-     * order=4，晚于 starter-web 的 HttpTraceLogFilter(2) 与 starter-security 的 AuthSessionFilter(3)，
-     * 保证执行时会话里已有已认证用户 ID。
+     * 唯一切库点：本地配了 master（system 服务）则沿用 master；否则请求头 tid 经授权校验后，
+     * 由 SPI 解析租户数据源（缓存 + system-feign）并切换。
      */
     @Configuration(proxyBeanMethods = false)
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-    static class UserDataSourceBindFilterConfiguration {
+    @ConditionalOnProperty(name = "spring.datasource.tenant-routing-enabled", havingValue = "true")
+    static class TenantRoutingInterceptorConfiguration {
 
         @Bean
-        public FilterRegistrationBean<UserDataSourceBindFilter> userDataSourceBindFilterRegistrationBean(
-                UserDataSourceBindingService bindingService) {
-            FilterRegistrationBean<UserDataSourceBindFilter> registration = new FilterRegistrationBean<>();
-            registration.setFilter(new UserDataSourceBindFilter(bindingService));
-            registration.setOrder(4);
-            registration.addUrlPatterns("/*");
-            return registration;
+        public DynamicDatasourceInterceptor dynamicDatasourceInterceptor(
+                SwitchableDataSource switchableDataSource,
+                DataSourceProperties dataSourceProperties,
+                ObjectProvider<TenantDataSourceResolver> resolverProvider) {
+            return new DynamicDatasourceInterceptor(switchableDataSource, dataSourceProperties, resolverProvider);
+        }
+
+        @Bean
+        public WebMvcConfigurer tenantRoutingWebMvcConfigurer(DynamicDatasourceInterceptor interceptor) {
+            return new WebMvcConfigurer() {
+                @Override
+                public void addInterceptors(InterceptorRegistry registry) {
+                    registry.addInterceptor(interceptor).addPathPatterns("/**");
+                }
+            };
         }
     }
 

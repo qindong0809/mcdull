@@ -1,0 +1,23 @@
+package io.gitee.dqcer.mcdull.system.facade.vo;
+
+import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSource;
+import lombok.Data;
+
+/**
+ * 租户数据源远程 VO。
+ *
+ * @author dqcer
+ */
+@Data
+public class RemoteTenantDataSourceVO implements TenantDataSource {
+
+    private String key;
+
+    private Integer tenantId;
+
+    private String url;
+
+    private String username;
+
+    private String password;
+}

@@ -24,7 +24,14 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Feign → UserDataSourceResolver  SPI 适配器：把远程 DTO 转成框架无业务语义的 UserDataSource -->
+        <!-- 租户数据源 SPI 适配器使用 ICache 做本地缓存 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mcdull-framework-api-redis</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Feign → TenantDataSourceResolver SPI 适配器：把远程 DTO 转成框架无业务语义的 TenantDataSource -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mcdull-framework-spi</artifactId>

@@ -24,6 +24,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class RoutingDataSource extends AbstractRoutingDataSource {
 
+    /**
+     * 数据源注册上限（含默认数据源）：用户绑定与租户路由共用，防止构造大量连接池撑爆数据库。
+     */
+    public static final int MAX_DATASOURCE_COUNT = 100;
+
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     protected Map<Object, Object> dataSourceMap = new ConcurrentHashMap<>();

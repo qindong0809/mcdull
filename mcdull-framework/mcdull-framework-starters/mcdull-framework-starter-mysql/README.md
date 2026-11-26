@@ -125,38 +125,16 @@ public class User {
 
 ### 动态数据源使用示例
 
-```java
-@Service
-public class DynamicDataSourceService {
+Web 请求不需要手工切换：入口过滤器先绑定 `master`，鉴权完成后由用户绑定过滤器或租户拦截器按会话身份叠加数据源。业务代码只在临时切库时使用 `@DynamicDataSource`：
 
-    @Autowired
-    private GlobalDataRoutingDataSource globalDataRoutingDataSource;
-    
-    @Autowired
-    private TenantDataRoutingDatSource tenantDataRoutingDatSource;
-    
-    @Autowired
-    private UserMapper userMapper;
-    
-    /**
-     * 使用全局数据源执行操作
-     */
-    public List<User> getUsersFromGlobalDataSource() {
-        return globalDataRoutingDataSource.get(() -> {
-            return userMapper.selectList(null);
-        });
-    }
-    
-    /**
-     * 使用租户数据源执行操作
-     */
-    public List<User> getUsersFromTenantDataSource(String tenantId) {
-        return tenantDataRoutingDatSource.get(() -> {
-            return userMapper.selectList(null);
-        }, tenantId);
-    }
+```java
+@DynamicDataSource("#tenantId")   // SpEL，从方法参数解析 lookupKey；key 必须已注册
+public List<User> listByTenant(String tenantId) {
+    return userMapper.selectList(null);
 }
 ```
+
+> **不要在 Web 请求链路中调用 `GlobalDataRoutingDataSource.get(Supplier)`**：它当前在 `finally` 中调用 `clear()` 清空整个路由栈，退出后后续数据库访问会因空 lookupKey 失败。非 Web 线程（如定时任务）应按 `DatabaseBackupTaskExecutor` 的写法显式 `switchDataSource()` / `removeDataSource()`。
 
 ## 核心功能
 
@@ -186,7 +164,35 @@ public class DynamicDataSourceService {
 
 ### 7. 租户数据源隔离
 
-支持基于租户 ID 的数据源隔离，通过 `TenantDataRoutingDatSource` 实现不同租户的数据隔离。
+由 `DynamicDatasourceInterceptor` 提供，默认关闭，需显式开启：
+
+```yaml
+spring:
+  datasource:
+    tenant-routing-enabled: true
+```
+
+**当前状态：拦截器只做租户身份校验，不做租户级切库**。租户数据源的读取逻辑（从缓存获取，未命中则经 `system-feign` 查询 master 库并回填缓存）尚未实现，`resolve()` 暂返回 `null`，沿用上层数据源。
+
+租户身份只取服务端会话 `UnifySession.tenantId`，请求头 `tid` 仅做一致性校验，不一致抛 `system.tenant.mismatch`。
+
+## 租户路由的启用顺序
+
+框架通过 `TenantDataSourceResolver` SPI（`mcdull-framework-spi` 的 `datasource` 包）解析租户数据源，由 `DynamicDatasourceInterceptor` 消费。**仅按 tenantId 切库**，不再支持用户级独立绑定。
+
+**启用顺序**（从请求进入到 Controller）：
+
+1. `HttpTraceLogFilter`（order=2）：建会话、设置 traceId、切换 `master` 并入栈；
+2. `AuthSessionFilter`（order=3）：回填已认证用户的 `userId` / `tenantId` / `tenantIds`；
+3. `DynamicDatasourceInterceptor`（MVC 层，唯一切库点）：
+   - 本地配了 master（system 服务、登录接口）→ 用 master，不切租户库；
+   - 否则取请求头 `tid`（空 → `system.tenant.required`），校验属于服务端授权租户集合（否则 `system.tenant.forbidden`）；
+   - 经 SPI 解析数据源（缓存 + system-feign），注册物理池并 `push(tenantKey)`；
+4. 退出时：`afterCompletion` 按入栈时记录的 key 精确移除。
+
+**降级行为**：SPI 未配置实现、system 不可用或租户无独立数据源时，沿用当前数据源。
+
+> 遗留类 `TenantDataRoutingDatSource` 尚未实现（未注册为 Bean），请勿注入使用。
 
 ## 注意事项
 

@@ -19,7 +19,6 @@ public class GlobalDataRoutingDataSource extends RoutingDataSource implements Sw
     public void switchDataSource() {
         String lookupKey = dataSourceProperties.getDefaultName();
         // 不再 clear()：请求边界的清理由 HttpTraceLogFilter 的 finally 负责。
-        // 若此处清空，会抹掉认证阶段已绑定的用户数据源。
         super.loadDataSource(lookupKey, dataSourceProperties);
         DynamicContextHolder.push(lookupKey);
     }
