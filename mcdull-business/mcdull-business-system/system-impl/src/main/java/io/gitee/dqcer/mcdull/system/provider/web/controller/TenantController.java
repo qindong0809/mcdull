@@ -56,21 +56,21 @@ public class TenantController extends BasicController {
     private ITenantInitService tenantInitService;
 
     @Operation(summary = "分页查询")
-    @PostMapping("/system/tenant/query")
+    @PostMapping("/tenant/query")
     @SaCheckEL("stp.checkPermission('system:tenant:query')")
     public Result<PagedVO<TenantVO>> query(@RequestBody @Valid TenantQueryDTO dto) {
         return Result.success(tenantService.queryPage(dto));
     }
 
     @Operation(summary = "详情")
-    @GetMapping("/system/tenant/detail")
+    @GetMapping("/tenant/detail")
     @SaCheckEL("stp.checkPermission('system:tenant:query')")
     public Result<TenantDetailVO> detail(@RequestParam("id") Integer id) {
         return Result.success(tenantService.detail(id));
     }
 
     @Operation(summary = "新增")
-    @PostMapping("/system/tenant/add")
+    @PostMapping("/tenant/add")
     @SaCheckEL("stp.checkPermission('system:tenant:write')")
     public Result<Boolean> add(@RequestBody @Valid TenantAddDTO dto) {
         tenantService.add(dto);
@@ -78,7 +78,7 @@ public class TenantController extends BasicController {
     }
 
     @Operation(summary = "更新")
-    @PostMapping("/system/tenant/update")
+    @PostMapping("/tenant/update")
     @SaCheckEL("stp.checkPermission('system:tenant:write')")
     public Result<Boolean> update(@RequestBody @Valid TenantUpdateDTO dto) {
         tenantService.update(dto);
@@ -86,7 +86,7 @@ public class TenantController extends BasicController {
     }
 
     @Operation(summary = "删除")
-    @PostMapping("/system/tenant/delete")
+    @PostMapping("/tenant/delete")
     @SaCheckEL("stp.checkPermission('system:tenant:delete')")
     public Result<Boolean> delete(@RequestBody @Valid IdDTO dto) {
         tenantService.delete(dto.getId());
@@ -94,7 +94,7 @@ public class TenantController extends BasicController {
     }
 
     @Operation(summary = "启停")
-    @PostMapping("/system/tenant/change-status")
+    @PostMapping("/tenant/change-status")
     @SaCheckEL("stp.checkPermission('system:tenant:write')")
     public Result<Boolean> changeStatus(@RequestBody @Valid StatusDTO dto) {
         tenantService.changeStatus(dto.getId(), dto.getInactive());
@@ -102,14 +102,14 @@ public class TenantController extends BasicController {
     }
 
     @Operation(summary = "数据源下拉")
-    @GetMapping("/system/tenant/datasource-options")
+    @GetMapping("/tenant/datasource-options")
     @SaCheckEL("stp.checkPermission('system:tenant:query')")
     public Result<List<DatasourceOptionVO>> datasourceOptions() {
         return Result.success(tenantService.datasourceOptions());
     }
 
     @Operation(summary = "执行初始化")
-    @PostMapping("/system/tenant/init")
+    @PostMapping("/tenant/init")
     @SaCheckEL("stp.checkPermission('system:tenant:init')")
     public Result<TenantTaskVO> init(@RequestBody @Valid TenantInitDTO dto, HttpServletRequest request) {
         Integer currentTenantId = tenantAuthService.currentTenantId(request);
@@ -121,7 +121,7 @@ public class TenantController extends BasicController {
     }
 
     @Operation(summary = "初始化进度订阅")
-    @GetMapping(value = "/system/tenant/init-progress", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/tenant/init-progress", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @SaCheckEL("stp.checkPermission('system:tenant:init')")
     public SseEmitter initProgress(@RequestParam("taskNo") String taskNo,
                                    @RequestParam(value = "tid", required = false) String tid,
@@ -152,7 +152,7 @@ public class TenantController extends BasicController {
     }
 
     @Operation(summary = "初始化快照")
-    @GetMapping("/system/tenant/init-snapshot")
+    @GetMapping("/tenant/init-snapshot")
     @SaCheckEL("stp.checkPermission('system:tenant:init')")
     public Result<TenantInitProgressVO> initSnapshot(@RequestParam("taskNo") String taskNo, HttpServletRequest request) {
         Integer tenantId = tenantAuthService.currentTenantId(request);
@@ -168,14 +168,14 @@ public class TenantController extends BasicController {
     }
 
     @Operation(summary = "租户用户列表")
-    @GetMapping("/system/tenant/user/list")
+    @GetMapping("/tenant/user/list")
     @SaCheckEL("stp.checkPermission('system:tenant:write')")
     public Result<List<TenantUserVO>> listUsers(@RequestParam("tenantId") Integer tenantId) {
         return Result.success(tenantAuthService.listUsers(tenantId));
     }
 
     @Operation(summary = "添加租户用户")
-    @PostMapping("/system/tenant/user/add")
+    @PostMapping("/tenant/user/add")
     @SaCheckEL("stp.checkPermission('system:tenant:write')")
     public Result<Boolean> addUsers(@RequestBody @Valid TenantUserDTO dto) {
         tenantAuthService.addUsers(dto.getTenantId(), dto.getUserIds());
@@ -183,7 +183,7 @@ public class TenantController extends BasicController {
     }
 
     @Operation(summary = "移除租户用户")
-    @PostMapping("/system/tenant/user/remove")
+    @PostMapping("/tenant/user/remove")
     @SaCheckEL("stp.checkPermission('system:tenant:write')")
     public Result<Boolean> removeUsers(@RequestBody @Valid TenantUserDTO dto) {
         tenantAuthService.removeUsers(dto.getTenantId(), dto.getUserIds());
@@ -191,7 +191,7 @@ public class TenantController extends BasicController {
     }
 
     @Operation(summary = "租户菜单树")
-    @GetMapping("/system/tenant/menu/tree")
+    @GetMapping("/tenant/menu/tree")
     @SaCheckEL("stp.checkPermission('system:tenant:write')")
     public Result<List<MenuTreeVO>> menuTree(@RequestParam("tenantId") Integer tenantId,
                                              @RequestParam(value = "applicationCode", required = false) String applicationCode) {
@@ -199,7 +199,7 @@ public class TenantController extends BasicController {
     }
 
     @Operation(summary = "保存租户菜单")
-    @PostMapping("/system/tenant/menu/save")
+    @PostMapping("/tenant/menu/save")
     @SaCheckEL("stp.checkPermission('system:tenant:write')")
     public Result<Boolean> saveMenus(@RequestBody @Valid TenantMenuSaveDTO dto) {
         tenantAuthService.saveMenus(dto.getTenantId(), dto.getMenuIds());

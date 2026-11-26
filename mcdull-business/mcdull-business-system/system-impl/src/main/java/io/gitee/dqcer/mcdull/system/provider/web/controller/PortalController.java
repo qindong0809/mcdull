@@ -27,7 +27,7 @@ public class PortalController extends BasicController {
     private ITenantAuthService tenantAuthService;
 
     @Operation(summary = "首屏聚合数据")
-    @GetMapping("/system/portal/overview")
+    @GetMapping("/portal/overview")
     public Result<PortalOverviewVO> overview(HttpServletRequest request) {
         Integer tenantId = tenantAuthService.currentTenantId(request);
         if (tenantId != null) {

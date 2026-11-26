@@ -39,14 +39,14 @@ public class DatasourceController extends BasicController {
     private IDatasourceService datasourceService;
 
     @Operation(summary = "分页查询")
-    @PostMapping("/system/datasource/query")
+    @PostMapping("/datasource/query")
     @SaCheckEL("stp.checkPermission('system:datasource:query')")
     public Result<PagedVO<DatasourceVO>> query(@Validated @RequestBody DatasourceQueryDTO dto) {
         return Result.success(datasourceService.queryPage(dto));
     }
 
     @Operation(summary = "新增")
-    @PostMapping("/system/datasource/add")
+    @PostMapping("/datasource/add")
     @SaCheckEL("stp.checkPermission('system:datasource:write')")
     public Result<Boolean> add(@RequestBody @Valid DatasourceAddDTO dto) {
         datasourceService.add(dto);
@@ -54,7 +54,7 @@ public class DatasourceController extends BasicController {
     }
 
     @Operation(summary = "更新")
-    @PostMapping("/system/datasource/update")
+    @PostMapping("/datasource/update")
     @SaCheckEL("stp.checkPermission('system:datasource:write')")
     public Result<Boolean> update(@RequestBody @Valid DatasourceUpdateDTO dto) {
         datasourceService.update(dto);
@@ -62,7 +62,7 @@ public class DatasourceController extends BasicController {
     }
 
     @Operation(summary = "删除")
-    @PostMapping("/system/datasource/delete")
+    @PostMapping("/datasource/delete")
     @SaCheckEL("stp.checkPermission('system:datasource:delete')")
     public Result<Boolean> delete(@RequestBody @Valid IdDTO dto) {
         datasourceService.delete(dto.getId());
@@ -70,7 +70,7 @@ public class DatasourceController extends BasicController {
     }
 
     @Operation(summary = "启停")
-    @PostMapping("/system/datasource/change-status")
+    @PostMapping("/datasource/change-status")
     @SaCheckEL("stp.checkPermission('system:datasource:write')")
     public Result<Boolean> changeStatus(@RequestBody @Valid StatusDTO dto) {
         datasourceService.changeStatus(dto.getId(), dto.getInactive());
@@ -78,14 +78,14 @@ public class DatasourceController extends BasicController {
     }
 
     @Operation(summary = "下拉选项")
-    @GetMapping("/system/datasource/options")
+    @GetMapping("/datasource/options")
     @SaCheckEL("stp.checkPermission('system:datasource:query')")
     public Result<List<DatasourceOptionVO>> options() {
         return Result.success(datasourceService.options());
     }
 
     @Operation(summary = "测试连接")
-    @PostMapping("/system/datasource/test-connection")
+    @PostMapping("/datasource/test-connection")
     @SaCheckEL("stp.checkPermission('system:datasource:test')")
     public Result<DatasourceTestVO> test(@RequestBody @Valid DatasourceTestDTO dto) {
         return Result.success(datasourceService.test(dto));
