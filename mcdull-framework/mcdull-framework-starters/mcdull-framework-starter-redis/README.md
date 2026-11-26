@@ -120,6 +120,21 @@ public void doSomethingWithLock() {
 
 通过 `@RedisLock` 注解或 `RedissonClient` 使用分布式锁，支持可重入锁、公平锁、读写锁等类型。
 
+`@RedisLock` 失败语义：
+
+| 属性 | 默认值 | 说明 |
+|---|---|---|
+| `throwOnFailure` | `true` | 竞争锁失败时抛 `BusinessException`（`system.busy`），不再静默返回 `null` |
+| `messageCode` | 空 | 自定义失败 i18n code，为空时用 `system.busy` |
+
+```java
+// 幂等补偿场景可显式降级：竞争失败时返回 null
+@RedisLock(key = "'compensate:' + #id", throwOnFailure = false)
+public void compensate(Long id) { ... }
+```
+
+锁等待被中断时会恢复线程中断标记并抛业务异常；释放锁前校验 `isHeldByCurrentThread()`，避免看门狗租约过期后误解锁。
+
 ### 3. 序列化
 
 Redisson codec 与 Spring Cache 序列化器共用同一套 Jackson 配置（含日期格式与多态类型白名单），同一 Redis 中只有一种数据格式。

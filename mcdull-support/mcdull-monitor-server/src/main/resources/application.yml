@@ -1,5 +1,7 @@
 server:
   port: 9000
+  # 默认仅监听回环，远程访问走 SSH 隧道或内网 Ingress
+  address: ${MONITOR_BIND_ADDRESS:127.0.0.1}
 spring:
   boot:
     admin:
@@ -9,3 +11,9 @@ spring:
         discovery:
           # seata 不具有健康检查的能力 防止报错排除掉
           ignored-services: seata-server
+
+mcdull:
+  monitor:
+    user: ${MONITOR_SECURITY_USER:admin}
+    # 无默认值：缺失或过短时启动失败，避免监控平台裸奔
+    password: ${MONITOR_SECURITY_PASSWORD}

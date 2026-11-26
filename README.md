@@ -135,6 +135,8 @@ mvn -B -pl mcdull-business/mcdull-business-system/system-impl test -Dtest=System
 public void submitOrder(Long userId) { ... }
 ```
 
+获取锁失败时**默认抛出业务异常**（`system.busy`），调用方不会静默拿到 `null`；幂等补偿等允许降级的场景可显式设 `throwOnFailure = false`。中断会恢复线程中断标记，释放锁前校验持锁线程，避免看门狗租约过期后误解锁。
+
 同时提供编程式 `ConcurrentRateLimiter`，支持限流和带超时的分布式锁，并可选是否抛出异常（适用于幂等补偿场景）。
 
 ### ⏱️ @CacheExpire — 缓存防雪崩
