@@ -36,6 +36,9 @@ public class LogonVO extends UserSessionBO implements VO {
     @Schema(description = "菜单列表")
     private List<MenuVO> menuList;
 
+    @Schema(description = "可访问租户列表")
+    private List<TenantVO> tenantList;
+
     @Schema(description = "上次登录ip")
     private String lastLoginIp;
 

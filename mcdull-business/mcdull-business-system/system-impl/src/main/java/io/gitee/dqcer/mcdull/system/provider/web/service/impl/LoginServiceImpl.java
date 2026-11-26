@@ -9,6 +9,8 @@ import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import io.gitee.dqcer.mcdull.framework.base.constants.HttpHeaderConstants;
+import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.system.provider.config.constants.CacheConstants;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
@@ -23,6 +25,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.enums.ApplicationEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.LogonVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.MenuVO;
+import io.gitee.dqcer.mcdull.system.provider.model.vo.TenantVO;
 import io.gitee.dqcer.mcdull.system.provider.model.vo.UserPowerVO;
 import io.gitee.dqcer.mcdull.system.provider.util.Ip2RegionUtil;
 import io.gitee.dqcer.mcdull.system.provider.web.manager.ICommonManager;
@@ -58,6 +61,8 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
     private IDepartmentService departmentService;
     @Resource
     private ICommonManager commonManager;
+    @Resource
+    private ITenantAuthService tenantAuthService;
 
 
     @Override
@@ -110,6 +115,7 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
         list.sort((o1, o2) -> NumberUtil.compare(Convert.toInt(o1.getSort(),0), Convert.toInt(o2.getSort(), 0)));
         list.sort(Comparator.comparing(MenuVO::getMenuId));
         vo.setMenuList(list);
+        vo.setTenantList(this.buildTenantList(userEntity));
         LoginLogEntity lastLoginLog = loginLogService.getLastLoginLog(userEntity.getLoginName());
         if (ObjUtil.isNotNull(lastLoginLog)) {
             vo.setLastLoginIp(lastLoginLog.getLoginIp());
@@ -168,7 +174,9 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
     public LogonVO getCurrentUserInfo(String code) {
         Integer userId = UserContextHolder.userId();
         String appCode = StrUtil.blankToDefault(code, "all");
-        String key = StrUtil.format("current:user:{}:app:{}:v2:role:list", userId, appCode);
+        Integer tenantId = this.currentTenantId();
+        String key = StrUtil.format("current:user:{}:app:{}:tenant:{}:v2:role:list", userId, appCode,
+                tenantId == null ? 0 : tenantId);
         Cache cache = cacheManager.getCache(CacheConstants.BUSINESS_CACHE);
         if (ObjUtil.isNotNull(cache)) {
             LogonVO vo = cache.get(key, LogonVO.class);
@@ -181,7 +189,7 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
             LogonVO vo = this.buildLogonVo(userEntity);
             vo.setToken(StpUtil.getTokenValue());
             vo.setCurrentAppCode(appCode);
-            vo.setMenuList(this.filterMenuByApp(vo.getMenuList(), code));
+            vo.setMenuList(this.filterMenuByTenant(this.filterMenuByApp(vo.getMenuList(), code), tenantId, userEntity));
             if (ObjUtil.isNotNull(cache)) {
                 cache.put(key, vo);
             }
@@ -189,6 +197,65 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
         }
         LogHelp.error(log, "getCurrentUserInfo error, userId: {}, appCode: {}", userId, appCode);
         return null;
+    }
+
+    private Integer currentTenantId() {
+        if (ServletUtil.getRequest() == null) {
+            return null;
+        }
+        String value = ServletUtil.getRequest().getHeader(HttpHeaderConstants.T_ID);
+        if (StrUtil.isBlank(value)) {
+            return null;
+        }
+        try {
+            return Integer.valueOf(value);
+        } catch (NumberFormatException ex) {
+            throw new BusinessException("system.tenant.required");
+        }
+    }
+
+    private List<MenuVO> filterMenuByTenant(List<MenuVO> menuList, Integer tenantId, UserEntity userEntity) {
+        if (tenantId == null || CollUtil.isEmpty(menuList)) {
+            return menuList;
+        }
+        Set<Integer> accessible = BooleanUtil.isTrue(userEntity.getAdministratorFlag())
+                ? tenantAuthService.allActiveTenantIds()
+                : tenantAuthService.authorizedTenantIds(userEntity.getId());
+        if (!accessible.contains(tenantId)) {
+            throw new BusinessException("system.tenant.forbidden");
+        }
+
+        List<String> applicationCodes = tenantAuthService.applicationCodes(tenantId);
+        Set<Integer> whitelist = tenantAuthService.menuIds(tenantId);
+        Map<Integer, MenuVO> menuMap = menuList.stream()
+                .filter(menu -> ObjUtil.isNotNull(menu.getMenuId()))
+                .collect(Collectors.toMap(MenuVO::getMenuId, menu -> menu, (a, b) -> a));
+        Set<Integer> keepIds = new HashSet<>();
+        for (MenuVO menu : menuList) {
+            String applicationCode = StrUtil.blankToDefault(menu.getApplicationCode(), "system");
+            boolean platformMenu = "system".equals(applicationCode);
+            boolean tenantMenu = applicationCodes.contains(applicationCode);
+            boolean allowed = whitelist.isEmpty() || whitelist.contains(menu.getMenuId());
+            if (platformMenu || (tenantMenu && allowed)) {
+                keepIds.add(menu.getMenuId());
+                Integer parentId = menu.getParentId();
+                while (ObjUtil.isNotNull(parentId) && menuMap.containsKey(parentId)) {
+                    keepIds.add(parentId);
+                    parentId = menuMap.get(parentId).getParentId();
+                }
+            }
+        }
+        if (keepIds.isEmpty()) {
+            return menuList;
+        }
+        return menuList.stream().filter(menu -> keepIds.contains(menu.getMenuId())).collect(Collectors.toList());
+    }
+
+    private List<TenantVO> buildTenantList(UserEntity userEntity) {
+        Set<Integer> tenantIds = BooleanUtil.isTrue(userEntity.getAdministratorFlag())
+                ? tenantAuthService.allActiveTenantIds()
+                : tenantAuthService.authorizedTenantIds(userEntity.getId());
+        return tenantAuthService.tenantList(tenantIds);
     }
 
     private List<MenuVO> filterMenuByApp(List<MenuVO> menuList, String appCode) {

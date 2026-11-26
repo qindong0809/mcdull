@@ -108,6 +108,17 @@ public class MenuServiceImpl
         List<MenuEntity> menuList = this.allAndButton();
         if (CollUtil.isNotEmpty(menuList)) {
             for (MenuEntity menu : menuList) {
+                if (dto.getApplicationCode() != null && !dto.getApplicationCode().isEmpty()
+                        && !dto.getApplicationCode().equals(menu.getApplicationCode())) {
+                    continue;
+                }
+                if (dto.getInactive() != null && !dto.getInactive().equals(menu.getInactive())) {
+                    continue;
+                }
+                if (dto.getName() != null && !dto.getName().isEmpty()
+                        && !menu.getMenuName().contains(dto.getName())) {
+                    continue;
+                }
                 MenuVO vo = MenuConvert.toVO(menu);
                 list.add(vo);
             }
@@ -204,6 +215,7 @@ public class MenuServiceImpl
 
     private void setCommonField(MenuBaseDTO dto, MenuEntity menuEntity) {
         menuEntity.setMenuName(dto.getMenuName());
+        menuEntity.setApplicationCode(dto.getApplicationCode());
         menuEntity.setMenuType(dto.getMenuType());
         menuEntity.setParentId(dto.getParentId());
         menuEntity.setSort(dto.getSort());
@@ -335,7 +347,12 @@ public class MenuServiceImpl
 //    @Cacheable(cacheNames = CacheConstants.BUSINESS_CACHE, key = "#onlyMenu")
     @Override
     public List<MenuTreeVO> queryMenuTree(Boolean onlyMenu) {
-        List<MenuEntity> list = this.listOnlyMenu(onlyMenu);
+        return this.queryMenuTree(onlyMenu, null);
+    }
+
+    @Override
+    public List<MenuTreeVO> queryMenuTree(Boolean onlyMenu, String applicationCode) {
+        List<MenuEntity> list = this.listOnlyMenu(onlyMenu, applicationCode);
         List<Tree<Integer>> integerTree = this.getTrees(list);
         return this.convertMenuTreeVO(integerTree);
     }
@@ -351,6 +368,7 @@ public class MenuServiceImpl
         List<Pair<String, Func1<MenuVO, ?>>> list = new ArrayList<>();
         list.add(Pair.of("ID", MenuVO::getMenuId));
         list.add(Pair.of("菜单名称", MenuVO::getMenuName));
+        list.add(Pair.of("归属应用", MenuVO::getApplicationCode));
         list.add(Pair.of("菜单类型", MenuVO::getMenuType));
         list.add(Pair.of("父级", MenuVO::getParentId));
         list.add(Pair.of("排序", MenuVO::getSort));
@@ -372,7 +390,15 @@ public class MenuServiceImpl
 
     @Override
     public List<LabelValueVO<String, String>> getDropdownOptions() {
-        return this.getNameCodeList();
+        return this.getDropdownOptions(null);
+    }
+
+    @Override
+    public List<LabelValueVO<String, String>> getDropdownOptions(String applicationCode) {
+        List<MenuEntity> listAll = this.listAll().stream()
+                .filter(menu -> StrUtil.isBlank(applicationCode) || applicationCode.equals(menu.getApplicationCode()))
+                .collect(Collectors.toList());
+        return this.getNameCodeList(listAll);
     }
 
     private List<String> getMenuNameByPermissionCode(String permissionCode) {
@@ -656,10 +682,17 @@ public class MenuServiceImpl
     }
 
     public List<MenuEntity> listOnlyMenu(Boolean onlyMenu) {
+        return this.listOnlyMenu(onlyMenu, null);
+    }
+
+    public List<MenuEntity> listOnlyMenu(Boolean onlyMenu, String applicationCode) {
         LambdaQueryWrapper<MenuEntity> query = Wrappers.lambdaQuery();
         if (BooleanUtil.isTrue(onlyMenu)) {
             query.in(MenuEntity::getMenuType,
                 ListUtil.of(MenuTypeEnum.MENU.getCode(), MenuTypeEnum.CATALOG.getCode()));
+        }
+        if (StrUtil.isNotBlank(applicationCode)) {
+            query.eq(MenuEntity::getApplicationCode, applicationCode);
         }
         query.eq(BaseEntity::getInactive, false);
         return baseMapper.selectList(query);
@@ -683,9 +716,12 @@ public class MenuServiceImpl
 
     @Override
     public List<LabelValueVO<String, String>> getNameCodeList() {
+        return this.getNameCodeList(this.listAll());
+    }
+
+    private List<LabelValueVO<String, String>> getNameCodeList(List<MenuEntity> listAll) {
         List<LabelValueVO<String, String>> list = new ArrayList<>();
-        List<MenuEntity> listAll = this.listAll();
-        Map<String, MenuEntity> collect = this.listAll().stream()
+        Map<String, MenuEntity> collect = listAll.stream()
             .filter(menuEntity -> CharSequenceUtil.isNotBlank(menuEntity.getApiPerms()))
             .collect(Collectors.toMap(MenuEntity::getApiPerms, Function.identity(), (o1, o2) -> o1));
         for (Map.Entry<String, MenuEntity> entry : collect.entrySet()) {

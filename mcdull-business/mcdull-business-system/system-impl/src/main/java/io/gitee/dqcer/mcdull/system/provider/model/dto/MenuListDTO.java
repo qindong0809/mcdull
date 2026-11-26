@@ -20,4 +20,6 @@ public class MenuListDTO implements DTO {
     @Length(max = 128)
     private String name;
 
+    private String applicationCode;
+
 }

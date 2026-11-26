@@ -102,6 +102,11 @@ mcdull:
       aes-key: ${MCDULL_PASSWORD_AES_KEY:1024abcd1024abcd1024abcd1024abcd}
       # 迁移完成后改为 false，拒绝存量 SHA1 口令
       legacy-enabled: ${MCDULL_PASSWORD_LEGACY_ENABLED:true}
+    datasource:
+      aes-key: ${MCDULL_DATASOURCE_AES_KEY:1024abcd1024abcd1024abcd1024abcd}
+  tenant:
+    init-script-dir: ${MCDULL_TENANT_INIT_SCRIPT_DIR:./sql/init}
+    task-ttl-seconds: ${MCDULL_TENANT_TASK_TTL_SECONDS:86400}
   gateway:
     no-auth:
       - /administrator/auth/login

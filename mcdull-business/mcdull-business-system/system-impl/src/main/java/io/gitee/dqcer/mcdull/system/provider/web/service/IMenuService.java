@@ -102,6 +102,15 @@ public interface IMenuService extends IRepository<MenuEntity> {
     List<MenuTreeVO> queryMenuTree(Boolean onlyMenu);
 
     /**
+     * 按应用编码查询菜单树
+     *
+     * @param onlyMenu       仅菜单
+     * @param applicationCode 应用编码
+     * @return {@link List }<{@link MenuTreeVO }>
+     */
+    List<MenuTreeVO> queryMenuTree(Boolean onlyMenu, String applicationCode);
+
+    /**
      * export data
      *
      * @param dto DTO
@@ -114,6 +123,14 @@ public interface IMenuService extends IRepository<MenuEntity> {
      * @return {@link List }<{@link LabelValueVO }<{@link String }, {@link String }>>
      */
     List<LabelValueVO<String, String>> getDropdownOptions();
+
+    /**
+     * 按应用编码查询下拉选项
+     *
+     * @param applicationCode 应用编码
+     * @return {@link List }<{@link LabelValueVO }<{@link String }, {@link String }>>
+     */
+    List<LabelValueVO<String, String>> getDropdownOptions(String applicationCode);
 
     /**
      * get current menu name

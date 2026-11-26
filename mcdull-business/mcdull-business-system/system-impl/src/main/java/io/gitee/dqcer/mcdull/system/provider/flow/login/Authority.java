@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.gitee.dqcer.mcdull.framework.base.constants.GlobalConstant;
 import io.gitee.dqcer.mcdull.framework.base.storage.CacheUserSession;
@@ -18,6 +19,7 @@ import io.gitee.dqcer.mcdull.system.provider.model.entity.UserEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.LoginDeviceEnum;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.LoginLogResultTypeEnum;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ILoginService;
+import io.gitee.dqcer.mcdull.system.provider.web.service.ITenantAuthService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IUserConfigService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
@@ -32,6 +34,8 @@ public class Authority implements ProcessHandler<LoginContext> {
     private ILoginService loginService;
     @Resource
     private IUserConfigService userConfigService;
+    @Resource
+    private ITenantAuthService tenantAuthService;
 
     @Override
     public void execute(LoginContext context) {
@@ -62,6 +66,9 @@ public class Authority implements ProcessHandler<LoginContext> {
         CacheUserSession cache = new CacheUserSession();
         cache.setUserId(String.valueOf(entity.getId()));
         cache.setTenantId(entity.getDepartmentId());
+        cache.setTenantIds(BooleanUtil.isTrue(entity.getAdministratorFlag())
+                ? tenantAuthService.allActiveTenantIds()
+                : tenantAuthService.authorizedTenantIds(entity.getId()));
         cache.setAdministratorFlag(entity.getAdministratorFlag());
         cache.setLanguage(Locale.SIMPLIFIED_CHINESE.getLanguage());
         cache.setLoginName(entity.getLoginName());

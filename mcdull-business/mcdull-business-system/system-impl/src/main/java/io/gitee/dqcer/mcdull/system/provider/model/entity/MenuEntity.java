@@ -19,6 +19,11 @@ public class MenuEntity extends BaseEntity<Integer> {
     private String menuName;
 
     /**
+     * 归属应用编码
+     */
+    private String applicationCode;
+
+    /**
      * {@link io.gitee.dqcer.mcdull.system.provider.model.enums.MenuTypeEnum}
      */
     private Integer menuType;

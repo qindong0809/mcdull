@@ -24,6 +24,7 @@ public class MenuConvert {
             vo.setVisibleFlag(entity.getVisibleFlag());
             vo.setSort(entity.getSort());
             vo.setMenuName(entity.getMenuName());
+            vo.setApplicationCode(entity.getApplicationCode());
             vo.setPermsType(entity.getPermsType());
             vo.setIcon(entity.getIcon());
             vo.setCacheFlag(entity.getCacheFlag());

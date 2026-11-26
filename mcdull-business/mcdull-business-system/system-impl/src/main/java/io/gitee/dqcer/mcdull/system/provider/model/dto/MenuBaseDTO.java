@@ -22,6 +22,9 @@ public class MenuBaseDTO {
     @Length(max = 30, message = "菜单名称最多30个字符")
     private String menuName;
 
+    @Schema(description = "归属应用编码")
+    private String applicationCode;
+
     @SchemaEnum(value = MenuTypeEnum.class, desc = "类型")
     private Integer menuType;
 

@@ -16,4 +16,7 @@ public class MenuTreeVO extends MenuVO{
 
     @Schema(description = "菜单子集")
     private List<MenuTreeVO> children;
+
+    @Schema(description = "当前租户是否勾选")
+    private Boolean checked;
 }

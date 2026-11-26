@@ -45,8 +45,9 @@ public class MenuController extends BasicController {
 
     @Operation(summary = "查询菜单树")
     @GetMapping("/menu/tree")
-    public Result<List<MenuTreeVO>> queryMenuTree(@RequestParam("onlyMenu") Boolean onlyMenu) {
-        return Result.success(menuService.queryMenuTree(onlyMenu));
+    public Result<List<MenuTreeVO>> queryMenuTree(@RequestParam("onlyMenu") Boolean onlyMenu,
+                                                   @RequestParam(value = "applicationCode", required = false) String applicationCode) {
+        return Result.success(menuService.queryMenuTree(onlyMenu, applicationCode));
     }
 
     @Operation(summary = "添加菜单")
@@ -100,7 +101,8 @@ public class MenuController extends BasicController {
 
     @Operation(summary = "下拉选项")
     @GetMapping("/menu/dropdown-options")
-    public Result<List<LabelValueVO<String, String>>> getDropdownOptions() {
-        return Result.success(menuService.getDropdownOptions());
+    public Result<List<LabelValueVO<String, String>>> getDropdownOptions(
+            @RequestParam(value = "applicationCode", required = false) String applicationCode) {
+        return Result.success(menuService.getDropdownOptions(applicationCode));
     }
 }

@@ -21,6 +21,9 @@ public class MenuVO implements VO {
     @Schema(description = "菜单名称")
     private String menuName;
 
+    @Schema(description = "归属应用编码")
+    private String applicationCode;
+
     /**
      * {@link io.gitee.dqcer.mcdull.system.provider.model.enums.MenuTypeEnum}
      */
