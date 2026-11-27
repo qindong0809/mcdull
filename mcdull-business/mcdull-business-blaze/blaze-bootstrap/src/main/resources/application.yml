@@ -77,6 +77,9 @@ sa-token:
   token-name: Authorization
 
 mcdull:
+  security:
+    datasource:
+      aes-key: ${MCDULL_DATASOURCE_AES_KEY:1024abcd1024abcd1024abcd1024abcd}
   gateway:
     no-auth:
       - /pub/**

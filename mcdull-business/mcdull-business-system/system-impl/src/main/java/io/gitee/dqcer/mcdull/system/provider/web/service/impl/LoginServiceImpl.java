@@ -235,7 +235,8 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
             String applicationCode = StrUtil.blankToDefault(menu.getApplicationCode(), "system");
             boolean platformMenu = "system".equals(applicationCode);
             boolean tenantMenu = applicationCodes.contains(applicationCode);
-            boolean allowed = whitelist.isEmpty() || whitelist.contains(menu.getMenuId());
+            // 白名单为空表示租户未配置任何菜单，不得放行为全部租户菜单；平台菜单仍按平台权限放行
+            boolean allowed = !whitelist.isEmpty() && whitelist.contains(menu.getMenuId());
             if (platformMenu || (tenantMenu && allowed)) {
                 keepIds.add(menu.getMenuId());
                 Integer parentId = menu.getParentId();
@@ -246,7 +247,7 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
             }
         }
         if (keepIds.isEmpty()) {
-            return menuList;
+            return Collections.emptyList();
         }
         return menuList.stream().filter(menu -> keepIds.contains(menu.getMenuId())).collect(Collectors.toList());
     }
@@ -292,7 +293,7 @@ public class LoginServiceImpl extends GenericLogic implements ILoginService {
             }
         }
         if (keepIds.isEmpty()) {
-            return menuList;
+            return Collections.emptyList();
         }
         return menuList.stream().filter(menu -> keepIds.contains(menu.getMenuId())).collect(Collectors.toList());
     }

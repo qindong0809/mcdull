@@ -19,5 +19,6 @@ public class RemoteTenantDataSourceVO implements TenantDataSource {
 
     private String username;
 
+    /** AES+Base64 密文；缓存与 Feign 传输中始终是密文，由 resolver 使用前解密 */
     private String password;
 }

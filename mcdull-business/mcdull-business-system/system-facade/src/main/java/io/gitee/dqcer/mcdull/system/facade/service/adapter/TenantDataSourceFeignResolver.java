@@ -4,6 +4,7 @@ import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.InnerResult;
 import io.gitee.dqcer.mcdull.framework.redis.cache.ICache;
 import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSource;
+import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSourceCipherResolver;
 import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSourceResolver;
 import io.gitee.dqcer.mcdull.system.facade.service.TenantDataSourceApi;
 import io.gitee.dqcer.mcdull.system.facade.vo.RemoteTenantDataSourceVO;
@@ -44,6 +45,9 @@ public class TenantDataSourceFeignResolver implements TenantDataSourceResolver {
     @Resource
     private ICache cache;
 
+    @Resource
+    private TenantDataSourceCipherResolver cipherResolver;
+
     @Override
     public Set<Integer> getAuthorizedTenantIds(String userId) {
         if (userId == null || userId.isBlank()) {
@@ -68,7 +72,8 @@ public class TenantDataSourceFeignResolver implements TenantDataSourceResolver {
         if (tenantId == null || tenantId <= 0) {
             return null;
         }
-        return cache.getOrSetPrefixed(CACHE_TENANT_DS + tenantId, RemoteTenantDataSourceVO.class,
+        RemoteTenantDataSourceVO cached = cache.getOrSetPrefixed(CACHE_TENANT_DS + tenantId,
+                RemoteTenantDataSourceVO.class,
                 () -> {
                     try {
                         InnerResult<RemoteTenantDataSourceVO> result = tenantDataSourceApi.getByTenantId(tenantId);
@@ -78,5 +83,27 @@ public class TenantDataSourceFeignResolver implements TenantDataSourceResolver {
                         return null;
                     }
                 }, CACHE_EXPIRE);
+        return decrypt(cached, tenantId);
+    }
+
+    /**
+     * 复制缓存对象后解密，避免改写到缓存中的密文对象。
+     */
+    private TenantDataSource decrypt(RemoteTenantDataSourceVO cached, Integer tenantId) {
+        if (cached == null) {
+            return null;
+        }
+        RemoteTenantDataSourceVO vo = new RemoteTenantDataSourceVO();
+        vo.setKey(cached.getKey());
+        vo.setTenantId(cached.getTenantId());
+        vo.setUrl(cached.getUrl());
+        vo.setUsername(cached.getUsername());
+        try {
+            vo.setPassword(cipherResolver.decrypt(cached.getPassword()));
+        } catch (Exception ex) {
+            LogHelp.warn(log, "租户数据源密码解密失败，降级为不切库. tenantId={}, cause={}", tenantId, ex.getMessage());
+            return null;
+        }
+        return vo;
     }
 }

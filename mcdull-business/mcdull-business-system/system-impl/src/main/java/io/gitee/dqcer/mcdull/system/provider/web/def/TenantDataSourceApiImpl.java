@@ -6,7 +6,6 @@ import io.gitee.dqcer.mcdull.system.facade.vo.RemoteTenantDataSourceVO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.DatasourceEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.TenantEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.TenantInitStatusEnum;
-import io.gitee.dqcer.mcdull.system.provider.web.manager.DatasourceCryptoManager;
 import io.gitee.dqcer.mcdull.system.provider.web.service.IDatasourceService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ITenantAuthService;
 import io.gitee.dqcer.mcdull.system.provider.web.service.ITenantService;
@@ -31,8 +30,6 @@ public class TenantDataSourceApiImpl implements TenantDataSourceApi {
     private IDatasourceService datasourceService;
     @Resource
     private ITenantAuthService tenantAuthService;
-    @Resource
-    private DatasourceCryptoManager cryptoManager;
 
     @Override
     public InnerResult<RemoteTenantDataSourceVO> getByTenantId(Integer tenantId) {
@@ -57,7 +54,8 @@ public class TenantDataSourceApiImpl implements TenantDataSourceApi {
         vo.setTenantId(tenantId);
         vo.setUrl(tenantUrl(datasource.getJdbcUrl(), databaseName));
         vo.setUsername(datasource.getUsername());
-        vo.setPassword(cryptoManager.decrypt(datasource.getPasswordCipher()));
+        // 只返回密文：缓存 VO 不得含明文，由 resolver 使用时解密
+        vo.setPassword(datasource.getPasswordCipher());
         return InnerResult.success(vo);
     }
 
