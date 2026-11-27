@@ -1,32 +1,52 @@
 package io.gitee.dqcer.mcdull.workflow.provider.application;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.gitee.dqcer.mcdull.workflow.web.service.IFlowDefinitionService;
+import org.dromara.warm.flow.core.FlowEngine;
+import org.dromara.warm.flow.core.dto.FlowCombine;
+import org.dromara.warm.flow.core.dto.FlowParams;
+import org.dromara.warm.flow.core.entity.Definition;
+import org.dromara.warm.flow.core.entity.HisTask;
+import org.dromara.warm.flow.core.entity.Instance;
+import org.dromara.warm.flow.core.entity.Node;
+import org.dromara.warm.flow.core.entity.Skip;
+import org.dromara.warm.flow.core.entity.Task;
+import org.dromara.warm.flow.core.enums.SkipType;
+import org.dromara.warm.flow.core.enums.UserType;
 import io.gitee.dqcer.mcdull.framework.base.exception.BusinessException;
 import io.gitee.dqcer.mcdull.workflow.facade.constants.WorkflowConstant;
 import io.gitee.dqcer.mcdull.workflow.facade.enums.TaskActionEnum;
 import io.gitee.dqcer.mcdull.workflow.facade.enums.WorkflowCodeEnum;
 import io.gitee.dqcer.mcdull.workflow.facade.enums.WorkflowStatusEnum;
 import io.gitee.dqcer.mcdull.workflow.facade.model.common.BaseWorkflowRequest;
+import io.gitee.dqcer.mcdull.workflow.facade.model.common.BatchQueryItem;
 import io.gitee.dqcer.mcdull.workflow.facade.model.common.BatchQueryResult;
 import io.gitee.dqcer.mcdull.workflow.facade.model.common.BatchResult;
 import io.gitee.dqcer.mcdull.workflow.facade.model.common.CursorPageVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.common.ItemResult;
 import io.gitee.dqcer.mcdull.workflow.facade.model.common.ProcessBusinessKey;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.ApprovalDiagramQueryDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.ApprovalHistoryQueryDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.ApprovalStatusQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.BatchHandleTaskDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.CancelApprovalDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.BatchStartProcessDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.BusinessKeyBatchQueryDTO;
-import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DefinitionBatchQueryDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DefinitionQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DefinitionVersionBatchDTO;
-import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DiagramBatchQueryDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DiagramQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.HandleTaskDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.HistoryBatchQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.StartProcessDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.TaskBatchQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.TodoCountBatchDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.TodoCursorQueryDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.vo.ApprovalDiagramVO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.vo.ApprovalStatusVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.DefinitionVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.DefinitionVersionVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.DiagramVO;
@@ -39,6 +59,8 @@ import io.gitee.dqcer.mcdull.workflow.facade.model.vo.TaskVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.TodoCountVO;
 import io.gitee.dqcer.mcdull.workflow.web.mapper.WorkflowFacadeMapper;
 import jakarta.annotation.Resource;
+import org.dromara.warm.flow.core.service.DefService;
+import org.dromara.warm.flow.orm.mapper.FlowDefinitionMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -57,6 +79,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * workflow facade 用例实现。
@@ -74,80 +97,83 @@ public class WorkflowApplicationServiceImpl implements WorkflowApplicationServic
 
     @Resource
     private ObjectMapper objectMapper;
-
     @Resource
-    @Lazy
-    private WorkflowApplicationService self;
+    private DefService defService;
+
 
     @Override
-    public BatchQueryResult<String, DefinitionVO> batchGetDefinitions(DefinitionBatchQueryDTO dto) {
-        checkReadSize(dto.getDefinitionKeys().size());
-        String tenant = tenant(dto.getTenantId());
-        List<Map<String, Object>> keys = definitionKeys(dto.getDefinitionKeys());
-        List<Map<String, Object>> rows = workflowFacadeMapper.selectDefinitionsByKeys(tenant, keys);
-        Map<Long, Map<String, Object>> byId = new LinkedHashMap<>();
-        Map<String, Map<String, Object>> byCode = new LinkedHashMap<>();
-        for (Map<String, Object> row : rows) {
-            byId.put(longOf(row.get("definitionId")), row);
-            byCode.put(str(row.get("flowCode")), row);
+    public List<DefinitionVO> batchGetDefinitions(DefinitionQueryDTO dto) {
+        List<Definition> definitions = defService.getByFlowCode(dto.getCode());
+        if (definitions == null || definitions.isEmpty()) {
+            return Collections.emptyList();
         }
-        BatchQueryResult<String, DefinitionVO> result = BatchQueryResult.empty();
-        for (String key : dto.getDefinitionKeys()) {
-            Map<String, Object> row = findDefinition(key, byId, byCode);
-            result.add(key, row == null ? null : toDefinitionVO(key, row));
-        }
-        return result;
+        return definitions.stream()
+                .map(definition -> toDefinitionVO(dto.getCode(), definition))
+                .collect(Collectors.toList());
     }
 
     @Override
     public BatchQueryResult<String, DefinitionVersionVO> batchGetDefinitionVersions(DefinitionVersionBatchDTO dto) {
         checkReadSize(dto.getDefinitionKeys().size());
-        String tenant = tenant(dto.getTenantId());
-        List<Map<String, Object>> keys = definitionKeys(dto.getDefinitionKeys());
-        List<Map<String, Object>> rows = workflowFacadeMapper.selectDefinitionsByKeys(tenant, keys);
-        Map<Long, Map<String, Object>> byId = new LinkedHashMap<>();
-        Map<String, Map<String, Object>> byCode = new LinkedHashMap<>();
-        for (Map<String, Object> row : rows) {
-            byId.put(longOf(row.get("definitionId")), row);
-            byCode.put(str(row.get("flowCode")), row);
+        List<String> codes = new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
+        for (String key : dto.getDefinitionKeys()) {
+            if (StrUtil.startWith(key, "def_")) {
+                try {
+                    ids.add(Long.valueOf(key.substring(4)));
+                    continue;
+                } catch (NumberFormatException ignored) {
+                    // 非法 def_ 前缀按 flowCode 处理
+                }
+            }
+            codes.add(key);
+        }
+        Map<String, Definition> byKey = new LinkedHashMap<>();
+        if (!codes.isEmpty()) {
+            List<Definition> definitions = defService.queryByCodeList(codes);
+            if (definitions != null) {
+                for (Definition definition : definitions) {
+                    byKey.putIfAbsent(definition.getFlowCode(), definition);
+                }
+            }
+        }
+        if (!ids.isEmpty()) {
+            List<Definition> definitions = defService.getByIds(ids);
+            if (definitions != null) {
+                for (Definition definition : definitions) {
+                    byKey.put("def_" + definition.getId(), definition);
+                }
+            }
         }
         BatchQueryResult<String, DefinitionVersionVO> result = BatchQueryResult.empty();
         for (String key : dto.getDefinitionKeys()) {
-            Map<String, Object> row = findDefinition(key, byId, byCode);
-            if (row == null) {
-                result.add(key, null);
-                continue;
-            }
-            result.add(key, DefinitionVersionVO.builder()
+            Definition definition = byKey.get(key);
+            result.add(key, definition == null ? null : DefinitionVersionVO.builder()
                     .definitionKey(key)
-                    .version(str(row.get("version")))
-                    .updateTime(time(row.get("updateTime")))
-                    .publishStatus(intOf(row.get("publishStatus"), 0))
-                    .activityStatus(intOf(row.get("activityStatus"), 1))
+                    .version(definition.getVersion())
+                    .updateTime(definition.getUpdateTime() == null
+                            ? null : DateUtil.format(definition.getUpdateTime(), "yyyy-MM-dd HH:mm:ss"))
+                    .publishStatus(definition.getIsPublish() == null ? 0 : definition.getIsPublish())
+                    .activityStatus(definition.getActivityStatus() == null ? 1 : definition.getActivityStatus())
                     .build());
         }
         return result;
     }
 
     @Override
-    public BatchQueryResult<String, DiagramVO> batchGetDiagrams(DiagramBatchQueryDTO dto) {
-        checkReadSize(dto.getDefinitionKeys().size());
+    public List<DiagramVO> batchGetDiagrams(DiagramQueryDTO dto) {
         String tenant = tenant(dto.getTenantId());
-        List<Map<String, Object>> keys = definitionKeys(dto.getDefinitionKeys());
-        List<Map<String, Object>> rows = workflowFacadeMapper.selectDefinitionsByKeys(tenant, keys);
-        Map<Long, Map<String, Object>> byId = new LinkedHashMap<>();
-        Map<String, Map<String, Object>> byCode = new LinkedHashMap<>();
-        Set<Long> definitionIds = new LinkedHashSet<>();
-        for (Map<String, Object> row : rows) {
-            Long id = longOf(row.get("definitionId"));
-            byId.put(id, row);
-            byCode.put(str(row.get("flowCode")), row);
-            definitionIds.add(id);
+        List<Definition> definitions = defService.getByFlowCode(dto.getCode());
+        if (definitions == null || definitions.isEmpty()) {
+            return Collections.emptyList();
         }
+        List<Long> ids = definitions.stream()
+                .map(Definition::getId)
+                .filter(id -> id != null && id > 0)
+                .collect(Collectors.toList());
         Map<Long, List<DiagramVO.DiagramNodeVO>> nodes = new LinkedHashMap<>();
         Map<Long, List<DiagramVO.DiagramEdgeVO>> edges = new LinkedHashMap<>();
-        if (!definitionIds.isEmpty()) {
-            List<Long> ids = new ArrayList<>(definitionIds);
+        if (!ids.isEmpty()) {
             for (Map<String, Object> row : workflowFacadeMapper.selectDefinitionNodes(tenant, ids)) {
                 Long definitionId = longOf(row.get("definitionId"));
                 nodes.computeIfAbsent(definitionId, k -> new ArrayList<>()).add(DiagramVO.DiagramNodeVO.builder()
@@ -170,21 +196,13 @@ public class WorkflowApplicationServiceImpl implements WorkflowApplicationServic
                         .build());
             }
         }
-        BatchQueryResult<String, DiagramVO> result = BatchQueryResult.empty();
-        for (String key : dto.getDefinitionKeys()) {
-            Map<String, Object> row = findDefinition(key, byId, byCode);
-            if (row == null) {
-                result.add(key, null);
-                continue;
-            }
-            Long definitionId = longOf(row.get("definitionId"));
-            result.add(key, DiagramVO.builder()
-                    .definitionKey(key)
-                    .nodes(nodes.getOrDefault(definitionId, Collections.emptyList()))
-                    .edges(edges.getOrDefault(definitionId, Collections.emptyList()))
-                    .build());
-        }
-        return result;
+        return definitions.stream()
+                .map(definition -> DiagramVO.builder()
+                        .definitionKey(dto.getCode())
+                        .nodes(nodes.getOrDefault(definition.getId(), Collections.emptyList()))
+                        .edges(edges.getOrDefault(definition.getId(), Collections.emptyList()))
+                        .build())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -204,7 +222,7 @@ public class WorkflowApplicationServiceImpl implements WorkflowApplicationServic
                     ? raw.getIdempotencyKey()
                     : raw.getFlowCode() + ":" + raw.getBusinessId();
             try {
-                items.add(ItemResult.success(itemKey, self.startProcess(item)));
+                items.add(ItemResult.success(itemKey, this.startProcess(item)));
             } catch (BusinessException e) {
                 items.add(ItemResult.fail(itemKey, codeOf(e), e.getMessage()));
             } catch (RuntimeException e) {
@@ -319,7 +337,7 @@ public class WorkflowApplicationServiceImpl implements WorkflowApplicationServic
                     ? raw.getIdempotencyKey()
                     : str(raw.getTaskId());
             try {
-                items.add(ItemResult.success(itemKey, self.handleTask(item)));
+                items.add(ItemResult.success(itemKey, this.handleTask(item)));
             } catch (BusinessException e) {
                 items.add(ItemResult.fail(itemKey, codeOf(e), e.getMessage()));
             } catch (RuntimeException e) {
@@ -330,13 +348,180 @@ public class WorkflowApplicationServiceImpl implements WorkflowApplicationServic
     }
 
     @Override
+    public List<ApprovalStatusVO> batchGetApprovalStatus(ApprovalStatusQueryDTO dto) {
+        checkReadSize(dto.getBusinessIds().size());
+        BusinessKeyBatchQueryDTO query = new BusinessKeyBatchQueryDTO();
+        query.setTenantId(dto.getTenantId());
+        query.setKeys(dto.getBusinessIds().stream()
+                .map(businessId -> ProcessBusinessKey.builder()
+                        .tenantId(dto.getTenantId())
+                        .flowCode(dto.getCode())
+                        .businessId(businessId)
+                        .build())
+                .collect(Collectors.toList()));
+        BatchQueryResult<ProcessBusinessKey, InstanceStatusVO> source = batchGetInstanceStatuses(query);
+        return source.getItems().stream()
+                .map(BatchQueryItem::getValue)
+                .filter(value -> value != null)
+                .map(value -> toApprovalStatusVO(dto.getTenantId(), value))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<HistoryVO> getApprovalHistory(ApprovalHistoryQueryDTO dto) {
+        String tenant = tenant(dto.getTenantId());
+        Map<String, Object> instance = workflowFacadeMapper.selectInstanceByBusinessKey(
+                tenant, dto.getCode(), dto.getBusinessId());
+        Long instanceId = instance == null ? null : longOf(instance.get("id"));
+        if (instanceId == null || instanceId <= 0) {
+            throw new BusinessException(WorkflowCodeEnum.INSTANCE_NOT_FOUND);
+        }
+        int limit = dto.getLimit() == null || dto.getLimit() <= 0
+                ? 50 : Math.min(dto.getLimit(), WorkflowConstant.MAX_PAGE_SIZE);
+        List<HisTask> rows = FlowEngine.hisTaskService().getByInsId(instanceId);
+        if (rows == null || rows.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return rows.stream()
+                .limit(limit)
+                .map(row -> toHistoryVO(instanceId, row))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ApprovalStatusVO cancelApproval(CancelApprovalDTO dto) {
+        String tenant = tenant(dto.getTenantId());
+        return withIdempotency(tenant, dto.getIdempotencyKey(), dto, ApprovalStatusVO.class,
+                () -> doCancel(tenant, dto));
+    }
+
+    private ApprovalStatusVO doCancel(String tenant, CancelApprovalDTO dto) {
+        Map<String, Object> instance = workflowFacadeMapper.selectInstanceByBusinessKey(
+                tenant, dto.getCode(), dto.getBusinessId());
+        if (instance == null) {
+            throw new BusinessException(WorkflowCodeEnum.INSTANCE_NOT_FOUND);
+        }
+        String operator = dto.getOperatorId();
+        if (StrUtil.isBlank(operator) || !operator.equals(str(instance.get("starter_id")))) {
+            throw new BusinessException(WorkflowCodeEnum.PERMISSION_DENIED);
+        }
+        if (!WorkflowStatusEnum.RUNNING.getCode().equals(str(instance.get("flow_status")))) {
+            throw new BusinessException(WorkflowCodeEnum.INSTANCE_STATUS_INVALID);
+        }
+        Long instanceId = longOf(instance.get("id"));
+        if (instanceId == null || instanceId <= 0) {
+            throw new BusinessException(WorkflowCodeEnum.INSTANCE_NOT_FOUND);
+        }
+
+        String withdrawn = WorkflowStatusEnum.WITHDRAWN.getCode();
+        FlowParams params = FlowParams.build()
+                .handler(operator)
+                .message(dto.getReason())
+                .flowStatus(withdrawn)
+                .ignore(true);
+        FlowEngine.taskService().terminationByInsId(instanceId, params);
+        insertEvent(tenant, "PROCESS_WITHDRAWN", str(instanceId), instance);
+        return ApprovalStatusVO.builder()
+                .tenantId(tenant)
+                .instanceId(instanceId)
+                .flowCode(dto.getCode())
+                .businessId(dto.getBusinessId())
+                .businessTitle(str(instance.get("business_title")))
+                .flowStatus(withdrawn)
+                .statusText(WorkflowStatusEnum.WITHDRAWN.getText())
+                .currentNodeCode("")
+                .currentNodeName("")
+                .currentApproverIds(Collections.emptyList())
+                .currentApproverNames(Collections.emptyList())
+                .updateTime(DateUtil.now())
+                .build();
+    }
+
+    @Override
+    public ApprovalDiagramVO getApprovalDiagram(ApprovalDiagramQueryDTO dto) {
+        String tenant = tenant(dto.getTenantId());
+        Map<String, Object> instance = null;
+        if (StrUtil.isNotBlank(dto.getBusinessId())) {
+            instance = workflowFacadeMapper.selectInstanceByBusinessKey(
+                    tenant, dto.getCode(), dto.getBusinessId());
+            if (instance == null) {
+                throw new BusinessException(WorkflowCodeEnum.INSTANCE_NOT_FOUND);
+            }
+        }
+
+        Definition definition = null;
+        if (instance != null) {
+            Long definitionId = longOf(instance.get("definition_id"));
+            if (definitionId != null && definitionId > 0) {
+                definition = defService.getById(definitionId);
+            }
+        } else {
+            List<Definition> definitions = defService.getByFlowCode(dto.getCode());
+            if (definitions != null && !definitions.isEmpty()) {
+                definition = definitions.get(0);
+            }
+        }
+        if (definition == null) {
+            throw new BusinessException(WorkflowCodeEnum.DEFINITION_NOT_FOUND);
+        }
+        DiagramVO diagram = toDiagramVO(dto.getCode(), definition);
+
+        ApprovalDiagramVO.ApprovalDiagramVOBuilder builder = ApprovalDiagramVO.builder()
+                .definitionKey(dto.getCode())
+                .nodes(diagram.getNodes())
+                .edges(diagram.getEdges())
+                .businessId(dto.getBusinessId());
+        if (instance == null) {
+            return builder.build();
+        }
+
+        Long instanceId = longOf(instance.get("id"));
+        if (instanceId == null || instanceId <= 0) {
+            throw new BusinessException(WorkflowCodeEnum.INSTANCE_NOT_FOUND);
+        }
+        String flowStatus = str(instance.get("flow_status"));
+        builder.instanceId(instanceId)
+                .flowStatus(flowStatus)
+                .statusText(WorkflowStatusEnum.textOf(flowStatus))
+                .currentNodeCode(str(instance.get("node_code")))
+                .currentNodeName(str(instance.get("node_name")));
+
+        List<String> approverIds = new ArrayList<>();
+        List<String> approverNames = new ArrayList<>();
+        List<Map<String, Object>> approvers = workflowFacadeMapper.selectApproversByInstanceIds(
+                tenant, List.of(instanceId));
+        if (approvers != null) {
+            for (Map<String, Object> row : approvers) {
+                approverIds.add(str(row.get("assigneeId")));
+                approverNames.add(str(row.get("assigneeName")));
+            }
+        }
+        builder.currentApproverIds(approverIds).currentApproverNames(approverNames);
+
+        LinkedHashSet<String> visited = new LinkedHashSet<>();
+        List<HistoryVO> history = new ArrayList<>();
+        List<HisTask> historyRows = FlowEngine.hisTaskService().getByInsId(instanceId);
+        if (historyRows != null) {
+            for (HisTask row : historyRows) {
+                HistoryVO item = toHistoryVO(instanceId, row);
+                history.add(item);
+                if (StrUtil.isNotBlank(item.getNodeCode())) {
+                    visited.add(item.getNodeCode());
+                }
+            }
+        }
+        return builder.visitedNodeCodes(new ArrayList<>(visited)).history(history).build();
+    }
+
+    @Override
     public BatchQueryResult<Long, List<HistoryVO>> batchGetHistoriesByInstanceIds(HistoryBatchQueryDTO dto) {
         checkReadSize(dto.getInstanceIds().size());
         String tenant = tenant(dto.getTenantId());
         int limit = dto.getLimitPerInstance() == null
                 ? 50 : Math.min(dto.getLimitPerInstance(), WorkflowConstant.MAX_PAGE_SIZE);
-        List<Long> ids = new ArrayList<>(new LinkedHashSet<>(dto.getInstanceIds()));
-        List<Map<String, Object>> rows = workflowFacadeMapper.selectHistoriesByInstanceIds(tenant, ids, limit);
+        List<Map<String, Object>> rows = workflowFacadeMapper.selectHistoriesByInstanceIds(
+                tenant, dto.getInstanceIds(), limit);
         Map<Long, List<HistoryVO>> byInstance = new LinkedHashMap<>();
         for (Map<String, Object> row : rows) {
             Long instanceId = longOf(row.get("instanceId"));
@@ -356,7 +541,8 @@ public class WorkflowApplicationServiceImpl implements WorkflowApplicationServic
         }
         BatchQueryResult<Long, List<HistoryVO>> result = BatchQueryResult.empty();
         for (Long id : dto.getInstanceIds()) {
-            result.add(id, byInstance.getOrDefault(id, Collections.emptyList()));
+            List<HistoryVO> values = byInstance.getOrDefault(id, Collections.emptyList());
+            result.add(id, values.size() > limit ? values.subList(0, limit) : values);
         }
         return result;
     }
@@ -445,76 +631,75 @@ public class WorkflowApplicationServiceImpl implements WorkflowApplicationServic
     }
 
     private StartProcessResult doStart(String tenant, StartProcessDTO dto) {
-        Map<String, Object> definition = workflowFacadeMapper.selectDefinitionByCode(tenant, dto.getFlowCode());
-        if (definition == null) {
-            throw new BusinessException(WorkflowCodeEnum.DEFINITION_NOT_FOUND);
-        }
-        Long definitionId = longOf(definition.get("id"));
         Map<String, Object> exists = workflowFacadeMapper.selectInstanceByBusinessKey(
                 tenant, dto.getFlowCode(), dto.getBusinessId());
         if (exists != null && !WorkflowStatusEnum.isFinal(str(exists.get("flow_status")))) {
             throw new BusinessException(WorkflowCodeEnum.BUSINESS_KEY_CONFLICT);
         }
-        List<Map<String, Object>> firstNodes = workflowFacadeMapper.selectFirstNodes(tenant, definitionId);
-        if (firstNodes == null || firstNodes.isEmpty()) {
-            throw new BusinessException(WorkflowCodeEnum.ENGINE_ERROR);
-        }
-        Map<String, Object> firstNode = firstNodes.get(0);
-        Long instanceId = IdUtil.getSnowflakeNextId();
-        String operatorId = StrUtil.isBlank(dto.getOperatorId()) ? "0" : dto.getOperatorId();
-        Map<String, Object> instance = new HashMap<>();
-        instance.put("id", instanceId);
-        instance.put("definitionId", definitionId);
-        instance.put("flowCode", dto.getFlowCode());
-        instance.put("businessId", dto.getBusinessId());
-        instance.put("businessType", dto.getBusinessType());
-        instance.put("businessTitle", dto.getBusinessTitle());
-        instance.put("nodeType", 1);
-        instance.put("nodeCode", str(firstNode.get("node_code")));
-        instance.put("nodeName", str(firstNode.get("node_name")));
-        instance.put("variable", json(dto.getVariables()));
-        instance.put("flowStatus", WorkflowStatusEnum.RUNNING.getCode());
-        instance.put("activityStatus", 1);
-        instance.put("createBy", operatorId);
-        instance.put("starterId", operatorId);
-        instance.put("starterName", StrUtil.isBlank(dto.getOperatorName()) ? operatorId : dto.getOperatorName());
-        instance.put("ext", "");
-        instance.put("revision", 0L);
-        instance.put("tenantId", tenant);
-        workflowFacadeMapper.insertInstance(instance);
-        insertEvent(tenant, "PROCESS_STARTED", str(instanceId), instance);
 
-        for (Map<String, Object> node : firstNodes) {
-            Long taskId = IdUtil.getSnowflakeNextId();
-            Map<String, Object> task = new HashMap<>();
-            task.put("id", taskId);
-            task.put("definitionId", definitionId);
-            task.put("instanceId", instanceId);
-            task.put("nodeCode", str(node.get("node_code")));
-            task.put("nodeName", str(node.get("node_name")));
-            task.put("nodeType", 1);
-            task.put("flowStatus", WorkflowStatusEnum.RUNNING.getCode());
-            task.put("formCustom", "N");
-            task.put("formPath", str(node.get("form_path")));
-            task.put("revision", 0L);
-            task.put("tenantId", tenant);
-            workflowFacadeMapper.insertTask(task);
-            List<String> assignees = resolveAssignees(dto, str(node.get("handler_path")), operatorId);
-            for (String assignee : assignees) {
-                insertFlowUser(tenant, taskId, "1", assignee,
-                        StrUtil.isBlank(dto.getAssigneeNames().get(assignee))
-                                ? assignee : dto.getAssigneeNames().get(assignee), operatorId);
+        String operatorId = StrUtil.isBlank(dto.getOperatorId()) ? "0" : dto.getOperatorId();
+        String starterName = StrUtil.isBlank(dto.getOperatorName()) ? operatorId : dto.getOperatorName();
+        Map<String, Object> ext = new HashMap<>();
+        ext.put("starterName", starterName);
+        ext.put("businessTitle", dto.getBusinessTitle());
+        ext.put("businessType", dto.getBusinessType());
+
+        FlowParams params = FlowParams.build()
+                .flowCode(dto.getFlowCode())
+                .handler(operatorId)
+                .variable(dto.getVariables())
+                .flowStatus(WorkflowStatusEnum.RUNNING.getCode())
+                .ext(json(ext))
+                .ignore(true);
+        if (dto.getAssigneeIds() != null && !dto.getAssigneeIds().isEmpty()) {
+            params.nextHandler(dto.getAssigneeIds().toArray(String[]::new));
+        }
+        Instance instance = FlowEngine.insService().start(dto.getBusinessId(), params);
+
+        workflowFacadeMapper.updateInstanceSnapshot(tenant, instance.getId(), dto.getFlowCode(),
+                operatorId, starterName, dto.getBusinessTitle(), dto.getBusinessType(), 0L);
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("id", instance.getId());
+        payload.put("definitionId", instance.getDefinitionId());
+        payload.put("flowCode", dto.getFlowCode());
+        payload.put("businessId", instance.getBusinessId());
+        payload.put("businessTitle", dto.getBusinessTitle());
+        payload.put("businessType", dto.getBusinessType());
+        payload.put("nodeType", instance.getNodeType());
+        payload.put("nodeCode", instance.getNodeCode());
+        payload.put("nodeName", instance.getNodeName());
+        payload.put("variable", instance.getVariable());
+        payload.put("flowStatus", instance.getFlowStatus());
+        payload.put("createBy", instance.getCreateBy());
+        payload.put("starterId", operatorId);
+        payload.put("starterName", starterName);
+        payload.put("tenantId", tenant);
+        insertEvent(tenant, "PROCESS_STARTED", str(instance.getId()), payload);
+
+        List<Task> tasks = FlowEngine.taskService().getByInsId(instance.getId());
+        if (tasks != null) {
+            for (Task task : tasks) {
+                Map<String, Object> taskPayload = new HashMap<>();
+                taskPayload.put("id", task.getId());
+                taskPayload.put("definitionId", task.getDefinitionId());
+                taskPayload.put("instanceId", task.getInstanceId());
+                taskPayload.put("nodeCode", task.getNodeCode());
+                taskPayload.put("nodeName", task.getNodeName());
+                taskPayload.put("nodeType", task.getNodeType());
+                taskPayload.put("flowStatus", task.getFlowStatus());
+                taskPayload.put("tenantId", tenant);
+                insertEvent(tenant, "TASK_CREATED", str(task.getId()), taskPayload);
             }
-            insertEvent(tenant, "TASK_CREATED", str(taskId), task);
         }
         return StartProcessResult.builder()
-                .instanceId(instanceId)
+                .instanceId(instance.getId())
                 .flowCode(dto.getFlowCode())
-                .businessId(dto.getBusinessId())
-                .flowStatus(WorkflowStatusEnum.RUNNING.getCode())
-                .currentNodeCode(str(firstNode.get("node_code")))
-                .currentNodeName(str(firstNode.get("node_name")))
-                .createTime(LocalDateTime.now().toString())
+                .businessId(instance.getBusinessId())
+                .flowStatus(instance.getFlowStatus())
+                .currentNodeCode(instance.getNodeCode())
+                .currentNodeName(instance.getNodeName())
+                .createTime(DateUtil.format(instance.getCreateTime(), "yyyy-MM-dd HH:mm:ss"))
                 .build();
     }
 
@@ -532,7 +717,9 @@ public class WorkflowApplicationServiceImpl implements WorkflowApplicationServic
             throw new BusinessException(WorkflowCodeEnum.INSTANCE_STATUS_INVALID);
         }
         String operator = StrUtil.isBlank(dto.getOperatorId()) ? "0" : dto.getOperatorId();
-        if (workflowFacadeMapper.countAssignee(tenant, dto.getTaskId(), operator) == 0) {
+        List<String> approvers = FlowEngine.userService()
+                .getPermission(dto.getTaskId(), UserType.APPROVAL.getKey());
+        if (approvers == null || !approvers.contains(operator)) {
             throw new BusinessException(WorkflowCodeEnum.TASK_NOT_ASSIGNED);
         }
         Long expectedRevision = dto.getExpectedRevision() == null
@@ -543,6 +730,11 @@ public class WorkflowApplicationServiceImpl implements WorkflowApplicationServic
         Long instanceId = longOf(task.get("instanceId"));
         Long definitionId = longOf(task.get("definitionId"));
         String operatorName = StrUtil.isBlank(dto.getOperatorName()) ? operator : dto.getOperatorName();
+
+        if (action == TaskActionEnum.APPROVE || action == TaskActionEnum.REJECT) {
+            return doHandleByWarmFlow(tenant, dto, action, task, instanceId, operator,
+                    expectedRevision, expectedInstanceRevision);
+        }
 
         HandlePlan plan = buildPlan(tenant, action, task, definitionId);
         if (action == TaskActionEnum.URGE) {
@@ -622,6 +814,61 @@ public class WorkflowApplicationServiceImpl implements WorkflowApplicationServic
                 .nextNodeCode(plan.nextCode)
                 .nextNodeName(plan.nextName)
                 .finished(WorkflowStatusEnum.isFinal(plan.flowStatus))
+                .build();
+    }
+
+    private TaskHandleResult doHandleByWarmFlow(String tenant, HandleTaskDTO dto, TaskActionEnum action,
+                                                Map<String, Object> task, Long instanceId, String operator,
+                                                Long expectedRevision, Long expectedInstanceRevision) {
+        Long currentTaskRevision = longOf(task.get("taskRevision"));
+        Long currentInstanceRevision = longOf(task.get("instanceRevision"));
+        if (expectedRevision != null && currentTaskRevision != null && !expectedRevision.equals(currentTaskRevision)) {
+            throw new BusinessException(WorkflowCodeEnum.CONCURRENT_CONFLICT);
+        }
+        if (expectedInstanceRevision != null && currentInstanceRevision != null
+                && !expectedInstanceRevision.equals(currentInstanceRevision)) {
+            throw new BusinessException(WorkflowCodeEnum.CONCURRENT_CONFLICT);
+        }
+
+        Long taskId = longOf(task.get("taskId"));
+        FlowParams params = FlowParams.build()
+                .handler(operator)
+                .message(dto.getComment())
+                .variable(dto.getVariables())
+                .ignore(true);
+        if (action == TaskActionEnum.APPROVE) {
+            params.skipType(SkipType.PASS.getKey());
+        } else {
+            params.skipType(SkipType.REJECT.getKey())
+                    .flowStatus(WorkflowStatusEnum.REJECTED.getCode())
+                    .hisStatus(WorkflowStatusEnum.REJECTED.getCode());
+        }
+        Instance instance = FlowEngine.taskService().skip(taskId, params);
+
+        List<HisTask> hisTasks = FlowEngine.hisTaskService().listByTaskId(taskId);
+        Long historyId = hisTasks == null || hisTasks.isEmpty() ? null : hisTasks.get(hisTasks.size() - 1).getId();
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("id", historyId);
+        payload.put("instanceId", instanceId);
+        payload.put("taskId", taskId);
+        payload.put("action", action.getCode());
+        payload.put("comment", dto.getComment());
+        payload.put("variables", dto.getVariables());
+        payload.put("flowStatus", instance.getFlowStatus());
+        payload.put("tenantId", tenant);
+        insertEvent(tenant, "TASK_COMPLETED", str(historyId), payload);
+        if (WorkflowStatusEnum.isFinal(instance.getFlowStatus())) {
+            insertEvent(tenant, "PROCESS_COMPLETED", str(instanceId), payload);
+        }
+        return TaskHandleResult.builder()
+                .taskId(taskId)
+                .instanceId(instanceId)
+                .historyId(historyId)
+                .action(action.getCode())
+                .flowStatus(instance.getFlowStatus())
+                .nextNodeCode(instance.getNodeCode())
+                .nextNodeName(instance.getNodeName())
+                .finished(WorkflowStatusEnum.isFinal(instance.getFlowStatus()))
                 .build();
     }
 
@@ -808,54 +1055,70 @@ public class WorkflowApplicationServiceImpl implements WorkflowApplicationServic
         return item;
     }
 
-    private List<Map<String, Object>> definitionKeys(List<String> keys) {
-        List<Map<String, Object>> result = new ArrayList<>();
-        for (String key : keys) {
-            Map<String, Object> row = new HashMap<>();
-            if (StrUtil.startWith(key, "def_")) {
-                try {
-                    row.put("type", "ID");
-                    row.put("value", Long.valueOf(key.substring(4)));
-                    result.add(row);
-                    continue;
-                } catch (NumberFormatException ignored) {
-                    // 非法 def_ 前缀按 flowCode 处理
-                }
-            }
-            row.put("type", "CODE");
-            row.put("value", key);
-            result.add(row);
-        }
-        return result;
-    }
-
-    private Map<String, Object> findDefinition(String key,
-                                               Map<Long, Map<String, Object>> byId,
-                                               Map<String, Map<String, Object>> byCode) {
-        if (!StrUtil.startWith(key, "def_")) {
-            return byCode.get(key);
-        }
-        try {
-            return byId.get(Long.valueOf(key.substring(4)));
-        } catch (NumberFormatException e) {
-            return byCode.get(key);
-        }
-    }
-
-    private DefinitionVO toDefinitionVO(String key, Map<String, Object> row) {
+    private DefinitionVO toDefinitionVO(String key, Definition definition) {
         return DefinitionVO.builder()
                 .definitionKey(key)
-                .definitionId(longOf(row.get("definitionId")))
-                .flowCode(str(row.get("flowCode")))
-                .flowName(str(row.get("flowName")))
-                .category(str(row.get("category")))
-                .version(str(row.get("version")))
-                .publishStatus(intOf(row.get("publishStatus"), 0))
-                .activityStatus(intOf(row.get("activityStatus"), 1))
-                .formCustom(str(row.get("formCustom")))
-                .formPath(str(row.get("formPath")))
-                .ext(str(row.get("ext")))
-                .updateTime(time(row.get("updateTime")))
+                .definitionId(definition.getId())
+                .flowCode(definition.getFlowCode())
+                .flowName(definition.getFlowName())
+                .category(definition.getCategory())
+                .version(definition.getVersion())
+                .publishStatus(definition.getIsPublish() == null ? 0 : definition.getIsPublish())
+                .activityStatus(definition.getActivityStatus() == null ? 1 : definition.getActivityStatus())
+                .formCustom(definition.getFormCustom())
+                .formPath(definition.getFormPath())
+                .ext(definition.getExt())
+                .updateTime(definition.getUpdateTime() == null
+                        ? null : DateUtil.format(definition.getUpdateTime(), "yyyy-MM-dd HH:mm:ss"))
+                .build();
+    }
+
+    private ApprovalStatusVO toApprovalStatusVO(String tenant, InstanceStatusVO value) {
+        return ApprovalStatusVO.builder()
+                .tenantId(tenant)
+                .instanceId(value.getInstanceId())
+                .flowCode(value.getFlowCode())
+                .businessId(value.getBusinessId())
+                .businessTitle(value.getBusinessTitle())
+                .flowStatus(value.getFlowStatus())
+                .statusText(value.getStatusText())
+                .currentNodeCode(value.getCurrentNodeCode())
+                .currentNodeName(value.getCurrentNodeName())
+                .currentApproverIds(value.getCurrentApproverIds())
+                .currentApproverNames(value.getCurrentApproverNames())
+                .updateTime(value.getUpdateTime())
+                .build();
+    }
+
+    private DiagramVO toDiagramVO(String code, Definition definition) {
+        FlowCombine combine = defService.getFlowCombineNoDef(definition.getId());
+        List<DiagramVO.DiagramNodeVO> nodes = new ArrayList<>();
+        List<DiagramVO.DiagramEdgeVO> edges = new ArrayList<>();
+        if (combine != null) {
+            for (Node node : combine.getAllNodes()) {
+                nodes.add(DiagramVO.DiagramNodeVO.builder()
+                        .nodeCode(node.getNodeCode())
+                        .nodeName(node.getNodeName())
+                        .nodeType(node.getNodeType())
+                        .coordinate(node.getCoordinate())
+                        .handlerPath(node.getListenerPath())
+                        .permissionFlag(node.getPermissionFlag())
+                        .build());
+            }
+            for (Skip skip : combine.getAllSkips()) {
+                edges.add(DiagramVO.DiagramEdgeVO.builder()
+                        .fromNodeCode(skip.getNowNodeCode())
+                        .toNodeCode(skip.getNextNodeCode())
+                        .label(skip.getSkipName())
+                        .condition(skip.getSkipCondition())
+                        .skipType(skip.getSkipType())
+                        .build());
+            }
+        }
+        return DiagramVO.builder()
+                .definitionKey(code)
+                .nodes(nodes)
+                .edges(edges)
                 .build();
     }
 
@@ -893,9 +1156,34 @@ public class WorkflowApplicationServiceImpl implements WorkflowApplicationServic
         }
     }
 
+    private HistoryVO toHistoryVO(Long instanceId, HisTask row) {
+        Map<String, Object> value = new HashMap<>();
+        value.put("flowStatus", row.getFlowStatus());
+        value.put("cooperateType", row.getCooperateType());
+        value.put("skipType", row.getSkipType());
+        return HistoryVO.builder()
+                .historyId(row.getId())
+                .instanceId(instanceId)
+                .nodeCode(row.getNodeCode())
+                .nodeName(row.getNodeName())
+                .handlerId(row.getApprover())
+                .handlerName(row.getApprover())
+                .action(actionOf(value))
+                .skipType(row.getSkipType())
+                .comment(row.getMessage())
+                .createTime(row.getCreateTime() == null
+                        ? null : DateUtil.format(row.getCreateTime(), "yyyy-MM-dd HH:mm:ss"))
+                .updateTime(row.getUpdateTime() == null
+                        ? null : DateUtil.format(row.getUpdateTime(), "yyyy-MM-dd HH:mm:ss"))
+                .build();
+    }
+
     private String actionOf(Map<String, Object> row) {
         int cooperateType = intOf(row.get("cooperateType"), 1);
         String skipType = str(row.get("skipType"));
+        if (WorkflowStatusEnum.WITHDRAWN.getCode().equals(str(row.get("flowStatus")))) {
+            return TaskActionEnum.WITHDRAW.getCode();
+        }
         if (cooperateType == 2) {
             return TaskActionEnum.TRANSFER.getCode();
         }
@@ -907,6 +1195,9 @@ public class WorkflowApplicationServiceImpl implements WorkflowApplicationServic
         }
         if ("REJECT".equals(skipType)) {
             return TaskActionEnum.REJECT.getCode();
+        }
+        if ("WITHDRAW".equals(skipType)) {
+            return TaskActionEnum.WITHDRAW.getCode();
         }
         if ("PASS".equals(skipType)) {
             return TaskActionEnum.APPROVE.getCode();

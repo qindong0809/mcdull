@@ -45,6 +45,15 @@ public interface WorkflowFacadeMapper {
 
     int insertTask(@Param("row") Map<String, Object> row);
 
+    int updateInstanceSnapshot(@Param("tenantId") String tenantId,
+                               @Param("instanceId") Long instanceId,
+                               @Param("flowCode") String flowCode,
+                               @Param("starterId") String starterId,
+                               @Param("starterName") String starterName,
+                               @Param("businessTitle") String businessTitle,
+                               @Param("businessType") String businessType,
+                               @Param("revision") Long revision);
+
     int insertFlowUser(@Param("row") Map<String, Object> row);
 
     int insertEvent(@Param("row") Map<String, Object> row);

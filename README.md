@@ -571,7 +571,9 @@ mcdull/
 │   ├── mcdull-ai              # AI 相关功能
 │   └── mcdull-agent           # AI Agent 服务
 ├── doc/                       # 项目文档
-└── sql/                       # 数据库初始化脚本
+└── release/                   # 数据库脚本与版本发布包
+    ├── sql/                   # 源脚本（按系统归集）
+    └── v2.0.0/                # v2.0.0 全量/增量发布包
 ```
 
 每个业务模块采用标准三层拆分：
@@ -608,24 +610,20 @@ cd mcdull
 
 **2. 初始化数据库**
 
-按顺序执行 `sql/` 目录下的脚本：
+详见 `release/ORDER.txt`。全新库按序执行：
 
 ```bash
-# 核心系统表结构（必须）
-sql/common.sql
-sql/3.0.sql
-sql/sys_area.sql
+# 台账表 + 全量脚本（必须）
+release/sql/00_bootstrap.sql
+release/v2.0.0/system/v2.0.0_system.full.sql
+release/v2.0.0/workflow/v2.0.0_workflow.full.sql
 
-# 可选：行政区域扩展数据
-sql/0.1.1_sys_area.sql
-
-# 可选：Focus 业务模块
-sql/focus.sql
-
-# 可选：工作流
-sql/3.0_workflow_1.7.4.sql
-sql/warm-flow.sql
+# 可选：行政区域数据、Focus 业务
+release/sql/sys_area.sql
+release/sql/focus.sql
 ```
+
+已有库升级执行 `release/v2.0.0/<system>/v2.0.0_<system>_upgrade.sql`。源脚本变更后运行 `release/build-full.ps1` 重新生成全量。
 
 **3. 配置 Nacos**
 

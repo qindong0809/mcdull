@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "mcdull.tenant")
 public class TenantInitProperties {
-    private String initScriptDir = "sql/init";
+    private String initScriptDir = "release/sql/init";
     private long taskTtlSeconds = 86400L;
 }

@@ -72,7 +72,7 @@
 
         <!-- ===== 上收各业务/框架模块此前内联的第三方版本，单一来源管理 ===== -->
         <jjwt.version>0.12.6</jjwt.version>
-        <warm-flow.version>1.7.3</warm-flow.version>
+        <warm-flow.version>1.8.9</warm-flow.version>
         <ganymed-ssh2.version>build210</ganymed-ssh2.version>
         <ip2region.version>2.7.0</ip2region.version>
         <velocity.version>2.3</velocity.version>

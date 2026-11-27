@@ -1,0 +1,4 @@
+7cda7f86f8529498d150c569fc4fbb1528f61a362331e79ca2abd249af271932  v2.0.0/system/v2.0.0_system.full.sql
+f9719ab4664a2e752b51576c7df8f7a3b6ff85eab10cb83e5319e9216ecc10ae  v2.0.0/system/v2.0.0_system_upgrade.sql
+0d032ab0d1355b0b262e426520239eef4cad41fdb2ca2c31d6d211f2efcac2cc  v2.0.0/workflow/v2.0.0_workflow.full.sql
+e7ffc4fb5034373b9d236f4ff3e6c4437ed04756b1ab7594a2431cc559c08f04  v2.0.0/workflow/v2.0.0_workflow_upgrade.sql

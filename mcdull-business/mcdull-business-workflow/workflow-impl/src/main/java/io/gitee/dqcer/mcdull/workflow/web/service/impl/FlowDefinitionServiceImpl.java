@@ -60,7 +60,7 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
     @Override
     public Boolean add(FlowDefinitionDTO flowDefinition) {
         flowDefinition.setDelFlag("0");
-        return defService.saveAndInitNode(flowDefinition);
+        return defService.checkAndSave(flowDefinition);
     }
 
     @Transactional(rollbackFor = Exception.class)

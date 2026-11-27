@@ -6,16 +6,22 @@ import io.gitee.dqcer.mcdull.workflow.facade.model.common.CursorPageVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.common.ProcessBusinessKey;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.BatchHandleTaskDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.BatchStartProcessDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.ApprovalDiagramQueryDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.ApprovalHistoryQueryDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.ApprovalStatusQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.BusinessKeyBatchQueryDTO;
-import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DefinitionBatchQueryDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.CancelApprovalDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DefinitionQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DefinitionVersionBatchDTO;
-import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DiagramBatchQueryDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DiagramQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.HandleTaskDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.HistoryBatchQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.StartProcessDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.TaskBatchQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.TodoCountBatchDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.TodoCursorQueryDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.vo.ApprovalDiagramVO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.vo.ApprovalStatusVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.DefinitionVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.DefinitionVersionVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.DiagramVO;
@@ -37,11 +43,11 @@ import java.util.List;
  */
 public interface WorkflowApplicationService {
 
-    BatchQueryResult<String, DefinitionVO> batchGetDefinitions(DefinitionBatchQueryDTO dto);
+    List<DefinitionVO> batchGetDefinitions(DefinitionQueryDTO dto);
 
     BatchQueryResult<String, DefinitionVersionVO> batchGetDefinitionVersions(DefinitionVersionBatchDTO dto);
 
-    BatchQueryResult<String, DiagramVO> batchGetDiagrams(DiagramBatchQueryDTO dto);
+    List<DiagramVO> batchGetDiagrams(DiagramQueryDTO dto);
 
     StartProcessResult startProcess(StartProcessDTO dto);
 
@@ -60,6 +66,14 @@ public interface WorkflowApplicationService {
     TaskHandleResult handleTask(HandleTaskDTO dto);
 
     BatchResult<TaskHandleResult> batchHandleTasks(BatchHandleTaskDTO dto);
+
+    List<ApprovalStatusVO> batchGetApprovalStatus(ApprovalStatusQueryDTO dto);
+
+    List<HistoryVO> getApprovalHistory(ApprovalHistoryQueryDTO dto);
+
+    ApprovalStatusVO cancelApproval(CancelApprovalDTO dto);
+
+    ApprovalDiagramVO getApprovalDiagram(ApprovalDiagramQueryDTO dto);
 
     BatchQueryResult<Long, List<HistoryVO>> batchGetHistoriesByInstanceIds(HistoryBatchQueryDTO dto);
 

@@ -1,0 +1,14 @@
+# SQL 执行顺序（# 为注释）
+# 全新库：先 bootstrap，再按系统执行 full
+sql/00_bootstrap.sql
+v2.0.0/system/v2.0.0_system.full.sql
+v2.0.0/workflow/v2.0.0_workflow.full.sql
+
+# 已有库升级：按系统执行 upgrade（与 full 二选一）
+# v2.0.0/system/v2.0.0_system_upgrade.sql
+# v2.0.0/workflow/v2.0.0_workflow_upgrade.sql
+
+# 可选：行政区域数据较大，未纳入全量，按需执行
+# sql/sys_area.sql
+# sql/0.1.1_sys_area.sql
+# sql/focus.sql

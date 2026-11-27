@@ -158,6 +158,19 @@
              now(), now(), '0', #{row.tenantId})
     </insert>
 
+    <update id="updateInstanceSnapshot">
+        UPDATE flow_instance
+        SET flow_code = #{flowCode},
+            starter_id = #{starterId},
+            starter_name = #{starterName},
+            business_title = #{businessTitle},
+            business_type = #{businessType},
+            revision = #{revision}
+        WHERE del_flag = '0'
+          AND tenant_id = #{tenantId}
+          AND id = #{instanceId}
+    </update>
+
     <insert id="insertFlowUser">
         INSERT INTO flow_user
             (id, type, processed_by, processed_name, associated, create_by,
@@ -347,10 +360,11 @@
                    h.instance_id AS instanceId,
                    h.node_code AS nodeCode,
                    h.node_name AS nodeName,
-                   h.approver_id AS handlerId,
-                   h.approver_name AS handlerName,
+                   COALESCE(h.approver_id, h.approver) AS handlerId,
+                   COALESCE(h.approver_name, h.approver) AS handlerName,
                    h.skip_type AS skipType,
                    h.cooperate_type AS cooperateType,
+                   h.flow_status AS flowStatus,
                    h.message AS comment,
                    h.create_time AS createTime,
                    h.update_time AS updateTime,
