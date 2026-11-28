@@ -26,7 +26,7 @@ public interface TenantDataSourceResolver {
         }
 
         @Override
-        public TenantDataSource resolve(Integer tenantId) {
+        public TenantDataSourceInfo resolve(Integer tenantId) {
             return null;
         }
     };
@@ -45,5 +45,5 @@ public interface TenantDataSourceResolver {
      * @param tenantId 已通过授权校验的租户 ID
      * @return 租户数据源；无独立数据源时返回 null
      */
-    TenantDataSource resolve(Integer tenantId);
+    TenantDataSourceInfo resolve(Integer tenantId);
 }

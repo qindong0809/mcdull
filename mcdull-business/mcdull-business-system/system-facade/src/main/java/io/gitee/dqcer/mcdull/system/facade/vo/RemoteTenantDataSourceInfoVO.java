@@ -1,6 +1,6 @@
 package io.gitee.dqcer.mcdull.system.facade.vo;
 
-import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSource;
+import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSourceInfo;
 import lombok.Data;
 
 /**
@@ -9,7 +9,7 @@ import lombok.Data;
  * @author dqcer
  */
 @Data
-public class RemoteTenantDataSourceVO implements TenantDataSource {
+public class RemoteTenantDataSourceInfoVO implements TenantDataSourceInfo {
 
     private String key;
 

@@ -3,11 +3,11 @@ package io.gitee.dqcer.mcdull.system.facade.service.adapter;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
 import io.gitee.dqcer.mcdull.framework.base.wrapper.InnerResult;
 import io.gitee.dqcer.mcdull.framework.redis.cache.ICache;
-import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSource;
+import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSourceInfo;
 import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSourceCipherResolver;
 import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSourceResolver;
 import io.gitee.dqcer.mcdull.system.facade.service.TenantDataSourceApi;
-import io.gitee.dqcer.mcdull.system.facade.vo.RemoteTenantDataSourceVO;
+import io.gitee.dqcer.mcdull.system.facade.vo.RemoteTenantDataSourceInfoVO;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,15 +68,15 @@ public class TenantDataSourceFeignResolver implements TenantDataSourceResolver {
     }
 
     @Override
-    public TenantDataSource resolve(Integer tenantId) {
+    public TenantDataSourceInfo resolve(Integer tenantId) {
         if (tenantId == null || tenantId <= 0) {
             return null;
         }
-        RemoteTenantDataSourceVO cached = cache.getOrSetPrefixed(CACHE_TENANT_DS + tenantId,
-                RemoteTenantDataSourceVO.class,
+        RemoteTenantDataSourceInfoVO cached = cache.getOrSetPrefixed(CACHE_TENANT_DS + tenantId,
+                RemoteTenantDataSourceInfoVO.class,
                 () -> {
                     try {
-                        InnerResult<RemoteTenantDataSourceVO> result = tenantDataSourceApi.getByTenantId(tenantId);
+                        InnerResult<RemoteTenantDataSourceInfoVO> result = tenantDataSourceApi.getByTenantId(tenantId);
                         return result.unwrapOrNull();
                     } catch (Exception ex) {
                         LogHelp.warn(log, "解析租户数据源失败，降级为不切库. tenantId={}, cause={}", tenantId, ex.getMessage());
@@ -89,11 +89,11 @@ public class TenantDataSourceFeignResolver implements TenantDataSourceResolver {
     /**
      * 复制缓存对象后解密，避免改写到缓存中的密文对象。
      */
-    private TenantDataSource decrypt(RemoteTenantDataSourceVO cached, Integer tenantId) {
+    private TenantDataSourceInfo decrypt(RemoteTenantDataSourceInfoVO cached, Integer tenantId) {
         if (cached == null) {
             return null;
         }
-        RemoteTenantDataSourceVO vo = new RemoteTenantDataSourceVO();
+        RemoteTenantDataSourceInfoVO vo = new RemoteTenantDataSourceInfoVO();
         vo.setKey(cached.getKey());
         vo.setTenantId(cached.getTenantId());
         vo.setUrl(cached.getUrl());

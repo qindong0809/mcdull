@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class AesTenantDataSourceCipherResolverTest {
+class AesTenantDataSourceInfoCipherResolverTest {
 
     private static final String KEY = "1024abcd1024abcd1024abcd1024abcd";
 

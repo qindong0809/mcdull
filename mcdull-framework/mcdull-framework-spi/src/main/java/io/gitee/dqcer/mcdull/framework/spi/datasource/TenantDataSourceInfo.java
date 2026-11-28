@@ -10,7 +10,7 @@ package io.gitee.dqcer.mcdull.framework.spi.datasource;
  *
  * @author dqcer
  */
-public interface TenantDataSource {
+public interface TenantDataSourceInfo {
 
     /** 路由 lookupKey，如 tenant_42 */
     String getKey();

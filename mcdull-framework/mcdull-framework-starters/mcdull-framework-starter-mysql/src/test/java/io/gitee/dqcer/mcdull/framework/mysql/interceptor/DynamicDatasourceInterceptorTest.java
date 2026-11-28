@@ -7,6 +7,7 @@ import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.mysql.config.DynamicContextHolder;
 import io.gitee.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
 import io.gitee.dqcer.mcdull.framework.mysql.routing.SwitchableDataSource;
+import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSourceInfo;
 import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSourceResolver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -111,7 +112,7 @@ class DynamicDatasourceInterceptorTest {
             }
 
             @Override
-            public io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSource resolve(Integer tenantId) {
+            public TenantDataSourceInfo resolve(Integer tenantId) {
                 return null;
             }
         };

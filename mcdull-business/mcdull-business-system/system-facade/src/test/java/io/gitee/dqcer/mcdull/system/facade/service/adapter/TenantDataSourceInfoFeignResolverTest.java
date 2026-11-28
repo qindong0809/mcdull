@@ -1,9 +1,9 @@
 package io.gitee.dqcer.mcdull.system.facade.service.adapter;
 
 import io.gitee.dqcer.mcdull.framework.redis.cache.ICache;
-import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSource;
+import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSourceInfo;
 import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSourceCipherResolver;
-import io.gitee.dqcer.mcdull.system.facade.vo.RemoteTenantDataSourceVO;
+import io.gitee.dqcer.mcdull.system.facade.vo.RemoteTenantDataSourceInfoVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class TenantDataSourceFeignResolverTest {
+class TenantDataSourceInfoFeignResolverTest {
 
     @Mock
     private ICache cache;
@@ -33,11 +33,11 @@ class TenantDataSourceFeignResolverTest {
 
     @Test
     void cachedValueStaysCipheredAndReturnedValueIsDecrypted() {
-        RemoteTenantDataSourceVO cached = cachedVo();
+        RemoteTenantDataSourceInfoVO cached = cachedVo();
         stubCache(cached);
         when(cipherResolver.decrypt("CIPHER")).thenReturn("PLAIN");
 
-        TenantDataSource result = resolver.resolve(12);
+        TenantDataSourceInfo result = resolver.resolve(12);
 
         assertEquals("PLAIN", result.getPassword());
         assertEquals("CIPHER", cached.getPassword());
@@ -52,13 +52,13 @@ class TenantDataSourceFeignResolverTest {
         assertNull(resolver.resolve(12));
     }
 
-    private void stubCache(RemoteTenantDataSourceVO cached) {
-        when(cache.getOrSetPrefixed(eq("tenant:ds:12"), eq(RemoteTenantDataSourceVO.class),
+    private void stubCache(RemoteTenantDataSourceInfoVO cached) {
+        when(cache.getOrSetPrefixed(eq("tenant:ds:12"), eq(RemoteTenantDataSourceInfoVO.class),
                 any(Supplier.class), anyLong())).thenReturn(cached);
     }
 
-    private RemoteTenantDataSourceVO cachedVo() {
-        RemoteTenantDataSourceVO vo = new RemoteTenantDataSourceVO();
+    private RemoteTenantDataSourceInfoVO cachedVo() {
+        RemoteTenantDataSourceInfoVO vo = new RemoteTenantDataSourceInfoVO();
         vo.setKey("tenant_12");
         vo.setTenantId(12);
         vo.setUrl("jdbc:mysql://localhost:3306/tenant_12");

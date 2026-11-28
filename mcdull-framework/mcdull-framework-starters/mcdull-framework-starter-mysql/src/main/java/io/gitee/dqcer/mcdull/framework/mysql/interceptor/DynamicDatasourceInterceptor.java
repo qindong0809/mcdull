@@ -11,7 +11,7 @@ import io.gitee.dqcer.mcdull.framework.mysql.config.DynamicContextHolder;
 import io.gitee.dqcer.mcdull.framework.mysql.config.RoutingDataSource;
 import io.gitee.dqcer.mcdull.framework.mysql.properties.DataSourceProperties;
 import io.gitee.dqcer.mcdull.framework.mysql.routing.SwitchableDataSource;
-import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSource;
+import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSourceInfo;
 import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSourceResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -93,25 +93,25 @@ public class DynamicDatasourceInterceptor implements HandlerInterceptor {
         }
 
         // ④ 解析数据源（SPI 内部：缓存命中直接返回，未命中走 system-feign）
-        TenantDataSource tenantDataSource = resolver.resolve(tenantId);
-        if (tenantDataSource == null || tenantDataSource.getKey() == null || tenantDataSource.getUrl() == null) {
+        TenantDataSourceInfo tenantDataSourceInfo = resolver.resolve(tenantId);
+        if (tenantDataSourceInfo == null || tenantDataSourceInfo.getKey() == null || tenantDataSourceInfo.getUrl() == null) {
             LogHelp.debug(log, "租户 {} 无独立数据源，沿用当前数据源", tenantId);
             return true;
         }
 
-        if (!switchableDataSource.containsDataSource(tenantDataSource.getKey())
+        if (!switchableDataSource.containsDataSource(tenantDataSourceInfo.getKey())
                 && switchableDataSource.dataSourceCount() >= RoutingDataSource.MAX_DATASOURCE_COUNT) {
             LogHelp.warn(log, "数据源数量超过上限 {}，拒绝注册 key={}",
-                    RoutingDataSource.MAX_DATASOURCE_COUNT, tenantDataSource.getKey());
+                    RoutingDataSource.MAX_DATASOURCE_COUNT, tenantDataSourceInfo.getKey());
             throw new BusinessException("system.datasource.limit");
         }
 
         // ⑤ 注册物理池并入栈
-        registerIfAbsent(tenantDataSource);
-        DynamicContextHolder.push(tenantDataSource.getKey());
-        request.setAttribute(ATTR_TENANT_KEY, tenantDataSource.getKey());
+        registerIfAbsent(tenantDataSourceInfo);
+        DynamicContextHolder.push(tenantDataSourceInfo.getKey());
+        request.setAttribute(ATTR_TENANT_KEY, tenantDataSourceInfo.getKey());
         LogHelp.debug(log, "租户 {} 绑定数据源 {}，当前路由 {}",
-                tenantId, tenantDataSource.getKey(), DynamicContextHolder.peek());
+                tenantId, tenantDataSourceInfo.getKey(), DynamicContextHolder.peek());
         return true;
     }
 
@@ -124,7 +124,7 @@ public class DynamicDatasourceInterceptor implements HandlerInterceptor {
         }
     }
 
-    private void registerIfAbsent(TenantDataSource ds) {
+    private void registerIfAbsent(TenantDataSourceInfo ds) {
         if (switchableDataSource.containsDataSource(ds.getKey())) {
             return;
         }

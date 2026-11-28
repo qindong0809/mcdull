@@ -2,7 +2,7 @@ package io.gitee.dqcer.mcdull.system.provider.web.def;
 
 import io.gitee.dqcer.mcdull.framework.base.wrapper.InnerResult;
 import io.gitee.dqcer.mcdull.system.facade.service.TenantDataSourceApi;
-import io.gitee.dqcer.mcdull.system.facade.vo.RemoteTenantDataSourceVO;
+import io.gitee.dqcer.mcdull.system.facade.vo.RemoteTenantDataSourceInfoVO;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.DatasourceEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.entity.TenantEntity;
 import io.gitee.dqcer.mcdull.system.provider.model.enums.TenantInitStatusEnum;
@@ -32,7 +32,7 @@ public class TenantDataSourceApiImpl implements TenantDataSourceApi {
     private ITenantAuthService tenantAuthService;
 
     @Override
-    public InnerResult<RemoteTenantDataSourceVO> getByTenantId(Integer tenantId) {
+    public InnerResult<RemoteTenantDataSourceInfoVO> getByTenantId(Integer tenantId) {
         if (tenantId == null || tenantId <= 0) {
             return InnerResult.error("system.tenant.required");
         }
@@ -49,7 +49,7 @@ public class TenantDataSourceApiImpl implements TenantDataSourceApi {
         String databaseName = tenant.getDatabaseName() == null || tenant.getDatabaseName().isBlank()
                 ? "tenant_" + tenantId
                 : tenant.getDatabaseName();
-        RemoteTenantDataSourceVO vo = new RemoteTenantDataSourceVO();
+        RemoteTenantDataSourceInfoVO vo = new RemoteTenantDataSourceInfoVO();
         vo.setKey("tenant_" + tenantId);
         vo.setTenantId(tenantId);
         vo.setUrl(tenantUrl(datasource.getJdbcUrl(), databaseName));
