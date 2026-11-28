@@ -20,8 +20,6 @@ public class BusinessKeyBatchQueryDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String tenantId;
-
     @Valid
     @NotEmpty(message = "keys 不能为空")
     private List<ProcessBusinessKey> keys = new ArrayList<>();

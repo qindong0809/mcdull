@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 批量发起流程请求。每条独立事务、独立幂等键，单条失败不影响其他条目。
+ * 批量发起流程请求。每条独立事务，单条失败不影响其他条目；幂等由业务服务控制。
  *
  * @author dqcer
  * @since 2026-11-21

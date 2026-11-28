@@ -18,8 +18,6 @@ public class TodoCursorQueryDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String tenantId;
-
     @NotBlank(message = "assigneeId 不能为空")
     private String assigneeId;
 

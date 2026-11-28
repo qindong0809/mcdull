@@ -49,9 +49,6 @@ public class ApprovalDiagramVO implements Serializable {
     private List<String> currentApproverIds = new ArrayList<>();
 
     @Builder.Default
-    private List<String> currentApproverNames = new ArrayList<>();
-
-    @Builder.Default
     private List<String> visitedNodeCodes = new ArrayList<>();
 
     @Builder.Default

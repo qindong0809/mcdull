@@ -16,8 +16,6 @@ public class DiagramQueryDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String tenantId;
-
     /**
      * 流程编码，对应 warm-flow 的 flowCode。
      */

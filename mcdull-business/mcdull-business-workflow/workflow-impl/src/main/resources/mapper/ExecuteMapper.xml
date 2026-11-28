@@ -12,7 +12,6 @@
             t.instance_id,
             t.create_time,
             t.update_time,
-            t.tenant_id,
             t.flow_status,
             i.business_id,
             i.activity_status,

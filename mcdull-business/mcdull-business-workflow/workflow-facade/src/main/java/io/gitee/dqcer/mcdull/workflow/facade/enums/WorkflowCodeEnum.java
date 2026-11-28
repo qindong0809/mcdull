@@ -19,8 +19,6 @@ public enum WorkflowCodeEnum implements ICode {
     TASK_NOT_ASSIGNED(999621, "任务不属于当前办理人"),
     TASK_ACTION_INVALID(999622, "支持的审批动作无效"),
     BATCH_SIZE_EXCEEDED(999630, "批量条数超过上限"),
-    DUPLICATE_REQUEST(999631, "重复请求正在处理中"),
-    IDEMPOTENCY_CONFLICT(999632, "幂等键复用了不同的请求内容"),
     CONCURRENT_CONFLICT(999633, "流程状态已被其他操作更新，请重试"),
     BUSINESS_KEY_CONFLICT(999634, "业务键已存在运行中的流程实例"),
     PERMISSION_DENIED(999640, "无权限调用工作流能力"),

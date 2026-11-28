@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 流程实例轻量状态 VO。业务列表页批量渲染首选该结构。
@@ -29,9 +31,12 @@ public class InstanceStatusVO implements Serializable {
 
     private String businessId;
 
-    private String businessType;
-
-    private String businessTitle;
+    /**
+     * 业务属性快照，由调用方按 key 解释，工作流只原样回传。
+     * <p>
+     * 典型内容：businessTitle、businessNo、applicantName、departmentName、amountText 等。
+     */
+    private Map<String, Object> attributes = new HashMap<>();
 
     private String flowStatus;
 
@@ -43,13 +48,6 @@ public class InstanceStatusVO implements Serializable {
 
     @Builder.Default
     private List<String> currentApproverIds = new ArrayList<>();
-
-    @Builder.Default
-    private List<String> currentApproverNames = new ArrayList<>();
-
-    private String starterId;
-
-    private String starterName;
 
     private String updateTime;
 }

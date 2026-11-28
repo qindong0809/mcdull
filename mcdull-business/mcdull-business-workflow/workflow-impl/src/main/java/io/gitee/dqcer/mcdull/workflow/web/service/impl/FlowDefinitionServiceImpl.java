@@ -104,7 +104,6 @@ public class FlowDefinitionServiceImpl implements IFlowDefinitionService {
         vo.setId(record.getId());
         vo.setCreateTime(record.getCreateTime());
         vo.setUpdateTime(record.getUpdateTime());
-        vo.setTenantId(record.getTenantId());
         vo.setDelFlag(record.getDelFlag());
         vo.setFlowCode(record.getFlowCode());
         vo.setFlowName(record.getFlowName());

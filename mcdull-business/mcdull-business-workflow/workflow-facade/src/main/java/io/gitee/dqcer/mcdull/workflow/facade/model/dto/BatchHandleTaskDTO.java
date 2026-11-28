@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 批量办理请求。每条独立事务、独立幂等键。
+ * 批量办理请求。每条独立事务；幂等由业务服务控制。
  *
  * @author dqcer
  * @since 2026-11-21

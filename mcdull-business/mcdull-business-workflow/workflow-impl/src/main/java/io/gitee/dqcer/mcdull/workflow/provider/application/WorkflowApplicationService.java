@@ -51,21 +51,11 @@ public interface WorkflowApplicationService {
 
     StartProcessResult startProcess(StartProcessDTO dto);
 
-    BatchResult<StartProcessResult> batchStartProcesses(BatchStartProcessDTO dto);
-
-    BatchQueryResult<ProcessBusinessKey, InstanceStatusVO> batchGetInstancesByBusinessKeys(BusinessKeyBatchQueryDTO dto);
-
     BatchQueryResult<ProcessBusinessKey, InstanceStatusVO> batchGetInstanceStatuses(BusinessKeyBatchQueryDTO dto);
-
-    List<TodoCountVO> batchCountTodo(TodoCountBatchDTO dto);
 
     CursorPageVO<TaskVO> pageTodoTasks(TodoCursorQueryDTO dto);
 
-    BatchQueryResult<Long, TaskVO> batchGetTasks(TaskBatchQueryDTO dto);
-
     TaskHandleResult handleTask(HandleTaskDTO dto);
-
-    BatchResult<TaskHandleResult> batchHandleTasks(BatchHandleTaskDTO dto);
 
     List<ApprovalStatusVO> batchGetApprovalStatus(ApprovalStatusQueryDTO dto);
 
@@ -74,8 +64,6 @@ public interface WorkflowApplicationService {
     ApprovalStatusVO cancelApproval(CancelApprovalDTO dto);
 
     ApprovalDiagramVO getApprovalDiagram(ApprovalDiagramQueryDTO dto);
-
-    BatchQueryResult<Long, List<HistoryVO>> batchGetHistoriesByInstanceIds(HistoryBatchQueryDTO dto);
 
     BatchQueryResult<ProcessBusinessKey, LatestApprovalVO> batchGetLatestApprovals(BusinessKeyBatchQueryDTO dto);
 }

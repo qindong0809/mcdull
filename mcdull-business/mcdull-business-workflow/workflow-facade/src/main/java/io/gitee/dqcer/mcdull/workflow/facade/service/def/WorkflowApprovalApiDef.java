@@ -2,21 +2,27 @@ package io.gitee.dqcer.mcdull.workflow.facade.service.def;
 
 import io.gitee.dqcer.mcdull.framework.base.wrapper.InnerResult;
 import io.gitee.dqcer.mcdull.workflow.facade.constants.WorkflowConstant;
+import io.gitee.dqcer.mcdull.workflow.facade.model.common.BatchQueryResult;
 import io.gitee.dqcer.mcdull.workflow.facade.model.common.CursorPageVO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.common.ProcessBusinessKey;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.ApprovalActionDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.ApprovalDiagramQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.ApprovalHistoryQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.ApprovalStatusQueryDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.BusinessKeyBatchQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.CancelApprovalDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DefinitionQueryDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DefinitionVersionBatchDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DiagramQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.StartApprovalDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.TodoCursorQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.ApprovalDiagramVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.ApprovalStatusVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.DefinitionVO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.vo.DefinitionVersionVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.DiagramVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.HistoryVO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.vo.LatestApprovalVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.StartProcessResult;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.TaskHandleResult;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.TaskVO;
@@ -30,7 +36,7 @@ import java.util.List;
  * 审批场景契约。
  *
  * <p>规则：只暴露审批语义；不暴露 nodeCode/skipType/handlerPath 等引擎概念；
- * 写操作必须带 idempotencyKey；租户来自 DTO 且与调用方上下文校验；
+ * 幂等由业务服务控制，workflow 不保存幂等状态；租户由框架拦截器统一附加，业务调用方无感；
  * 批量读单批不超过 500，批量写单批不超过 100。</p>
  *
  * @author dqcer
@@ -49,6 +55,15 @@ public interface WorkflowApprovalApiDef {
             @Valid @RequestBody DefinitionQueryDTO dto);
 
     /**
+     * 场景：业务系统本地缓存流程定义后，批量校验定义版本是否变化。
+     * 规则：definitionKeys 支持 flowCode 或 def_{definitionId}；单批不超过 500；
+     * 返回 version、updateTime、publishStatus、activityStatus；未找到的定义返回 null。
+     */
+    @PostMapping(WorkflowConstant.BASE_PATH + "/definitions/versions")
+    InnerResult<BatchQueryResult<String, DefinitionVersionVO>> batchGetDefinitionVersions(
+            @Valid @RequestBody DefinitionVersionBatchDTO dto);
+
+    /**
      * 场景：绑定流程前按 flowCode 预览流程图。
      * 规则：请求参数只有 code（flowCode），复用 defService.getByFlowCode；
      * 返回该 code 下所有版本定义图，不含实例进度；无结果返回空列表。
@@ -60,15 +75,15 @@ public interface WorkflowApprovalApiDef {
     /**
      * 场景：业务单据提交审批。
      * 规则：flowCode/businessId/operatorId 必填；businessId 在同一租户同一 flowCode 下只能对应一个运行中实例；
-     * idempotencyKey 必填，重试必须复用同一个 key 且请求体完全一致；
-     * 成功返回 instanceId/status/currentNode；失败返回 999631/999632/999634 等业务错误码。
+     * 幂等由调用方保证；业务属性放在 attributes，工作流不解释其含义；
+     * 成功返回 instanceId/status/currentNode；失败返回 999634 等业务错误码。
      */
     @PostMapping(WorkflowConstant.BASE_PATH + "/approvals/start")
     InnerResult<StartProcessResult> startApproval(@Valid @RequestBody StartApprovalDTO dto);
 
     /**
      * 场景：业务单据列表页按 flowCode 批量展示审批状态。
-     * 规则：请求参数为 code（flowCode）+ businessIds；按 tenantId+code+businessId 查询；
+     * 规则：请求参数为 code（flowCode）+ businessIds；按 flowCode+businessId 查询，租户由框架拦截器附加；
      * 返回 flowStatus/statusText/currentNode/currentApprover；无结果返回空列表；
      * 不查流程图、不查历史明细；单批不超过 500。
      */
@@ -77,17 +92,25 @@ public interface WorkflowApprovalApiDef {
             @Valid @RequestBody ApprovalStatusQueryDTO dto);
 
     /**
+     * 场景：业务单据列表页批量展示每个单据最近一次审批结果。列表页展示“最新审批结果”
+     * 规则：keys 为 flowCode+businessId 列表，单批不超过 500；返回当前实例状态和最近一条审批记录；
+     * 最近审批记录包含 handlerId、action、comment、updateTime 和 attributes；无实例或无历史返回 null。
+     */
+    @PostMapping(WorkflowConstant.BASE_PATH + "/approvals/batch-latest")
+    InnerResult<BatchQueryResult<ProcessBusinessKey, LatestApprovalVO>> batchGetLatestApprovals(
+            @Valid @RequestBody BusinessKeyBatchQueryDTO dto);
+
+    /**
      * 场景：审批人同意任务。
-     * 规则：taskId 必须是当前操作人的待办；idempotencyKey 必填；
-     * expectedRevision 不为空时按乐观锁校验，冲突返回 999633；
-     * 成功后任务完成、实例推进到下一节点，最后节点完成时实例状态变为终态。
+     * 规则：taskId 必须是当前操作人的待办；
+     * 幂等由调用方保证；成功后任务完成、实例推进到下一节点，最后节点完成时实例状态变为终态。
      */
     @PostMapping(WorkflowConstant.BASE_PATH + "/approvals/approve")
     InnerResult<TaskHandleResult> approve(@Valid @RequestBody ApprovalActionDTO dto);
 
     /**
      * 场景：审批人驳回任务。
-     * 规则：taskId 必须是当前操作人的待办；idempotencyKey 必填；
+     * 规则：taskId 必须是当前操作人的待办；幂等由调用方保证；
      * 驳回后任务完成、实例状态置为 REJECTED(9)；不产生下一节点任务。
      */
     @PostMapping(WorkflowConstant.BASE_PATH + "/approvals/reject")
@@ -96,7 +119,7 @@ public interface WorkflowApprovalApiDef {
     /**
      * 场景：发起人撤回自己提交的审批。
      * 规则：operatorId 必须是实例 starterId；实例状态必须为 RUNNING(1)；
-     * 终态实例不可撤回；idempotencyKey 必填；
+     * 终态实例不可撤回；幂等由调用方保证；
      * 撤回会完成全部运行中的任务、实例状态置为 WITHDRAWN(6)，并写入一条撤回历史。
      */
     @PostMapping(WorkflowConstant.BASE_PATH + "/approvals/cancel")
@@ -104,7 +127,7 @@ public interface WorkflowApprovalApiDef {
 
     /**
      * 场景：业务单据详情页展示审批时间线。
-     * 规则：按 tenantId+flowCode+businessId 定位实例；实例不存在返回 999610；
+     * 规则：按 flowCode+businessId 定位实例，租户由框架拦截器附加；实例不存在返回 999610；
      * 返回按 updateTime 倒序的历史记录，包含 node/handler/action/comment/time；
      * limit 为空默认 50，最大 200；无记录返回空列表。
      */

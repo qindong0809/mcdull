@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.workflow.facade.model.dto;
 
 import io.gitee.dqcer.mcdull.workflow.facade.model.common.BaseWorkflowRequest;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,13 +27,17 @@ public class ApprovalActionDTO extends BaseWorkflowRequest {
 
     private String comment;
 
+    /**
+     * 流程变量，供引擎做条件判断和流转控制，不是业务展示快照。
+     * <p>
+     * 典型内容：amount、riskLevel、needFinanceReview 等；只放基本类型、字符串及其集合。
+     */
     private Map<String, Object> variables = new HashMap<>();
 
     /**
-     * 乐观锁版本，null 表示不校验。
+     * 业务属性快照，供业务方展示使用，工作流不解释其 key 的含义。
+     * <p>
+     * 典型内容：approverName、approverDepartmentName、commentText 等；工作流只原样保存并回传。
      */
-    private Long expectedRevision;
-
-    @NotBlank(message = "idempotencyKey 不能为空")
-    private String idempotencyKey;
+    private Map<String, Object> attributes = new HashMap<>();
 }

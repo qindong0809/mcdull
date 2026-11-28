@@ -36,24 +36,6 @@ SET h.approver_id = h.approver,
     h.approver_name = h.approver
 WHERE h.approver IS NOT NULL AND h.approver_id IS NULL;
 
-CREATE TABLE `flow_idempotency`
-(
-    `id`             bigint       NOT NULL COMMENT '主键id',
-    `tenant_id`      varchar(40)  NOT NULL COMMENT '租户id',
-    `idempotency_key` varchar(100) NOT NULL COMMENT '幂等键',
-    `request_hash`   varchar(64)  NOT NULL COMMENT '请求内容摘要',
-    `status`         varchar(20)  NOT NULL COMMENT 'PROCESSING/SUCCESS/FAILED',
-    `response_json`  text         COMMENT '成功响应快照',
-    `error_code`     int          DEFAULT NULL COMMENT '失败错误码',
-    `error_message`  varchar(500) DEFAULT NULL COMMENT '失败原因',
-    `expire_time`    datetime     DEFAULT NULL COMMENT '过期时间',
-    `create_time`    datetime     DEFAULT NULL,
-    `update_time`    datetime     DEFAULT NULL,
-    `del_flag`       char(1)      DEFAULT '0',
-    PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE KEY `uk_flow_idempotency` (`tenant_id`, `idempotency_key`) USING BTREE
-) ENGINE = InnoDB COMMENT ='工作流服务间幂等记录表';
-
 CREATE TABLE `flow_event_outbox`
 (
     `id`             bigint       NOT NULL COMMENT '主键id',

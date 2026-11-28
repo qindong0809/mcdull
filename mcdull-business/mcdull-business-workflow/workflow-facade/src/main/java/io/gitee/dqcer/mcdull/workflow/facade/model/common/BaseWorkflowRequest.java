@@ -16,11 +16,6 @@ public class BaseWorkflowRequest implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 租户 ID。写操作必填。
-     */
-    private String tenantId;
-
-    /**
      * 操作人 ID。写操作必填。
      */
     private String operatorId;

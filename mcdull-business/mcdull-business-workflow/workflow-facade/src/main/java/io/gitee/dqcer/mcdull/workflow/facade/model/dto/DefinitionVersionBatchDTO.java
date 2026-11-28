@@ -18,8 +18,6 @@ public class DefinitionVersionBatchDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String tenantId;
-
     @NotEmpty(message = "definitionKeys 不能为空")
     private List<String> definitionKeys = new ArrayList<>();
 }

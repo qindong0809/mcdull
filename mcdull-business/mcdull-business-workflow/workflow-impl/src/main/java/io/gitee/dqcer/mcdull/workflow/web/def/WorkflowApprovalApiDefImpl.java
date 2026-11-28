@@ -2,13 +2,17 @@ package io.gitee.dqcer.mcdull.workflow.web.def;
 
 import io.gitee.dqcer.mcdull.framework.base.wrapper.InnerResult;
 import io.gitee.dqcer.mcdull.workflow.facade.enums.TaskActionEnum;
+import io.gitee.dqcer.mcdull.workflow.facade.model.common.BatchQueryResult;
 import io.gitee.dqcer.mcdull.workflow.facade.model.common.CursorPageVO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.common.ProcessBusinessKey;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.ApprovalActionDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.ApprovalDiagramQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.ApprovalHistoryQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.ApprovalStatusQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.CancelApprovalDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DefinitionQueryDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DefinitionVersionBatchDTO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.dto.BusinessKeyBatchQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.DiagramQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.HandleTaskDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.dto.StartApprovalDTO;
@@ -17,8 +21,10 @@ import io.gitee.dqcer.mcdull.workflow.facade.model.dto.TodoCursorQueryDTO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.ApprovalDiagramVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.ApprovalStatusVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.DefinitionVO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.vo.DefinitionVersionVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.DiagramVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.HistoryVO;
+import io.gitee.dqcer.mcdull.workflow.facade.model.vo.LatestApprovalVO;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.StartProcessResult;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.TaskHandleResult;
 import io.gitee.dqcer.mcdull.workflow.facade.model.vo.TaskVO;
@@ -52,6 +58,12 @@ public class WorkflowApprovalApiDefImpl implements WorkflowApprovalApi {
     }
 
     @Override
+    public InnerResult<BatchQueryResult<String, DefinitionVersionVO>> batchGetDefinitionVersions(
+            DefinitionVersionBatchDTO dto) {
+        return InnerResult.success(workflowApplicationService.batchGetDefinitionVersions(dto));
+    }
+
+    @Override
     public InnerResult<List<DiagramVO>> batchGetDefinitionDiagrams(DiagramQueryDTO dto) {
         return InnerResult.success(workflowApplicationService.batchGetDiagrams(dto));
     }
@@ -66,6 +78,12 @@ public class WorkflowApprovalApiDefImpl implements WorkflowApprovalApi {
     @Override
     public InnerResult<List<ApprovalStatusVO>> batchGetApprovalStatus(ApprovalStatusQueryDTO dto) {
         return InnerResult.success(workflowApplicationService.batchGetApprovalStatus(dto));
+    }
+
+    @Override
+    public InnerResult<BatchQueryResult<ProcessBusinessKey, LatestApprovalVO>> batchGetLatestApprovals(
+            BusinessKeyBatchQueryDTO dto) {
+        return InnerResult.success(workflowApplicationService.batchGetLatestApprovals(dto));
     }
 
     @Override

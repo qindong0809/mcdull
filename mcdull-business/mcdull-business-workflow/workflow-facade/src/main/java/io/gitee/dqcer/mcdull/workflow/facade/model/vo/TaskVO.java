@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 任务 VO。人员名称均为发起/办理时写入的快照。
@@ -39,21 +41,17 @@ public class TaskVO implements Serializable {
 
     private String businessId;
 
-    private String businessTitle;
-
-    private String starterId;
-
-    private String starterName;
+    /**
+     * 业务属性快照，由调用方按 key 解释，工作流只原样回传。
+     * <p>
+     * 典型内容：businessTitle、businessNo、applicantName、departmentName、amountText 等。
+     */
+    private Map<String, Object> attributes = new HashMap<>();
 
     @Builder.Default
     private List<String> assigneeIds = new ArrayList<>();
 
-    @Builder.Default
-    private List<String> assigneeNames = new ArrayList<>();
-
     private String createTime;
 
     private String updateTime;
-
-    private Long revision;
 }

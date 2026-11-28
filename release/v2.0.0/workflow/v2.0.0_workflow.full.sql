@@ -173,41 +173,6 @@ CREATE TABLE `flow_user`
   KEY `user_associated` (`associated`) USING BTREE
 )  COMMENT ='流程用户表';
 
-CREATE TABLE `flow_idempotency`
-(
-    `id`             bigint       NOT NULL COMMENT '主键id',
-    `tenant_id`      varchar(40)  NOT NULL COMMENT '租户id',
-    `idempotency_key` varchar(100) NOT NULL COMMENT '幂等键',
-    `request_hash`   varchar(64)  NOT NULL COMMENT '请求内容摘要',
-    `status`         varchar(20)  NOT NULL COMMENT 'PROCESSING/SUCCESS/FAILED',
-    `response_json`  text         COMMENT '成功响应快照',
-    `error_code`     int          DEFAULT NULL COMMENT '失败错误码',
-    `error_message`  varchar(500) DEFAULT NULL COMMENT '失败原因',
-    `expire_time`    datetime     DEFAULT NULL COMMENT '过期时间',
-    `create_time`    datetime     DEFAULT NULL,
-    `update_time`    datetime     DEFAULT NULL,
-    `del_flag`       char(1)      DEFAULT '0',
-    PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE KEY `uk_flow_idempotency` (`tenant_id`, `idempotency_key`) USING BTREE
-)  COMMENT ='工作流服务间幂等记录表';
-
-CREATE TABLE `flow_event_outbox`
-(
-    `id`             bigint       NOT NULL COMMENT '主键id',
-    `tenant_id`      varchar(40)  DEFAULT NULL COMMENT '租户id',
-    `event_type`     varchar(64)  NOT NULL COMMENT '事件类型',
-    `aggregate_id`   varchar(100) DEFAULT NULL COMMENT '聚合根id',
-    `payload_json`   text         COMMENT '事件载荷，只含工作流数据',
-    `status`         varchar(20)  NOT NULL DEFAULT 'PENDING' COMMENT 'PENDING/SENT/FAILED',
-    `retry_count`    int          NOT NULL DEFAULT 0 COMMENT '重试次数',
-    `next_retry_time` datetime    DEFAULT NULL COMMENT '下次重试时间',
-    `create_time`    datetime     DEFAULT NULL,
-    `update_time`    datetime     DEFAULT NULL,
-    `del_flag`       char(1)      DEFAULT '0',
-    PRIMARY KEY (`id`) USING BTREE,
-    KEY `idx_flow_event_outbox_status` (`status`, `next_retry_time`, `id`) USING BTREE
-)  COMMENT ='工作流事件发件箱';
-
 
 INSERT IGNORE INTO sys_sql_log(system, scope, version, script_name, applied_time)
        VALUES ('workflow', 'master', 'v2.0.0', 'v2.0.0_workflow.full', NOW());

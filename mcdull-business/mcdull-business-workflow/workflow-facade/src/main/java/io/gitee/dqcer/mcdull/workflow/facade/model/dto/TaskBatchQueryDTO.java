@@ -18,8 +18,6 @@ public class TaskBatchQueryDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String tenantId;
-
     @NotEmpty(message = "taskIds 不能为空")
     private List<Long> taskIds = new ArrayList<>();
 }

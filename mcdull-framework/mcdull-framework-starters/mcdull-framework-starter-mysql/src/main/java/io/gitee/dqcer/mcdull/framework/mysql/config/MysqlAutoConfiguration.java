@@ -10,12 +10,16 @@ import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.DataChangeRecorderInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import io.gitee.dqcer.mcdull.framework.base.help.LogHelp;
+import io.gitee.dqcer.mcdull.framework.base.storage.UnifySession;
+import io.gitee.dqcer.mcdull.framework.base.storage.UserContextHolder;
 import io.gitee.dqcer.mcdull.framework.mysql.aspect.DataSourceAspect;
 import io.gitee.dqcer.mcdull.framework.mysql.context.DataSourceContextPropagator;
 import io.gitee.dqcer.mcdull.framework.mysql.interceptor.DynamicDatasourceInterceptor;
@@ -24,11 +28,14 @@ import io.gitee.dqcer.mcdull.framework.mysql.routing.SwitchableDataSource;
 import io.gitee.dqcer.mcdull.framework.spi.AsyncContextPropagator;
 import io.gitee.dqcer.mcdull.framework.spi.datasource.TenantDataSourceResolver;
 import jakarta.annotation.Resource;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.LongValue;
 import jakarta.servlet.*;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -50,6 +57,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 自动配置
@@ -62,12 +70,18 @@ import java.util.Map;
 @EnableConfigurationProperties(DataSourceProperties.class)
 public class MysqlAutoConfiguration {
 
+    private static final Set<String> TENANT_TABLES = Set.of(
+            "flow_definition", "flow_node", "flow_skip", "flow_instance",
+            "flow_task", "flow_his_task", "flow_user", "flow_event_outbox");
+
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Resource
     private ApplicationContext context;
     @Resource
     private DataSource dataSource;
+    @Value("${mcdull.tenant.enabled:true}")
+    private boolean tenantEnabled;
 
     /**
      * 调整 SqlSessionFactory 为 MyBatis-Plus 的 SqlSessionFactory
@@ -104,6 +118,11 @@ public class MysqlAutoConfiguration {
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        if (tenantEnabled) {
+            TenantLineInnerInterceptor tenantLineInterceptor = new TenantLineInnerInterceptor();
+            tenantLineInterceptor.setTenantLineHandler(tenantLineHandler());
+            interceptor.addInnerInterceptor(tenantLineInterceptor);
+        }
         DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor = new DynamicTableNameInnerInterceptor();
         dynamicTableNameInnerInterceptor.setTableNameHandler(((sql, tableName) -> {
             // 获取参数方法
@@ -120,6 +139,27 @@ public class MysqlAutoConfiguration {
 //        interceptor.addInnerInterceptor(new DataChangeRecorderInnerInterceptor(context));
         interceptor.addInnerInterceptor(new DataChangeRecorderInnerInterceptor());
         return interceptor;
+    }
+
+    private TenantLineHandler tenantLineHandler() {
+        return new TenantLineHandler() {
+            @Override
+            public Expression getTenantId() {
+                UnifySession session = UserContextHolder.getSession();
+                Integer tenantId = session == null ? null : session.getTenantId();
+                return new LongValue(tenantId == null ? 0L : tenantId.longValue());
+            }
+
+            @Override
+            public String getTenantIdColumn() {
+                return "tenant_id";
+            }
+
+            @Override
+            public boolean ignoreTable(String tableName) {
+                return !TENANT_TABLES.contains(tableName == null ? "" : tableName.toLowerCase());
+            }
+        };
     }
 
     @Bean

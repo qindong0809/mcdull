@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 审批历史 VO。
@@ -31,7 +33,12 @@ public class HistoryVO implements Serializable {
 
     private String handlerId;
 
-    private String handlerName;
+    /**
+     * 业务属性快照，由调用方按 key 解释，工作流只原样回传。
+     * <p>
+     * 典型内容：approverName、approverDepartmentName、commentText 等。
+     */
+    private Map<String, Object> attributes = new HashMap<>();
 
     private String action;
 

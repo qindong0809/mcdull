@@ -27,10 +27,4 @@ public class CancelApprovalDTO extends BaseWorkflowRequest {
      * 撤回原因，可为空。
      */
     private String reason;
-
-    /**
-     * 同一撤回动作的多次重试必须传相同 key。
-     */
-    @NotBlank(message = "idempotencyKey 不能为空")
-    private String idempotencyKey;
 }

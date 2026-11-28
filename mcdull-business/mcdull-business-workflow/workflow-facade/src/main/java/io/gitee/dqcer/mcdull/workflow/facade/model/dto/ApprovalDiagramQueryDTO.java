@@ -19,9 +19,6 @@ public class ApprovalDiagramQueryDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotBlank(message = "tenantId 不能为空")
-    private String tenantId;
-
     @NotBlank(message = "code 不能为空")
     private String code;
 
