@@ -17,16 +17,11 @@
         <artifactId>mcdull-framework-starter-tag</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>mcdull-framework-starter-feign</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>system-facade</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+<!--      <dependency>-->
+<!--        <groupId>${project.groupId}</groupId>-->
+<!--        <artifactId>mcdull-framework-starter-feign</artifactId>-->
+<!--        <version>${project.version}</version>-->
+<!--      </dependency>-->
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>mcdull-framework-starter-nacos</artifactId>

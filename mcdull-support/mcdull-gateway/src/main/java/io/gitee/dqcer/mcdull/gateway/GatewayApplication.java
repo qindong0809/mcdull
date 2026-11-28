@@ -1,7 +1,6 @@
 package io.gitee.dqcer.mcdull.gateway;
 
 import io.gitee.dqcer.mcdull.framework.base.wrapper.Result;
-import io.gitee.dqcer.mcdull.system.facade.EnableSystemFeignClients;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,12 +20,8 @@ import java.util.stream.Collectors;
  * @author dqcer
  * @since 2022/10/24
  */
-@RestController
 @EnableDiscoveryClient
 @SpringBootApplication
-// 网关的启动包内没有 system-impl，AuthApi 等契约只能以 Feign 代理的形式存在；
-// 少了这个注解，StpInterfaceImpl 注入 AuthApi 会在启动时直接找不到 bean
-@EnableSystemFeignClients
 public class GatewayApplication {
 
     public static void main(String[] args) {
@@ -39,24 +34,4 @@ public class GatewayApplication {
         return new HttpMessageConverters(converters.orderedStream().collect(Collectors.toList()));
     }
 
-    @GetMapping
-    public Result<String> demo() {
-        return Result.success("good job");
-    }
-
-    private String s  ="1";
-
-    /**
-     * 测试 agent gc
-     *
-     * @return {@link Result}<{@link String}>
-     */
-    @GetMapping("log")
-    public Result<String> testAgentGc() {
-        int max = 10000;
-        for (int i = 0; i < max; i++) {
-            s += new String("dfd");
-        }
-        return Result.success("testLog");
-    }
 }

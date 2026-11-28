@@ -1,6 +1,7 @@
 package io.gitee.dqcer.mcdull.system.facade.vo;
 
 import io.gitee.dqcer.mcdull.framework.base.support.VO;
+import io.gitee.dqcer.mcdull.framework.spi.permission.UserPermissionInfo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Setter
 @Getter
-public class RemoteLogonUserVO implements VO {
+public class RemoteLogonUserVO implements VO, UserPermissionInfo {
 
     private Integer userId;
 

@@ -41,7 +41,6 @@ import io.gitee.dqcer.mcdull.framework.web.enums.IEnum;
 import io.gitee.dqcer.mcdull.framework.web.enums.InactiveEnum;
 import io.gitee.dqcer.mcdull.framework.web.enums.SexEnum;
 import io.gitee.dqcer.mcdull.framework.mysql.util.LogicCheckUtil;
-import io.gitee.dqcer.mcdull.system.facade.vo.RemoteLogonUserVO;
 import io.gitee.dqcer.mcdull.system.provider.model.audit.UserAudit;
 import io.gitee.dqcer.mcdull.system.facade.model.bo.DynamicFieldBO;
 import io.gitee.dqcer.mcdull.system.provider.model.convert.UserConvert;
@@ -975,15 +974,5 @@ public class UserServiceImpl
         }
         return Map.of();
     }
-
-    @Override
-    public RemoteLogonUserVO getLogonUserInfo(Object loginId, String loginType) {
-        RemoteLogonUserVO remoteLogonUserVO = new RemoteLogonUserVO();
-        remoteLogonUserVO.setUserId(Convert.toInt(loginId));
-        // 当前默认单租户
-        remoteLogonUserVO.setTenantId(1);
-        return remoteLogonUserVO;
-    }
-
 
 }

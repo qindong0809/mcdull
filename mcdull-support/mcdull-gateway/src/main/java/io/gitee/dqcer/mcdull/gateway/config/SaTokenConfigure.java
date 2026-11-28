@@ -42,9 +42,10 @@ public class SaTokenConfigure {
         if (noAuth.isEmpty()) {
             log.warn("mcdull.gateway.no-auth 为空，登录接口也会被鉴权拦截");
         }
-        noAuth.forEach(path -> filter.addExclude(path));
+        noAuth.forEach(filter::addExclude);
         log.info("Sa-Token 免鉴权路径: {}", noAuth);
 
+        // 直接从redis 查询判断是否已登录
         return filter
             // 鉴权方法：每次访问进入
             .setAuth(obj -> {

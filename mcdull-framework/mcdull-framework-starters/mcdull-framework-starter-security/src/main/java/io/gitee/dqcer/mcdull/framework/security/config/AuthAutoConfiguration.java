@@ -1,9 +1,14 @@
 package io.gitee.dqcer.mcdull.framework.security.config;
 
+import cn.dev33.satoken.stp.StpInterface;
+import io.gitee.dqcer.mcdull.framework.security.RemoteUserDetailsService;
 import io.gitee.dqcer.mcdull.framework.security.advice.SaTokenExceptionAdvice;
 import io.gitee.dqcer.mcdull.framework.security.aspect.AuditAspect;
 import io.gitee.dqcer.mcdull.framework.security.filter.AuthSessionFilter;
+import io.gitee.dqcer.mcdull.framework.spi.permission.UserPermissionResolver;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +34,18 @@ public class AuthAutoConfiguration {
     @Bean
     public AuditAspect auditAspect() {
         return new AuditAspect();
+    }
+
+    /**
+     * 通用远程权限数据源，业务服务自带本地 StpInterface 时让位。
+     * 未配置 UserPermissionResolver 时仍注册一个 NOOP 数据源，避免鉴权时找不到 Bean。
+     */
+    @Bean
+    @ConditionalOnMissingBean(StpInterface.class)
+    public StpInterface remoteStpInterface(ObjectProvider<UserPermissionResolver> resolverProvider) {
+        UserPermissionResolver resolver = resolverProvider.orderedStream().findFirst()
+                .orElse(UserPermissionResolver.NOOP);
+        return new RemoteUserDetailsService(resolver);
     }
 
     /**
